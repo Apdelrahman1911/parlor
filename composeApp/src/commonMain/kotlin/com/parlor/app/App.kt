@@ -7,11 +7,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.parlor.app.shell.home.HomeScreen
 import com.parlor.app.shell.settings.SettingsScreen
+import com.parlor.core.ids.SessionId
+import com.parlor.core.result.Result
 import com.parlor.designsystem.localization.AppLanguage
 import com.parlor.designsystem.localization.ProvideAppLanguage
 import com.parlor.designsystem.localization.customAppLocale
@@ -19,6 +22,7 @@ import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.designsystem.theme.ThemeMode
 import com.parlor.games.whodunit.ui.flow.WhodunitGameFlow
 import com.parlor.storage.settings.SettingsStore
+import com.parlor.storage.snapshot.SnapshotStore
 import org.koin.compose.koinInject
 
 /**
@@ -42,21 +46,56 @@ fun App() {
         customAppLocale = language.tag
     }
 
+    val snapshotStore: SnapshotStore = koinInject()
+
     ProvideAppLanguage(language = language) {
         ParlorTheme(themeMode = themeMode) {
             var screen: AppScreen by remember { mutableStateOf(AppScreen.Home) }
+            var resumeSessionId: SessionId? by remember { mutableStateOf(null) }
+            // Bumped whenever we return to Home, so we re-query the store and
+            // pick up sessions that just started OR sessions just-deleted by
+            // entering PostGame.
+            var unfinishedRefreshKey: Int by remember { mutableStateOf(0) }
+
+            val unfinishedSessions by produceState(
+                initialValue = emptyList<SessionId>(),
+                key1 = screen,
+                key2 = unfinishedRefreshKey,
+            ) {
+                value = if (screen == AppScreen.Home) {
+                    when (val r = snapshotStore.listUnfinished()) {
+                        is Result.Success -> r.data
+                        is Result.Failure -> emptyList()
+                    }
+                } else {
+                    value
+                }
+            }
 
             when (screen) {
                 AppScreen.Home -> HomeScreen(
                     onTileSelected = { gameId ->
-                        if (gameId == "whodunit") screen = AppScreen.Whodunit
+                        if (gameId == "whodunit") {
+                            resumeSessionId = null
+                            screen = AppScreen.Whodunit
+                        }
                     },
                     onSettings = { screen = AppScreen.Settings },
                     modifier = Modifier.fillMaxSize(),
+                    unfinishedSessions = unfinishedSessions,
+                    onResume = { sessionId ->
+                        resumeSessionId = sessionId
+                        screen = AppScreen.Whodunit
+                    },
                 )
                 AppScreen.Whodunit -> WhodunitGameFlow(
-                    onBackToLibrary = { screen = AppScreen.Home },
+                    onBackToLibrary = {
+                        resumeSessionId = null
+                        unfinishedRefreshKey++
+                        screen = AppScreen.Home
+                    },
                     modifier = Modifier.fillMaxSize(),
+                    resumeSessionId = resumeSessionId,
                 )
                 AppScreen.Settings -> SettingsScreen(
                     onBack = { screen = AppScreen.Home },

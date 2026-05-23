@@ -25,12 +25,17 @@ import com.parlor.app.resources.home_coming_soon_state
 import com.parlor.app.resources.home_eyebrow
 import com.parlor.app.resources.home_featured_state
 import com.parlor.app.resources.home_future_game_title
+import com.parlor.app.resources.home_resume_section_label
+import com.parlor.app.resources.home_resume_tile_description
+import com.parlor.app.resources.home_resume_tile_subtitle
+import com.parlor.app.resources.home_resume_tile_title
 import com.parlor.app.resources.home_tonights_game_label
 import com.parlor.app.resources.home_whodunit_subtitle
 import com.parlor.app.resources.home_whodunit_tagline
 import com.parlor.app.resources.home_whodunit_title
 import com.parlor.app.resources.settings_open
 import com.parlor.app.resources.settings_title
+import com.parlor.core.ids.SessionId
 import com.parlor.designsystem.backdrop.HeroBackdrop
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorCard
@@ -42,12 +47,18 @@ import org.jetbrains.compose.resources.stringResource
  * vignette), content shows the *Tonight's Game* card and a small *All Games*
  * grid with future tiles greyed out. A small Settings entry sits in the top
  * row.
+ *
+ * Phase 6.2: when [unfinishedSessions] is non-empty, a *Continue Where You
+ * Left Off* section is rendered above *Tonight's Game*, with one tile per
+ * unfinished session. Tapping a tile calls [onResume] with that session id.
  */
 @Composable
 fun HomeScreen(
     onTileSelected: (String) -> Unit,
     onSettings: () -> Unit,
     modifier: Modifier = Modifier,
+    unfinishedSessions: List<SessionId> = emptyList(),
+    onResume: (SessionId) -> Unit = {},
 ) {
     val settingsLabel = stringResource(Res.string.settings_title)
     val settingsDescription = stringResource(Res.string.settings_open)
@@ -77,6 +88,17 @@ fun HomeScreen(
             }
             Spacer(modifier = Modifier.height(ParlorTheme.spacing.xs))
 
+            if (unfinishedSessions.isNotEmpty()) {
+                EyebrowLabel(text = stringResource(Res.string.home_resume_section_label))
+                ResumeSection(
+                    sessions = unfinishedSessions,
+                    title = stringResource(Res.string.home_resume_tile_title),
+                    subtitle = stringResource(Res.string.home_resume_tile_subtitle),
+                    contentDescription = stringResource(Res.string.home_resume_tile_description),
+                    onResume = onResume,
+                )
+            }
+
             TonightsGameCard(
                 eyebrow = stringResource(Res.string.home_tonights_game_label),
                 title = stringResource(Res.string.home_whodunit_title),
@@ -93,6 +115,57 @@ fun HomeScreen(
                 futurePlaceholderTitle = stringResource(Res.string.home_future_game_title),
                 featuredState = stringResource(Res.string.home_featured_state),
                 comingSoonState = stringResource(Res.string.home_coming_soon_state),
+            )
+        }
+    }
+}
+
+@Composable
+private fun ResumeSection(
+    sessions: List<SessionId>,
+    title: String,
+    subtitle: String,
+    contentDescription: String,
+    onResume: (SessionId) -> Unit,
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s)) {
+        sessions.forEach { sessionId ->
+            ResumeTile(
+                title = title,
+                subtitle = subtitle,
+                contentDescription = contentDescription,
+                onTap = { onResume(sessionId) },
+            )
+        }
+    }
+}
+
+@Composable
+private fun ResumeTile(
+    title: String,
+    subtitle: String,
+    contentDescription: String,
+    onTap: () -> Unit,
+) {
+    ParlorCard(
+        modifier = Modifier
+            .fillMaxWidth()
+            .semantics { this.contentDescription = contentDescription }
+            .clickable(onClick = onTap),
+        elevation = ParlorTheme.elevation.medium,
+        cornerRadius = ParlorTheme.radii.card,
+        contentPadding = ParlorTheme.spacing.l,
+    ) {
+        Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.xs)) {
+            Text(
+                text = title,
+                style = ParlorTheme.typography.headingLarge,
+                color = ParlorTheme.colors.textPrimary,
+            )
+            Text(
+                text = subtitle,
+                style = ParlorTheme.typography.bodyMedium,
+                color = ParlorTheme.colors.textSecondary,
             )
         }
     }

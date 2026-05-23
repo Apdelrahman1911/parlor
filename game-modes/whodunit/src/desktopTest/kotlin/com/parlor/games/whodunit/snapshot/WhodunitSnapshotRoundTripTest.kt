@@ -38,7 +38,6 @@ import com.parlor.games.whodunit.domain.state.WhodunitState
 import com.parlor.games.whodunit.resources.Res
 import com.parlor.session.passandplay.PassAndPlaySessionController
 import com.parlor.storage.snapshot.FileBackedSnapshotStore
-import com.parlor.storage.snapshot.SnapshotFileSystem
 import com.parlor.storage.snapshot.SnapshotStore
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
@@ -49,8 +48,6 @@ import io.ktor.serialization.kotlinx.json.json
 import io.ktor.utils.io.ByteReadChannel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
@@ -308,24 +305,3 @@ class WhodunitSnapshotRoundTripTest {
     }
 }
 
-/**
- * Test-only in-memory `SnapshotFileSystem`. Same contract as the platform
- * actuals, no disk I/O — fast, deterministic, suspending API preserved so
- * call-site behavior matches production.
- */
-private class InMemorySnapshotFileSystem : SnapshotFileSystem {
-    private val mutex = Mutex()
-    private val files: MutableMap<String, ByteArray> = mutableMapOf()
-
-    override suspend fun read(name: String): ByteArray? = mutex.withLock { files[name] }
-
-    override suspend fun write(name: String, bytes: ByteArray) {
-        mutex.withLock { files[name] = bytes }
-    }
-
-    override suspend fun delete(name: String) {
-        mutex.withLock { files.remove(name) }
-    }
-
-    override suspend fun list(): List<String> = mutex.withLock { files.keys.toList() }
-}

@@ -35,19 +35,27 @@ import kotlinx.coroutines.sync.withLock
  * rendered. The reducer never sees the topology — it sees actions in and
  * state out.
  *
- * Phase 4 wires the Whodunit definition into this controller. Phase 7 adds a
- * shape test that proves the same engine code can drive a multi-device flow
- * with no changes here.
+ * Phase 4 wires the Whodunit definition into this controller. Phase 6.2 adds
+ * `restoredState` so a snapshot-driven resume can boot the controller at the
+ * persisted state instead of `definition.createInitialState(config)`. Phase 7
+ * adds a shape test that proves the same engine code can drive a multi-device
+ * flow with no changes here.
+ *
+ * @param restoredState When non-null, the controller starts with this state
+ * (used by Phase 6.2 resume). When null, the controller calls
+ * `definition.createInitialState(config)` as before — the prior contract.
  */
 class PassAndPlaySessionController<S : GameState, A : GameAction, E : GameEvent>(
     private val definition: GameDefinition<S, A, E>,
     private val config: SessionConfig,
     private val reducerContext: ReducerContext,
     private val scope: CoroutineScope,
+    restoredState: S? = null,
 ) : SessionController<S, A, E> {
 
     private val mutex = Mutex()
-    private val state: MutableStateFlow<S> = MutableStateFlow(definition.createInitialState(config))
+    private val state: MutableStateFlow<S> =
+        MutableStateFlow(restoredState ?: definition.createInitialState(config))
     private val reducer = definition.reducer()
     private val policy: ProjectionPolicy<S> = definition.projectionPolicy()
 

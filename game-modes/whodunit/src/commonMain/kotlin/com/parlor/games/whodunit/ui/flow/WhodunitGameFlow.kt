@@ -67,6 +67,7 @@ import com.parlor.games.whodunit.ui.screens.vote.VoteBallotScreen
 import com.parlor.games.whodunit.ui.screens.vote.VoteHandoffScreen
 import com.parlor.session.ViewerContext
 import com.parlor.session.passandplay.PassAndPlaySessionController
+import com.parlor.storage.snapshot.SnapshotStore
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
@@ -80,30 +81,100 @@ import org.koin.core.qualifier.named
  * screens by observing `session.publicState`. UI events submit real
  * [WhodunitAction]s; the reducer drives phase transitions.
  *
- * Replaces the previous `WhodunitSetupDemo` placeholder. The reducer is the
- * single source of truth for game progress; the UI is a pure projection.
+ * Phase 6.2: when [resumeSessionId] is non-null, the flow looks up the
+ * persisted snapshot, decodes its payload to a [WhodunitState], skips the
+ * pre-session setup screens, and boots the controller at the saved phase. A
+ * missing or corrupt snapshot drops back to the library — never to a half-
+ * configured fresh game.
  */
 @Composable
 fun WhodunitGameFlow(
     onBackToLibrary: () -> Unit,
     modifier: Modifier = Modifier,
+    resumeSessionId: SessionId? = null,
 ) {
     val repository: CaseRepository = koinInject()
     val payloadValidator: PayloadValidator<WhodunitCase> = koinInject(qualifier = named("whodunit"))
+    val snapshotStore: SnapshotStore = koinInject()
+    val definition: WhodunitDefinition = koinInject()
 
-    val caseResult by produceState<Result<ValidatedCase<WhodunitCase>, DataError>?>(initialValue = null) {
-        value = repository.loadCase(CaseId("last-dinner"), payloadValidator)
+    val resumeResult by produceState<Result<ResumedSession, DataError>?>(
+        initialValue = null,
+        key1 = resumeSessionId,
+    ) {
+        value = if (resumeSessionId == null) null
+        else loadResumedSession(snapshotStore, definition, resumeSessionId)
     }
 
-    when (val r = caseResult) {
-        null -> LoadingScreen(modifier)
-        is Result.Failure -> ErrorScreen(error = r.error, onBack = onBackToLibrary, modifier = modifier)
-        is Result.Success -> ConfiguredFlow(
-            case = r.data,
-            onBackToLibrary = onBackToLibrary,
+    val caseResult by produceState<Result<ValidatedCase<WhodunitCase>, DataError>?>(
+        initialValue = null,
+        key1 = resumeSessionId,
+        key2 = resumeResult,
+    ) {
+        val targetCaseId = when (val r = resumeResult) {
+            is Result.Success -> r.data.state.public.caseId.raw
+            else -> "last-dinner"
+        }
+        // For a fresh launch, kick off the load right away. For resume, only
+        // load once the snapshot has decoded successfully (so a corrupt resume
+        // bails out fast instead of loading content unnecessarily).
+        if (resumeSessionId == null || resumeResult is Result.Success) {
+            value = repository.loadCase(CaseId(targetCaseId), payloadValidator)
+        }
+    }
+
+    when {
+        resumeSessionId != null && resumeResult is Result.Failure -> ErrorScreen(
+            error = (resumeResult as Result.Failure).error,
+            onBack = onBackToLibrary,
             modifier = modifier,
         )
+        caseResult == null -> LoadingScreen(modifier)
+        caseResult is Result.Failure -> ErrorScreen(
+            error = (caseResult as Result.Failure).error,
+            onBack = onBackToLibrary,
+            modifier = modifier,
+        )
+        else -> {
+            val case = (caseResult as Result.Success).data
+            val resumed = (resumeResult as? Result.Success)?.data
+            if (resumed != null) {
+                SessionDrivenFlow(
+                    case = case,
+                    modeId = resumed.state.public.modeId,
+                    players = resumed.state.players,
+                    onBackToLibrary = onBackToLibrary,
+                    restoredState = resumed.state,
+                    restoredSessionId = resumed.sessionId,
+                    modifier = modifier,
+                )
+            } else {
+                ConfiguredFlow(
+                    case = case,
+                    onBackToLibrary = onBackToLibrary,
+                    modifier = modifier,
+                )
+            }
+        }
     }
+}
+
+/** Result of decoding a persisted snapshot: ready to feed into `SessionDrivenFlow`. */
+private data class ResumedSession(
+    val sessionId: SessionId,
+    val state: WhodunitState,
+)
+
+private suspend fun loadResumedSession(
+    snapshotStore: SnapshotStore,
+    definition: WhodunitDefinition,
+    sessionId: SessionId,
+): Result<ResumedSession, DataError> = when (val loaded = snapshotStore.load(sessionId)) {
+    is Result.Failure -> Result.Failure(loaded.error)
+    is Result.Success -> runCatching {
+        val state = definition.snapshotCodec().decode(loaded.data.payload)
+        Result.Success(ResumedSession(sessionId, state))
+    }.getOrElse { Result.Failure(DataError.CorruptedData) }
 }
 
 // ============================================================================= Loading / Error ==
@@ -222,20 +293,23 @@ private fun SessionDrivenFlow(
     players: List<Player>,
     onBackToLibrary: () -> Unit,
     modifier: Modifier = Modifier,
+    restoredState: WhodunitState? = null,
+    restoredSessionId: SessionId? = null,
 ) {
     val clock: Clock = koinInject()
     val definition: WhodunitDefinition = koinInject()
-    val snapshotStore: com.parlor.storage.snapshot.SnapshotStore = koinInject()
+    val snapshotStore: SnapshotStore = koinInject()
     val scope = rememberCoroutineScope()
 
-    // Generate one seed for the whole session; AssignRoles re-uses it.
-    val seed = remember(case.envelope.caseId, modeId, players) {
-        RandomSource.system().nextLong()
+    // Seed source: restored snapshot wins so the resumed random stream picks
+    // up where it left off. Fresh sessions get a system-random seed.
+    val seed = remember(case.envelope.caseId, modeId, players, restoredState) {
+        restoredState?.hostOnly?.randomSeed ?: RandomSource.system().nextLong()
     }
 
-    val sessionConfig = remember(case.envelope.caseId, modeId, players, seed) {
+    val sessionConfig = remember(case.envelope.caseId, modeId, players, seed, restoredSessionId) {
         SessionConfig(
-            sessionId = SessionId("local-${seed.toString(16)}"),
+            sessionId = restoredSessionId ?: SessionId("local-${seed.toString(16)}"),
             caseId = CaseId(case.envelope.caseId),
             modeId = modeId,
             players = players,
@@ -243,7 +317,7 @@ private fun SessionDrivenFlow(
         )
     }
 
-    val session = remember(sessionConfig) {
+    val session = remember(sessionConfig, restoredState) {
         val ctx = WhodunitReducerContext(
             clock = clock,
             random = RandomSource.seeded(seed),
@@ -254,6 +328,7 @@ private fun SessionDrivenFlow(
             config = sessionConfig,
             reducerContext = ctx,
             scope = scope,
+            restoredState = restoredState,
         )
     }
 
