@@ -6,6 +6,7 @@ import com.parlor.core.time.SystemClock
 import com.parlor.games.whodunit.di.whodunitModule
 import com.parlor.storage.settings.InMemorySettingsStore
 import com.parlor.storage.settings.SettingsStore
+import kotlinx.serialization.json.Json
 import org.koin.core.module.Module
 import org.koin.dsl.module
 
@@ -25,6 +26,15 @@ val coreModule: Module = module {
     single<Clock> { SystemClock }
     single<RandomSource> { RandomSource.system() }
     single<SettingsStore> { InMemorySettingsStore() }
+    // Strict JSON for content validation: unknown fields in case payloads must
+    // fail validation rather than be silently dropped (ARCHITECTURE.md §8.4).
+    single<Json> {
+        Json {
+            ignoreUnknownKeys = false
+            isLenient = false
+            encodeDefaults = true
+        }
+    }
 }
 
 val allModules: List<Module> = listOf(

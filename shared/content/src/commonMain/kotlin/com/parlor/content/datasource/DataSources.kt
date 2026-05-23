@@ -23,7 +23,11 @@ interface RemoteCaseDataSource {
 }
 
 interface BundledFallbackCaseDataSource {
-    fun availableCases(): List<CaseSummary>
+    /**
+     * Suspending because the bundled JSON is held in Compose Multiplatform
+     * resources (`Res.readBytes(...)` is a suspending API across all targets).
+     */
+    suspend fun availableCases(): List<CaseSummary>
     suspend fun loadBundled(id: CaseId): CaseEnvelope?
 }
 

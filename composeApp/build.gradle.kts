@@ -98,8 +98,8 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
-    // Bundle case JSON drafts as Android assets for the bundled fallback path.
-    sourceSets["main"].assets.srcDir(rootProject.file("content"))
+    // Case JSON lives inside the Whodunit module's Compose Multiplatform
+    // resources, not in app-level Android assets. See game-modes/whodunit/.
 }
 
 // Compose Multiplatform resources for shell strings (Home, settings, etc.).

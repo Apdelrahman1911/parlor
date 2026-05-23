@@ -33,14 +33,10 @@ kotlin {
     }
 }
 
-// Bundle the case JSON as a resource so the BundledFallbackCaseDataSource
-// can resolve it without filesystem access at runtime.
-android {
-    sourceSets["main"].assets.srcDir(rootProject.file("content"))
-}
-
-// Compose Multiplatform resources — generated `Res` accessor lives at this package
-// (instead of the auto-derived name) so call sites read cleanly.
+// Compose Multiplatform resources — bundled case JSON lives once under
+// commonMain/composeResources/files/cases/<id>.json and is loaded uniformly
+// across Android/iOS/Desktop via `Res.readBytes(...)`. The generated `Res`
+// accessor is exposed at this package so call sites read cleanly.
 compose.resources {
     publicResClass = true
     packageOfResClass = "com.parlor.games.whodunit.resources"

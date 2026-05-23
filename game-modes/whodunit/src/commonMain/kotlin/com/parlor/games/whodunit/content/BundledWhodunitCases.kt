@@ -1,47 +1,72 @@
 package com.parlor.games.whodunit.content
 
 import com.parlor.content.datasource.BundledFallbackCaseDataSource
-import com.parlor.content.schema.CaseSummary
 import com.parlor.content.schema.CaseEnvelope
+import com.parlor.content.schema.CaseSummary
 import com.parlor.core.ids.CaseId
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.json.Json
 
 /**
- * The bundled-fallback data source for Whodunit. Reads JSON content from a
- * map supplied at construction time — each platform (`androidMain` /
- * `iosMain` / `desktopMain`) populates the map by loading from its native
- * resource path.
+ * The bundled-fallback data source for Whodunit. Reads case JSON from Compose
+ * Multiplatform's shared resources (`composeResources/files/cases/<id>.json`)
+ * — one source of truth, no per-platform duplication. The reader lambda is
+ * injected so this class stays unit-testable.
  *
  * Per ARCHITECTURE.md §8: the bundled case is *not* an inline data class; the
  * JSON flows through the same validator as any remote case.
  */
 class BundledWhodunitCases(
-    private val rawJsonByCaseId: Map<String, String>,
+    /** Case ids whose JSON files exist under `composeResources/files/cases/`. */
+    private val knownCaseIds: List<String>,
+    /**
+     * Loads the raw JSON for a case id. Typically wired to
+     * `Res.readBytes("files/cases/$id.json").decodeToString()`. Returns null
+     * if the resource is missing.
+     */
+    private val loadJson: suspend (caseId: String) -> String?,
     private val json: Json,
 ) : BundledFallbackCaseDataSource {
 
-    private val envelopes: Map<String, CaseEnvelope> by lazy {
-        rawJsonByCaseId.mapValues { (_, raw) ->
-            json.decodeFromString(CaseEnvelope.serializer(), raw)
+    private val mutex = Mutex()
+    private var envelopes: Map<String, CaseEnvelope>? = null
+
+    override suspend fun availableCases(): List<CaseSummary> =
+        loadEnvelopesOnce().values.map { it.toSummary() }
+
+    override suspend fun loadBundled(id: CaseId): CaseEnvelope? =
+        loadEnvelopesOnce()[id.raw]
+
+    private suspend fun loadEnvelopesOnce(): Map<String, CaseEnvelope> = mutex.withLock {
+        envelopes?.let { return@withLock it }
+        val loaded = mutableMapOf<String, CaseEnvelope>()
+        for (id in knownCaseIds) {
+            val raw = loadJson(id) ?: continue
+            try {
+                loaded[id] = json.decodeFromString(CaseEnvelope.serializer(), raw)
+            } catch (_: Throwable) {
+                // A malformed bundle is a build bug, not a runtime case. The
+                // repository's bundled fallback will simply not surface this
+                // id; the validator would otherwise reject it downstream.
+            }
         }
+        envelopes = loaded
+        loaded
     }
-
-    override fun availableCases(): List<CaseSummary> = envelopes.values.map { env ->
-        CaseSummary(
-            caseId = env.caseId,
-            title = env.title,
-            subtitle = env.subtitle,
-            version = env.version,
-            gameId = env.gameId,
-            supportedPlayerCounts = env.supportedPlayerCounts,
-            supportedModes = env.supportedModes,
-            language = env.language,
-            theme = env.theme,
-            estimatedDuration = env.estimatedDuration,
-            minimumAppVersion = env.minimumAppVersion,
-            coverArtUrl = null,
-        )
-    }
-
-    override suspend fun loadBundled(id: CaseId): CaseEnvelope? = envelopes[id.raw]
 }
+
+private fun CaseEnvelope.toSummary() = CaseSummary(
+    caseId = caseId,
+    title = title,
+    subtitle = subtitle,
+    version = version,
+    gameId = gameId,
+    supportedPlayerCounts = supportedPlayerCounts,
+    supportedModes = supportedModes,
+    language = language,
+    theme = theme,
+    estimatedDuration = estimatedDuration,
+    minimumAppVersion = minimumAppVersion,
+    coverArtUrl = null,
+)
