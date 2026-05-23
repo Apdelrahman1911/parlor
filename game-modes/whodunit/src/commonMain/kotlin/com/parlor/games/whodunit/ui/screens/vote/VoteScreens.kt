@@ -26,10 +26,10 @@ import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.whodunit.resources.Res
 import com.parlor.games.whodunit.resources.reveal_handoff_subtitle
 import com.parlor.games.whodunit.resources.reveal_handoff_title_format
-import com.parlor.games.whodunit.resources.vote_ballot_abstain
-import com.parlor.games.whodunit.resources.vote_ballot_abstain_description
 import com.parlor.games.whodunit.resources.vote_ballot_headline_format
 import com.parlor.games.whodunit.resources.vote_ballot_instruction
+import com.parlor.games.whodunit.resources.vote_ballot_refuse
+import com.parlor.games.whodunit.resources.vote_ballot_refuse_description
 import com.parlor.games.whodunit.resources.vote_tied_begin_revote
 import com.parlor.games.whodunit.resources.vote_tied_begin_revote_description
 import com.parlor.games.whodunit.resources.vote_tied_body
@@ -37,12 +37,17 @@ import com.parlor.games.whodunit.resources.vote_tied_eyebrow
 import com.parlor.games.whodunit.ui.components.CandlelitCover
 import org.jetbrains.compose.resources.stringResource
 
+/**
+ * Vote ballot. [onRefuse] is Phase 6.3's *refuse-to-vote* affordance — tally-
+ * equivalent to abstain but UI-distinct so players who actively decline to
+ * participate aren't conflated with players who simply have no opinion.
+ */
 @Composable
 fun VoteBallotScreen(
     currentVoterName: String,
     candidates: List<Pair<PlayerId, String>>,
     onVote: (PlayerId) -> Unit,
-    onAbstain: () -> Unit,
+    onRefuse: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
@@ -71,9 +76,9 @@ fun VoteBallotScreen(
             }
             Spacer(Modifier.height(ParlorTheme.spacing.l))
             ParlorButton(
-                label = stringResource(Res.string.vote_ballot_abstain),
-                contentDescription = stringResource(Res.string.vote_ballot_abstain_description),
-                onClick = onAbstain,
+                label = stringResource(Res.string.vote_ballot_refuse),
+                contentDescription = stringResource(Res.string.vote_ballot_refuse_description),
+                onClick = onRefuse,
                 modifier = Modifier.fillMaxWidth(),
             )
         }

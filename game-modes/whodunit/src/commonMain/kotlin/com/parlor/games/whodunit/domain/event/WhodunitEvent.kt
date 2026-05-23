@@ -25,6 +25,8 @@ sealed interface WhodunitEvent : GameEvent {
     // Voting (Phase 5)
     data object VoteOpened : WhodunitEvent
     data class VoteCast(val voter: PlayerId, val target: PlayerId) : WhodunitEvent
+    /** A voter declined to vote via the *refuse* button (player protest). */
+    data class VoteRefused(val voter: PlayerId) : WhodunitEvent
     data class VoteTallied(val totals: Map<PlayerId, Int>) : WhodunitEvent
     data class VoteTied(val tiedPlayerIds: List<PlayerId>) : WhodunitEvent
 

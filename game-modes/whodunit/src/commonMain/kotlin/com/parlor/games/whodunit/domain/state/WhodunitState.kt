@@ -36,6 +36,15 @@ data class WhodunitPublic(
     val voteState: VoteState = VoteState.Idle,
     val briefingCardIndex: Int = 0,
     val timer: PublicTimerState? = null,
+    /**
+     * Session-wide pause. Distinct from `timer.paused`, which only affects the
+     * discussion ticker. While `paused == true` the reducer ignores
+     * `TimerTicked` and the UI renders a pause overlay on top of whatever
+     * phase the players were in. The flag is part of public state so it
+     * survives serialization — a snapshot persisted while paused resumes
+     * paused.
+     */
+    val paused: Boolean = false,
 )
 
 /** Per-player private — visible only to the owning player. */

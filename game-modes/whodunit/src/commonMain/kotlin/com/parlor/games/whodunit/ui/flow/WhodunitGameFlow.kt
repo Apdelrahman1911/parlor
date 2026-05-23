@@ -1,12 +1,18 @@
 package com.parlor.games.whodunit.ui.flow
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -56,6 +62,10 @@ import com.parlor.games.whodunit.ui.screens.reveal.RevealStageScreen
 import com.parlor.games.whodunit.ui.screens.round.ClueRevealScreen
 import com.parlor.games.whodunit.ui.screens.round.DiscussionScreen
 import com.parlor.games.whodunit.ui.screens.round.RoundTitleCardScreen
+import com.parlor.games.whodunit.ui.screens.safety.PauseOverlay
+import com.parlor.games.whodunit.resources.Res
+import com.parlor.games.whodunit.resources.pause_open_description
+import org.jetbrains.compose.resources.stringResource
 import com.parlor.games.whodunit.ui.screens.setup.ModeSelectionScreen
 import com.parlor.games.whodunit.ui.screens.setup.PlayerCountDisplayStrategy
 import com.parlor.games.whodunit.ui.screens.setup.PlayerCountScreen
@@ -345,28 +355,33 @@ private fun SessionDrivenFlow(
 
     // Phase 6.1 snapshot writer: persist the canonical (host) state on every
     // PhaseEntered so the game can be resumed after process death. PostGame
-    // deletes the snapshot — game is over, nothing to resume. Phase 6.2 wires
-    // the cold-start resume prompt.
+    // deletes the snapshot — game is over, nothing to resume.
+    //
+    // Phase 6.3 adds an eager write on PauseEngaged so a quick pause-then-crash
+    // doesn't lose recent un-phase-transitioning actions (e.g., briefing-card
+    // taps that don't change the phase).
     LaunchedEffect(session) {
         val codec = definition.snapshotCodec()
         @Suppress("UNCHECKED_CAST")
         val events = session.events as SharedFlow<WhodunitEvent>
         events.collect { event ->
-            if (event !is WhodunitEvent.PhaseEntered) return@collect
             val canonicalState = session.hostState?.value?.state ?: return@collect
-            if (event.phase is WhodunitPhase.PostGame) {
-                snapshotStore.delete(sessionConfig.sessionId)
-            } else {
-                snapshotStore.save(
-                    com.parlor.engine.snapshot.GameSnapshot(
-                        sessionId = sessionConfig.sessionId,
-                        gameId = WhodunitIds.GameId,
-                        engineVersion = ENGINE_VERSION,
-                        createdAt = clock.now(),
-                        phaseId = canonicalState.phase.id,
-                        payload = codec.encode(canonicalState),
-                    ),
-                )
+            when {
+                event is WhodunitEvent.PhaseEntered && event.phase is WhodunitPhase.PostGame -> {
+                    snapshotStore.delete(sessionConfig.sessionId)
+                }
+                event is WhodunitEvent.PhaseEntered || event == WhodunitEvent.PauseEngaged -> {
+                    snapshotStore.save(
+                        com.parlor.engine.snapshot.GameSnapshot(
+                            sessionId = sessionConfig.sessionId,
+                            gameId = WhodunitIds.GameId,
+                            engineVersion = ENGINE_VERSION,
+                            createdAt = clock.now(),
+                            phaseId = canonicalState.phase.id,
+                            payload = codec.encode(canonicalState),
+                        ),
+                    )
+                }
             }
         }
     }
@@ -382,7 +397,90 @@ private fun SessionDrivenFlow(
         }
     }
 
-    when (val phase = state.phase) {
+    Box(modifier = modifier.fillMaxSize()) {
+        PhaseRouter(
+            phase = state.phase,
+            state = state,
+            case = case,
+            payload = payload,
+            session = session,
+            scope = scope,
+            verdict = verdict,
+            onVerdictClear = { verdict = null },
+            onBackToLibrary = onBackToLibrary,
+            modifier = Modifier.fillMaxSize(),
+        )
+
+        // Pause chrome — visible on every in-game screen except during the
+        // overlay itself. Tapping it submits the Pause action; the reducer
+        // flips public.paused, the snapshot writer fires on PauseEngaged.
+        if (!state.public.paused && state.phase !is WhodunitPhase.PostGame) {
+            PauseAffordance(
+                onPause = { scope.launch { session.submit(WhodunitAction.Pause) } },
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(ParlorTheme.spacing.m),
+            )
+        }
+
+        if (state.public.paused) {
+            PauseOverlay(
+                onResume = { scope.launch { session.submit(WhodunitAction.Resume) } },
+                onResumeLater = {
+                    // Snapshot was already written on PauseEngaged; just leave.
+                    onBackToLibrary()
+                },
+                onEndNow = {
+                    scope.launch {
+                        snapshotStore.delete(sessionConfig.sessionId)
+                        onBackToLibrary()
+                    }
+                },
+            )
+        }
+    }
+}
+
+@Composable
+private fun PauseAffordance(
+    onPause: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val openDescription = stringResource(Res.string.pause_open_description)
+    Box(
+        modifier = modifier
+            .size(48.dp)
+            .semantics { contentDescription = openDescription }
+            .clickable(onClick = onPause),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = "II",
+            style = ParlorTheme.typography.labelSmall,
+            color = ParlorTheme.colors.accentEmber,
+            textAlign = TextAlign.Center,
+        )
+    }
+}
+
+/**
+ * Pure phase-to-screen routing extracted from [SessionDrivenFlow] so the pause
+ * chrome and overlay can sit cleanly on top in a single Box.
+ */
+@Composable
+private fun PhaseRouter(
+    phase: WhodunitPhase,
+    state: WhodunitState,
+    case: ValidatedCase<WhodunitCase>,
+    payload: WhodunitCase,
+    session: PassAndPlaySessionController<WhodunitState, WhodunitAction, WhodunitEvent>,
+    scope: kotlinx.coroutines.CoroutineScope,
+    verdict: Verdict?,
+    onVerdictClear: () -> Unit,
+    onBackToLibrary: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    when (phase) {
         is WhodunitPhase.Setup -> LoadingScreen(modifier)
         is WhodunitPhase.PublicIntro -> PublicIntroScreen(
             title = case.envelope.title,
@@ -436,7 +534,7 @@ private fun SessionDrivenFlow(
         )
         is WhodunitPhase.PostGame -> PostGameScreen(
             onReplaySameCase = {
-                verdict = null
+                onVerdictClear()
                 scope.launch { session.submit(WhodunitAction.BeginReplay) }
             },
             onTryOtherMode = onBackToLibrary,
@@ -671,9 +769,9 @@ private fun VoteSegment(
                     ballotOpen = false
                 }
             },
-            onAbstain = {
+            onRefuse = {
                 scope.launch {
-                    session.submit(WhodunitAction.AbstainVote(nextVoter))
+                    session.submit(WhodunitAction.RefuseToVote(nextVoter))
                     ballotOpen = false
                 }
             },

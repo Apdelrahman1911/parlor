@@ -34,6 +34,13 @@ sealed interface WhodunitAction : GameAction {
     data object OpenVote : WhodunitAction
     data class CastVote(val voter: PlayerId, val target: PlayerId) : WhodunitAction
     data class AbstainVote(val voter: PlayerId) : WhodunitAction
+    /**
+     * Player-facing intent to skip the ballot. Tally-equivalent to
+     * [AbstainVote] (the voter contributes no count), but the reducer emits
+     * a distinct `VoteRefused` event so the UI / telemetry can distinguish
+     * a deliberate protest from a no-opinion abstention.
+     */
+    data class RefuseToVote(val voter: PlayerId) : WhodunitAction
     data object CloseVote : WhodunitAction
     data object AcknowledgeRevealCard : WhodunitAction
 

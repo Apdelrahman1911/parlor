@@ -58,15 +58,16 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
             // Voting (Phase 5)
             WhodunitAction.OpenVote -> openVote(state)
             is WhodunitAction.CastVote -> castVote(state, action.voter, action.target)
-            is WhodunitAction.AbstainVote -> abstainVote(state, action.voter)
+            is WhodunitAction.AbstainVote -> abstainVote(state, action.voter, refused = false)
+            is WhodunitAction.RefuseToVote -> abstainVote(state, action.voter, refused = true)
             WhodunitAction.CloseVote -> closeVote(state)
             WhodunitAction.AcknowledgeRevealCard -> Reduction(state)
             WhodunitAction.AcknowledgeReveal -> advance(state, WhodunitPhase.PostGame)
             WhodunitAction.BeginReplay -> beginReplay(state, wctx)
 
             // Safety (Phase 6)
-            WhodunitAction.Pause -> Reduction(state, listOf(WhodunitEvent.PauseEngaged))
-            WhodunitAction.Resume -> Reduction(state, listOf(WhodunitEvent.PauseLifted))
+            WhodunitAction.Pause -> pauseSession(state)
+            WhodunitAction.Resume -> resumeSession(state)
             is WhodunitAction.EndGameEarly -> endGameEarly(state, action.withReveal)
             WhodunitAction.RequestReroll -> reroll(state, wctx)
         }
@@ -252,7 +253,13 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
     }
 
     private fun timerTicked(state: WhodunitState, remaining: Int): Reduction<WhodunitState, WhodunitEvent> {
+        // Session pause and per-timer pause both freeze the timer — a tick
+        // arriving while either flag is set is a no-op (the ticker coroutine
+        // races with the pause action and we don't want stale ticks to slip
+        // through after the user has paused).
+        if (state.public.paused) return Reduction(state)
         val t = state.public.timer ?: return Reduction(state)
+        if (t.paused) return Reduction(state)
         val clamped = remaining.coerceAtLeast(0)
         val newT = t.copy(remainingSeconds = clamped)
         val events = mutableListOf<WhodunitEvent>()
@@ -325,14 +332,24 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
         )
     }
 
-    private fun abstainVote(state: WhodunitState, voter: PlayerId): Reduction<WhodunitState, WhodunitEvent> {
+    /**
+     * Abstain/refuse share tally semantics: the voter contributes no count and
+     * the ballot pointer advances. Refusal additionally emits [WhodunitEvent.VoteRefused]
+     * so UI / telemetry can distinguish "no opinion" from "protest."
+     */
+    private fun abstainVote(
+        state: WhodunitState,
+        voter: PlayerId,
+        refused: Boolean,
+    ): Reduction<WhodunitState, WhodunitEvent> {
         val vote = state.public.voteState as? VoteState.Collecting ?: return Reduction(state)
         if (voter !in vote.ballotPlayerIds) return Reduction(state)
         val advanced = vote.copy(
             abstained = vote.abstained + voter,
             currentVoterIndex = vote.currentVoterIndex + 1,
         )
-        return Reduction(state.copy(public = state.public.copy(voteState = advanced)))
+        val events: List<WhodunitEvent> = if (refused) listOf(WhodunitEvent.VoteRefused(voter)) else emptyList()
+        return Reduction(state.copy(public = state.public.copy(voteState = advanced)), events)
     }
 
     private fun closeVote(state: WhodunitState): Reduction<WhodunitState, WhodunitEvent> {
@@ -503,6 +520,7 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
                 voteState = VoteState.Idle,
                 briefingCardIndex = 0,
                 timer = null,
+                paused = false,
             ),
             privatePerPlayer = emptyMap(),
             phase = WhodunitPhase.Setup,
@@ -511,6 +529,29 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
     }
 
     // ====================================================================== Safety (P6) ==
+
+    /**
+     * Session-wide pause. Flips [WhodunitPublic.paused] and freezes any active
+     * discussion timer. A snapshot persisted now resumes paused — the resume
+     * UX renders the pause overlay until the player explicitly continues.
+     */
+    private fun pauseSession(state: WhodunitState): Reduction<WhodunitState, WhodunitEvent> {
+        if (state.public.paused) return Reduction(state)
+        val frozenTimer = state.public.timer?.copy(paused = true)
+        return Reduction(
+            state.copy(public = state.public.copy(paused = true, timer = frozenTimer)),
+            listOf(WhodunitEvent.PauseEngaged),
+        )
+    }
+
+    private fun resumeSession(state: WhodunitState): Reduction<WhodunitState, WhodunitEvent> {
+        if (!state.public.paused) return Reduction(state)
+        val unfrozenTimer = state.public.timer?.copy(paused = false)
+        return Reduction(
+            state.copy(public = state.public.copy(paused = false, timer = unfrozenTimer)),
+            listOf(WhodunitEvent.PauseLifted),
+        )
+    }
 
     private fun endGameEarly(state: WhodunitState, withReveal: Boolean): Reduction<WhodunitState, WhodunitEvent> {
         return if (withReveal) {
