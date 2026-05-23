@@ -1,4 +1,4 @@
-package com.parlor.engine.reducer
+package com.parlor.engine.testing.reducer
 
 import assertk.assertThat
 import assertk.assertions.containsExactly
@@ -11,18 +11,20 @@ import com.parlor.core.ids.PlayerId
 import com.parlor.core.ids.SessionId
 import com.parlor.core.random.RandomSource
 import com.parlor.core.time.FakeClock
-import com.parlor.engine.fakes.RoundRobinAnnounceGame
-import com.parlor.engine.fakes.RrAction
-import com.parlor.engine.fakes.RrEvent
-import com.parlor.engine.fakes.RrPhase
+import com.parlor.engine.reducer.DefaultReducerContext
 import com.parlor.engine.session.SessionConfig
 import com.parlor.engine.state.Player
+import com.parlor.engine.testing.fakes.RoundRobinAnnounceGame
+import com.parlor.engine.testing.fakes.RrAction
+import com.parlor.engine.testing.fakes.RrEvent
+import com.parlor.engine.testing.fakes.RrPhase
 import kotlinx.datetime.Instant
 import kotlin.test.Test
 
 /**
  * Engine smoke test: a trivial test game runs end-to-end through the reducer
- * with phase transitions and event emission.
+ * with phase transitions and event emission. Lives in :shared:engine-testing
+ * so the fakes it depends on don't create a project cycle back to engine.
  */
 class ReducerSmokeTest {
 
@@ -62,14 +64,13 @@ class ReducerSmokeTest {
         assertThat(state.announcedBy).containsExactly(
             PlayerId("p1"), PlayerId("p2"), PlayerId("p3"),
         )
-        assertThat(allEvents).hasSize(4)  // three PlayerAnnounced + one SessionEnded
+        assertThat(allEvents).hasSize(4)
         assertThat(allEvents.last()).isInstanceOf(RrEvent.SessionEnded::class)
     }
 
     @Test
     fun out_of_turn_announcement_is_rejected() {
         val state = initialState()
-        // Bob tries to go first; expected seat is Alice.
         val reduction = reducer.reduce(state, RrAction.Announce(PlayerId("p2")), ctx)
         assertThat(reduction.newState).isEqualTo(state)
         assertThat(reduction.events).hasSize(0)

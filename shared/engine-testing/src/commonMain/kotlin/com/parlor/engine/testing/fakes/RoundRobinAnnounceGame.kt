@@ -1,4 +1,4 @@
-package com.parlor.engine.fakes
+package com.parlor.engine.testing.fakes
 
 import com.parlor.core.ids.GameId
 import com.parlor.core.ids.ModeId
@@ -29,6 +29,10 @@ import kotlin.time.Duration.Companion.minutes
  * the last seat the game ends. Exercises the entire engine contract surface
  * (Definition, Mode, State, Action, Event, Reducer, ProjectionPolicy, Snapshot)
  * without touching any Whodunit code.
+ *
+ * Lives in :shared:engine-testing — a dedicated test-fixtures module — so
+ * any module's test source set can depend on these fakes without pulling
+ * them into a production binary.
  */
 class RoundRobinAnnounceGame : GameDefinition<RrState, RrAction, RrEvent> {
     override val id: GameId = GameId("round-robin-test")
@@ -95,7 +99,6 @@ object RrReducer : GameReducer<RrState, RrAction, RrEvent>() {
         return when (action) {
             is RrAction.Announce -> {
                 if (action.by != expectedPlayer.id) {
-                    // Reject silently — out-of-turn announcement.
                     Reduction(state)
                 } else {
                     val nextSeat = phase.currentSeat + 1
@@ -129,7 +132,7 @@ object RrProjectionPolicy : ProjectionPolicy<RrState> {
     override fun toHost(state: RrState) = HostProjection(state)
 }
 
-/** Placeholder codec — Phase 3 uses kotlinx.serialization properly. */
+/** Placeholder codec — the real engine uses kotlinx.serialization. */
 object RrSnapshotCodec : SnapshotCodec<RrState> {
     override fun encode(state: RrState): ByteArray = state.toString().encodeToByteArray()
     override fun decode(payload: ByteArray): RrState =

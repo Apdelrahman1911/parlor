@@ -9,17 +9,16 @@ import com.parlor.core.ids.PlayerId
 import com.parlor.core.ids.SessionId
 import com.parlor.core.random.RandomSource
 import com.parlor.core.time.FakeClock
-import com.parlor.engine.fakes.RoundRobinAnnounceGame
-import com.parlor.engine.fakes.RrAction
-import com.parlor.engine.fakes.RrPhase
-import com.parlor.engine.fakes.RrState
+import com.parlor.engine.testing.fakes.RoundRobinAnnounceGame
+import com.parlor.engine.testing.fakes.RrAction
+import com.parlor.engine.testing.fakes.RrPhase
+import com.parlor.engine.testing.fakes.RrState
 import com.parlor.engine.reducer.DefaultReducerContext
 import com.parlor.engine.session.SessionConfig
 import com.parlor.engine.state.Player
 import com.parlor.session.passandplay.PassAndPlaySessionController
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.Instant
@@ -35,8 +34,15 @@ import kotlin.test.Test
  */
 class MultiDeviceShapeTest {
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun reducer_state_trajectory_matches_across_topologies() = runTest {
+        // Controllers expose `publicState` via `stateIn(scope, Eagerly, ...)`. With
+        // a StandardTestDispatcher we'd read stale cached values after submit();
+        // an UnconfinedTestDispatcher tied to the test scheduler runs collectors
+        // synchronously so the trajectory we record matches what the reducer just
+        // produced.
+        val controllerScope = CoroutineScope(UnconfinedTestDispatcher(testScheduler))
         val players = listOf(
             Player(PlayerId("p1"), "Alice", seat = 0),
             Player(PlayerId("p2"), "Bob", seat = 1),
@@ -56,7 +62,7 @@ class MultiDeviceShapeTest {
         )
 
         // Reference run: pass-and-play.
-        val passAndPlay = PassAndPlaySessionController(game, config, ctx, this.backgroundScope)
+        val passAndPlay = PassAndPlaySessionController(game, config, ctx, controllerScope)
         val passTrajectory = mutableListOf<RrState>()
         passTrajectory += passAndPlay.publicState.value.state
 
@@ -70,7 +76,7 @@ class MultiDeviceShapeTest {
         // canonical session. The shadow controller mirrors public state.
         val bus = InMemoryRoomBus()
         players.forEach { bus.registerPeer(it.id) }
-        val hostSession = PassAndPlaySessionController(game, config, ctx, this.backgroundScope)
+        val hostSession = PassAndPlaySessionController(game, config, ctx, controllerScope)
         val shadowsTrajectory = mutableListOf<RrState>()
         shadowsTrajectory += hostSession.publicState.value.state
 
