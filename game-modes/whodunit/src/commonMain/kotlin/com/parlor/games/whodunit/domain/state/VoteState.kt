@@ -20,13 +20,20 @@ sealed interface VoteState {
         val castSoFar: Map<PlayerId, PlayerId> = emptyMap(),
         val abstained: Set<PlayerId> = emptySet(),
         val currentVoterIndex: Int = 0,
+        /**
+         * True when this collection is the *revote* opened after a previous
+         * tie (i.e., `OpenVote` ran from a [Tied] state). The reducer reads
+         * this to decide whether a fresh tie should trigger the tied-twice
+         * outcome (killer wins in Classic; advance round in Elimination,
+         * per design doc §12 / §13).
+         */
+        val isSecondRound: Boolean = false,
     ) : VoteState
 
     @Serializable
     data class Tied(
         val tiedPlayerIds: List<PlayerId>,
         val debateSecondsRemaining: Int,
-        val secondRound: Boolean = false,
     ) : VoteState
 
     @Serializable

@@ -288,6 +288,9 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
 
     private fun openVote(state: WhodunitState): Reduction<WhodunitState, WhodunitEvent> {
         val isElimination = state.public.modeId == WhodunitIds.EliminationModeId
+        // If we're opening from a Tied state, this is the revote — preserve
+        // that marker forward so handleTie can apply the second-tie rule.
+        val isSecondRound = state.public.voteState is VoteState.Tied
         val survivors = state.public.playersAtTable.map { it.id } - state.public.eliminatedPlayers.toSet()
         val ballot = if (isElimination) survivors else state.public.playersAtTable.map { it.id }
         val vote = VoteState.Collecting(
@@ -296,6 +299,7 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
             castSoFar = emptyMap(),
             abstained = emptySet(),
             currentVoterIndex = 0,
+            isSecondRound = isSecondRound,
         )
         return Reduction(
             state.copy(public = state.public.copy(voteState = vote)),
@@ -345,22 +349,49 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
         val topTargets = tally.filterValues { it == maxCount }.keys.toList()
 
         return if (topTargets.size > 1) {
-            handleTie(state, topTargets, vote.isElimination)
+            handleTie(state, topTargets, vote.isElimination, vote.isSecondRound)
         } else {
             resolveVote(state, topTargets.first(), vote.isElimination, tally)
         }
     }
 
+    /**
+     * Resolve a tie outcome.
+     *
+     * The [isSecondRound] flag arrives from the current [VoteState.Collecting]
+     * — set true by [openVote] when it ran from a [VoteState.Tied] state.
+     * (Reading it from `voteState` here would not work: at close-time the
+     * voteState is `Collecting`, not `Tied`, so the previous reducer's
+     * `priorTied?.secondRound == true` was always false — the killer-wins /
+     * advance-round paths could never trigger.)
+     *
+     * Outcomes per design doc §12 / §13:
+     *  - First tie (any mode): debate window, transition to [WhodunitPhase.TiedRevote].
+     *  - Second tie, Classic: killer wins via [KillerWinCause.TieUnresolved].
+     *  - Second tie, Elimination: no one is eliminated, game proceeds to the
+     *    next round with `voteState = Idle`.
+     */
     private fun handleTie(
         state: WhodunitState,
         tied: List<PlayerId>,
         isElimination: Boolean,
+        isSecondRound: Boolean,
     ): Reduction<WhodunitState, WhodunitEvent> {
-        val priorTied = state.public.voteState as? VoteState.Tied
-        val isSecondRound = priorTied?.secondRound == true
         if (isSecondRound) {
             return if (isElimination) {
-                Reduction(state.copy(public = state.public.copy(voteState = VoteState.NoResolution("tied-twice"))))
+                val nextRoundIndex = state.public.currentRound + 1
+                val nextPhase = WhodunitPhase.Round(nextRoundIndex)
+                Reduction(
+                    state.copy(
+                        phase = nextPhase,
+                        public = state.public.copy(
+                            currentRound = nextRoundIndex,
+                            voteState = VoteState.Idle,
+                            timer = null,
+                        ),
+                    ),
+                    listOf(WhodunitEvent.PhaseEntered(nextPhase)),
+                )
             } else {
                 killerWins(state, KillerWinCause.TieUnresolved)
             }
