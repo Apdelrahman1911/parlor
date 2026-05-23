@@ -1,0 +1,54 @@
+package com.parlor.content.datasource
+
+import com.parlor.content.schema.CaseEnvelope
+import com.parlor.content.schema.CaseSummary
+import com.parlor.core.ids.CaseId
+import com.parlor.core.ids.GameId
+import com.parlor.core.result.NetworkError
+import com.parlor.core.result.Result
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.HttpRequestTimeoutException
+import io.ktor.client.plugins.ServerResponseException
+import io.ktor.client.request.get
+import io.ktor.http.HttpStatusCode
+import kotlinx.serialization.SerializationException
+
+/**
+ * Ktor-backed remote source. Dev builds inject an HttpClient with the
+ * MockEngine pointed at static JSON in-repo; production injects a real engine
+ * pointed at the case-management backend.
+ *
+ * Either way, this is the *only* content code path. No inline shortcut exists.
+ */
+class KtorRemoteCaseDataSource(
+    private val client: HttpClient,
+    private val baseUrl: String,
+) : RemoteCaseDataSource {
+
+    override suspend fun listCases(gameId: GameId): Result<List<CaseSummary>, NetworkError> = runCatching {
+        val response: List<CaseSummary> = client.get("$baseUrl/games/${gameId.raw}/cases").body()
+        Result.Success(response) as Result<List<CaseSummary>, NetworkError>
+    }.getOrElse { it.toNetworkErrorResult() }
+
+    override suspend fun fetchCase(id: CaseId): Result<CaseEnvelope, NetworkError> = runCatching {
+        val response: CaseEnvelope = client.get("$baseUrl/cases/${id.raw}").body()
+        Result.Success(response) as Result<CaseEnvelope, NetworkError>
+    }.getOrElse { it.toNetworkErrorResult() }
+
+    private fun <T> Throwable.toNetworkErrorResult(): Result<T, NetworkError> = when (this) {
+        is HttpRequestTimeoutException -> Result.Failure(NetworkError.Timeout)
+        is ClientRequestException -> {
+            val code = response.status.value
+            if (code == HttpStatusCode.Unauthorized.value) {
+                Result.Failure(NetworkError.Unauthorized)
+            } else {
+                Result.Failure(NetworkError.Server(code))
+            }
+        }
+        is ServerResponseException -> Result.Failure(NetworkError.Server(response.status.value))
+        is SerializationException -> Result.Failure(NetworkError.Serialization(message ?: "decode"))
+        else -> Result.Failure(NetworkError.Unknown(message))
+    }
+}

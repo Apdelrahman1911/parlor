@@ -1,0 +1,382 @@
+{
+  "schemaVersion": 1,
+  "caseId": "last-dinner",
+  "title": "The Last Dinner",
+  "subtitle": "A country-manor murder mystery.",
+  "version": "1.0.0",
+  "minimumAppVersion": "1.0.0",
+  "gameId": "whodunit",
+  "supportedPlayerCounts": [4, 6],
+  "supportedModes": ["classic-vote", "elimination"],
+  "language": "en",
+  "theme": "country-manor",
+  "estimatedDuration": [25, 35],
+  "metadata": {
+    "authors": ["Phase 0 draft — to be edited"],
+    "settingNotes": "A country estate. Rainy night. Road blocked at 9:00 p.m. Phones down. Police arrive in the morning."
+  },
+  "payload": {
+    "publicIntro": "It was meant to be a celebration. Seventy candles on the cake, six guests at the table, and the rain coming down outside in long gray sheets. Maxwell Hargrove sat at the head of his own table, raised his glass twice, gave a toast that insulted at least two of his guests, and excused himself at 9:15 to take his evening brandy alone in the study. He was not seen alive again. At 10:45, his wife found him slumped over his desk. The glass was empty. The brandy was poisoned. The road is blocked. The phones are down. The police will not arrive until morning. Six of you are in this house. One of you killed him. And by sunrise, you have to decide who.",
+    "bedrockClues": [
+      "Maxwell Hargrove, 70, was found dead in his study at 10:45 p.m., slumped over his desk.",
+      "Cause of death: poison in his evening brandy.",
+      "The poison was added between 8:30 p.m. and 9:30 p.m.",
+      "The household's daily heart medication, kept in the kitchen pantry, was the vehicle."
+    ],
+    "characters": [
+      {
+        "id": "eleanor-hargrove",
+        "displayName": "Eleanor Hargrove",
+        "relationshipToVictim": "Wife of 22 years.",
+        "publicIdentity": "Maxwell's wife of twenty-two years. Once a stage actress in London before she married him. Hosted tonight's dinner. Found the body.",
+        "publicMotive": "Maxwell was about to change the will against her.",
+        "privateSecret": "She is having an affair with Tomas, the gardener.",
+        "innocentBrief": {
+          "verdictLine": "You are innocent.",
+          "alibi": "I was in the greenhouse with Tomas from 8:50 to 9:25. I cannot say so without exposing him — and us.",
+          "goal": "Find the killer. Survive the vote. Don't get accused because of your affair.",
+          "canSayFreely": "How difficult Maxwell could be. The arguments over the will. The strain everyone saw.",
+          "mustHide": "Where you actually were from 8:50 to 9:25. The greenhouse. Tomas. Anything that explains the missing thirty-five minutes."
+        },
+        "guiltyBrief": {
+          "verdictLine": "You are the killer.",
+          "method": "On your way out of the dining room at 8:50, you detoured through the kitchen pantry. While Clara's back was turned, you added a fatal dose of Maxwell's medication to the brandy decanter she was about to carry to the study. Then you slipped out to meet Tomas.",
+          "timeline": [
+            { "time": "8:30 p.m.", "action": "At the table for the toast. Smile through it." },
+            { "time": "8:50 p.m.", "action": "Excuse yourself. Detour through the pantry. Add the dose to the decanter while Clara's back is turned." },
+            { "time": "8:55 p.m.", "action": "Out the side door, to the greenhouse. Tomas is waiting." },
+            { "time": "9:25 p.m.", "action": "Back inside through the side door. Rejoin the guests in the drawing room." },
+            { "time": "10:45 p.m.", "action": "Find the body. Scream." }
+          ],
+          "fakeAlibi": "I was in the greenhouse with Tomas from 8:50 to 9:25. He saw me the whole time. (True about the greenhouse. Omit the pantry detour entirely.)",
+          "deflectionTargets": ["vivienne-cross"],
+          "panicMove": "Pivot to the affair. Reveal it openly. Make pity outweigh suspicion. Cry if you must — you trained for this on a London stage.",
+          "actingTips": "Stage-actress poise. Smile through insults. Fidget with your wedding ring. Elegant, never angry. Never look at the brandy decanter."
+        },
+        "optionalDetails": {
+          "backstory": "Maxwell married you when you were the toast of a small West-End theatre. He bought your contract out from under your director, and you let him. You have not been on a stage since.",
+          "actingTips": "Posture is everything. Hold a glass like a prop. Pause before you answer; let the silence weigh.",
+          "emotionalMotivation": "Twenty-two years of performing the role of his wife. Tonight the role is finally over.",
+          "suggestedBehavior": "Volunteer warm anecdotes about Maxwell. Cry only when others stop talking. Be the host.",
+          "extraNightDetails": "Tomas pressed a small brass key into your hand when you parted. You haven't worked out which lock it fits."
+        }
+      },
+      {
+        "id": "daniel-hargrove",
+        "displayName": "Daniel Hargrove",
+        "relationshipToVictim": "Estranged son.",
+        "publicIdentity": "Maxwell's only son. Disowned six years ago after a public fight. Before dinner tonight, the two of you had a long private conversation in the study and emerged appearing to have reconciled. At the toast, Maxwell clinked his glass against yours and said the family had 'a great deal to discuss in the coming weeks.'",
+        "publicMotive": "Defused in public — but no one heard what was actually said in the study, and Maxwell's word on inheritance was famously unreliable.",
+        "privateSecret": "The 'reconciliation' was theatre. In private, Maxwell told you any future inheritance would come with humiliating public conditions — a confession of past failures, a probation, an apology to specific relatives. You left the study smiling for the room and furious underneath.",
+        "innocentBrief": {
+          "verdictLine": "You are innocent.",
+          "alibi": "I was in the library from 9:00 to 9:50, reading my mother's old letters. Clara passed in the hallway around 9:25 and would have seen me through the open door.",
+          "goal": "Find the killer. Don't let the room read your fury as guilt. Don't get framed by the lawyer.",
+          "canSayFreely": "Your difficult history with Maxwell. The reconciliation in the study before dinner. Your grief.",
+          "mustHide": "What Maxwell actually said in the study. How angry you really are. Your real opinion of the inheritance."
+        },
+        "guiltyBrief": {
+          "verdictLine": "You are the killer.",
+          "method": "After the study conversation at 8:45, instead of going straight to the library, you detoured through the kitchen pantry. You added a fatal dose of your father's heart medication to the brandy decanter Clara was about to carry up. You then walked to the library and made sure Clara saw you reading at 9:25.",
+          "timeline": [
+            { "time": "8:15 p.m.", "action": "Enter the study with Maxwell for the 'reconciliation.'" },
+            { "time": "8:40 p.m.", "action": "Leave the study. Smile for the room." },
+            { "time": "8:45 p.m.", "action": "Detour through the kitchen pantry. Clara's back is turned to the stove. Add the dose to the decanter." },
+            { "time": "8:50 p.m.", "action": "Into the library. Light the lamp at 9:10." },
+            { "time": "9:25 p.m.", "action": "Look up as Clara passes the door. Be seen reading." },
+            { "time": "10:45 p.m.", "action": "Be among the first to enter the study with Eleanor." }
+          ],
+          "fakeAlibi": "I was in the library from 9:00. Clara saw me at 9:25. I haven't moved.",
+          "deflectionTargets": ["vivienne-cross"],
+          "panicMove": "Lean on grief. 'My father and I made peace tonight. Whatever you think of me — I came here for this. Why would I kill him *now*?'",
+          "actingTips": "Composed in public. Contained. Surprise people when you speak. Mourn openly. Volunteer that the dinner went well."
+        },
+        "optionalDetails": {
+          "backstory": "Six years ago you stood up at a charity dinner and called your father a fraud in front of three hundred people. He paid the bill, walked out, and disowned you in the morning paper. Tonight was supposed to be the first step back.",
+          "actingTips": "Quiet relief on your face. Not joy — relief. A man who has been carrying a stone for six years and tonight set it down.",
+          "emotionalMotivation": "Beneath the calm: you cannot tell whether you wanted reconciliation or revenge. Both at once.",
+          "suggestedBehavior": "Volunteer warm memories of your mother. Steer the room toward Vivienne — she had a clearer financial motive and a less defensible window of time.",
+          "extraNightDetails": "You carried your mother's letters into the library. One page is missing from the bundle."
+        }
+      },
+      {
+        "id": "vivienne-cross",
+        "displayName": "Vivienne Cross",
+        "relationshipToVictim": "Family lawyer for 15 years.",
+        "publicIdentity": "Maxwell's lawyer for fifteen years. Keeper of his will and his contracts. Drinks more than she lets on. Sharp, ironic, talks fast.",
+        "publicMotive": "She had been quietly stealing money from Maxwell for years. He had recently begun asking questions. He summoned her tonight.",
+        "privateSecret": "Maxwell knew about the theft and told her two days ago he would 'decide her fate' tonight. She doesn't know what he meant.",
+        "innocentBrief": {
+          "verdictLine": "You are innocent.",
+          "alibi": "I was in the library, alone, from 9:10 to 9:50. No one saw me, but no one saw me leave the room either.",
+          "goal": "Find the killer. Don't get hung for the theft you actually did commit.",
+          "canSayFreely": "How difficult Maxwell could be as a client. The summons tonight. Your professional frustration.",
+          "mustHide": "The years of theft. What Maxwell said two days ago. Your fear of what he was about to do."
+        },
+        "guiltyBrief": {
+          "verdictLine": "You are the killer.",
+          "method": "Maxwell sent you into the study at 8:45 to fetch a document. On your way back through the kitchen, you stopped in the pantry, measured a fatal dose into the brandy decanter while Clara faced the stove, and continued upstairs as if you had only fetched the paper.",
+          "timeline": [
+            { "time": "8:45 p.m.", "action": "Maxwell asks you to fetch a document from the study desk." },
+            { "time": "8:48 p.m.", "action": "Back through the kitchen pantry. Clara is at the stove. Add the dose." },
+            { "time": "8:55 p.m.", "action": "Return with the document. Hand it to Maxwell." },
+            { "time": "9:10 p.m.", "action": "Settle into the library, alone. Burn one incriminating page in the fireplace." },
+            { "time": "10:45 p.m.", "action": "Be among those who rush to the study with Eleanor." }
+          ],
+          "fakeAlibi": "I went to the study at 8:45 to fetch a document for Maxwell, then to the library. I was alone in the library from 9:10.",
+          "deflectionTargets": ["daniel-hargrove"],
+          "panicMove": "Sharp counter-attack. 'You think I would do this with my career on the line? Look at the son who walked out of that study furious tonight and try again.'",
+          "actingTips": "Sharp, ironic, the calmest person in the room. Volunteer evidence freely — it makes you look fearless."
+        },
+        "optionalDetails": {
+          "backstory": "Fifteen years of small extractions: an inflated bill here, an inheritance trust there. You convinced yourself it was justified — Maxwell's wealth was inherited; yours was earned.",
+          "actingTips": "Talk fast. Use a lawyer's vocabulary. Lean on procedural language.",
+          "emotionalMotivation": "Beneath the irony: terror. You know what disbarment looks like. You know what prison looks like.",
+          "suggestedBehavior": "Build the case against Daniel piece by piece. He had access, motive, and the worst temper at this dinner.",
+          "extraNightDetails": "You have a small lighter in your jacket pocket. It is warm."
+        }
+      },
+      {
+        "id": "james-sutton",
+        "displayName": "James Sutton",
+        "relationshipToVictim": "Business partner of 20 years.",
+        "publicIdentity": "Maxwell's business partner for twenty years. Built the company while Maxwell played figurehead. Stiff, formal, hates being interrupted.",
+        "publicMotive": "Maxwell had been quietly negotiating to sell the company behind James's back. The sale would have ruined him.",
+        "privateSecret": "You had already gone into the study earlier this evening, at 7:30, to confront Maxwell about the sale. He laughed in your face.",
+        "innocentBrief": {
+          "verdictLine": "You are innocent.",
+          "alibi": "I was in the smoking room from 9:10 to 9:40. Alone. I had a cigar. I was thinking.",
+          "goal": "Find the killer. Don't get cornered for the 7:30 confrontation no one knows about.",
+          "canSayFreely": "How treacherous Maxwell could be in business. The general fact of the sale negotiations.",
+          "mustHide": "The 7:30 confrontation. The exact words Maxwell used. How completely he humiliated you."
+        },
+        "guiltyBrief": {
+          "verdictLine": "You are the killer.",
+          "method": "At 8:55 you left the after-dinner gathering 'for the bathroom.' You went instead through the kitchen pantry, added a fatal dose to the brandy decanter, and returned to the smoking room as if nothing had happened.",
+          "timeline": [
+            { "time": "7:30 p.m.", "action": "Confront Maxwell in the study. He laughs." },
+            { "time": "8:30 p.m.", "action": "At the table. Refuse to drink to the toast." },
+            { "time": "8:55 p.m.", "action": "'Bathroom.' Detour through the kitchen pantry. Add the dose." },
+            { "time": "9:00 p.m.", "action": "Smoking room. Light a cigar. Pretend to have been here longer." },
+            { "time": "10:45 p.m.", "action": "Be among the last to enter the study." }
+          ],
+          "fakeAlibi": "I was in the smoking room from 9:10. Alone, with a cigar. The ashtray will bear me out.",
+          "deflectionTargets": ["henry-vance"],
+          "panicMove": "Cold counter. 'I had twenty years with him. If I were going to kill him, I would have done it five years ago. Look at the doctor — Maxwell threatened him *tonight*.'",
+          "actingTips": "Stay cold. Businesslike. Hate being interrupted. Do not raise your voice; lawyers and lovers raise their voices."
+        },
+        "optionalDetails": {
+          "backstory": "You built the firm while Maxwell hosted the parties. When you discovered last month that he had been negotiating a sale that would cash him out and leave you to manage the wreckage, you stopped sleeping.",
+          "actingTips": "Sit straight. Cross your arms. Answer briefly. Treat the room like a board meeting.",
+          "emotionalMotivation": "Twenty years of indignity, compressed into one evening of cold patience.",
+          "suggestedBehavior": "Suggest the doctor. Suggest the wife. Suggest anyone with a sharper, fresher motive than yours.",
+          "extraNightDetails": "Your left cufflink is gone. You don't remember when you noticed."
+        }
+      },
+      {
+        "id": "clara-bell",
+        "displayName": "Clara Bell",
+        "relationshipToVictim": "Housekeeper for 30 years.",
+        "publicIdentity": "Has worked for the Hargroves for thirty years. Practically raised Daniel. Soft-spoken. Served the dinner.",
+        "publicMotive": "Maxwell told her two weeks ago she was being let go without a pension. She is working her final week.",
+        "privateSecret": "She has long believed Maxwell did something terrible decades ago. She has never told anyone.",
+        "innocentBrief": {
+          "verdictLine": "You are innocent.",
+          "alibi": "I was moving between the dining room, the kitchen, and the pantry all evening. I was where I always am.",
+          "goal": "Find the killer. Don't let your access become your conviction.",
+          "canSayFreely": "How long you have served. Your fondness for Daniel. Your concern about your pension.",
+          "mustHide": "What you suspect Maxwell did decades ago. The fact that you have always known about Eleanor and Tomas."
+        },
+        "guiltyBrief": {
+          "verdictLine": "You are the killer.",
+          "method": "You added a fatal dose of Maxwell's daily medication to the brandy decanter while preparing it in the kitchen pantry during dinner service. It looked like every other evening's routine. No one looked twice.",
+          "timeline": [
+            { "time": "8:00 p.m.", "action": "Serve the dinner." },
+            { "time": "8:30 p.m.", "action": "Withdraw to the kitchen during the toast." },
+            { "time": "8:35 p.m.", "action": "In the pantry, prepare the brandy decanter as you always do. Add the extra dose. Wipe the rim." },
+            { "time": "9:00 p.m.", "action": "Carry the decanter to the study. Set it on the desk. Withdraw." },
+            { "time": "11:00 p.m.", "action": "After the body is found, wash the decanter as part of your evening routine." }
+          ],
+          "fakeAlibi": "I was where I always am. The pantry, the dining room, the kitchen. I served the brandy as I have served it every evening for thirty years.",
+          "deflectionTargets": ["eleanor-hargrove"],
+          "panicMove": "Quietly: 'Maxwell did terrible things to people in this room. I have been silent for thirty years. Ask Eleanor where she really was tonight.'",
+          "actingTips": "Invisible servant. Helpful, never volunteer. See everything, say nothing. When pressed, gently suggest Eleanor's affair — the room will run with it."
+        },
+        "optionalDetails": {
+          "backstory": "Thirty years of doors, drawers, and small confidences. You raised Daniel when his mother could not bring herself to. Maxwell never thanked you for it.",
+          "actingTips": "Smooth your apron. Stand at the edge of the room. Speak gently. Look slightly past whoever is talking.",
+          "emotionalMotivation": "Thirty years of swallowed grievance, distilled into a single measured dose.",
+          "suggestedBehavior": "Volunteer evidence about Eleanor's affair if it seems useful. Defend Daniel loyally. Be small.",
+          "extraNightDetails": "Your apron pocket holds a folded scrap of paper torn from the household ledger. You do not remember tearing it."
+        }
+      },
+      {
+        "id": "henry-vance",
+        "displayName": "Dr. Henry Vance",
+        "relationshipToVictim": "Family doctor for 25 years.",
+        "publicIdentity": "Maxwell's personal doctor for twenty-five years. Prescribed Maxwell's daily heart medication years ago — kept in the kitchen pantry where Clara prepared it, taken with the after-dinner brandy. Everyone in the household knew the routine.",
+        "publicMotive": "Maxwell had recently discovered Henry was overprescribing medications to wealthy patients and pocketing the difference. Maxwell threatened, twice tonight, to 'settle the matter after dinner.'",
+        "privateSecret": "Henry has been overprescribing for years and recently began to fear that exposure would mean prison, not just professional ruin.",
+        "innocentBrief": {
+          "verdictLine": "You are innocent.",
+          "alibi": "I was in the smoking room from 9:15, then moved to the conservatory. Mostly alone. I spent the evening avoiding Maxwell.",
+          "goal": "Find the killer. Don't let the overprescription scheme — which you did, openly admit — sink you.",
+          "canSayFreely": "The overprescription. Confess it. Volunteer it. Let the room watch you tell on yourself.",
+          "mustHide": "How recently you understood it would mean prison. How much it has been on your mind tonight."
+        },
+        "guiltyBrief": {
+          "verdictLine": "You are the killer.",
+          "method": "At 8:50 you entered the kitchen on the pretext of getting a glass of water. In the pantry you measured a fatal extra dose from Maxwell's medication bottle and added it to the brandy decanter before Clara carried it up to the study.",
+          "timeline": [
+            { "time": "8:30 p.m.", "action": "At the table. Endure the toast." },
+            { "time": "8:50 p.m.", "action": "Into the kitchen 'for water.' Into the pantry. Measure. Add. Wipe." },
+            { "time": "8:55 p.m.", "action": "Back to the gathering. Hold the glass of water like a prop." },
+            { "time": "9:15 p.m.", "action": "Smoking room. Then conservatory. Avoid Maxwell entirely." },
+            { "time": "10:45 p.m.", "action": "Diagnose Maxwell's body. Confirm what you did." }
+          ],
+          "fakeAlibi": "I was in the smoking room from 9:15. I was avoiding him. He had threatened me at dinner and I wanted nothing to do with him.",
+          "deflectionTargets": ["clara-bell"],
+          "panicMove": "Confess to the overprescription openly. 'Yes, I did it. Yes, I am a coward. But Maxwell threatening me at dinner is a *reason to leave the room*, not a reason to murder a man. Clara handles those medications every day.'",
+          "actingTips": "Nervous, sycophantic, talks too much when drunk. Confess the overprescription unprompted. Bet that the honesty makes you look honest. Steer toward Clara, who handles the medicine cabinet daily."
+        },
+        "optionalDetails": {
+          "backstory": "Twenty-five years of small adjustments to prescriptions. Wealthy patients, wealthier kickbacks. You always told yourself the patients were fine. Most of them were.",
+          "actingTips": "Smile too much. Laugh at jokes that weren't jokes. Pour yourself an extra finger.",
+          "emotionalMotivation": "The slow, drinking-too-much realization tonight that Maxwell will, in the morning, end your life.",
+          "suggestedBehavior": "Get the overprescription out into the room early. Be its loudest accuser of yourself. Steer the conversation gently to Clara.",
+          "extraNightDetails": "Your handkerchief is missing. You haven't noticed yet."
+        }
+      }
+    ],
+    "cluePools": {
+      "publicUniversal": [
+        {
+          "id": "pu-brandy-poisoned",
+          "text": "The brandy in the study was poisoned. The medication used is the same kind Maxwell took every evening."
+        },
+        {
+          "id": "pu-window-of-time",
+          "text": "The poison was added to the brandy decanter sometime between 8:30 and 9:30 p.m."
+        }
+      ],
+      "killerPointing": {
+        "eleanor-hargrove": [
+          { "id": "kp-eleanor-1", "text": "Maxwell's medicine bottle was found in the kitchen pantry, half-empty. No one admits leaving it there." },
+          { "id": "kp-eleanor-2", "text": "The greenhouse door was unlocked at 9:00 p.m., when it should have been locked." },
+          { "id": "kp-eleanor-3", "text": "A wedding ring was briefly seen on the kitchen counter, then gone." },
+          { "id": "kp-eleanor-4", "text": "Eleanor's wrap, hung in the hall, smells faintly of brandy." }
+        ],
+        "daniel-hargrove": [
+          { "id": "kp-daniel-1", "text": "A page from his late mother's letters was found on the pantry counter, far from the library where he claimed to be reading." },
+          { "id": "kp-daniel-2", "text": "Maxwell's medicine bottle was found in the kitchen pantry, half-empty." },
+          { "id": "kp-daniel-3", "text": "A man's footprint near the pantry door, dried, matches Daniel's boots." },
+          { "id": "kp-daniel-4", "text": "The library lamp was off until 9:10 — fifteen minutes later than Daniel said he began reading." }
+        ],
+        "vivienne-cross": [
+          { "id": "kp-vivienne-1", "text": "A document with Maxwell's signature, dated tonight, was found half-burned in the study fireplace." },
+          { "id": "kp-vivienne-2", "text": "Maxwell's medicine bottle was found in the kitchen pantry, half-empty." },
+          { "id": "kp-vivienne-3", "text": "Vivienne was seen on the upper stairs at 8:50, earlier than her stated alibi." },
+          { "id": "kp-vivienne-4", "text": "The library fireplace was warm at 10:00 p.m. — recently used, in a room where no fire was lit." }
+        ],
+        "james-sutton": [
+          { "id": "kp-james-1", "text": "A second cufflink turned up on the kitchen pantry floor." },
+          { "id": "kp-james-2", "text": "Maxwell's medicine bottle was found in the kitchen pantry, half-empty." },
+          { "id": "kp-james-3", "text": "James was seen leaving the smoking room briefly at 8:55, 'for the bathroom.'" },
+          { "id": "kp-james-4", "text": "The smoking-room ashtray's cigar was unlit until 9:15." }
+        ],
+        "clara-bell": [
+          { "id": "kp-clara-1", "text": "The brandy decanter was washed clean before any investigation could examine it." },
+          { "id": "kp-clara-2", "text": "Maxwell's daily medication is missing more pills than the day's dose accounts for." },
+          { "id": "kp-clara-3", "text": "Clara's apron pocket carried a small fold of paper torn from the household ledger." },
+          { "id": "kp-clara-4", "text": "Clara was the only person continuously near the brandy decanter from dinner through the toast." }
+        ],
+        "henry-vance": [
+          { "id": "kp-henry-1", "text": "An empty glass in the kitchen — not from the brandy set — bore traces of medication powder." },
+          { "id": "kp-henry-2", "text": "Maxwell's medicine bottle was found in the kitchen pantry, half-empty." },
+          { "id": "kp-henry-3", "text": "Henry was seen entering the kitchen at 8:50, though he said he was in the smoking room." },
+          { "id": "kp-henry-4", "text": "A linen handkerchief, monogrammed H.V., was found in the pantry doorway." }
+        ]
+      },
+      "redHerring": {
+        "eleanor-hargrove": [
+          { "id": "rh-eleanor-1", "text": "Vivienne was overheard arguing with Maxwell two days ago: 'You will decide my fate tonight.'" },
+          { "id": "rh-eleanor-2", "text": "The library — where Vivienne said she was alone — has no witness for her presence from 9:10 to 9:50." }
+        ],
+        "daniel-hargrove": [
+          { "id": "rh-daniel-1", "text": "Vivienne's hands shook all evening; she emptied her glass three times." },
+          { "id": "rh-daniel-2", "text": "Vivienne entered the study before dinner and stayed for nine minutes alone." }
+        ],
+        "vivienne-cross": [
+          { "id": "rh-vivienne-1", "text": "Daniel's earlier conversation with Maxwell, in the study, was less peaceful than they performed at the toast." },
+          { "id": "rh-vivienne-2", "text": "Daniel was alone in the library — Clara's brief glance through the door does not cover the critical 8:45 minutes." }
+        ],
+        "james-sutton": [
+          { "id": "rh-james-1", "text": "Henry was seen putting a small vial into his pocket during dinner." },
+          { "id": "rh-james-2", "text": "Henry had threatened Maxwell openly about 'settling the matter after dinner.'" }
+        ],
+        "clara-bell": [
+          { "id": "rh-clara-1", "text": "Eleanor was missing from the dining room for thirty-five minutes during the critical window." },
+          { "id": "rh-clara-2", "text": "Eleanor lied about being in the kitchen." }
+        ],
+        "henry-vance": [
+          { "id": "rh-henry-1", "text": "Clara handles the household medicine cabinet daily; she knows the dosages exactly." },
+          { "id": "rh-henry-2", "text": "Clara was the only person continuously near the brandy decanter all evening." }
+        ]
+      },
+      "contradiction": {
+        "eleanor-hargrove": [
+          { "id": "co-eleanor-1", "text": "Eleanor said she was in the kitchen briefly. Two guests recall her walking away from the kitchen, not toward it." }
+        ],
+        "daniel-hargrove": [
+          { "id": "co-daniel-1", "text": "Daniel said he began reading in the library at 9:00. The library lamp was off until 9:10." }
+        ],
+        "vivienne-cross": [
+          { "id": "co-vivienne-1", "text": "Vivienne said she went upstairs at 9:10. The hallway lamp by the stairs was lit at 8:50." }
+        ],
+        "james-sutton": [
+          { "id": "co-james-1", "text": "James said he was in the smoking room from 9:10. The smoking-room cigar he claimed to be smoking was unlit until 9:15." }
+        ],
+        "clara-bell": [
+          { "id": "co-clara-1", "text": "Clara said she was in the dining room continuously after the toast. The brandy decanter sat unattended in the pantry from 8:45 to 8:55, and Clara was the only person assigned to it." }
+        ],
+        "henry-vance": [
+          { "id": "co-henry-1", "text": "Henry said he was avoiding Maxwell after dinner. A linen handkerchief with his monogram was found in the pantry doorway." }
+        ]
+      },
+      "finalStrong": {
+        "eleanor-hargrove": [
+          { "id": "fs-eleanor-1", "text": "A second set of footprints in the wet greenhouse path led back inside — but the muddy print on the kitchen pantry floor matches no man's shoe." },
+          { "id": "fs-eleanor-2", "text": "Tomas, asked privately by Clara, says Eleanor's breath smelled faintly of brandy when she arrived at the greenhouse — and she had not, by her own story, touched a glass." }
+        ],
+        "daniel-hargrove": [
+          { "id": "fs-daniel-1", "text": "The pantry door creaked at 8:50. Clara, looking up, saw a man's shoulder in dark wool. Daniel's jacket was dark wool tonight; no one else at the dinner wore it." },
+          { "id": "fs-daniel-2", "text": "A page from his mother's letters was found on the pantry counter, beside where the decanter had stood." }
+        ],
+        "vivienne-cross": [
+          { "id": "fs-vivienne-1", "text": "The burned document in the fireplace bears Vivienne's marginal notes — the handwriting matches her contracts in the desk." },
+          { "id": "fs-vivienne-2", "text": "The library window, said to have been latched all evening, was discovered ajar at 10:00 p.m. Vivienne is the only guest with a reason — and the height — to leave that way." }
+        ],
+        "james-sutton": [
+          { "id": "fs-james-1", "text": "The cufflink on the pantry floor matches the set James wore tonight. He is missing one." },
+          { "id": "fs-james-2", "text": "The smoking-room cigar was unlit until 9:15 — leaving a twenty-five minute gap during which James was nowhere he claimed to be." }
+        ],
+        "clara-bell": [
+          { "id": "fs-clara-1", "text": "The amount of poison was precisely measured. Only someone who handled the household's medicines daily — Clara — could have measured a fatal dose that exactly." },
+          { "id": "fs-clara-2", "text": "The fold of paper from Clara's apron, when read, is the inventory line for the brandy stock. A fresh tick has been entered beside tonight's date." }
+        ],
+        "henry-vance": [
+          { "id": "fs-henry-1", "text": "The pantry doorway handkerchief bears Henry's monogram. At 8:50 — by his own account, in the smoking room — he was in fact at the pantry door." },
+          { "id": "fs-henry-2", "text": "The glass in the kitchen, with traces of powder, bears a fingerprint on its rim. Henry's prints are the only doctor-recorded set in the household." }
+        ]
+      }
+    },
+    "revealNarratives": {
+      "eleanor-hargrove": "It began with the will. Maxwell had been quietly preparing to remove Eleanor — twenty-two years of marriage cut away with a stroke of his pen. She had known for a week. She had decided three days ago. Tonight, on her way out of the dining room to meet Tomas, she stepped into the kitchen pantry. Clara was at the stove. The brandy decanter sat ready. Eleanor measured the dose she had taken from his pillbox a week earlier — she had practiced — and stirred it in. She wiped the rim. She walked out to the greenhouse. Tomas, who knew nothing, became her alibi. By the time she returned, the room had moved on. By the time she 'found' the body, the rain had washed her footprints off the greenhouse path. It was, in the end, a stage actress's performance — and the curtain came down at 10:45.",
+      "daniel-hargrove": "The reconciliation in the study was Maxwell's performance, not Daniel's. Behind the closed door, his father had laid out the inheritance terms — a confession of past failures, a probation, an apology to specific relatives. Daniel had smiled. He had clinked the glass at the toast. And then, between the toast and the library, he had stopped in the pantry. Clara was at the stove. The decanter sat ready. He measured. He stirred. He carried a page of his mother's letters in his pocket for steadiness; it slipped to the counter as he reached. By 9:10 he was reading in the library, lit by the lamp he had just turned on, his face composed for Clara's passing glance. The peace at the toast had been theatre. So was the grief at the body.",
+      "vivienne-cross": "She had been stealing from Maxwell for fifteen years, and two days ago he had told her he would 'decide her fate tonight.' She did not know what he meant. She could not afford to find out. When Maxwell sent her into the study at 8:45 to fetch a document, she took her route back through the kitchen. The pantry was empty for ninety seconds. The decanter was warm under her hand. She measured the dose she had brought in her own jacket pocket, and stirred. She delivered the document. She settled into the library. She burned, in the library fireplace, the one paper that would have ended her. By morning the library would smell faintly of smoke, and Maxwell would smell of nothing at all.",
+      "james-sutton": "Twenty years of indignity, distilled into thirty seconds at the pantry door. James had confronted Maxwell at 7:30 about the sale; Maxwell had laughed. By 8:55, James knew what to do. He left the smoking room 'for the bathroom,' detoured through the kitchen, stopped in the pantry, measured the dose he had carried in his cufflink-box, and added it to the decanter while Clara faced the stove. One cufflink fell as he moved. He did not notice. He returned to the smoking room and lit a cigar at 9:15 to date the evidence. The cufflink, in the morning, betrayed him. The cigar, more quickly, betrayed his timeline.",
+      "clara-bell": "Thirty years of swallowed grievance — and one week of working her final week without a pension. Clara prepared the decanter as she had prepared it every evening for three decades, and tonight she measured a different dose. She added it during dinner service, before anyone might think to watch. She carried the decanter to the study and set it on Maxwell's desk and withdrew without a word, as she had done every evening for thirty years. The dose was precise because she had measured those medications precisely every day of her working life. By morning she would wash the decanter. She would draw a line through the brandy stock in the household ledger. She would resign her position cleanly. She had been invisible all along. Tonight she had used it.",
+      "henry-vance": "The threat at dinner — Maxwell saying he would 'settle the matter after dinner' — was the moment Henry understood it would not be ruin, but prison. At 8:50 he excused himself from the gathering for a glass of water. He stopped in the pantry. He measured from Maxwell's own bottle, by hand, the way he had measured doses for twenty-five years. He stirred. He wiped. His handkerchief slipped from his pocket in the doorway. He did not notice. He returned to the smoking room, then the conservatory, avoiding Maxwell until 10:45 when he was called to confirm what he had already done. The honesty he later performed about the overprescription scheme was, in its way, a kind of cover — a coward's last courtroom-grade lie."
+    }
+  }
+}
