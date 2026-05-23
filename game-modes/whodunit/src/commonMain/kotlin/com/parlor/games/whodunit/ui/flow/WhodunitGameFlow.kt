@@ -225,6 +225,7 @@ private fun SessionDrivenFlow(
 ) {
     val clock: Clock = koinInject()
     val definition: WhodunitDefinition = koinInject()
+    val snapshotStore: com.parlor.storage.snapshot.SnapshotStore = koinInject()
     val scope = rememberCoroutineScope()
 
     // Generate one seed for the whole session; AssignRoles re-uses it.
@@ -232,14 +233,17 @@ private fun SessionDrivenFlow(
         RandomSource.system().nextLong()
     }
 
-    val session = remember(case.envelope.caseId, modeId, players, seed) {
-        val config = SessionConfig(
+    val sessionConfig = remember(case.envelope.caseId, modeId, players, seed) {
+        SessionConfig(
             sessionId = SessionId("local-${seed.toString(16)}"),
             caseId = CaseId(case.envelope.caseId),
             modeId = modeId,
             players = players,
             randomSeed = seed,
         )
+    }
+
+    val session = remember(sessionConfig) {
         val ctx = WhodunitReducerContext(
             clock = clock,
             random = RandomSource.seeded(seed),
@@ -247,7 +251,7 @@ private fun SessionDrivenFlow(
         )
         PassAndPlaySessionController(
             definition = definition,
-            config = config,
+            config = sessionConfig,
             reducerContext = ctx,
             scope = scope,
         )
@@ -261,6 +265,34 @@ private fun SessionDrivenFlow(
         val events = session.events as SharedFlow<WhodunitEvent>
         events.collect { event ->
             if (event is WhodunitEvent.WinnerDecided) verdict = event.winner
+        }
+    }
+
+    // Phase 6.1 snapshot writer: persist the canonical (host) state on every
+    // PhaseEntered so the game can be resumed after process death. PostGame
+    // deletes the snapshot — game is over, nothing to resume. Phase 6.2 wires
+    // the cold-start resume prompt.
+    LaunchedEffect(session) {
+        val codec = definition.snapshotCodec()
+        @Suppress("UNCHECKED_CAST")
+        val events = session.events as SharedFlow<WhodunitEvent>
+        events.collect { event ->
+            if (event !is WhodunitEvent.PhaseEntered) return@collect
+            val canonicalState = session.hostState?.value?.state ?: return@collect
+            if (event.phase is WhodunitPhase.PostGame) {
+                snapshotStore.delete(sessionConfig.sessionId)
+            } else {
+                snapshotStore.save(
+                    com.parlor.engine.snapshot.GameSnapshot(
+                        sessionId = sessionConfig.sessionId,
+                        gameId = WhodunitIds.GameId,
+                        engineVersion = ENGINE_VERSION,
+                        createdAt = clock.now(),
+                        phaseId = canonicalState.phase.id,
+                        payload = codec.encode(canonicalState),
+                    ),
+                )
+            }
         }
     }
 
@@ -495,6 +527,14 @@ private fun roundTitleAndTagline(roundIndex: Int, playerCount: Int): Pair<String
 }
 
 private const val DISCUSSION_SECONDS = 180
+
+/**
+ * Engine version stamped on persisted snapshots. Bumped when the engine state
+ * shape changes incompatibly; the snapshot store refuses to restore a
+ * snapshot whose engineVersion is older than what this app supports.
+ */
+private val ENGINE_VERSION: com.parlor.core.versioning.SemVer =
+    com.parlor.core.versioning.SemVer(1, 0, 0)
 
 // ============================================================================== Voting ==
 

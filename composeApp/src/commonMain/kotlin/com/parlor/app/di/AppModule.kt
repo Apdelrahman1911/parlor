@@ -1,5 +1,6 @@
 package com.parlor.app.di
 
+import com.parlor.app.storage.platformStorageModule
 import com.parlor.core.random.RandomSource
 import com.parlor.core.time.Clock
 import com.parlor.core.time.SystemClock
@@ -41,4 +42,6 @@ val allModules: List<Module> = listOf(
     coreModule,
     whodunitModule,
     contentModule,
+    storageModule,
+    platformStorageModule(),
 )
