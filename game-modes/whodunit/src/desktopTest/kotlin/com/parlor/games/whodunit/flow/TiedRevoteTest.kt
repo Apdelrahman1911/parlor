@@ -276,4 +276,115 @@ class TiedRevoteTest {
 
         session.close()
     }
+
+    @Test
+    fun classic_first_tie_then_resolved_revote_resolves_normally() = runTest {
+        val payload = loadCase()
+        val seed = 31L
+        val players = listOf(
+            Player(PlayerId("p1"), "Alice", seat = 0),
+            Player(PlayerId("p2"), "Bob", seat = 1),
+            Player(PlayerId("p3"), "Cara", seat = 2),
+            Player(PlayerId("p4"), "Diego", seat = 3),
+        )
+        val (session, scope) = buildSession(payload, WhodunitIds.ClassicVoteModeId, players, seed)
+        val events = mutableListOf<WhodunitEvent>()
+        val collector = scope.launch { session.events.collect { events += it } }
+
+        driveToClassicVote(session, players, seed)
+        assertThat(stateOf(session).phase).isInstanceOf(WhodunitPhase.FinalVote::class)
+
+        val killer = hostState(session).hostOnly.killerId
+        val innocents = players.filter { it.id != killer }
+        val targetA = innocents[0].id
+        val targetB = innocents[1].id
+        val ballot = (stateOf(session).public.voteState as VoteState.Collecting).ballotPlayerIds
+
+        // First vote: 2-2 tie between targetA and targetB.
+        session.submit(WhodunitAction.CastVote(ballot[0], targetA))
+        session.submit(WhodunitAction.CastVote(ballot[1], targetA))
+        session.submit(WhodunitAction.CastVote(ballot[2], targetB))
+        session.submit(WhodunitAction.CastVote(ballot[3], targetB))
+        session.submit(WhodunitAction.CloseVote)
+        assertThat(stateOf(session).phase).isInstanceOf(WhodunitPhase.TiedRevote::class)
+
+        // Open the revote; verify the second-round marker is propagated.
+        session.submit(WhodunitAction.OpenVote)
+        val secondCollecting = stateOf(session).public.voteState as VoteState.Collecting
+        assertThat(secondCollecting.isSecondRound).isTrue()
+
+        // Second vote: room agrees and unanimously accuses the actual killer.
+        // The revote MUST resolve normally (no fake tied-twice trigger).
+        for (voter in ballot) session.submit(WhodunitAction.CastVote(voter, killer))
+        session.submit(WhodunitAction.CloseVote)
+
+        // Outcome: Reveal phase, killer accused, PlayersWin verdict.
+        val finalState = stateOf(session)
+        assertThat(finalState.phase).isInstanceOf(WhodunitPhase.Reveal::class)
+        val resolved = finalState.public.voteState as VoteState.Resolved
+        assertThat(resolved.accusedPlayerId).isEqualTo(killer)
+        assertThat(resolved.wasKiller).isTrue()
+        val verdict = events.filterIsInstance<WhodunitEvent.WinnerDecided>().last().winner
+        assertThat(verdict).isInstanceOf(Verdict.PlayersWin::class)
+
+        collector.cancel()
+        session.close()
+    }
+
+    @Test
+    fun elimination_first_tie_then_resolved_revote_eliminates_killer_ending_game() = runTest {
+        val payload = loadCase()
+        val seed = 77L
+        val players = listOf(
+            Player(PlayerId("p1"), "Alice", seat = 0),
+            Player(PlayerId("p2"), "Bob", seat = 1),
+            Player(PlayerId("p3"), "Cara", seat = 2),
+            Player(PlayerId("p4"), "Diego", seat = 3),
+            Player(PlayerId("p5"), "Esme", seat = 4),
+        )
+        val (session, scope) = buildSession(payload, WhodunitIds.EliminationModeId, players, seed)
+        val events = mutableListOf<WhodunitEvent>()
+        val collector = scope.launch { session.events.collect { events += it } }
+
+        session.submit(WhodunitAction.AssignRoles(seed))
+        session.submit(WhodunitAction.AdvanceFromIntro)
+        for (i in 1..4) session.submit(WhodunitAction.AdvanceBriefingCard(i))
+        for (player in players) {
+            session.submit(WhodunitAction.StartCharacterReveal(player.id))
+            session.submit(WhodunitAction.CompleteCharacterReveal(player.id))
+        }
+        session.submit(WhodunitAction.RevealNextClue)
+        session.submit(WhodunitAction.StartDiscussionTimer(30))
+        session.submit(WhodunitAction.AdvanceFromDiscussion)
+
+        val killer = hostState(session).hostOnly.killerId
+        val innocents = players.filter { it.id != killer }
+        val targetA = innocents[0].id
+        val targetB = innocents[1].id
+        val ballot = (stateOf(session).public.voteState as VoteState.Collecting).ballotPlayerIds
+
+        // First vote: 2-2-abstain tie.
+        session.submit(WhodunitAction.CastVote(ballot[0], targetA))
+        session.submit(WhodunitAction.CastVote(ballot[1], targetA))
+        session.submit(WhodunitAction.CastVote(ballot[2], targetB))
+        session.submit(WhodunitAction.CastVote(ballot[3], targetB))
+        session.submit(WhodunitAction.AbstainVote(ballot[4]))
+        session.submit(WhodunitAction.CloseVote)
+        assertThat(stateOf(session).phase).isInstanceOf(WhodunitPhase.TiedRevote::class)
+
+        // Revote: everyone votes for the actual killer.
+        session.submit(WhodunitAction.OpenVote)
+        for (voter in ballot) session.submit(WhodunitAction.CastVote(voter, killer))
+        session.submit(WhodunitAction.CloseVote)
+
+        // Elimination: killer eliminated immediately → game ends in Reveal.
+        val finalState = stateOf(session)
+        assertThat(finalState.phase).isInstanceOf(WhodunitPhase.Reveal::class)
+        assertThat(finalState.public.eliminatedPlayers).isEqualTo(listOf(killer))
+        val verdict = events.filterIsInstance<WhodunitEvent.WinnerDecided>().last().winner
+        assertThat(verdict).isInstanceOf(Verdict.PlayersWin::class)
+
+        collector.cancel()
+        session.close()
+    }
 }
