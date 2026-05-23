@@ -586,13 +586,21 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
                 voteState = VoteState.Idle,
                 currentRound = 0,
                 timer = null,
+                paused = false,
             ),
         )
         val priorPhaseId = state.phase.id
-        val reduction = assignRoles(reset, newSeed, ctx)
+        val assigned = assignRoles(reset, newSeed, ctx)
+        // assignRoles sets phase to PublicIntro and emits PhaseEntered(PublicIntro).
+        // Reroll skips the public intro (the players have already seen it) and
+        // lands in CharacterReveal, so we must drop the misleading event and
+        // emit one for the *actual* destination phase. Otherwise telemetry,
+        // sound triggers, and the snapshot writer all see a phantom intro.
+        val target = WhodunitPhase.CharacterReveal(0)
+        val cleanedEvents = assigned.events.filter { it !is WhodunitEvent.PhaseEntered }
         return Reduction(
-            reduction.newState.copy(phase = WhodunitPhase.CharacterReveal(0)),
-            reduction.events + WhodunitEvent.RerolledAt(priorPhaseId),
+            assigned.newState.copy(phase = target),
+            cleanedEvents + WhodunitEvent.PhaseEntered(target) + WhodunitEvent.RerolledAt(priorPhaseId),
         )
     }
 

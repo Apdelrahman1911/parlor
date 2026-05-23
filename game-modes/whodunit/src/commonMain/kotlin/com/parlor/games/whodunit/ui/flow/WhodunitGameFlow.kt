@@ -63,6 +63,9 @@ import com.parlor.games.whodunit.ui.screens.round.ClueRevealScreen
 import com.parlor.games.whodunit.ui.screens.round.DiscussionScreen
 import com.parlor.games.whodunit.ui.screens.round.RoundTitleCardScreen
 import com.parlor.games.whodunit.ui.screens.safety.PauseOverlay
+import com.parlor.games.whodunit.ui.screens.safety.PrivacyConcernAffordance
+import com.parlor.games.whodunit.ui.screens.safety.PrivacyConcernDialog
+import com.parlor.games.whodunit.ui.timer.runDiscussionTickerLoop
 import com.parlor.games.whodunit.resources.Res
 import com.parlor.games.whodunit.resources.pause_open_description
 import org.jetbrains.compose.resources.stringResource
@@ -586,43 +589,69 @@ private fun CharacterRevealSegment(
     val character = characterId?.let { id -> payload.characters.firstOrNull { it.id == id } }
 
     var stage by remember(phase.playerIndex) { mutableStateOf(RevealStage.Handoff) }
+    var privacyOpen by remember { mutableStateOf(false) }
 
-    when (stage) {
-        RevealStage.Handoff -> CharacterRevealHandoffScreen(
-            playerName = currentPlayer.displayName,
-            onContinue = { stage = RevealStage.Gate },
-            modifier = modifier,
-        )
-        RevealStage.Gate -> CharacterRevealGateScreen(
-            playerName = currentPlayer.displayName,
-            onRevealed = {
-                scope.launch { session.submit(WhodunitAction.StartCharacterReveal(currentPlayer.id)) }
-                stage = RevealStage.Dossier
-            },
-            modifier = modifier,
-        )
-        RevealStage.Dossier -> {
-            if (character == null || role == null) {
-                LoadingScreen(modifier)
-            } else {
-                DossierRevealScreen(
-                    character = character,
-                    role = role,
-                    onDone = { stage = RevealStage.Hide },
-                    modifier = modifier,
-                )
-            }
-        }
-        RevealStage.Hide -> HideAndPassScreen(
-            nextPlayerName = nextPlayer?.displayName,
-            onTap = {
-                scope.launch {
-                    session.setActiveViewer(ViewerContext.Public)
-                    session.submit(WhodunitAction.CompleteCharacterReveal(currentPlayer.id))
+    Box(modifier = modifier.fillMaxSize()) {
+        when (stage) {
+            RevealStage.Handoff -> CharacterRevealHandoffScreen(
+                playerName = currentPlayer.displayName,
+                onContinue = { stage = RevealStage.Gate },
+                modifier = Modifier.fillMaxSize(),
+            )
+            RevealStage.Gate -> CharacterRevealGateScreen(
+                playerName = currentPlayer.displayName,
+                onRevealed = {
+                    scope.launch { session.submit(WhodunitAction.StartCharacterReveal(currentPlayer.id)) }
+                    stage = RevealStage.Dossier
+                },
+                modifier = Modifier.fillMaxSize(),
+            )
+            RevealStage.Dossier -> {
+                if (character == null || role == null) {
+                    LoadingScreen(Modifier.fillMaxSize())
+                } else {
+                    DossierRevealScreen(
+                        character = character,
+                        role = role,
+                        onDone = { stage = RevealStage.Hide },
+                        modifier = Modifier.fillMaxSize(),
+                    )
                 }
-            },
-            modifier = modifier,
-        )
+            }
+            RevealStage.Hide -> HideAndPassScreen(
+                nextPlayerName = nextPlayer?.displayName,
+                onTap = {
+                    scope.launch {
+                        session.setActiveViewer(ViewerContext.Public)
+                        session.submit(WhodunitAction.CompleteCharacterReveal(currentPlayer.id))
+                    }
+                },
+                modifier = Modifier.fillMaxSize(),
+            )
+        }
+
+        // Privacy-concern affordance: visible on the *cover* screens (Handoff
+        // and Hide) where no private dossier is on screen. Hidden during
+        // Gate and Dossier so it can't be triggered while a private card is
+        // actually visible.
+        if (stage == RevealStage.Handoff || stage == RevealStage.Hide) {
+            PrivacyConcernAffordance(
+                onOpen = { privacyOpen = true },
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(ParlorTheme.spacing.l),
+            )
+        }
+
+        if (privacyOpen) {
+            PrivacyConcernDialog(
+                onContinue = { privacyOpen = false },
+                onReroll = {
+                    privacyOpen = false
+                    scope.launch { session.submit(WhodunitAction.RequestReroll) }
+                },
+            )
+        }
     }
 }
 
@@ -642,6 +671,19 @@ private fun RoundSegment(
     val clueThisRound = state.public.revealedClues.firstOrNull { it.roundIndex == roundIndex }
     val timer = state.public.timer
     val (title, tagline) = roundTitleAndTagline(roundIndex, state.players.size)
+
+    // Real-time discussion ticker. Keyed on the timer's stable id so:
+    //  - a new round starting its own timer spawns a fresh loop,
+    //  - composition rebuilds within the same round reuse the existing loop
+    //    (no duplicate `TimerTicked` dispatches),
+    //  - clearing the timer (TimerExpired / AdvanceFromDiscussion) cancels
+    //    the LaunchedEffect.
+    val timerId = timer?.timerId
+    LaunchedEffect(timerId, session) {
+        if (timerId != null) {
+            runDiscussionTickerLoop(session, timerId)
+        }
+    }
 
     when {
         clueThisRound == null -> RoundTitleCardScreen(
