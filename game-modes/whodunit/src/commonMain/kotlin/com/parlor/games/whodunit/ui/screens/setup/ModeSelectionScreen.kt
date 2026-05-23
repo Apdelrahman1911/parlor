@@ -17,12 +17,19 @@ import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorCard
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.whodunit.WhodunitIds
+import com.parlor.games.whodunit.resources.Res
+import com.parlor.games.whodunit.resources.setup_choose_mode_eyebrow
+import com.parlor.games.whodunit.resources.setup_choose_mode_headline
+import com.parlor.games.whodunit.resources.setup_mode_choose_description_format
+import com.parlor.games.whodunit.resources.setup_mode_choose_format
+import com.parlor.games.whodunit.resources.setup_mode_classic_body
+import com.parlor.games.whodunit.resources.setup_mode_classic_meta
+import com.parlor.games.whodunit.resources.setup_mode_classic_title
+import com.parlor.games.whodunit.resources.setup_mode_elimination_body
+import com.parlor.games.whodunit.resources.setup_mode_elimination_meta
+import com.parlor.games.whodunit.resources.setup_mode_elimination_title
+import org.jetbrains.compose.resources.stringResource
 
-/**
- * Mode Selection — the first screen of the Whodunit setup flow. Two large
- * cards, each readable from across a small table. The cinematic identity is
- * carried by the HeroBackdrop and the dramatic card elevation.
- */
 @Composable
 fun ModeSelectionScreen(
     onModeSelected: (ModeId) -> Unit,
@@ -37,12 +44,12 @@ fun ModeSelectionScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
-                text = "CHOOSE GAME MODE",
+                text = stringResource(Res.string.setup_choose_mode_eyebrow),
                 style = ParlorTheme.typography.labelSmall,
                 color = ParlorTheme.colors.textSecondary,
             )
             Text(
-                text = "How do you want to play?",
+                text = stringResource(Res.string.setup_choose_mode_headline),
                 style = ParlorTheme.typography.displayMedium,
                 color = ParlorTheme.colors.textPrimary,
                 textAlign = TextAlign.Center,
@@ -53,20 +60,16 @@ fun ModeSelectionScreen(
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 ModeCard(
-                    title = "Classic Vote",
-                    body = "Investigate the full case. One vote at the end. " +
-                        "Best for story and deduction.",
-                    timeLine = "25–35 min",
-                    playerLine = "4–6 players",
+                    title = stringResource(Res.string.setup_mode_classic_title),
+                    body = stringResource(Res.string.setup_mode_classic_body),
+                    meta = stringResource(Res.string.setup_mode_classic_meta),
                     onClick = { onModeSelected(WhodunitIds.ClassicVoteModeId) },
                     modifier = Modifier.weight(1f),
                 )
                 ModeCard(
-                    title = "Elimination",
-                    body = "Vote after every round. Find the killer before " +
-                        "they survive. Best for fast, tense games.",
-                    timeLine = "15–25 min",
-                    playerLine = "5–6 players",
+                    title = stringResource(Res.string.setup_mode_elimination_title),
+                    body = stringResource(Res.string.setup_mode_elimination_body),
+                    meta = stringResource(Res.string.setup_mode_elimination_meta),
                     onClick = { onModeSelected(WhodunitIds.EliminationModeId) },
                     modifier = Modifier.weight(1f),
                 )
@@ -79,11 +82,12 @@ fun ModeSelectionScreen(
 private fun ModeCard(
     title: String,
     body: String,
-    timeLine: String,
-    playerLine: String,
+    meta: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val buttonLabel = stringResource(Res.string.setup_mode_choose_format, title)
+    val buttonDescription = stringResource(Res.string.setup_mode_choose_description_format, title)
     ParlorCard(
         modifier = modifier.fillMaxWidth(),
         elevation = ParlorTheme.elevation.dramatic,
@@ -102,13 +106,13 @@ private fun ModeCard(
                 color = ParlorTheme.colors.textSecondary,
             )
             Text(
-                text = "$timeLine  ·  $playerLine",
+                text = meta,
                 style = ParlorTheme.typography.labelMedium,
                 color = ParlorTheme.colors.accentEmber,
             )
             ParlorButton(
-                label = "Choose $title",
-                contentDescription = "Choose $title mode and proceed to player setup.",
+                label = buttonLabel,
+                contentDescription = buttonDescription,
                 onClick = onClick,
             )
         }

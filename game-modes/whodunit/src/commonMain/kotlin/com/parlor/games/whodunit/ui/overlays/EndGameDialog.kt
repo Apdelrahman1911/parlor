@@ -14,11 +14,17 @@ import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorCard
 import com.parlor.designsystem.components.ParlorScrim
 import com.parlor.designsystem.theme.ParlorTheme
+import com.parlor.games.whodunit.resources.Res
+import com.parlor.games.whodunit.resources.endgame_body
+import com.parlor.games.whodunit.resources.endgame_cancel
+import com.parlor.games.whodunit.resources.endgame_cancel_description
+import com.parlor.games.whodunit.resources.endgame_quietly
+import com.parlor.games.whodunit.resources.endgame_quietly_description
+import com.parlor.games.whodunit.resources.endgame_reveal_now
+import com.parlor.games.whodunit.resources.endgame_reveal_now_description
+import com.parlor.games.whodunit.resources.endgame_title
+import org.jetbrains.compose.resources.stringResource
 
-/**
- * End-game dialog from the pause overlay. Two options per design doc §15:
- * reveal-now (plays the reveal sequence and ends) or end-without-reveal.
- */
 @Composable
 fun EndGameDialog(
     onRevealNow: () -> Unit,
@@ -43,30 +49,30 @@ fun EndGameDialog(
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m)) {
                     Text(
-                        text = "End this game?",
+                        text = stringResource(Res.string.endgame_title),
                         style = ParlorTheme.typography.displayMedium,
                         color = ParlorTheme.colors.textPrimary,
                     )
                     Text(
-                        text = "The game cannot continue without all players. Choose how to close.",
+                        text = stringResource(Res.string.endgame_body),
                         style = ParlorTheme.typography.bodyLarge,
                         color = ParlorTheme.colors.textSecondary,
                     )
                     ParlorButton(
-                        label = "Reveal the Case Now",
-                        contentDescription = "End the game and play the full reveal narrative.",
+                        label = stringResource(Res.string.endgame_reveal_now),
+                        contentDescription = stringResource(Res.string.endgame_reveal_now_description),
                         onClick = onRevealNow,
                         modifier = Modifier.fillMaxWidth(),
                     )
                     ParlorButton(
-                        label = "End Without Reveal",
-                        contentDescription = "End the game without revealing the killer.",
+                        label = stringResource(Res.string.endgame_quietly),
+                        contentDescription = stringResource(Res.string.endgame_quietly_description),
                         onClick = onEndQuietly,
                         modifier = Modifier.fillMaxWidth(),
                     )
                     ParlorButton(
-                        label = "Cancel",
-                        contentDescription = "Return to pause without ending the game.",
+                        label = stringResource(Res.string.endgame_cancel),
+                        contentDescription = stringResource(Res.string.endgame_cancel_description),
                         onClick = onCancel,
                         modifier = Modifier.fillMaxWidth(),
                     )

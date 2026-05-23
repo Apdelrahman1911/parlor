@@ -20,11 +20,19 @@ import com.parlor.designsystem.components.ParlorCard
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.whodunit.domain.event.KillerWinCause
 import com.parlor.games.whodunit.domain.event.Verdict
+import com.parlor.games.whodunit.resources.Res
+import com.parlor.games.whodunit.resources.reveal_stage_continue
+import com.parlor.games.whodunit.resources.reveal_stage_continue_description
+import com.parlor.games.whodunit.resources.reveal_stage_eyebrow
+import com.parlor.games.whodunit.resources.reveal_stage_killer_finaltwo_subhead
+import com.parlor.games.whodunit.resources.reveal_stage_killer_innocent_subhead
+import com.parlor.games.whodunit.resources.reveal_stage_killer_tie_subhead
+import com.parlor.games.whodunit.resources.reveal_stage_killer_was_label
+import com.parlor.games.whodunit.resources.reveal_stage_no
+import com.parlor.games.whodunit.resources.reveal_stage_players_win_subhead
+import com.parlor.games.whodunit.resources.reveal_stage_yes
+import org.jetbrains.compose.resources.stringResource
 
-/**
- * The dramatic climax. Shows the YES/NO verdict, then the reveal narrative.
- * Per design doc §12, the screen is paced — a single screen builds tension.
- */
 @Composable
 fun RevealStageScreen(
     verdict: Verdict,
@@ -34,16 +42,23 @@ fun RevealStageScreen(
     modifier: Modifier = Modifier,
 ) {
     val colors = ParlorTheme.colors
-    val (verdictLine, accentColor) = when (verdict) {
-        is Verdict.PlayersWin -> "YES." to colors.semanticSuccess
-        is Verdict.KillerWins -> "NO." to colors.semanticDanger
+    val verdictLine = when (verdict) {
+        is Verdict.PlayersWin -> stringResource(Res.string.reveal_stage_yes)
+        is Verdict.KillerWins -> stringResource(Res.string.reveal_stage_no)
+    }
+    val accentColor = when (verdict) {
+        is Verdict.PlayersWin -> colors.semanticSuccess
+        is Verdict.KillerWins -> colors.semanticDanger
     }
     val subhead = when (verdict) {
-        is Verdict.PlayersWin -> "The room has chosen correctly."
+        is Verdict.PlayersWin -> stringResource(Res.string.reveal_stage_players_win_subhead)
         is Verdict.KillerWins -> when (verdict.cause) {
-            KillerWinCause.InnocentAccused -> "An innocent has been condemned."
-            KillerWinCause.TieUnresolved -> "Indecision. The killer escapes."
-            KillerWinCause.SurvivedToFinalTwo -> "The killer has survived to the final two."
+            KillerWinCause.InnocentAccused ->
+                stringResource(Res.string.reveal_stage_killer_innocent_subhead)
+            KillerWinCause.TieUnresolved ->
+                stringResource(Res.string.reveal_stage_killer_tie_subhead)
+            KillerWinCause.SurvivedToFinalTwo ->
+                stringResource(Res.string.reveal_stage_killer_finaltwo_subhead)
         }
     }
 
@@ -57,7 +72,7 @@ fun RevealStageScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
-                text = "THE REVEAL",
+                text = stringResource(Res.string.reveal_stage_eyebrow),
                 style = ParlorTheme.typography.labelSmall,
                 color = colors.textSecondary,
             )
@@ -80,7 +95,7 @@ fun RevealStageScreen(
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m)) {
                     Text(
-                        text = "THE KILLER WAS",
+                        text = stringResource(Res.string.reveal_stage_killer_was_label),
                         style = ParlorTheme.typography.labelSmall,
                         color = colors.accentEmber,
                     )
@@ -98,8 +113,8 @@ fun RevealStageScreen(
                 }
             }
             ParlorButton(
-                label = "Continue",
-                contentDescription = "Acknowledge the reveal and continue to post-game.",
+                label = stringResource(Res.string.reveal_stage_continue),
+                contentDescription = stringResource(Res.string.reveal_stage_continue_description),
                 onClick = onAcknowledge,
                 modifier = Modifier.fillMaxWidth(),
             )

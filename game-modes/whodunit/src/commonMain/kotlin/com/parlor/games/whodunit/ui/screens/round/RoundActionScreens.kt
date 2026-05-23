@@ -12,12 +12,25 @@ import androidx.compose.ui.text.style.TextAlign
 import com.parlor.designsystem.backdrop.HeroBackdrop
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.theme.ParlorTheme
+import com.parlor.games.whodunit.resources.Res
+import com.parlor.games.whodunit.resources.round_action_alibi_body_format
+import com.parlor.games.whodunit.resources.round_action_alibi_done
+import com.parlor.games.whodunit.resources.round_action_alibi_eyebrow
+import com.parlor.games.whodunit.resources.round_action_alibi_headline_format
+import com.parlor.games.whodunit.resources.round_action_monologue_body_format
+import com.parlor.games.whodunit.resources.round_action_monologue_done
+import com.parlor.games.whodunit.resources.round_action_monologue_eyebrow
+import com.parlor.games.whodunit.resources.round_action_monologue_headline_format
+import com.parlor.games.whodunit.resources.round_action_questions_body
+import com.parlor.games.whodunit.resources.round_action_questions_done
+import com.parlor.games.whodunit.resources.round_action_questions_eyebrow
+import com.parlor.games.whodunit.resources.round_action_questions_headline
+import com.parlor.games.whodunit.resources.round_action_silent_body
+import com.parlor.games.whodunit.resources.round_action_silent_done
+import com.parlor.games.whodunit.resources.round_action_silent_eyebrow
+import com.parlor.games.whodunit.resources.round_action_silent_headline
+import org.jetbrains.compose.resources.stringResource
 
-/**
- * The four structured-action prompts. Each one is a single, minimal screen
- * that instructs the table how to proceed and offers a Done button to advance
- * the reducer. (The actual speaking/listening happens around the phone.)
- */
 @Composable
 fun AlibiRoundScreen(
     currentPlayerName: String,
@@ -26,10 +39,10 @@ fun AlibiRoundScreen(
     modifier: Modifier = Modifier,
 ) {
     StructuredPrompt(
-        eyebrow = "ALIBI ROUND",
-        headline = "$currentPlayerName,",
-        body = "tell us where you were when it happened. You have $secondsPerPlayer seconds.",
-        buttonLabel = "Done — Next Player",
+        eyebrow = stringResource(Res.string.round_action_alibi_eyebrow),
+        headline = stringResource(Res.string.round_action_alibi_headline_format, currentPlayerName),
+        body = stringResource(Res.string.round_action_alibi_body_format, secondsPerPlayer),
+        buttonLabel = stringResource(Res.string.round_action_alibi_done),
         onContinue = onAdvance,
         modifier = modifier,
     )
@@ -41,10 +54,10 @@ fun DirectedQuestionsScreen(
     modifier: Modifier = Modifier,
 ) {
     StructuredPrompt(
-        eyebrow = "QUESTIONS",
-        headline = "Ask the table.",
-        body = "Each player asks one direct question. The asked player must answer (and may lie).",
-        buttonLabel = "Begin Discussion",
+        eyebrow = stringResource(Res.string.round_action_questions_eyebrow),
+        headline = stringResource(Res.string.round_action_questions_headline),
+        body = stringResource(Res.string.round_action_questions_body),
+        buttonLabel = stringResource(Res.string.round_action_questions_done),
         onContinue = onAdvance,
         modifier = modifier,
     )
@@ -56,10 +69,10 @@ fun SilentAccusationScreen(
     modifier: Modifier = Modifier,
 ) {
     StructuredPrompt(
-        eyebrow = "SILENT ACCUSATION",
-        headline = "Point.",
-        body = "On the count of three, point at the player you suspect most. No talking.",
-        buttonLabel = "Done",
+        eyebrow = stringResource(Res.string.round_action_silent_eyebrow),
+        headline = stringResource(Res.string.round_action_silent_headline),
+        body = stringResource(Res.string.round_action_silent_body),
+        buttonLabel = stringResource(Res.string.round_action_silent_done),
         onContinue = onAdvance,
         modifier = modifier,
     )
@@ -73,10 +86,10 @@ fun MonologueScreen(
     modifier: Modifier = Modifier,
 ) {
     StructuredPrompt(
-        eyebrow = "FINAL MONOLOGUE",
-        headline = "$currentPlayerName, your 30 seconds.",
-        body = "Defend yourself. Make your case. Accuse someone. Time remaining: ${secondsRemaining}s.",
-        buttonLabel = "Done — Next Speaker",
+        eyebrow = stringResource(Res.string.round_action_monologue_eyebrow),
+        headline = stringResource(Res.string.round_action_monologue_headline_format, currentPlayerName),
+        body = stringResource(Res.string.round_action_monologue_body_format, secondsRemaining),
+        buttonLabel = stringResource(Res.string.round_action_monologue_done),
         onContinue = onAdvance,
         modifier = modifier,
     )
@@ -96,7 +109,10 @@ private fun StructuredPrompt(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(ParlorTheme.spacing.xl),
-            verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l),
+            verticalArrangement = Arrangement.spacedBy(
+                ParlorTheme.spacing.l,
+                androidx.compose.ui.Alignment.CenterVertically,
+            ),
         ) {
             Text(
                 text = eyebrow,

@@ -14,10 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,9 +23,20 @@ import com.parlor.core.ids.PlayerId
 import com.parlor.designsystem.backdrop.HeroBackdrop
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.theme.ParlorTheme
+import com.parlor.games.whodunit.resources.Res
+import com.parlor.games.whodunit.resources.reveal_handoff_subtitle
+import com.parlor.games.whodunit.resources.reveal_handoff_title_format
+import com.parlor.games.whodunit.resources.vote_ballot_abstain
+import com.parlor.games.whodunit.resources.vote_ballot_abstain_description
+import com.parlor.games.whodunit.resources.vote_ballot_headline_format
+import com.parlor.games.whodunit.resources.vote_ballot_instruction
+import com.parlor.games.whodunit.resources.vote_tied_begin_revote
+import com.parlor.games.whodunit.resources.vote_tied_begin_revote_description
+import com.parlor.games.whodunit.resources.vote_tied_body
+import com.parlor.games.whodunit.resources.vote_tied_eyebrow
 import com.parlor.games.whodunit.ui.components.CandlelitCover
+import org.jetbrains.compose.resources.stringResource
 
-/** Pass-and-tap vote: cover → voter taps a target → cover for next voter. */
 @Composable
 fun VoteBallotScreen(
     currentVoterName: String,
@@ -47,13 +54,13 @@ fun VoteBallotScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
-                text = "$currentVoterName, cast your vote.",
+                text = stringResource(Res.string.vote_ballot_headline_format, currentVoterName),
                 style = ParlorTheme.typography.displayMedium,
                 color = ParlorTheme.colors.textPrimary,
                 textAlign = TextAlign.Center,
             )
             Text(
-                text = "Tap the name of the person you accuse.",
+                text = stringResource(Res.string.vote_ballot_instruction),
                 style = ParlorTheme.typography.bodyLarge,
                 color = ParlorTheme.colors.textSecondary,
                 textAlign = TextAlign.Center,
@@ -64,8 +71,8 @@ fun VoteBallotScreen(
             }
             Spacer(Modifier.height(ParlorTheme.spacing.l))
             ParlorButton(
-                label = "Abstain",
-                contentDescription = "Decline to vote.",
+                label = stringResource(Res.string.vote_ballot_abstain),
+                contentDescription = stringResource(Res.string.vote_ballot_abstain_description),
                 onClick = onAbstain,
                 modifier = Modifier.fillMaxWidth(),
             )
@@ -94,18 +101,20 @@ private fun CandidateRow(name: String, onClick: () -> Unit) {
     }
 }
 
-/** Cover between voters — "Pass to [next]". */
 @Composable
-fun VoteHandoffScreen(nextVoterName: String, onContinue: () -> Unit, modifier: Modifier = Modifier) {
-    CandidatePassCover(
-        title = "Pass to $nextVoterName.",
-        subtitle = "When you're alone, tap to vote.",
+fun VoteHandoffScreen(
+    nextVoterName: String,
+    onContinue: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    CandlelitCover(
+        title = stringResource(Res.string.reveal_handoff_title_format, nextVoterName),
+        subtitle = stringResource(Res.string.reveal_handoff_subtitle),
         onDismiss = onContinue,
         modifier = modifier,
     )
 }
 
-/** Tied-revote framing screen — debate then revote between the tied suspects. */
 @Composable
 fun TiedRevoteScreen(
     tiedNames: List<String>,
@@ -122,7 +131,7 @@ fun TiedRevoteScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
-                text = "TIED",
+                text = stringResource(Res.string.vote_tied_eyebrow),
                 style = ParlorTheme.typography.labelSmall,
                 color = ParlorTheme.colors.accentEmber,
             )
@@ -133,7 +142,7 @@ fun TiedRevoteScreen(
                 textAlign = TextAlign.Center,
             )
             Text(
-                text = "60 seconds. Each tied suspect defends themselves. Then revote.",
+                text = stringResource(Res.string.vote_tied_body),
                 style = ParlorTheme.typography.bodyLarge,
                 color = ParlorTheme.colors.textSecondary,
                 textAlign = TextAlign.Center,
@@ -145,21 +154,11 @@ fun TiedRevoteScreen(
             )
             Spacer(Modifier.height(ParlorTheme.spacing.l))
             ParlorButton(
-                label = "Begin the Revote",
-                contentDescription = "Open the revote between the tied suspects.",
+                label = stringResource(Res.string.vote_tied_begin_revote),
+                contentDescription = stringResource(Res.string.vote_tied_begin_revote_description),
                 onClick = onBeginRevote,
                 modifier = Modifier.fillMaxWidth(),
             )
         }
     }
-}
-
-@Composable
-private fun CandidatePassCover(
-    title: String,
-    subtitle: String,
-    onDismiss: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    CandlelitCover(title = title, subtitle = subtitle, onDismiss = onDismiss, modifier = modifier)
 }

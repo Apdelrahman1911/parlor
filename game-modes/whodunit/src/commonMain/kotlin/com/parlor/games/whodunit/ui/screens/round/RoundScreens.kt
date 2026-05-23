@@ -19,10 +19,21 @@ import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.whodunit.domain.state.PublicTimerState
 import com.parlor.games.whodunit.domain.state.RevealedClue
+import com.parlor.games.whodunit.resources.Res
+import com.parlor.games.whodunit.resources.round_begin_discussion
+import com.parlor.games.whodunit.resources.round_begin_discussion_description
+import com.parlor.games.whodunit.resources.round_clue_eyebrow_format
+import com.parlor.games.whodunit.resources.round_discussion_eyebrow
+import com.parlor.games.whodunit.resources.round_eyebrow_format
+import com.parlor.games.whodunit.resources.round_known_so_far
+import com.parlor.games.whodunit.resources.round_move_on
+import com.parlor.games.whodunit.resources.round_move_on_description
+import com.parlor.games.whodunit.resources.round_reveal_clue_button
+import com.parlor.games.whodunit.resources.round_reveal_clue_description
 import com.parlor.games.whodunit.ui.components.ClueCard
 import com.parlor.games.whodunit.ui.components.TimerRibbon
+import org.jetbrains.compose.resources.stringResource
 
-/** Round title — short, theatrical card before any clue or discussion. */
 @Composable
 fun RoundTitleCardScreen(
     roundIndex: Int,
@@ -40,7 +51,7 @@ fun RoundTitleCardScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
-                text = "ROUND $roundIndex",
+                text = stringResource(Res.string.round_eyebrow_format, roundIndex),
                 style = ParlorTheme.typography.labelSmall,
                 color = ParlorTheme.colors.textSecondary,
             )
@@ -62,8 +73,8 @@ fun RoundTitleCardScreen(
                 )
             }
             ParlorButton(
-                label = "Reveal the Clue",
-                contentDescription = "Reveal this round's clue.",
+                label = stringResource(Res.string.round_reveal_clue_button),
+                contentDescription = stringResource(Res.string.round_reveal_clue_description),
                 onClick = onContinue,
                 modifier = Modifier.fillMaxWidth(),
             )
@@ -71,7 +82,6 @@ fun RoundTitleCardScreen(
     }
 }
 
-/** The clue-reveal screen for a given round. */
 @Composable
 fun ClueRevealScreen(
     clue: RevealedClue,
@@ -87,15 +97,15 @@ fun ClueRevealScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
-                text = "ROUND ${clue.roundIndex}  ·  CLUE",
+                text = stringResource(Res.string.round_clue_eyebrow_format, clue.roundIndex),
                 style = ParlorTheme.typography.labelSmall,
                 color = ParlorTheme.colors.textSecondary,
             )
             ClueCard(text = clue.text)
             Spacer(modifier = Modifier.height(ParlorTheme.spacing.l))
             ParlorButton(
-                label = "Begin Discussion",
-                contentDescription = "Start the discussion timer.",
+                label = stringResource(Res.string.round_begin_discussion),
+                contentDescription = stringResource(Res.string.round_begin_discussion_description),
                 onClick = onContinue,
                 modifier = Modifier.fillMaxWidth(),
             )
@@ -103,7 +113,6 @@ fun ClueRevealScreen(
     }
 }
 
-/** Discussion timer screen — shows the timer ribbon and revealed clues. */
 @Composable
 fun DiscussionScreen(
     timer: PublicTimerState?,
@@ -120,7 +129,7 @@ fun DiscussionScreen(
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l),
         ) {
             Text(
-                text = "DISCUSSION",
+                text = stringResource(Res.string.round_discussion_eyebrow),
                 style = ParlorTheme.typography.labelSmall,
                 color = ParlorTheme.colors.textSecondary,
             )
@@ -133,7 +142,7 @@ fun DiscussionScreen(
                 )
             }
             Text(
-                text = "What you know so far",
+                text = stringResource(Res.string.round_known_so_far),
                 style = ParlorTheme.typography.headingLarge,
                 color = ParlorTheme.colors.textPrimary,
             )
@@ -146,8 +155,8 @@ fun DiscussionScreen(
             }
             Spacer(modifier = Modifier.height(ParlorTheme.spacing.l))
             ParlorButton(
-                label = "Move On",
-                contentDescription = "Advance from discussion to the next round or the vote.",
+                label = stringResource(Res.string.round_move_on),
+                contentDescription = stringResource(Res.string.round_move_on_description),
                 onClick = onAdvance,
                 modifier = Modifier.fillMaxWidth(),
             )

@@ -10,6 +10,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import com.parlor.designsystem.components.ParlorCard
 import com.parlor.designsystem.theme.ParlorTheme
+import com.parlor.games.whodunit.resources.Res
+import com.parlor.games.whodunit.resources.round_clue_eyebrow_label
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * Museum-label-style clue display. Short, large, readable across a table.
@@ -17,7 +20,7 @@ import com.parlor.designsystem.theme.ParlorTheme
 @Composable
 fun ClueCard(
     text: String,
-    eyebrow: String = "NEW CLUE",
+    eyebrow: String = stringResource(Res.string.round_clue_eyebrow_label),
     modifier: Modifier = Modifier,
 ) {
     ParlorCard(

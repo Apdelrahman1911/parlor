@@ -13,11 +13,17 @@ import androidx.compose.ui.text.style.TextAlign
 import com.parlor.designsystem.backdrop.HeroBackdrop
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.theme.ParlorTheme
+import com.parlor.games.whodunit.resources.Res
+import com.parlor.games.whodunit.resources.postgame_back_to_library
+import com.parlor.games.whodunit.resources.postgame_back_to_library_description
+import com.parlor.games.whodunit.resources.postgame_eyebrow
+import com.parlor.games.whodunit.resources.postgame_question
+import com.parlor.games.whodunit.resources.postgame_replay
+import com.parlor.games.whodunit.resources.postgame_replay_description
+import com.parlor.games.whodunit.resources.postgame_try_other_mode
+import com.parlor.games.whodunit.resources.postgame_try_other_mode_description
+import org.jetbrains.compose.resources.stringResource
 
-/**
- * Post-game menu — replay-with-new-killer, try-other-mode, back-to-library.
- * The first button is the largest, per design doc §17.
- */
 @Composable
 fun PostGameScreen(
     onReplaySameCase: () -> Unit,
@@ -34,31 +40,31 @@ fun PostGameScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
-                text = "AFTER THE GAME",
+                text = stringResource(Res.string.postgame_eyebrow),
                 style = ParlorTheme.typography.labelSmall,
                 color = ParlorTheme.colors.textSecondary,
             )
             Text(
-                text = "What's next?",
+                text = stringResource(Res.string.postgame_question),
                 style = ParlorTheme.typography.displayLarge,
                 color = ParlorTheme.colors.textPrimary,
                 textAlign = TextAlign.Center,
             )
             ParlorButton(
-                label = "Play Again — New Killer",
-                contentDescription = "Replay this case with a freshly randomized killer.",
+                label = stringResource(Res.string.postgame_replay),
+                contentDescription = stringResource(Res.string.postgame_replay_description),
                 onClick = onReplaySameCase,
                 modifier = Modifier.fillMaxWidth(),
             )
             ParlorButton(
-                label = "Try the Other Mode",
-                contentDescription = "Switch between Classic Vote and Elimination.",
+                label = stringResource(Res.string.postgame_try_other_mode),
+                contentDescription = stringResource(Res.string.postgame_try_other_mode_description),
                 onClick = onTryOtherMode,
                 modifier = Modifier.fillMaxWidth(),
             )
             ParlorButton(
-                label = "Back to the Library",
-                contentDescription = "Return to the games library.",
+                label = stringResource(Res.string.postgame_back_to_library),
+                contentDescription = stringResource(Res.string.postgame_back_to_library_description),
                 onClick = onBackToLibrary,
                 modifier = Modifier.fillMaxWidth(),
             )

@@ -20,15 +20,32 @@ import com.parlor.designsystem.components.ParlorCard
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.whodunit.content.Character
 import com.parlor.games.whodunit.domain.state.PlayerRole
+import com.parlor.games.whodunit.resources.Res
+import com.parlor.games.whodunit.resources.dossier_acting_tips_label
+import com.parlor.games.whodunit.resources.dossier_alibi_label
+import com.parlor.games.whodunit.resources.dossier_backstory_label
+import com.parlor.games.whodunit.resources.dossier_done
+import com.parlor.games.whodunit.resources.dossier_done_description
+import com.parlor.games.whodunit.resources.dossier_feeling_label
+import com.parlor.games.whodunit.resources.dossier_freely_label
+import com.parlor.games.whodunit.resources.dossier_goal_label
+import com.parlor.games.whodunit.resources.dossier_hide_optional
+import com.parlor.games.whodunit.resources.dossier_hide_optional_description
+import com.parlor.games.whodunit.resources.dossier_killer_goal_fallback
+import com.parlor.games.whodunit.resources.dossier_killer_must_hide_fallback
+import com.parlor.games.whodunit.resources.dossier_motive_label
+import com.parlor.games.whodunit.resources.dossier_must_hide_label
+import com.parlor.games.whodunit.resources.dossier_secret_label
+import com.parlor.games.whodunit.resources.dossier_show_optional
+import com.parlor.games.whodunit.resources.dossier_show_optional_description
+import com.parlor.games.whodunit.resources.dossier_suggested_label
+import com.parlor.games.whodunit.resources.dossier_that_night_label
+import com.parlor.games.whodunit.resources.dossier_you_are_eyebrow
+import org.jetbrains.compose.resources.stringResource
 
 /**
- * The dossier display per design doc §8.
- *
- * **Must Read** is always visible (one screen). **Optional Details** is
- * expandable. Verdict line is the dramatic dossier centerpiece.
- *
- * The dossier text is **case content** — this component never composes prose
- * itself, only renders what the validated case payload provided.
+ * Dossier card. Must Read + Optional Details. Renders text from validated case
+ * content — never composes prose itself.
  */
 @Composable
 fun DossierCard(
@@ -37,6 +54,9 @@ fun DossierCard(
     onDone: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val killerGoalFallback = stringResource(Res.string.dossier_killer_goal_fallback)
+    val killerMustHideFallback = stringResource(Res.string.dossier_killer_must_hide_fallback)
+
     val brief = when (role) {
         PlayerRole.Innocent -> Brief(
             verdict = character.innocentBrief.verdictLine,
@@ -49,15 +69,23 @@ fun DossierCard(
         PlayerRole.Killer -> Brief(
             verdict = character.guiltyBrief.verdictLine,
             alibi = character.guiltyBrief.fakeAlibi,
-            goal = "Stay hidden. Steer suspicion. Survive.",
+            goal = killerGoalFallback,
             canSay = character.guiltyBrief.panicMove,
-            mustHide = "The truth.",
+            mustHide = killerMustHideFallback,
             extra = character.guiltyBrief.actingTips,
         )
     }
 
     var showOptional by remember { mutableStateOf(false) }
     val scroll = rememberScrollState()
+
+    val secretLabel = stringResource(Res.string.dossier_secret_label)
+    val motiveLabel = stringResource(Res.string.dossier_motive_label)
+    val alibiLabel = stringResource(Res.string.dossier_alibi_label)
+    val goalLabel = stringResource(Res.string.dossier_goal_label)
+    val freelyLabel = stringResource(Res.string.dossier_freely_label)
+    val mustHideLabel = stringResource(Res.string.dossier_must_hide_label)
+    val actingTipsLabel = stringResource(Res.string.dossier_acting_tips_label)
 
     ParlorCard(
         modifier = modifier
@@ -74,7 +102,7 @@ fun DossierCard(
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m),
         ) {
             Text(
-                text = "YOU ARE",
+                text = stringResource(Res.string.dossier_you_are_eyebrow),
                 style = ParlorTheme.typography.labelSmall,
                 color = ParlorTheme.colors.textSecondary,
             )
@@ -90,7 +118,6 @@ fun DossierCard(
             )
             Spacer(modifier = Modifier.height(ParlorTheme.spacing.s))
 
-            // Verdict — the dramatic centerpiece.
             Text(
                 text = brief.verdict,
                 style = ParlorTheme.typography.displayLarge,
@@ -101,24 +128,30 @@ fun DossierCard(
             )
             Spacer(modifier = Modifier.height(ParlorTheme.spacing.s))
 
-            LabeledLine("Your secret.", character.privateSecret)
-            LabeledLine("Your motive.", character.publicMotive)
-            LabeledLine("Your alibi.", brief.alibi)
-            LabeledLine("Your goal.", brief.goal)
-            LabeledLine("What you can say freely.", brief.canSay)
-            LabeledLine("What you must hide.", brief.mustHide)
+            LabeledLine(secretLabel, character.privateSecret)
+            LabeledLine(motiveLabel, character.publicMotive)
+            LabeledLine(alibiLabel, brief.alibi)
+            LabeledLine(goalLabel, brief.goal)
+            LabeledLine(freelyLabel, brief.canSay)
+            LabeledLine(mustHideLabel, brief.mustHide)
 
             Spacer(modifier = Modifier.height(ParlorTheme.spacing.m))
 
             if (character.optionalDetails != null) {
+                val toggleLabel = if (showOptional) {
+                    stringResource(Res.string.dossier_hide_optional)
+                } else {
+                    stringResource(Res.string.dossier_show_optional)
+                }
+                val toggleDescription = if (showOptional) {
+                    stringResource(Res.string.dossier_hide_optional_description)
+                } else {
+                    stringResource(Res.string.dossier_show_optional_description)
+                }
                 ParlorButton(
-                    label = if (showOptional) "Hide details" else "More about your character",
+                    label = toggleLabel,
                     onClick = { showOptional = !showOptional },
-                    contentDescription = if (showOptional) {
-                        "Hide optional details."
-                    } else {
-                        "Show optional details about your character."
-                    },
+                    contentDescription = toggleDescription,
                 )
                 if (showOptional) {
                     OptionalDetailsBlock(character)
@@ -127,15 +160,15 @@ fun DossierCard(
 
             if (brief.extra != null) {
                 Spacer(modifier = Modifier.height(ParlorTheme.spacing.s))
-                LabeledLine("Acting tips.", brief.extra)
+                LabeledLine(actingTipsLabel, brief.extra)
             }
 
             Spacer(modifier = Modifier.height(ParlorTheme.spacing.l))
 
             ParlorButton(
-                label = "I'm Done",
+                label = stringResource(Res.string.dossier_done),
                 onClick = onDone,
-                contentDescription = "Hide the dossier and pass the phone.",
+                contentDescription = stringResource(Res.string.dossier_done_description),
                 modifier = Modifier.fillMaxWidth(),
             )
         }
@@ -155,7 +188,7 @@ private data class Brief(
 private fun LabeledLine(label: String, value: String) {
     Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.xxs)) {
         Text(
-            text = label.uppercase(),
+            text = label,
             style = ParlorTheme.typography.labelSmall,
             color = ParlorTheme.colors.accentEmber,
         )
@@ -170,11 +203,16 @@ private fun LabeledLine(label: String, value: String) {
 @Composable
 private fun OptionalDetailsBlock(character: Character) {
     val od = character.optionalDetails ?: return
+    val backstoryLabel = stringResource(Res.string.dossier_backstory_label)
+    val actingTipsLabel = stringResource(Res.string.dossier_acting_tips_label)
+    val feelingLabel = stringResource(Res.string.dossier_feeling_label)
+    val suggestedLabel = stringResource(Res.string.dossier_suggested_label)
+    val thatNightLabel = stringResource(Res.string.dossier_that_night_label)
     Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m)) {
-        od.backstory?.let { LabeledLine("Backstory.", it) }
-        od.actingTips?.let { LabeledLine("Acting tips.", it) }
-        od.emotionalMotivation?.let { LabeledLine("How you feel underneath.", it) }
-        od.suggestedBehavior?.let { LabeledLine("Suggested behavior.", it) }
-        od.extraNightDetails?.let { LabeledLine("That night.", it) }
+        od.backstory?.let { LabeledLine(backstoryLabel, it) }
+        od.actingTips?.let { LabeledLine(actingTipsLabel, it) }
+        od.emotionalMotivation?.let { LabeledLine(feelingLabel, it) }
+        od.suggestedBehavior?.let { LabeledLine(suggestedLabel, it) }
+        od.extraNightDetails?.let { LabeledLine(thatNightLabel, it) }
     }
 }

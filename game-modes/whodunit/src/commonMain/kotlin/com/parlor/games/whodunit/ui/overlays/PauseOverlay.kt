@@ -15,11 +15,15 @@ import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorCard
 import com.parlor.designsystem.components.ParlorScrim
 import com.parlor.designsystem.theme.ParlorTheme
+import com.parlor.games.whodunit.resources.Res
+import com.parlor.games.whodunit.resources.pause_body
+import com.parlor.games.whodunit.resources.pause_end_game
+import com.parlor.games.whodunit.resources.pause_end_game_description
+import com.parlor.games.whodunit.resources.pause_resume
+import com.parlor.games.whodunit.resources.pause_resume_description
+import com.parlor.games.whodunit.resources.pause_title
+import org.jetbrains.compose.resources.stringResource
 
-/**
- * Full-screen pause overlay. Per design doc §15, freezes timers without
- * leaking any information about the current phase.
- */
 @Composable
 fun PauseOverlay(
     onResume: () -> Unit,
@@ -43,28 +47,28 @@ fun PauseOverlay(
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l)) {
                     Text(
-                        text = "Paused",
+                        text = stringResource(Res.string.pause_title),
                         style = ParlorTheme.typography.displayLarge,
                         color = ParlorTheme.colors.textPrimary,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth(),
                     )
                     Text(
-                        text = "The room is paused. Timers will resume when you continue.",
+                        text = stringResource(Res.string.pause_body),
                         style = ParlorTheme.typography.bodyLarge,
                         color = ParlorTheme.colors.textSecondary,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth(),
                     )
                     ParlorButton(
-                        label = "Resume",
-                        contentDescription = "Resume the game.",
+                        label = stringResource(Res.string.pause_resume),
+                        contentDescription = stringResource(Res.string.pause_resume_description),
                         onClick = onResume,
                         modifier = Modifier.fillMaxWidth(),
                     )
                     ParlorButton(
-                        label = "End Game",
-                        contentDescription = "End this game and return to the menu.",
+                        label = stringResource(Res.string.pause_end_game),
+                        contentDescription = stringResource(Res.string.pause_end_game_description),
                         onClick = onEndGame,
                         modifier = Modifier.fillMaxWidth(),
                     )

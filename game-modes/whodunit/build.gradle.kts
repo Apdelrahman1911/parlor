@@ -38,3 +38,10 @@ kotlin {
 android {
     sourceSets["main"].assets.srcDir(rootProject.file("content"))
 }
+
+// Compose Multiplatform resources — generated `Res` accessor lives at this package
+// (instead of the auto-derived name) so call sites read cleanly.
+compose.resources {
+    publicResClass = true
+    packageOfResClass = "com.parlor.games.whodunit.resources"
+}

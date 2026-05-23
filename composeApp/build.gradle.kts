@@ -102,6 +102,12 @@ android {
     sourceSets["main"].assets.srcDir(rootProject.file("content"))
 }
 
+// Compose Multiplatform resources for shell strings (Home, settings, etc.).
+compose.resources {
+    publicResClass = true
+    packageOfResClass = "com.parlor.app.resources"
+}
+
 compose.desktop {
     application {
         mainClass = "com.parlor.app.MainKt"

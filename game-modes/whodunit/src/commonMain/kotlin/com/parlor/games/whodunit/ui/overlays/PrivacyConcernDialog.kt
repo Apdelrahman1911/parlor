@@ -14,10 +14,15 @@ import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorCard
 import com.parlor.designsystem.components.ParlorScrim
 import com.parlor.designsystem.theme.ParlorTheme
+import com.parlor.games.whodunit.resources.Res
+import com.parlor.games.whodunit.resources.privacy_body
+import com.parlor.games.whodunit.resources.privacy_continue
+import com.parlor.games.whodunit.resources.privacy_continue_description
+import com.parlor.games.whodunit.resources.privacy_reroll
+import com.parlor.games.whodunit.resources.privacy_reroll_description
+import com.parlor.games.whodunit.resources.privacy_title
+import org.jetbrains.compose.resources.stringResource
 
-/**
- * Privacy concern flow per design doc §15. Continue or reroll all roles.
- */
 @Composable
 fun PrivacyConcernDialog(
     onContinue: () -> Unit,
@@ -41,25 +46,24 @@ fun PrivacyConcernDialog(
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m)) {
                     Text(
-                        text = "Privacy concern",
+                        text = stringResource(Res.string.privacy_title),
                         style = ParlorTheme.typography.displayMedium,
                         color = ParlorTheme.colors.textPrimary,
                     )
                     Text(
-                        text = "Did someone see a dossier they shouldn't have?",
+                        text = stringResource(Res.string.privacy_body),
                         style = ParlorTheme.typography.bodyLarge,
                         color = ParlorTheme.colors.textSecondary,
                     )
                     ParlorButton(
-                        label = "Continue Anyway",
-                        contentDescription = "Continue the game with the existing roles.",
+                        label = stringResource(Res.string.privacy_continue),
+                        contentDescription = stringResource(Res.string.privacy_continue_description),
                         onClick = onContinue,
                         modifier = Modifier.fillMaxWidth(),
                     )
                     ParlorButton(
-                        label = "Reroll All Roles",
-                        contentDescription = "Reshuffle roles and restart character reveal. " +
-                            "Anyone who saw their old role must forget it.",
+                        label = stringResource(Res.string.privacy_reroll),
+                        contentDescription = stringResource(Res.string.privacy_reroll_description),
                         onClick = onReroll,
                         modifier = Modifier.fillMaxWidth(),
                     )

@@ -12,10 +12,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import com.parlor.designsystem.theme.ParlorTheme
+import com.parlor.games.whodunit.resources.Res
+import com.parlor.games.whodunit.resources.round_discussion_paused_label
+import com.parlor.games.whodunit.resources.round_discussion_timer_label
+import org.jetbrains.compose.resources.stringResource
 
 /**
- * The strip that shows discussion-timer state. Soft warning color when the
- * last 10 seconds are reached; subtle when plenty of time remains.
+ * Discussion-timer strip. Soft warning color when the last 10 seconds are
+ * reached; subtle when plenty of time remains.
  */
 @Composable
 fun TimerRibbon(
@@ -28,6 +32,14 @@ fun TimerRibbon(
     val urgent = remainingSeconds in 1..10
     val mm = remainingSeconds / 60
     val ss = (remainingSeconds % 60).toString().padStart(2, '0')
+    val totalMm = totalSeconds / 60
+    val totalSs = (totalSeconds % 60).toString().padStart(2, '0')
+
+    val statusLabel = if (paused) {
+        stringResource(Res.string.round_discussion_paused_label)
+    } else {
+        stringResource(Res.string.round_discussion_timer_label)
+    }
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -39,17 +51,17 @@ fun TimerRibbon(
             .padding(horizontal = ParlorTheme.spacing.l, vertical = ParlorTheme.spacing.m),
     ) {
         Text(
-            text = if (paused) "PAUSED" else "DISCUSSION",
+            text = statusLabel,
             style = ParlorTheme.typography.labelSmall,
             color = if (urgent) colors.textPrimary else colors.textSecondary,
         )
         Text(
             text = "$mm:$ss",
             style = ParlorTheme.typography.timerMedium,
-            color = if (urgent) colors.textPrimary else colors.textPrimary,
+            color = colors.textPrimary,
         )
         Text(
-            text = "/ ${totalSeconds / 60}:${(totalSeconds % 60).toString().padStart(2, '0')}",
+            text = "/ $totalMm:$totalSs",
             style = ParlorTheme.typography.bodyMedium,
             color = colors.textTertiary,
         )

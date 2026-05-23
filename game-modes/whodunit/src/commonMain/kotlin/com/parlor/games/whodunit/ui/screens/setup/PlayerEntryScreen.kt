@@ -5,8 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -14,22 +12,22 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import com.parlor.designsystem.backdrop.HeroBackdrop
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.theme.ParlorTheme
+import com.parlor.games.whodunit.resources.Res
+import com.parlor.games.whodunit.resources.setup_player_entry_confirm
+import com.parlor.games.whodunit.resources.setup_player_entry_confirm_description
+import com.parlor.games.whodunit.resources.setup_player_entry_eyebrow
+import com.parlor.games.whodunit.resources.setup_player_entry_field_format
+import com.parlor.games.whodunit.resources.setup_player_entry_headline
+import org.jetbrains.compose.resources.stringResource
 
-/**
- * Player Entry — each player types their own name. Used throughout the game
- * ("Pass to Eleanor" not "Pass to Player 3"). Phase 4: simple, premium-feeling
- * input rows. Phase 6 adds unicode-name QA.
- */
 @Composable
 fun PlayerEntryScreen(
     playerCount: Int,
@@ -50,12 +48,12 @@ fun PlayerEntryScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
-                text = "ENTER YOUR NAMES",
+                text = stringResource(Res.string.setup_player_entry_eyebrow),
                 style = ParlorTheme.typography.labelSmall,
                 color = ParlorTheme.colors.textSecondary,
             )
             Text(
-                text = "Pass the phone. Each player types theirs.",
+                text = stringResource(Res.string.setup_player_entry_headline),
                 style = ParlorTheme.typography.displayMedium,
                 color = ParlorTheme.colors.textPrimary,
             )
@@ -69,8 +67,8 @@ fun PlayerEntryScreen(
             }
 
             ParlorButton(
-                label = "Begin",
-                contentDescription = "Confirm player names and continue to the case intro.",
+                label = stringResource(Res.string.setup_player_entry_confirm),
+                contentDescription = stringResource(Res.string.setup_player_entry_confirm_description),
                 onClick = { onConfirm(names.toList()) },
                 enabled = names.all { it.isNotBlank() },
                 modifier = Modifier.fillMaxWidth(),
@@ -85,10 +83,11 @@ private fun NameField(
     value: String,
     onValueChange: (String) -> Unit,
 ) {
+    val label = stringResource(Res.string.setup_player_entry_field_format, index + 1)
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
-        label = { Text("Player ${index + 1}", style = ParlorTheme.typography.labelMedium) },
+        label = { Text(label, style = ParlorTheme.typography.labelMedium) },
         singleLine = true,
         textStyle = ParlorTheme.typography.bodyLarge,
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),

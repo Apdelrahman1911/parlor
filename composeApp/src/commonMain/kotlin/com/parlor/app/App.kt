@@ -3,6 +3,8 @@ package com.parlor.app
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -10,39 +12,64 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.parlor.app.shell.WhodunitSetupDemo
 import com.parlor.app.shell.home.HomeScreen
+import com.parlor.app.shell.settings.SettingsScreen
+import com.parlor.designsystem.localization.AppLanguage
+import com.parlor.designsystem.localization.ProvideAppLanguage
+import com.parlor.designsystem.localization.customAppLocale
 import com.parlor.designsystem.theme.ParlorTheme
+import com.parlor.designsystem.theme.ThemeMode
+import com.parlor.storage.settings.SettingsStore
+import org.koin.compose.koinInject
 
 /**
- * Application root. Wraps Parlor's theme and routes between Home and the
- * (current Phase 4) Whodunit setup demo.
+ * Application root. Reads language and appearance preferences from
+ * [SettingsStore] and wraps content with [ProvideAppLanguage] (LTR/RTL + locale
+ * propagation) and [ParlorTheme] (light/dark resolution).
  *
  * Phase 5 replaces this hand-rolled router with Compose Navigation backed by
  * the `NavGraphRegistry`.
  */
 @Composable
 fun App() {
-    ParlorTheme {
-        var screen: AppScreen by remember { mutableStateOf(AppScreen.Home) }
+    val settings: SettingsStore = koinInject()
+    val languageTag by settings.languageOverride.collectAsState(initial = null)
+    val themeModeTag by settings.themeMode.collectAsState(initial = ThemeMode.Default.tag)
 
-        when (screen) {
-            AppScreen.Home -> HomeScreen(
-                onTileSelected = { gameId ->
-                    if (gameId == "whodunit") screen = AppScreen.WhodunitSetup
-                },
-                modifier = Modifier.fillMaxSize(),
-            )
-            AppScreen.WhodunitSetup -> WhodunitSetupDemo(
-                onSetupComplete = {
-                    // Phase 5 transitions into the reveal/round flow.
-                    screen = AppScreen.Home
-                },
-                modifier = Modifier.fillMaxSize(),
-            )
+    val language = AppLanguage.fromTag(languageTag)
+    val themeMode = ThemeMode.fromTag(themeModeTag)
+
+    LaunchedEffect(language) {
+        customAppLocale = language.tag
+    }
+
+    ProvideAppLanguage(language = language) {
+        ParlorTheme(themeMode = themeMode) {
+            var screen: AppScreen by remember { mutableStateOf(AppScreen.Home) }
+
+            when (screen) {
+                AppScreen.Home -> HomeScreen(
+                    onTileSelected = { gameId ->
+                        if (gameId == "whodunit") screen = AppScreen.WhodunitSetup
+                    },
+                    onSettings = { screen = AppScreen.Settings },
+                    modifier = Modifier.fillMaxSize(),
+                )
+                AppScreen.WhodunitSetup -> WhodunitSetupDemo(
+                    onSetupComplete = {
+                        screen = AppScreen.Home
+                    },
+                    modifier = Modifier.fillMaxSize(),
+                )
+                AppScreen.Settings -> SettingsScreen(
+                    onBack = { screen = AppScreen.Home },
+                    modifier = Modifier.fillMaxSize(),
+                )
+            }
         }
     }
 }
 
-private enum class AppScreen { Home, WhodunitSetup }
+private enum class AppScreen { Home, WhodunitSetup, Settings }
 
 /** Tiny shim used by Compose previews to keep the API surface stable. */
 @Composable

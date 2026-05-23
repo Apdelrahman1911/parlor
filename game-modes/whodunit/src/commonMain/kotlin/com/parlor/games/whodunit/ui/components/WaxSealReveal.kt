@@ -3,7 +3,6 @@ package com.parlor.games.whodunit.ui.components
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,15 +29,17 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.parlor.designsystem.theme.ParlorTheme
+import com.parlor.games.whodunit.resources.Res
+import com.parlor.games.whodunit.resources.reveal_gate_a11y
+import com.parlor.games.whodunit.resources.reveal_gate_reduce_motion_hint
 import kotlinx.coroutines.delay
+import org.jetbrains.compose.resources.stringResource
 
 /**
- * The signature Whodunit interaction.
- *
- * The user presses and holds a wax-seal icon for 1.5 s. The seal pulses with a
- * warm ember glow during the hold; on completion it breaks and the dossier is
- * revealed. A tap fallback (single tap then explicit confirmation) appears for
- * motor accessibility or when `reducedMotion` is on.
+ * The signature Whodunit interaction. Press-and-hold a wax-seal icon for 1.5 s.
+ * The seal pulses with a warm ember glow during the hold; on completion it
+ * breaks and the dossier is revealed. A tap fallback (single tap then explicit
+ * confirmation) appears for motor accessibility or when `reducedMotion` is on.
  */
 @Composable
 fun WaxSealReveal(
@@ -49,6 +50,8 @@ fun WaxSealReveal(
 ) {
     val colors = ParlorTheme.colors
     val reduced = ParlorTheme.reducedMotion
+    val a11y = stringResource(Res.string.reveal_gate_a11y)
+    val reduceMotionHint = stringResource(Res.string.reveal_gate_reduce_motion_hint)
 
     var pressing by remember { mutableStateOf(false) }
     var progress by remember { mutableStateOf(0f) }
@@ -104,15 +107,12 @@ fun WaxSealReveal(
                         },
                     )
                 }
-                .semantics {
-                    contentDescription = "Press and hold the wax seal to reveal your dossier."
-                },
+                .semantics { contentDescription = a11y },
         ) {
             Canvas(modifier = Modifier.fillMaxWidth().size(160.dp)) {
                 val radius = size.minDimension / 2f
                 val center = Offset(size.width / 2f, size.height / 2f)
 
-                // Outer ember glow (alpha modulated by hold progress).
                 drawCircle(
                     brush = Brush.radialGradient(
                         colors = listOf(
@@ -125,7 +125,6 @@ fun WaxSealReveal(
                     radius = radius * 1.4f,
                 )
 
-                // Core seal.
                 drawCircle(
                     brush = Brush.radialGradient(
                         colors = listOf(colors.accentEmber, colors.accentEmberDeep),
@@ -135,7 +134,6 @@ fun WaxSealReveal(
                     radius = radius,
                 )
 
-                // Inner highlight crescent — implies a heated wax surface.
                 drawCircle(
                     color = colors.accentEmberGlow.copy(alpha = 0.45f),
                     radius = radius * 0.45f,
@@ -154,7 +152,7 @@ fun WaxSealReveal(
 
         if (reduced) {
             Text(
-                text = "Reduce motion is on. Tap the seal to reveal.",
+                text = reduceMotionHint,
                 style = ParlorTheme.typography.labelSmall,
                 color = colors.textTertiary,
                 textAlign = TextAlign.Center,

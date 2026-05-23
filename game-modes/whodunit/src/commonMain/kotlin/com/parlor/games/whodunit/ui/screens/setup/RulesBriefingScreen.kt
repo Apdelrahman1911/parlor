@@ -22,11 +22,18 @@ import com.parlor.designsystem.backdrop.HeroBackdrop
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorCard
 import com.parlor.designsystem.theme.ParlorTheme
+import com.parlor.games.whodunit.resources.Res
+import com.parlor.games.whodunit.resources.setup_briefing_begin
+import com.parlor.games.whodunit.resources.setup_briefing_begin_description
+import com.parlor.games.whodunit.resources.setup_briefing_card_1
+import com.parlor.games.whodunit.resources.setup_briefing_card_2
+import com.parlor.games.whodunit.resources.setup_briefing_card_3
+import com.parlor.games.whodunit.resources.setup_briefing_card_4
+import com.parlor.games.whodunit.resources.setup_briefing_continue
+import com.parlor.games.whodunit.resources.setup_briefing_continue_description
+import com.parlor.games.whodunit.resources.setup_briefing_eyebrow
+import org.jetbrains.compose.resources.stringResource
 
-/**
- * Rules briefing carousel — four short cards. Phase 4 uses a step pager. Phase
- * 6 can polish the inter-card motion with theatrical transitions.
- */
 @Composable
 fun RulesBriefingScreen(
     cardIndex: Int,
@@ -34,12 +41,23 @@ fun RulesBriefingScreen(
     modifier: Modifier = Modifier,
 ) {
     val cards = listOf(
-        "One of you is the killer. Even you don't know who, until you see your character.",
-        "You may lie. You should lie. Especially if you're guilty.",
-        "Each round, the app reveals a new clue. Discuss. Accuse. Suspect.",
-        "Vote according to your chosen mode. Get it wrong, the killer wins.",
+        stringResource(Res.string.setup_briefing_card_1),
+        stringResource(Res.string.setup_briefing_card_2),
+        stringResource(Res.string.setup_briefing_card_3),
+        stringResource(Res.string.setup_briefing_card_4),
     )
     val safeIndex = cardIndex.coerceIn(0, cards.size - 1)
+    val isLast = safeIndex == cards.size - 1
+    val buttonLabel = if (isLast) {
+        stringResource(Res.string.setup_briefing_begin)
+    } else {
+        stringResource(Res.string.setup_briefing_continue)
+    }
+    val buttonDescription = if (isLast) {
+        stringResource(Res.string.setup_briefing_begin_description)
+    } else {
+        stringResource(Res.string.setup_briefing_continue_description)
+    }
 
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
         Column(
@@ -50,7 +68,7 @@ fun RulesBriefingScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
-                text = "HOW TO PLAY",
+                text = stringResource(Res.string.setup_briefing_eyebrow),
                 style = ParlorTheme.typography.labelSmall,
                 color = ParlorTheme.colors.textSecondary,
             )
@@ -89,12 +107,8 @@ fun RulesBriefingScreen(
                 }
                 Spacer(modifier = Modifier.size(ParlorTheme.spacing.s))
                 ParlorButton(
-                    label = if (safeIndex == cards.size - 1) "Begin the Investigation" else "Continue",
-                    contentDescription = if (safeIndex == cards.size - 1) {
-                        "Begin the investigation."
-                    } else {
-                        "Advance to the next briefing card."
-                    },
+                    label = buttonLabel,
+                    contentDescription = buttonDescription,
                     onClick = { onAdvance(safeIndex + 1) },
                     modifier = Modifier.fillMaxWidth(),
                 )

@@ -21,21 +21,22 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.parlor.designsystem.backdrop.HeroBackdrop
 import com.parlor.designsystem.theme.ParlorTheme
+import com.parlor.games.whodunit.resources.Res
+import com.parlor.games.whodunit.resources.setup_player_count_case_cap_format
+import com.parlor.games.whodunit.resources.setup_player_count_eyebrow
+import com.parlor.games.whodunit.resources.setup_player_count_headline
+import org.jetbrains.compose.resources.stringResource
 
 /**
- * Player Count — renders the *module's* full range. Per ARCHITECTURE.md §1.5,
+ * Player Count — renders the module's full range. Per ARCHITECTURE.md §1.5,
  * the display strategy (show-and-disable vs hide-unsupported) is a product
- * decision. We default to **hide-unsupported** for the launch UX of *The Last
+ * decision. Default is **hide-unsupported** for the launch UX of *The Last
  * Dinner* (cleaner; only 4–6 are shown).
- *
- * The screen never silently hides slots the *module* supports — it only hides
- * slots the selected case doesn't support. When a future 8-character case
- * lands, the visible range expands automatically.
  */
 @Composable
 fun PlayerCountScreen(
-    moduleRange: IntRange,                 // e.g., 4..8 for Classic Vote
-    caseSupportedRange: IntRange,          // e.g., 4..6 for The Last Dinner
+    moduleRange: IntRange,
+    caseSupportedRange: IntRange,
     displayStrategy: PlayerCountDisplayStrategy = PlayerCountDisplayStrategy.HideUnsupported,
     onCountSelected: (Int) -> Unit,
     modifier: Modifier = Modifier,
@@ -54,12 +55,12 @@ fun PlayerCountScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
-                text = "HOW MANY PLAYERS",
+                text = stringResource(Res.string.setup_player_count_eyebrow),
                 style = ParlorTheme.typography.labelSmall,
                 color = ParlorTheme.colors.textSecondary,
             )
             Text(
-                text = "Tap a number.",
+                text = stringResource(Res.string.setup_player_count_headline),
                 style = ParlorTheme.typography.displayMedium,
                 color = ParlorTheme.colors.textPrimary,
                 textAlign = TextAlign.Center,
@@ -83,7 +84,10 @@ fun PlayerCountScreen(
                 caseSupportedRange.last < moduleRange.last
             ) {
                 Text(
-                    text = "This case supports up to ${caseSupportedRange.last} players.",
+                    text = stringResource(
+                        Res.string.setup_player_count_case_cap_format,
+                        caseSupportedRange.last,
+                    ),
                     style = ParlorTheme.typography.bodyMedium,
                     color = ParlorTheme.colors.textTertiary,
                     textAlign = TextAlign.Center,

@@ -14,14 +14,20 @@ import com.parlor.designsystem.backdrop.HeroBackdrop
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.whodunit.content.Character
 import com.parlor.games.whodunit.domain.state.PlayerRole
+import com.parlor.games.whodunit.resources.Res
+import com.parlor.games.whodunit.resources.reveal_gate_headline_format
+import com.parlor.games.whodunit.resources.reveal_gate_hold_hint
+import com.parlor.games.whodunit.resources.reveal_gate_instruction
+import com.parlor.games.whodunit.resources.reveal_handoff_subtitle
+import com.parlor.games.whodunit.resources.reveal_handoff_title_format
+import com.parlor.games.whodunit.resources.reveal_hide_end
+import com.parlor.games.whodunit.resources.reveal_hide_next_format
 import com.parlor.games.whodunit.ui.components.CandlelitCover
 import com.parlor.games.whodunit.ui.components.DossierCard
 import com.parlor.games.whodunit.ui.components.HideScreen
 import com.parlor.games.whodunit.ui.components.WaxSealReveal
+import org.jetbrains.compose.resources.stringResource
 
-/**
- * Handoff cover — "Pass the phone to [Name]. Tap when ready."
- */
 @Composable
 fun CharacterRevealHandoffScreen(
     playerName: String,
@@ -29,16 +35,13 @@ fun CharacterRevealHandoffScreen(
     modifier: Modifier = Modifier,
 ) {
     CandlelitCover(
-        title = "Pass to $playerName.",
-        subtitle = "When you're alone with the phone, tap to continue.",
+        title = stringResource(Res.string.reveal_handoff_title_format, playerName),
+        subtitle = stringResource(Res.string.reveal_handoff_subtitle),
         onDismiss = onContinue,
         modifier = modifier,
     )
 }
 
-/**
- * Wax-seal gate — the player presses and holds to reveal.
- */
 @Composable
 fun CharacterRevealGateScreen(
     playerName: String,
@@ -54,21 +57,21 @@ fun CharacterRevealGateScreen(
             verticalArrangement = Arrangement.SpaceAround,
         ) {
             Text(
-                text = "$playerName,",
+                text = stringResource(Res.string.reveal_gate_headline_format, playerName),
                 style = ParlorTheme.typography.displayMedium,
                 color = ParlorTheme.colors.textPrimary,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth(),
             )
             Text(
-                text = "find a quiet angle. Press and hold the seal.",
+                text = stringResource(Res.string.reveal_gate_instruction),
                 style = ParlorTheme.typography.bodyLarge,
                 color = ParlorTheme.colors.textSecondary,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth(),
             )
             WaxSealReveal(
-                label = "Hold for 1.5 seconds.",
+                label = stringResource(Res.string.reveal_gate_hold_hint),
                 onRevealed = onRevealed,
                 modifier = Modifier.fillMaxWidth(),
             )
@@ -76,10 +79,6 @@ fun CharacterRevealGateScreen(
     }
 }
 
-/**
- * Dossier reveal — Must Read + Optional Details. Card is the full screen, set
- * against the candlelit backdrop.
- */
 @Composable
 fun DossierRevealScreen(
     character: Character,
@@ -99,7 +98,6 @@ fun DossierRevealScreen(
     }
 }
 
-/** Hide and pass — full-black with one line. */
 @Composable
 fun HideAndPassScreen(
     nextPlayerName: String?,
@@ -107,9 +105,9 @@ fun HideAndPassScreen(
     modifier: Modifier = Modifier,
 ) {
     val text = if (nextPlayerName != null) {
-        "Hide the phone. Pass to $nextPlayerName when no one is watching."
+        stringResource(Res.string.reveal_hide_next_format, nextPlayerName)
     } else {
-        "Hide the phone. Pass back to the table."
+        stringResource(Res.string.reveal_hide_end)
     }
     HideScreen(line = text, onTap = onTap, modifier = modifier)
 }

@@ -13,11 +13,13 @@ import androidx.compose.ui.Modifier
 import com.parlor.designsystem.backdrop.HeroBackdrop
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.theme.ParlorTheme
+import com.parlor.games.whodunit.resources.Res
+import com.parlor.games.whodunit.resources.setup_intro_continue
+import com.parlor.games.whodunit.resources.setup_intro_continue_description
+import com.parlor.games.whodunit.resources.setup_intro_read_aloud_eyebrow
+import com.parlor.games.whodunit.resources.setup_intro_what_is_true_eyebrow
+import org.jetbrains.compose.resources.stringResource
 
-/**
- * Public intro — placed face-up at the table. Everyone reads together.
- * The prose comes from validated case content; the screen never composes it.
- */
 @Composable
 fun PublicIntroScreen(
     title: String,
@@ -35,7 +37,7 @@ fun PublicIntroScreen(
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l),
         ) {
             Text(
-                text = "READ ALOUD",
+                text = stringResource(Res.string.setup_intro_read_aloud_eyebrow),
                 style = ParlorTheme.typography.labelSmall,
                 color = ParlorTheme.colors.textSecondary,
             )
@@ -50,7 +52,7 @@ fun PublicIntroScreen(
                 color = ParlorTheme.colors.textNarration,
             )
             Text(
-                text = "WHAT IS TRUE",
+                text = stringResource(Res.string.setup_intro_what_is_true_eyebrow),
                 style = ParlorTheme.typography.labelSmall,
                 color = ParlorTheme.colors.accentEmber,
             )
@@ -62,8 +64,8 @@ fun PublicIntroScreen(
                 )
             }
             ParlorButton(
-                label = "Continue",
-                contentDescription = "Advance from the public intro to the rules briefing.",
+                label = stringResource(Res.string.setup_intro_continue),
+                contentDescription = stringResource(Res.string.setup_intro_continue_description),
                 onClick = onContinue,
                 modifier = Modifier.fillMaxWidth(),
             )
