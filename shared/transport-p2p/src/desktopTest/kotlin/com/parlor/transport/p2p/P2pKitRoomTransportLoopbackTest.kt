@@ -1,0 +1,203 @@
+package com.parlor.transport.p2p
+
+import assertk.assertThat
+import assertk.assertions.isEqualTo
+import assertk.assertions.isInstanceOf
+import assertk.assertions.isNotNull
+import assertk.assertions.isTrue
+import com.parlor.core.ids.PlayerId
+import com.parlor.core.result.Result
+import com.parlor.networking.protocol.HostMessage
+import com.parlor.networking.protocol.PeerMessage
+import com.parlor.networking.room.LocalRoom
+import com.parlor.networking.room.RoomInfo
+import com.parlor.networking.room.SendTarget
+import com.parlor.networking.transport.HostConfig
+import dev.p2pkit.core.AppId
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeout
+import kotlin.test.AfterTest
+import kotlin.test.Test
+import kotlin.time.Duration.Companion.seconds
+
+/**
+ * End-to-end loopback verification: two `P2pKitRoomTransport` instances
+ * stand up in one JVM process, one hosts and one joins via LAN/loopback,
+ * and the host↔peer protocol round-trips successfully.
+ *
+ * This is the "smallest first commit that lets us test host/join/message
+ * sync" — it does not wire P2pKit into the app's production DI yet, but
+ * proves the adapter is functionally correct on the JVM target.
+ *
+ * The test runs on `desktopTest` only because P2pKit's LAN transport on
+ * the JVM uses JmDNS over loopback — Android/iOS have their own
+ * platform-specific listeners that can't be exercised in a unit test.
+ *
+ * **This test is opt-in.** It assumes the build was configured with
+ * `parlor.p2p.enabled=true`. If the property is false the whole module
+ * (including this test) is excluded from the build by `settings.gradle.kts`.
+ */
+class P2pKitRoomTransportLoopbackTest {
+
+    private val testScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
+    private val rooms: MutableList<LocalRoom> = mutableListOf()
+
+    @AfterTest
+    fun teardown() = runBlocking {
+        rooms.forEach { runCatching { it.leave() } }
+        rooms.clear()
+        testScope.coroutineContext[Job]?.cancel()
+    }
+
+    @Test
+    fun host_advertises_a_room_code_that_join_resolves_to() = runBlocking {
+        // Use a unique appId per test run so concurrent test invocations
+        // can't see each other's advertisements.
+        val appId = AppId("com.parlor.p2p.test.${randomTag()}")
+
+        val hostTransport = P2pKitRoomTransport(
+            appId = appId,
+            deviceName = "host-device",
+            scope = testScope,
+        )
+        val hostResult = withTimeout(15.seconds) {
+            hostTransport.host(HostConfig(roomDisplayName = "Test Room"))
+        }
+        assertThat(hostResult).isInstanceOf(Result.Success::class)
+        val hostRoom = (hostResult as Result.Success).data
+        rooms += hostRoom
+
+        val roomCode = hostRoom.info.value.code
+        assertThat(roomCode.length).isEqualTo(6)
+        assertThat(hostRoom.info.value.status).isEqualTo(RoomInfo.Status.Hosting)
+        assertThat(hostRoom.isHost).isTrue()
+    }
+
+    @Test
+    fun peer_can_join_a_hosted_room_and_membership_appears_on_host() = runBlocking {
+        val appId = AppId("com.parlor.p2p.test.${randomTag()}")
+
+        val hostTransport = P2pKitRoomTransport(appId, "host-device", testScope)
+        val peerTransport = P2pKitRoomTransport(appId, "peer-alice", testScope)
+
+        val hostRoom = (
+            withTimeout(15.seconds) {
+                hostTransport.host(HostConfig(roomDisplayName = "Test Room"))
+            } as Result.Success
+            ).data
+        rooms += hostRoom
+        val code = hostRoom.info.value.code
+
+        val peerRoom = (
+            withTimeout(30.seconds) { peerTransport.join(code, "peer-alice") } as Result.Success
+            ).data
+        rooms += peerRoom
+        assertThat(peerRoom.isHost).isEqualTo(false)
+        assertThat(peerRoom.info.value.status).isEqualTo(RoomInfo.Status.Joined)
+
+        // Host membership eventually includes the peer.
+        val firstMember = withTimeout(10.seconds) {
+            hostRoom.members.first { it.isNotEmpty() }.first()
+        }
+        assertThat(firstMember.displayName).isEqualTo("peer-alice")
+        assertThat(firstMember.connected).isTrue()
+    }
+
+    @Test
+    fun peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back() = runBlocking {
+        val appId = AppId("com.parlor.p2p.test.${randomTag()}")
+
+        val hostTransport = P2pKitRoomTransport(appId, "host-device", testScope)
+        val peerTransport = P2pKitRoomTransport(appId, "peer-alice", testScope)
+
+        val hostRoom = (
+            withTimeout(15.seconds) {
+                hostTransport.host(HostConfig(roomDisplayName = "Test Room"))
+            } as Result.Success
+            ).data
+        rooms += hostRoom
+        val code = hostRoom.info.value.code
+
+        val peerRoom = (
+            withTimeout(30.seconds) { peerTransport.join(code, "peer-alice") } as Result.Success
+            ).data
+        rooms += peerRoom
+
+        // Wait for host membership to be observed (the host's accept-loop
+        // needs to have processed the inbound session before its outbound
+        // send can find the session in its lookup map).
+        val joinedPlayerId = withTimeout(10.seconds) {
+            hostRoom.members.first { it.isNotEmpty() }.first().playerId
+        }
+
+        // Peer → Host: send a JoinRequest, host receives it.
+        val hostInbox = async {
+            withTimeout(10.seconds) { hostRoom.incoming.first() }
+        }
+        peerRoom.sendToHost(PeerMessage.JoinRequest("peer-alice"))
+        val received = hostInbox.await()
+        assertThat(received).isInstanceOf(PeerMessage.JoinRequest::class)
+        assertThat((received as PeerMessage.JoinRequest).displayName).isEqualTo("peer-alice")
+
+        // Host → Peer (direct): send a fake EndSession, peer receives it.
+        val peerInbox = async {
+            withTimeout(10.seconds) { peerRoom.incoming.first() }
+        }
+        hostRoom.send(SendTarget.Direct(joinedPlayerId), HostMessage.EndSession)
+        val hostMsg = peerInbox.await()
+        assertThat(hostMsg).isInstanceOf(HostMessage.EndSession::class)
+    }
+
+    @Test
+    fun host_broadcast_reaches_every_peer() = runBlocking {
+        val appId = AppId("com.parlor.p2p.test.${randomTag()}")
+
+        val hostTransport = P2pKitRoomTransport(appId, "host-device", testScope)
+        val peer1Transport = P2pKitRoomTransport(appId, "peer-1", testScope)
+        val peer2Transport = P2pKitRoomTransport(appId, "peer-2", testScope)
+
+        val hostRoom = (
+            withTimeout(15.seconds) {
+                hostTransport.host(HostConfig(roomDisplayName = "Test Room"))
+            } as Result.Success
+            ).data
+        rooms += hostRoom
+        val code = hostRoom.info.value.code
+
+        val peer1Room = (
+            withTimeout(30.seconds) { peer1Transport.join(code, "peer-1") } as Result.Success
+            ).data
+        rooms += peer1Room
+        val peer2Room = (
+            withTimeout(30.seconds) { peer2Transport.join(code, "peer-2") } as Result.Success
+            ).data
+        rooms += peer2Room
+
+        // Wait until both peers are known to the host.
+        withTimeout(10.seconds) {
+            hostRoom.members.first { it.size >= 2 }
+        }
+
+        // Broadcast EndSession; both peers receive it.
+        val peer1Inbox = async {
+            withTimeout(10.seconds) { peer1Room.incoming.first() }
+        }
+        val peer2Inbox = async {
+            withTimeout(10.seconds) { peer2Room.incoming.first() }
+        }
+        hostRoom.send(SendTarget.Broadcast, HostMessage.EndSession)
+        assertThat(peer1Inbox.await()).isInstanceOf(HostMessage.EndSession::class)
+        assertThat(peer2Inbox.await()).isInstanceOf(HostMessage.EndSession::class)
+    }
+
+    private fun randomTag(): String =
+        (1..6).map { ('a'..'z').random() }.joinToString("")
+}
