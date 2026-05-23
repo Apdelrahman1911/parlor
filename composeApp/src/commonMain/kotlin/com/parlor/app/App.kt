@@ -10,7 +10,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import com.parlor.app.shell.WhodunitSetupDemo
 import com.parlor.app.shell.home.HomeScreen
 import com.parlor.app.shell.settings.SettingsScreen
 import com.parlor.designsystem.localization.AppLanguage
@@ -18,6 +17,7 @@ import com.parlor.designsystem.localization.ProvideAppLanguage
 import com.parlor.designsystem.localization.customAppLocale
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.designsystem.theme.ThemeMode
+import com.parlor.games.whodunit.ui.flow.WhodunitGameFlow
 import com.parlor.storage.settings.SettingsStore
 import org.koin.compose.koinInject
 
@@ -26,8 +26,8 @@ import org.koin.compose.koinInject
  * [SettingsStore] and wraps content with [ProvideAppLanguage] (LTR/RTL + locale
  * propagation) and [ParlorTheme] (light/dark resolution).
  *
- * Phase 5 replaces this hand-rolled router with Compose Navigation backed by
- * the `NavGraphRegistry`.
+ * The Whodunit route now points at the real reducer-driven
+ * [WhodunitGameFlow] (not the prior `WhodunitSetupDemo` placeholder).
  */
 @Composable
 fun App() {
@@ -49,15 +49,13 @@ fun App() {
             when (screen) {
                 AppScreen.Home -> HomeScreen(
                     onTileSelected = { gameId ->
-                        if (gameId == "whodunit") screen = AppScreen.WhodunitSetup
+                        if (gameId == "whodunit") screen = AppScreen.Whodunit
                     },
                     onSettings = { screen = AppScreen.Settings },
                     modifier = Modifier.fillMaxSize(),
                 )
-                AppScreen.WhodunitSetup -> WhodunitSetupDemo(
-                    onSetupComplete = {
-                        screen = AppScreen.Home
-                    },
+                AppScreen.Whodunit -> WhodunitGameFlow(
+                    onBackToLibrary = { screen = AppScreen.Home },
                     modifier = Modifier.fillMaxSize(),
                 )
                 AppScreen.Settings -> SettingsScreen(
@@ -69,7 +67,7 @@ fun App() {
     }
 }
 
-private enum class AppScreen { Home, WhodunitSetup, Settings }
+private enum class AppScreen { Home, Whodunit, Settings }
 
 /** Tiny shim used by Compose previews to keep the API surface stable. */
 @Composable
