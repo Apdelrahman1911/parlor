@@ -1,8 +1,20 @@
 package com.parlor.content.schema
 
 import com.parlor.core.versioning.SemVer
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonDecoder
 import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonEncoder
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.intOrNull
 
 /**
  * Generic case envelope per docs/CONTENT_SCHEMA.md §2.
@@ -30,10 +42,14 @@ data class CaseEnvelope(
 )
 
 /**
- * Serializable representation of an int range — JSON-friendly `[min, max]`.
- * Converts to/from Kotlin's [IntRange] via [toIntRange].
+ * An int range with a JSON-array wire format — `[min, max]` — per
+ * docs/CONTENT_SCHEMA.md §2.1. Stored internally as two Ints; converts to/from
+ * Kotlin's [IntRange] via [toIntRange].
+ *
+ * The custom serializer is required because kotlinx.serialization's auto-
+ * generated form would produce `{"min":4,"max":6}` — schema-incompatible.
  */
-@Serializable
+@Serializable(with = IntRangePair.Serializer::class)
 data class IntRangePair(val min: Int, val max: Int) {
     init {
         require(min <= max) { "IntRangePair min ($min) must be <= max ($max)" }
@@ -43,4 +59,37 @@ data class IntRangePair(val min: Int, val max: Int) {
     companion object {
         fun of(range: IntRange): IntRangePair = IntRangePair(range.first, range.last)
     }
+
+    object Serializer : KSerializer<IntRangePair> {
+        // The wire format is a JSON array `[min, max]`. Using a primitive
+        // descriptor keeps non-JSON formats from trying to introspect a fake
+        // class shape — and this type is JSON-only by design.
+        override val descriptor: SerialDescriptor =
+            PrimitiveSerialDescriptor("IntRangePair", PrimitiveKind.STRING)
+
+        override fun serialize(encoder: Encoder, value: IntRangePair) {
+            val jsonEncoder = encoder as? JsonEncoder
+                ?: throw SerializationException("IntRangePair is JSON-only")
+            jsonEncoder.encodeJsonElement(
+                JsonArray(listOf(JsonPrimitive(value.min), JsonPrimitive(value.max))),
+            )
+        }
+
+        override fun deserialize(decoder: Decoder): IntRangePair {
+            val jsonDecoder = decoder as? JsonDecoder
+                ?: throw SerializationException("IntRangePair is JSON-only")
+            val element = jsonDecoder.decodeJsonElement()
+            if (element !is JsonArray || element.size != 2) {
+                throw SerializationException(
+                    "IntRangePair expected a JSON array of two integers; got $element",
+                )
+            }
+            val min = (element[0] as? JsonPrimitive)?.intOrNull
+                ?: throw SerializationException("IntRangePair[0] is not an integer")
+            val max = (element[1] as? JsonPrimitive)?.intOrNull
+                ?: throw SerializationException("IntRangePair[1] is not an integer")
+            return IntRangePair(min, max)
+        }
+    }
 }
+

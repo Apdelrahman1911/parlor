@@ -40,4 +40,5 @@ val coreModule: Module = module {
 val allModules: List<Module> = listOf(
     coreModule,
     whodunitModule,
+    contentModule,
 )

@@ -29,6 +29,8 @@ kotlin {
             implementation(libs.turbine)
             implementation(libs.assertk)
             implementation(libs.koin.test)
+            implementation(libs.bundles.ktor.common)
+            implementation(libs.ktor.client.mock)
         }
     }
 }

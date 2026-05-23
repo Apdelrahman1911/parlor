@@ -43,13 +43,10 @@ class BundledWhodunitCases(
         val loaded = mutableMapOf<String, CaseEnvelope>()
         for (id in knownCaseIds) {
             val raw = loadJson(id) ?: continue
-            try {
-                loaded[id] = json.decodeFromString(CaseEnvelope.serializer(), raw)
-            } catch (_: Throwable) {
-                // A malformed bundle is a build bug, not a runtime case. The
-                // repository's bundled fallback will simply not surface this
-                // id; the validator would otherwise reject it downstream.
-            }
+            // A malformed bundle is a build bug. Let the deserialization
+            // exception propagate so it's caught at first access (in tests or
+            // at app startup), not silently hidden behind a "no cases" UI.
+            loaded[id] = json.decodeFromString(CaseEnvelope.serializer(), raw)
         }
         envelopes = loaded
         loaded

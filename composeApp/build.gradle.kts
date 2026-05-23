@@ -52,8 +52,10 @@ kotlin {
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
 
-            // Ktor (mock-engine wiring lives in androidMain/desktopMain DI bindings)
+            // Ktor + the in-process MockEngine for dev. Production builds swap
+            // MockEngine for a real platform engine (okhttp / darwin / cio).
             implementation(libs.bundles.ktor.common)
+            implementation(libs.ktor.client.mock)
 
             // Kotlinx
             implementation(libs.kotlinx.coroutines.core)
