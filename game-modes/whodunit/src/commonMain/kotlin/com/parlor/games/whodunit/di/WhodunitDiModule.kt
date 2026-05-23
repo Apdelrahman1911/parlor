@@ -37,7 +37,7 @@ val whodunitModule = module {
 
     single<BundledFallbackCaseDataSource> {
         BundledWhodunitCases(
-            knownCaseIds = listOf("last-dinner"),
+            knownCaseIds = listOf("last-dinner", "layla-halabi", "jasmine-ring"),
             loadJson = { caseId ->
                 runCatching {
                     Res.readBytes("files/cases/$caseId.json").decodeToString()
