@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.parlor.designsystem.backdrop.HeroBackdrop
+import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.whodunit.resources.Res
@@ -36,10 +37,9 @@ fun PublicIntroScreen(
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l),
         ) {
-            Text(
+            EyebrowLabel(
                 text = stringResource(Res.string.setup_intro_read_aloud_eyebrow),
-                style = ParlorTheme.typography.labelSmall,
-                color = ParlorTheme.colors.textSecondary,
+                accent = false,
             )
             Text(
                 text = title,
@@ -51,11 +51,7 @@ fun PublicIntroScreen(
                 style = ParlorTheme.typography.narration,
                 color = ParlorTheme.colors.textNarration,
             )
-            Text(
-                text = stringResource(Res.string.setup_intro_what_is_true_eyebrow),
-                style = ParlorTheme.typography.labelSmall,
-                color = ParlorTheme.colors.accentEmber,
-            )
+            EyebrowLabel(text = stringResource(Res.string.setup_intro_what_is_true_eyebrow))
             bedrockClues.forEach { clue ->
                 Text(
                     text = "·  $clue",

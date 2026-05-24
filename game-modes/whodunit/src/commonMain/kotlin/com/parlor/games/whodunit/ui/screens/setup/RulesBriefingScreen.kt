@@ -19,6 +19,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.parlor.designsystem.backdrop.HeroBackdrop
+import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorCard
 import com.parlor.designsystem.theme.ParlorTheme
@@ -67,10 +68,9 @@ fun RulesBriefingScreen(
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text(
+            EyebrowLabel(
                 text = stringResource(Res.string.setup_briefing_eyebrow),
-                style = ParlorTheme.typography.labelSmall,
-                color = ParlorTheme.colors.textSecondary,
+                accent = false,
             )
 
             ParlorCard(

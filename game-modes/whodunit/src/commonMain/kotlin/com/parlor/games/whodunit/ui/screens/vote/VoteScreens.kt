@@ -21,7 +21,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.parlor.core.ids.PlayerId
 import com.parlor.designsystem.backdrop.HeroBackdrop
+import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ParlorButton
+import com.parlor.designsystem.components.ParlorButtonVariant
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.whodunit.resources.Res
 import com.parlor.games.whodunit.resources.reveal_handoff_subtitle
@@ -80,6 +82,7 @@ fun VoteBallotScreen(
                 contentDescription = stringResource(Res.string.vote_ballot_refuse_description),
                 onClick = onRefuse,
                 modifier = Modifier.fillMaxWidth(),
+                variant = ParlorButtonVariant.Ghost,
             )
         }
     }
@@ -135,11 +138,7 @@ fun TiedRevoteScreen(
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text(
-                text = stringResource(Res.string.vote_tied_eyebrow),
-                style = ParlorTheme.typography.labelSmall,
-                color = ParlorTheme.colors.accentEmber,
-            )
+            EyebrowLabel(text = stringResource(Res.string.vote_tied_eyebrow))
             Text(
                 text = tiedNames.joinToString(separator = " · "),
                 style = ParlorTheme.typography.displayLarge,

@@ -15,7 +15,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ParlorButton
+import com.parlor.designsystem.components.ParlorButtonVariant
 import com.parlor.designsystem.components.ParlorCard
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.whodunit.content.Character
@@ -94,6 +96,7 @@ fun DossierCard(
         elevation = ParlorTheme.elevation.dramatic,
         cornerRadius = ParlorTheme.radii.elevated,
         contentPadding = ParlorTheme.spacing.xl,
+        hero = true,
     ) {
         Column(
             modifier = Modifier
@@ -101,10 +104,9 @@ fun DossierCard(
                 .verticalScroll(scroll),
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m),
         ) {
-            Text(
+            EyebrowLabel(
                 text = stringResource(Res.string.dossier_you_are_eyebrow),
-                style = ParlorTheme.typography.labelSmall,
-                color = ParlorTheme.colors.textSecondary,
+                accent = false,
             )
             Text(
                 text = character.displayName,
@@ -152,6 +154,7 @@ fun DossierCard(
                     label = toggleLabel,
                     onClick = { showOptional = !showOptional },
                     contentDescription = toggleDescription,
+                    variant = ParlorButtonVariant.Ghost,
                 )
                 if (showOptional) {
                     OptionalDetailsBlock(character)
@@ -187,11 +190,7 @@ private data class Brief(
 @Composable
 private fun LabeledLine(label: String, value: String) {
     Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.xxs)) {
-        Text(
-            text = label,
-            style = ParlorTheme.typography.labelSmall,
-            color = ParlorTheme.colors.accentEmber,
-        )
+        EyebrowLabel(text = label)
         Text(
             text = value,
             style = ParlorTheme.typography.bodyLarge,

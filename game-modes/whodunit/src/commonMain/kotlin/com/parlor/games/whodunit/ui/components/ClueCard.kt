@@ -8,6 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ParlorCard
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.whodunit.resources.Res
@@ -30,17 +31,16 @@ fun ClueCard(
         elevation = ParlorTheme.elevation.dramatic,
         cornerRadius = ParlorTheme.radii.elevated,
         contentPadding = ParlorTheme.spacing.xxl,
+        hero = true,
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m),
             modifier = Modifier.fillMaxWidth(),
         ) {
-            Text(
+            EyebrowLabel(
                 text = eyebrow,
-                style = ParlorTheme.typography.labelSmall,
-                color = ParlorTheme.colors.accentEmber,
-                textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center,
             )
             Text(
                 text = text,

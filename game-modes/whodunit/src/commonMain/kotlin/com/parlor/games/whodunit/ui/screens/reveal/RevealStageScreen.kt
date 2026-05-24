@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import com.parlor.designsystem.backdrop.HeroBackdrop
+import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorCard
 import com.parlor.designsystem.theme.ParlorTheme
@@ -71,10 +72,9 @@ fun RevealStageScreen(
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text(
+            EyebrowLabel(
                 text = stringResource(Res.string.reveal_stage_eyebrow),
-                style = ParlorTheme.typography.labelSmall,
-                color = colors.textSecondary,
+                accent = false,
             )
             Text(
                 text = verdictLine,
@@ -92,13 +92,10 @@ fun RevealStageScreen(
                 elevation = ParlorTheme.elevation.dramatic,
                 cornerRadius = ParlorTheme.radii.elevated,
                 contentPadding = ParlorTheme.spacing.xxl,
+                hero = true,
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m)) {
-                    Text(
-                        text = stringResource(Res.string.reveal_stage_killer_was_label),
-                        style = ParlorTheme.typography.labelSmall,
-                        color = colors.accentEmber,
-                    )
+                    EyebrowLabel(text = stringResource(Res.string.reveal_stage_killer_was_label))
                     Text(
                         text = killerDisplayName,
                         style = ParlorTheme.typography.displayLarge,

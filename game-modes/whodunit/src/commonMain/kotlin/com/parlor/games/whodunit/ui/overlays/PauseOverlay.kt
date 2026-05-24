@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import com.parlor.designsystem.components.ParlorButton
+import com.parlor.designsystem.components.ParlorButtonVariant
 import com.parlor.designsystem.components.ParlorCard
 import com.parlor.designsystem.components.ParlorScrim
 import com.parlor.designsystem.theme.ParlorTheme
@@ -71,6 +72,7 @@ fun PauseOverlay(
                         contentDescription = stringResource(Res.string.pause_end_game_description),
                         onClick = onEndGame,
                         modifier = Modifier.fillMaxWidth(),
+                        variant = ParlorButtonVariant.Destructive,
                     )
                 }
             }

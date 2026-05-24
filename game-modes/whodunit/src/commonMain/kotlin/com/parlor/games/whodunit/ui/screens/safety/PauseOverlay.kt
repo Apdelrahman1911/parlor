@@ -19,7 +19,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
+import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ParlorButton
+import com.parlor.designsystem.components.ParlorButtonVariant
 import com.parlor.designsystem.components.ParlorCard
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.whodunit.resources.Res
@@ -85,11 +87,7 @@ fun PauseOverlay(
                 Column(
                     verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m),
                 ) {
-                    Text(
-                        text = stringResource(Res.string.pause_title).uppercase(),
-                        style = ParlorTheme.typography.labelSmall,
-                        color = ParlorTheme.colors.accentEmber,
-                    )
+                    EyebrowLabel(text = stringResource(Res.string.pause_title))
                     Text(
                         text = stringResource(Res.string.pause_body),
                         style = ParlorTheme.typography.bodyLarge,
@@ -107,12 +105,14 @@ fun PauseOverlay(
                         contentDescription = stringResource(Res.string.pause_resume_later_description),
                         onClick = onResumeLater,
                         modifier = Modifier.fillMaxWidth(),
+                        variant = ParlorButtonVariant.Secondary,
                     )
                     ParlorButton(
                         label = stringResource(Res.string.pause_end_game),
                         contentDescription = stringResource(Res.string.pause_end_game_description),
                         onClick = { endConfirmOpen = true },
                         modifier = Modifier.fillMaxWidth(),
+                        variant = ParlorButtonVariant.Destructive,
                     )
                 }
             }
@@ -175,12 +175,14 @@ private fun EndGameConfirmDialog(
                         contentDescription = stringResource(Res.string.endgame_end_now_description),
                         onClick = onConfirmEndNow,
                         modifier = Modifier.fillMaxWidth(),
+                        variant = ParlorButtonVariant.Destructive,
                     )
                     ParlorButton(
                         label = stringResource(Res.string.endgame_cancel),
                         contentDescription = stringResource(Res.string.endgame_cancel_description),
                         onClick = onCancel,
                         modifier = Modifier.fillMaxWidth(),
+                        variant = ParlorButtonVariant.Ghost,
                     )
                 }
             }

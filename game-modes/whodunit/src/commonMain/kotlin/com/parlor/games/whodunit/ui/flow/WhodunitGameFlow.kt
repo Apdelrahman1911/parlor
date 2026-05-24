@@ -38,6 +38,7 @@ import com.parlor.core.result.Result
 import com.parlor.core.time.Clock
 import com.parlor.designsystem.backdrop.HeroBackdrop
 import com.parlor.designsystem.components.ParlorButton
+import com.parlor.designsystem.components.ParlorButtonVariant
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.engine.session.SessionConfig
 import com.parlor.engine.state.Player
@@ -239,6 +240,7 @@ private fun ErrorScreen(error: DataError, onBack: () -> Unit, modifier: Modifier
                 contentDescription = "Return to the library.",
                 onClick = onBack,
                 modifier = Modifier.fillMaxWidth(),
+                variant = ParlorButtonVariant.Ghost,
             )
         }
     }

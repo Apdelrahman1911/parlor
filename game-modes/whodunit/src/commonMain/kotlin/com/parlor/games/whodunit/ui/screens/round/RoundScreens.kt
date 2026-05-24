@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import com.parlor.designsystem.backdrop.HeroBackdrop
+import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.whodunit.domain.state.PublicTimerState
@@ -50,10 +51,9 @@ fun RoundTitleCardScreen(
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text(
+            EyebrowLabel(
                 text = stringResource(Res.string.round_eyebrow_format, roundIndex),
-                style = ParlorTheme.typography.labelSmall,
-                color = ParlorTheme.colors.textSecondary,
+                accent = false,
             )
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -96,10 +96,9 @@ fun ClueRevealScreen(
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.xl),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text(
+            EyebrowLabel(
                 text = stringResource(Res.string.round_clue_eyebrow_format, clue.roundIndex),
-                style = ParlorTheme.typography.labelSmall,
-                color = ParlorTheme.colors.textSecondary,
+                accent = false,
             )
             ClueCard(text = clue.text)
             Spacer(modifier = Modifier.height(ParlorTheme.spacing.l))
@@ -128,10 +127,9 @@ fun DiscussionScreen(
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l),
         ) {
-            Text(
+            EyebrowLabel(
                 text = stringResource(Res.string.round_discussion_eyebrow),
-                style = ParlorTheme.typography.labelSmall,
-                color = ParlorTheme.colors.textSecondary,
+                accent = false,
             )
             if (timer != null) {
                 TimerRibbon(

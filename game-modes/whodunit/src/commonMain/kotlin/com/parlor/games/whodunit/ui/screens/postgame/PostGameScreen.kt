@@ -11,7 +11,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import com.parlor.designsystem.backdrop.HeroBackdrop
+import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ParlorButton
+import com.parlor.designsystem.components.ParlorButtonVariant
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.whodunit.resources.Res
 import com.parlor.games.whodunit.resources.postgame_back_to_library
@@ -39,10 +41,9 @@ fun PostGameScreen(
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text(
+            EyebrowLabel(
                 text = stringResource(Res.string.postgame_eyebrow),
-                style = ParlorTheme.typography.labelSmall,
-                color = ParlorTheme.colors.textSecondary,
+                accent = false,
             )
             Text(
                 text = stringResource(Res.string.postgame_question),
@@ -61,12 +62,14 @@ fun PostGameScreen(
                 contentDescription = stringResource(Res.string.postgame_try_other_mode_description),
                 onClick = onTryOtherMode,
                 modifier = Modifier.fillMaxWidth(),
+                variant = ParlorButtonVariant.Secondary,
             )
             ParlorButton(
                 label = stringResource(Res.string.postgame_back_to_library),
                 contentDescription = stringResource(Res.string.postgame_back_to_library_description),
                 onClick = onBackToLibrary,
                 modifier = Modifier.fillMaxWidth(),
+                variant = ParlorButtonVariant.Ghost,
             )
         }
     }

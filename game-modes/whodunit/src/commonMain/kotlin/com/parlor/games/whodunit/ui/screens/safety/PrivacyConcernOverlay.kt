@@ -18,7 +18,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
+import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ParlorButton
+import com.parlor.designsystem.components.ParlorButtonVariant
 import com.parlor.designsystem.components.ParlorCard
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.whodunit.resources.Res
@@ -44,10 +46,9 @@ fun PrivacyConcernAffordance(
 ) {
     val openLabel = stringResource(Res.string.privacy_open)
     val openDescription = stringResource(Res.string.privacy_open_description)
-    Text(
-        text = openLabel.uppercase(),
-        style = ParlorTheme.typography.labelSmall,
-        color = ParlorTheme.colors.textTertiary,
+    EyebrowLabel(
+        text = openLabel,
+        accent = false,
         modifier = modifier
             .semantics { contentDescription = openDescription }
             .clickable(onClick = onOpen)
@@ -93,11 +94,7 @@ fun PrivacyConcernDialog(
                 contentPadding = ParlorTheme.spacing.xl,
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m)) {
-                    Text(
-                        text = stringResource(Res.string.privacy_title).uppercase(),
-                        style = ParlorTheme.typography.labelSmall,
-                        color = ParlorTheme.colors.accentEmber,
-                    )
+                    EyebrowLabel(text = stringResource(Res.string.privacy_title))
                     Text(
                         text = stringResource(Res.string.privacy_body),
                         style = ParlorTheme.typography.displayMedium,
@@ -116,6 +113,7 @@ fun PrivacyConcernDialog(
                         contentDescription = stringResource(Res.string.privacy_continue_description),
                         onClick = onContinue,
                         modifier = Modifier.fillMaxWidth(),
+                        variant = ParlorButtonVariant.Ghost,
                     )
                 }
             }

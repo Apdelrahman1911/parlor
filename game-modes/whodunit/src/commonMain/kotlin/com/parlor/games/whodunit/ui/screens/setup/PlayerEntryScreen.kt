@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import com.parlor.designsystem.backdrop.HeroBackdrop
+import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.whodunit.resources.Res
@@ -47,10 +48,9 @@ fun PlayerEntryScreen(
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text(
+            EyebrowLabel(
                 text = stringResource(Res.string.setup_player_entry_eyebrow),
-                style = ParlorTheme.typography.labelSmall,
-                color = ParlorTheme.colors.textSecondary,
+                accent = false,
             )
             Text(
                 text = stringResource(Res.string.setup_player_entry_headline),

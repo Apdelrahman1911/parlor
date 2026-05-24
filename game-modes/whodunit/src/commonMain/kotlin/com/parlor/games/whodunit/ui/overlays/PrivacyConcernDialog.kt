@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.parlor.designsystem.components.ParlorButton
+import com.parlor.designsystem.components.ParlorButtonVariant
 import com.parlor.designsystem.components.ParlorCard
 import com.parlor.designsystem.components.ParlorScrim
 import com.parlor.designsystem.theme.ParlorTheme
@@ -66,6 +67,7 @@ fun PrivacyConcernDialog(
                         contentDescription = stringResource(Res.string.privacy_reroll_description),
                         onClick = onReroll,
                         modifier = Modifier.fillMaxWidth(),
+                        variant = ParlorButtonVariant.Secondary,
                     )
                 }
             }

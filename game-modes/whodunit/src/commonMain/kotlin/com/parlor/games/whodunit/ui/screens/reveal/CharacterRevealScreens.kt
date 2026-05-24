@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import com.parlor.designsystem.backdrop.HeroBackdrop
+import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.whodunit.content.Character
 import com.parlor.games.whodunit.domain.state.PlayerRole
@@ -70,10 +71,8 @@ fun CharacterRevealWaitingScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
-            Text(
-                text = stringResource(Res.string.reveal_waiting_eyebrow).uppercase(),
-                style = ParlorTheme.typography.labelSmall,
-                color = ParlorTheme.colors.accentEmber,
+            EyebrowLabel(
+                text = stringResource(Res.string.reveal_waiting_eyebrow),
                 textAlign = TextAlign.Center,
             )
             Text(

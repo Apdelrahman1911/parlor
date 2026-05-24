@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import com.parlor.designsystem.backdrop.HeroBackdrop
+import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.whodunit.resources.Res
@@ -114,12 +115,10 @@ private fun StructuredPrompt(
                 androidx.compose.ui.Alignment.CenterVertically,
             ),
         ) {
-            Text(
+            EyebrowLabel(
                 text = eyebrow,
-                style = ParlorTheme.typography.labelSmall,
-                color = ParlorTheme.colors.accentEmber,
-                textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center,
             )
             Text(
                 text = headline,

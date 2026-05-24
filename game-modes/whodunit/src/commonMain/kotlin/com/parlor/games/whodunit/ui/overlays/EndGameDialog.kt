@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.parlor.designsystem.components.ParlorButton
+import com.parlor.designsystem.components.ParlorButtonVariant
 import com.parlor.designsystem.components.ParlorCard
 import com.parlor.designsystem.components.ParlorScrim
 import com.parlor.designsystem.theme.ParlorTheme
@@ -69,12 +70,14 @@ fun EndGameDialog(
                         contentDescription = stringResource(Res.string.endgame_quietly_description),
                         onClick = onEndQuietly,
                         modifier = Modifier.fillMaxWidth(),
+                        variant = ParlorButtonVariant.Secondary,
                     )
                     ParlorButton(
                         label = stringResource(Res.string.endgame_cancel),
                         contentDescription = stringResource(Res.string.endgame_cancel_description),
                         onClick = onCancel,
                         modifier = Modifier.fillMaxWidth(),
+                        variant = ParlorButtonVariant.Ghost,
                     )
                 }
             }
