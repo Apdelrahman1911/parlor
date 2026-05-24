@@ -13,6 +13,7 @@ import com.parlor.games.whodunit.domain.state.WhodunitState
 import com.parlor.networking.protocol.HostMessage
 import com.parlor.networking.protocol.PeerMessage
 import com.parlor.networking.room.LocalRoom
+import com.parlor.networking.room.PeerEvent
 import com.parlor.networking.room.SendTarget
 import com.parlor.session.passandplay.PassAndPlaySessionController
 import kotlinx.coroutines.CoroutineScope
@@ -62,6 +63,7 @@ class WhodunitHostRoomBridge(
     init {
         startBroadcasts()
         startActionInbox()
+        startPeerEventsListener()
     }
 
     /**
@@ -156,13 +158,60 @@ class WhodunitHostRoomBridge(
             room.incoming.filterIsInstance<PeerMessage.ActionSubmit>().collect { msg ->
                 val action = runCatching { WhodunitActionCodec.decode(msg.payload) }.getOrNull()
                     ?: return@collect
-                if (!WhodunitActionAuthority.isAllowed(action, msg.sender, hostId)) {
-                    // Drop silently — peer attempted a host-only action or
-                    // submitted on behalf of another player.
+                // Authority gate also enforces the dropped-spectator rule —
+                // a stale or queued action from a dropped peer is rejected
+                // here regardless of sender attestation.
+                val droppedPlayers = controller.publicState.value.state.public.droppedPlayers
+                if (!WhodunitActionAuthority.isAllowed(action, msg.sender, hostId, droppedPlayers)) {
                     return@collect
                 }
                 controller.submit(action)
             }
         }
+    }
+
+    /**
+     * Wave 9H-5: subscribe to [LocalRoom.peerEvents] and translate
+     * transport-level connection transitions into canonical game actions:
+     *  - PeerLeft → MarkPlayerDisconnected (recorded in public state).
+     *  - PeerReconnected → MarkPlayerReconnected + targeted re-send of the
+     *    current public snapshot AND the reconnected peer's private slice,
+     *    so the peer's shadow catches up to the current screen without a
+     *    "rejoin lobby" detour.
+     */
+    private fun startPeerEventsListener() {
+        jobs += scope.launch {
+            room.peerEvents.collect { event ->
+                when (event) {
+                    is PeerEvent.PeerLeft -> {
+                        controller.submit(WhodunitAction.MarkPlayerDisconnected(event.playerId))
+                    }
+                    is PeerEvent.PeerReconnected -> {
+                        controller.submit(WhodunitAction.MarkPlayerReconnected(event.playerId))
+                        resendSnapshotTo(event.playerId)
+                    }
+                    is PeerEvent.PeerJoined -> Unit  // initial join handled by JoinRequest
+                    // Peer-side events ignored on the host.
+                    PeerEvent.HostLost,
+                    PeerEvent.HostRestored,
+                    PeerEvent.SelfOffline,
+                    PeerEvent.SelfOnline -> Unit
+                }
+            }
+        }
+    }
+
+    /** Send the current snapshot + the target peer's private slice. */
+    private suspend fun resendSnapshotTo(playerId: PlayerId) {
+        val state = controller.hostState!!.value.state
+        val publicState = WhodunitProjectionPolicy.toPublic(state).state
+        val publicBytes = json.encodeToString(publicStateSerializer, publicState).encodeToByteArray()
+        room.send(SendTarget.Direct(playerId), HostMessage.PublicStateSnapshot(publicBytes))
+        val slice = state.privatePerPlayer[playerId] ?: return
+        val privateBytes = json.encodeToString(privateSerializer, slice).encodeToByteArray()
+        room.send(
+            target = SendTarget.Direct(playerId),
+            message = HostMessage.PrivateStateForPlayer(target = playerId, payload = privateBytes),
+        )
     }
 }

@@ -6,7 +6,10 @@ import com.parlor.networking.protocol.HostMessage
 import com.parlor.networking.protocol.PeerMessage
 import com.parlor.networking.protocol.RoomMessage
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 
 /**
  * The local-multi-device room abstraction. Phase 7 implements an in-memory
@@ -31,10 +34,23 @@ interface LocalRoom {
      */
     val selfPlayerId: PlayerId
 
+    /**
+     * Connection-lifecycle events. Implementations that don't surface
+     * peer-state transitions return an empty flow — bridges still detect
+     * `HostLost` via snapshot-silence timeouts. Wave 9H-5 added this
+     * flow; pre-9H transports may default to [emptyPeerEvents].
+     */
+    val peerEvents: SharedFlow<PeerEvent>
+        get() = emptyPeerEvents
+
     suspend fun send(target: SendTarget, message: HostMessage): Result<Unit, NetError>
     suspend fun sendToHost(message: PeerMessage): Result<Unit, NetError>
     suspend fun leave()
 }
+
+/** Shared empty flow for transports that don't emit peer events. */
+internal val emptyPeerEvents: SharedFlow<PeerEvent> =
+    MutableSharedFlow<PeerEvent>(replay = 0, extraBufferCapacity = 0).asSharedFlow()
 
 sealed interface SendTarget {
     data object Broadcast : SendTarget

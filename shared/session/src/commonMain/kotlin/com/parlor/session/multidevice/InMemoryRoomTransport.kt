@@ -7,6 +7,7 @@ import com.parlor.networking.protocol.PeerMessage
 import com.parlor.networking.protocol.RoomMessage
 import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.NetError
+import com.parlor.networking.room.PeerEvent
 import com.parlor.networking.room.RoomInfo
 import com.parlor.networking.room.RoomMember
 import com.parlor.networking.room.SendTarget
@@ -15,7 +16,10 @@ import com.parlor.networking.transport.RoomTransport
 import com.parlor.networking.transport.TransportCapability
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.consumeAsFlow
 
@@ -28,6 +32,18 @@ class InMemoryRoomBus {
 
     private val hostInbox = Channel<PeerMessage>(Channel.UNLIMITED)
     private val peerInboxes = mutableMapOf<PlayerId, Channel<HostMessage>>()
+
+    /**
+     * Connection-event broadcast. Both the host-side and peer-side rooms
+     * subscribe to this; the bus emits synthetic events when tests call
+     * [emitPeerLeft] etc. Production transports don't use this — they
+     * source events from their own transport callbacks.
+     */
+    private val _peerEvents = MutableSharedFlow<PeerEvent>(
+        replay = 0,
+        extraBufferCapacity = 32,
+    )
+    val peerEvents: SharedFlow<PeerEvent> = _peerEvents.asSharedFlow()
 
     val hostMessagesIn: Flow<PeerMessage> = hostInbox.consumeAsFlow()
 
@@ -48,6 +64,28 @@ class InMemoryRoomBus {
             is SendTarget.Direct -> peerInboxes[target.playerId]?.send(message)
         }
     }
+
+    // -------------------------------------------------- Test-only event API --
+
+    /** Test hook: synthesise a peer-left event for host + the leaving peer. */
+    suspend fun emitPeerLeft(playerId: PlayerId, displayName: String) {
+        _peerEvents.emit(PeerEvent.PeerLeft(playerId, displayName))
+    }
+
+    /** Test hook: synthesise a peer-reconnected event. */
+    suspend fun emitPeerReconnected(playerId: PlayerId, displayName: String) {
+        _peerEvents.emit(PeerEvent.PeerReconnected(playerId, displayName))
+    }
+
+    /** Test hook: synthesise a host-lost event (peer-side). */
+    suspend fun emitHostLost() {
+        _peerEvents.emit(PeerEvent.HostLost)
+    }
+
+    /** Test hook: synthesise a host-restored event (peer-side). */
+    suspend fun emitHostRestored() {
+        _peerEvents.emit(PeerEvent.HostRestored)
+    }
 }
 
 /** A peer-side room that reads/writes through an [InMemoryRoomBus]. */
@@ -66,6 +104,7 @@ class InMemoryPeerRoom(
     override val members = _members.asStateFlow()
     override val isHost = false
     override val incoming: Flow<RoomMessage> = bus.peerMessagesIn(selfPlayerId)
+    override val peerEvents: SharedFlow<PeerEvent> = bus.peerEvents
 
     override suspend fun send(target: SendTarget, message: HostMessage): Result<Unit, NetError> {
         return Result.Failure(NetError.Unauthorized)  // Peers cannot host-broadcast.
