@@ -52,6 +52,7 @@ import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorButtonVariant
 import com.parlor.designsystem.components.ParlorCard
+import com.parlor.designsystem.components.StickyActionBar
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.engine.state.Player
 import com.parlor.games.whodunit.content.WhodunitCase
@@ -161,17 +162,23 @@ private fun HostLobbyContent(
     val members by room.members.collectAsState()
 
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
+        Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(ParlorTheme.spacing.l)
-                .verticalScroll(rememberScrollState()),
+                .verticalScroll(rememberScrollState())
+                .padding(
+                    start = ParlorTheme.spacing.l,
+                    end = ParlorTheme.spacing.l,
+                    top = ParlorTheme.spacing.l,
+                    bottom = ParlorTheme.spacing.xxxl + ParlorTheme.spacing.xxl,
+                ),
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l),
         ) {
             EyebrowLabel(text = stringResource(Res.string.host_title))
 
             // Hero room-code card — the screen's signature moment. The
-            // ember-tinted hero surface + dramatic elevation make the code
+            // indigo-tinted hero surface + dramatic elevation make the code
             // unmistakable when the host turns the phone to a friend.
             ParlorCard(
                 modifier = Modifier.fillMaxWidth(),
@@ -219,14 +226,15 @@ private fun HostLobbyContent(
                 }
             }
 
-            Spacer(Modifier.height(ParlorTheme.spacing.m))
+        }
 
-            val startLabel = if (members.isEmpty()) {
-                stringResource(Res.string.host_start_solo)
-            } else {
-                stringResource(Res.string.host_start_with_players_format)
-                    .replace("%1\$s", (members.size + 1).toString())
-            }
+        val startLabel = if (members.isEmpty()) {
+            stringResource(Res.string.host_start_solo)
+        } else {
+            stringResource(Res.string.host_start_with_players_format)
+                .replace("%1\$s", (members.size + 1).toString())
+        }
+        StickyActionBar(modifier = Modifier.align(Alignment.BottomCenter)) {
             ParlorButton(
                 label = startLabel,
                 contentDescription = stringResource(Res.string.host_start_description),
@@ -240,6 +248,7 @@ private fun HostLobbyContent(
                 modifier = Modifier.fillMaxWidth(),
                 variant = ParlorButtonVariant.Secondary,
             )
+        }
         }
     }
 }

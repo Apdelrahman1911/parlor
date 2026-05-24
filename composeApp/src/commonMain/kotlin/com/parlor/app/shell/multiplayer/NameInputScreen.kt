@@ -1,6 +1,7 @@
 package com.parlor.app.shell.multiplayer
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.ui.Alignment
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,6 +34,7 @@ import com.parlor.designsystem.backdrop.HeroBackdrop
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorTextField
 import com.parlor.designsystem.components.ScreenHeader
+import com.parlor.designsystem.components.StickyActionBar
 import com.parlor.designsystem.theme.ParlorTheme
 import org.jetbrains.compose.resources.stringResource
 
@@ -57,42 +60,49 @@ fun NameInputScreen(
     val sanitized = name.trim().ifBlank { "Player" }
 
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(ParlorTheme.spacing.l)
-                .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l),
-        ) {
-            ScreenHeader(
-                title = if (isHost) stringResource(Res.string.name_title_host)
-                else stringResource(Res.string.name_title_peer),
-                eyebrow = if (isHost) stringResource(Res.string.name_eyebrow_host)
-                else stringResource(Res.string.name_eyebrow_peer),
-                subtitle = stringResource(Res.string.name_help),
-                onBack = onBack,
-                backContentDescription = stringResource(Res.string.name_back_description),
-            )
+        Box(modifier = Modifier.fillMaxSize()) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(
+                        start = ParlorTheme.spacing.l,
+                        end = ParlorTheme.spacing.l,
+                        top = ParlorTheme.spacing.l,
+                        bottom = ParlorTheme.spacing.xxxl + ParlorTheme.spacing.xxl,
+                    ),
+                verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l),
+            ) {
+                ScreenHeader(
+                    title = if (isHost) stringResource(Res.string.name_title_host)
+                    else stringResource(Res.string.name_title_peer),
+                    eyebrow = if (isHost) stringResource(Res.string.name_eyebrow_host)
+                    else stringResource(Res.string.name_eyebrow_peer),
+                    subtitle = stringResource(Res.string.name_help),
+                    onBack = onBack,
+                    backContentDescription = stringResource(Res.string.name_back_description),
+                )
 
-            ParlorTextField(
-                value = name,
-                onValueChange = { input -> name = input.take(32) },
-                label = stringResource(Res.string.name_field),
-            )
+                ParlorTextField(
+                    value = name,
+                    onValueChange = { input -> name = input.take(32) },
+                    label = stringResource(Res.string.name_field),
+                )
+            }
 
-            Spacer(Modifier.height(ParlorTheme.spacing.m))
-
-            ParlorButton(
-                label = if (isHost) stringResource(Res.string.name_confirm_host)
-                else stringResource(Res.string.name_confirm_peer),
-                contentDescription = if (isHost) {
-                    stringResource(Res.string.name_confirm_host_description)
-                } else {
-                    stringResource(Res.string.name_confirm_peer_description)
-                },
-                onClick = { onConfirm(sanitized) },
-                modifier = Modifier.fillMaxWidth(),
-            )
+            StickyActionBar(modifier = Modifier.align(Alignment.BottomCenter)) {
+                ParlorButton(
+                    label = if (isHost) stringResource(Res.string.name_confirm_host)
+                    else stringResource(Res.string.name_confirm_peer),
+                    contentDescription = if (isHost) {
+                        stringResource(Res.string.name_confirm_host_description)
+                    } else {
+                        stringResource(Res.string.name_confirm_peer_description)
+                    },
+                    onClick = { onConfirm(sanitized) },
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
         }
     }
 }
