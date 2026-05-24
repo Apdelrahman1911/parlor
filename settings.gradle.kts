@@ -23,8 +23,14 @@ pluginManagement {
 // Why mavenLocal and not includeBuild: P2pKit requires Gradle 9.3.1+ (AGP 9.x);
 // Parlor is on Gradle 8.11.1. P2pKit publishes with its own Gradle, Parlor
 // consumes via its own — no version clash.
-val p2pExplicit: Boolean? =
-    (extra.properties["parlor.p2p.enabled"] as? String)?.toBoolean()
+val p2pExplicit: Boolean? = run {
+    val raw = extra.properties["parlor.p2p.enabled"] as? String ?: return@run null
+    // .properties files don't strip inline `#` comments — strip them ourselves
+    // so `parlor.p2p.enabled=true   # always on` reads as `true` and not as
+    // the literal "true   # always on" (which `.toBoolean()` would reject).
+    val cleaned = raw.substringBefore('#').trim()
+    if (cleaned.isEmpty()) null else cleaned.toBooleanStrictOrNull() ?: cleaned.toBoolean()
+}
 val p2pAutoDetected: Boolean = run {
     val home = System.getProperty("user.home")
     if (home.isNullOrBlank()) {
