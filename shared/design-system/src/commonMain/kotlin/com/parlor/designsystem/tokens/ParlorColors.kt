@@ -84,16 +84,16 @@ val CozyNoirPalette = ParlorColors(
     surfaceInset = Color(0xFF050507),
     surfaceHero = Color(0xFF1A1A23),
 
-    accentEmber = Color(0xFFFF6B5A),
-    accentEmberGlow = Color(0xFFFF8C7E),
-    accentEmberDeep = Color(0xFFE54B3A),
+    accentEmber = Color(0xFF7C5CFF),
+    accentEmberGlow = Color(0xFF9477FF),
+    accentEmberDeep = Color(0xFF5A3EE0),
     accentBrass = Color(0xFF8A8A92),
     accentParchment = Color(0xFFFAFAFA),
 
     textPrimary = Color(0xFFFAFAFA),
     textSecondary = Color(0xFFB6B6BE),
     textTertiary = Color(0xFF7A7A82),
-    textOnAccent = Color(0xFF0B0B0F),
+    textOnAccent = Color(0xFFFFFFFF),
     textNarration = Color(0xFFB6B6BE),
 
     semanticSuccess = Color(0xFF3FB66E),
@@ -102,8 +102,8 @@ val CozyNoirPalette = ParlorColors(
 
     borderSubtle = Color(0xFF20202A),
     borderElevated = Color(0xFF2A2A35),
-    borderGlow = Color(0x33FF6B5A),
-    borderAccent = Color(0xFFFF6B5A),
+    borderGlow = Color(0x337C5CFF),
+    borderAccent = Color(0xFF7C5CFF),
 
     transparent = Color(0x00000000),
     overlayScrim = Color(0xD9000000),
@@ -123,9 +123,9 @@ val LightCozyNoirPalette = ParlorColors(
     surfaceInset = Color(0xFFFAFAFA),
     surfaceHero = Color(0xFFF0F0F4),
 
-    accentEmber = Color(0xFFE54B3A),
-    accentEmberGlow = Color(0xFFFF6B5A),
-    accentEmberDeep = Color(0xFFB23323),
+    accentEmber = Color(0xFF5A3EE0),
+    accentEmberGlow = Color(0xFF6F4BE8),
+    accentEmberDeep = Color(0xFF3F25B5),
     accentBrass = Color(0xFF6E6E78),
     accentParchment = Color(0xFF0B0B0F),
 
@@ -141,8 +141,8 @@ val LightCozyNoirPalette = ParlorColors(
 
     borderSubtle = Color(0xFFE2E2E8),
     borderElevated = Color(0xFFDADAE0),
-    borderGlow = Color(0x33E54B3A),
-    borderAccent = Color(0xFFE54B3A),
+    borderGlow = Color(0x335A3EE0),
+    borderAccent = Color(0xFF5A3EE0),
 
     transparent = Color(0x00000000),
     overlayScrim = Color(0x99000000),

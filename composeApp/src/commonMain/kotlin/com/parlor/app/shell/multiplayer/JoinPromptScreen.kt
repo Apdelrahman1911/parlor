@@ -28,9 +28,9 @@ import com.parlor.app.resources.join_confirm_description
 import com.parlor.app.resources.join_eyebrow
 import com.parlor.app.resources.join_title
 import com.parlor.designsystem.backdrop.HeroBackdrop
-import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ParlorButton
-import com.parlor.designsystem.components.ParlorButtonVariant
+import com.parlor.designsystem.components.ParlorTextField
+import com.parlor.designsystem.components.ScreenHeader
 import com.parlor.designsystem.theme.ParlorTheme
 import androidx.compose.foundation.text.KeyboardOptions
 import org.jetbrains.compose.resources.stringResource
@@ -56,27 +56,19 @@ fun JoinPromptScreen(
                 .padding(ParlorTheme.spacing.xl),
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l),
         ) {
-            EyebrowLabel(text = stringResource(Res.string.join_eyebrow))
-            Text(
-                text = stringResource(Res.string.join_title),
-                style = ParlorTheme.typography.displayMedium,
-                color = ParlorTheme.colors.textPrimary,
-            )
-            Text(
-                text = stringResource(Res.string.join_code_help),
-                style = ParlorTheme.typography.bodyMedium,
-                color = ParlorTheme.colors.textSecondary,
+            ScreenHeader(
+                title = stringResource(Res.string.join_title),
+                eyebrow = stringResource(Res.string.join_eyebrow),
+                subtitle = stringResource(Res.string.join_code_help),
+                onBack = onCancel,
+                backContentDescription = stringResource(Res.string.join_cancel_description),
             )
 
-            Spacer(modifier = Modifier.height(ParlorTheme.spacing.m))
-
-            OutlinedTextField(
+            ParlorTextField(
                 value = code,
                 onValueChange = { input -> code = input.uppercase().filter { it.isLetterOrDigit() }.take(6) },
-                label = { Text(stringResource(Res.string.join_code_field)) },
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Characters),
-                modifier = Modifier.fillMaxWidth(),
+                label = stringResource(Res.string.join_code_field),
+                capitalization = KeyboardCapitalization.Characters,
             )
 
             Spacer(modifier = Modifier.height(ParlorTheme.spacing.l))
@@ -86,13 +78,6 @@ fun JoinPromptScreen(
                 contentDescription = stringResource(Res.string.join_confirm_description),
                 onClick = { onConfirm(code) },
                 modifier = Modifier.fillMaxWidth(),
-            )
-            ParlorButton(
-                label = stringResource(Res.string.join_cancel),
-                contentDescription = stringResource(Res.string.join_cancel_description),
-                onClick = onCancel,
-                modifier = Modifier.fillMaxWidth(),
-                variant = ParlorButtonVariant.Ghost,
             )
         }
     }

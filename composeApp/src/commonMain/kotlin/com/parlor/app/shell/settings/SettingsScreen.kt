@@ -35,8 +35,8 @@ import com.parlor.app.resources.settings_language_english
 import com.parlor.app.resources.settings_language_label
 import com.parlor.app.resources.settings_title
 import com.parlor.designsystem.backdrop.HeroBackdrop
-import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorCard
+import com.parlor.designsystem.components.ScreenHeader
 import com.parlor.designsystem.localization.AppLanguage
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.designsystem.theme.ThemeMode
@@ -75,10 +75,10 @@ fun SettingsScreen(
                 .padding(ParlorTheme.spacing.xl),
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.xl),
         ) {
-            Text(
-                text = stringResource(Res.string.settings_title),
-                style = ParlorTheme.typography.displayLarge,
-                color = ParlorTheme.colors.textPrimary,
+            ScreenHeader(
+                title = stringResource(Res.string.settings_title),
+                onBack = onBack,
+                backContentDescription = stringResource(Res.string.settings_back_description),
             )
 
             SettingsSection(label = stringResource(Res.string.settings_language_label)) {
@@ -122,12 +122,7 @@ fun SettingsScreen(
                 )
             }
 
-            ParlorButton(
-                label = stringResource(Res.string.settings_back),
-                contentDescription = stringResource(Res.string.settings_back_description),
-                onClick = onBack,
-                modifier = Modifier.fillMaxWidth(),
-            )
+            // Back is in the ScreenHeader; no bottom button needed.
         }
     }
 }

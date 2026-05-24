@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,9 +29,9 @@ import com.parlor.app.resources.name_help
 import com.parlor.app.resources.name_title_host
 import com.parlor.app.resources.name_title_peer
 import com.parlor.designsystem.backdrop.HeroBackdrop
-import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ParlorButton
-import com.parlor.designsystem.components.ParlorButtonVariant
+import com.parlor.designsystem.components.ParlorTextField
+import com.parlor.designsystem.components.ScreenHeader
 import com.parlor.designsystem.theme.ParlorTheme
 import org.jetbrains.compose.resources.stringResource
 
@@ -66,30 +64,20 @@ fun NameInputScreen(
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l),
         ) {
-            EyebrowLabel(
-                text = if (isHost) stringResource(Res.string.name_eyebrow_host)
-                else stringResource(Res.string.name_eyebrow_peer),
-            )
-            Text(
-                text = if (isHost) stringResource(Res.string.name_title_host)
+            ScreenHeader(
+                title = if (isHost) stringResource(Res.string.name_title_host)
                 else stringResource(Res.string.name_title_peer),
-                style = ParlorTheme.typography.displayLarge,
-                color = ParlorTheme.colors.textPrimary,
-            )
-            Text(
-                text = stringResource(Res.string.name_help),
-                style = ParlorTheme.typography.bodyLarge,
-                color = ParlorTheme.colors.textSecondary,
+                eyebrow = if (isHost) stringResource(Res.string.name_eyebrow_host)
+                else stringResource(Res.string.name_eyebrow_peer),
+                subtitle = stringResource(Res.string.name_help),
+                onBack = onBack,
+                backContentDescription = stringResource(Res.string.name_back_description),
             )
 
-            Spacer(Modifier.height(ParlorTheme.spacing.s))
-
-            OutlinedTextField(
+            ParlorTextField(
                 value = name,
                 onValueChange = { input -> name = input.take(32) },
-                label = { Text(stringResource(Res.string.name_field)) },
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth(),
+                label = stringResource(Res.string.name_field),
             )
 
             Spacer(Modifier.height(ParlorTheme.spacing.m))
@@ -104,13 +92,6 @@ fun NameInputScreen(
                 },
                 onClick = { onConfirm(sanitized) },
                 modifier = Modifier.fillMaxWidth(),
-            )
-            ParlorButton(
-                label = stringResource(Res.string.name_back),
-                contentDescription = stringResource(Res.string.name_back_description),
-                onClick = onBack,
-                modifier = Modifier.fillMaxWidth(),
-                variant = ParlorButtonVariant.Ghost,
             )
         }
     }

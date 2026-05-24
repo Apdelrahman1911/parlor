@@ -44,9 +44,12 @@ import com.parlor.content.schema.CaseSummary
 import com.parlor.core.ids.GameId
 import com.parlor.core.result.Result
 import com.parlor.designsystem.backdrop.HeroBackdrop
+import com.parlor.designsystem.components.CandleFlame
+import com.parlor.designsystem.components.EmptyState
 import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorButtonVariant
+import com.parlor.designsystem.components.ScreenHeader
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.whodunit.WhodunitIds
 import org.jetbrains.compose.resources.stringResource
@@ -89,38 +92,33 @@ fun CasePickerScreen(
                 ),
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l),
         ) {
-            EyebrowLabel(text = stringResource(Res.string.case_picker_eyebrow))
-            Text(
-                text = stringResource(Res.string.case_picker_title),
-                style = ParlorTheme.typography.displayLarge,
-                color = ParlorTheme.colors.textPrimary,
-            )
-            Text(
-                text = stringResource(Res.string.case_picker_subtitle),
-                style = ParlorTheme.typography.bodyLarge,
-                color = ParlorTheme.colors.textSecondary,
+            ScreenHeader(
+                title = stringResource(Res.string.case_picker_title),
+                eyebrow = stringResource(Res.string.case_picker_eyebrow),
+                subtitle = stringResource(Res.string.case_picker_subtitle),
+                onBack = onBack,
+                backContentDescription = stringResource(Res.string.case_picker_back_description),
             )
 
             when (val state = casesResult) {
-                null -> Text(
-                    text = stringResource(Res.string.case_picker_loading),
-                    style = ParlorTheme.typography.bodyLarge,
-                    color = ParlorTheme.colors.textTertiary,
-                )
-                is Result.Failure -> Text(
-                    text = stringResource(Res.string.library_load_error_format).replace(
+                null -> Box(
+                    modifier = Modifier.fillMaxWidth().weight(1f),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    CandleFlame(size = ParlorTheme.iconSize.xl)
+                }
+                is Result.Failure -> EmptyState(
+                    title = stringResource(Res.string.library_load_error_format).replace(
                         "%1\$s",
                         state.error.toString(),
                     ),
-                    style = ParlorTheme.typography.bodyLarge,
-                    color = ParlorTheme.colors.textPrimary,
+                    modifier = Modifier.weight(1f),
                 )
                 is Result.Success -> {
                     if (state.data.isEmpty()) {
-                        Text(
-                            text = stringResource(Res.string.case_picker_empty),
-                            style = ParlorTheme.typography.bodyLarge,
-                            color = ParlorTheme.colors.textTertiary,
+                        EmptyState(
+                            title = stringResource(Res.string.case_picker_empty),
+                            modifier = Modifier.weight(1f),
                         )
                     } else {
                         LazyColumn(
@@ -140,13 +138,8 @@ fun CasePickerScreen(
                 }
             }
 
-            ParlorButton(
-                label = stringResource(Res.string.case_picker_back),
-                contentDescription = stringResource(Res.string.case_picker_back_description),
-                onClick = onBack,
-                modifier = Modifier.fillMaxWidth(),
-                variant = ParlorButtonVariant.Ghost,
-            )
+            // Back is in the ScreenHeader chevron now. Bottom button row
+            // removed; the screen header carries the back affordance.
         }
     }
 }
