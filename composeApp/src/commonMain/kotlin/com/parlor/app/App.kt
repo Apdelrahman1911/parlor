@@ -11,6 +11,9 @@ import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import com.parlor.app.permissions.P2pPermissionRationaleScreen
+import com.parlor.app.permissions.PermissionStatus
+import com.parlor.app.permissions.rememberP2pPermissionGate
 import com.parlor.app.shell.home.HomeScreen
 import com.parlor.app.shell.library.CasePickerScreen
 import com.parlor.app.shell.multiplayer.HostSessionFlow
@@ -119,10 +122,10 @@ fun App() {
                     },
                     multiplayerEnabled = roomTransport != null,
                     onHost = {
-                        if (roomTransport != null) screen = AppScreen.HostName
+                        if (roomTransport != null) screen = AppScreen.HostPermission
                     },
                     onJoin = {
-                        if (roomTransport != null) screen = AppScreen.JoinName
+                        if (roomTransport != null) screen = AppScreen.JoinPermission
                     },
                     onBrowseCases = { screen = AppScreen.SoloCasePicker },
                 )
@@ -146,6 +149,26 @@ fun App() {
                 )
 
                 // -------- Host branch --------
+                AppScreen.HostPermission -> {
+                    val gate = rememberP2pPermissionGate()
+                    val gateStatus by gate.status.collectAsState()
+                    LaunchedEffect(gateStatus) {
+                        if (gateStatus == PermissionStatus.Granted) {
+                            screen = AppScreen.HostName
+                        }
+                    }
+                    if (gateStatus == PermissionStatus.Granted) {
+                        // Brief flicker handled by the LaunchedEffect.
+                        Text(text = "")
+                    } else {
+                        P2pPermissionRationaleScreen(
+                            gate = gate,
+                            onGranted = { screen = AppScreen.HostName },
+                            onBack = backToHome,
+                            modifier = Modifier.fillMaxSize(),
+                        )
+                    }
+                }
                 AppScreen.HostName -> NameInputScreen(
                     isHost = true,
                     initial = hostName,
@@ -189,6 +212,25 @@ fun App() {
                 }
 
                 // -------- Peer branch --------
+                AppScreen.JoinPermission -> {
+                    val gate = rememberP2pPermissionGate()
+                    val gateStatus by gate.status.collectAsState()
+                    LaunchedEffect(gateStatus) {
+                        if (gateStatus == PermissionStatus.Granted) {
+                            screen = AppScreen.JoinName
+                        }
+                    }
+                    if (gateStatus == PermissionStatus.Granted) {
+                        Text(text = "")
+                    } else {
+                        P2pPermissionRationaleScreen(
+                            gate = gate,
+                            onGranted = { screen = AppScreen.JoinName },
+                            onBack = backToHome,
+                            modifier = Modifier.fillMaxSize(),
+                        )
+                    }
+                }
                 AppScreen.JoinName -> NameInputScreen(
                     isHost = false,
                     initial = peerName,
@@ -234,8 +276,8 @@ fun App() {
 private enum class AppScreen {
     Home,
     SoloCasePicker, Whodunit,
-    HostName, HostCasePicker, HostMode, HostLobby,
-    JoinName, JoinPrompt, PeerLobby,
+    HostPermission, HostName, HostCasePicker, HostMode, HostLobby,
+    JoinPermission, JoinName, JoinPrompt, PeerLobby,
     Settings,
 }
 

@@ -2,10 +2,11 @@ package com.parlor.games.whodunit.ui.screens.setup
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -40,8 +41,9 @@ fun ModeSelectionScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .verticalScroll(rememberScrollState())
                 .padding(ParlorTheme.spacing.xl),
-            verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.xl),
+            verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             EyebrowLabel(
@@ -55,25 +57,23 @@ fun ModeSelectionScreen(
                 textAlign = TextAlign.Center,
             )
 
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l),
+            // Stack vertically: side-by-side mode cards on a 360 dp phone
+            // crush the body text to two-word lines. Vertical stacking keeps
+            // the bodyLarge readable at every width.
+            ModeCard(
+                title = stringResource(Res.string.setup_mode_classic_title),
+                body = stringResource(Res.string.setup_mode_classic_body),
+                meta = stringResource(Res.string.setup_mode_classic_meta),
+                onClick = { onModeSelected(WhodunitIds.ClassicVoteModeId) },
                 modifier = Modifier.fillMaxWidth(),
-            ) {
-                ModeCard(
-                    title = stringResource(Res.string.setup_mode_classic_title),
-                    body = stringResource(Res.string.setup_mode_classic_body),
-                    meta = stringResource(Res.string.setup_mode_classic_meta),
-                    onClick = { onModeSelected(WhodunitIds.ClassicVoteModeId) },
-                    modifier = Modifier.weight(1f),
-                )
-                ModeCard(
-                    title = stringResource(Res.string.setup_mode_elimination_title),
-                    body = stringResource(Res.string.setup_mode_elimination_body),
-                    meta = stringResource(Res.string.setup_mode_elimination_meta),
-                    onClick = { onModeSelected(WhodunitIds.EliminationModeId) },
-                    modifier = Modifier.weight(1f),
-                )
-            }
+            )
+            ModeCard(
+                title = stringResource(Res.string.setup_mode_elimination_title),
+                body = stringResource(Res.string.setup_mode_elimination_body),
+                meta = stringResource(Res.string.setup_mode_elimination_meta),
+                onClick = { onModeSelected(WhodunitIds.EliminationModeId) },
+                modifier = Modifier.fillMaxWidth(),
+            )
         }
     }
 }
