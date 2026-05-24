@@ -1,5 +1,7 @@
 package com.parlor.designsystem.components
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -21,6 +23,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -102,16 +110,64 @@ fun ParlorButton(
         Color.Transparent
     }
 
+    // Spring scale: 1.0 at rest, 0.97 when pressed. Gives a tactile
+    // "I felt it" response that doesn't slow down the user.
+    val pressScale by animateFloatAsState(
+        targetValue = if (isPressed && interactive) 0.97f else 1f,
+        animationSpec = spring(dampingRatio = 0.6f, stiffness = 700f),
+        label = "press-scale",
+    )
+
+    val shape = RoundedCornerShape(ParlorTheme.radii.subtle)
+    val solidBackground = variant == ParlorButtonVariant.Primary ||
+        variant == ParlorButtonVariant.Destructive
+    val lift = if (enabled && solidBackground) 6.dp else 0.dp
+
     Box(
         modifier = modifier
-            .heightIn(min = 48.dp)
-            .clip(RoundedCornerShape(ParlorTheme.radii.subtle))
+            .scale(pressScale)
+            .heightIn(min = 52.dp)
+            .shadow(elevation = lift, shape = shape, clip = false)
+            .clip(shape)
             .background(effectiveContainer)
             .background(pressedTint)
+            .drawBehind {
+                if (solidBackground && enabled) {
+                    // Brass top highlight — catches candlelight on the lip
+                    // of the button. Subtle on Destructive (smoke); bright on
+                    // Primary (ember catches fire).
+                    val highlightAlpha = if (variant == ParlorButtonVariant.Primary) 0.55f else 0.30f
+                    drawRect(
+                        brush = Brush.verticalGradient(
+                            colors = listOf(
+                                colors.accentBrass.copy(alpha = highlightAlpha),
+                                Color.Transparent,
+                            ),
+                            startY = 0f,
+                            endY = 3.dp.toPx(),
+                        ),
+                        topLeft = Offset(0f, 0f),
+                        size = Size(size.width, 3.dp.toPx()),
+                    )
+                    // Bottom inset shadow — the button presses into the surface.
+                    drawRect(
+                        brush = Brush.verticalGradient(
+                            colors = listOf(
+                                Color.Transparent,
+                                Color.Black.copy(alpha = 0.35f),
+                            ),
+                            startY = size.height - 4.dp.toPx(),
+                            endY = size.height,
+                        ),
+                        topLeft = Offset(0f, size.height - 4.dp.toPx()),
+                        size = Size(size.width, 4.dp.toPx()),
+                    )
+                }
+            }
             .border(
                 width = 1.dp,
                 color = effectiveBorder,
-                shape = RoundedCornerShape(ParlorTheme.radii.subtle),
+                shape = shape,
             )
             .clickable(
                 interactionSource = interaction,
