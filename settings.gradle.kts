@@ -11,19 +11,45 @@ pluginManagement {
     }
 }
 
-// P2pKit integration is opt-in via `parlor.p2p.enabled=true` in gradle.properties.
-// When enabled, the adapter module :shared:transport-p2p is added to the build
-// and depends on P2pKit's published artifacts (dev.p2pkit:p2p-core,
-// dev.p2pkit:p2p-transport-lan) via mavenLocal().
+// P2pKit integration. The flag resolves in three steps:
+//   1. Explicit override via gradle.properties or -P (always wins).
+//   2. Auto-detect: enabled when P2pKit 0.6.0 is published in mavenLocal.
+//   3. Default off.
 //
-// Why mavenLocal and not includeBuild: P2pKit requires Gradle 9.3.1+ (AGP 9.x),
-// while Parlor is on Gradle 8.11.1. The user runs `./gradlew publishToMavenLocal`
-// once inside ../P2pKit so its own Gradle 9.3+ builds the artifacts; Parlor then
-// consumes them through its own Gradle 8.11 build with no version clash.
+// So if you've run `./gradlew publishToMavenLocal` inside ../P2pKit once, every
+// build from Android Studio / IntelliJ / CLI picks it up automatically — no
+// flag, no special build config. Fresh clones / CI without P2pKit stay off.
 //
-// Pass-and-play builds are unaffected — the module isn't even included when the
-// flag is false.
-val p2pEnabled: Boolean = (extra.properties["parlor.p2p.enabled"] as? String)?.toBoolean() ?: false
+// Why mavenLocal and not includeBuild: P2pKit requires Gradle 9.3.1+ (AGP 9.x);
+// Parlor is on Gradle 8.11.1. P2pKit publishes with its own Gradle, Parlor
+// consumes via its own — no version clash.
+val p2pExplicit: Boolean? =
+    (extra.properties["parlor.p2p.enabled"] as? String)?.toBoolean()
+val p2pAutoDetected: Boolean = run {
+    val home = System.getProperty("user.home")
+    if (home.isNullOrBlank()) {
+        false
+    } else {
+        val coreArtifact = java.io.File(
+            home,
+            ".m2/repository/dev/p2pkit/p2p-core/0.6.0/p2p-core-0.6.0.jar",
+        )
+        val lanArtifact = java.io.File(
+            home,
+            ".m2/repository/dev/p2pkit/p2p-transport-lan/0.6.0/p2p-transport-lan-0.6.0.module",
+        )
+        coreArtifact.exists() && lanArtifact.exists()
+    }
+}
+val p2pEnabled: Boolean = p2pExplicit ?: p2pAutoDetected
+
+println(
+    "[parlor] P2pKit integration: " + if (p2pEnabled) {
+        "ENABLED (${if (p2pExplicit != null) "explicit" else "auto-detected from mavenLocal"})"
+    } else {
+        "disabled — publish ../P2pKit to mavenLocal or set parlor.p2p.enabled=true to turn on"
+    },
+)
 
 dependencyResolutionManagement {
     repositories {
