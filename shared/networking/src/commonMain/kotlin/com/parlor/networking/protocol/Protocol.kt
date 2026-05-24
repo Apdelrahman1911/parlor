@@ -55,8 +55,14 @@ sealed interface HostMessage : RoomMessage {
 sealed interface PeerMessage : RoomMessage {
     @Serializable
     data class JoinRequest(val displayName: String) : PeerMessage
+    /**
+     * Peer-submitted action. [sender] is the peer's self-attested PlayerId
+     * (always equal to its `LocalRoom.selfPlayerId` at submit time). The
+     * host validates [sender] against the action's authority scope via
+     * `WhodunitActionAuthority.isAllowed`; mismatches are silently dropped.
+     */
     @Serializable
-    data class ActionSubmit(val payload: ByteArray) : PeerMessage
+    data class ActionSubmit(val sender: PlayerId, val payload: ByteArray) : PeerMessage
     @Serializable
     data object Heartbeat : PeerMessage
     @Serializable

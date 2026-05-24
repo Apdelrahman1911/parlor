@@ -55,6 +55,7 @@ import com.parlor.games.whodunit.domain.reducer.WhodunitReducerContext
 import com.parlor.games.whodunit.domain.state.VoteState
 import com.parlor.games.whodunit.domain.state.WhodunitState
 import com.parlor.games.whodunit.ui.components.HideScreen
+import com.parlor.games.whodunit.ui.screens.peer.PeerWaitingForHostScreen
 import com.parlor.games.whodunit.ui.screens.postgame.PostGameScreen
 import com.parlor.games.whodunit.ui.screens.reveal.CharacterRevealGateScreen
 import com.parlor.games.whodunit.ui.screens.reveal.CharacterRevealHandoffScreen
@@ -70,6 +71,20 @@ import com.parlor.games.whodunit.ui.screens.safety.PrivacyConcernDialog
 import com.parlor.games.whodunit.ui.timer.runDiscussionTickerLoop
 import com.parlor.games.whodunit.resources.Res
 import com.parlor.games.whodunit.resources.pause_open_description
+import com.parlor.games.whodunit.resources.peer_briefing_body
+import com.parlor.games.whodunit.resources.peer_briefing_title
+import com.parlor.games.whodunit.resources.peer_intro_body
+import com.parlor.games.whodunit.resources.peer_intro_title
+import com.parlor.games.whodunit.resources.peer_postgame_body
+import com.parlor.games.whodunit.resources.peer_postgame_title
+import com.parlor.games.whodunit.resources.peer_leave_room
+import com.parlor.games.whodunit.resources.peer_leave_room_description
+import com.parlor.games.whodunit.resources.peer_reveal_ack_body
+import com.parlor.games.whodunit.resources.peer_reveal_ack_title
+import com.parlor.games.whodunit.resources.peer_round_body
+import com.parlor.games.whodunit.resources.peer_round_title
+import com.parlor.games.whodunit.resources.peer_waiting_eyebrow
+import com.parlor.games.whodunit.resources.peer_waiting_for_host
 import org.jetbrains.compose.resources.stringResource
 import com.parlor.games.whodunit.ui.screens.setup.ModeSelectionScreen
 import com.parlor.games.whodunit.ui.screens.setup.PlayerCountDisplayStrategy
@@ -501,21 +516,44 @@ private fun PhaseRouter(
     onBackToLibrary: () -> Unit,
     modifier: Modifier = Modifier,
     selfPlayerId: PlayerId? = null,
+    isHost: Boolean = true,
 ) {
+    val waitingHint = stringResource(Res.string.peer_waiting_for_host)
+    val waitingEyebrow = stringResource(Res.string.peer_waiting_eyebrow)
     when (phase) {
         is WhodunitPhase.Setup -> LoadingScreen(modifier)
-        is WhodunitPhase.PublicIntro -> PublicIntroScreen(
-            title = case.envelope.title,
-            intro = payload.publicIntro,
-            bedrockClues = payload.bedrockClues,
-            onContinue = { scope.launch { session.submit(WhodunitAction.AdvanceFromIntro) } },
-            modifier = modifier,
-        )
-        is WhodunitPhase.RulesBriefing -> RulesBriefingScreen(
-            cardIndex = state.public.briefingCardIndex,
-            onAdvance = { next -> scope.launch { session.submit(WhodunitAction.AdvanceBriefingCard(next)) } },
-            modifier = modifier,
-        )
+        is WhodunitPhase.PublicIntro -> if (isHost) {
+            PublicIntroScreen(
+                title = case.envelope.title,
+                intro = payload.publicIntro,
+                bedrockClues = payload.bedrockClues,
+                onContinue = { scope.launch { session.submit(WhodunitAction.AdvanceFromIntro) } },
+                modifier = modifier,
+            )
+        } else {
+            PeerWaitingForHostScreen(
+                eyebrow = waitingEyebrow,
+                title = stringResource(Res.string.peer_intro_title),
+                body = stringResource(Res.string.peer_intro_body),
+                waitingHint = waitingHint,
+                modifier = modifier,
+            )
+        }
+        is WhodunitPhase.RulesBriefing -> if (isHost) {
+            RulesBriefingScreen(
+                cardIndex = state.public.briefingCardIndex,
+                onAdvance = { next -> scope.launch { session.submit(WhodunitAction.AdvanceBriefingCard(next)) } },
+                modifier = modifier,
+            )
+        } else {
+            PeerWaitingForHostScreen(
+                eyebrow = waitingEyebrow,
+                title = stringResource(Res.string.peer_briefing_title),
+                body = stringResource(Res.string.peer_briefing_body),
+                waitingHint = waitingHint,
+                modifier = modifier,
+            )
+        }
         is WhodunitPhase.CharacterReveal -> CharacterRevealSegment(
             session = session,
             phase = phase,
@@ -524,46 +562,91 @@ private fun PhaseRouter(
             selfPlayerId = selfPlayerId,
             modifier = modifier,
         )
-        is WhodunitPhase.Round -> RoundSegment(
-            session = session,
-            roundIndex = phase.index,
-            state = state,
-            payload = payload,
-            modifier = modifier,
-        )
+        is WhodunitPhase.Round -> if (isHost) {
+            RoundSegment(
+                session = session,
+                roundIndex = phase.index,
+                state = state,
+                payload = payload,
+                modifier = modifier,
+            )
+        } else {
+            PeerWaitingForHostScreen(
+                eyebrow = waitingEyebrow,
+                title = stringResource(Res.string.peer_round_title),
+                body = stringResource(Res.string.peer_round_body),
+                waitingHint = waitingHint,
+                modifier = modifier,
+            )
+        }
         is WhodunitPhase.FinalVote -> VoteSegment(
             session = session,
             state = state,
             players = state.players,
             modifier = modifier,
+            selfPlayerId = selfPlayerId,
+            isHost = isHost,
         )
         is WhodunitPhase.TiedRevote -> {
             // After the user taps "Begin Revote", voteState transitions from
             // Tied → Collecting. The phase remains TiedRevote during the revote.
             if (state.public.voteState is VoteState.Collecting) {
-                VoteSegment(session, state, state.players, modifier)
+                VoteSegment(session, state, state.players, modifier, selfPlayerId, isHost)
             } else {
-                TiedRevoteSegment(session, state, modifier)
+                if (isHost) {
+                    TiedRevoteSegment(session, state, modifier)
+                } else {
+                    PeerWaitingForHostScreen(
+                        eyebrow = waitingEyebrow,
+                        title = stringResource(Res.string.peer_round_title),
+                        body = stringResource(Res.string.peer_round_body),
+                        waitingHint = waitingHint,
+                        modifier = modifier,
+                    )
+                }
             }
         }
-        is WhodunitPhase.Reveal -> RevealStageScreen(
-            verdict = verdict ?: Verdict.PlayersWin(payload.characters.first().id),
-            killerDisplayName = killerDisplayName(state, payload),
-            revealNarrative = payload.revealNarratives[killerCharIdFromVerdict(verdict)
-                ?: state.players.firstOrNull()?.id?.raw.orEmpty()]
-                ?: "",
-            onAcknowledge = { scope.launch { session.submit(WhodunitAction.AcknowledgeReveal) } },
-            modifier = modifier,
-        )
-        is WhodunitPhase.PostGame -> PostGameScreen(
-            onReplaySameCase = {
-                onVerdictClear()
-                scope.launch { session.submit(WhodunitAction.BeginReplay) }
-            },
-            onTryOtherMode = onBackToLibrary,
-            onBackToLibrary = onBackToLibrary,
-            modifier = modifier,
-        )
+        is WhodunitPhase.Reveal -> if (isHost) {
+            RevealStageScreen(
+                verdict = verdict ?: Verdict.PlayersWin(payload.characters.first().id),
+                killerDisplayName = killerDisplayName(state, payload),
+                revealNarrative = payload.revealNarratives[killerCharIdFromVerdict(verdict)
+                    ?: state.players.firstOrNull()?.id?.raw.orEmpty()]
+                    ?: "",
+                onAcknowledge = { scope.launch { session.submit(WhodunitAction.AcknowledgeReveal) } },
+                modifier = modifier,
+            )
+        } else {
+            // Peer still sees the verdict — but acknowledge is host-driven.
+            RevealStageScreen(
+                verdict = verdict ?: Verdict.PlayersWin(payload.characters.first().id),
+                killerDisplayName = killerDisplayName(state, payload),
+                revealNarrative = payload.revealNarratives[killerCharIdFromVerdict(verdict)
+                    ?: state.players.firstOrNull()?.id?.raw.orEmpty()]
+                    ?: "",
+                onAcknowledge = { /* peer cannot acknowledge — host closes the reveal */ },
+                modifier = modifier,
+            )
+        }
+        is WhodunitPhase.PostGame -> if (isHost) {
+            PostGameScreen(
+                onReplaySameCase = {
+                    onVerdictClear()
+                    scope.launch { session.submit(WhodunitAction.BeginReplay) }
+                },
+                onTryOtherMode = onBackToLibrary,
+                onBackToLibrary = onBackToLibrary,
+                modifier = modifier,
+            )
+        } else {
+            PeerWaitingForHostScreen(
+                eyebrow = waitingEyebrow,
+                title = stringResource(Res.string.peer_postgame_title),
+                body = stringResource(Res.string.peer_postgame_body),
+                waitingHint = stringResource(Res.string.peer_leave_room),
+                modifier = modifier,
+            )
+        }
     }
 }
 
@@ -796,6 +879,8 @@ private fun VoteSegment(
     state: WhodunitState,
     players: List<Player>,
     modifier: Modifier = Modifier,
+    selfPlayerId: PlayerId? = null,
+    isHost: Boolean = true,
 ) {
     val scope = rememberCoroutineScope()
     val vote = state.public.voteState as? VoteState.Collecting
@@ -810,19 +895,36 @@ private fun VoteSegment(
     val nextVoter = vote.ballotPlayerIds.firstOrNull { it !in votedOrAbstained }
     val nextVoterName = nextVoter?.let { id -> players.firstOrNull { it.id == id }?.displayName }
 
-    // Per-voter ceremony: handoff cover → ballot. We track the local stage so
-    // each voter sees a hand-off before voting.
-    var ballotOpen by remember(nextVoter) { mutableStateOf(false) }
-
     if (nextVoter == null) {
-        // Everyone has voted or abstained — close the vote.
-        LaunchedEffect(Unit) {
-            session.submit(WhodunitAction.CloseVote)
+        // Everyone has voted or abstained — close the vote. Only the host
+        // submits CloseVote; peers just wait for the host's tally to ripple
+        // back as a phase change.
+        if (isHost) {
+            LaunchedEffect(Unit) {
+                session.submit(WhodunitAction.CloseVote)
+            }
         }
         // While the reducer tallies, briefly show a dim hide screen.
         HideScreen(
             line = "Counting…",
             onTap = {},
+            modifier = modifier,
+        )
+        return
+    }
+
+    // Multi-device per-voter gating: only the device whose self is nextVoter
+    // sees the ballot. Other devices show the standard hand-off cover with
+    // the next voter's name. Pass-and-play (selfPlayerId == null) keeps the
+    // pre-existing tap-to-continue behaviour for everyone on one phone.
+    val isLocalVoter = selfPlayerId == null || nextVoter == selfPlayerId
+
+    var ballotOpen by remember(nextVoter) { mutableStateOf(false) }
+
+    if (!isLocalVoter) {
+        VoteHandoffScreen(
+            nextVoterName = nextVoterName ?: "the next voter",
+            onContinue = { /* not the local voter — host drives the flow */ },
             modifier = modifier,
         )
         return
@@ -972,6 +1074,7 @@ fun WhodunitMultiplayerHostFlow(
             },
             modifier = Modifier.fillMaxSize(),
             selfPlayerId = room.selfPlayerId,
+            isHost = true,
         )
 
         if (!state.public.paused && state.phase !is WhodunitPhase.PostGame) {
@@ -1063,6 +1166,7 @@ fun WhodunitMultiplayerPeerFlow(
             onBackToLibrary = onBackToLibrary,
             modifier = Modifier.fillMaxSize(),
             selfPlayerId = selfPlayerId,
+            isHost = false,
         )
         if (state.public.paused) {
             PeerHostPausedBanner(modifier = Modifier.align(Alignment.Center))

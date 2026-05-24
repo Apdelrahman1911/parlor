@@ -107,7 +107,12 @@ fun PeerLobbyScreen(
                         onSendPause = {
                             scope.launch {
                                 val bytes = WhodunitActionCodec.encode(WhodunitAction.Pause)
-                                current.sendToHost(PeerMessage.ActionSubmit(bytes))
+                                current.sendToHost(
+                                    PeerMessage.ActionSubmit(
+                                        sender = current.selfPlayerId,
+                                        payload = bytes,
+                                    ),
+                                )
                                 sentLog.value = sentLog.value + sentFormat.format("Pause")
                             }
                         },

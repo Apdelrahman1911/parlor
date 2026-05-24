@@ -5,6 +5,7 @@ import com.parlor.engine.state.Player
 import com.parlor.games.whodunit.WhodunitIds
 import com.parlor.games.whodunit.domain.action.WhodunitAction
 import com.parlor.games.whodunit.domain.action.WhodunitActionCodec
+import com.parlor.games.whodunit.domain.authority.WhodunitActionAuthority
 import com.parlor.games.whodunit.domain.event.WhodunitEvent
 import com.parlor.games.whodunit.domain.projection.WhodunitProjectionPolicy
 import com.parlor.games.whodunit.domain.state.WhodunitPrivate
@@ -150,13 +151,17 @@ class WhodunitHostRoomBridge(
     // ============================================================ Inbox ==
 
     private fun startActionInbox() {
+        val hostId = room.info.value.hostPlayerId
         jobs += scope.launch {
             room.incoming.filterIsInstance<PeerMessage.ActionSubmit>().collect { msg ->
-                runCatching {
-                    WhodunitActionCodec.decode(msg.payload)
-                }.onSuccess { action ->
-                    controller.submit(action)
+                val action = runCatching { WhodunitActionCodec.decode(msg.payload) }.getOrNull()
+                    ?: return@collect
+                if (!WhodunitActionAuthority.isAllowed(action, msg.sender, hostId)) {
+                    // Drop silently — peer attempted a host-only action or
+                    // submitted on behalf of another player.
+                    return@collect
                 }
+                controller.submit(action)
             }
         }
     }

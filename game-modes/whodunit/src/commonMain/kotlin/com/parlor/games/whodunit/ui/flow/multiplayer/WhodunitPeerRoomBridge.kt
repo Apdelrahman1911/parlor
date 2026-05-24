@@ -124,7 +124,9 @@ class WhodunitPeerRoomBridge(
 
     private suspend fun sendActionToHost(action: WhodunitAction): Result<Unit, SubmitError> {
         val bytes = WhodunitActionCodec.encode(action)
-        val sendResult = room.sendToHost(PeerMessage.ActionSubmit(bytes))
+        val sendResult = room.sendToHost(
+            PeerMessage.ActionSubmit(sender = selfPlayerId, payload = bytes),
+        )
         return when (sendResult) {
             is Result.Success -> Result.Success(Unit)
             is Result.Failure -> Result.Failure(SubmitError.SessionClosed)
