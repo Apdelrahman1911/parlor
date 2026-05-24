@@ -1,5 +1,7 @@
 package com.parlor.core.logging
 
+import kotlin.jvm.JvmInline
+
 /**
  * Logger contract. Platform actuals provide the underlying implementation
  * (Android Log, NSLog, println on Desktop).

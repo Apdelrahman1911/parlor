@@ -1,5 +1,6 @@
 package com.parlor.core.ids
 
+import kotlin.jvm.JvmInline
 import kotlinx.serialization.Serializable
 
 /**

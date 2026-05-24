@@ -1,5 +1,6 @@
 package com.parlor.session.passandplay
 
+import kotlin.concurrent.Volatile
 import com.parlor.core.ids.PlayerId
 import com.parlor.core.result.Result
 import com.parlor.engine.action.GameAction
