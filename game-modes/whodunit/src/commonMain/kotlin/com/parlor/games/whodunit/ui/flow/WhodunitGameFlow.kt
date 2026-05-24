@@ -1134,6 +1134,16 @@ fun WhodunitMultiplayerPeerFlow(
     room: LocalRoom,
     onBackToLibrary: () -> Unit,
     modifier: Modifier = Modifier,
+    /**
+     * Wave 9H-8: PeerSessionFlow uses these to drive the
+     * [com.parlor.designsystem.components.ReconnectingOverlay] and
+     * [com.parlor.designsystem.components.OfflineBanner] at the screen
+     * root. The peer bridge synthesises HostLost / SelfOffline via
+     * its `connectionEvents` SharedFlow; we forward those transitions
+     * up so the chrome composes over the whole flow.
+     */
+    onHostLostChanged: (Boolean) -> Unit = {},
+    onSelfOfflineChanged: (Boolean) -> Unit = {},
 ) {
     val definition: WhodunitDefinition = koinInject()
     val scope = rememberCoroutineScope()
@@ -1162,6 +1172,27 @@ fun WhodunitMultiplayerPeerFlow(
 
     LaunchedEffect(bridge) {
         bridge.hostDisconnected.collect { onBackToLibrary() }
+    }
+
+    // Wave 9H-8: forward HostLost / SelfOffline to the screen root.
+    // Toast emission for PeerLeft / PeerReconnected / HostRestored
+    // is layered later when the host bridge's peerEvents surface
+    // reaches this flow (host-side concern); the offline banner +
+    // reconnecting overlay only need the boolean state.
+    LaunchedEffect(bridge) {
+        bridge.connectionEvents.collect { event ->
+            when (event) {
+                com.parlor.networking.room.PeerEvent.HostLost ->
+                    onHostLostChanged(true)
+                com.parlor.networking.room.PeerEvent.HostRestored ->
+                    onHostLostChanged(false)
+                com.parlor.networking.room.PeerEvent.SelfOffline ->
+                    onSelfOfflineChanged(true)
+                com.parlor.networking.room.PeerEvent.SelfOnline ->
+                    onSelfOfflineChanged(false)
+                else -> Unit
+            }
+        }
     }
 
     val session = bridge.controller

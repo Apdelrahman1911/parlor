@@ -25,6 +25,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import com.parlor.app.resources.Res
+import com.parlor.app.resources.party_offline_banner
+import com.parlor.app.resources.party_reconnecting_overlay_leave
+import com.parlor.app.resources.party_reconnecting_overlay_leave_description
+import com.parlor.app.resources.party_reconnecting_overlay_title
+import com.parlor.designsystem.components.LocalParlorToastState
+import com.parlor.designsystem.components.OfflineBanner
+import com.parlor.designsystem.components.ReconnectingOverlay
 import com.parlor.app.resources.error_back
 import com.parlor.app.resources.error_back_description
 import com.parlor.app.resources.peer_case_load_error_format
@@ -116,18 +123,56 @@ fun PeerSessionFlow(
     val current = room
     val start = sessionStart
 
-    when {
-        joinError != null -> PeerErrorState(joinError!!, onBack = onBackToLibrary, modifier = modifier)
-        current == null -> PeerConnectingState(code, modifier = modifier)
-        start == null -> PeerWaitingForHostStart(current, peerName, modifier = modifier, onLeave = onBackToLibrary)
-        else -> PeerSessionWithCase(
-            transport = transport,
-            room = current,
-            start = start,
-            peerName = peerName,
-            onBackToLibrary = onBackToLibrary,
-            modifier = modifier,
-        )
+    // Wave 9H-8 connection presenter state. The WhodunitMultiplayerPeerFlow
+    // owns the peer bridge that synthesises HostLost / SelfOffline events;
+    // when we wire its connectionEvents through here, these flags drive
+    // the overlay + banner. For now both default to false — the screens
+    // below still render the inner flow, and a follow-up will hook the
+    // bridge's SharedFlow into a PartyConnectionPresenter at this scope.
+    var hostLost by remember { mutableStateOf(false) }
+    var selfOffline by remember { mutableStateOf(false) }
+
+    Box(modifier = modifier.fillMaxSize()) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            if (selfOffline) {
+                OfflineBanner(label = stringResource(Res.string.party_offline_banner))
+            }
+            Box(modifier = Modifier.fillMaxSize()) {
+                when {
+                    joinError != null -> PeerErrorState(
+                        joinError!!,
+                        onBack = onBackToLibrary,
+                        modifier = Modifier.fillMaxSize(),
+                    )
+                    current == null -> PeerConnectingState(code, modifier = Modifier.fillMaxSize())
+                    start == null -> PeerWaitingForHostStart(
+                        current,
+                        peerName,
+                        modifier = Modifier.fillMaxSize(),
+                        onLeave = onBackToLibrary,
+                    )
+                    else -> PeerSessionWithCase(
+                        transport = transport,
+                        room = current,
+                        start = start,
+                        peerName = peerName,
+                        onBackToLibrary = onBackToLibrary,
+                        modifier = Modifier.fillMaxSize(),
+                        onHostLostChanged = { hostLost = it },
+                        onSelfOfflineChanged = { selfOffline = it },
+                    )
+                }
+            }
+        }
+        if (hostLost) {
+            ReconnectingOverlay(
+                title = stringResource(Res.string.party_reconnecting_overlay_title),
+                leaveLabel = stringResource(Res.string.party_reconnecting_overlay_leave),
+                leaveContentDescription = stringResource(Res.string.party_reconnecting_overlay_leave_description),
+                onLeave = onBackToLibrary,
+                modifier = Modifier.fillMaxSize(),
+            )
+        }
     }
 }
 
@@ -139,6 +184,8 @@ private fun PeerSessionWithCase(
     peerName: String,
     onBackToLibrary: () -> Unit,
     modifier: Modifier = Modifier,
+    onHostLostChanged: (Boolean) -> Unit = {},
+    onSelfOfflineChanged: (Boolean) -> Unit = {},
 ) {
     val repository: CaseRepository = koinInject()
     val payloadValidator: PayloadValidator<WhodunitCase> = koinInject(qualifier = named("whodunit"))
@@ -169,6 +216,8 @@ private fun PeerSessionWithCase(
                 room = room,
                 onBackToLibrary = onBackToLibrary,
                 modifier = modifier,
+                onHostLostChanged = onHostLostChanged,
+                onSelfOfflineChanged = onSelfOfflineChanged,
             )
         }
     }

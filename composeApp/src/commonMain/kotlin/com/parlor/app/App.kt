@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -14,6 +15,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.parlor.app.permissions.P2pPermissionRationaleScreen
 import com.parlor.app.permissions.PermissionStatus
@@ -29,6 +31,9 @@ import com.parlor.content.repository.CaseRepository
 import com.parlor.core.ids.ModeId
 import com.parlor.core.ids.SessionId
 import com.parlor.core.result.Result
+import com.parlor.designsystem.components.LocalParlorToastState
+import com.parlor.designsystem.components.ParlorToastHost
+import com.parlor.designsystem.components.ParlorToastState
 import com.parlor.designsystem.localization.AppLanguage
 import com.parlor.designsystem.localization.ProvideAppLanguage
 import com.parlor.designsystem.localization.customAppLocale
@@ -71,8 +76,11 @@ fun App() {
     // doesn't need to declare a Koin binding for it.
     val roomTransport: RoomTransport? = remember { KoinPlatform.getKoin().getOrNull() }
 
+    val toastState = remember { ParlorToastState() }
+
     ProvideAppLanguage(language = language) {
         ParlorTheme(themeMode = themeMode) {
+            CompositionLocalProvider(LocalParlorToastState provides toastState) {
             var screen: AppScreen by remember { mutableStateOf(AppScreen.Home) }
             var resumeSessionId: SessionId? by remember { mutableStateOf(null) }
             var unfinishedRefreshKey: Int by remember { mutableStateOf(0) }
@@ -291,6 +299,13 @@ fun App() {
                 )
             }
                 }
+                // Toast host overlays every screen so any descendant can
+                // show("...") via LocalParlorToastState.current.
+                ParlorToastHost(
+                    state = toastState,
+                    modifier = Modifier.align(Alignment.BottomCenter),
+                )
+            }
             }
         }
     }
