@@ -14,6 +14,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -78,6 +79,12 @@ import com.parlor.games.whodunit.ui.screens.setup.RulesBriefingScreen
 import com.parlor.games.whodunit.ui.screens.vote.TiedRevoteScreen
 import com.parlor.games.whodunit.ui.screens.vote.VoteBallotScreen
 import com.parlor.games.whodunit.ui.screens.vote.VoteHandoffScreen
+import com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostRoomBridge
+import com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitPeerRoomBridge
+import com.parlor.networking.protocol.HostMessage
+import com.parlor.networking.room.LocalRoom
+import com.parlor.networking.room.SendTarget
+import com.parlor.session.SessionController
 import com.parlor.session.ViewerContext
 import com.parlor.session.passandplay.PassAndPlaySessionController
 import com.parlor.storage.snapshot.SnapshotStore
@@ -105,6 +112,7 @@ fun WhodunitGameFlow(
     onBackToLibrary: () -> Unit,
     modifier: Modifier = Modifier,
     resumeSessionId: SessionId? = null,
+    caseId: String = "last-dinner",
 ) {
     val repository: CaseRepository = koinInject()
     val payloadValidator: PayloadValidator<WhodunitCase> = koinInject(qualifier = named("whodunit"))
@@ -123,10 +131,11 @@ fun WhodunitGameFlow(
         initialValue = null,
         key1 = resumeSessionId,
         key2 = resumeResult,
+        key3 = caseId,
     ) {
         val targetCaseId = when (val r = resumeResult) {
             is Result.Success -> r.data.state.public.caseId.raw
-            else -> "last-dinner"
+            else -> caseId
         }
         // For a fresh launch, kick off the load right away. For resume, only
         // load once the snapshot has decoded successfully (so a corrupt resume
@@ -476,7 +485,7 @@ private fun PhaseRouter(
     state: WhodunitState,
     case: ValidatedCase<WhodunitCase>,
     payload: WhodunitCase,
-    session: PassAndPlaySessionController<WhodunitState, WhodunitAction, WhodunitEvent>,
+    session: SessionController<WhodunitState, WhodunitAction, WhodunitEvent>,
     scope: kotlinx.coroutines.CoroutineScope,
     verdict: Verdict?,
     onVerdictClear: () -> Unit,
@@ -565,7 +574,7 @@ private fun killerDisplayName(state: WhodunitState, payload: WhodunitCase): Stri
 
 @Composable
 private fun CharacterRevealSegment(
-    session: PassAndPlaySessionController<WhodunitState, WhodunitAction, WhodunitEvent>,
+    session: SessionController<WhodunitState, WhodunitAction, WhodunitEvent>,
     phase: WhodunitPhase.CharacterReveal,
     payload: WhodunitCase,
     players: List<Player>,
@@ -661,7 +670,7 @@ private enum class RevealStage { Handoff, Gate, Dossier, Hide }
 
 @Composable
 private fun RoundSegment(
-    session: PassAndPlaySessionController<WhodunitState, WhodunitAction, WhodunitEvent>,
+    session: SessionController<WhodunitState, WhodunitAction, WhodunitEvent>,
     roundIndex: Int,
     state: WhodunitState,
     payload: WhodunitCase,
@@ -755,7 +764,7 @@ private val ENGINE_VERSION: com.parlor.core.versioning.SemVer =
 
 @Composable
 private fun VoteSegment(
-    session: PassAndPlaySessionController<WhodunitState, WhodunitAction, WhodunitEvent>,
+    session: SessionController<WhodunitState, WhodunitAction, WhodunitEvent>,
     state: WhodunitState,
     players: List<Player>,
     modifier: Modifier = Modifier,
@@ -824,7 +833,7 @@ private fun VoteSegment(
 
 @Composable
 private fun TiedRevoteSegment(
-    session: PassAndPlaySessionController<WhodunitState, WhodunitAction, WhodunitEvent>,
+    session: SessionController<WhodunitState, WhodunitAction, WhodunitEvent>,
     state: WhodunitState,
     modifier: Modifier = Modifier,
 ) {
@@ -839,4 +848,226 @@ private fun TiedRevoteSegment(
         onBeginRevote = { scope.launch { session.submit(WhodunitAction.OpenVote) } },
         modifier = modifier,
     )
+}
+
+// ====================================================================== Multi-device ==
+
+/**
+ * Multi-device host entry. Builds a [PassAndPlaySessionController] as in
+ * pass-and-play, wraps it in a [WhodunitHostRoomBridge] that broadcasts the
+ * public projection on every state change and routes per-player private
+ * slices, and renders the standard [PhaseRouter] so the host plays from the
+ * same UI as solo play. `Start Game` on the lobby called
+ * `bridge.announceStart(...)` before transitioning here; this composable
+ * just runs the game.
+ */
+@Composable
+fun WhodunitMultiplayerHostFlow(
+    case: ValidatedCase<WhodunitCase>,
+    modeId: ModeId,
+    players: List<Player>,
+    seed: Long,
+    room: LocalRoom,
+    onBackToLibrary: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val clock: Clock = koinInject()
+    val definition: WhodunitDefinition = koinInject()
+    val scope = rememberCoroutineScope()
+
+    val sessionConfig = remember(case.envelope.caseId, modeId, players, seed) {
+        SessionConfig(
+            sessionId = SessionId("mp-host-${seed.toString(16)}"),
+            caseId = CaseId(case.envelope.caseId),
+            modeId = modeId,
+            players = players,
+            randomSeed = seed,
+        )
+    }
+    val session = remember(sessionConfig) {
+        PassAndPlaySessionController(
+            definition = definition,
+            config = sessionConfig,
+            reducerContext = WhodunitReducerContext(
+                clock = clock,
+                random = RandomSource.seeded(seed),
+                case = case.payload,
+            ),
+            scope = scope,
+        )
+    }
+    val bridge = remember(session, room, players) {
+        WhodunitHostRoomBridge(session, room, players, scope)
+    }
+    LaunchedEffect(bridge) {
+        bridge.announceStart(
+            caseId = case.envelope.caseId,
+            modeId = modeId.raw,
+            seed = seed,
+        )
+    }
+    DisposableEffect(bridge) { onDispose { bridge.close() } }
+
+    var verdict by remember { mutableStateOf<Verdict?>(null) }
+    LaunchedEffect(session) {
+        @Suppress("UNCHECKED_CAST")
+        (session.events as SharedFlow<WhodunitEvent>).collect { event ->
+            if (event is WhodunitEvent.WinnerDecided) verdict = event.winner
+        }
+    }
+
+    val publicProjection by session.publicState.collectAsState()
+    val state = publicProjection.state
+    val payload = case.payload
+
+    LaunchedEffect(state.phase) {
+        if (state.phase is WhodunitPhase.Setup) {
+            session.submit(WhodunitAction.AssignRoles(seed))
+        }
+    }
+
+    Box(modifier = modifier.fillMaxSize()) {
+        PhaseRouter(
+            phase = state.phase,
+            state = state,
+            case = case,
+            payload = payload,
+            session = session,
+            scope = scope,
+            verdict = verdict,
+            onVerdictClear = { verdict = null },
+            onBackToLibrary = {
+                scope.launch {
+                    runCatching { room.send(SendTarget.Broadcast, HostMessage.EndSession) }
+                    onBackToLibrary()
+                }
+            },
+            modifier = Modifier.fillMaxSize(),
+        )
+
+        if (!state.public.paused && state.phase !is WhodunitPhase.PostGame) {
+            PauseAffordance(
+                onPause = { scope.launch { session.submit(WhodunitAction.Pause) } },
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(ParlorTheme.spacing.m),
+            )
+        }
+        if (state.public.paused) {
+            PauseOverlay(
+                onResume = { scope.launch { session.submit(WhodunitAction.Resume) } },
+                onResumeLater = { onBackToLibrary() },
+                onEndNow = {
+                    scope.launch {
+                        runCatching { room.send(SendTarget.Broadcast, HostMessage.EndSession) }
+                        onBackToLibrary()
+                    }
+                },
+            )
+        }
+    }
+}
+
+/**
+ * Multi-device peer entry. Spins up a [WhodunitPeerRoomBridge] that holds
+ * a `ShadowSessionController` updated by inbound host snapshots, and renders
+ * the same [PhaseRouter] the host uses. The peer never reduces game state
+ * locally — every action it submits is sent to the host, and every state
+ * change is reflected when the host's snapshot arrives.
+ */
+@Composable
+fun WhodunitMultiplayerPeerFlow(
+    case: ValidatedCase<WhodunitCase>,
+    modeId: ModeId,
+    players: List<Player>,
+    selfPlayerId: PlayerId,
+    seed: Long,
+    room: LocalRoom,
+    onBackToLibrary: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val definition: WhodunitDefinition = koinInject()
+    val scope = rememberCoroutineScope()
+
+    val initialState = remember(case.envelope.caseId, players, modeId, seed) {
+        definition.createInitialState(
+            SessionConfig(
+                sessionId = SessionId("mp-peer-${seed.toString(16)}"),
+                caseId = CaseId(case.envelope.caseId),
+                modeId = modeId,
+                players = players,
+                randomSeed = seed,
+            ),
+        )
+    }
+
+    val bridge = remember(room, selfPlayerId) {
+        WhodunitPeerRoomBridge(
+            room = room,
+            selfPlayerId = selfPlayerId,
+            initialPublic = initialState,
+            scope = scope,
+        )
+    }
+    DisposableEffect(bridge) { onDispose { bridge.close() } }
+
+    LaunchedEffect(bridge) {
+        bridge.hostDisconnected.collect { onBackToLibrary() }
+    }
+
+    val session = bridge.controller
+    val verdict by remember { mutableStateOf<Verdict?>(null) }
+    val publicProjection by session.publicState.collectAsState()
+    val state = publicProjection.state
+    val payload = case.payload
+
+    Box(modifier = modifier.fillMaxSize()) {
+        PhaseRouter(
+            phase = state.phase,
+            state = state,
+            case = case,
+            payload = payload,
+            session = session,
+            scope = scope,
+            verdict = verdict,
+            onVerdictClear = { /* peer never replays — replay is host-driven */ },
+            onBackToLibrary = onBackToLibrary,
+            modifier = Modifier.fillMaxSize(),
+        )
+        if (state.public.paused) {
+            PeerHostPausedBanner(modifier = Modifier.align(Alignment.Center))
+        }
+    }
+}
+
+/**
+ * Tiny banner shown on peer devices when the host has paused. Peers can't
+ * resume — only the host can. Tapping does nothing; the banner clears
+ * automatically when the host resumes (state.public.paused = false).
+ */
+@Composable
+private fun PeerHostPausedBanner(modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(ParlorTheme.spacing.xl),
+        contentAlignment = Alignment.Center,
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s),
+        ) {
+            Text(
+                text = "PAUSED",
+                style = ParlorTheme.typography.labelSmall,
+                color = ParlorTheme.colors.accentEmber,
+            )
+            Text(
+                text = "The host paused the game.",
+                style = ParlorTheme.typography.displayMedium,
+                color = ParlorTheme.colors.textPrimary,
+                textAlign = TextAlign.Center,
+            )
+        }
+    }
 }

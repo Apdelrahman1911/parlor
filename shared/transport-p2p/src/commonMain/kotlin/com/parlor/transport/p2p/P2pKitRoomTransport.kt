@@ -152,6 +152,8 @@ internal class HostP2pRoom(
     private val json: Json,
 ) : LocalRoom {
 
+    override val selfPlayerId: PlayerId = hostPlayerId
+
     private val _info = MutableStateFlow(
         RoomInfo(
             code = roomCode,
@@ -235,6 +237,8 @@ internal class PeerP2pRoom(
     scope: CoroutineScope,
     private val json: Json,
 ) : LocalRoom {
+
+    override val selfPlayerId: PlayerId = PlayerId(kit.localPeerId.value)
 
     private val _info = MutableStateFlow(
         RoomInfo(

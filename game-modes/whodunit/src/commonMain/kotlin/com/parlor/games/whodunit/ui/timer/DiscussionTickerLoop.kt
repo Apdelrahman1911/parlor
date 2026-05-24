@@ -3,7 +3,7 @@ package com.parlor.games.whodunit.ui.timer
 import com.parlor.games.whodunit.domain.action.WhodunitAction
 import com.parlor.games.whodunit.domain.event.WhodunitEvent
 import com.parlor.games.whodunit.domain.state.WhodunitState
-import com.parlor.session.passandplay.PassAndPlaySessionController
+import com.parlor.session.SessionController
 import kotlinx.coroutines.delay
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
@@ -36,7 +36,7 @@ import kotlin.time.Duration.Companion.seconds
  * [delay].
  */
 suspend fun runDiscussionTickerLoop(
-    session: PassAndPlaySessionController<WhodunitState, WhodunitAction, WhodunitEvent>,
+    session: SessionController<WhodunitState, WhodunitAction, WhodunitEvent>,
     timerId: String,
     tickInterval: Duration = 1.seconds,
 ) {

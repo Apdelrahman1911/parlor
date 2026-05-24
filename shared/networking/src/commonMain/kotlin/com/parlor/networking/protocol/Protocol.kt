@@ -1,6 +1,7 @@
 package com.parlor.networking.protocol
 
 import com.parlor.core.ids.PlayerId
+import com.parlor.engine.state.Player
 import kotlinx.serialization.Serializable
 
 /**
@@ -29,6 +30,25 @@ sealed interface HostMessage : RoomMessage {
     data class TimerSync(val timerId: String, val deadlineEpochMs: Long) : HostMessage
     @Serializable
     data object EndSession : HostMessage
+
+    /**
+     * Sent by the host once their lobby's *Start Game* is tapped. Tells every
+     * peer "stop showing the lobby; load this case and switch to the game
+     * flow." Carries the canonical session shape so peers can stand up their
+     * shadow controller with the same `SessionConfig` the host uses.
+     *
+     * `seed` makes deterministic replay easier across peers — though the host
+     * is always authoritative, so peer-side reduction is never run; the seed
+     * is shipped so peer-side UI that depends on it (e.g., debug overlays) is
+     * available without an extra round trip.
+     */
+    @Serializable
+    data class SessionStarting(
+        val caseId: String,
+        val modeId: String,
+        val players: List<Player>,
+        val seed: Long,
+    ) : HostMessage
 }
 
 @Serializable

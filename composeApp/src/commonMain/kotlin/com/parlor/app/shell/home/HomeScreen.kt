@@ -29,6 +29,11 @@ import com.parlor.app.resources.home_host
 import com.parlor.app.resources.home_host_description
 import com.parlor.app.resources.home_join
 import com.parlor.app.resources.home_join_description
+import com.parlor.app.resources.home_library_card_action
+import com.parlor.app.resources.home_library_card_description
+import com.parlor.app.resources.home_library_card_eyebrow
+import com.parlor.app.resources.home_library_card_subtitle
+import com.parlor.app.resources.home_library_card_title
 import com.parlor.app.resources.home_multiplayer_disabled
 import com.parlor.app.resources.home_multiplayer_eyebrow
 import com.parlor.app.resources.home_resume_section_label
@@ -68,6 +73,7 @@ fun HomeScreen(
     multiplayerEnabled: Boolean = false,
     onHost: () -> Unit = {},
     onJoin: () -> Unit = {},
+    onBrowseCases: () -> Unit = {},
 ) {
     val settingsLabel = stringResource(Res.string.settings_title)
     val settingsDescription = stringResource(Res.string.settings_open)
@@ -109,13 +115,13 @@ fun HomeScreen(
             }
 
             TonightsGameCard(
-                eyebrow = stringResource(Res.string.home_tonights_game_label),
-                title = stringResource(Res.string.home_whodunit_title),
-                subtitle = stringResource(Res.string.home_whodunit_subtitle),
-                tagline = stringResource(Res.string.home_whodunit_tagline),
-                beginLabel = stringResource(Res.string.home_begin_investigation),
-                beginContentDescription = stringResource(Res.string.home_begin_investigation_description),
-                onBegin = { onTileSelected("whodunit") },
+                eyebrow = stringResource(Res.string.home_library_card_eyebrow),
+                title = stringResource(Res.string.home_library_card_title),
+                subtitle = stringResource(Res.string.home_whodunit_title),
+                tagline = stringResource(Res.string.home_library_card_subtitle),
+                beginLabel = stringResource(Res.string.home_library_card_action),
+                beginContentDescription = stringResource(Res.string.home_library_card_description),
+                onBegin = onBrowseCases,
             )
 
             // Phase 8 entry point. The section renders regardless of build

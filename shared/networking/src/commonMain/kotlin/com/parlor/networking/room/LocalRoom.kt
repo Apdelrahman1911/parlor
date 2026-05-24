@@ -23,6 +23,14 @@ interface LocalRoom {
     val isHost: Boolean
     val incoming: Flow<RoomMessage>
 
+    /**
+     * The local device's player id. On the host this equals
+     * [RoomInfo.hostPlayerId]; on a peer this is the peer's own id, distinct
+     * from `info.hostPlayerId`. Used to map the local device into the game's
+     * player list when the host sends `SessionStarting`.
+     */
+    val selfPlayerId: PlayerId
+
     suspend fun send(target: SendTarget, message: HostMessage): Result<Unit, NetError>
     suspend fun sendToHost(message: PeerMessage): Result<Unit, NetError>
     suspend fun leave()

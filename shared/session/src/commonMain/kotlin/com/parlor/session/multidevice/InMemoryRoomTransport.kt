@@ -53,7 +53,7 @@ class InMemoryRoomBus {
 /** A peer-side room that reads/writes through an [InMemoryRoomBus]. */
 class InMemoryPeerRoom(
     private val bus: InMemoryRoomBus,
-    private val selfPlayerId: PlayerId,
+    override val selfPlayerId: PlayerId,
     private val displayName: String,
     private val hostId: PlayerId,
 ) : LocalRoom {
