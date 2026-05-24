@@ -20,6 +20,7 @@ import com.parlor.designsystem.tokens.ParlorRadii
 import com.parlor.designsystem.tokens.ParlorSpacing
 import com.parlor.designsystem.tokens.ParlorTypography
 import com.parlor.designsystem.tokens.isLight
+import com.parlor.designsystem.tokens.rememberParlorTypography
 
 /**
  * Parlor's design-system entry point. Wraps Material 3 with our token system
@@ -65,7 +66,7 @@ fun ParlorTheme(
     themeMode: ThemeMode = ThemeMode.Default,
     darkPalette: ParlorColors = CozyNoirPalette,
     lightPalette: ParlorColors = LightCozyNoirPalette,
-    typography: ParlorTypography = DefaultParlorTypography,
+    typography: ParlorTypography = rememberParlorTypography(),
     spacing: ParlorSpacing = ParlorSpacing(),
     elevation: ParlorElevation = ParlorElevation(),
     radii: ParlorRadii = ParlorRadii(),
