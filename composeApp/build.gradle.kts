@@ -6,6 +6,13 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
+// Phase 8 opt-in: when parlor.p2p.enabled=true the composeApp depends on the
+// :shared:transport-p2p adapter and compiles the `p2pEnabledMain` source set,
+// which exposes `p2pBootstrapModules()` returning the real Koin transport
+// module. With the flag off the alternate `p2pDisabledMain` source set
+// returns an empty list and no P2pKit symbol is ever referenced.
+val p2pEnabled: Boolean = (project.findProperty("parlor.p2p.enabled") as? String)?.toBoolean() ?: false
+
 kotlin {
     androidTarget {
         compilerOptions {
@@ -25,41 +32,51 @@ kotlin {
     }
 
     sourceSets {
-        commonMain.dependencies {
-            // Shared layers
-            implementation(project(":shared:core"))
-            implementation(project(":shared:engine"))
-            implementation(project(":shared:design-system"))
-            implementation(project(":shared:session"))
-            implementation(project(":shared:content"))
-            implementation(project(":shared:networking"))
-            implementation(project(":shared:storage"))
-            implementation(project(":shared:navigation"))
+        commonMain {
+            // One of these two source dirs supplies `p2pBootstrapModules()`;
+            // the inactive directory's file is simply not seen by the compiler.
+            kotlin.srcDir(
+                if (p2pEnabled) "src/p2pEnabledMain/kotlin" else "src/p2pDisabledMain/kotlin",
+            )
+            dependencies {
+                // Shared layers
+                implementation(project(":shared:core"))
+                implementation(project(":shared:engine"))
+                implementation(project(":shared:design-system"))
+                implementation(project(":shared:session"))
+                implementation(project(":shared:content"))
+                implementation(project(":shared:networking"))
+                implementation(project(":shared:storage"))
+                implementation(project(":shared:navigation"))
+                if (p2pEnabled) {
+                    implementation(project(":shared:transport-p2p"))
+                }
 
-            // Game modules
-            implementation(project(":game-modes:whodunit"))
+                // Game modules
+                implementation(project(":game-modes:whodunit"))
 
-            // Compose
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.material3)
-            implementation(compose.ui)
-            implementation(compose.components.resources)
-            implementation(compose.components.uiToolingPreview)
+                // Compose
+                implementation(compose.runtime)
+                implementation(compose.foundation)
+                implementation(compose.material3)
+                implementation(compose.ui)
+                implementation(compose.components.resources)
+                implementation(compose.components.uiToolingPreview)
 
-            // Koin
-            implementation(libs.koin.core)
-            implementation(libs.koin.compose)
-            implementation(libs.koin.compose.viewmodel)
+                // Koin
+                implementation(libs.koin.core)
+                implementation(libs.koin.compose)
+                implementation(libs.koin.compose.viewmodel)
 
-            // Ktor + the in-process MockEngine for dev. Production builds swap
-            // MockEngine for a real platform engine (okhttp / darwin / cio).
-            implementation(libs.bundles.ktor.common)
-            implementation(libs.ktor.client.mock)
+                // Ktor + the in-process MockEngine for dev. Production builds
+                // swap MockEngine for a real platform engine.
+                implementation(libs.bundles.ktor.common)
+                implementation(libs.ktor.client.mock)
 
-            // Kotlinx
-            implementation(libs.kotlinx.coroutines.core)
-            implementation(libs.kotlinx.serialization.json)
+                // Kotlinx
+                implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.kotlinx.serialization.json)
+            }
         }
         androidMain.dependencies {
             implementation(libs.koin.android)

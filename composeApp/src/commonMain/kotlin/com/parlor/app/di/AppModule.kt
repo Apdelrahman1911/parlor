@@ -1,5 +1,6 @@
 package com.parlor.app.di
 
+import com.parlor.app.p2p.p2pBootstrapModules
 import com.parlor.app.storage.platformStorageModule
 import com.parlor.core.random.RandomSource
 import com.parlor.core.time.Clock
@@ -44,4 +45,4 @@ val allModules: List<Module> = listOf(
     contentModule,
     storageModule,
     platformStorageModule(),
-)
+) + p2pBootstrapModules()

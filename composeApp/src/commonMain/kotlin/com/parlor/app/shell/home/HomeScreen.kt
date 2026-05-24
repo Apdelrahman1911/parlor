@@ -25,6 +25,12 @@ import com.parlor.app.resources.home_coming_soon_state
 import com.parlor.app.resources.home_eyebrow
 import com.parlor.app.resources.home_featured_state
 import com.parlor.app.resources.home_future_game_title
+import com.parlor.app.resources.home_host
+import com.parlor.app.resources.home_host_description
+import com.parlor.app.resources.home_join
+import com.parlor.app.resources.home_join_description
+import com.parlor.app.resources.home_multiplayer_disabled
+import com.parlor.app.resources.home_multiplayer_eyebrow
 import com.parlor.app.resources.home_resume_section_label
 import com.parlor.app.resources.home_resume_tile_description
 import com.parlor.app.resources.home_resume_tile_subtitle
@@ -59,6 +65,9 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     unfinishedSessions: List<SessionId> = emptyList(),
     onResume: (SessionId) -> Unit = {},
+    multiplayerEnabled: Boolean = false,
+    onHost: () -> Unit = {},
+    onJoin: () -> Unit = {},
 ) {
     val settingsLabel = stringResource(Res.string.settings_title)
     val settingsDescription = stringResource(Res.string.settings_open)
@@ -108,6 +117,31 @@ fun HomeScreen(
                 beginContentDescription = stringResource(Res.string.home_begin_investigation_description),
                 onBegin = { onTileSelected("whodunit") },
             )
+
+            // Phase 8 entry point. The section renders regardless of build
+            // flavour so testers can see whether multiplayer is wired in —
+            // when disabled, the buttons are present but show a clear hint.
+            EyebrowLabel(text = stringResource(Res.string.home_multiplayer_eyebrow))
+            if (multiplayerEnabled) {
+                ParlorButton(
+                    label = stringResource(Res.string.home_host),
+                    contentDescription = stringResource(Res.string.home_host_description),
+                    onClick = onHost,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+                ParlorButton(
+                    label = stringResource(Res.string.home_join),
+                    contentDescription = stringResource(Res.string.home_join_description),
+                    onClick = onJoin,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            } else {
+                Text(
+                    text = stringResource(Res.string.home_multiplayer_disabled),
+                    style = ParlorTheme.typography.bodyMedium,
+                    color = ParlorTheme.colors.textTertiary,
+                )
+            }
 
             EyebrowLabel(text = stringResource(Res.string.home_all_games_label))
             AllGamesGrid(

@@ -20,6 +20,7 @@ kotlin {
             // `group = "dev.p2pkit"; version = "0.6.0"` to its modules.
             implementation("dev.p2pkit:p2p-core:0.6.0")
             implementation("dev.p2pkit:p2p-transport-lan:0.6.0")
+            implementation(libs.koin.core)
         }
         commonTest.dependencies {
             implementation(kotlin("test"))

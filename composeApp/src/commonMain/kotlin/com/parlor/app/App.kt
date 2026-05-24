@@ -12,6 +12,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.parlor.app.shell.home.HomeScreen
+import com.parlor.app.shell.multiplayer.HostLobbyScreen
+import com.parlor.app.shell.multiplayer.JoinPromptScreen
+import com.parlor.app.shell.multiplayer.PeerLobbyScreen
 import com.parlor.app.shell.settings.SettingsScreen
 import com.parlor.core.ids.SessionId
 import com.parlor.core.result.Result
@@ -21,9 +24,11 @@ import com.parlor.designsystem.localization.customAppLocale
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.designsystem.theme.ThemeMode
 import com.parlor.games.whodunit.ui.flow.WhodunitGameFlow
+import com.parlor.networking.transport.RoomTransport
 import com.parlor.storage.settings.SettingsStore
 import com.parlor.storage.snapshot.SnapshotStore
 import org.koin.compose.koinInject
+import org.koin.mp.KoinPlatform
 
 /**
  * Application root. Reads language and appearance preferences from
@@ -47,6 +52,10 @@ fun App() {
     }
 
     val snapshotStore: SnapshotStore = koinInject()
+    // RoomTransport is only registered when `parlor.p2p.enabled=true`. We pull
+    // it through KoinPlatform.getKoin().getOrNull(...) so the default build
+    // doesn't need to declare a Koin binding for it.
+    val roomTransport: RoomTransport? = remember { KoinPlatform.getKoin().getOrNull() }
 
     ProvideAppLanguage(language = language) {
         ParlorTheme(themeMode = themeMode) {
@@ -56,6 +65,7 @@ fun App() {
             // pick up sessions that just started OR sessions just-deleted by
             // entering PostGame.
             var unfinishedRefreshKey: Int by remember { mutableStateOf(0) }
+            var pendingJoinCode: String by remember { mutableStateOf("") }
 
             val unfinishedSessions by produceState(
                 initialValue = emptyList<SessionId>(),
@@ -87,6 +97,9 @@ fun App() {
                         resumeSessionId = sessionId
                         screen = AppScreen.Whodunit
                     },
+                    multiplayerEnabled = roomTransport != null,
+                    onHost = { if (roomTransport != null) screen = AppScreen.HostLobby },
+                    onJoin = { if (roomTransport != null) screen = AppScreen.JoinPrompt },
                 )
                 AppScreen.Whodunit -> WhodunitGameFlow(
                     onBackToLibrary = {
@@ -101,12 +114,49 @@ fun App() {
                     onBack = { screen = AppScreen.Home },
                     modifier = Modifier.fillMaxSize(),
                 )
+                AppScreen.HostLobby -> {
+                    val transport = roomTransport
+                    if (transport == null) {
+                        screen = AppScreen.Home
+                    } else {
+                        HostLobbyScreen(
+                            transport = transport,
+                            onLeave = { screen = AppScreen.Home },
+                            modifier = Modifier.fillMaxSize(),
+                        )
+                    }
+                }
+                AppScreen.JoinPrompt -> JoinPromptScreen(
+                    onConfirm = { code ->
+                        pendingJoinCode = code
+                        screen = AppScreen.PeerLobby
+                    },
+                    onCancel = { screen = AppScreen.Home },
+                    modifier = Modifier.fillMaxSize(),
+                )
+                AppScreen.PeerLobby -> {
+                    val transport = roomTransport
+                    if (transport == null || pendingJoinCode.isBlank()) {
+                        screen = AppScreen.Home
+                    } else {
+                        PeerLobbyScreen(
+                            transport = transport,
+                            code = pendingJoinCode,
+                            displayName = "parlor-peer",
+                            onLeave = {
+                                pendingJoinCode = ""
+                                screen = AppScreen.Home
+                            },
+                            modifier = Modifier.fillMaxSize(),
+                        )
+                    }
+                }
             }
         }
     }
 }
 
-private enum class AppScreen { Home, Whodunit, Settings }
+private enum class AppScreen { Home, Whodunit, Settings, HostLobby, JoinPrompt, PeerLobby }
 
 /** Tiny shim used by Compose previews to keep the API surface stable. */
 @Composable
