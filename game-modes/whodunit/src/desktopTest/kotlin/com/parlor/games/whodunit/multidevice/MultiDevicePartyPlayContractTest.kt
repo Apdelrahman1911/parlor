@@ -187,6 +187,11 @@ class MultiDevicePartyPlayContractTest {
         assertThat(phaseBeforeImpersonation == phaseAfterImpersonation).isTrue()
 
         // -- Authority case 3: SelfActor with the correct actor is accepted.
+        // 9H-3: CompleteCharacterReveal no longer auto-advances the phase;
+        // instead it adds the player to public.rolesViewed. The assertion
+        // here is: the canonical state mutates in response to alice's
+        // correctly-attested action.
+        val rolesViewedBefore = hostSession.publicState.value.state.public.rolesViewed
         aliceRoom.sendToHost(
             PeerMessage.ActionSubmit(
                 sender = alice,
@@ -194,9 +199,9 @@ class MultiDevicePartyPlayContractTest {
             ),
         )
         runCurrent()
-        // Phase should have advanced past alice's reveal.
-        val phaseAfterValid = hostSession.publicState.value.state.phase
-        assertThat(phaseAfterValid != phaseBeforeImpersonation).isTrue()
+        val rolesViewedAfter = hostSession.publicState.value.state.public.rolesViewed
+        assertThat(alice in rolesViewedAfter).isTrue()
+        assertThat(rolesViewedAfter != rolesViewedBefore).isTrue()
 
         hostBridge.close()
         aliceBridge.close()

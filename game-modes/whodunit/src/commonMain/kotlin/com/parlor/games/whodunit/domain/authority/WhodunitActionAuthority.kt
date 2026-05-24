@@ -51,7 +51,8 @@ object WhodunitActionAuthority {
         is WhodunitAction.MarkPlayerDisconnected,
         is WhodunitAction.MarkPlayerReconnected,
         is WhodunitAction.ContinueWithoutPlayer,
-        is WhodunitAction.ReadmitPlayer -> AuthorityScope.HostOnly
+        is WhodunitAction.ReadmitPlayer,
+        WhodunitAction.AdvanceFromCharacterReveal -> AuthorityScope.HostOnly
 
         // Self-actor: only the named player may submit.
         is WhodunitAction.CompleteCharacterReveal -> AuthorityScope.SelfActor(action.playerId)

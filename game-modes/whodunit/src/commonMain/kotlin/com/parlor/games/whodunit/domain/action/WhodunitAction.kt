@@ -37,6 +37,12 @@ sealed interface WhodunitAction : GameAction {
     @Serializable data class AcknowledgeBriefing(val playerId: PlayerId) : WhodunitAction
     /** Peer signals they've viewed their assigned role. SelfActor. */
     @Serializable data class ConfirmRoleViewed(val playerId: PlayerId) : WhodunitAction
+    /**
+     * Host advances from CharacterReveal (simultaneous-reveal model) to
+     * Round(1). Gated by `PartyReadiness.isComplete(rolesViewed, active)`.
+     * HostOnly.
+     */
+    @Serializable data object AdvanceFromCharacterReveal : WhodunitAction
 
     // --- Party Play connection rules (Wave 9H) ---
     /** Host bridge submits when it detects a peer drop. HostOnly. */

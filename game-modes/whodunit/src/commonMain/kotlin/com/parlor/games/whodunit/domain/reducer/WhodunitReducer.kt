@@ -50,6 +50,7 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
             is WhodunitAction.AcknowledgeIntro -> acknowledgeIntro(state, action.playerId)
             is WhodunitAction.AcknowledgeBriefing -> acknowledgeBriefing(state, action.playerId)
             is WhodunitAction.ConfirmRoleViewed -> confirmRoleViewed(state, action.playerId)
+            WhodunitAction.AdvanceFromCharacterReveal -> advanceFromCharacterReveal(state)
 
             // Party Play connection rules (Wave 9H)
             is WhodunitAction.MarkPlayerDisconnected -> markPlayerDisconnected(state, action.playerId)
@@ -328,29 +329,60 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
         )
     }
 
+    /**
+     * Wave 9H: CompleteCharacterReveal is repurposed as the per-player
+     * "I'm done viewing my role" signal — it locks the dossier and adds
+     * the player to `rolesViewed`. It NO LONGER auto-advances the phase.
+     * The host explicitly fires `AdvanceFromCharacterReveal` when all
+     * active-roster players have confirmed.
+     *
+     * The vestigial `phase.playerIndex` field is left at 0 — the
+     * simultaneous-reveal model doesn't sequence players any more, but
+     * the field is preserved for snapshot back-compat (pre-9H snapshots
+     * mid-CharacterReveal still deserialise; the next host advance
+     * normalises).
+     */
     private fun completeCharacterReveal(
         state: WhodunitState,
         playerId: PlayerId,
     ): Reduction<WhodunitState, WhodunitEvent> {
-        val phase = state.phase as? WhodunitPhase.CharacterReveal ?: return Reduction(state)
-        val current = state.players.getOrNull(phase.playerIndex) ?: return Reduction(state)
-        if (current.id != playerId) return Reduction(state)
-
-        val nextIndex = phase.playerIndex + 1
+        if (state.phase !is WhodunitPhase.CharacterReveal) return Reduction(state)
+        if (playerId !in state.players.map { it.id }) return Reduction(state)
+        if (playerId in state.public.droppedPlayers) return Reduction(state)
         val priv = state.privatePerPlayer[playerId]
-        val updated = if (priv != null) state.privatePerPlayer + (playerId to priv.copy(dossierUnlocked = false)) else state.privatePerPlayer
+        val updatedPriv = if (priv != null) {
+            state.privatePerPlayer + (playerId to priv.copy(dossierUnlocked = false))
+        } else state.privatePerPlayer
+        val updatedRolesViewed = state.public.rolesViewed + playerId
+        return Reduction(
+            state.copy(
+                privatePerPlayer = updatedPriv,
+                public = state.public.copy(rolesViewed = updatedRolesViewed),
+            ),
+        )
+    }
 
-        return if (nextIndex >= state.players.size) {
-            val newState = state.copy(
-                privatePerPlayer = updated,
-                phase = WhodunitPhase.Round(index = 1),
-                public = state.public.copy(currentRound = 1),
-            )
-            Reduction(newState, listOf(WhodunitEvent.PhaseEntered(newState.phase)))
-        } else {
-            val nextPhase = WhodunitPhase.CharacterReveal(playerIndex = nextIndex)
-            Reduction(state.copy(privatePerPlayer = updated, phase = nextPhase), listOf(WhodunitEvent.PhaseEntered(nextPhase)))
+    /**
+     * Host signals "everyone has viewed their role, move to Round 1".
+     * Gated by `PartyReadiness.isComplete(rolesViewed, activeRoster)`.
+     * Clears `rolesViewed` on success.
+     */
+    private fun advanceFromCharacterReveal(
+        state: WhodunitState,
+    ): Reduction<WhodunitState, WhodunitEvent> {
+        if (state.phase !is WhodunitPhase.CharacterReveal) return Reduction(state)
+        val active = activeRoster(state)
+        if (!PartyReadiness.isComplete(state.public.rolesViewed, active)) {
+            return Reduction(state)
         }
+        val newState = state.copy(
+            phase = WhodunitPhase.Round(index = 1),
+            public = state.public.copy(
+                currentRound = 1,
+                rolesViewed = emptySet(),
+            ),
+        )
+        return Reduction(newState, listOf(WhodunitEvent.PhaseEntered(newState.phase)))
     }
 
     private fun openPrivateReview(state: WhodunitState, playerId: PlayerId): Reduction<WhodunitState, WhodunitEvent> {

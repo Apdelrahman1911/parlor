@@ -28,6 +28,7 @@ import com.parlor.games.whodunit.WhodunitDefinition
 import com.parlor.games.whodunit.WhodunitIds
 import com.parlor.games.whodunit.ackBriefingForAll
 import com.parlor.games.whodunit.ackIntroForAll
+import com.parlor.games.whodunit.revealRolesAndAdvance
 import com.parlor.games.whodunit.content.BundledWhodunitCases
 import com.parlor.games.whodunit.content.WhodunitCase
 import com.parlor.games.whodunit.content.WhodunitPayloadValidator
@@ -165,10 +166,7 @@ class PauseRefuseLeaveTest {
         session.submit(WhodunitAction.AdvanceFromIntro)
         session.ackBriefingForAll(players)
         for (i in 1..4) session.submit(WhodunitAction.AdvanceBriefingCard(i))
-        for (player in players) {
-            session.submit(WhodunitAction.StartCharacterReveal(player.id))
-            session.submit(WhodunitAction.CompleteCharacterReveal(player.id))
-        }
+        session.revealRolesAndAdvance(players)
         session.submit(WhodunitAction.RevealNextClue)
         session.submit(WhodunitAction.StartDiscussionTimer(60))
     }
@@ -183,10 +181,7 @@ class PauseRefuseLeaveTest {
         session.submit(WhodunitAction.AdvanceFromIntro)
         session.ackBriefingForAll(players)
         for (i in 1..4) session.submit(WhodunitAction.AdvanceBriefingCard(i))
-        for (player in players) {
-            session.submit(WhodunitAction.StartCharacterReveal(player.id))
-            session.submit(WhodunitAction.CompleteCharacterReveal(player.id))
-        }
+        session.revealRolesAndAdvance(players)
         // Per WhodunitReducer.isLastRound: 4-player games end at round 3,
         // 5–6-player games end at round 4. Drive every non-final round through
         // its discussion so we land in FinalVote with the ballot opened.
@@ -464,10 +459,7 @@ class PauseRefuseLeaveTest {
         session.submit(WhodunitAction.AdvanceFromIntro)
         session.ackBriefingForAll(players)
         for (i in 1..4) session.submit(WhodunitAction.AdvanceBriefingCard(i))
-        for (player in players) {
-            session.submit(WhodunitAction.StartCharacterReveal(player.id))
-            session.submit(WhodunitAction.CompleteCharacterReveal(player.id))
-        }
+        session.revealRolesAndAdvance(players)
         // In Elimination Mode, voting happens at the end of each round. Drive
         // through round 1's clue + discussion, then vote.
         session.submit(WhodunitAction.RevealNextClue)

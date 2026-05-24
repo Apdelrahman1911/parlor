@@ -26,6 +26,7 @@ import com.parlor.games.whodunit.WhodunitDefinition
 import com.parlor.games.whodunit.WhodunitIds
 import com.parlor.games.whodunit.ackBriefingForAll
 import com.parlor.games.whodunit.ackIntroForAll
+import com.parlor.games.whodunit.revealRolesAndAdvance
 import com.parlor.games.whodunit.content.BundledWhodunitCases
 import com.parlor.games.whodunit.content.WhodunitCase
 import com.parlor.games.whodunit.content.WhodunitPayloadValidator
@@ -158,10 +159,7 @@ class ContinueWithoutPlayerTest {
         session.ackBriefingForAll(players)
         for (i in 1..4) session.submit(WhodunitAction.AdvanceBriefingCard(i))
         // Drive through character reveal to Round(1).
-        for (player in players) {
-            session.submit(WhodunitAction.StartCharacterReveal(player.id))
-            session.submit(WhodunitAction.CompleteCharacterReveal(player.id))
-        }
+        session.revealRolesAndAdvance(players)
         assertThat(phaseOf(session)).isInstanceOf(WhodunitPhase.Round::class)
 
         // Drop and then try to readmit — rejected because we're past the
@@ -215,10 +213,7 @@ class ContinueWithoutPlayerTest {
         session.submit(WhodunitAction.AdvanceFromIntro)
         session.ackBriefingForAll(players)
         for (i in 1..4) session.submit(WhodunitAction.AdvanceBriefingCard(i))
-        for (player in players) {
-            session.submit(WhodunitAction.StartCharacterReveal(player.id))
-            session.submit(WhodunitAction.CompleteCharacterReveal(player.id))
-        }
+        session.revealRolesAndAdvance(players)
 
         // Drop a player BEFORE OpenVote rebuilds the ballot from the active roster.
         session.submit(WhodunitAction.ContinueWithoutPlayer(players[3].id))

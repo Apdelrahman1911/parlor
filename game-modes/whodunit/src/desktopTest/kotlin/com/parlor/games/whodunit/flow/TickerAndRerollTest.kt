@@ -30,6 +30,7 @@ import com.parlor.games.whodunit.WhodunitDefinition
 import com.parlor.games.whodunit.WhodunitIds
 import com.parlor.games.whodunit.ackBriefingForAll
 import com.parlor.games.whodunit.ackIntroForAll
+import com.parlor.games.whodunit.revealRolesAndAdvance
 import com.parlor.games.whodunit.content.BundledWhodunitCases
 import com.parlor.games.whodunit.content.WhodunitCase
 import com.parlor.games.whodunit.content.WhodunitPayloadValidator
@@ -165,10 +166,7 @@ class TickerAndRerollTest {
         session.submit(WhodunitAction.AdvanceFromIntro)
         session.ackBriefingForAll(players)
         for (i in 1..4) session.submit(WhodunitAction.AdvanceBriefingCard(i))
-        for (player in players) {
-            session.submit(WhodunitAction.StartCharacterReveal(player.id))
-            session.submit(WhodunitAction.CompleteCharacterReveal(player.id))
-        }
+        session.revealRolesAndAdvance(players)
         session.submit(WhodunitAction.RevealNextClue)
         session.submit(WhodunitAction.StartDiscussionTimer(totalSeconds))
     }

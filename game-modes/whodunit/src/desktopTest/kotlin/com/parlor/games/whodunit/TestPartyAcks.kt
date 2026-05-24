@@ -24,3 +24,18 @@ internal suspend fun PassAndPlaySessionController<WhodunitState, WhodunitAction,
 ) {
     for (player in players) submit(WhodunitAction.AcknowledgeBriefing(player.id))
 }
+
+/**
+ * Wave 9H-3: Drive the simultaneous-reveal phase. Each player completes
+ * their reveal (which now adds them to `rolesViewed` without
+ * auto-advancing), then host explicitly advances to Round(1).
+ */
+internal suspend fun PassAndPlaySessionController<WhodunitState, WhodunitAction, WhodunitEvent>.revealRolesAndAdvance(
+    players: List<Player>,
+) {
+    for (player in players) {
+        submit(WhodunitAction.StartCharacterReveal(player.id))
+        submit(WhodunitAction.CompleteCharacterReveal(player.id))
+    }
+    submit(WhodunitAction.AdvanceFromCharacterReveal)
+}

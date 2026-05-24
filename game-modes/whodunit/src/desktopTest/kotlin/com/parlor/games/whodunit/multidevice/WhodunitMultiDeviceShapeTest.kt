@@ -225,6 +225,7 @@ class WhodunitMultiDeviceShapeTest {
             host.submit(WhodunitAction.CompleteCharacterReveal(player.id))
             assertPeerMirrorsHostAndRedactsHostOnly(host, peers, "reveal complete ${player.id}")
         }
+        host.submit(WhodunitAction.AdvanceFromCharacterReveal)
         assertThat(stateOf(host).phase).isInstanceOf(WhodunitPhase.Round::class)
 
         // --- Rounds 1..3 (Classic with 4 players: round 3 is final). ---
@@ -308,6 +309,7 @@ class WhodunitMultiDeviceShapeTest {
             host.submit(WhodunitAction.StartCharacterReveal(p.id)); pin("CharReveal-start-${p.id.raw}")
             host.submit(WhodunitAction.CompleteCharacterReveal(p.id)); pin("CharReveal-end-${p.id.raw}")
         }
+        host.submit(WhodunitAction.AdvanceFromCharacterReveal); pin("Round-1-entry")
         for (r in 1..3) {
             host.submit(WhodunitAction.RevealNextClue); pin("Round$r-clue")
             host.submit(WhodunitAction.StartDiscussionTimer(30)); pin("Round$r-timer")
