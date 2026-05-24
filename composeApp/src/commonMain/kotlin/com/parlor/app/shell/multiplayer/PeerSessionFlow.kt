@@ -34,6 +34,9 @@ import com.parlor.app.resources.peer_eyebrow
 import com.parlor.app.resources.peer_leave
 import com.parlor.app.resources.peer_leave_description
 import com.parlor.app.resources.peer_loading_case
+import com.parlor.app.resources.peer_room_code_label_format
+import com.parlor.app.resources.peer_room_header_format
+import com.parlor.app.resources.peer_waiting_for_start
 import com.parlor.content.repository.CaseRepository
 import com.parlor.content.validation.PayloadValidator
 import com.parlor.content.validation.ValidatedCase
@@ -220,17 +223,20 @@ private fun PeerWaitingForHostStart(
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s)) {
                     Text(
-                        text = "In ${info.displayName}'s room as $peerName",
+                        text = stringResource(Res.string.peer_room_header_format)
+                            .replace("%1\$s", info.displayName)
+                            .replace("%2\$s", peerName),
                         style = ParlorTheme.typography.displayMedium,
                         color = ParlorTheme.colors.textPrimary,
                     )
                     Text(
-                        text = "Waiting for the host to start the game…",
+                        text = stringResource(Res.string.peer_waiting_for_start),
                         style = ParlorTheme.typography.bodyLarge,
                         color = ParlorTheme.colors.textSecondary,
                     )
                     Text(
-                        text = "Room: ${info.code}",
+                        text = stringResource(Res.string.peer_room_code_label_format)
+                            .replace("%1\$s", info.code),
                         style = ParlorTheme.typography.bodyMedium,
                         color = ParlorTheme.colors.textTertiary,
                     )

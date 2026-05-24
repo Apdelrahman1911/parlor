@@ -93,6 +93,8 @@ import com.parlor.games.whodunit.resources.whodunit_error_eyebrow
 import com.parlor.games.whodunit.resources.whodunit_error_title
 import com.parlor.games.whodunit.resources.whodunit_loading_eyebrow
 import com.parlor.games.whodunit.resources.whodunit_vote_counting
+import com.parlor.games.whodunit.resources.peer_paused_body
+import com.parlor.games.whodunit.resources.peer_paused_eyebrow
 import org.jetbrains.compose.resources.stringResource
 import com.parlor.games.whodunit.ui.screens.setup.ModeSelectionScreen
 import com.parlor.games.whodunit.ui.screens.setup.PlayerCountDisplayStrategy
@@ -1207,12 +1209,12 @@ private fun PeerHostPausedBanner(modifier: Modifier = Modifier) {
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s),
         ) {
             Text(
-                text = "PAUSED",
+                text = stringResource(Res.string.peer_paused_eyebrow).uppercase(),
                 style = ParlorTheme.typography.labelSmall,
                 color = ParlorTheme.colors.accentEmber,
             )
             Text(
-                text = "The host paused the game.",
+                text = stringResource(Res.string.peer_paused_body),
                 style = ParlorTheme.typography.displayMedium,
                 color = ParlorTheme.colors.textPrimary,
                 textAlign = TextAlign.Center,

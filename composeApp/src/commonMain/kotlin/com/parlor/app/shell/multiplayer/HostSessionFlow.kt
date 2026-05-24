@@ -29,6 +29,9 @@ import com.parlor.app.resources.error_back
 import com.parlor.app.resources.error_back_description
 import com.parlor.app.resources.host_cancel
 import com.parlor.app.resources.host_error_title
+import com.parlor.app.resources.host_start_description
+import com.parlor.app.resources.host_start_solo
+import com.parlor.app.resources.host_start_with_players_format
 import com.parlor.app.resources.host_cancel_description
 import com.parlor.app.resources.host_members_empty
 import com.parlor.app.resources.host_members_eyebrow
@@ -218,9 +221,15 @@ private fun HostLobbyContent(
 
             Spacer(Modifier.height(ParlorTheme.spacing.m))
 
+            val startLabel = if (members.isEmpty()) {
+                stringResource(Res.string.host_start_solo)
+            } else {
+                stringResource(Res.string.host_start_with_players_format)
+                    .replace("%1\$s", (members.size + 1).toString())
+            }
             ParlorButton(
-                label = if (members.isEmpty()) "Start Solo (Pass-and-Play)" else "Start Game (${members.size + 1} players)",
-                contentDescription = "Begin the game with the current roster.",
+                label = startLabel,
+                contentDescription = stringResource(Res.string.host_start_description),
                 onClick = onStart,
                 modifier = Modifier.fillMaxWidth(),
             )
