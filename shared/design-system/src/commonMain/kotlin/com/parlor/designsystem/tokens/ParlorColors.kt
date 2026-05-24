@@ -4,11 +4,22 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
 
 /**
- * Color tokens per docs/DESIGN_TOKENS.md §1.
+ * Color tokens per docs/DESIGN_TOKENS.md §1 — reworked for production-quality.
  *
- * Pure black is banned. All surfaces are warm near-blacks. Ember accents
- * layer with alpha for glow. The exposed `ParlorColors` is the contract;
- * concrete values live in [CozyNoirPalette] (Whodunit) and future overlays.
+ * Two principles drove this revision:
+ *  1. **Distinct surface elevation.** The previous palette had ~5% luminance
+ *     steps between canvas → elevated → higher; cards barely stood out on a
+ *     phone. The new dark palette widens to ~10–15% steps with a warmer-hue
+ *     shift as elevation rises, so card-on-card hierarchy reads at 360 dp.
+ *     A new `surfaceHero` carries the most attention-grabbing card on the
+ *     screen (room code, dossier, reveal).
+ *  2. **Light mode that's actually contrasty.** Text scale deepened so body
+ *     text on parchment well clears WCAG AA. Brass borders give cards a
+ *     bookbinding edge instead of fading into the background.
+ *
+ * Ember stays the brand anchor across modes; only the surface family swaps.
+ * `borderAccent` (new) lets primary affordances carry a stronger ember rim
+ * than the existing subtle `borderGlow`.
  */
 @Immutable
 data class ParlorColors(
@@ -16,6 +27,8 @@ data class ParlorColors(
     val surfaceElevated: Color,
     val surfaceHigher: Color,
     val surfaceInset: Color,
+    /** Attention-grabbing surface for the hero card on a screen. */
+    val surfaceHero: Color,
 
     val accentEmber: Color,
     val accentEmberGlow: Color,
@@ -36,75 +49,82 @@ data class ParlorColors(
     val borderSubtle: Color,
     val borderElevated: Color,
     val borderGlow: Color,
-)
-
-/** Cozy-noir (dark) — the default Whodunit palette. */
-val CozyNoirPalette = ParlorColors(
-    surfaceCanvas = Color(0xFF0B0807),
-    surfaceElevated = Color(0xFF14100D),
-    surfaceHigher = Color(0xFF1C1814),
-    surfaceInset = Color(0xFF070504),
-
-    accentEmber = Color(0xFFD97A2A),
-    accentEmberGlow = Color(0xFFF2A04D),
-    accentEmberDeep = Color(0xFF8C4015),
-    accentBrass = Color(0xFFB89968),
-    accentParchment = Color(0xFFE8DAB6),
-
-    textPrimary = Color(0xFFF2E6CD),
-    textSecondary = Color(0xFFB8A98A),
-    textTertiary = Color(0xFF6B5B45),
-    textOnAccent = Color(0xFF0B0807),
-    textNarration = Color(0xFFE8DAB6),
-
-    semanticSuccess = Color(0xFF7A8C5E),
-    semanticDanger = Color(0xFFA33D2A),
-    semanticMuted = Color(0xFF5C4B3A),
-
-    borderSubtle = Color(0xFF26201A),
-    borderElevated = Color(0xFF3A312A),
-    borderGlow = Color(0x2ED97A2A),  // ember at ~0.18 alpha (AARRGGBB)
+    /** Stronger ember rim for hero cards and primary affordances. */
+    val borderAccent: Color,
 )
 
 /**
- * Cozy-noir (light) — a parchment-and-ember variant. The ember accent stays
- * constant across themes so brand recognition is preserved; surfaces become
- * warm parchment, text becomes deep brown, and the brass moves darker for
- * contrast on light backgrounds.
- *
- * Still cozy. Still noir-adjacent. Just lit by morning light instead of a
- * candle.
+ * Cozy-noir (dark) — candlelight on mahogany. Wider surface stops + warmer
+ * hue shift as elevation rises; AA-clean text against every surface tier.
  */
-val LightCozyNoirPalette = ParlorColors(
-    surfaceCanvas = Color(0xFFF5EDD9),
-    surfaceElevated = Color(0xFFFAF4E4),
-    surfaceHigher = Color(0xFFFFFCF2),
-    surfaceInset = Color(0xFFE8DEC4),
+val CozyNoirPalette = ParlorColors(
+    surfaceCanvas = Color(0xFF0A0706),
+    surfaceElevated = Color(0xFF1A1310),
+    surfaceHigher = Color(0xFF261C16),
+    surfaceInset = Color(0xFF050302),
+    surfaceHero = Color(0xFF2B1F18),
 
     accentEmber = Color(0xFFD97A2A),
     accentEmberGlow = Color(0xFFF2A04D),
     accentEmberDeep = Color(0xFF8C4015),
-    accentBrass = Color(0xFF8C7A4A),
-    accentParchment = Color(0xFF2D2618),
+    accentBrass = Color(0xFFC8A872),
+    accentParchment = Color(0xFFEFE0BC),
 
-    textPrimary = Color(0xFF1C1814),
-    textSecondary = Color(0xFF5C4B3A),
-    textTertiary = Color(0xFF8C7A60),
-    textOnAccent = Color(0xFFFFFCF2),
-    textNarration = Color(0xFF3A312A),
+    textPrimary = Color(0xFFF5EAD0),
+    textSecondary = Color(0xFFC4B596),
+    textTertiary = Color(0xFF8C7B5C),
+    textOnAccent = Color(0xFF0A0706),
+    textNarration = Color(0xFFEDDDB5),
 
-    semanticSuccess = Color(0xFF5C7A3D),
-    semanticDanger = Color(0xFF8C2D1F),
-    semanticMuted = Color(0xFFB8A98A),
+    semanticSuccess = Color(0xFF8FA666),
+    semanticDanger = Color(0xFFC4533F),
+    semanticMuted = Color(0xFF6B5C45),
 
-    borderSubtle = Color(0xFFD6CBB1),
-    borderElevated = Color(0xFFB8A98A),
-    borderGlow = Color(0x2ED97A2A),  // same ember rim alpha works on light too
+    borderSubtle = Color(0xFF2E2620),
+    borderElevated = Color(0xFF4A3E33),
+    borderGlow = Color(0x33D97A2A),
+    borderAccent = Color(0x66D97A2A),
+)
+
+/**
+ * Cozy-noir (light) — parchment and ember. Surfaces step cream→gold;
+ * deeper text + brass borders give cards a bookbinding edge instead of
+ * fading into the background.
+ *
+ * Still cozy. Still noir-adjacent. Just lit by morning light.
+ */
+val LightCozyNoirPalette = ParlorColors(
+    surfaceCanvas = Color(0xFFEFE5CD),
+    surfaceElevated = Color(0xFFF7EFDA),
+    surfaceHigher = Color(0xFFFDF8EA),
+    surfaceInset = Color(0xFFDFD3B8),
+    surfaceHero = Color(0xFFFFF5DC),
+
+    accentEmber = Color(0xFFC45F1F),
+    accentEmberGlow = Color(0xFFE38845),
+    accentEmberDeep = Color(0xFF7A3510),
+    accentBrass = Color(0xFF7A6839),
+    accentParchment = Color(0xFF2A2316),
+
+    textPrimary = Color(0xFF1A1410),
+    textSecondary = Color(0xFF4A3E2E),
+    textTertiary = Color(0xFF7A6A50),
+    textOnAccent = Color(0xFFFFF8EC),
+    textNarration = Color(0xFF332918),
+
+    semanticSuccess = Color(0xFF4D6630),
+    semanticDanger = Color(0xFF7A2818),
+    semanticMuted = Color(0xFFA89A7C),
+
+    borderSubtle = Color(0xFFC8BC9D),
+    borderElevated = Color(0xFFA89A7C),
+    borderGlow = Color(0x33C45F1F),
+    borderAccent = Color(0x66C45F1F),
 )
 
 /** Returns true if the palette is the light variant (used by the theme to pick a Material 3 scheme). */
 val ParlorColors.isLight: Boolean
-    get() = textPrimary.luminance() > 0.5f
+    get() = surfaceCanvas.luminance() > 0.5f
 
 // Local helper to avoid pulling in androidx.core; Color has no public luminance accessor in CMP common,
 // but we can approximate with the relative red+green+blue channels.

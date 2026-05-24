@@ -1,3 +1,5 @@
+@file:Suppress("LongParameterList")
+
 package com.parlor.designsystem.components
 
 import androidx.compose.foundation.background
