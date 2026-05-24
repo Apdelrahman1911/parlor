@@ -56,6 +56,26 @@ data class WhodunitPublic(
     val introAcknowledged: Set<PlayerId> = emptySet(),
     val briefingReady: Set<PlayerId> = emptySet(),
     val rolesViewed: Set<PlayerId> = emptySet(),
+
+    /**
+     * Players the host bridge has detected as transiently offline.
+     * Submitted via `MarkPlayerDisconnected` / `MarkPlayerReconnected`.
+     * Disconnected players are NOT auto-dropped; they still count
+     * toward readiness invariants until the host explicitly
+     * `ContinueWithoutPlayer`s them.
+     */
+    val disconnectedPlayers: Set<PlayerId> = emptySet(),
+
+    /**
+     * Players the host has explicitly chosen to continue without via
+     * `ContinueWithoutPlayer`. Sticky for the session — only
+     * `ReadmitPlayer` clears the slot, and only before the next host
+     * phase advance. Dropped players are excluded from the active
+     * roster everywhere: readiness invariants, vote ballots, all
+     * SelfActor actions (authority + reducer enforce, see
+     * `WhodunitActionAuthority.isAllowed`).
+     */
+    val droppedPlayers: Set<PlayerId> = emptySet(),
 )
 
 /** Per-player private — visible only to the owning player. */

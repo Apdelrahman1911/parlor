@@ -51,6 +51,12 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
             is WhodunitAction.AcknowledgeBriefing -> acknowledgeBriefing(state, action.playerId)
             is WhodunitAction.ConfirmRoleViewed -> confirmRoleViewed(state, action.playerId)
 
+            // Party Play connection rules (Wave 9H)
+            is WhodunitAction.MarkPlayerDisconnected -> markPlayerDisconnected(state, action.playerId)
+            is WhodunitAction.MarkPlayerReconnected -> markPlayerReconnected(state, action.playerId)
+            is WhodunitAction.ContinueWithoutPlayer -> continueWithoutPlayer(state, action.playerId)
+            is WhodunitAction.ReadmitPlayer -> readmitPlayer(state, action.playerId)
+
             // Rounds (Phase 5)
             WhodunitAction.RevealNextClue -> revealNextClue(state, wctx)
             is WhodunitAction.SubmitStructuredAction -> Reduction(state)
@@ -131,14 +137,13 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
     }
 
     /**
-     * Active roster used by the readiness invariant. For Wave 9H-1, it's
-     * every player at the table; 9H-2 will subtract `droppedPlayers`. The
-     * helper is centralised here so both `advanceFromIntro` and the final
-     * briefing-card advance read the same definition.
+     * Active roster used by the readiness invariant. Subtracts
+     * `public.droppedPlayers`; disconnected (transient) players still
+     * count because the host hasn't yet chosen to skip them.
      */
     private fun activeRoster(state: WhodunitState) = PartyReadiness.activeRoster(
         players = state.players,
-        droppedPlayers = emptySet(),
+        droppedPlayers = state.public.droppedPlayers,
     )
 
     /**
@@ -190,6 +195,8 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
     ): Reduction<WhodunitState, WhodunitEvent> {
         if (state.phase != WhodunitPhase.PublicIntro) return Reduction(state)
         if (playerId !in state.players.map { it.id }) return Reduction(state)
+        // Dropped-spectator defense: a dropped player cannot ack.
+        if (playerId in state.public.droppedPlayers) return Reduction(state)
         val updated = state.public.introAcknowledged + playerId
         if (updated == state.public.introAcknowledged) return Reduction(state)
         return Reduction(state.copy(public = state.public.copy(introAcknowledged = updated)))
@@ -201,6 +208,7 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
     ): Reduction<WhodunitState, WhodunitEvent> {
         if (state.phase != WhodunitPhase.RulesBriefing) return Reduction(state)
         if (playerId !in state.players.map { it.id }) return Reduction(state)
+        if (playerId in state.public.droppedPlayers) return Reduction(state)
         val updated = state.public.briefingReady + playerId
         if (updated == state.public.briefingReady) return Reduction(state)
         return Reduction(state.copy(public = state.public.copy(briefingReady = updated)))
@@ -212,9 +220,100 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
     ): Reduction<WhodunitState, WhodunitEvent> {
         if (state.phase !is WhodunitPhase.CharacterReveal) return Reduction(state)
         if (playerId !in state.players.map { it.id }) return Reduction(state)
+        if (playerId in state.public.droppedPlayers) return Reduction(state)
         val updated = state.public.rolesViewed + playerId
         if (updated == state.public.rolesViewed) return Reduction(state)
         return Reduction(state.copy(public = state.public.copy(rolesViewed = updated)))
+    }
+
+    // -------------------------------------------------- Connection rules (9H-2) --
+
+    private fun markPlayerDisconnected(
+        state: WhodunitState,
+        playerId: PlayerId,
+    ): Reduction<WhodunitState, WhodunitEvent> {
+        if (playerId !in state.players.map { it.id }) return Reduction(state)
+        if (playerId in state.public.disconnectedPlayers) return Reduction(state)
+        return Reduction(
+            state.copy(
+                public = state.public.copy(
+                    disconnectedPlayers = state.public.disconnectedPlayers + playerId,
+                ),
+            ),
+        )
+    }
+
+    private fun markPlayerReconnected(
+        state: WhodunitState,
+        playerId: PlayerId,
+    ): Reduction<WhodunitState, WhodunitEvent> {
+        if (playerId !in state.public.disconnectedPlayers) return Reduction(state)
+        return Reduction(
+            state.copy(
+                public = state.public.copy(
+                    disconnectedPlayers = state.public.disconnectedPlayers - playerId,
+                ),
+            ),
+        )
+    }
+
+    private fun continueWithoutPlayer(
+        state: WhodunitState,
+        playerId: PlayerId,
+    ): Reduction<WhodunitState, WhodunitEvent> {
+        if (playerId !in state.players.map { it.id }) return Reduction(state)
+        if (playerId in state.public.droppedPlayers) return Reduction(state)
+        // Also remove from any open vote ballot — dropped players don't vote.
+        val newVote = when (val v = state.public.voteState) {
+            is VoteState.Collecting -> v.copy(
+                ballotPlayerIds = v.ballotPlayerIds - playerId,
+                castSoFar = v.castSoFar - playerId,
+                abstained = v.abstained - playerId,
+            )
+            else -> v
+        }
+        return Reduction(
+            state.copy(
+                public = state.public.copy(
+                    droppedPlayers = state.public.droppedPlayers + playerId,
+                    // Clean the player's id out of all readiness sets so
+                    // their absence flips the relevant gate open immediately.
+                    introAcknowledged = state.public.introAcknowledged - playerId,
+                    briefingReady = state.public.briefingReady - playerId,
+                    rolesViewed = state.public.rolesViewed - playerId,
+                    voteState = newVote,
+                ),
+            ),
+        )
+    }
+
+    /**
+     * Reverts a `ContinueWithoutPlayer` decision. Only valid while still in
+     * the same phase as the original drop — once the host has advanced past
+     * that phase, the readmit ship has sailed. We approximate this with the
+     * coarser rule "only valid in `PublicIntro`, `RulesBriefing`, or
+     * `CharacterReveal`" (the readiness-gated phases). Once a Round has
+     * begun, readmit is rejected.
+     */
+    private fun readmitPlayer(
+        state: WhodunitState,
+        playerId: PlayerId,
+    ): Reduction<WhodunitState, WhodunitEvent> {
+        if (playerId !in state.public.droppedPlayers) return Reduction(state)
+        val canReadmit = when (state.phase) {
+            WhodunitPhase.PublicIntro,
+            WhodunitPhase.RulesBriefing,
+            is WhodunitPhase.CharacterReveal -> true
+            else -> false
+        }
+        if (!canReadmit) return Reduction(state)
+        return Reduction(
+            state.copy(
+                public = state.public.copy(
+                    droppedPlayers = state.public.droppedPlayers - playerId,
+                ),
+            ),
+        )
     }
 
     private fun startCharacterReveal(
@@ -378,8 +477,12 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
         // If we're opening from a Tied state, this is the revote — preserve
         // that marker forward so handleTie can apply the second-tie rule.
         val isSecondRound = state.public.voteState is VoteState.Tied
-        val survivors = state.public.playersAtTable.map { it.id } - state.public.eliminatedPlayers.toSet()
-        val ballot = if (isElimination) survivors else state.public.playersAtTable.map { it.id }
+        val tableIds = state.public.playersAtTable.map { it.id }
+        // Active roster excludes dropped players (Wave 9H-2 — host has
+        // explicitly chosen to continue without them).
+        val active = tableIds - state.public.droppedPlayers
+        val survivors = active - state.public.eliminatedPlayers.toSet()
+        val ballot = if (isElimination) survivors else active
         val vote = VoteState.Collecting(
             isElimination = isElimination,
             ballotPlayerIds = ballot,
@@ -399,6 +502,7 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
         voter: PlayerId,
         target: PlayerId,
     ): Reduction<WhodunitState, WhodunitEvent> {
+        if (voter in state.public.droppedPlayers) return Reduction(state)
         val vote = state.public.voteState as? VoteState.Collecting ?: return Reduction(state)
         if (voter !in vote.ballotPlayerIds) return Reduction(state)
         val advanced = vote.copy(
@@ -422,6 +526,7 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
         voter: PlayerId,
         refused: Boolean,
     ): Reduction<WhodunitState, WhodunitEvent> {
+        if (voter in state.public.droppedPlayers) return Reduction(state)
         val vote = state.public.voteState as? VoteState.Collecting ?: return Reduction(state)
         if (voter !in vote.ballotPlayerIds) return Reduction(state)
         val advanced = vote.copy(

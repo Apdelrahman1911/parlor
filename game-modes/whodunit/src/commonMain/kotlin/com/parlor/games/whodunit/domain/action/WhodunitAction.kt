@@ -38,6 +38,20 @@ sealed interface WhodunitAction : GameAction {
     /** Peer signals they've viewed their assigned role. SelfActor. */
     @Serializable data class ConfirmRoleViewed(val playerId: PlayerId) : WhodunitAction
 
+    // --- Party Play connection rules (Wave 9H) ---
+    /** Host bridge submits when it detects a peer drop. HostOnly. */
+    @Serializable data class MarkPlayerDisconnected(val playerId: PlayerId) : WhodunitAction
+    /** Host bridge submits when a previously-dropped peer reconnects. HostOnly. */
+    @Serializable data class MarkPlayerReconnected(val playerId: PlayerId) : WhodunitAction
+    /** Host opts to continue the game without [playerId]. Sticky. HostOnly. */
+    @Serializable data class ContinueWithoutPlayer(val playerId: PlayerId) : WhodunitAction
+    /**
+     * Host undoes a `ContinueWithoutPlayer` decision before the next
+     * phase advance. Only valid while still on the same phase as the
+     * original drop. HostOnly.
+     */
+    @Serializable data class ReadmitPlayer(val playerId: PlayerId) : WhodunitAction
+
     // --- Rounds (Phase 5) ---
     @Serializable data object RevealNextClue : WhodunitAction
     @Serializable data class SubmitStructuredAction(val payload: StructuredActionPayload) : WhodunitAction

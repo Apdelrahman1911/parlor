@@ -53,6 +53,10 @@ class WhodunitActionAuthorityTest {
             WhodunitAction.Resume,
             WhodunitAction.EndGameEarly(withReveal = true),
             WhodunitAction.RequestReroll,
+            WhodunitAction.MarkPlayerDisconnected(alice),
+            WhodunitAction.MarkPlayerReconnected(alice),
+            WhodunitAction.ContinueWithoutPlayer(alice),
+            WhodunitAction.ReadmitPlayer(alice),
         )
         for (action in hostOnly) {
             assertEquals(AuthorityScope.HostOnly, WhodunitActionAuthority.classify(action),
@@ -131,6 +135,60 @@ class WhodunitActionAuthorityTest {
             assertFalse(WhodunitActionAuthority.isAllowed(action, bob, host),
                 "bob cannot submit $action on alice's behalf")
         }
+    }
+
+    // ============================================================ Dropped spectators ==
+
+    @Test
+    fun dropped_player_self_actor_actions_are_rejected() {
+        val dropped = setOf(alice)
+        val actions = listOf<WhodunitAction>(
+            WhodunitAction.AcknowledgeIntro(alice),
+            WhodunitAction.AcknowledgeBriefing(alice),
+            WhodunitAction.ConfirmRoleViewed(alice),
+            WhodunitAction.CompleteCharacterReveal(alice),
+            WhodunitAction.OpenPrivateReview(alice),
+            WhodunitAction.CloseHide(alice),
+            WhodunitAction.CastVote(voter = alice, target = bob),
+            WhodunitAction.AbstainVote(alice),
+            WhodunitAction.RefuseToVote(alice),
+        )
+        for (action in actions) {
+            // Sender == actor is normally allowed, but the dropped gate rejects.
+            assertFalse(
+                WhodunitActionAuthority.isAllowed(action, alice, host, dropped),
+                "dropped alice cannot submit $action",
+            )
+        }
+    }
+
+    @Test
+    fun dropped_player_does_not_block_other_actors() {
+        val dropped = setOf(alice)
+        // Bob is not dropped — his actions remain valid.
+        assertTrue(
+            WhodunitActionAuthority.isAllowed(
+                WhodunitAction.CastVote(voter = bob, target = alice),
+                bob,
+                host,
+                dropped,
+            ),
+        )
+    }
+
+    @Test
+    fun host_only_actions_pass_through_dropped_set_unaffected() {
+        // Dropped set should not change host-only enforcement: host can submit
+        // ContinueWithoutPlayer even for already-dropped players (idempotent).
+        val dropped = setOf(alice)
+        assertTrue(
+            WhodunitActionAuthority.isAllowed(
+                WhodunitAction.ContinueWithoutPlayer(alice),
+                host,
+                host,
+                dropped,
+            ),
+        )
     }
 
     @Test

@@ -47,7 +47,11 @@ object WhodunitActionAuthority {
         WhodunitAction.Pause,
         WhodunitAction.Resume,
         is WhodunitAction.EndGameEarly,
-        WhodunitAction.RequestReroll -> AuthorityScope.HostOnly
+        WhodunitAction.RequestReroll,
+        is WhodunitAction.MarkPlayerDisconnected,
+        is WhodunitAction.MarkPlayerReconnected,
+        is WhodunitAction.ContinueWithoutPlayer,
+        is WhodunitAction.ReadmitPlayer -> AuthorityScope.HostOnly
 
         // Self-actor: only the named player may submit.
         is WhodunitAction.CompleteCharacterReveal -> AuthorityScope.SelfActor(action.playerId)
@@ -70,13 +74,35 @@ object WhodunitActionAuthority {
 
     /**
      * True iff the wire-attested [senderId] is permitted to submit [action]
-     * given the host identity [hostId]. The host is implicitly trusted (they
-     * never call this on their own actions); this is consulted by the host
-     * on inbound peer [com.parlor.networking.protocol.PeerMessage.ActionSubmit].
+     * given the host identity [hostId] and the set of game-dropped players
+     * [droppedPlayers].
+     *
+     * The host is implicitly trusted (they never call this on their own
+     * actions); this is consulted by the host on inbound peer
+     * [com.parlor.networking.protocol.PeerMessage.ActionSubmit].
+     *
+     * Three-rule gate:
+     *  1. HostOnly actions: only the host may submit.
+     *  2. SelfActor actions: only the named actor may submit.
+     *  3. SelfActor actions with an actor in [droppedPlayers]: rejected.
+     *     A dropped player is a spectator — their stale or queued actions
+     *     cannot mutate game state regardless of the sender identity. This
+     *     is the load-bearing "dropped spectator enforcement" rule.
+     *
+     * [droppedPlayers] defaults to `emptySet()` for backwards compatibility
+     * with call sites that don't yet pass the dropped set. The host bridge
+     * passes `state.public.droppedPlayers` to enforce rule 3.
      */
-    fun isAllowed(action: WhodunitAction, senderId: PlayerId, hostId: PlayerId): Boolean =
-        when (val scope = classify(action)) {
-            AuthorityScope.HostOnly -> senderId == hostId
-            is AuthorityScope.SelfActor -> senderId == scope.actor
+    fun isAllowed(
+        action: WhodunitAction,
+        senderId: PlayerId,
+        hostId: PlayerId,
+        droppedPlayers: Set<PlayerId> = emptySet(),
+    ): Boolean = when (val scope = classify(action)) {
+        AuthorityScope.HostOnly -> senderId == hostId
+        is AuthorityScope.SelfActor -> {
+            if (scope.actor in droppedPlayers) false
+            else senderId == scope.actor
         }
+    }
 }
