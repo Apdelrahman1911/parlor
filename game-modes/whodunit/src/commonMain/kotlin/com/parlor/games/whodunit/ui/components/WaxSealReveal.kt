@@ -1,6 +1,7 @@
 package com.parlor.games.whodunit.ui.components
 
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -23,6 +24,8 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -33,13 +36,33 @@ import com.parlor.games.whodunit.resources.Res
 import com.parlor.games.whodunit.resources.reveal_gate_a11y
 import com.parlor.games.whodunit.resources.reveal_gate_reduce_motion_hint
 import kotlinx.coroutines.delay
+import kotlin.math.cos
+import kotlin.math.sin
 import org.jetbrains.compose.resources.stringResource
 
 /**
- * The signature Whodunit interaction. Press-and-hold a wax-seal icon for 1.5 s.
- * The seal pulses with a warm ember glow during the hold; on completion it
- * breaks and the dossier is revealed. A tap fallback (single tap then explicit
- * confirmation) appears for motor accessibility or when `reducedMotion` is on.
+ * The signature Whodunit interaction. Press-and-hold a wax-seal stamp for
+ * `holdMs` ms. The seal:
+ *  - pulses with a warm ember glow under the press;
+ *  - draws a progress arc around the rim showing how much hold remains;
+ *  - on release (early) springs back to rest;
+ *  - on completion *crackles* — a quick pop scale + an ember flare — then
+ *    invokes [onRevealed].
+ *
+ * Composed in concentric layers (outer → inner):
+ *  1. Halation glow that grows with progress.
+ *  2. Progress arc — a brass ring that fills clockwise from 12 o'clock.
+ *  3. Spread of melted wax around the seal (irregular soft edge).
+ *  4. Wax body — radial gradient ember→deep so the seal looks domed.
+ *  5. Rim notches — twelve tiny "wax stamp" ticks pressed into the rim.
+ *  6. Embossed motif — a "P" monogram drawn with light + shadow strokes.
+ *  7. Specular highlight — top-left ellipse that reads as candlelight
+ *     catching the curve.
+ *  8. Crack overlay (only at completion) — a hairline split across the
+ *     seal that fades in for ~200 ms before [onRevealed] fires.
+ *
+ * Reduced-motion path: render the seal at rest and treat any tap as a
+ * full reveal — no hold gesture, no animation.
  */
 @Composable
 fun WaxSealReveal(
@@ -55,15 +78,30 @@ fun WaxSealReveal(
 
     var pressing by remember { mutableStateOf(false) }
     var progress by remember { mutableStateOf(0f) }
-    val animatedScale by animateFloatAsState(
-        targetValue = if (pressing) 1.08f else 1f,
-        animationSpec = tween(durationMillis = 240),
+    var cracked by remember { mutableStateOf(false) }
+
+    val pressScale by animateFloatAsState(
+        targetValue = when {
+            cracked -> 1.18f
+            pressing -> 1.06f
+            else -> 1f
+        },
+        animationSpec = if (cracked) {
+            spring(dampingRatio = 0.4f, stiffness = 700f)
+        } else {
+            tween(durationMillis = 240)
+        },
         label = "wax-seal-press-scale",
+    )
+    val crackProgress by animateFloatAsState(
+        targetValue = if (cracked) 1f else 0f,
+        animationSpec = tween(durationMillis = 240),
+        label = "wax-seal-crack",
     )
 
     LaunchedEffect(pressing) {
         if (!pressing) {
-            progress = 0f
+            if (!cracked) progress = 0f
             return@LaunchedEffect
         }
         val tickMs = 16L
@@ -75,6 +113,8 @@ fun WaxSealReveal(
             progress = (elapsed.toFloat() / total).coerceIn(0f, 1f)
         }
         if (pressing && elapsed >= total) {
+            cracked = true
+            delay(220L)
             onRevealed()
         }
     }
@@ -84,13 +124,13 @@ fun WaxSealReveal(
             .fillMaxWidth()
             .padding(ParlorTheme.spacing.l),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m),
+        verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l),
     ) {
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
-                .size(180.dp)
-                .scale(animatedScale)
+                .size(200.dp)
+                .scale(pressScale)
                 .pointerInput(reduced) {
                     detectTapGestures(
                         onPress = {
@@ -109,36 +149,168 @@ fun WaxSealReveal(
                 }
                 .semantics { contentDescription = a11y },
         ) {
-            Canvas(modifier = Modifier.fillMaxWidth().size(160.dp)) {
-                val radius = size.minDimension / 2f
+            Canvas(modifier = Modifier.size(200.dp)) {
+                val full = size.minDimension
                 val center = Offset(size.width / 2f, size.height / 2f)
+                val sealR = full * 0.38f
+                val spreadR = sealR * 1.14f
 
+                // 1. Halation — grows with progress.
+                val halationAlpha = 0.18f + 0.42f * progress
                 drawCircle(
                     brush = Brush.radialGradient(
                         colors = listOf(
-                            colors.accentEmberGlow.copy(alpha = 0.20f + 0.30f * progress),
+                            colors.accentEmberGlow.copy(alpha = halationAlpha),
+                            colors.accentEmber.copy(alpha = halationAlpha * 0.4f),
                             Color.Transparent,
                         ),
                         center = center,
-                        radius = radius * 1.4f,
+                        radius = full * 0.50f,
                     ),
-                    radius = radius * 1.4f,
+                    center = center,
+                    radius = full * 0.50f,
                 )
 
+                // 3. Spread of melted wax — softer, larger, slightly cooler.
                 drawCircle(
                     brush = Brush.radialGradient(
-                        colors = listOf(colors.accentEmber, colors.accentEmberDeep),
+                        colors = listOf(
+                            colors.accentEmberDeep.copy(alpha = 0.95f),
+                            colors.accentEmberDeep.copy(alpha = 0.55f),
+                            colors.accentEmberDeep.copy(alpha = 0.0f),
+                        ),
                         center = center,
-                        radius = radius,
+                        radius = spreadR,
                     ),
-                    radius = radius,
+                    center = center,
+                    radius = spreadR,
                 )
 
+                // 4. Wax body — domed via three-stop radial.
                 drawCircle(
-                    color = colors.accentEmberGlow.copy(alpha = 0.45f),
-                    radius = radius * 0.45f,
-                    center = Offset(center.x - radius * 0.25f, center.y - radius * 0.25f),
+                    brush = Brush.radialGradient(
+                        colors = listOf(
+                            colors.accentEmberGlow,
+                            colors.accentEmber,
+                            colors.accentEmberDeep,
+                        ),
+                        center = Offset(center.x - sealR * 0.15f, center.y - sealR * 0.20f),
+                        radius = sealR * 1.4f,
+                    ),
+                    center = center,
+                    radius = sealR,
                 )
+
+                // 5. Rim notches — 12 tiny indents around the perimeter.
+                val notchCount = 12
+                val notchInner = sealR * 0.93f
+                val notchOuter = sealR * 1.01f
+                for (i in 0 until notchCount) {
+                    val angle = (i.toFloat() / notchCount) * 2f * kotlin.math.PI.toFloat()
+                    val cosA = cos(angle)
+                    val sinA = sin(angle)
+                    drawLine(
+                        color = colors.accentEmberDeep.copy(alpha = 0.6f),
+                        start = Offset(center.x + cosA * notchInner, center.y + sinA * notchInner),
+                        end = Offset(center.x + cosA * notchOuter, center.y + sinA * notchOuter),
+                        strokeWidth = 1.5.dp.toPx(),
+                        cap = StrokeCap.Round,
+                    )
+                }
+
+                // 6. Embossed "P" monogram.
+                val monogramThickness = sealR * 0.13f
+                val monogramH = sealR * 0.95f
+                // Vertical stem of the P
+                drawLine(
+                    color = colors.accentEmberDeep.copy(alpha = 0.55f),
+                    start = Offset(center.x - sealR * 0.28f, center.y - monogramH / 2f),
+                    end = Offset(center.x - sealR * 0.28f, center.y + monogramH / 2f),
+                    strokeWidth = monogramThickness,
+                    cap = StrokeCap.Round,
+                )
+                // Bowl of the P (upper half-loop)
+                drawArc(
+                    color = colors.accentEmberDeep.copy(alpha = 0.55f),
+                    startAngle = -90f,
+                    sweepAngle = 180f,
+                    useCenter = false,
+                    topLeft = Offset(
+                        center.x - sealR * 0.28f,
+                        center.y - monogramH / 2f,
+                    ),
+                    size = androidx.compose.ui.geometry.Size(sealR * 0.62f, sealR * 0.62f),
+                    style = Stroke(width = monogramThickness, cap = StrokeCap.Round),
+                )
+                // Highlight echo of the monogram — offset up-left, lighter.
+                drawLine(
+                    color = colors.accentEmberGlow.copy(alpha = 0.30f),
+                    start = Offset(center.x - sealR * 0.28f - 1.5.dp.toPx(), center.y - monogramH / 2f - 1.5.dp.toPx()),
+                    end = Offset(center.x - sealR * 0.28f - 1.5.dp.toPx(), center.y + monogramH / 2f - 1.5.dp.toPx()),
+                    strokeWidth = monogramThickness * 0.4f,
+                    cap = StrokeCap.Round,
+                )
+
+                // 7. Specular highlight — small bright ellipse top-left.
+                drawCircle(
+                    brush = Brush.radialGradient(
+                        colors = listOf(
+                            colors.accentParchment.copy(alpha = 0.55f),
+                            Color.Transparent,
+                        ),
+                        center = Offset(center.x - sealR * 0.40f, center.y - sealR * 0.40f),
+                        radius = sealR * 0.32f,
+                    ),
+                    center = Offset(center.x - sealR * 0.40f, center.y - sealR * 0.40f),
+                    radius = sealR * 0.32f,
+                )
+
+                // 2. Progress arc around the rim — drawn last so it sits
+                //    above the wax body. From 12 o'clock clockwise.
+                if (progress > 0f) {
+                    val ringR = sealR * 1.18f
+                    drawArc(
+                        color = colors.accentBrass.copy(alpha = 0.85f),
+                        startAngle = -90f,
+                        sweepAngle = 360f * progress,
+                        useCenter = false,
+                        topLeft = Offset(center.x - ringR, center.y - ringR),
+                        size = androidx.compose.ui.geometry.Size(ringR * 2, ringR * 2),
+                        style = Stroke(width = 2.5.dp.toPx(), cap = StrokeCap.Round),
+                    )
+                }
+
+                // 8. Crack overlay — hairline split that fades in on completion.
+                if (crackProgress > 0f) {
+                    val crackAlpha = 0.85f * crackProgress
+                    // Main diagonal crack
+                    drawLine(
+                        color = Color.Black.copy(alpha = crackAlpha),
+                        start = Offset(center.x - sealR * 0.7f, center.y - sealR * 0.3f),
+                        end = Offset(center.x + sealR * 0.6f, center.y + sealR * 0.5f),
+                        strokeWidth = 1.6.dp.toPx(),
+                    )
+                    // Smaller branch crack
+                    drawLine(
+                        color = Color.Black.copy(alpha = crackAlpha * 0.7f),
+                        start = Offset(center.x + sealR * 0.1f, center.y + sealR * 0.1f),
+                        end = Offset(center.x + sealR * 0.55f, center.y - sealR * 0.4f),
+                        strokeWidth = 1.2.dp.toPx(),
+                    )
+                    // Inner ember leak from the crack
+                    drawCircle(
+                        brush = Brush.radialGradient(
+                            colors = listOf(
+                                colors.accentEmberGlow.copy(alpha = 0.6f * crackProgress),
+                                Color.Transparent,
+                            ),
+                            center = center,
+                            radius = sealR * 0.6f,
+                        ),
+                        center = center,
+                        radius = sealR * 0.6f,
+                    )
+                }
             }
         }
 
