@@ -26,6 +26,8 @@ import com.parlor.engine.snapshot.GameSnapshot
 import com.parlor.engine.state.Player
 import com.parlor.games.whodunit.WhodunitDefinition
 import com.parlor.games.whodunit.WhodunitIds
+import com.parlor.games.whodunit.ackBriefingForAll
+import com.parlor.games.whodunit.ackIntroForAll
 import com.parlor.games.whodunit.content.BundledWhodunitCases
 import com.parlor.games.whodunit.content.WhodunitCase
 import com.parlor.games.whodunit.content.WhodunitPayloadValidator
@@ -155,7 +157,9 @@ class WhodunitSnapshotRoundTripTest {
 
         // Drive partway: setup → into Round 1, clue revealed, discussion timer running.
         session.submit(WhodunitAction.AssignRoles(seed))
+        session.ackIntroForAll(players)
         session.submit(WhodunitAction.AdvanceFromIntro)
+        session.ackBriefingForAll(players)
         for (i in 1..4) session.submit(WhodunitAction.AdvanceBriefingCard(i))
         for (player in players) {
             session.submit(WhodunitAction.StartCharacterReveal(player.id))
@@ -204,7 +208,9 @@ class WhodunitSnapshotRoundTripTest {
         // Drive into a 2-2 tied vote and open the revote so the state captures
         // VoteState.Collecting(isSecondRound = true).
         session.submit(WhodunitAction.AssignRoles(seed))
+        session.ackIntroForAll(players)
         session.submit(WhodunitAction.AdvanceFromIntro)
+        session.ackBriefingForAll(players)
         for (i in 1..4) session.submit(WhodunitAction.AdvanceBriefingCard(i))
         for (player in players) {
             session.submit(WhodunitAction.StartCharacterReveal(player.id))

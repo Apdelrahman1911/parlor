@@ -24,6 +24,8 @@ import com.parlor.engine.session.SessionConfig
 import com.parlor.engine.state.Player
 import com.parlor.games.whodunit.WhodunitDefinition
 import com.parlor.games.whodunit.WhodunitIds
+import com.parlor.games.whodunit.ackBriefingForAll
+import com.parlor.games.whodunit.ackIntroForAll
 import com.parlor.games.whodunit.content.BundledWhodunitCases
 import com.parlor.games.whodunit.content.WhodunitCase
 import com.parlor.games.whodunit.content.WhodunitPayloadValidator
@@ -204,8 +206,10 @@ class WhodunitMultiDeviceShapeTest {
         )
         // (The peer mirror equality check above already enforces redaction.)
 
+        host.ackIntroForAll(players)
         host.submit(WhodunitAction.AdvanceFromIntro)
         assertPeerMirrorsHostAndRedactsHostOnly(host, peers, "after AdvanceFromIntro")
+        host.ackBriefingForAll(players)
         for (i in 1..4) {
             host.submit(WhodunitAction.AdvanceBriefingCard(i))
             assertPeerMirrorsHostAndRedactsHostOnly(host, peers, "briefing card $i")
@@ -295,7 +299,9 @@ class WhodunitMultiDeviceShapeTest {
         }
 
         host.submit(WhodunitAction.AssignRoles(seed)); pin("PublicIntro")
+        host.ackIntroForAll(players)
         host.submit(WhodunitAction.AdvanceFromIntro); pin("RulesBriefing-start")
+        host.ackBriefingForAll(players)
         for (i in 1..4) host.submit(WhodunitAction.AdvanceBriefingCard(i))
         pin("CharacterReveal-entry")
         for (p in players) {
@@ -337,6 +343,7 @@ class WhodunitMultiDeviceShapeTest {
         val peer = WhodunitPeerSimulator(PlayerId("peer-pause"), bus, json, scope)
 
         host.submit(WhodunitAction.AssignRoles(13L))
+        host.ackIntroForAll(players)
         host.submit(WhodunitAction.AdvanceFromIntro)
         host.submit(WhodunitAction.Pause)
 
@@ -364,6 +371,7 @@ class WhodunitMultiDeviceShapeTest {
 
         // Drive partway so both sides have a known mirror.
         host.submit(WhodunitAction.AssignRoles(19L))
+        host.ackIntroForAll(players)
         host.submit(WhodunitAction.AdvanceFromIntro)
 
         val priorPeerSnapshots = peer.snapshotsReceived
@@ -432,6 +440,7 @@ class WhodunitMultiDeviceShapeTest {
         val peer = WhodunitPeerSimulator(PlayerId("peer-extended-drop"), bus, json, scope)
 
         host.submit(WhodunitAction.AssignRoles(23L))
+        host.ackIntroForAll(players)
         host.submit(WhodunitAction.AdvanceFromIntro)
         val baselineSnapshotCount = peer.snapshotsReceived
 
@@ -459,11 +468,15 @@ class WhodunitMultiDeviceShapeTest {
         // CharacterReveal (since AdvanceBriefingCard(4) advances out of the
         // briefing). Either way, the peer converges in one delivered message.
         hostSim.dropPolicy = null
+        host.ackBriefingForAll(players)
         host.submit(WhodunitAction.AdvanceBriefingCard(4))
 
         val convergedState = peer.state.value!!
         assertThat(convergedState).isEqualTo(stateOf(host))
-        assertThat(peer.snapshotsReceived).isEqualTo(baselineSnapshotCount + 1)
+        // baseline + 4 acks + 1 advance = baseline + 5 snapshots delivered
+        // after drop restoration. The Wave 9H readiness gating means each
+        // ack is its own state change.
+        assertThat(peer.snapshotsReceived).isEqualTo(baselineSnapshotCount + 5)
 
         hostSim.close()
         host.close()
@@ -487,6 +500,7 @@ class WhodunitMultiDeviceShapeTest {
         )
 
         host.submit(WhodunitAction.AssignRoles(29L))
+        host.ackIntroForAll(players)
         host.submit(WhodunitAction.AdvanceFromIntro)
         host.submit(WhodunitAction.AdvanceBriefingCard(1))
 

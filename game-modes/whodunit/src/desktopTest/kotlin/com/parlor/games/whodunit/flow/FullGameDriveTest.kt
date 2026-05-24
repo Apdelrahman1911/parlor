@@ -20,6 +20,8 @@ import com.parlor.engine.session.SessionConfig
 import com.parlor.engine.state.Player
 import com.parlor.games.whodunit.WhodunitDefinition
 import com.parlor.games.whodunit.WhodunitIds
+import com.parlor.games.whodunit.ackBriefingForAll
+import com.parlor.games.whodunit.ackIntroForAll
 import com.parlor.games.whodunit.content.BundledWhodunitCases
 import com.parlor.games.whodunit.content.WhodunitCase
 import com.parlor.games.whodunit.content.WhodunitPayloadValidator
@@ -169,10 +171,12 @@ class FullGameDriveTest {
         assertThat(phaseOf(session)).isInstanceOf(WhodunitPhase.PublicIntro::class)
 
         // AdvanceFromIntro → RulesBriefing
+        session.ackIntroForAll(players)
         session.submit(WhodunitAction.AdvanceFromIntro)
         assertThat(phaseOf(session)).isInstanceOf(WhodunitPhase.RulesBriefing::class)
 
         // Four briefing cards → CharacterReveal(0)
+        session.ackBriefingForAll(players)
         for (i in 1..4) session.submit(WhodunitAction.AdvanceBriefingCard(i))
         assertThat(phaseOf(session)).isInstanceOf(WhodunitPhase.CharacterReveal::class)
 
@@ -226,7 +230,9 @@ class FullGameDriveTest {
         val collector = sessionScope.launch { session.events.collect { events += it } }
 
         session.submit(WhodunitAction.AssignRoles(seed))
+        session.ackIntroForAll(players)
         session.submit(WhodunitAction.AdvanceFromIntro)
+        session.ackBriefingForAll(players)
         for (i in 1..4) session.submit(WhodunitAction.AdvanceBriefingCard(i))
         for (player in players) {
             session.submit(WhodunitAction.StartCharacterReveal(player.id))
@@ -264,7 +270,9 @@ class FullGameDriveTest {
         val collector = sessionScope.launch { session.events.collect { events += it } }
 
         session.submit(WhodunitAction.AssignRoles(seed))
+        session.ackIntroForAll(players)
         session.submit(WhodunitAction.AdvanceFromIntro)
+        session.ackBriefingForAll(players)
         for (i in 1..4) session.submit(WhodunitAction.AdvanceBriefingCard(i))
         for (player in players) {
             session.submit(WhodunitAction.StartCharacterReveal(player.id))
@@ -301,7 +309,9 @@ class FullGameDriveTest {
         )
 
         session.submit(WhodunitAction.AssignRoles(seed))
+        session.ackIntroForAll(players)
         session.submit(WhodunitAction.AdvanceFromIntro)
+        session.ackBriefingForAll(players)
         for (i in 1..4) session.submit(WhodunitAction.AdvanceBriefingCard(i))
         for (player in players) {
             session.submit(WhodunitAction.StartCharacterReveal(player.id))

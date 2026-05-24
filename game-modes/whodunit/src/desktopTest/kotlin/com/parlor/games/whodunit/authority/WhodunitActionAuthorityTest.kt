@@ -86,6 +86,23 @@ class WhodunitActionAuthorityTest {
     }
 
     @Test
+    fun self_actor_party_readiness_acks_only_named_player() {
+        val actions = listOf<WhodunitAction>(
+            WhodunitAction.AcknowledgeIntro(alice),
+            WhodunitAction.AcknowledgeBriefing(alice),
+            WhodunitAction.ConfirmRoleViewed(alice),
+        )
+        for (action in actions) {
+            assertEquals(AuthorityScope.SelfActor(alice), WhodunitActionAuthority.classify(action))
+            assertTrue(WhodunitActionAuthority.isAllowed(action, alice, host))
+            assertFalse(WhodunitActionAuthority.isAllowed(action, bob, host),
+                "bob cannot acknowledge for alice")
+            assertFalse(WhodunitActionAuthority.isAllowed(action, host, host),
+                "host cannot ack on alice's behalf")
+        }
+    }
+
+    @Test
     fun self_actor_voting_only_named_voter() {
         val actions = listOf<WhodunitAction>(
             WhodunitAction.CastVote(voter = alice, target = bob),

@@ -14,6 +14,7 @@ import com.parlor.games.whodunit.domain.event.KillerWinCause
 import com.parlor.games.whodunit.domain.event.Verdict
 import com.parlor.games.whodunit.domain.event.WhodunitEvent
 import com.parlor.games.whodunit.domain.phase.WhodunitPhase
+import com.parlor.games.whodunit.domain.state.PartyReadiness
 import com.parlor.games.whodunit.domain.state.PlayerRole
 import com.parlor.games.whodunit.domain.state.PublicTimerState
 import com.parlor.games.whodunit.domain.state.RevealedClue
@@ -38,12 +39,17 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
         return when (action) {
             // Lifecycle / reveal (Phase 4)
             is WhodunitAction.AssignRoles -> assignRoles(state, action.seed, wctx)
-            WhodunitAction.AdvanceFromIntro -> advance(state, WhodunitPhase.RulesBriefing)
+            WhodunitAction.AdvanceFromIntro -> advanceFromIntro(state)
             is WhodunitAction.AdvanceBriefingCard -> advanceBriefingCard(state, action.index)
             is WhodunitAction.StartCharacterReveal -> startCharacterReveal(state, action.playerId)
             is WhodunitAction.CompleteCharacterReveal -> completeCharacterReveal(state, action.playerId)
             is WhodunitAction.OpenPrivateReview -> openPrivateReview(state, action.playerId)
             is WhodunitAction.CloseHide -> closeHide(state, action.playerId)
+
+            // Party Play readiness (Wave 9H)
+            is WhodunitAction.AcknowledgeIntro -> acknowledgeIntro(state, action.playerId)
+            is WhodunitAction.AcknowledgeBriefing -> acknowledgeBriefing(state, action.playerId)
+            is WhodunitAction.ConfirmRoleViewed -> confirmRoleViewed(state, action.playerId)
 
             // Rounds (Phase 5)
             WhodunitAction.RevealNextClue -> revealNextClue(state, wctx)
@@ -124,17 +130,91 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
         return Reduction(state.copy(phase = next), listOf(WhodunitEvent.PhaseEntered(next)))
     }
 
+    /**
+     * Active roster used by the readiness invariant. For Wave 9H-1, it's
+     * every player at the table; 9H-2 will subtract `droppedPlayers`. The
+     * helper is centralised here so both `advanceFromIntro` and the final
+     * briefing-card advance read the same definition.
+     */
+    private fun activeRoster(state: WhodunitState) = PartyReadiness.activeRoster(
+        players = state.players,
+        droppedPlayers = emptySet(),
+    )
+
+    /**
+     * Gate: AdvanceFromIntro is rejected unless every active-roster player
+     * has acknowledged the case intro. Defense-in-depth: the host UI also
+     * disables the Next button on the same invariant, but the reducer is
+     * the canonical enforcer.
+     */
+    private fun advanceFromIntro(state: WhodunitState): Reduction<WhodunitState, WhodunitEvent> {
+        val active = activeRoster(state)
+        if (!PartyReadiness.isComplete(state.public.introAcknowledged, active)) {
+            return Reduction(state)
+        }
+        val advanced = advance(state, WhodunitPhase.RulesBriefing)
+        return advanced.copy(
+            newState = advanced.newState.copy(
+                public = advanced.newState.public.copy(introAcknowledged = emptySet()),
+            ),
+        )
+    }
+
     private fun advanceBriefingCard(state: WhodunitState, index: Int): Reduction<WhodunitState, WhodunitEvent> {
         val newIndex = index.coerceAtLeast(0)
         return if (newIndex >= BRIEFING_CARD_COUNT) {
+            // Final advance: gated by briefing readiness.
+            val active = activeRoster(state)
+            if (!PartyReadiness.isComplete(state.public.briefingReady, active)) {
+                return Reduction(state)
+            }
             val newState = state.copy(
                 phase = WhodunitPhase.CharacterReveal(playerIndex = 0),
-                public = state.public.copy(briefingCardIndex = 0),
+                public = state.public.copy(
+                    briefingCardIndex = 0,
+                    briefingReady = emptySet(),
+                ),
             )
             Reduction(newState, listOf(WhodunitEvent.PhaseEntered(newState.phase)))
         } else {
+            // Card-by-card advance: unchanged, not gated by readiness.
             Reduction(state.copy(public = state.public.copy(briefingCardIndex = newIndex)))
         }
+    }
+
+    // -------------------------------------------------- Party readiness (9H-1) --
+
+    private fun acknowledgeIntro(
+        state: WhodunitState,
+        playerId: PlayerId,
+    ): Reduction<WhodunitState, WhodunitEvent> {
+        if (state.phase != WhodunitPhase.PublicIntro) return Reduction(state)
+        if (playerId !in state.players.map { it.id }) return Reduction(state)
+        val updated = state.public.introAcknowledged + playerId
+        if (updated == state.public.introAcknowledged) return Reduction(state)
+        return Reduction(state.copy(public = state.public.copy(introAcknowledged = updated)))
+    }
+
+    private fun acknowledgeBriefing(
+        state: WhodunitState,
+        playerId: PlayerId,
+    ): Reduction<WhodunitState, WhodunitEvent> {
+        if (state.phase != WhodunitPhase.RulesBriefing) return Reduction(state)
+        if (playerId !in state.players.map { it.id }) return Reduction(state)
+        val updated = state.public.briefingReady + playerId
+        if (updated == state.public.briefingReady) return Reduction(state)
+        return Reduction(state.copy(public = state.public.copy(briefingReady = updated)))
+    }
+
+    private fun confirmRoleViewed(
+        state: WhodunitState,
+        playerId: PlayerId,
+    ): Reduction<WhodunitState, WhodunitEvent> {
+        if (state.phase !is WhodunitPhase.CharacterReveal) return Reduction(state)
+        if (playerId !in state.players.map { it.id }) return Reduction(state)
+        val updated = state.public.rolesViewed + playerId
+        if (updated == state.public.rolesViewed) return Reduction(state)
+        return Reduction(state.copy(public = state.public.copy(rolesViewed = updated)))
     }
 
     private fun startCharacterReveal(

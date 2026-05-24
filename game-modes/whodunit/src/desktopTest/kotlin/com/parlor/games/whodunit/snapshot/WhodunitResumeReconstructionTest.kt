@@ -24,6 +24,7 @@ import com.parlor.engine.snapshot.GameSnapshot
 import com.parlor.engine.state.Player
 import com.parlor.games.whodunit.WhodunitDefinition
 import com.parlor.games.whodunit.WhodunitIds
+import com.parlor.games.whodunit.ackIntroForAll
 import com.parlor.games.whodunit.content.BundledWhodunitCases
 import com.parlor.games.whodunit.content.WhodunitCase
 import com.parlor.games.whodunit.content.WhodunitPayloadValidator
@@ -138,6 +139,7 @@ class WhodunitResumeReconstructionTest {
             scope = originalScope,
         )
         original.submit(WhodunitAction.AssignRoles(seed))
+        original.ackIntroForAll(players)
         original.submit(WhodunitAction.AdvanceFromIntro)
         // Now in RulesBriefing card 0. Advance two cards to capture a non-trivial
         // briefingCardIndex (so a regression that drops public state surfaces).

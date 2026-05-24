@@ -45,6 +45,17 @@ data class WhodunitPublic(
      * paused.
      */
     val paused: Boolean = false,
+
+    /**
+     * Party Play readiness sets — Wave 9H. Each ack-required phase has
+     * exactly one set. The host's "advance" CTA is gated by
+     * `PartyReadiness.isComplete(set, activeRoster)`. Defaults to empty
+     * so deserialised pre-9H snapshots fall through gracefully (no one
+     * has acked yet — UI re-prompts on resume).
+     */
+    val introAcknowledged: Set<PlayerId> = emptySet(),
+    val briefingReady: Set<PlayerId> = emptySet(),
+    val rolesViewed: Set<PlayerId> = emptySet(),
 )
 
 /** Per-player private — visible only to the owning player. */

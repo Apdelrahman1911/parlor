@@ -28,6 +28,8 @@ import com.parlor.engine.session.SessionConfig
 import com.parlor.engine.state.Player
 import com.parlor.games.whodunit.WhodunitDefinition
 import com.parlor.games.whodunit.WhodunitIds
+import com.parlor.games.whodunit.ackBriefingForAll
+import com.parlor.games.whodunit.ackIntroForAll
 import com.parlor.games.whodunit.content.BundledWhodunitCases
 import com.parlor.games.whodunit.content.WhodunitCase
 import com.parlor.games.whodunit.content.WhodunitPayloadValidator
@@ -159,7 +161,9 @@ class TickerAndRerollTest {
         totalSeconds: Int = 30,
     ) {
         session.submit(WhodunitAction.AssignRoles(seed))
+        session.ackIntroForAll(players)
         session.submit(WhodunitAction.AdvanceFromIntro)
+        session.ackBriefingForAll(players)
         for (i in 1..4) session.submit(WhodunitAction.AdvanceBriefingCard(i))
         for (player in players) {
             session.submit(WhodunitAction.StartCharacterReveal(player.id))
@@ -316,7 +320,9 @@ class TickerAndRerollTest {
 
         // Drive into CharacterReveal so the player is "looking at" their dossier.
         session.submit(WhodunitAction.AssignRoles(seed))
+        session.ackIntroForAll(players)
         session.submit(WhodunitAction.AdvanceFromIntro)
+        session.ackBriefingForAll(players)
         for (i in 1..4) session.submit(WhodunitAction.AdvanceBriefingCard(i))
         // We're now in CharacterReveal(playerIndex = 0).
         assertThat(stateOf(session).phase).isInstanceOf(WhodunitPhase.CharacterReveal::class)
@@ -395,7 +401,9 @@ class TickerAndRerollTest {
         val seed = 9002L
         val (session, _) = buildSession(payload, WhodunitIds.ClassicVoteModeId, players, seed)
         session.submit(WhodunitAction.AssignRoles(seed))
+        session.ackIntroForAll(players)
         session.submit(WhodunitAction.AdvanceFromIntro)
+        session.ackBriefingForAll(players)
         for (i in 1..4) session.submit(WhodunitAction.AdvanceBriefingCard(i))
         // Pause during CharacterReveal, then reroll.
         session.submit(WhodunitAction.Pause)
@@ -418,7 +426,9 @@ class TickerAndRerollTest {
         val collector = scope.launch { session.events.collect { events += it } }
 
         session.submit(WhodunitAction.AssignRoles(seed))
+        session.ackIntroForAll(players)
         session.submit(WhodunitAction.AdvanceFromIntro)
+        session.ackBriefingForAll(players)
         for (i in 1..4) session.submit(WhodunitAction.AdvanceBriefingCard(i))
         events.clear()
 

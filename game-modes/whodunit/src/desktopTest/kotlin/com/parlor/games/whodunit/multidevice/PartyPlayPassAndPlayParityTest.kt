@@ -141,7 +141,11 @@ class PartyPlayPassAndPlayParityTest {
     ) {
         // Setup → PublicIntro → RulesBriefing → CharacterReveal → Round(1..3) → FinalVote → Reveal → PostGame
         driver(WhodunitAction.AssignRoles(seed))
+        // Wave 9H readiness gating: ack intro before AdvanceFromIntro,
+        // ack briefing before the final AdvanceBriefingCard.
+        for (player in players) driver(WhodunitAction.AcknowledgeIntro(player.id))
         driver(WhodunitAction.AdvanceFromIntro)
+        for (player in players) driver(WhodunitAction.AcknowledgeBriefing(player.id))
         for (i in 1..4) driver(WhodunitAction.AdvanceBriefingCard(i))
         for (player in players) {
             driver(WhodunitAction.StartCharacterReveal(player.id))

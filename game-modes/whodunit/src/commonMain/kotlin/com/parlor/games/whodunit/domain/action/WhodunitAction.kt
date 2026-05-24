@@ -30,6 +30,14 @@ sealed interface WhodunitAction : GameAction {
     @Serializable data class OpenPrivateReview(val playerId: PlayerId) : WhodunitAction
     @Serializable data class CloseHide(val playerId: PlayerId) : WhodunitAction
 
+    // --- Party Play readiness (Wave 9H) ---
+    /** Peer signals they've read the case intro. SelfActor. */
+    @Serializable data class AcknowledgeIntro(val playerId: PlayerId) : WhodunitAction
+    /** Peer signals they're ready to start after the briefing. SelfActor. */
+    @Serializable data class AcknowledgeBriefing(val playerId: PlayerId) : WhodunitAction
+    /** Peer signals they've viewed their assigned role. SelfActor. */
+    @Serializable data class ConfirmRoleViewed(val playerId: PlayerId) : WhodunitAction
+
     // --- Rounds (Phase 5) ---
     @Serializable data object RevealNextClue : WhodunitAction
     @Serializable data class SubmitStructuredAction(val payload: StructuredActionPayload) : WhodunitAction

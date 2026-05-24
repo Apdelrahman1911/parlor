@@ -17,6 +17,8 @@ import com.parlor.engine.session.SessionConfig
 import com.parlor.engine.state.Player
 import com.parlor.games.whodunit.WhodunitDefinition
 import com.parlor.games.whodunit.WhodunitIds
+import com.parlor.games.whodunit.ackBriefingForAll
+import com.parlor.games.whodunit.ackIntroForAll
 import com.parlor.games.whodunit.content.BundledWhodunitCases
 import com.parlor.games.whodunit.content.WhodunitCase
 import com.parlor.games.whodunit.content.WhodunitPayloadValidator
@@ -157,9 +159,11 @@ class MultiDevicePartyPlayContractTest {
         // -- Authority case 2: SelfActor with impersonated actor is rejected.
         // Bob tries to send CompleteCharacterReveal claiming to be Alice.
         // Host advances to CharacterReveal first so the action is otherwise valid.
+        hostSession.ackIntroForAll(players)
         hostSession.submit(WhodunitAction.AdvanceFromIntro)
         runCurrent()
         // Skip through briefing.
+        hostSession.ackBriefingForAll(players)
         var safety = 0
         while (hostSession.publicState.value.state.phase is WhodunitPhase.RulesBriefing && safety < 10) {
             hostSession.submit(WhodunitAction.AdvanceBriefingCard(safety + 1))
