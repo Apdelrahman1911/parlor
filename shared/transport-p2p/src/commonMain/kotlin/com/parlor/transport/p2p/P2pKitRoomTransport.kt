@@ -18,7 +18,6 @@ import dev.p2pkit.core.P2pKit
 import dev.p2pkit.core.P2pMessage
 import dev.p2pkit.core.P2pSession
 import dev.p2pkit.core.Peer
-import dev.p2pkit.transport.lan.lan
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
@@ -58,6 +57,7 @@ class P2pKitRoomTransport(
     private val appId: AppId,
     private val deviceName: String,
     private val scope: CoroutineScope,
+    private val kitFactory: P2pKitFactory,
     private val json: Json = Json {
         ignoreUnknownKeys = false
         isLenient = false
@@ -74,14 +74,13 @@ class P2pKitRoomTransport(
     override suspend fun host(config: HostConfig): Result<LocalRoom, NetError> {
         return runCatching {
             val roomCode = generateRoomCode()
-            val kit = P2pKit.create {
-                this.appId = this@P2pKitRoomTransport.appId
-                // Publish the room code in the deviceName so joining peers can
-                // discriminate without a separate advertise-metadata API in
-                // P2pKit v0.3. Joining peers match by exact prefix.
-                this.deviceName = "${P2P_ROOM_PREFIX}$roomCode|$deviceName"
-                transports { lan() }
-            }
+            // The room code rides in the deviceName so joining peers can match
+            // by prefix without a separate advertise-metadata API in
+            // P2pKit v0.3.
+            val kit = kitFactory.createKit(
+                appId = appId,
+                deviceName = "${P2P_ROOM_PREFIX}$roomCode|$deviceName",
+            )
             kit.start()
             kit.startAdvertising()
             HostP2pRoom(
@@ -100,11 +99,7 @@ class P2pKitRoomTransport(
 
     override suspend fun join(code: String, displayName: String): Result<LocalRoom, NetError> {
         return runCatching {
-            val kit = P2pKit.create {
-                this.appId = this@P2pKitRoomTransport.appId
-                this.deviceName = displayName
-                transports { lan() }
-            }
+            val kit = kitFactory.createKit(appId = appId, deviceName = displayName)
             kit.start()
             kit.startDiscovery()
             // Wait for a peer whose advertised name carries our prefix + code.

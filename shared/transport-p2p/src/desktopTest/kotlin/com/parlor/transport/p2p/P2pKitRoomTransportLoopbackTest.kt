@@ -14,6 +14,8 @@ import com.parlor.networking.room.RoomInfo
 import com.parlor.networking.room.SendTarget
 import com.parlor.networking.transport.HostConfig
 import dev.p2pkit.core.AppId
+import dev.p2pkit.core.P2pKit
+import dev.p2pkit.transport.lan.lan
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -59,6 +61,14 @@ class P2pKitRoomTransportLoopbackTest {
     private val testScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
     private val rooms: MutableList<LocalRoom> = mutableListOf()
 
+    private val testKitFactory = object : P2pKitFactory {
+        override fun createKit(appId: AppId, deviceName: String) = P2pKit.create {
+            this.appId = appId
+            this.deviceName = deviceName
+            transports { lan() }
+        }
+    }
+
     @AfterTest
     fun teardown() {
         runBlocking {
@@ -78,6 +88,7 @@ class P2pKitRoomTransportLoopbackTest {
             appId = appId,
             deviceName = "host-device",
             scope = testScope,
+            kitFactory = testKitFactory,
         )
         val hostResult = withTimeout(15.seconds) {
             hostTransport.host(HostConfig(roomDisplayName = "Test Room"))
@@ -98,8 +109,8 @@ class P2pKitRoomTransportLoopbackTest {
     fun peer_can_join_a_hosted_room_and_membership_appears_on_host() = runBlocking {
         val appId = AppId("com.parlor.p2p.test.${randomTag()}")
 
-        val hostTransport = P2pKitRoomTransport(appId, "host-device", testScope)
-        val peerTransport = P2pKitRoomTransport(appId, "peer-alice", testScope)
+        val hostTransport = P2pKitRoomTransport(appId, "host-device", testScope, testKitFactory)
+        val peerTransport = P2pKitRoomTransport(appId, "peer-alice", testScope, testKitFactory)
 
         val hostRoom = (
             withTimeout(15.seconds) {
@@ -130,8 +141,8 @@ class P2pKitRoomTransportLoopbackTest {
     fun peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back() = runBlocking {
         val appId = AppId("com.parlor.p2p.test.${randomTag()}")
 
-        val hostTransport = P2pKitRoomTransport(appId, "host-device", testScope)
-        val peerTransport = P2pKitRoomTransport(appId, "peer-alice", testScope)
+        val hostTransport = P2pKitRoomTransport(appId, "host-device", testScope, testKitFactory)
+        val peerTransport = P2pKitRoomTransport(appId, "peer-alice", testScope, testKitFactory)
 
         val hostRoom = (
             withTimeout(15.seconds) {
@@ -177,9 +188,9 @@ class P2pKitRoomTransportLoopbackTest {
     fun host_broadcast_reaches_every_peer() = runBlocking {
         val appId = AppId("com.parlor.p2p.test.${randomTag()}")
 
-        val hostTransport = P2pKitRoomTransport(appId, "host-device", testScope)
-        val peer1Transport = P2pKitRoomTransport(appId, "peer-1", testScope)
-        val peer2Transport = P2pKitRoomTransport(appId, "peer-2", testScope)
+        val hostTransport = P2pKitRoomTransport(appId, "host-device", testScope, testKitFactory)
+        val peer1Transport = P2pKitRoomTransport(appId, "peer-1", testScope, testKitFactory)
+        val peer2Transport = P2pKitRoomTransport(appId, "peer-2", testScope, testKitFactory)
 
         val hostRoom = (
             withTimeout(15.seconds) {
