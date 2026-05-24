@@ -14,6 +14,11 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.contentDescription
@@ -37,33 +42,42 @@ import com.parlor.app.resources.home_library_card_eyebrow
 import com.parlor.app.resources.home_library_card_subtitle
 import com.parlor.app.resources.home_library_card_title
 import com.parlor.app.resources.home_multiplayer_disabled
-import com.parlor.app.resources.home_multiplayer_eyebrow
-import com.parlor.app.resources.home_resume_section_label
+import com.parlor.app.resources.home_play_section_host_subtitle
+import com.parlor.app.resources.home_play_section_host_title
+import com.parlor.app.resources.home_play_section_join_subtitle
+import com.parlor.app.resources.home_play_section_join_title
+import com.parlor.app.resources.home_play_section_resume_eyebrow
+import com.parlor.app.resources.home_play_section_session_eyebrow
 import com.parlor.app.resources.home_resume_tile_description
 import com.parlor.app.resources.home_resume_tile_subtitle
 import com.parlor.app.resources.home_resume_tile_title
-import com.parlor.app.resources.home_tonights_game_label
-import com.parlor.app.resources.home_whodunit_subtitle
-import com.parlor.app.resources.home_whodunit_tagline
+import com.parlor.app.resources.home_tab_library
+import com.parlor.app.resources.home_tab_library_description
+import com.parlor.app.resources.home_tab_play
+import com.parlor.app.resources.home_tab_play_description
 import com.parlor.app.resources.home_whodunit_title
 import com.parlor.app.resources.settings_open
 import com.parlor.app.resources.settings_title
 import com.parlor.core.ids.SessionId
 import com.parlor.designsystem.backdrop.HeroBackdrop
+import com.parlor.designsystem.components.EyebrowLabel
+import com.parlor.designsystem.components.ParlorBottomTab
+import com.parlor.designsystem.components.ParlorBottomTabBar
 import com.parlor.designsystem.components.ParlorButton
+import com.parlor.designsystem.components.ParlorButtonVariant
 import com.parlor.designsystem.components.ParlorCard
 import com.parlor.designsystem.theme.ParlorTheme
 import org.jetbrains.compose.resources.stringResource
 
 /**
- * Parlor Home — atmosphere from [HeroBackdrop] (ember bloom, candle flicker,
- * vignette), content shows the *Tonight's Game* card and a small *All Games*
- * grid with future tiles greyed out. A small Settings entry sits in the top
- * row.
+ * Home — split into two tabs for clarity.
  *
- * Phase 6.2: when [unfinishedSessions] is non-empty, a *Continue Where You
- * Left Off* section is rendered above *Tonight's Game*, with one tile per
- * unfinished session. Tapping a tile calls [onResume] with that session id.
+ *  - **Library** (default): "Tonight's Game" hero card + All Games grid.
+ *    For browsing and starting solo or hosted sessions.
+ *  - **Play**: resume in-progress session (if any) + Host card + Join
+ *    card. For acting on a real-time session.
+ *
+ * Settings remains a top-right text action above the tab content.
  */
 @Composable
 fun HomeScreen(
@@ -79,109 +93,170 @@ fun HomeScreen(
 ) {
     val settingsLabel = stringResource(Res.string.settings_title)
     val settingsDescription = stringResource(Res.string.settings_open)
+    val libraryLabel = stringResource(Res.string.home_tab_library)
+    val libraryDescription = stringResource(Res.string.home_tab_library_description)
+    val playLabel = stringResource(Res.string.home_tab_play)
+    val playDescription = stringResource(Res.string.home_tab_play_description)
+
+    var selectedTab by rememberSaveable { mutableStateOf(0) }
 
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(ParlorTheme.spacing.xl),
-            verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.xl),
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                EyebrowLabel(text = stringResource(Res.string.home_eyebrow))
-                Spacer(modifier = Modifier.weight(1f))
-                Text(
-                    text = settingsLabel.uppercase(),
-                    style = ParlorTheme.typography.labelSmall,
-                    color = ParlorTheme.colors.accentEmber,
+        Box(modifier = Modifier.fillMaxSize()) {
+            Column(modifier = Modifier.fillMaxSize()) {
+                // Top bar: eyebrow + settings.
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
-                        .semantics { contentDescription = settingsDescription }
-                        .clickable(onClick = onSettings)
-                        .padding(ParlorTheme.spacing.s),
+                        .fillMaxWidth()
+                        .padding(
+                            start = ParlorTheme.spacing.xl,
+                            end = ParlorTheme.spacing.xl,
+                            top = ParlorTheme.spacing.xl,
+                        ),
+                ) {
+                    EyebrowLabel(text = stringResource(Res.string.home_eyebrow))
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(
+                        text = settingsLabel.uppercase(),
+                        style = ParlorTheme.typography.labelSmall,
+                        color = ParlorTheme.colors.accentEmber,
+                        modifier = Modifier
+                            .semantics { contentDescription = settingsDescription }
+                            .clickable(onClick = onSettings)
+                            .padding(ParlorTheme.spacing.s),
+                    )
+                }
+
+                Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
+                    when (selectedTab) {
+                        0 -> LibraryTab(
+                            onBrowseCases = onBrowseCases,
+                            onTileSelected = onTileSelected,
+                        )
+                        else -> PlayTab(
+                            multiplayerEnabled = multiplayerEnabled,
+                            unfinishedSessions = unfinishedSessions,
+                            onResume = onResume,
+                            onHost = onHost,
+                            onJoin = onJoin,
+                        )
+                    }
+                }
+
+                ParlorBottomTabBar(
+                    tabs = listOf(
+                        ParlorBottomTab(label = libraryLabel, contentDescription = libraryDescription),
+                        ParlorBottomTab(label = playLabel, contentDescription = playDescription),
+                    ),
+                    selectedIndex = selectedTab,
+                    onTabSelected = { selectedTab = it },
                 )
             }
-            Spacer(modifier = Modifier.height(ParlorTheme.spacing.xs))
-
-            if (unfinishedSessions.isNotEmpty()) {
-                EyebrowLabel(text = stringResource(Res.string.home_resume_section_label))
-                ResumeSection(
-                    sessions = unfinishedSessions,
-                    title = stringResource(Res.string.home_resume_tile_title),
-                    subtitle = stringResource(Res.string.home_resume_tile_subtitle),
-                    contentDescription = stringResource(Res.string.home_resume_tile_description),
-                    onResume = onResume,
-                )
-            }
-
-            TonightsGameCard(
-                eyebrow = stringResource(Res.string.home_library_card_eyebrow),
-                title = stringResource(Res.string.home_library_card_title),
-                subtitle = stringResource(Res.string.home_whodunit_title),
-                tagline = stringResource(Res.string.home_library_card_subtitle),
-                beginLabel = stringResource(Res.string.home_library_card_action),
-                beginContentDescription = stringResource(Res.string.home_library_card_description),
-                onBegin = onBrowseCases,
-            )
-
-            // Phase 8 entry point. The section renders regardless of build
-            // flavour so testers can see whether multiplayer is wired in —
-            // when disabled, the buttons are present but show a clear hint.
-            EyebrowLabel(text = stringResource(Res.string.home_multiplayer_eyebrow))
-            if (multiplayerEnabled) {
-                ParlorButton(
-                    label = stringResource(Res.string.home_host),
-                    contentDescription = stringResource(Res.string.home_host_description),
-                    onClick = onHost,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-                ParlorButton(
-                    label = stringResource(Res.string.home_join),
-                    contentDescription = stringResource(Res.string.home_join_description),
-                    onClick = onJoin,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-            } else {
-                Text(
-                    text = stringResource(Res.string.home_multiplayer_disabled),
-                    style = ParlorTheme.typography.bodyMedium,
-                    color = ParlorTheme.colors.textTertiary,
-                )
-            }
-
-            EyebrowLabel(text = stringResource(Res.string.home_all_games_label))
-            AllGamesGrid(
-                whodunitTitle = stringResource(Res.string.home_whodunit_title),
-                futurePlaceholderTitle = stringResource(Res.string.home_future_game_title),
-                featuredState = stringResource(Res.string.home_featured_state),
-                comingSoonState = stringResource(Res.string.home_coming_soon_state),
-            )
         }
     }
 }
+
+// =================================================================== Library tab ==
 
 @Composable
-private fun ResumeSection(
-    sessions: List<SessionId>,
-    title: String,
-    subtitle: String,
-    contentDescription: String,
-    onResume: (SessionId) -> Unit,
+private fun LibraryTab(
+    onBrowseCases: () -> Unit,
+    onTileSelected: (String) -> Unit,
 ) {
-    Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s)) {
-        sessions.forEach { sessionId ->
-            ResumeTile(
-                title = title,
-                subtitle = subtitle,
-                contentDescription = contentDescription,
-                onTap = { onResume(sessionId) },
-            )
-        }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(
+                start = ParlorTheme.spacing.xl,
+                end = ParlorTheme.spacing.xl,
+                top = ParlorTheme.spacing.l,
+                bottom = ParlorTheme.spacing.xl,
+            ),
+        verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.xl),
+    ) {
+        TonightsGameCard(
+            eyebrow = stringResource(Res.string.home_library_card_eyebrow),
+            title = stringResource(Res.string.home_library_card_title),
+            subtitle = stringResource(Res.string.home_whodunit_title),
+            tagline = stringResource(Res.string.home_library_card_subtitle),
+            beginLabel = stringResource(Res.string.home_library_card_action),
+            beginContentDescription = stringResource(Res.string.home_library_card_description),
+            onBegin = onBrowseCases,
+        )
+
+        EyebrowLabel(text = stringResource(Res.string.home_all_games_label), accent = false)
+        AllGamesGrid(
+            whodunitTitle = stringResource(Res.string.home_whodunit_title),
+            futurePlaceholderTitle = stringResource(Res.string.home_future_game_title),
+            featuredState = stringResource(Res.string.home_featured_state),
+            comingSoonState = stringResource(Res.string.home_coming_soon_state),
+        )
     }
 }
+
+// =================================================================== Play tab ==
+
+@Composable
+private fun PlayTab(
+    multiplayerEnabled: Boolean,
+    unfinishedSessions: List<SessionId>,
+    onResume: (SessionId) -> Unit,
+    onHost: () -> Unit,
+    onJoin: () -> Unit,
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(
+                start = ParlorTheme.spacing.xl,
+                end = ParlorTheme.spacing.xl,
+                top = ParlorTheme.spacing.l,
+                bottom = ParlorTheme.spacing.xl,
+            ),
+        verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.xl),
+    ) {
+        if (unfinishedSessions.isNotEmpty()) {
+            EyebrowLabel(text = stringResource(Res.string.home_play_section_resume_eyebrow), accent = false)
+            Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s)) {
+                unfinishedSessions.forEach { sessionId ->
+                    ResumeTile(
+                        title = stringResource(Res.string.home_resume_tile_title),
+                        subtitle = stringResource(Res.string.home_resume_tile_subtitle),
+                        contentDescription = stringResource(Res.string.home_resume_tile_description),
+                        onTap = { onResume(sessionId) },
+                    )
+                }
+            }
+        }
+
+        EyebrowLabel(text = stringResource(Res.string.home_play_section_session_eyebrow), accent = false)
+
+        SessionActionCard(
+            title = stringResource(Res.string.home_play_section_host_title),
+            subtitle = stringResource(Res.string.home_play_section_host_subtitle),
+            actionLabel = stringResource(Res.string.home_host),
+            actionDescription = stringResource(Res.string.home_host_description),
+            onAction = onHost,
+            enabled = multiplayerEnabled,
+            disabledHint = stringResource(Res.string.home_multiplayer_disabled).takeUnless { multiplayerEnabled },
+        )
+
+        SessionActionCard(
+            title = stringResource(Res.string.home_play_section_join_title),
+            subtitle = stringResource(Res.string.home_play_section_join_subtitle),
+            actionLabel = stringResource(Res.string.home_join),
+            actionDescription = stringResource(Res.string.home_join_description),
+            onAction = onJoin,
+            enabled = multiplayerEnabled,
+            disabledHint = null, // host card already explains the state
+            secondary = true,
+        )
+    }
+}
+
+// =================================================================== Shared cards ==
 
 @Composable
 private fun ResumeTile(
@@ -195,7 +270,6 @@ private fun ResumeTile(
             .fillMaxWidth()
             .semantics { this.contentDescription = contentDescription }
             .clickable(onClick = onTap),
-        elevation = ParlorTheme.elevation.medium,
         cornerRadius = ParlorTheme.radii.card,
         contentPadding = ParlorTheme.spacing.l,
     ) {
@@ -215,12 +289,51 @@ private fun ResumeTile(
 }
 
 @Composable
-private fun EyebrowLabel(text: String) {
-    Text(
-        text = text.uppercase(),
-        style = ParlorTheme.typography.labelSmall,
-        color = ParlorTheme.colors.textSecondary,
-    )
+private fun SessionActionCard(
+    title: String,
+    subtitle: String,
+    actionLabel: String,
+    actionDescription: String,
+    onAction: () -> Unit,
+    enabled: Boolean,
+    disabledHint: String?,
+    secondary: Boolean = false,
+) {
+    ParlorCard(
+        modifier = Modifier.fillMaxWidth(),
+        cornerRadius = ParlorTheme.radii.elevated,
+        contentPadding = ParlorTheme.spacing.xl,
+        hero = !secondary && enabled,
+    ) {
+        Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m)) {
+            Text(
+                text = title,
+                style = ParlorTheme.typography.displayMedium,
+                color = ParlorTheme.colors.textPrimary,
+            )
+            Text(
+                text = subtitle,
+                style = ParlorTheme.typography.bodyLarge,
+                color = ParlorTheme.colors.textSecondary,
+            )
+            if (disabledHint != null) {
+                Text(
+                    text = disabledHint,
+                    style = ParlorTheme.typography.bodyMedium,
+                    color = ParlorTheme.colors.textTertiary,
+                )
+            }
+            Spacer(modifier = Modifier.height(ParlorTheme.spacing.s))
+            ParlorButton(
+                label = actionLabel,
+                contentDescription = actionDescription,
+                onClick = onAction,
+                modifier = Modifier.fillMaxWidth(),
+                variant = if (secondary) ParlorButtonVariant.Secondary else ParlorButtonVariant.Primary,
+                enabled = enabled,
+            )
+        }
+    }
 }
 
 @Composable
@@ -235,16 +348,12 @@ private fun TonightsGameCard(
 ) {
     ParlorCard(
         modifier = Modifier.fillMaxWidth(),
-        elevation = ParlorTheme.elevation.dramatic,
         cornerRadius = ParlorTheme.radii.elevated,
         contentPadding = ParlorTheme.spacing.xl,
+        hero = true,
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m)) {
-            Text(
-                text = eyebrow,
-                style = ParlorTheme.typography.labelSmall,
-                color = ParlorTheme.colors.textSecondary,
-            )
+            EyebrowLabel(text = eyebrow, accent = false)
             Text(
                 text = title,
                 style = ParlorTheme.typography.displayHero,
@@ -265,6 +374,7 @@ private fun TonightsGameCard(
                 label = beginLabel,
                 contentDescription = beginContentDescription,
                 onClick = onBegin,
+                modifier = Modifier.fillMaxWidth(),
             )
         }
     }
@@ -278,17 +388,21 @@ private fun AllGamesGrid(
     comingSoonState: String,
 ) {
     Row(horizontalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m)) {
-        GameTile(title = whodunitTitle, state = featuredState, isActive = true)
-        GameTile(title = "$futurePlaceholderTitle 2", state = comingSoonState, isActive = false)
-        GameTile(title = "$futurePlaceholderTitle 3", state = comingSoonState, isActive = false)
+        GameTile(title = whodunitTitle, state = featuredState, isActive = true, modifier = Modifier.weight(1f))
+        GameTile(title = "$futurePlaceholderTitle 2", state = comingSoonState, isActive = false, modifier = Modifier.weight(1f))
+        GameTile(title = "$futurePlaceholderTitle 3", state = comingSoonState, isActive = false, modifier = Modifier.weight(1f))
     }
 }
 
 @Composable
-private fun GameTile(title: String, state: String, isActive: Boolean) {
+private fun GameTile(
+    title: String,
+    state: String,
+    isActive: Boolean,
+    modifier: Modifier = Modifier,
+) {
     ParlorCard(
-        modifier = Modifier.fillMaxWidth(0.32f),
-        elevation = if (isActive) ParlorTheme.elevation.medium else ParlorTheme.elevation.low,
+        modifier = modifier,
         cornerRadius = ParlorTheme.radii.card,
         contentPadding = ParlorTheme.spacing.l,
     ) {
@@ -296,7 +410,7 @@ private fun GameTile(title: String, state: String, isActive: Boolean) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
                     text = title,
-                    style = ParlorTheme.typography.headingLarge,
+                    style = ParlorTheme.typography.headingMedium,
                     color = if (isActive) ParlorTheme.colors.textPrimary else ParlorTheme.colors.textTertiary,
                     textAlign = TextAlign.Center,
                 )
