@@ -37,6 +37,7 @@ import com.parlor.core.ids.ModeId
 import com.parlor.core.result.DataError
 import com.parlor.core.result.Result
 import com.parlor.designsystem.backdrop.HeroBackdrop
+import com.parlor.designsystem.components.CandleFlame
 import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorButtonVariant
@@ -168,13 +169,20 @@ private fun PeerSessionWithCase(
 @Composable
 private fun PeerConnectingState(code: String, modifier: Modifier = Modifier) {
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Column(
+            modifier = Modifier.fillMaxSize().padding(ParlorTheme.spacing.xl),
+            verticalArrangement = Arrangement.spacedBy(
+                ParlorTheme.spacing.l,
+                Alignment.CenterVertically,
+            ),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            CandleFlame(size = androidx.compose.ui.unit.Dp(72f))
             Text(
                 text = stringResource(Res.string.peer_connecting_format).replace("%1\$s", code),
                 style = ParlorTheme.typography.displayMedium,
                 color = ParlorTheme.colors.textPrimary,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(ParlorTheme.spacing.xl),
             )
         }
     }
@@ -240,13 +248,20 @@ private fun PeerWaitingForHostStart(
 @Composable
 private fun PeerLoadingCase(modifier: Modifier = Modifier) {
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Column(
+            modifier = Modifier.fillMaxSize().padding(ParlorTheme.spacing.xl),
+            verticalArrangement = Arrangement.spacedBy(
+                ParlorTheme.spacing.l,
+                Alignment.CenterVertically,
+            ),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            CandleFlame(size = androidx.compose.ui.unit.Dp(72f))
             Text(
                 text = "Loading the case…",
                 style = ParlorTheme.typography.displayMedium,
                 color = ParlorTheme.colors.textPrimary,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(ParlorTheme.spacing.xl),
             )
         }
     }

@@ -41,6 +41,7 @@ import com.parlor.core.random.RandomSource
 import com.parlor.core.result.DataError
 import com.parlor.core.result.Result
 import com.parlor.designsystem.backdrop.HeroBackdrop
+import com.parlor.designsystem.components.CandleFlame
 import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorButtonVariant
@@ -234,13 +235,20 @@ private fun HostLobbyContent(
 @Composable
 private fun HostLoadingState(modifier: Modifier = Modifier) {
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Column(
+            modifier = Modifier.fillMaxSize().padding(ParlorTheme.spacing.xl),
+            verticalArrangement = Arrangement.spacedBy(
+                ParlorTheme.spacing.l,
+                Alignment.CenterVertically,
+            ),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            CandleFlame(size = androidx.compose.ui.unit.Dp(72f))
             Text(
                 text = stringResource(Res.string.host_starting),
                 style = ParlorTheme.typography.displayMedium,
                 color = ParlorTheme.colors.textPrimary,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(ParlorTheme.spacing.xl),
             )
         }
     }

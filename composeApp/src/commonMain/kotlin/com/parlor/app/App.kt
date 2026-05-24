@@ -1,5 +1,12 @@
 package com.parlor.app
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -110,7 +117,40 @@ fun App() {
                 screen = AppScreen.Home
             }
 
-            when (screen) {
+            // Screen-transition: slide-and-fade. Forward nav (advancing
+            // along the screen enum) slides incoming from the right; back
+            // nav slides incoming from the left. AnimatedContent reads the
+            // depth of `screen` to decide direction; we treat Home as the
+            // root.
+            val screenDepth: (AppScreen) -> Int = { s ->
+                when (s) {
+                    AppScreen.Home -> 0
+                    AppScreen.SoloCasePicker, AppScreen.HostPermission,
+                    AppScreen.JoinPermission, AppScreen.Settings -> 1
+                    AppScreen.HostName, AppScreen.JoinName -> 2
+                    AppScreen.HostCasePicker, AppScreen.JoinPrompt -> 3
+                    AppScreen.HostMode -> 4
+                    AppScreen.HostLobby, AppScreen.PeerLobby -> 5
+                    AppScreen.Whodunit -> 6
+                }
+            }
+
+            AnimatedContent(
+                targetState = screen,
+                transitionSpec = {
+                    val forward = screenDepth(targetState) >= screenDepth(initialState)
+                    val slideMagnitude = if (forward) 1 else -1
+                    (slideInHorizontally(animationSpec = tween(320)) { full ->
+                        slideMagnitude * full / 6
+                    } + fadeIn(animationSpec = tween(320))) togetherWith
+                        (slideOutHorizontally(animationSpec = tween(280)) { full ->
+                            -slideMagnitude * full / 8
+                        } + fadeOut(animationSpec = tween(220)))
+                },
+                modifier = Modifier.fillMaxSize(),
+                label = "parlor-screen-transition",
+            ) { current ->
+            when (current) {
                 AppScreen.Home -> HomeScreen(
                     onTileSelected = { /* legacy tile id; replaced by case picker */ },
                     onSettings = { screen = AppScreen.Settings },
@@ -268,6 +308,7 @@ fun App() {
                     onBack = backToHome,
                     modifier = Modifier.fillMaxSize(),
                 )
+            }
             }
         }
     }

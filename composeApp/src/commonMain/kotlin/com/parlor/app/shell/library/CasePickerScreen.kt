@@ -3,6 +3,7 @@ package com.parlor.app.shell.library
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,10 +20,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.text.style.TextAlign
 import com.parlor.app.resources.Res
 import com.parlor.app.resources.case_picker_back
@@ -155,17 +158,26 @@ private fun CaseRow(summary: CaseSummary, onClick: () -> Unit) {
         "%1\$s",
         summary.supportedModes.joinToString(", "),
     )
+    val interaction = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }
+    val isPressed by interaction.collectIsPressedAsState()
+    val pressScale by androidx.compose.animation.core.animateFloatAsState(
+        targetValue = if (isPressed) 0.98f else 1f,
+        animationSpec = androidx.compose.animation.core.spring(dampingRatio = 0.6f, stiffness = 600f),
+        label = "case-press",
+    )
+    val borderColor = if (isPressed) colors.accentEmber else colors.borderElevated
     Box(
         modifier = Modifier
             .fillMaxWidth()
+            .scale(pressScale)
             .clip(RoundedCornerShape(ParlorTheme.radii.elevated))
             .background(colors.surfaceElevated)
             .border(
                 width = androidx.compose.ui.unit.Dp(1f),
-                color = colors.borderElevated,
+                color = borderColor,
                 shape = RoundedCornerShape(ParlorTheme.radii.elevated),
             )
-            .clickable(onClick = onClick),
+            .clickable(interactionSource = interaction, indication = null, onClick = onClick),
     ) {
         Column(
             modifier = Modifier

@@ -3,6 +3,10 @@ package com.parlor.games.whodunit.ui.screens.vote
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.draw.scale
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -94,13 +98,22 @@ fun VoteBallotScreen(
 @Composable
 private fun CandidateRow(name: String, onClick: () -> Unit) {
     val colors = ParlorTheme.colors
+    val interaction = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }
+    val isPressed by interaction.collectIsPressedAsState()
+    val pressScale by androidx.compose.animation.core.animateFloatAsState(
+        targetValue = if (isPressed) 0.97f else 1f,
+        animationSpec = androidx.compose.animation.core.spring(dampingRatio = 0.6f, stiffness = 700f),
+        label = "candidate-press",
+    )
+    val borderColor = if (isPressed) colors.accentEmber else colors.borderElevated
     Box(
         modifier = Modifier
             .fillMaxWidth()
+            .scale(pressScale)
             .clip(RoundedCornerShape(ParlorTheme.radii.card))
             .background(colors.surfaceElevated)
-            .border(1.dp, colors.borderElevated, RoundedCornerShape(ParlorTheme.radii.card))
-            .clickable(onClick = onClick)
+            .border(1.dp, borderColor, RoundedCornerShape(ParlorTheme.radii.card))
+            .clickable(interactionSource = interaction, indication = null, onClick = onClick)
             .padding(ParlorTheme.spacing.l),
         contentAlignment = Alignment.CenterStart,
     ) {

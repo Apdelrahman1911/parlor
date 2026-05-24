@@ -37,6 +37,8 @@ import com.parlor.core.result.DataError
 import com.parlor.core.result.Result
 import com.parlor.core.time.Clock
 import com.parlor.designsystem.backdrop.HeroBackdrop
+import com.parlor.designsystem.components.CandleFlame
+import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorButtonVariant
 import com.parlor.designsystem.theme.ParlorTheme
@@ -220,12 +222,16 @@ private suspend fun loadResumedSession(
 @Composable
 private fun LoadingScreen(modifier: Modifier = Modifier) {
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text(
-                text = "…",
-                style = ParlorTheme.typography.displayHero,
-                color = ParlorTheme.colors.accentEmber,
-            )
+        Column(
+            modifier = Modifier.fillMaxSize().padding(ParlorTheme.spacing.xl),
+            verticalArrangement = Arrangement.spacedBy(
+                ParlorTheme.spacing.l,
+                Alignment.CenterVertically,
+            ),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            CandleFlame(size = androidx.compose.ui.unit.Dp(72f))
+            EyebrowLabel(text = "Setting the table")
         }
     }
 }
@@ -240,15 +246,18 @@ private fun ErrorScreen(error: DataError, onBack: () -> Unit, modifier: Modifier
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l, Alignment.CenterVertically),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+            EyebrowLabel(text = "Case file misplaced")
             Text(
-                text = "Couldn't load the case.",
+                text = "We couldn't pull the case from the shelves.",
                 style = ParlorTheme.typography.displayMedium,
                 color = ParlorTheme.colors.textPrimary,
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center,
             )
             Text(
                 text = error.toString(),
                 style = ParlorTheme.typography.bodyMedium,
                 color = ParlorTheme.colors.textTertiary,
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center,
             )
             ParlorButton(
                 label = "Back",
