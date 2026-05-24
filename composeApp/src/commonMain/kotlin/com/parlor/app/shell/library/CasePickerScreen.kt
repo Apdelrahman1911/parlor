@@ -158,26 +158,17 @@ private fun CaseRow(summary: CaseSummary, onClick: () -> Unit) {
         "%1\$s",
         summary.supportedModes.joinToString(", "),
     )
-    val interaction = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }
-    val isPressed by interaction.collectIsPressedAsState()
-    val pressScale by androidx.compose.animation.core.animateFloatAsState(
-        targetValue = if (isPressed) 0.98f else 1f,
-        animationSpec = androidx.compose.animation.core.spring(dampingRatio = 0.6f, stiffness = 600f),
-        label = "case-press",
-    )
-    val borderColor = if (isPressed) colors.accentEmber else colors.borderElevated
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .scale(pressScale)
             .clip(RoundedCornerShape(ParlorTheme.radii.elevated))
             .background(colors.surfaceElevated)
             .border(
                 width = androidx.compose.ui.unit.Dp(1f),
-                color = borderColor,
+                color = colors.borderElevated,
                 shape = RoundedCornerShape(ParlorTheme.radii.elevated),
             )
-            .clickable(interactionSource = interaction, indication = null, onClick = onClick),
+            .clickable(onClick = onClick),
     ) {
         Column(
             modifier = Modifier

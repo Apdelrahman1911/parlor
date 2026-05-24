@@ -110,14 +110,6 @@ fun ParlorButton(
         Color.Transparent
     }
 
-    // Spring scale: 1.0 at rest, 0.97 when pressed. Gives a tactile
-    // "I felt it" response that doesn't slow down the user.
-    val pressScale by animateFloatAsState(
-        targetValue = if (isPressed && interactive) 0.97f else 1f,
-        animationSpec = spring(dampingRatio = 0.6f, stiffness = 700f),
-        label = "press-scale",
-    )
-
     val shape = RoundedCornerShape(ParlorTheme.radii.subtle)
     val solidBackground = variant == ParlorButtonVariant.Primary ||
         variant == ParlorButtonVariant.Destructive
@@ -125,7 +117,6 @@ fun ParlorButton(
 
     Box(
         modifier = modifier
-            .scale(pressScale)
             .heightIn(min = 52.dp)
             .shadow(elevation = lift, shape = shape, clip = false)
             .clip(shape)
