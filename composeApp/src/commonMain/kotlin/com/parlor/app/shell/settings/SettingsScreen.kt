@@ -198,8 +198,8 @@ private fun OptionRow(
         if (selected) {
             Box(
                 modifier = Modifier
-                    .size(10.dp)
-                    .clip(RoundedCornerShape(50))
+                    .size(ParlorTheme.iconSize.xxs)
+                    .clip(RoundedCornerShape(ParlorTheme.radii.pill))
                     .background(colors.accentEmber),
             )
         }

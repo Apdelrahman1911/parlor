@@ -64,6 +64,14 @@ data class ParlorColors(
     val transparent: Color,
     /** Modal overlay scrim. Use instead of `Color.Black.copy(alpha=...)`. */
     val overlayScrim: Color,
+    /** Cover-screen body. Pure black in both modes — used by the "hide the dossier" beats. */
+    val coverScreen: Color,
+    /** Light text colour readable on [coverScreen]. Identical across light + dark palettes. */
+    val coverScreenTextPrimary: Color,
+    /** Secondary text on [coverScreen]. */
+    val coverScreenTextSecondary: Color,
+    /** Tertiary / hint text on [coverScreen]. */
+    val coverScreenTextTertiary: Color,
 )
 
 /**
@@ -99,6 +107,10 @@ val CozyNoirPalette = ParlorColors(
 
     transparent = Color(0x00000000),
     overlayScrim = Color(0xD9000000),
+    coverScreen = Color(0xFF000000),
+    coverScreenTextPrimary = Color(0xFFFAFAFA),
+    coverScreenTextSecondary = Color(0xFFB6B6BE),
+    coverScreenTextTertiary = Color(0xFF7A7A82),
 )
 
 /**
@@ -134,6 +146,10 @@ val LightCozyNoirPalette = ParlorColors(
 
     transparent = Color(0x00000000),
     overlayScrim = Color(0x99000000),
+    coverScreen = Color(0xFF000000),
+    coverScreenTextPrimary = Color(0xFFFAFAFA),
+    coverScreenTextSecondary = Color(0xFFB6B6BE),
+    coverScreenTextTertiary = Color(0xFF7A7A82),
 )
 
 /** True iff the palette is the light variant (used by the theme to pick a Material 3 scheme). */

@@ -113,13 +113,13 @@ private fun PlayerCountSlot(
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
-            .size(64.dp)
+            .size(ParlorTheme.iconSize.hero)
             .clip(RoundedCornerShape(ParlorTheme.radii.card))
             .background(
                 if (enabled) colors.surfaceElevated else colors.surfaceInset,
             )
             .border(
-                width = 1.dp,
+                width = ParlorTheme.borders.hairline,
                 color = if (enabled) colors.borderElevated else colors.semanticMuted,
                 shape = RoundedCornerShape(ParlorTheme.radii.card),
             )

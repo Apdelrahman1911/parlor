@@ -72,6 +72,7 @@ data class ParlorBorders(
  */
 @Immutable
 data class ParlorIconSize(
+    val xxs: Dp = 8.dp,
     val xs: Dp = 12.dp,
     val s: Dp = 16.dp,
     val m: Dp = 20.dp,

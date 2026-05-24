@@ -25,10 +25,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import com.parlor.app.resources.Res
+import com.parlor.app.resources.error_back
+import com.parlor.app.resources.error_back_description
+import com.parlor.app.resources.peer_case_load_error_format
 import com.parlor.app.resources.peer_connecting_format
+import com.parlor.app.resources.peer_error_title
 import com.parlor.app.resources.peer_eyebrow
 import com.parlor.app.resources.peer_leave
 import com.parlor.app.resources.peer_leave_description
+import com.parlor.app.resources.peer_loading_case
 import com.parlor.content.repository.CaseRepository
 import com.parlor.content.validation.PayloadValidator
 import com.parlor.content.validation.ValidatedCase
@@ -145,7 +150,7 @@ private fun PeerSessionWithCase(
     when (val r = caseResult) {
         null -> PeerLoadingCase(modifier)
         is Result.Failure -> PeerErrorState(
-            "Couldn't load the case: ${r.error}",
+            stringResource(Res.string.peer_case_load_error_format).replace("%1\$s", r.error.toString()),
             onBack = onBackToLibrary,
             modifier = modifier,
         )
@@ -258,7 +263,7 @@ private fun PeerLoadingCase(modifier: Modifier = Modifier) {
         ) {
             CandleFlame(size = androidx.compose.ui.unit.Dp(72f))
             Text(
-                text = "Loading the case…",
+                text = stringResource(Res.string.peer_loading_case),
                 style = ParlorTheme.typography.displayMedium,
                 color = ParlorTheme.colors.textPrimary,
                 textAlign = TextAlign.Center,
@@ -278,7 +283,7 @@ private fun PeerErrorState(error: String, onBack: () -> Unit, modifier: Modifier
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
-                text = "Couldn't join the room.",
+                text = stringResource(Res.string.peer_error_title),
                 style = ParlorTheme.typography.displayMedium,
                 color = ParlorTheme.colors.textPrimary,
                 textAlign = TextAlign.Center,
@@ -290,8 +295,8 @@ private fun PeerErrorState(error: String, onBack: () -> Unit, modifier: Modifier
                 textAlign = TextAlign.Center,
             )
             ParlorButton(
-                label = "Back",
-                contentDescription = "Return to the home screen.",
+                label = stringResource(Res.string.error_back),
+                contentDescription = stringResource(Res.string.error_back_description),
                 onClick = onBack,
                 modifier = Modifier.fillMaxWidth(),
                 variant = ParlorButtonVariant.Ghost,

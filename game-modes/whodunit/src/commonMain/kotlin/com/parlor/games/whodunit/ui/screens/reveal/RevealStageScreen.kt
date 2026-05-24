@@ -141,8 +141,8 @@ fun RevealStageScreen(
             // Accent line — coral bar that draws in from zero width.
             Box(
                 modifier = Modifier
-                    .width(96.dp * accentLineProgress)
-                    .height(4.dp)
+                    .width(ParlorTheme.spacing.xxxl * 1.5f * accentLineProgress)
+                    .height(ParlorTheme.spacing.xs)
                     .background(colors.accentEmber),
             )
             Text(

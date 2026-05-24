@@ -29,6 +29,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.text.style.TextAlign
 import com.parlor.app.resources.Res
 import com.parlor.app.resources.case_picker_back
+import com.parlor.app.resources.library_load_error_format
 import com.parlor.app.resources.case_picker_back_description
 import com.parlor.app.resources.case_picker_eyebrow
 import com.parlor.app.resources.case_picker_empty
@@ -107,7 +108,10 @@ fun CasePickerScreen(
                     color = ParlorTheme.colors.textTertiary,
                 )
                 is Result.Failure -> Text(
-                    text = "Couldn't load cases: ${state.error}",
+                    text = stringResource(Res.string.library_load_error_format).replace(
+                        "%1\$s",
+                        state.error.toString(),
+                    ),
                     style = ParlorTheme.typography.bodyLarge,
                     color = ParlorTheme.colors.textPrimary,
                 )

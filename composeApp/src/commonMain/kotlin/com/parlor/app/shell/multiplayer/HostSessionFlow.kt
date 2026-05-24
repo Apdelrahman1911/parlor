@@ -25,7 +25,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import com.parlor.app.resources.Res
+import com.parlor.app.resources.error_back
+import com.parlor.app.resources.error_back_description
 import com.parlor.app.resources.host_cancel
+import com.parlor.app.resources.host_error_title
 import com.parlor.app.resources.host_cancel_description
 import com.parlor.app.resources.host_members_empty
 import com.parlor.app.resources.host_members_eyebrow
@@ -265,7 +268,7 @@ private fun HostErrorState(error: String, onBack: () -> Unit, modifier: Modifier
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
-                text = "Couldn't open the room.",
+                text = stringResource(Res.string.host_error_title),
                 style = ParlorTheme.typography.displayMedium,
                 color = ParlorTheme.colors.textPrimary,
                 textAlign = TextAlign.Center,
@@ -277,8 +280,8 @@ private fun HostErrorState(error: String, onBack: () -> Unit, modifier: Modifier
                 textAlign = TextAlign.Center,
             )
             ParlorButton(
-                label = "Back",
-                contentDescription = "Return to the home screen.",
+                label = stringResource(Res.string.error_back),
+                contentDescription = stringResource(Res.string.error_back_description),
                 onClick = onBack,
                 modifier = Modifier.fillMaxWidth(),
                 variant = ParlorButtonVariant.Ghost,

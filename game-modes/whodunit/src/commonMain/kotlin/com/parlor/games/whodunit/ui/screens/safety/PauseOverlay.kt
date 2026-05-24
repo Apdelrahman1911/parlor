@@ -17,7 +17,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ParlorButton
@@ -68,7 +67,7 @@ fun PauseOverlay(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.78f)),
+                .background(ParlorTheme.colors.overlayScrim),
         )
 
         Column(
@@ -139,7 +138,7 @@ private fun EndGameConfirmDialog(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.88f)),
+                .background(ParlorTheme.colors.overlayScrim),
         )
         Column(
             modifier = Modifier

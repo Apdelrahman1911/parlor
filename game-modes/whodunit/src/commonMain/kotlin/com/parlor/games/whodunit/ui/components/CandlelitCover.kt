@@ -11,17 +11,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
-import com.parlor.designsystem.backdrop.AmbientBackdrop
 import com.parlor.designsystem.theme.ParlorTheme
 
 /**
- * Full-screen candlelit cover. Used as:
- * - the hand-off prompt before a player reveals their dossier
- * - the hide-and-pass screen after a player taps "I'm Done"
- *
- * The screen fully occludes prior content — a tap dismisses and advances.
+ * Pass-the-phone cover screen. Pure-black body in both light and dark
+ * modes so the previous player's dossier is fully occluded before the
+ * next player takes the device. A tap dismisses.
  */
 @Composable
 fun CandlelitCover(
@@ -33,37 +29,35 @@ fun CandlelitCover(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(Color.Black)
+            .background(ParlorTheme.colors.coverScreen)
             .clickable { onDismiss() },
     ) {
-        AmbientBackdrop(modifier = Modifier.fillMaxSize(), bloomIntensity = 0.06f) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(ParlorTheme.spacing.xxl),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(ParlorTheme.spacing.xxl),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Text(
+                text = title,
+                style = ParlorTheme.typography.displayMedium,
+                color = ParlorTheme.colors.coverScreenTextPrimary,
+                textAlign = TextAlign.Center,
+            )
+            Box(modifier = Modifier.padding(top = ParlorTheme.spacing.m)) {
                 Text(
-                    text = title,
-                    style = ParlorTheme.typography.displayMedium,
-                    color = ParlorTheme.colors.textPrimary,
+                    text = subtitle,
+                    style = ParlorTheme.typography.bodyLarge,
+                    color = ParlorTheme.colors.coverScreenTextSecondary,
                     textAlign = TextAlign.Center,
                 )
-                Box(modifier = Modifier.padding(top = ParlorTheme.spacing.m)) {
-                    Text(
-                        text = subtitle,
-                        style = ParlorTheme.typography.bodyLarge,
-                        color = ParlorTheme.colors.textSecondary,
-                        textAlign = TextAlign.Center,
-                    )
-                }
             }
         }
     }
 }
 
-/** Full-black hide screen — minimal text, single tap to advance. */
+/** Black hide screen — minimal text, single tap to advance. */
 @Composable
 fun HideScreen(
     line: String,
@@ -73,14 +67,14 @@ fun HideScreen(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(Color.Black)
+            .background(ParlorTheme.colors.coverScreen)
             .clickable { onTap() },
         contentAlignment = Alignment.Center,
     ) {
         Text(
             text = line,
             style = ParlorTheme.typography.bodyLarge,
-            color = ParlorTheme.colors.textTertiary,
+            color = ParlorTheme.colors.coverScreenTextTertiary,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(ParlorTheme.spacing.xxl),
         )

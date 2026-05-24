@@ -99,7 +99,7 @@ fun RulesBriefingScreen(
                     repeat(cards.size) { i ->
                         Box(
                             modifier = Modifier
-                                .size(8.dp)
+                                .size(ParlorTheme.iconSize.xxs)
                                 .clip(CircleShape)
                                 .background(
                                     if (i == safeIndex) ParlorTheme.colors.accentEmber

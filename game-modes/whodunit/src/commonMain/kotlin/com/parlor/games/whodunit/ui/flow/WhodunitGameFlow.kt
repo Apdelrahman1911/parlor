@@ -87,6 +87,12 @@ import com.parlor.games.whodunit.resources.peer_round_body
 import com.parlor.games.whodunit.resources.peer_round_title
 import com.parlor.games.whodunit.resources.peer_waiting_eyebrow
 import com.parlor.games.whodunit.resources.peer_waiting_for_host
+import com.parlor.games.whodunit.resources.whodunit_error_back
+import com.parlor.games.whodunit.resources.whodunit_error_back_description
+import com.parlor.games.whodunit.resources.whodunit_error_eyebrow
+import com.parlor.games.whodunit.resources.whodunit_error_title
+import com.parlor.games.whodunit.resources.whodunit_loading_eyebrow
+import com.parlor.games.whodunit.resources.whodunit_vote_counting
 import org.jetbrains.compose.resources.stringResource
 import com.parlor.games.whodunit.ui.screens.setup.ModeSelectionScreen
 import com.parlor.games.whodunit.ui.screens.setup.PlayerCountDisplayStrategy
@@ -230,8 +236,8 @@ private fun LoadingScreen(modifier: Modifier = Modifier) {
             ),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            CandleFlame(size = androidx.compose.ui.unit.Dp(72f))
-            EyebrowLabel(text = "Setting the table")
+            CandleFlame(size = ParlorTheme.iconSize.xl)
+            EyebrowLabel(text = stringResource(Res.string.whodunit_loading_eyebrow), accent = false)
         }
     }
 }
@@ -246,9 +252,9 @@ private fun ErrorScreen(error: DataError, onBack: () -> Unit, modifier: Modifier
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l, Alignment.CenterVertically),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            EyebrowLabel(text = "Case file misplaced")
+            EyebrowLabel(text = stringResource(Res.string.whodunit_error_eyebrow), accent = false)
             Text(
-                text = "We couldn't pull the case from the shelves.",
+                text = stringResource(Res.string.whodunit_error_title),
                 style = ParlorTheme.typography.displayMedium,
                 color = ParlorTheme.colors.textPrimary,
                 textAlign = androidx.compose.ui.text.style.TextAlign.Center,
@@ -260,8 +266,8 @@ private fun ErrorScreen(error: DataError, onBack: () -> Unit, modifier: Modifier
                 textAlign = androidx.compose.ui.text.style.TextAlign.Center,
             )
             ParlorButton(
-                label = "Back",
-                contentDescription = "Return to the library.",
+                label = stringResource(Res.string.whodunit_error_back),
+                contentDescription = stringResource(Res.string.whodunit_error_back_description),
                 onClick = onBack,
                 modifier = Modifier.fillMaxWidth(),
                 variant = ParlorButtonVariant.Ghost,
@@ -915,7 +921,7 @@ private fun VoteSegment(
         }
         // While the reducer tallies, briefly show a dim hide screen.
         HideScreen(
-            line = "Counting…",
+            line = stringResource(Res.string.whodunit_vote_counting),
             onTap = {},
             modifier = modifier,
         )
