@@ -3,7 +3,7 @@ package com.parlor.games.whodunit.ui.screens.reveal
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,7 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
@@ -25,11 +25,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.scale
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import com.parlor.designsystem.backdrop.HeroBackdrop
 import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ParlorButton
@@ -48,21 +45,23 @@ import com.parlor.games.whodunit.resources.reveal_stage_killer_was_label
 import com.parlor.games.whodunit.resources.reveal_stage_no
 import com.parlor.games.whodunit.resources.reveal_stage_players_win_subhead
 import com.parlor.games.whodunit.resources.reveal_stage_yes
-import kotlin.math.min
+import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 
 /**
- * The final-reveal moment. Staged in three beats:
+ * The final-reveal moment, editorial direction.
  *
- *  1. **Verdict** ("Yes"/"No") fades in immediately at full size.
- *  2. After 150 ms the subhead and verdict-card frame scale in with a
- *     soft spring, accompanied by an ember bloom behind the killer's
- *     name.
- *  3. The narrative paragraph fades in last (700 ms in) so the room
- *     reads the killer's name before the explanation.
+ * Staged as three timed beats:
  *
- * Reduced-motion users skip the animation and see the final layout
- * immediately.
+ *  1. **Verdict word** ("Yes"/"No") fades in immediately at full display
+ *     size, with no decoration.
+ *  2. **Accent line** — a 48dp coral horizontal bar — slides in from
+ *     zero width to its full width, drawing the eye to the verdict card.
+ *  3. **Verdict card** holding the killer's name fades in.
+ *  4. **Narrative** fades in last so the room reads the killer's name
+ *     first.
+ *
+ * Reduced-motion users see the final layout immediately.
  */
 @Composable
 fun RevealStageScreen(
@@ -94,33 +93,28 @@ fun RevealStageScreen(
         }
     }
 
-    // Staged-reveal driver. `stage`:
-    //   0 = nothing on screen yet (only the verdict word fades in)
-    //   1 = card scales in + ember bloom
+    // Stage gating:
+    //   0 = verdict word only
+    //   1 = accent line draws + card fades in
     //   2 = narrative fades in
     var stage by remember { mutableStateOf(if (reduced) 2 else 0) }
     LaunchedEffect(reduced) {
         if (reduced) return@LaunchedEffect
-        kotlinx.coroutines.delay(180L)
+        delay(220L)
         stage = 1
-        kotlinx.coroutines.delay(620L)
+        delay(540L)
         stage = 2
     }
 
-    val cardScale by animateFloatAsState(
-        targetValue = if (stage >= 1) 1f else 0.92f,
-        animationSpec = tween(durationMillis = 460, easing = LinearOutSlowInEasing),
-        label = "reveal-card-scale",
+    val accentLineProgress by animateFloatAsState(
+        targetValue = if (stage >= 1) 1f else 0f,
+        animationSpec = tween(durationMillis = 540, easing = LinearOutSlowInEasing),
+        label = "reveal-accent-line",
     )
     val cardAlpha by animateFloatAsState(
         targetValue = if (stage >= 1) 1f else 0f,
         animationSpec = tween(durationMillis = 460),
         label = "reveal-card-alpha",
-    )
-    val bloomAlpha by animateFloatAsState(
-        targetValue = if (stage >= 1) 1f else 0f,
-        animationSpec = tween(durationMillis = 800),
-        label = "reveal-bloom-alpha",
     )
     val narrativeAlpha by animateFloatAsState(
         targetValue = if (stage >= 2) 1f else 0f,
@@ -137,14 +131,19 @@ fun RevealStageScreen(
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            EyebrowLabel(
-                text = stringResource(Res.string.reveal_stage_eyebrow),
-                accent = false,
-            )
+            EyebrowLabel(text = stringResource(Res.string.reveal_stage_eyebrow), accent = false)
             Text(
                 text = verdictLine,
                 style = ParlorTheme.typography.displayHero,
                 color = accentColor,
+                textAlign = TextAlign.Center,
+            )
+            // Accent line — coral bar that draws in from zero width.
+            Box(
+                modifier = Modifier
+                    .width(96.dp * accentLineProgress)
+                    .height(4.dp)
+                    .background(colors.accentEmber),
             )
             Text(
                 text = subhead,
@@ -153,54 +152,30 @@ fun RevealStageScreen(
                 textAlign = TextAlign.Center,
             )
 
-            // The verdict card with an ember bloom behind the killer name.
-            Box(
+            Spacer(Modifier.height(ParlorTheme.spacing.m))
+
+            ParlorCard(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .scale(cardScale)
                     .alpha(cardAlpha),
-                contentAlignment = Alignment.Center,
+                cornerRadius = ParlorTheme.radii.elevated,
+                contentPadding = ParlorTheme.spacing.xxl,
+                hero = true,
             ) {
-                // Bloom — sits behind the card, expands beyond its bounds.
-                Canvas(modifier = Modifier.fillMaxWidth().height(220.dp)) {
-                    val center = Offset(size.width / 2f, size.height * 0.45f)
-                    val r = min(size.width, size.height) * 0.85f
-                    drawCircle(
-                        brush = Brush.radialGradient(
-                            colors = listOf(
-                                colors.accentEmber.copy(alpha = 0.45f * bloomAlpha),
-                                colors.accentEmberDeep.copy(alpha = 0.20f * bloomAlpha),
-                                Color.Transparent,
-                            ),
-                            center = center,
-                            radius = r,
-                        ),
-                        center = center,
-                        radius = r,
+                Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m)) {
+                    EyebrowLabel(text = stringResource(Res.string.reveal_stage_killer_was_label))
+                    Text(
+                        text = killerDisplayName,
+                        style = ParlorTheme.typography.displayLarge,
+                        color = colors.textPrimary,
                     )
-                }
-                ParlorCard(
-                    modifier = Modifier.fillMaxWidth(),
-                    elevation = ParlorTheme.elevation.dramatic,
-                    cornerRadius = ParlorTheme.radii.elevated,
-                    contentPadding = ParlorTheme.spacing.xxl,
-                    hero = true,
-                ) {
-                    Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m)) {
-                        EyebrowLabel(text = stringResource(Res.string.reveal_stage_killer_was_label))
-                        Text(
-                            text = killerDisplayName,
-                            style = ParlorTheme.typography.displayLarge,
-                            color = colors.textPrimary,
-                        )
-                        Spacer(Modifier.height(ParlorTheme.spacing.s))
-                        Text(
-                            text = revealNarrative,
-                            style = ParlorTheme.typography.narration,
-                            color = colors.textNarration,
-                            modifier = Modifier.alpha(narrativeAlpha),
-                        )
-                    }
+                    Spacer(Modifier.height(ParlorTheme.spacing.s))
+                    Text(
+                        text = revealNarrative,
+                        style = ParlorTheme.typography.narration,
+                        color = colors.textNarration,
+                        modifier = Modifier.alpha(narrativeAlpha),
+                    )
                 }
             }
             ParlorButton(
