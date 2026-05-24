@@ -11,7 +11,22 @@ plugins {
 // which exposes `p2pBootstrapModules()` returning the real Koin transport
 // module. With the flag off the alternate `p2pDisabledMain` source set
 // returns an empty list and no P2pKit symbol is ever referenced.
-val p2pEnabled: Boolean = (project.findProperty("parlor.p2p.enabled") as? String)?.toBoolean() ?: false
+//
+// Resolution mirrors settings.gradle.kts: strip inline `#` comments (.properties
+// files don't do that natively) and trim before parsing. Auto-detect from
+// mavenLocal when the property isn't set explicitly.
+val p2pEnabled: Boolean = run {
+    val raw = project.findProperty("parlor.p2p.enabled") as? String
+    val explicit = raw?.substringBefore('#')?.trim()?.takeIf { it.isNotEmpty() }
+        ?.let { it.toBooleanStrictOrNull() ?: it.toBoolean() }
+    if (explicit != null) return@run explicit
+    val home = System.getProperty("user.home").orEmpty()
+    if (home.isBlank()) return@run false
+    val core = file("$home/.m2/repository/dev/p2pkit/p2p-core/0.6.0/p2p-core-0.6.0.jar")
+    val lan = file("$home/.m2/repository/dev/p2pkit/p2p-transport-lan/0.6.0/p2p-transport-lan-0.6.0.module")
+    core.exists() && lan.exists()
+}
+println("[parlor:composeApp] P2pKit dep: ${if (p2pEnabled) "ON" else "OFF"}")
 
 kotlin {
     androidTarget {
