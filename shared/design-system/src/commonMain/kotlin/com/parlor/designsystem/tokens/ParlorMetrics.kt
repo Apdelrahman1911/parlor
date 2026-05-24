@@ -53,3 +53,29 @@ data class ParlorBlur(
     val medium: Dp = 16.dp,
     val dramatic: Dp = 32.dp,
 )
+
+/**
+ * Border-stroke tokens. Lives next to the other metric scales so feature
+ * code can pull [ParlorTheme.borders.hairline] etc. without hardcoding
+ * `1.dp` literals.
+ */
+@Immutable
+data class ParlorBorders(
+    val hairline: Dp = 1.dp,
+    val regular: Dp = 1.5.dp,
+    val strong: Dp = 2.dp,
+)
+
+/**
+ * Icon-size tokens. Same purpose as [ParlorBorders] — keep icon sizes off
+ * the literal dp scale at call sites.
+ */
+@Immutable
+data class ParlorIconSize(
+    val xs: Dp = 12.dp,
+    val s: Dp = 16.dp,
+    val m: Dp = 20.dp,
+    val l: Dp = 24.dp,
+    val xl: Dp = 32.dp,
+    val hero: Dp = 64.dp,
+)

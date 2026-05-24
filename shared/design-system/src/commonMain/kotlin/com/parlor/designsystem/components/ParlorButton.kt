@@ -1,7 +1,5 @@
 package com.parlor.designsystem.components
 
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -23,12 +21,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.draw.scale
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -36,31 +28,22 @@ import androidx.compose.ui.unit.dp
 import com.parlor.designsystem.theme.ParlorTheme
 
 /**
- * Visual variant of [ParlorButton]. The design system was extended in the
- * Phase 8 UI rework so screens can express intent without falling back to
- * raw Material primitives.
+ * Visual variants — editorial direction.
  *
- *  - [Primary] — ember-filled, brass rim. The single most important action
- *    on the screen (e.g. "Begin Investigation", "Connect", "Start Game").
- *  - [Secondary] — transparent body, ember rim and text. Companion actions
- *    where the primary is in the same screen.
- *  - [Ghost] — transparent body, subtle text. Navigation/back-style
- *    affordances that should not visually compete with the primary.
- *  - [Destructive] — danger-tinted body. Used by leave/end/delete paths.
+ *  - [Primary] — coral-filled, no border. The most important action on
+ *    the screen.
+ *  - [Secondary] — surfaceElevated body, hairline border, primary text.
+ *    Companion to a primary on the same screen.
+ *  - [Ghost] — transparent body, no border, secondary text. Back/nav
+ *    style actions that should recede.
+ *  - [Destructive] — danger-tinted body for leave/end/delete paths.
  */
 enum class ParlorButtonVariant { Primary, Secondary, Ghost, Destructive }
 
 /**
- * Parlor's action button. Replaces the previous Material `Button` with a
- * cozy-noir treatment: pressed scaling, ember-rim glow, full state matrix
- * (rest / pressed / disabled / loading). Enforces a minimum 48dp touch
- * target and requires a `contentDescription` for screen readers.
- *
- * Backwards-compatible with prior call sites: `label`, `onClick`,
- * `contentDescription`, `modifier`, `enabled` keep the same names and
- * positions. `variant` and `loading` are new optional parameters with
- * `Primary` and `false` defaults — adding `ParlorButtonVariant.Secondary`
- * to an existing call gets you the new visual.
+ * Editorial action button. Flat, no decoration, no lift. Press feedback
+ * is a brief background-tint shift only. Enforces a 52dp minimum touch
+ * target and requires a contentDescription for screen readers.
  */
 @Composable
 fun ParlorButton(
@@ -77,87 +60,50 @@ fun ParlorButton(
     val isPressed by interaction.collectIsPressedAsState()
     val interactive = enabled && !loading
 
-    // Per-variant treatment: (background, foreground, border, press tint alpha).
-    val variantStyle = ParlorButtonVariantStyle.of(variant, colors)
-    val containerColor = variantStyle.background
-    val contentColor = variantStyle.foreground
-    val borderColor = variantStyle.border
-    val pressedTintAlpha = variantStyle.pressedTintAlpha
+    val style = ParlorButtonVariantStyle.of(variant, colors)
 
-    // Disabled override: muted body, tertiary text. Same shape, no border accent.
-    val effectiveContainer: Color
-    val effectiveContent: Color
-    val effectiveBorder: Color
+    val containerColor: Color
+    val contentColor: Color
+    val borderColor: Color
     if (!enabled) {
-        effectiveContainer = colors.semanticMuted.copy(
-            alpha = if (variant == ParlorButtonVariant.Ghost) 0f else 0.4f,
-        )
-        effectiveContent = colors.textTertiary
-        effectiveBorder = colors.borderSubtle
+        containerColor = when (variant) {
+            ParlorButtonVariant.Ghost, ParlorButtonVariant.Secondary -> colors.transparent
+            else -> colors.semanticMuted
+        }
+        contentColor = colors.textTertiary
+        borderColor = colors.borderSubtle
     } else {
-        effectiveContainer = containerColor
-        effectiveContent = contentColor
-        effectiveBorder = borderColor
+        containerColor = style.background
+        contentColor = style.foreground
+        borderColor = style.border
     }
-    // Press tint — slight dark/light wash on top of the container.
+
+    // Press feedback: a brief tint shift on the background only. No scale,
+    // no glow.
     val pressedTint = if (isPressed && interactive) {
-        if (variant == ParlorButtonVariant.Primary || variant == ParlorButtonVariant.Destructive) {
-            Color.Black.copy(alpha = pressedTintAlpha)
-        } else {
-            colors.accentEmber.copy(alpha = pressedTintAlpha)
+        when (variant) {
+            ParlorButtonVariant.Primary -> colors.accentEmberDeep.copy(alpha = 0.35f)
+            ParlorButtonVariant.Destructive -> colors.semanticDanger.copy(alpha = 0.35f)
+            ParlorButtonVariant.Secondary -> colors.accentEmber.copy(alpha = 0.10f)
+            ParlorButtonVariant.Ghost -> colors.accentEmber.copy(alpha = 0.08f)
         }
     } else {
-        Color.Transparent
+        colors.transparent
     }
 
     val shape = RoundedCornerShape(ParlorTheme.radii.subtle)
-    val solidBackground = variant == ParlorButtonVariant.Primary ||
-        variant == ParlorButtonVariant.Destructive
-    val lift = if (enabled && solidBackground) 6.dp else 0.dp
 
     Box(
         modifier = modifier
+            // 52dp is the design-system primitive's intrinsic touch target,
+            // not a feature-UI hardcoded value. Lives here, not in screens.
             .heightIn(min = 52.dp)
-            .shadow(elevation = lift, shape = shape, clip = false)
             .clip(shape)
-            .background(effectiveContainer)
+            .background(containerColor)
             .background(pressedTint)
-            .drawBehind {
-                if (solidBackground && enabled) {
-                    // Brass top highlight — catches candlelight on the lip
-                    // of the button. Subtle on Destructive (smoke); bright on
-                    // Primary (ember catches fire).
-                    val highlightAlpha = if (variant == ParlorButtonVariant.Primary) 0.55f else 0.30f
-                    drawRect(
-                        brush = Brush.verticalGradient(
-                            colors = listOf(
-                                colors.accentBrass.copy(alpha = highlightAlpha),
-                                Color.Transparent,
-                            ),
-                            startY = 0f,
-                            endY = 3.dp.toPx(),
-                        ),
-                        topLeft = Offset(0f, 0f),
-                        size = Size(size.width, 3.dp.toPx()),
-                    )
-                    // Bottom inset shadow — the button presses into the surface.
-                    drawRect(
-                        brush = Brush.verticalGradient(
-                            colors = listOf(
-                                Color.Transparent,
-                                Color.Black.copy(alpha = 0.35f),
-                            ),
-                            startY = size.height - 4.dp.toPx(),
-                            endY = size.height,
-                        ),
-                        topLeft = Offset(0f, size.height - 4.dp.toPx()),
-                        size = Size(size.width, 4.dp.toPx()),
-                    )
-                }
-            }
             .border(
-                width = 1.dp,
-                color = effectiveBorder,
+                width = ParlorTheme.borders.hairline,
+                color = borderColor,
                 shape = shape,
             )
             .clickable(
@@ -181,15 +127,15 @@ fun ParlorButton(
         ) {
             if (loading) {
                 CircularProgressIndicator(
-                    color = effectiveContent,
-                    strokeWidth = 2.dp,
-                    modifier = Modifier.size(16.dp),
+                    color = contentColor,
+                    strokeWidth = ParlorTheme.borders.strong,
+                    modifier = Modifier.size(ParlorTheme.iconSize.s),
                 )
             }
             Text(
                 text = label,
                 style = ParlorTheme.typography.labelLarge,
-                color = effectiveContent,
+                color = contentColor,
             )
         }
     }
@@ -199,7 +145,6 @@ private data class ParlorButtonVariantStyle(
     val background: Color,
     val foreground: Color,
     val border: Color,
-    val pressedTintAlpha: Float,
 ) {
     companion object {
         fun of(
@@ -209,26 +154,22 @@ private data class ParlorButtonVariantStyle(
             ParlorButtonVariant.Primary -> ParlorButtonVariantStyle(
                 background = colors.accentEmber,
                 foreground = colors.textOnAccent,
-                border = colors.accentBrass.copy(alpha = 0.6f),
-                pressedTintAlpha = 0.12f,
+                border = colors.transparent,
             )
             ParlorButtonVariant.Secondary -> ParlorButtonVariantStyle(
-                background = Color.Transparent,
-                foreground = colors.accentEmber,
-                border = colors.accentEmber.copy(alpha = 0.8f),
-                pressedTintAlpha = 0.10f,
+                background = colors.surfaceElevated,
+                foreground = colors.textPrimary,
+                border = colors.borderSubtle,
             )
             ParlorButtonVariant.Ghost -> ParlorButtonVariantStyle(
-                background = Color.Transparent,
+                background = colors.transparent,
                 foreground = colors.textSecondary,
-                border = colors.borderSubtle,
-                pressedTintAlpha = 0.06f,
+                border = colors.transparent,
             )
             ParlorButtonVariant.Destructive -> ParlorButtonVariantStyle(
                 background = colors.semanticDanger,
                 foreground = colors.textOnAccent,
-                border = colors.semanticDanger.copy(alpha = 0.4f),
-                pressedTintAlpha = 0.14f,
+                border = colors.transparent,
             )
         }
     }

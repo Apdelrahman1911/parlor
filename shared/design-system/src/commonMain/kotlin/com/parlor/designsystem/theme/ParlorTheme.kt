@@ -14,8 +14,10 @@ import com.parlor.designsystem.tokens.CozyNoirPalette
 import com.parlor.designsystem.tokens.DefaultParlorTypography
 import com.parlor.designsystem.tokens.LightCozyNoirPalette
 import com.parlor.designsystem.tokens.ParlorBlur
+import com.parlor.designsystem.tokens.ParlorBorders
 import com.parlor.designsystem.tokens.ParlorColors
 import com.parlor.designsystem.tokens.ParlorElevation
+import com.parlor.designsystem.tokens.ParlorIconSize
 import com.parlor.designsystem.tokens.ParlorRadii
 import com.parlor.designsystem.tokens.ParlorSpacing
 import com.parlor.designsystem.tokens.ParlorTypography
@@ -43,6 +45,10 @@ object ParlorTheme {
         @Composable @ReadOnlyComposable get() = LocalParlorRadii.current
     val blur: ParlorBlur
         @Composable @ReadOnlyComposable get() = LocalParlorBlur.current
+    val borders: ParlorBorders
+        @Composable @ReadOnlyComposable get() = LocalParlorBorders.current
+    val iconSize: ParlorIconSize
+        @Composable @ReadOnlyComposable get() = LocalParlorIconSize.current
     val motion: ParlorMotion
         @Composable @ReadOnlyComposable get() = LocalParlorMotion.current
     val reducedMotion: Boolean
@@ -71,6 +77,8 @@ fun ParlorTheme(
     elevation: ParlorElevation = ParlorElevation(),
     radii: ParlorRadii = ParlorRadii(),
     blur: ParlorBlur = ParlorBlur(),
+    borders: ParlorBorders = ParlorBorders(),
+    iconSize: ParlorIconSize = ParlorIconSize(),
     motion: ParlorMotion = ParlorMotion(),
     reducedMotion: Boolean = false,
     content: @Composable () -> Unit,
@@ -119,6 +127,8 @@ fun ParlorTheme(
         LocalParlorElevation provides elevation,
         LocalParlorRadii provides radii,
         LocalParlorBlur provides blur,
+        LocalParlorBorders provides borders,
+        LocalParlorIconSize provides iconSize,
         LocalParlorMotion provides motion,
         LocalReducedMotion provides reducedMotion,
         LocalThemeMode provides themeMode,
@@ -139,6 +149,8 @@ private val LocalParlorSpacing = staticCompositionLocalOf { ParlorSpacing() }
 private val LocalParlorElevation = staticCompositionLocalOf { ParlorElevation() }
 private val LocalParlorRadii = staticCompositionLocalOf { ParlorRadii() }
 private val LocalParlorBlur = staticCompositionLocalOf { ParlorBlur() }
+private val LocalParlorBorders = staticCompositionLocalOf { ParlorBorders() }
+private val LocalParlorIconSize = staticCompositionLocalOf { ParlorIconSize() }
 private val LocalParlorMotion = staticCompositionLocalOf { ParlorMotion() }
 private val LocalReducedMotion = staticCompositionLocalOf { false }
 private val LocalThemeMode = staticCompositionLocalOf { ThemeMode.Default }
