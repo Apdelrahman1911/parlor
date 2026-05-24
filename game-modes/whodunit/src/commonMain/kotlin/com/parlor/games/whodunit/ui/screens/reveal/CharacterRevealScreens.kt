@@ -22,6 +22,9 @@ import com.parlor.games.whodunit.resources.reveal_handoff_subtitle
 import com.parlor.games.whodunit.resources.reveal_handoff_title_format
 import com.parlor.games.whodunit.resources.reveal_hide_end
 import com.parlor.games.whodunit.resources.reveal_hide_next_format
+import com.parlor.games.whodunit.resources.reveal_waiting_eyebrow
+import com.parlor.games.whodunit.resources.reveal_waiting_subtitle
+import com.parlor.games.whodunit.resources.reveal_waiting_title_format
 import com.parlor.games.whodunit.ui.components.CandlelitCover
 import com.parlor.games.whodunit.ui.components.DossierCard
 import com.parlor.games.whodunit.ui.components.HideScreen
@@ -40,6 +43,59 @@ fun CharacterRevealHandoffScreen(
         onDismiss = onContinue,
         modifier = modifier,
     )
+}
+
+/**
+ * Multi-device-only screen shown to peers when the current
+ * [com.parlor.games.whodunit.domain.phase.WhodunitPhase.CharacterReveal] is
+ * focused on **another** player. The local device is the one whose
+ * `selfPlayerId` differs from `players[phase.playerIndex].id`. Each peer waits
+ * on this screen until the host advances `phase.playerIndex` to point at
+ * them; at that point the standard Handoff → Gate → Dossier → Hide
+ * ceremony takes over locally.
+ *
+ * No action affordance — peers can't advance another player's reveal. The
+ * screen auto-clears when state.phase moves.
+ */
+@Composable
+fun CharacterRevealWaitingScreen(
+    activePlayerName: String,
+    modifier: Modifier = Modifier,
+) {
+    HeroBackdrop(modifier = modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(ParlorTheme.spacing.xl),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+        ) {
+            Text(
+                text = stringResource(Res.string.reveal_waiting_eyebrow).uppercase(),
+                style = ParlorTheme.typography.labelSmall,
+                color = ParlorTheme.colors.accentEmber,
+                textAlign = TextAlign.Center,
+            )
+            Text(
+                text = stringResource(Res.string.reveal_waiting_title_format, activePlayerName),
+                style = ParlorTheme.typography.displayMedium,
+                color = ParlorTheme.colors.textPrimary,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = ParlorTheme.spacing.m),
+            )
+            Text(
+                text = stringResource(Res.string.reveal_waiting_subtitle),
+                style = ParlorTheme.typography.bodyLarge,
+                color = ParlorTheme.colors.textSecondary,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = ParlorTheme.spacing.s),
+            )
+        }
+    }
 }
 
 @Composable

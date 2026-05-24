@@ -478,6 +478,13 @@ private fun PauseAffordance(
 /**
  * Pure phase-to-screen routing extracted from [SessionDrivenFlow] so the pause
  * chrome and overlay can sit cleanly on top in a single Box.
+ *
+ * [selfPlayerId] is the local device's player identity in multi-device mode,
+ * or `null` for pass-and-play (where every phase's UI is for whoever is
+ * holding the phone). Used by phases whose UI must differ per peer — most
+ * importantly [WhodunitPhase.CharacterReveal], where a peer must NOT render
+ * another player's dossier (it doesn't have that player's private bucket
+ * and the shadow controller throws if asked for it).
  */
 @Composable
 private fun PhaseRouter(
@@ -491,6 +498,7 @@ private fun PhaseRouter(
     onVerdictClear: () -> Unit,
     onBackToLibrary: () -> Unit,
     modifier: Modifier = Modifier,
+    selfPlayerId: PlayerId? = null,
 ) {
     when (phase) {
         is WhodunitPhase.Setup -> LoadingScreen(modifier)
@@ -511,6 +519,7 @@ private fun PhaseRouter(
             phase = phase,
             payload = payload,
             players = state.players,
+            selfPlayerId = selfPlayerId,
             modifier = modifier,
         )
         is WhodunitPhase.Round -> RoundSegment(
@@ -579,9 +588,26 @@ private fun CharacterRevealSegment(
     payload: WhodunitCase,
     players: List<Player>,
     modifier: Modifier = Modifier,
+    selfPlayerId: PlayerId? = null,
 ) {
     val scope = rememberCoroutineScope()
-    val currentPlayer = players.getOrNull(phase.playerIndex) ?: return
+    val phaseCurrentPlayer = players.getOrNull(phase.playerIndex) ?: return
+
+    // Multi-device authority: only the device whose `selfPlayerId` matches the
+    // active reveal index renders the dossier ceremony. Every other peer
+    // shows a "waiting" screen — and crucially, never calls
+    // `session.privateStateFor(otherPlayer.id)`, which would throw on a
+    // shadow controller (each peer only holds its own private slice).
+    val localActor = resolveLocalRevealActor(phase, players, selfPlayerId)
+    if (localActor == null) {
+        com.parlor.games.whodunit.ui.screens.reveal.CharacterRevealWaitingScreen(
+            activePlayerName = phaseCurrentPlayer.displayName,
+            modifier = modifier,
+        )
+        return
+    }
+
+    val currentPlayer = localActor
     val nextPlayer = players.getOrNull(phase.playerIndex + 1)
 
     // Inform the session who is "holding" the device. The reducer doesn't
@@ -943,6 +969,7 @@ fun WhodunitMultiplayerHostFlow(
                 }
             },
             modifier = Modifier.fillMaxSize(),
+            selfPlayerId = room.selfPlayerId,
         )
 
         if (!state.public.paused && state.phase !is WhodunitPhase.PostGame) {
@@ -1033,6 +1060,7 @@ fun WhodunitMultiplayerPeerFlow(
             onVerdictClear = { /* peer never replays — replay is host-driven */ },
             onBackToLibrary = onBackToLibrary,
             modifier = Modifier.fillMaxSize(),
+            selfPlayerId = selfPlayerId,
         )
         if (state.public.paused) {
             PeerHostPausedBanner(modifier = Modifier.align(Alignment.Center))
