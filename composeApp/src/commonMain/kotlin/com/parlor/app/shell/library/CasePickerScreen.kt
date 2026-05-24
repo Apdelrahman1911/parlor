@@ -50,6 +50,7 @@ import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorButtonVariant
 import com.parlor.designsystem.components.ScreenHeader
+import com.parlor.designsystem.components.pressableSurface
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.whodunit.WhodunitIds
 import org.jetbrains.compose.resources.stringResource
@@ -158,14 +159,12 @@ private fun CaseRow(summary: CaseSummary, onClick: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(ParlorTheme.radii.elevated))
-            .background(colors.surfaceElevated)
+            .pressableSurface(onClick = onClick, cornerRadius = ParlorTheme.radii.elevated)
             .border(
-                width = androidx.compose.ui.unit.Dp(1f),
+                width = ParlorTheme.borders.hairline,
                 color = colors.borderElevated,
                 shape = RoundedCornerShape(ParlorTheme.radii.elevated),
-            )
-            .clickable(onClick = onClick),
+            ),
     ) {
         Column(
             modifier = Modifier

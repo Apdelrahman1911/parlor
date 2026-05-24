@@ -166,7 +166,7 @@ fun RevealStageScreen(
                     EyebrowLabel(text = stringResource(Res.string.reveal_stage_killer_was_label))
                     Text(
                         text = killerDisplayName,
-                        style = ParlorTheme.typography.displayLarge,
+                        style = ParlorTheme.typography.displayHero,
                         color = colors.textPrimary,
                     )
                     Spacer(Modifier.height(ParlorTheme.spacing.s))

@@ -30,6 +30,7 @@ import com.parlor.designsystem.backdrop.HeroBackdrop
 import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorButtonVariant
+import com.parlor.designsystem.components.pressableSurface
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.whodunit.resources.Res
 import com.parlor.games.whodunit.resources.reveal_handoff_subtitle
@@ -101,10 +102,12 @@ private fun CandidateRow(name: String, onClick: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(ParlorTheme.radii.card))
-            .background(colors.surfaceElevated)
-            .border(1.dp, colors.borderElevated, RoundedCornerShape(ParlorTheme.radii.card))
-            .clickable(onClick = onClick)
+            .pressableSurface(onClick = onClick, cornerRadius = ParlorTheme.radii.card)
+            .border(
+                width = ParlorTheme.borders.hairline,
+                color = colors.borderElevated,
+                shape = RoundedCornerShape(ParlorTheme.radii.card),
+            )
             .padding(ParlorTheme.spacing.l),
         contentAlignment = Alignment.CenterStart,
     ) {

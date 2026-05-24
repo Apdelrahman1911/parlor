@@ -20,10 +20,7 @@ import parlor.shared.design_system.generated.resources.jetbrains_mono
  * Big, bold display weights carry the hierarchy; serif decoration is
  * out of scope for this direction.
  *
- * Variable fonts let one .ttf serve every weight. The Cormorant
- * Garamond TTFs remain bundled in `composeResources/font/` for now in
- * case a future direction wants them, but they are not referenced
- * from the live typography.
+ * Variable fonts let one .ttf serve every weight.
  */
 @Immutable
 data class ParlorTypography(

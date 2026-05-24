@@ -110,7 +110,7 @@ fun DossierCard(
             )
             Text(
                 text = character.displayName,
-                style = ParlorTheme.typography.displayMedium,
+                style = ParlorTheme.typography.displayHero,
                 color = ParlorTheme.colors.textPrimary,
             )
             Text(
