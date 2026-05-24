@@ -31,7 +31,9 @@ import com.parlor.app.resources.name_help
 import com.parlor.app.resources.name_title_host
 import com.parlor.app.resources.name_title_peer
 import com.parlor.designsystem.backdrop.HeroBackdrop
+import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ParlorButton
+import com.parlor.designsystem.components.ParlorButtonVariant
 import com.parlor.designsystem.theme.ParlorTheme
 import org.jetbrains.compose.resources.stringResource
 
@@ -64,11 +66,9 @@ fun NameInputScreen(
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l),
         ) {
-            Text(
-                text = if (isHost) stringResource(Res.string.name_eyebrow_host).uppercase()
-                else stringResource(Res.string.name_eyebrow_peer).uppercase(),
-                style = ParlorTheme.typography.labelSmall,
-                color = ParlorTheme.colors.accentEmber,
+            EyebrowLabel(
+                text = if (isHost) stringResource(Res.string.name_eyebrow_host)
+                else stringResource(Res.string.name_eyebrow_peer),
             )
             Text(
                 text = if (isHost) stringResource(Res.string.name_title_host)
@@ -110,6 +110,7 @@ fun NameInputScreen(
                 contentDescription = stringResource(Res.string.name_back_description),
                 onClick = onBack,
                 modifier = Modifier.fillMaxWidth(),
+                variant = ParlorButtonVariant.Ghost,
             )
         }
     }

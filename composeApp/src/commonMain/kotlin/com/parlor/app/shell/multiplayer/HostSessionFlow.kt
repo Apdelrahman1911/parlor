@@ -41,7 +41,9 @@ import com.parlor.core.random.RandomSource
 import com.parlor.core.result.DataError
 import com.parlor.core.result.Result
 import com.parlor.designsystem.backdrop.HeroBackdrop
+import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ParlorButton
+import com.parlor.designsystem.components.ParlorButtonVariant
 import com.parlor.designsystem.components.ParlorCard
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.engine.state.Player
@@ -159,23 +161,22 @@ private fun HostLobbyContent(
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l),
         ) {
-            Text(
-                text = stringResource(Res.string.host_title).uppercase(),
-                style = ParlorTheme.typography.labelSmall,
-                color = ParlorTheme.colors.accentEmber,
-            )
+            EyebrowLabel(text = stringResource(Res.string.host_title))
 
+            // Hero room-code card — the screen's signature moment. The
+            // ember-tinted hero surface + dramatic elevation make the code
+            // unmistakable when the host turns the phone to a friend.
             ParlorCard(
                 modifier = Modifier.fillMaxWidth(),
                 elevation = ParlorTheme.elevation.dramatic,
                 cornerRadius = ParlorTheme.radii.elevated,
                 contentPadding = ParlorTheme.spacing.l,
+                hero = true,
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s)) {
-                    Text(
-                        text = stringResource(Res.string.host_room_code_eyebrow).uppercase(),
-                        style = ParlorTheme.typography.labelSmall,
-                        color = ParlorTheme.colors.textSecondary,
+                    EyebrowLabel(
+                        text = stringResource(Res.string.host_room_code_eyebrow),
+                        accent = false,
                     )
                     Text(
                         text = info.code,
@@ -194,11 +195,7 @@ private fun HostLobbyContent(
                 }
             }
 
-            Text(
-                text = stringResource(Res.string.host_members_eyebrow).uppercase(),
-                style = ParlorTheme.typography.labelSmall,
-                color = ParlorTheme.colors.textSecondary,
-            )
+            EyebrowLabel(text = stringResource(Res.string.host_members_eyebrow), accent = false)
             if (members.isEmpty()) {
                 Text(
                     text = stringResource(Res.string.host_members_empty),
@@ -228,6 +225,7 @@ private fun HostLobbyContent(
                 contentDescription = stringResource(Res.string.host_cancel_description),
                 onClick = onLeave,
                 modifier = Modifier.fillMaxWidth(),
+                variant = ParlorButtonVariant.Secondary,
             )
         }
     }
@@ -275,6 +273,7 @@ private fun HostErrorState(error: String, onBack: () -> Unit, modifier: Modifier
                 contentDescription = "Return to the home screen.",
                 onClick = onBack,
                 modifier = Modifier.fillMaxWidth(),
+                variant = ParlorButtonVariant.Ghost,
             )
         }
     }

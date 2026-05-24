@@ -40,7 +40,9 @@ import com.parlor.content.schema.CaseSummary
 import com.parlor.core.ids.GameId
 import com.parlor.core.result.Result
 import com.parlor.designsystem.backdrop.HeroBackdrop
+import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ParlorButton
+import com.parlor.designsystem.components.ParlorButtonVariant
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.whodunit.WhodunitIds
 import org.jetbrains.compose.resources.stringResource
@@ -83,11 +85,7 @@ fun CasePickerScreen(
                 ),
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l),
         ) {
-            Text(
-                text = stringResource(Res.string.case_picker_eyebrow).uppercase(),
-                style = ParlorTheme.typography.labelSmall,
-                color = ParlorTheme.colors.accentEmber,
-            )
+            EyebrowLabel(text = stringResource(Res.string.case_picker_eyebrow))
             Text(
                 text = stringResource(Res.string.case_picker_title),
                 style = ParlorTheme.typography.displayLarge,
@@ -140,6 +138,7 @@ fun CasePickerScreen(
                 contentDescription = stringResource(Res.string.case_picker_back_description),
                 onClick = onBack,
                 modifier = Modifier.fillMaxWidth(),
+                variant = ParlorButtonVariant.Ghost,
             )
         }
     }

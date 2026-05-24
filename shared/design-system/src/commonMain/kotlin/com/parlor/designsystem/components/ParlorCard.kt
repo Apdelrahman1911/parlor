@@ -12,38 +12,43 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.designsystem.tokens.ElevationSpec
 
-/**
- * The default card primitive — warm-shadow, soft brass rim, generous padding.
- * Every game module's cards should compose this rather than M3 `Card` directly,
- * so the cozy-noir treatment is consistent.
- */
 @Composable
 fun ParlorCard(
     modifier: Modifier = Modifier,
     elevation: ElevationSpec = ParlorTheme.elevation.medium,
     cornerRadius: Dp = ParlorTheme.radii.card,
     contentPadding: Dp = ParlorTheme.spacing.xl,
+    hero: Boolean = false,
+    bordered: Boolean = true,
     content: @Composable () -> Unit,
 ) {
     val colors = ParlorTheme.colors
+    val surfaceColor = if (hero) colors.surfaceHero else colors.surfaceElevated
+    val borderColor = if (hero) colors.borderAccent else colors.borderElevated
+    val baseModifier = modifier
+        .shadow(
+            elevation = elevation.yOffset,
+            shape = RoundedCornerShape(cornerRadius),
+            clip = false,
+        )
+        .clip(RoundedCornerShape(cornerRadius))
+        .background(surfaceColor)
+    val finalModifier = if (bordered) {
+        baseModifier.border(
+            width = 1.dp,
+            color = borderColor,
+            shape = RoundedCornerShape(cornerRadius),
+        )
+    } else {
+        baseModifier
+    }
     Surface(
-        color = colors.surfaceElevated,
-        modifier = modifier
-            .shadow(
-                elevation = elevation.yOffset,
-                shape = RoundedCornerShape(cornerRadius),
-                clip = false,
-            )
-            .clip(RoundedCornerShape(cornerRadius))
-            .background(colors.surfaceElevated)
-            .border(
-                width = androidx.compose.ui.unit.Dp.Hairline,
-                color = colors.borderElevated,
-                shape = RoundedCornerShape(cornerRadius),
-            ),
+        color = surfaceColor,
+        modifier = finalModifier,
     ) {
         androidx.compose.foundation.layout.Box(
             modifier = Modifier.padding(contentPadding),

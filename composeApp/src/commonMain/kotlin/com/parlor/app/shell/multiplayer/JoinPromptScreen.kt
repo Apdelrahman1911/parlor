@@ -26,7 +26,9 @@ import com.parlor.app.resources.join_confirm_description
 import com.parlor.app.resources.join_eyebrow
 import com.parlor.app.resources.join_title
 import com.parlor.designsystem.backdrop.HeroBackdrop
+import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ParlorButton
+import com.parlor.designsystem.components.ParlorButtonVariant
 import com.parlor.designsystem.theme.ParlorTheme
 import androidx.compose.foundation.text.KeyboardOptions
 import org.jetbrains.compose.resources.stringResource
@@ -51,11 +53,7 @@ fun JoinPromptScreen(
                 .padding(ParlorTheme.spacing.xl),
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l),
         ) {
-            Text(
-                text = stringResource(Res.string.join_eyebrow).uppercase(),
-                style = ParlorTheme.typography.labelSmall,
-                color = ParlorTheme.colors.accentEmber,
-            )
+            EyebrowLabel(text = stringResource(Res.string.join_eyebrow))
             Text(
                 text = stringResource(Res.string.join_title),
                 style = ParlorTheme.typography.displayMedium,
@@ -91,6 +89,7 @@ fun JoinPromptScreen(
                 contentDescription = stringResource(Res.string.join_cancel_description),
                 onClick = onCancel,
                 modifier = Modifier.fillMaxWidth(),
+                variant = ParlorButtonVariant.Ghost,
             )
         }
     }

@@ -37,7 +37,9 @@ import com.parlor.core.ids.ModeId
 import com.parlor.core.result.DataError
 import com.parlor.core.result.Result
 import com.parlor.designsystem.backdrop.HeroBackdrop
+import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ParlorButton
+import com.parlor.designsystem.components.ParlorButtonVariant
 import com.parlor.designsystem.components.ParlorCard
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.engine.state.Player
@@ -194,17 +196,14 @@ private fun PeerWaitingForHostStart(
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l),
         ) {
-            Text(
-                text = stringResource(Res.string.peer_eyebrow).uppercase(),
-                style = ParlorTheme.typography.labelSmall,
-                color = ParlorTheme.colors.accentEmber,
-            )
+            EyebrowLabel(text = stringResource(Res.string.peer_eyebrow))
 
             ParlorCard(
                 modifier = Modifier.fillMaxWidth(),
                 elevation = ParlorTheme.elevation.dramatic,
                 cornerRadius = ParlorTheme.radii.elevated,
                 contentPadding = ParlorTheme.spacing.l,
+                hero = true,
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s)) {
                     Text(
@@ -232,6 +231,7 @@ private fun PeerWaitingForHostStart(
                 contentDescription = stringResource(Res.string.peer_leave_description),
                 onClick = onLeave,
                 modifier = Modifier.fillMaxWidth(),
+                variant = ParlorButtonVariant.Secondary,
             )
         }
     }
@@ -279,6 +279,7 @@ private fun PeerErrorState(error: String, onBack: () -> Unit, modifier: Modifier
                 contentDescription = "Return to the home screen.",
                 onClick = onBack,
                 modifier = Modifier.fillMaxWidth(),
+                variant = ParlorButtonVariant.Ghost,
             )
         }
     }
