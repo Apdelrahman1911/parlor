@@ -4,22 +4,23 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
 
 /**
- * Color tokens per docs/DESIGN_TOKENS.md §1 — reworked for production-quality.
+ * Color tokens — Modern Dark Editorial direction.
  *
- * Two principles drove this revision:
- *  1. **Distinct surface elevation.** The previous palette had ~5% luminance
- *     steps between canvas → elevated → higher; cards barely stood out on a
- *     phone. The new dark palette widens to ~10–15% steps with a warmer-hue
- *     shift as elevation rises, so card-on-card hierarchy reads at 360 dp.
- *     A new `surfaceHero` carries the most attention-grabbing card on the
- *     screen (room code, dossier, reveal).
- *  2. **Light mode that's actually contrasty.** Text scale deepened so body
- *     text on parchment well clears WCAG AA. Brass borders give cards a
- *     bookbinding edge instead of fading into the background.
+ * Premium app-like aesthetic: charcoal surfaces, generous whitespace,
+ * one bold accent (coral). No textures, no gradients, no warm wood
+ * tones. Type and hierarchy carry the visual weight, not decoration.
  *
- * Ember stays the brand anchor across modes; only the surface family swaps.
- * `borderAccent` (new) lets primary affordances carry a stronger ember rim
- * than the existing subtle `borderGlow`.
+ * The data-class shape is intentionally backwards-compatible with the
+ * prior `cozy-noir` token names — `accentEmber` / `accentBrass` /
+ * `accentParchment` are still here but their values map onto coral and
+ * neutrals so the rest of the codebase keeps compiling while every
+ * screen automatically picks up the new look.
+ *
+ * Two utility tokens supplement the named set:
+ *  - [transparent] — explicit transparent so feature code never needs
+ *    `Color.Transparent`.
+ *  - [overlayScrim] — modal/dim-the-world overlay so feature code
+ *    never needs `Color.Black.copy(alpha=...)`.
  */
 @Immutable
 data class ParlorColors(
@@ -30,16 +31,22 @@ data class ParlorColors(
     /** Attention-grabbing surface for the hero card on a screen. */
     val surfaceHero: Color,
 
+    /** Primary brand accent. Coral in the editorial palette. */
     val accentEmber: Color,
+    /** Lighter accent — used for subtle highlights / focus glows. */
     val accentEmberGlow: Color,
+    /** Deeper accent — used for pressed-state accents and rare emphasis. */
     val accentEmberDeep: Color,
+    /** Neutral mid-grey, retained for back-compat. Editorial: a muted grey. */
     val accentBrass: Color,
+    /** High-contrast surface highlight. Editorial: pure white-tone on dark; deep ink on light. */
     val accentParchment: Color,
 
     val textPrimary: Color,
     val textSecondary: Color,
     val textTertiary: Color,
     val textOnAccent: Color,
+    /** Quoted / narration body — same as textSecondary in editorial direction. */
     val textNarration: Color,
 
     val semanticSuccess: Color,
@@ -48,84 +55,89 @@ data class ParlorColors(
 
     val borderSubtle: Color,
     val borderElevated: Color,
+    /** Soft accent glow — used sparingly for focus rings, not decoration. */
     val borderGlow: Color,
-    /** Stronger ember rim for hero cards and primary affordances. */
+    /** Strong accent rim — used on hero affordances. */
     val borderAccent: Color,
+
+    /** Explicit fully-transparent token. Use instead of `Color.Transparent`. */
+    val transparent: Color,
+    /** Modal overlay scrim. Use instead of `Color.Black.copy(alpha=...)`. */
+    val overlayScrim: Color,
 )
 
 /**
- * Cozy-noir (dark) — candlelight on mahogany. Wider surface stops + warmer
- * hue shift as elevation rises; AA-clean text against every surface tier.
+ * Dark mode — charcoal canvas, coral accent, sharp whites.
  */
 val CozyNoirPalette = ParlorColors(
-    surfaceCanvas = Color(0xFF0A0706),
-    surfaceElevated = Color(0xFF1A1310),
-    surfaceHigher = Color(0xFF261C16),
-    surfaceInset = Color(0xFF050302),
-    surfaceHero = Color(0xFF2B1F18),
+    surfaceCanvas = Color(0xFF0B0B0F),
+    surfaceElevated = Color(0xFF16161C),
+    surfaceHigher = Color(0xFF1F1F26),
+    surfaceInset = Color(0xFF050507),
+    surfaceHero = Color(0xFF1A1A23),
 
-    accentEmber = Color(0xFFD97A2A),
-    accentEmberGlow = Color(0xFFF2A04D),
-    accentEmberDeep = Color(0xFF8C4015),
-    accentBrass = Color(0xFFC8A872),
-    accentParchment = Color(0xFFEFE0BC),
+    accentEmber = Color(0xFFFF6B5A),
+    accentEmberGlow = Color(0xFFFF8C7E),
+    accentEmberDeep = Color(0xFFE54B3A),
+    accentBrass = Color(0xFF8A8A92),
+    accentParchment = Color(0xFFFAFAFA),
 
-    textPrimary = Color(0xFFF5EAD0),
-    textSecondary = Color(0xFFC4B596),
-    textTertiary = Color(0xFF8C7B5C),
-    textOnAccent = Color(0xFF0A0706),
-    textNarration = Color(0xFFEDDDB5),
+    textPrimary = Color(0xFFFAFAFA),
+    textSecondary = Color(0xFFB6B6BE),
+    textTertiary = Color(0xFF7A7A82),
+    textOnAccent = Color(0xFF0B0B0F),
+    textNarration = Color(0xFFB6B6BE),
 
-    semanticSuccess = Color(0xFF8FA666),
-    semanticDanger = Color(0xFFC4533F),
-    semanticMuted = Color(0xFF6B5C45),
+    semanticSuccess = Color(0xFF3FB66E),
+    semanticDanger = Color(0xFFFF4438),
+    semanticMuted = Color(0xFF44444E),
 
-    borderSubtle = Color(0xFF2E2620),
-    borderElevated = Color(0xFF4A3E33),
-    borderGlow = Color(0x33D97A2A),
-    borderAccent = Color(0x66D97A2A),
+    borderSubtle = Color(0xFF20202A),
+    borderElevated = Color(0xFF2A2A35),
+    borderGlow = Color(0x33FF6B5A),
+    borderAccent = Color(0xFFFF6B5A),
+
+    transparent = Color(0x00000000),
+    overlayScrim = Color(0xD9000000),
 )
 
 /**
- * Cozy-noir (light) — parchment and ember. Surfaces step cream→gold;
- * deeper text + brass borders give cards a bookbinding edge instead of
- * fading into the background.
- *
- * Still cozy. Still noir-adjacent. Just lit by morning light.
+ * Light mode — pure white canvas, deeper coral accent for legibility.
  */
 val LightCozyNoirPalette = ParlorColors(
-    surfaceCanvas = Color(0xFFEFE5CD),
-    surfaceElevated = Color(0xFFF7EFDA),
-    surfaceHigher = Color(0xFFFDF8EA),
-    surfaceInset = Color(0xFFDFD3B8),
-    surfaceHero = Color(0xFFFFF5DC),
+    surfaceCanvas = Color(0xFFFFFFFF),
+    surfaceElevated = Color(0xFFF4F4F7),
+    surfaceHigher = Color(0xFFE9E9EE),
+    surfaceInset = Color(0xFFFAFAFA),
+    surfaceHero = Color(0xFFF0F0F4),
 
-    accentEmber = Color(0xFFC45F1F),
-    accentEmberGlow = Color(0xFFE38845),
-    accentEmberDeep = Color(0xFF7A3510),
-    accentBrass = Color(0xFF7A6839),
-    accentParchment = Color(0xFF2A2316),
+    accentEmber = Color(0xFFE54B3A),
+    accentEmberGlow = Color(0xFFFF6B5A),
+    accentEmberDeep = Color(0xFFB23323),
+    accentBrass = Color(0xFF6E6E78),
+    accentParchment = Color(0xFF0B0B0F),
 
-    textPrimary = Color(0xFF1A1410),
-    textSecondary = Color(0xFF4A3E2E),
-    textTertiary = Color(0xFF7A6A50),
-    textOnAccent = Color(0xFFFFF8EC),
-    textNarration = Color(0xFF332918),
+    textPrimary = Color(0xFF0B0B0F),
+    textSecondary = Color(0xFF4A4A52),
+    textTertiary = Color(0xFF8A8A92),
+    textOnAccent = Color(0xFFFFFFFF),
+    textNarration = Color(0xFF4A4A52),
 
-    semanticSuccess = Color(0xFF4D6630),
-    semanticDanger = Color(0xFF7A2818),
-    semanticMuted = Color(0xFFA89A7C),
+    semanticSuccess = Color(0xFF1E8E4F),
+    semanticDanger = Color(0xFFD93022),
+    semanticMuted = Color(0xFFC8C8D0),
 
-    borderSubtle = Color(0xFFC8BC9D),
-    borderElevated = Color(0xFFA89A7C),
-    borderGlow = Color(0x33C45F1F),
-    borderAccent = Color(0x66C45F1F),
+    borderSubtle = Color(0xFFE2E2E8),
+    borderElevated = Color(0xFFDADAE0),
+    borderGlow = Color(0x33E54B3A),
+    borderAccent = Color(0xFFE54B3A),
+
+    transparent = Color(0x00000000),
+    overlayScrim = Color(0x99000000),
 )
 
-/** Returns true if the palette is the light variant (used by the theme to pick a Material 3 scheme). */
+/** True iff the palette is the light variant (used by the theme to pick a Material 3 scheme). */
 val ParlorColors.isLight: Boolean
     get() = surfaceCanvas.luminance() > 0.5f
 
-// Local helper to avoid pulling in androidx.core; Color has no public luminance accessor in CMP common,
-// but we can approximate with the relative red+green+blue channels.
 private fun Color.luminance(): Float = 0.2126f * red + 0.7152f * green + 0.0722f * blue
