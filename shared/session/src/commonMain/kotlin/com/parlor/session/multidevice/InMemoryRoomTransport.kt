@@ -106,11 +106,19 @@ class InMemoryPeerRoom(
     override val incoming: Flow<RoomMessage> = bus.peerMessagesIn(selfPlayerId)
     override val peerEvents: SharedFlow<PeerEvent> = bus.peerEvents
 
+    /**
+     * Test-only flag. When true, [sendToHost] returns
+     * [NetError.NotConnected] without touching the bus so the peer bridge
+     * can exercise its offline-detection + queue paths.
+     */
+    var simulateNotConnected: Boolean = false
+
     override suspend fun send(target: SendTarget, message: HostMessage): Result<Unit, NetError> {
         return Result.Failure(NetError.Unauthorized)  // Peers cannot host-broadcast.
     }
 
     override suspend fun sendToHost(message: PeerMessage): Result<Unit, NetError> {
+        if (simulateNotConnected) return Result.Failure(NetError.NotConnected)
         bus.fromPeer(message)
         return Result.Success(Unit)
     }
