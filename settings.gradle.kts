@@ -94,3 +94,4 @@ if (p2pEnabled) {
 
 // Game modules
 include(":game-modes:whodunit")
+include(":game-modes:mafia")

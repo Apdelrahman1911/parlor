@@ -5,6 +5,7 @@ import com.parlor.app.storage.platformStorageModule
 import com.parlor.core.random.RandomSource
 import com.parlor.core.time.Clock
 import com.parlor.core.time.SystemClock
+import com.parlor.games.mafia.di.mafiaModule
 import com.parlor.games.whodunit.di.whodunitModule
 import com.parlor.storage.settings.InMemorySettingsStore
 import com.parlor.storage.settings.SettingsStore
@@ -42,6 +43,7 @@ val coreModule: Module = module {
 val allModules: List<Module> = listOf(
     coreModule,
     whodunitModule,
+    mafiaModule,
     contentModule,
     storageModule,
     platformStorageModule(),

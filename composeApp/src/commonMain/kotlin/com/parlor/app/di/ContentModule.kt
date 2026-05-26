@@ -13,6 +13,7 @@ import com.parlor.core.ids.CaseId
 import com.parlor.core.versioning.SemVer
 import com.parlor.engine.registry.DefaultGameRegistry
 import com.parlor.engine.registry.GameRegistry
+import com.parlor.games.mafia.MafiaDefinition
 import com.parlor.games.whodunit.WhodunitDefinition
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
@@ -51,7 +52,12 @@ import org.koin.dsl.module
 val contentModule: Module = module {
 
     single<GameRegistry> {
-        DefaultGameRegistry(listOf(get<WhodunitDefinition>()))
+        DefaultGameRegistry(
+            listOf(
+                get<WhodunitDefinition>(),
+                get<MafiaDefinition>(),
+            ),
+        )
     }
 
     single<HttpClient> {

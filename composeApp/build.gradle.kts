@@ -69,6 +69,7 @@ kotlin {
 
                 // Game modules
                 implementation(project(":game-modes:whodunit"))
+                implementation(project(":game-modes:mafia"))
 
                 // Compose
                 implementation(compose.runtime)
