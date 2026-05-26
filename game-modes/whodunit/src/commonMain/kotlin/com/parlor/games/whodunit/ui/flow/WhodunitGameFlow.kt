@@ -4,10 +4,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Text
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -48,7 +51,6 @@ import com.parlor.games.whodunit.WhodunitDefinition
 import com.parlor.games.whodunit.WhodunitIds
 import com.parlor.games.whodunit.content.WhodunitCase
 import com.parlor.games.whodunit.domain.action.WhodunitAction
-import com.parlor.games.whodunit.domain.event.Verdict
 import com.parlor.games.whodunit.domain.event.WhodunitEvent
 import com.parlor.games.whodunit.domain.modes.ClassicVoteMode
 import com.parlor.games.whodunit.domain.modes.EliminationMode
@@ -91,6 +93,12 @@ import com.parlor.games.whodunit.resources.whodunit_error_back
 import com.parlor.games.whodunit.resources.whodunit_error_back_description
 import com.parlor.games.whodunit.resources.whodunit_error_eyebrow
 import com.parlor.games.whodunit.resources.whodunit_error_title
+import com.parlor.games.whodunit.resources.whodunit_data_error_corrupted
+import com.parlor.games.whodunit.resources.whodunit_data_error_disk_full
+import com.parlor.games.whodunit.resources.whodunit_data_error_io
+import com.parlor.games.whodunit.resources.whodunit_data_error_not_found
+import com.parlor.games.whodunit.resources.whodunit_data_error_permission_denied
+import com.parlor.games.whodunit.resources.whodunit_data_error_unknown
 import com.parlor.games.whodunit.resources.whodunit_loading_eyebrow
 import com.parlor.games.whodunit.resources.whodunit_vote_counting
 import com.parlor.games.whodunit.resources.peer_paused_body
@@ -110,8 +118,11 @@ import com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitPeerRoomBridge
 import com.parlor.networking.protocol.HostMessage
 import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.SendTarget
+import com.parlor.games.whodunit.domain.party.WhodunitReadinessGate
+import com.parlor.session.PlayMode
 import com.parlor.session.SessionController
 import com.parlor.session.ViewerContext
+import com.parlor.session.party.PartyAwareSession
 import com.parlor.session.passandplay.PassAndPlaySessionController
 import com.parlor.storage.snapshot.SnapshotStore
 import kotlinx.coroutines.flow.SharedFlow
@@ -139,6 +150,11 @@ fun WhodunitGameFlow(
     modifier: Modifier = Modifier,
     resumeSessionId: SessionId? = null,
     caseId: String = "last-dinner",
+    // The local entry from Home → Browse Cases is functionally pass-and-play
+    // (single phone, multiple players around it). Multi-device entry points
+    // are separate composables — see [WhodunitMultiplayerHostFlow] /
+    // [WhodunitMultiplayerPeerFlow].
+    playMode: PlayMode = PlayMode.PassAndPlay,
 ) {
     val repository: CaseRepository = koinInject()
     val payloadValidator: PayloadValidator<WhodunitCase> = koinInject(qualifier = named("whodunit"))
@@ -187,10 +203,17 @@ fun WhodunitGameFlow(
             val case = (caseResult as Result.Success).data
             val resumed = (resumeResult as? Result.Success)?.data
             if (resumed != null) {
+                // The persisted play mode wins over the incoming prop: the
+                // user originally chose Solo or PassAndPlay on the play-mode
+                // picker, and resuming should put them back into the same
+                // ceremony. Falls through to the prop only when the snapshot
+                // pre-dates the metadata field.
+                val resumedPlayMode = resumed.playMode ?: playMode
                 SessionDrivenFlow(
                     case = case,
                     modeId = resumed.state.public.modeId,
                     players = resumed.state.players,
+                    playMode = resumedPlayMode,
                     onBackToLibrary = onBackToLibrary,
                     restoredState = resumed.state,
                     restoredSessionId = resumed.sessionId,
@@ -199,6 +222,7 @@ fun WhodunitGameFlow(
             } else {
                 ConfiguredFlow(
                     case = case,
+                    playMode = playMode,
                     onBackToLibrary = onBackToLibrary,
                     modifier = modifier,
                 )
@@ -211,7 +235,33 @@ fun WhodunitGameFlow(
 private data class ResumedSession(
     val sessionId: SessionId,
     val state: WhodunitState,
+    /**
+     * Play mode read back from `GameSnapshot.metadata[PLAY_MODE_KEY]`. Solo
+     * and PassAndPlay are the only modes that ever land here — MultiDevice
+     * sessions don't resume from snapshots (the room is gone when the host
+     * died). `null` means the snapshot pre-dates the metadata field; the
+     * caller falls back to whatever play mode the entry point chose.
+     */
+    val playMode: PlayMode?,
 )
+
+private const val PLAY_MODE_KEY = "playMode"
+private const val PLAY_MODE_SOLO = "Solo"
+private const val PLAY_MODE_PASS_AND_PLAY = "PassAndPlay"
+
+private fun PlayMode.serializeForMetadata(): String? = when (this) {
+    is PlayMode.Solo -> PLAY_MODE_SOLO
+    is PlayMode.PassAndPlay -> PLAY_MODE_PASS_AND_PLAY
+    // MultiDevice never persists — the room is the source of truth; if the
+    // host dies, peers leave and resume is a fresh local game (or nothing).
+    is PlayMode.MultiDevice -> null
+}
+
+private fun playModeFromMetadata(raw: String?): PlayMode? = when (raw) {
+    PLAY_MODE_SOLO -> PlayMode.Solo
+    PLAY_MODE_PASS_AND_PLAY -> PlayMode.PassAndPlay
+    else -> null
+}
 
 private suspend fun loadResumedSession(
     snapshotStore: SnapshotStore,
@@ -221,7 +271,8 @@ private suspend fun loadResumedSession(
     is Result.Failure -> Result.Failure(loaded.error)
     is Result.Success -> runCatching {
         val state = definition.snapshotCodec().decode(loaded.data.payload)
-        Result.Success(ResumedSession(sessionId, state))
+        val playMode = playModeFromMetadata(loaded.data.metadata[PLAY_MODE_KEY])
+        Result.Success(ResumedSession(sessionId, state, playMode))
     }.getOrElse { Result.Failure(DataError.CorruptedData) }
 }
 
@@ -244,6 +295,15 @@ internal fun LoadingScreen(modifier: Modifier = Modifier) {
     }
 }
 
+private fun whodunitDataErrorResource(error: DataError) = when (error) {
+    is DataError.NotFound -> Res.string.whodunit_data_error_not_found
+    is DataError.CorruptedData -> Res.string.whodunit_data_error_corrupted
+    is DataError.IoError -> Res.string.whodunit_data_error_io
+    is DataError.DiskFull -> Res.string.whodunit_data_error_disk_full
+    is DataError.PermissionDenied -> Res.string.whodunit_data_error_permission_denied
+    is DataError.Unknown -> Res.string.whodunit_data_error_unknown
+}
+
 @Composable
 private fun ErrorScreen(error: DataError, onBack: () -> Unit, modifier: Modifier = Modifier) {
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
@@ -262,7 +322,7 @@ private fun ErrorScreen(error: DataError, onBack: () -> Unit, modifier: Modifier
                 textAlign = androidx.compose.ui.text.style.TextAlign.Center,
             )
             Text(
-                text = error.toString(),
+                text = stringResource(whodunitDataErrorResource(error)),
                 style = ParlorTheme.typography.bodyMedium,
                 color = ParlorTheme.colors.textTertiary,
                 textAlign = androidx.compose.ui.text.style.TextAlign.Center,
@@ -293,6 +353,7 @@ private data class PreSession(
 @Composable
 private fun ConfiguredFlow(
     case: ValidatedCase<WhodunitCase>,
+    playMode: PlayMode,
     onBackToLibrary: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -319,21 +380,40 @@ private fun ConfiguredFlow(
                 modifier = modifier,
             )
         }
-        pre.players == null -> PlayerEntryScreen(
-            playerCount = pre.playerCount!!,
-            onConfirm = { names ->
-                pre = pre.copy(
-                    players = names.mapIndexed { i, n ->
-                        Player(PlayerId("p${i + 1}"), n.trim().ifBlank { "Player ${i + 1}" }, seat = i)
+        pre.players == null -> {
+            if (playMode is PlayMode.Solo) {
+                // Solo: there's only one human at the device, so asking for
+                // every "player" name would be busy-work. The reducer still
+                // needs N seats (a whodunit needs suspects), but their names
+                // are placeholders the player never has to look at again.
+                LaunchedEffect(pre.playerCount) {
+                    val count = pre.playerCount!!
+                    pre = pre.copy(
+                        players = (0 until count).map { i ->
+                            Player(PlayerId("p${i + 1}"), "Player ${i + 1}", seat = i)
+                        },
+                    )
+                }
+                LoadingScreen(modifier)
+            } else {
+                PlayerEntryScreen(
+                    playerCount = pre.playerCount!!,
+                    onConfirm = { names ->
+                        pre = pre.copy(
+                            players = names.mapIndexed { i, n ->
+                                Player(PlayerId("p${i + 1}"), n.trim().ifBlank { "Player ${i + 1}" }, seat = i)
+                            },
+                        )
                     },
+                    modifier = modifier,
                 )
-            },
-            modifier = modifier,
-        )
+            }
+        }
         else -> SessionDrivenFlow(
             case = case,
             modeId = pre.modeId!!,
             players = pre.players!!,
+            playMode = playMode,
             onBackToLibrary = onBackToLibrary,
             modifier = modifier,
         )
@@ -347,6 +427,7 @@ private fun SessionDrivenFlow(
     case: ValidatedCase<WhodunitCase>,
     modeId: ModeId,
     players: List<Player>,
+    playMode: PlayMode,
     onBackToLibrary: () -> Unit,
     modifier: Modifier = Modifier,
     restoredState: WhodunitState? = null,
@@ -373,30 +454,27 @@ private fun SessionDrivenFlow(
         )
     }
 
-    val session = remember(sessionConfig, restoredState) {
+    val session = remember(sessionConfig, restoredState, playMode) {
         val ctx = WhodunitReducerContext(
             clock = clock,
             random = RandomSource.seeded(seed),
             case = case.payload,
         )
-        PassAndPlaySessionController(
+        val raw = PassAndPlaySessionController(
             definition = definition,
             config = sessionConfig,
             reducerContext = ctx,
             scope = scope,
             restoredState = restoredState,
         )
-    }
-
-    // Track the latest verdict via events (the reducer emits WinnerDecided on
-    // transition to Reveal; the state doesn't carry the verdict directly).
-    var verdict by remember { mutableStateOf<Verdict?>(null) }
-    LaunchedEffect(session) {
-        @Suppress("UNCHECKED_CAST")
-        val events = session.events as SharedFlow<WhodunitEvent>
-        events.collect { event ->
-            if (event is WhodunitEvent.WinnerDecided) verdict = event.winner
-        }
+        // Local modes need auto-ack at the session boundary so per-phase UI
+        // buttons stay dumb. In MultiDevice the wrapper is a transparent
+        // pass-through (peers send their own acks).
+        PartyAwareSession(
+            delegate = raw,
+            playMode = playMode,
+            gate = WhodunitReadinessGate,
+        )
     }
 
     // Phase 6.1 snapshot writer: persist the canonical (host) state on every
@@ -408,6 +486,13 @@ private fun SessionDrivenFlow(
     // taps that don't change the phase).
     LaunchedEffect(session) {
         val codec = definition.snapshotCodec()
+        // Stamp the chosen play mode onto every persisted snapshot so resume
+        // restores the same UI ceremony. MultiDevice never reaches this code
+        // path (its own flows don't write snapshots), so the result is empty
+        // or one of {Solo, PassAndPlay}.
+        val metadata: Map<String, String> = playMode.serializeForMetadata()
+            ?.let { mapOf(PLAY_MODE_KEY to it) }
+            ?: emptyMap()
         @Suppress("UNCHECKED_CAST")
         val events = session.events as SharedFlow<WhodunitEvent>
         events.collect { event ->
@@ -425,6 +510,7 @@ private fun SessionDrivenFlow(
                             createdAt = clock.now(),
                             phaseId = canonicalState.phase.id,
                             payload = codec.encode(canonicalState),
+                            metadata = metadata,
                         ),
                     )
                 }
@@ -445,14 +531,13 @@ private fun SessionDrivenFlow(
 
     Box(modifier = modifier.fillMaxSize()) {
         PhaseRouter(
+            playMode = playMode,
             phase = state.phase,
             state = state,
             case = case,
             payload = payload,
             session = session,
             scope = scope,
-            verdict = verdict,
-            onVerdictClear = { verdict = null },
             onBackToLibrary = onBackToLibrary,
             modifier = Modifier.fillMaxSize(),
         )
@@ -465,6 +550,7 @@ private fun SessionDrivenFlow(
                 onPause = { scope.launch { session.submit(WhodunitAction.Pause) } },
                 modifier = Modifier
                     .align(Alignment.TopEnd)
+                    .windowInsetsPadding(WindowInsets.statusBars)
                     .padding(ParlorTheme.spacing.m),
             )
         }
@@ -553,7 +639,10 @@ fun WhodunitMultiplayerHostFlow(
             randomSeed = seed,
         )
     }
-    val session = remember(sessionConfig) {
+    val hostPlayMode = remember(room) {
+        PlayMode.MultiDevice(selfPlayerId = room.selfPlayerId, isHost = true)
+    }
+    val rawSession = remember(sessionConfig) {
         PassAndPlaySessionController(
             definition = definition,
             config = sessionConfig,
@@ -565,8 +654,17 @@ fun WhodunitMultiplayerHostFlow(
             scope = scope,
         )
     }
-    val bridge = remember(session, room, players) {
-        WhodunitHostRoomBridge(session, room, players, scope)
+    // The bridge talks to the raw controller for broadcasting host state.
+    // The UI submits through the PartyAwareSession wrapper. In MultiDevice
+    // mode the wrapper is a transparent pass-through — peers ack themselves
+    // — but using the wrapper everywhere keeps the surrounding code uniform
+    // with the local entries.
+    val session: SessionController<WhodunitState, WhodunitAction, WhodunitEvent> =
+        remember(rawSession, hostPlayMode) {
+            PartyAwareSession(rawSession, hostPlayMode, WhodunitReadinessGate)
+        }
+    val bridge = remember(rawSession, room, players) {
+        WhodunitHostRoomBridge(rawSession, room, players, scope)
     }
     LaunchedEffect(bridge) {
         bridge.announceStart(
@@ -576,14 +674,6 @@ fun WhodunitMultiplayerHostFlow(
         )
     }
     DisposableEffect(bridge) { onDispose { bridge.close() } }
-
-    var verdict by remember { mutableStateOf<Verdict?>(null) }
-    LaunchedEffect(session) {
-        @Suppress("UNCHECKED_CAST")
-        (session.events as SharedFlow<WhodunitEvent>).collect { event ->
-            if (event is WhodunitEvent.WinnerDecided) verdict = event.winner
-        }
-    }
 
     val publicProjection by session.publicState.collectAsState()
     val state = publicProjection.state
@@ -597,14 +687,13 @@ fun WhodunitMultiplayerHostFlow(
 
     Box(modifier = modifier.fillMaxSize()) {
         PhaseRouter(
+            playMode = hostPlayMode,
             phase = state.phase,
             state = state,
             case = case,
             payload = payload,
             session = session,
             scope = scope,
-            verdict = verdict,
-            onVerdictClear = { verdict = null },
             onBackToLibrary = {
                 scope.launch {
                     runCatching { room.send(SendTarget.Broadcast, HostMessage.EndSession) }
@@ -612,8 +701,6 @@ fun WhodunitMultiplayerHostFlow(
                 }
             },
             modifier = Modifier.fillMaxSize(),
-            selfPlayerId = room.selfPlayerId,
-            isHost = true,
         )
 
         if (!state.public.paused && state.phase !is WhodunitPhase.PostGame) {
@@ -621,6 +708,7 @@ fun WhodunitMultiplayerHostFlow(
                 onPause = { scope.launch { session.submit(WhodunitAction.Pause) } },
                 modifier = Modifier
                     .align(Alignment.TopEnd)
+                    .windowInsetsPadding(WindowInsets.statusBars)
                     .padding(ParlorTheme.spacing.m),
             )
         }
@@ -717,26 +805,31 @@ fun WhodunitMultiplayerPeerFlow(
         }
     }
 
-    val session = bridge.controller
-    val verdict by remember { mutableStateOf<Verdict?>(null) }
+    val peerPlayMode = remember(selfPlayerId) {
+        PlayMode.MultiDevice(selfPlayerId = selfPlayerId, isHost = false)
+    }
+    val session: SessionController<WhodunitState, WhodunitAction, WhodunitEvent> =
+        remember(bridge.controller, peerPlayMode) {
+            // Multi-device peer: wrapper is a transparent pass-through.
+            // Wired in for shape uniformity with the local entry — local
+            // mode is the only one that actually issues auto-acks.
+            PartyAwareSession(bridge.controller, peerPlayMode, WhodunitReadinessGate)
+        }
     val publicProjection by session.publicState.collectAsState()
     val state = publicProjection.state
     val payload = case.payload
 
     Box(modifier = modifier.fillMaxSize()) {
         PhaseRouter(
+            playMode = peerPlayMode,
             phase = state.phase,
             state = state,
             case = case,
             payload = payload,
             session = session,
             scope = scope,
-            verdict = verdict,
-            onVerdictClear = { /* peer never replays — replay is host-driven */ },
             onBackToLibrary = onBackToLibrary,
             modifier = Modifier.fillMaxSize(),
-            selfPlayerId = selfPlayerId,
-            isHost = false,
         )
         if (state.public.paused) {
             PeerHostPausedBanner(modifier = Modifier.align(Alignment.Center))

@@ -7,11 +7,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.only
-import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -65,12 +60,13 @@ fun StickyActionBar(
                     ),
                 ),
         )
-        // Solid action surface — sits on the canvas, padded for system bars.
+        // Solid action surface. System nav-bar inset is handled by
+        // AmbientBackdrop one level up, so the bar only deals with its
+        // own internal content padding here.
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(colors.surfaceCanvas)
-                .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Bottom))
                 .padding(
                     start = ParlorTheme.spacing.l,
                     end = ParlorTheme.spacing.l,

@@ -50,6 +50,6 @@ fun ParlorTextField(
             focusedLabelColor = colors.accentEmber,
             unfocusedLabelColor = colors.textSecondary,
         ),
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth().bringIntoViewOnFocus(),
     )
 }

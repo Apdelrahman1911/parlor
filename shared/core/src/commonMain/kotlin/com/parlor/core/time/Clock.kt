@@ -13,7 +13,7 @@ interface Clock {
 }
 
 object SystemClock : Clock {
-    override fun now(): Instant = kotlinx.datetime.Clock.System.now()
+    override fun now(): Instant = kotlin.time.Clock.System.now()
 }
 
 /**

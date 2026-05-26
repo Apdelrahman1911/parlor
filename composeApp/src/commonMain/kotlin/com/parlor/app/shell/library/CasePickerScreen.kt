@@ -39,9 +39,11 @@ import com.parlor.app.resources.case_picker_players_format
 import com.parlor.app.resources.case_picker_select_description
 import com.parlor.app.resources.case_picker_subtitle
 import com.parlor.app.resources.case_picker_title
+import com.parlor.app.shell.dataErrorMessage
 import com.parlor.content.repository.CaseRepository
 import com.parlor.content.schema.CaseSummary
 import com.parlor.core.ids.GameId
+import com.parlor.core.result.DataError
 import com.parlor.core.result.Result
 import com.parlor.designsystem.backdrop.HeroBackdrop
 import com.parlor.designsystem.components.CandleFlame
@@ -76,7 +78,7 @@ fun CasePickerScreen(
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val casesResult by produceState<Result<List<CaseSummary>, *>?>(
+    val casesResult by produceState<Result<List<CaseSummary>, DataError>?>(
         initialValue = null,
         key1 = repository,
     ) {
@@ -111,7 +113,7 @@ fun CasePickerScreen(
                 is Result.Failure -> EmptyState(
                     title = stringResource(Res.string.library_load_error_format).replace(
                         "%1\$s",
-                        state.error.toString(),
+                        dataErrorMessage(state.error),
                     ),
                     modifier = Modifier.weight(1f),
                 )

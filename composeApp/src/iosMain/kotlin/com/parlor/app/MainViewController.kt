@@ -2,6 +2,7 @@ package com.parlor.app
 
 import androidx.compose.ui.window.ComposeUIViewController
 import com.parlor.app.di.allModules
+import kotlin.concurrent.Volatile
 import org.koin.core.context.startKoin
 
 /**

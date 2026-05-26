@@ -26,6 +26,7 @@ import com.parlor.app.shell.multiplayer.HostSessionFlow
 import com.parlor.app.shell.multiplayer.JoinPromptScreen
 import com.parlor.app.shell.multiplayer.NameInputScreen
 import com.parlor.app.shell.multiplayer.PeerSessionFlow
+import com.parlor.app.shell.playmode.PlayModePickerScreen
 import com.parlor.app.shell.settings.SettingsScreen
 import com.parlor.content.repository.CaseRepository
 import com.parlor.core.ids.ModeId
@@ -39,26 +40,35 @@ import com.parlor.designsystem.localization.ProvideAppLanguage
 import com.parlor.designsystem.localization.customAppLocale
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.designsystem.theme.ThemeMode
+import com.parlor.games.mafia.ui.flow.multidevice.MafiaHostLobbyFlow
+import com.parlor.games.mafia.ui.flow.multidevice.MafiaPeerLobbyFlow
+import com.parlor.games.mafia.ui.flow.passandplay.MafiaGameFlow
 import com.parlor.games.whodunit.WhodunitIds
 import com.parlor.games.whodunit.ui.flow.WhodunitGameFlow
 import com.parlor.games.whodunit.ui.screens.setup.ModeSelectionScreen
+import com.parlor.app.shell.home.MAFIA_GAME_ID
+import com.parlor.app.shell.home.WHODUNIT_GAME_ID
 import com.parlor.networking.transport.RoomTransport
+import com.parlor.session.PlayMode
 import com.parlor.storage.settings.SettingsStore
 import com.parlor.storage.snapshot.SnapshotStore
 import org.koin.compose.koinInject
 import org.koin.mp.KoinPlatform
 
 /**
- * Parlor's root composable. Holds the high-level navigation state machine
- * — Home → (one of: pass-and-play game, host flow, peer flow, settings)
- * — and threads the user's selections (name, case id, mode) through each
- * branch.
+ * Parlor's root composable. Owns the high-level navigation state machine.
  *
- * The pass-and-play branch and the multiplayer branches share the case
- * picker; selecting a case from Home leads into a solo game with the same
- * UX as before, while the Host branch routes the picker through a mode
- * picker into the lobby. Picking a case is dynamic: any JSON registered in
- * `WhodunitDiModule.knownCaseIds` shows up automatically.
+ * Top-level shape: **Home → Setup → branch**.
+ *
+ *  - Home is game-first: pick a game card.
+ *  - Setup is one screen with four cards (Solo / Pass-and-Play / Host / Join);
+ *    the user makes the "how" decision once, up front.
+ *  - From Setup, single-device branches go to the case picker then the game;
+ *    multi-device branches go through the existing permission + name + case
+ *    + mode pipeline. Multiplayer is gated on whether RoomTransport is wired.
+ *
+ * Case discovery is dynamic — any JSON registered in
+ * `WhodunitDiModule.knownCaseIds` shows up in the picker automatically.
  */
 @Composable
 fun App() {
@@ -85,8 +95,12 @@ fun App() {
             var resumeSessionId: SessionId? by remember { mutableStateOf(null) }
             var unfinishedRefreshKey: Int by remember { mutableStateOf(0) }
 
-            // Pass-and-play case selection.
+            // Single-device entry (Library tab) — case + chosen play mode.
             var soloCaseId: String by remember { mutableStateOf("last-dinner") }
+            // Chosen on the play-mode picker between the case picker and the
+            // game. Always one of the two local modes (multi-device is wired
+            // separately through HostSessionFlow / PeerSessionFlow).
+            var soloPlayMode: PlayMode by remember { mutableStateOf(PlayMode.PassAndPlay) }
 
             // Host flow selections (carried across screens).
             var hostName: String by remember { mutableStateOf("") }
@@ -96,6 +110,12 @@ fun App() {
             // Peer flow selections.
             var peerName: String by remember { mutableStateOf("") }
             var pendingJoinCode: String by remember { mutableStateOf("") }
+
+            // Mafia multi-device selections — parallel to host/peer above so
+            // a single back navigation can clear all of them.
+            var mafiaHostName: String by remember { mutableStateOf("") }
+            var mafiaPeerName: String by remember { mutableStateOf("") }
+            var mafiaPendingJoinCode: String by remember { mutableStateOf("") }
 
             val unfinishedSessions by produceState(
                 initialValue = emptyList<SessionId>(),
@@ -118,6 +138,9 @@ fun App() {
                 peerName = ""
                 hostCaseId = ""
                 pendingJoinCode = ""
+                mafiaHostName = ""
+                mafiaPeerName = ""
+                mafiaPendingJoinCode = ""
                 unfinishedRefreshKey++
                 screen = AppScreen.Home
             }
@@ -141,7 +164,13 @@ fun App() {
                 ) { current ->
             when (current) {
                 AppScreen.Home -> HomeScreen(
-                    onTileSelected = { /* legacy tile id; replaced by case picker */ },
+                    onGameSelected = { gameId ->
+                        screen = when (gameId) {
+                            MAFIA_GAME_ID -> AppScreen.MafiaSetup
+                            WHODUNIT_GAME_ID -> AppScreen.GameSetup
+                            else -> AppScreen.GameSetup
+                        }
+                    },
                     onSettings = { screen = AppScreen.Settings },
                     modifier = Modifier.fillMaxSize(),
                     unfinishedSessions = unfinishedSessions,
@@ -149,17 +178,28 @@ fun App() {
                         resumeSessionId = sessionId
                         screen = AppScreen.Whodunit
                     },
-                    multiplayerEnabled = roomTransport != null,
+                )
+
+                // -------- Setup (the "how do you want to play?" gate) --------
+                // Branches into Solo/Pass-and-Play (case picker → game) or
+                // Host/Join (permission → name → case → mode → lobby).
+                AppScreen.GameSetup -> PlayModePickerScreen(
+                    onModeSelected = { mode ->
+                        soloPlayMode = mode
+                        screen = AppScreen.SoloCasePicker
+                    },
                     onHost = {
                         if (roomTransport != null) screen = AppScreen.HostPermission
                     },
                     onJoin = {
                         if (roomTransport != null) screen = AppScreen.JoinPermission
                     },
-                    onBrowseCases = { screen = AppScreen.SoloCasePicker },
+                    onBack = backToHome,
+                    multiplayerEnabled = roomTransport != null,
+                    modifier = Modifier.fillMaxSize(),
                 )
 
-                // -------- Pass-and-play branch --------
+                // -------- Single-device branch (Solo / PassAndPlay) --------
                 AppScreen.SoloCasePicker -> CasePickerScreen(
                     repository = caseRepository,
                     onCasePicked = { summary ->
@@ -167,7 +207,7 @@ fun App() {
                         resumeSessionId = null
                         screen = AppScreen.Whodunit
                     },
-                    onBack = backToHome,
+                    onBack = { screen = AppScreen.GameSetup },
                     modifier = Modifier.fillMaxSize(),
                 )
                 AppScreen.Whodunit -> WhodunitGameFlow(
@@ -175,6 +215,12 @@ fun App() {
                     modifier = Modifier.fillMaxSize(),
                     resumeSessionId = resumeSessionId,
                     caseId = soloCaseId,
+                    // The user explicitly picked Solo or PassAndPlay on the
+                    // play-mode picker. Multi-device entries are wired
+                    // through HostSessionFlow / PeerSessionFlow, which use
+                    // their own composables that declare MultiDevice mode
+                    // internally — they never land here.
+                    playMode = soloPlayMode,
                 )
 
                 // -------- Host branch --------
@@ -293,6 +339,131 @@ fun App() {
                     }
                 }
 
+                // -------- Mafia branch --------
+                // Mafia has no external case content, so it skips the case
+                // picker. The play-mode picker disables Solo (Mafia is a
+                // group game) and routes Pass-and-Play to MafiaGameFlow,
+                // Host/Join into the Mafia-owned multi-device lobby flows.
+                AppScreen.MafiaSetup -> PlayModePickerScreen(
+                    onModeSelected = { _ ->
+                        // The picker disables Solo for Mafia; any selection
+                        // here is Pass-and-Play, which is what MafiaGameFlow
+                        // expects.
+                        screen = AppScreen.Mafia
+                    },
+                    onHost = {
+                        if (roomTransport != null) screen = AppScreen.MafiaHostPermission
+                    },
+                    onJoin = {
+                        if (roomTransport != null) screen = AppScreen.MafiaJoinPermission
+                    },
+                    onBack = backToHome,
+                    multiplayerEnabled = roomTransport != null,
+                    soloEnabled = false,
+                    modifier = Modifier.fillMaxSize(),
+                )
+                AppScreen.Mafia -> MafiaGameFlow(
+                    onBackToHome = backToHome,
+                    modifier = Modifier.fillMaxSize(),
+                )
+
+                // Mafia host branch — permission gate → name → lobby.
+                AppScreen.MafiaHostPermission -> {
+                    val gate = rememberP2pPermissionGate()
+                    val gateStatus by gate.status.collectAsState()
+                    LaunchedEffect(gateStatus) {
+                        if (gateStatus == PermissionStatus.Granted) {
+                            screen = AppScreen.MafiaHostName
+                        }
+                    }
+                    if (gateStatus == PermissionStatus.Granted) {
+                        Text(text = "")
+                    } else {
+                        P2pPermissionRationaleScreen(
+                            gate = gate,
+                            onGranted = { screen = AppScreen.MafiaHostName },
+                            onBack = backToHome,
+                            modifier = Modifier.fillMaxSize(),
+                        )
+                    }
+                }
+                AppScreen.MafiaHostName -> NameInputScreen(
+                    isHost = true,
+                    initial = mafiaHostName,
+                    onConfirm = { name ->
+                        mafiaHostName = name
+                        screen = AppScreen.MafiaHostLobby
+                    },
+                    onBack = backToHome,
+                    modifier = Modifier.fillMaxSize(),
+                )
+                AppScreen.MafiaHostLobby -> {
+                    val transport = roomTransport
+                    if (transport == null || mafiaHostName.isBlank()) {
+                        screen = AppScreen.Home
+                    } else {
+                        MafiaHostLobbyFlow(
+                            transport = transport,
+                            hostName = mafiaHostName,
+                            onBackToHome = backToHome,
+                            modifier = Modifier.fillMaxSize(),
+                        )
+                    }
+                }
+
+                // Mafia join branch — permission gate → name → code → lobby.
+                AppScreen.MafiaJoinPermission -> {
+                    val gate = rememberP2pPermissionGate()
+                    val gateStatus by gate.status.collectAsState()
+                    LaunchedEffect(gateStatus) {
+                        if (gateStatus == PermissionStatus.Granted) {
+                            screen = AppScreen.MafiaJoinName
+                        }
+                    }
+                    if (gateStatus == PermissionStatus.Granted) {
+                        Text(text = "")
+                    } else {
+                        P2pPermissionRationaleScreen(
+                            gate = gate,
+                            onGranted = { screen = AppScreen.MafiaJoinName },
+                            onBack = backToHome,
+                            modifier = Modifier.fillMaxSize(),
+                        )
+                    }
+                }
+                AppScreen.MafiaJoinName -> NameInputScreen(
+                    isHost = false,
+                    initial = mafiaPeerName,
+                    onConfirm = { name ->
+                        mafiaPeerName = name
+                        screen = AppScreen.MafiaJoinPrompt
+                    },
+                    onBack = backToHome,
+                    modifier = Modifier.fillMaxSize(),
+                )
+                AppScreen.MafiaJoinPrompt -> JoinPromptScreen(
+                    onConfirm = { code ->
+                        mafiaPendingJoinCode = code
+                        screen = AppScreen.MafiaPeerLobby
+                    },
+                    onCancel = backToHome,
+                    modifier = Modifier.fillMaxSize(),
+                )
+                AppScreen.MafiaPeerLobby -> {
+                    val transport = roomTransport
+                    if (transport == null || mafiaPendingJoinCode.isBlank() || mafiaPeerName.isBlank()) {
+                        screen = AppScreen.Home
+                    } else {
+                        MafiaPeerLobbyFlow(
+                            transport = transport,
+                            code = mafiaPendingJoinCode,
+                            peerName = mafiaPeerName,
+                            onBackToHome = backToHome,
+                            modifier = Modifier.fillMaxSize(),
+                        )
+                    }
+                }
+
                 AppScreen.Settings -> SettingsScreen(
                     onBack = backToHome,
                     modifier = Modifier.fillMaxSize(),
@@ -313,7 +484,11 @@ fun App() {
 
 private enum class AppScreen {
     Home,
+    GameSetup,
     SoloCasePicker, Whodunit,
+    MafiaSetup, Mafia,
+    MafiaHostPermission, MafiaHostName, MafiaHostLobby,
+    MafiaJoinPermission, MafiaJoinName, MafiaJoinPrompt, MafiaPeerLobby,
     HostPermission, HostName, HostCasePicker, HostMode, HostLobby,
     JoinPermission, JoinName, JoinPrompt, PeerLobby,
     Settings,

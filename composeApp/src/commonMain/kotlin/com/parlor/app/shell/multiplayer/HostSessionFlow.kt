@@ -38,6 +38,8 @@ import com.parlor.app.resources.host_members_eyebrow
 import com.parlor.app.resources.host_room_code_eyebrow
 import com.parlor.app.resources.host_starting
 import com.parlor.app.resources.host_title
+import com.parlor.app.resources.host_hosting_as_format
+import com.parlor.app.shell.netErrorMessage
 import com.parlor.content.repository.CaseRepository
 import com.parlor.content.validation.PayloadValidator
 import com.parlor.content.validation.ValidatedCase
@@ -58,6 +60,7 @@ import com.parlor.engine.state.Player
 import com.parlor.games.whodunit.content.WhodunitCase
 import com.parlor.games.whodunit.ui.flow.WhodunitMultiplayerHostFlow
 import com.parlor.networking.room.LocalRoom
+import com.parlor.networking.room.NetError
 import com.parlor.networking.transport.HostConfig
 import com.parlor.networking.transport.RoomTransport
 import kotlinx.coroutines.launch
@@ -85,7 +88,8 @@ fun HostSessionFlow(
     val scope = rememberCoroutineScope()
 
     var room by remember { mutableStateOf<LocalRoom?>(null) }
-    var hostError by remember { mutableStateOf<String?>(null) }
+    // Keep the typed error so the rendering site can localise it.
+    var hostError by remember { mutableStateOf<NetError?>(null) }
     var started by remember { mutableStateOf(false) }
     val seed = remember(caseId) { RandomSource.system().nextLong() }
 
@@ -99,7 +103,7 @@ fun HostSessionFlow(
     LaunchedEffect(transport) {
         when (val result = transport.host(HostConfig(roomDisplayName = hostName))) {
             is Result.Success -> room = result.data
-            is Result.Failure -> hostError = result.error.toString()
+            is Result.Failure -> hostError = result.error
         }
     }
 
@@ -115,7 +119,7 @@ fun HostSessionFlow(
     val current = room
     val case = (caseResult as? Result.Success)?.data
     when {
-        hostError != null -> HostErrorState(hostError!!, onBack = onBackToLibrary, modifier = modifier)
+        hostError != null -> HostErrorState(netErrorMessage(hostError!!), onBack = onBackToLibrary, modifier = modifier)
         current == null || case == null -> HostLoadingState(modifier = modifier)
         !started -> HostLobbyContent(
             room = current,
@@ -200,7 +204,7 @@ private fun HostLobbyContent(
                         modifier = Modifier.fillMaxWidth(),
                     )
                     Text(
-                        text = "Hosting as $hostName",
+                        text = stringResource(Res.string.host_hosting_as_format).replace("%1\$s", hostName),
                         style = ParlorTheme.typography.bodyMedium,
                         color = ParlorTheme.colors.textTertiary,
                         textAlign = TextAlign.Center,

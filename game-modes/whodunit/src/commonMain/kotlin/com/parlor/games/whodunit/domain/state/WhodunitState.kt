@@ -7,6 +7,7 @@ import com.parlor.core.ids.ModeId
 import com.parlor.core.ids.PlayerId
 import com.parlor.engine.state.GameState
 import com.parlor.engine.state.Player
+import com.parlor.games.whodunit.domain.event.Verdict
 import com.parlor.games.whodunit.domain.phase.WhodunitPhase
 import kotlinx.serialization.Serializable
 
@@ -76,6 +77,18 @@ data class WhodunitPublic(
      * `WhodunitActionAuthority.isAllowed`).
      */
     val droppedPlayers: Set<PlayerId> = emptySet(),
+
+    /**
+     * The decided verdict, set when the reducer transitions to [WhodunitPhase.Reveal].
+     * Part of public state because the Reveal screen exposes it to the whole table
+     * by definition. Living in state means:
+     *   - Peers receive the verdict via [HostMessage.PublicStateSnapshot] (no
+     *     extra protocol surface needed).
+     *   - Snapshot resume restores the verdict for free.
+     *   - The UI reads from a single source of truth instead of a side-channel
+     *     event listener (which was prone to losing the verdict on resume).
+     */
+    val verdict: Verdict? = null,
 )
 
 /** Per-player private — visible only to the owning player. */

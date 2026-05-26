@@ -50,7 +50,15 @@ class CasePickerDiscoveryTest {
      * The same list the production Koin module wires (kept in sync manually —
      * touch this list when `WhodunitDiModule.knownCaseIds` changes).
      */
-    private val productionKnownCaseIds = listOf("last-dinner", "layla-halabi", "jasmine-ring")
+    private val productionKnownCaseIds = listOf(
+        "last-dinner",
+        "layla-halabi",
+        "jasmine-ring",
+        "khan-el-khalili",
+        "iskenderia-corniche",
+        "zamalek-ramadan",
+        "saidi-inheritance",
+    )
 
     private fun buildRepository(): DefaultCaseRepository {
         val bundled = BundledWhodunitCases(

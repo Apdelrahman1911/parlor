@@ -4,6 +4,7 @@ import com.parlor.core.ids.ClueId
 import com.parlor.core.ids.PlayerId
 import com.parlor.engine.event.GameEvent
 import com.parlor.games.whodunit.domain.phase.WhodunitPhase
+import kotlinx.serialization.Serializable
 
 /**
  * One-shot signals out of the reducer. Consumers: sound playback, UI motion,
@@ -44,9 +45,13 @@ sealed interface WhodunitEvent : GameEvent {
     data class GameEndedEarly(val withReveal: Boolean) : WhodunitEvent
 }
 
+@Serializable
 sealed interface Verdict {
+    @Serializable
     data class PlayersWin(val killerCharacterId: String) : Verdict
+    @Serializable
     data class KillerWins(val killerCharacterId: String, val cause: KillerWinCause) : Verdict
 }
 
+@Serializable
 enum class KillerWinCause { InnocentAccused, TieUnresolved, SurvivedToFinalTwo }

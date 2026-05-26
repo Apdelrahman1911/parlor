@@ -61,8 +61,11 @@ import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.engine.state.Player
 import com.parlor.games.whodunit.content.WhodunitCase
 import com.parlor.games.whodunit.ui.flow.WhodunitMultiplayerPeerFlow
+import com.parlor.app.shell.dataErrorMessage
+import com.parlor.app.shell.netErrorMessage
 import com.parlor.networking.protocol.HostMessage
 import com.parlor.networking.room.LocalRoom
+import com.parlor.networking.room.NetError
 import com.parlor.networking.transport.RoomTransport
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.launch
@@ -84,18 +87,19 @@ fun PeerSessionFlow(
     onBackToLibrary: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val repository: CaseRepository = koinInject()
-    val payloadValidator: PayloadValidator<WhodunitCase> = koinInject(qualifier = named("whodunit"))
     val scope = rememberCoroutineScope()
 
     var room by remember { mutableStateOf<LocalRoom?>(null) }
-    var joinError by remember { mutableStateOf<String?>(null) }
+    // Keep the typed error so the rendering site can localise it. Stringifying
+    // here would lose the type and ship "NetError$TransportFailure(reason=...)"
+    // straight to the user.
+    var joinError by remember { mutableStateOf<NetError?>(null) }
     var sessionStart by remember { mutableStateOf<SessionStartingFromHost?>(null) }
 
     LaunchedEffect(transport, code) {
         when (val result = transport.join(code, peerName)) {
             is Result.Success -> room = result.data
-            is Result.Failure -> joinError = result.error.toString()
+            is Result.Failure -> joinError = result.error
         }
     }
 
@@ -140,7 +144,7 @@ fun PeerSessionFlow(
             Box(modifier = Modifier.fillMaxSize()) {
                 when {
                     joinError != null -> PeerErrorState(
-                        joinError!!,
+                        netErrorMessage(joinError!!),
                         onBack = onBackToLibrary,
                         modifier = Modifier.fillMaxSize(),
                     )
@@ -200,7 +204,7 @@ private fun PeerSessionWithCase(
     when (val r = caseResult) {
         null -> PeerLoadingCase(modifier)
         is Result.Failure -> PeerErrorState(
-            stringResource(Res.string.peer_case_load_error_format).replace("%1\$s", r.error.toString()),
+            stringResource(Res.string.peer_case_load_error_format).replace("%1\$s", dataErrorMessage(r.error)),
             onBack = onBackToLibrary,
             modifier = modifier,
         )

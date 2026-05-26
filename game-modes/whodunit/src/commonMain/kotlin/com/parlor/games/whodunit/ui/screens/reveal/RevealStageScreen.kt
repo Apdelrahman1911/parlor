@@ -73,23 +73,32 @@ fun RevealStageScreen(
 ) {
     val colors = ParlorTheme.colors
     val reduced = ParlorTheme.reducedMotion
-    val verdictLine = when (verdict) {
-        is Verdict.PlayersWin -> stringResource(Res.string.reveal_stage_yes)
-        is Verdict.KillerWins -> stringResource(Res.string.reveal_stage_no)
+    // Capture the verdict in a local so the smart cast in the nested `when`
+    // is anchored to one stable read. The previous code branched three times
+    // on the parameter; on Kotlin/Native an incremental rebuild occasionally
+    // dropped exhaustiveness on the second / third `when` over the same
+    // sealed-interface parameter, throwing NoWhenBranchMatchedException on
+    // an instance that any `is` check would otherwise match.
+    val v: Verdict = verdict
+    val playersWin = v is Verdict.PlayersWin
+    val verdictLine = if (playersWin) {
+        stringResource(Res.string.reveal_stage_yes)
+    } else {
+        stringResource(Res.string.reveal_stage_no)
     }
-    val accentColor = when (verdict) {
-        is Verdict.PlayersWin -> colors.semanticSuccess
-        is Verdict.KillerWins -> colors.semanticDanger
-    }
-    val subhead = when (verdict) {
-        is Verdict.PlayersWin -> stringResource(Res.string.reveal_stage_players_win_subhead)
-        is Verdict.KillerWins -> when (verdict.cause) {
+    val accentColor = if (playersWin) colors.semanticSuccess else colors.semanticDanger
+    val subhead = if (v is Verdict.PlayersWin) {
+        stringResource(Res.string.reveal_stage_players_win_subhead)
+    } else {
+        val killerCause = (v as? Verdict.KillerWins)?.cause
+        when (killerCause) {
             KillerWinCause.InnocentAccused ->
                 stringResource(Res.string.reveal_stage_killer_innocent_subhead)
             KillerWinCause.TieUnresolved ->
                 stringResource(Res.string.reveal_stage_killer_tie_subhead)
             KillerWinCause.SurvivedToFinalTwo ->
                 stringResource(Res.string.reveal_stage_killer_finaltwo_subhead)
+            null -> stringResource(Res.string.reveal_stage_killer_innocent_subhead)
         }
     }
 

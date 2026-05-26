@@ -292,6 +292,68 @@ class FullGameDriveTest {
     }
 
     @Test
+    fun elimination_innocent_voted_out_holds_on_announcement_until_acknowledged() = runTest {
+        // Design doc §13: when an innocent is eliminated and the game continues,
+        // the app must surface "[Name] was innocent. The killer is still among
+        // you." before the next round opens. The reducer expresses that as a
+        // hold on voteState = Resolved(wasKiller = false); AcknowledgeRevealCard
+        // is the table's tap-through.
+        val payload = loadCase()
+        val seed = 8888L
+        val players = fivePlayers()
+        val (session, sessionScope) = buildSession(
+            payload, WhodunitIds.EliminationModeId, players, seed,
+        )
+
+        val events = mutableListOf<WhodunitEvent>()
+        val collector = sessionScope.launch { session.events.collect { events += it } }
+
+        session.submit(WhodunitAction.AssignRoles(seed))
+        session.ackIntroForAll(players)
+        session.submit(WhodunitAction.AdvanceFromIntro)
+        session.ackBriefingForAll(players)
+        for (i in 1..4) session.submit(WhodunitAction.AdvanceBriefingCard(i))
+        session.revealRolesAndAdvance(players)
+
+        session.submit(WhodunitAction.RevealNextClue)
+        session.submit(WhodunitAction.StartDiscussionTimer(30))
+        session.submit(WhodunitAction.AdvanceFromDiscussion)
+        assertThat(stateOf(session).public.voteState).isInstanceOf(VoteState.Collecting::class)
+
+        // Everyone votes for an innocent (not the killer).
+        val killerId = hostState(session).hostOnly.killerId
+        val innocent = players.first { it.id != killerId }.id
+        val ballot = (stateOf(session).public.voteState as VoteState.Collecting).ballotPlayerIds
+        for (voter in ballot) session.submit(WhodunitAction.CastVote(voter, innocent))
+        session.submit(WhodunitAction.CloseVote)
+
+        // The reducer holds on the announcement: phase still Round(1),
+        // voteState Resolved(wasKiller = false), the innocent is in
+        // eliminatedPlayers. No PhaseEntered(Round(2)) was emitted yet.
+        val holding = stateOf(session)
+        assertThat(holding.phase).isInstanceOf(WhodunitPhase.Round::class)
+        assertThat((holding.phase as WhodunitPhase.Round).index).isEqualTo(1)
+        val resolved = holding.public.voteState as VoteState.Resolved
+        assertThat(resolved.accusedPlayerId).isEqualTo(innocent)
+        assertThat(resolved.wasKiller).isEqualTo(false)
+        assertThat(holding.public.eliminatedPlayers.contains(innocent)).isTrue()
+        val eliminatedEvent = events.filterIsInstance<WhodunitEvent.PlayerEliminated>().last()
+        assertThat(eliminatedEvent.wasKiller).isEqualTo(false)
+
+        // Host taps through → next round opens with a fresh ballot.
+        session.submit(WhodunitAction.AcknowledgeRevealCard)
+        val advanced = stateOf(session)
+        assertThat(advanced.phase).isInstanceOf(WhodunitPhase.Round::class)
+        assertThat((advanced.phase as WhodunitPhase.Round).index).isEqualTo(2)
+        assertThat(advanced.public.voteState).isEqualTo(VoteState.Idle)
+        // The innocent stays in eliminatedPlayers — they are audience now.
+        assertThat(advanced.public.eliminatedPlayers.contains(innocent)).isTrue()
+
+        collector.cancel()
+        session.close()
+    }
+
+    @Test
     fun replay_after_reveal_reseeds_and_returns_to_public_intro() = runTest {
         val payload = loadCase()
         val seed = 7777L
