@@ -112,7 +112,7 @@ kotlin {
 
 android {
     namespace = "com.parlor.app"
-    compileSdk = 35
+    compileSdk = 36
     defaultConfig {
         applicationId = "com.parlor.app"
         minSdk = 26

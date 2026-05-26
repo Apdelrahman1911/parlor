@@ -44,7 +44,7 @@ class KmpLibraryConventionPlugin : Plugin<Project> {
 
         extensions.configure(LibraryExtension::class.java) {
             namespace = "com.parlor.${project.name.replace("-", ".")}"
-            compileSdk = 35
+            compileSdk = 36
             defaultConfig {
                 minSdk = 26
             }

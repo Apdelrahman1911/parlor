@@ -16,7 +16,7 @@ class AndroidAppConventionPlugin : Plugin<Project> {
         pluginManager.apply("org.jetbrains.kotlin.android")
 
         extensions.configure(ApplicationExtension::class.java) {
-            compileSdk = 35
+            compileSdk = 36
             defaultConfig {
                 applicationId = "com.parlor.app"
                 minSdk = 26
