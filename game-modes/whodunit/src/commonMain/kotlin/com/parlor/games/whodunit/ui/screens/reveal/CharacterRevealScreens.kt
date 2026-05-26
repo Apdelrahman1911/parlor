@@ -140,6 +140,7 @@ fun DossierRevealScreen(
     role: PlayerRole,
     onDone: () -> Unit,
     modifier: Modifier = Modifier,
+    allCharacters: List<Character> = emptyList(),
 ) {
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
         DossierCard(
@@ -149,6 +150,7 @@ fun DossierRevealScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(ParlorTheme.spacing.m),
+            allCharacters = allCharacters,
         )
     }
 }

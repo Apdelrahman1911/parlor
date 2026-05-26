@@ -17,6 +17,8 @@ import com.parlor.content.validation.ValidatedCase
 import com.parlor.core.ids.PlayerId
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.engine.state.Player
+import com.parlor.games.whodunit.content.Round
+import com.parlor.games.whodunit.content.RoundConfig
 import com.parlor.games.whodunit.content.WhodunitCase
 import com.parlor.games.whodunit.domain.action.WhodunitAction
 import com.parlor.games.whodunit.domain.event.Verdict
@@ -52,35 +54,95 @@ import com.parlor.games.whodunit.ui.screens.safety.PrivacyConcernAffordance
 import com.parlor.games.whodunit.ui.screens.safety.PrivacyConcernDialog
 import com.parlor.games.whodunit.ui.screens.setup.PublicIntroScreen
 import com.parlor.games.whodunit.ui.screens.setup.RulesBriefingScreen
+import com.parlor.games.whodunit.ui.screens.vote.EliminationInnocentOutcomeScreen
 import com.parlor.games.whodunit.ui.screens.vote.TiedRevoteScreen
 import com.parlor.games.whodunit.ui.screens.vote.VoteBallotScreen
 import com.parlor.games.whodunit.ui.screens.vote.VoteHandoffScreen
 import com.parlor.games.whodunit.ui.timer.runDiscussionTickerLoop
+import com.parlor.session.PlayMode
 import com.parlor.session.SessionController
 import com.parlor.session.ViewerContext
+import com.parlor.session.isHost
+import com.parlor.session.selfPlayerId
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 
 /**
- * Wave 9H-10: extracted from `WhodunitGameFlow.kt` to keep the router +
- * per-phase segment composables in their own file. Pure mechanical
- * split — no behavior change. The router and segments stay marked
- * `internal` so `WhodunitGameFlow.kt` (which still owns the entry
- * point + host/peer multi-device wrappers) can keep calling them.
+ * Top-level dispatch for the Whodunit per-phase UI.
  *
- * Pure phase-to-screen routing extracted from [SessionDrivenFlow] so the
- * pause chrome and overlay can sit cleanly on top in a single Box.
+ * The router takes a [PlayMode] and branches **once** at the top into one
+ * of two distinct UI trees:
  *
- * [selfPlayerId] is the local device's player identity in multi-device
- * mode, or `null` for pass-and-play (where every phase's UI is for
- * whoever is holding the phone). Used by phases whose UI must differ
- * per peer — most importantly [WhodunitPhase.CharacterReveal], where a
- * peer must NOT render another player's dossier (it doesn't have that
- * player's private bucket and the shadow controller throws if asked
- * for it).
+ *  - [HostPhaseScreens] — what the device running the canonical session
+ *    shows. Solo, PassAndPlay, and MultiDevice-host all land here; the
+ *    underlying [SessionController] is wrapped in
+ *    [com.parlor.session.party.PartyAwareSession] for the two local modes
+ *    so the host's gated advance actions don't need any auto-ack code in
+ *    the UI.
+ *
+ *  - [PeerPhaseScreens] — what a non-host MultiDevice peer shows.
+ *    Mostly cover/waiting screens with two real exceptions (the peer
+ *    sees its own character reveal and casts its own ballot).
+ *
+ * No phase branch checks `isHost` or `selfPlayerId == null` — the
+ * top-level dispatch made that distinction once and the two trees are
+ * structurally separate.
  */
 @Composable
 internal fun PhaseRouter(
+    playMode: PlayMode,
+    phase: WhodunitPhase,
+    state: WhodunitState,
+    case: ValidatedCase<WhodunitCase>,
+    payload: WhodunitCase,
+    session: SessionController<WhodunitState, WhodunitAction, WhodunitEvent>,
+    scope: kotlinx.coroutines.CoroutineScope,
+    onBackToLibrary: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    // The verdict lives on state.public so it auto-flows to peers via
+    // PublicStateSnapshot and auto-persists in the game snapshot. No more
+    // event-listener tracking, no more fallback guess on resume.
+    val verdict = state.public.verdict
+    if (playMode.isHost) {
+        HostPhaseScreens(
+            playMode = playMode,
+            phase = phase,
+            state = state,
+            case = case,
+            payload = payload,
+            session = session,
+            scope = scope,
+            verdict = verdict,
+            onBackToLibrary = onBackToLibrary,
+            modifier = modifier,
+        )
+    } else {
+        // Only MultiDevice can produce `!isHost`. The cast is checked here so
+        // the peer composables can rely on the typed shape (selfPlayerId is
+        // guaranteed non-null for peers).
+        PeerPhaseScreens(
+            playMode = playMode as PlayMode.MultiDevice,
+            phase = phase,
+            state = state,
+            payload = payload,
+            session = session,
+            verdict = verdict,
+            modifier = modifier,
+        )
+    }
+}
+
+// ==================================================================== Host screens ==
+//
+// What Solo, PassAndPlay, and MultiDevice-host all render. UI buttons just
+// submit the host action; PartyAwareSession (wrapping the session in local
+// modes) issues per-player acks underneath. The router stays free of any
+// readiness ceremony knowledge.
+
+@Composable
+private fun HostPhaseScreens(
+    playMode: PlayMode,
     phase: WhodunitPhase,
     state: WhodunitState,
     case: ValidatedCase<WhodunitCase>,
@@ -88,192 +150,395 @@ internal fun PhaseRouter(
     session: SessionController<WhodunitState, WhodunitAction, WhodunitEvent>,
     scope: kotlinx.coroutines.CoroutineScope,
     verdict: Verdict?,
-    onVerdictClear: () -> Unit,
     onBackToLibrary: () -> Unit,
-    modifier: Modifier = Modifier,
-    selfPlayerId: PlayerId? = null,
-    isHost: Boolean = true,
+    modifier: Modifier,
 ) {
-    val waitingHint = stringResource(Res.string.peer_waiting_for_host)
-    val waitingEyebrow = stringResource(Res.string.peer_waiting_eyebrow)
     when (phase) {
         is WhodunitPhase.Setup -> LoadingScreen(modifier)
-        is WhodunitPhase.PublicIntro -> if (isHost) {
-            PublicIntroScreen(
-                title = case.envelope.title,
-                intro = payload.publicIntro,
-                bedrockClues = payload.bedrockClues,
-                onContinue = { scope.launch { session.submit(WhodunitAction.AdvanceFromIntro) } },
-                modifier = modifier,
-            )
-        } else {
-            PeerWaitingForHostScreen(
-                eyebrow = waitingEyebrow,
-                title = stringResource(Res.string.peer_intro_title),
-                body = stringResource(Res.string.peer_intro_body),
-                waitingHint = waitingHint,
-                modifier = modifier,
-            )
-        }
-        is WhodunitPhase.RulesBriefing -> if (isHost) {
-            RulesBriefingScreen(
-                cardIndex = state.public.briefingCardIndex,
-                onAdvance = { next -> scope.launch { session.submit(WhodunitAction.AdvanceBriefingCard(next)) } },
-                modifier = modifier,
-            )
-        } else {
-            PeerWaitingForHostScreen(
-                eyebrow = waitingEyebrow,
-                title = stringResource(Res.string.peer_briefing_title),
-                body = stringResource(Res.string.peer_briefing_body),
-                waitingHint = waitingHint,
-                modifier = modifier,
-            )
-        }
-        is WhodunitPhase.CharacterReveal -> CharacterRevealSegment(
-            session = session,
-            phase = phase,
-            payload = payload,
-            players = state.players,
-            selfPlayerId = selfPlayerId,
+
+        is WhodunitPhase.PublicIntro -> PublicIntroScreen(
+            title = case.envelope.title,
+            intro = payload.publicIntro,
+            bedrockClues = payload.bedrockClues,
+            onContinue = { scope.launch { session.submit(WhodunitAction.AdvanceFromIntro) } },
             modifier = modifier,
         )
-        is WhodunitPhase.Round -> if (isHost) {
-            RoundSegment(
+
+        is WhodunitPhase.RulesBriefing -> RulesBriefingScreen(
+            cardIndex = state.public.briefingCardIndex,
+            onAdvance = { next -> scope.launch { session.submit(WhodunitAction.AdvanceBriefingCard(next)) } },
+            modifier = modifier,
+        )
+
+        is WhodunitPhase.CharacterReveal -> when (playMode) {
+            // Solo: one human at one phone reads through every dossier back-
+            // to-back. No hand-off, no hide-and-pass, no privacy ceremony —
+            // there's no second player to hide from.
+            is PlayMode.Solo -> SoloCharacterRevealSegment(
                 session = session,
-                roundIndex = phase.index,
-                state = state,
+                roster = state.players,
+                rolesViewed = state.public.rolesViewed,
+                droppedPlayers = state.public.droppedPlayers,
                 payload = payload,
                 modifier = modifier,
             )
-        } else {
-            PeerWaitingForHostScreen(
-                eyebrow = waitingEyebrow,
-                title = stringResource(Res.string.peer_round_title),
-                body = stringResource(Res.string.peer_round_body),
-                waitingHint = waitingHint,
+            // Pass-and-play: the device holds every player's private slice
+            // and we drive a single local cursor through the full hand-off
+            // ceremony so the phone can move safely around the table.
+            is PlayMode.PassAndPlay -> LocalCharacterRevealSegment(
+                session = session,
+                roster = state.players,
+                rolesViewed = state.public.rolesViewed,
+                droppedPlayers = state.public.droppedPlayers,
+                payload = payload,
+                modifier = modifier,
+            )
+            // MultiDevice host is also a player at the table — they render only
+            // their own dossier and wait while the other peers do the same.
+            is PlayMode.MultiDevice -> SelfCharacterRevealSegment(
+                session = session,
+                roster = state.players,
+                rolesViewed = state.public.rolesViewed,
+                selfPlayerId = playMode.selfPlayerId,
+                payload = payload,
                 modifier = modifier,
             )
         }
+
+        is WhodunitPhase.Round -> RoundSegment(
+            session = session,
+            roundIndex = phase.index,
+            state = state,
+            payload = payload,
+            modifier = modifier,
+        )
+
         is WhodunitPhase.FinalVote -> VoteSegment(
             session = session,
             state = state,
             players = state.players,
             modifier = modifier,
-            selfPlayerId = selfPlayerId,
-            isHost = isHost,
+            selfPlayerId = playMode.selfPlayerId,
+            isHost = true,
         )
+
         is WhodunitPhase.TiedRevote -> {
-            // After the user taps "Begin Revote", voteState transitions from
-            // Tied → Collecting. The phase remains TiedRevote during the revote.
+            // After "Begin Revote" voteState transitions Tied → Collecting and
+            // the same vote UI takes over. While still Tied, show the revote
+            // explainer card.
             if (state.public.voteState is VoteState.Collecting) {
-                VoteSegment(session, state, state.players, modifier, selfPlayerId, isHost)
+                VoteSegment(session, state, state.players, modifier, playMode.selfPlayerId, true)
             } else {
-                if (isHost) {
-                    TiedRevoteSegment(session, state, modifier)
-                } else {
-                    PeerWaitingForHostScreen(
-                        eyebrow = waitingEyebrow,
-                        title = stringResource(Res.string.peer_round_title),
-                        body = stringResource(Res.string.peer_round_body),
-                        waitingHint = waitingHint,
+                TiedRevoteSegment(session, state, modifier)
+            }
+        }
+
+        is WhodunitPhase.Reveal -> {
+            // The reducer always sets `state.public.verdict` before entering
+            // Reveal. If it's null here, something has gone wrong — render a
+            // benign loading state instead of guessing the outcome (a wrong
+            // guess would tell players the killer won when they actually won,
+            // or name the wrong character).
+            if (verdict == null) {
+                LoadingScreen(modifier)
+            } else {
+                RevealStageScreen(
+                    verdict = verdict,
+                    killerDisplayName = killerDisplayName(verdict, payload),
+                    revealNarrative = revealNarrativeFor(verdict, payload),
+                    onAcknowledge = { scope.launch { session.submit(WhodunitAction.AcknowledgeReveal) } },
+                    modifier = modifier,
+                )
+            }
+        }
+
+        is WhodunitPhase.PostGame -> PostGameScreen(
+            onReplaySameCase = {
+                scope.launch { session.submit(WhodunitAction.BeginReplay) }
+            },
+            onTryOtherMode = onBackToLibrary,
+            onBackToLibrary = onBackToLibrary,
+            modifier = modifier,
+        )
+    }
+}
+
+// ==================================================================== Peer screens ==
+//
+// What a non-host MultiDevice peer renders. Most phases are "waiting on
+// host" covers; two are peer-interactive (the peer's own character reveal,
+// and casting the peer's own ballot when it's their turn).
+
+@Composable
+private fun PeerPhaseScreens(
+    playMode: PlayMode.MultiDevice,
+    phase: WhodunitPhase,
+    state: WhodunitState,
+    payload: WhodunitCase,
+    session: SessionController<WhodunitState, WhodunitAction, WhodunitEvent>,
+    verdict: Verdict?,
+    modifier: Modifier,
+) {
+    val waitingHint = stringResource(Res.string.peer_waiting_for_host)
+    val waitingEyebrow = stringResource(Res.string.peer_waiting_eyebrow)
+    when (phase) {
+        is WhodunitPhase.Setup -> LoadingScreen(modifier)
+
+        is WhodunitPhase.PublicIntro -> PeerWaitingForHostScreen(
+            eyebrow = waitingEyebrow,
+            title = stringResource(Res.string.peer_intro_title),
+            body = stringResource(Res.string.peer_intro_body),
+            waitingHint = waitingHint,
+            modifier = modifier,
+        )
+
+        is WhodunitPhase.RulesBriefing -> PeerWaitingForHostScreen(
+            eyebrow = waitingEyebrow,
+            title = stringResource(Res.string.peer_briefing_title),
+            body = stringResource(Res.string.peer_briefing_body),
+            waitingHint = waitingHint,
+            modifier = modifier,
+        )
+
+        is WhodunitPhase.CharacterReveal -> SelfCharacterRevealSegment(
+            session = session,
+            roster = state.players,
+            rolesViewed = state.public.rolesViewed,
+            selfPlayerId = playMode.selfPlayerId,
+            payload = payload,
+            modifier = modifier,
+        )
+
+        is WhodunitPhase.Round -> {
+            // Elimination mode opens a vote inside the Round phase (after the
+            // discussion timer). Peers must be able to cast their ballot —
+            // showing the waiting screen here would leave Elimination peers
+            // unable to participate in any round vote.
+            val vs = state.public.voteState
+            when {
+                vs is VoteState.Collecting -> VoteSegment(
+                    session = session,
+                    state = state,
+                    players = state.players,
+                    modifier = modifier,
+                    selfPlayerId = playMode.selfPlayerId,
+                    isHost = false,
+                )
+                // The host is holding on the "innocent eliminated" announcement
+                // — peers see the same card, read-only, until the host advances.
+                vs is VoteState.Resolved && !vs.wasKiller -> {
+                    val accusedName = state.players
+                        .firstOrNull { it.id == vs.accusedPlayerId }
+                        ?.displayName ?: ""
+                    EliminationInnocentOutcomeScreen(
+                        eliminatedPlayerName = accusedName,
+                        onContinue = null,
                         modifier = modifier,
                     )
                 }
+                else -> PeerWaitingForHostScreen(
+                    eyebrow = waitingEyebrow,
+                    title = stringResource(Res.string.peer_round_title),
+                    body = stringResource(Res.string.peer_round_body),
+                    waitingHint = waitingHint,
+                    modifier = modifier,
+                )
             }
         }
-        is WhodunitPhase.Reveal -> if (isHost) {
-            RevealStageScreen(
-                verdict = verdict ?: Verdict.PlayersWin(payload.characters.first().id),
-                killerDisplayName = killerDisplayName(state, payload),
-                revealNarrative = payload.revealNarratives[killerCharIdFromVerdict(verdict)
-                    ?: state.players.firstOrNull()?.id?.raw.orEmpty()]
-                    ?: "",
-                onAcknowledge = { scope.launch { session.submit(WhodunitAction.AcknowledgeReveal) } },
-                modifier = modifier,
-            )
-        } else {
-            // Peer still sees the verdict — but acknowledge is host-driven.
-            RevealStageScreen(
-                verdict = verdict ?: Verdict.PlayersWin(payload.characters.first().id),
-                killerDisplayName = killerDisplayName(state, payload),
-                revealNarrative = payload.revealNarratives[killerCharIdFromVerdict(verdict)
-                    ?: state.players.firstOrNull()?.id?.raw.orEmpty()]
-                    ?: "",
-                onAcknowledge = { /* peer cannot acknowledge — host closes the reveal */ },
-                modifier = modifier,
-            )
+
+        is WhodunitPhase.FinalVote -> VoteSegment(
+            session = session,
+            state = state,
+            players = state.players,
+            modifier = modifier,
+            selfPlayerId = playMode.selfPlayerId,
+            isHost = false,
+        )
+
+        is WhodunitPhase.TiedRevote -> {
+            if (state.public.voteState is VoteState.Collecting) {
+                VoteSegment(session, state, state.players, modifier, playMode.selfPlayerId, false)
+            } else {
+                PeerWaitingForHostScreen(
+                    eyebrow = waitingEyebrow,
+                    title = stringResource(Res.string.peer_round_title),
+                    body = stringResource(Res.string.peer_round_body),
+                    waitingHint = waitingHint,
+                    modifier = modifier,
+                )
+            }
         }
-        is WhodunitPhase.PostGame -> if (isHost) {
-            PostGameScreen(
-                onReplaySameCase = {
-                    onVerdictClear()
-                    scope.launch { session.submit(WhodunitAction.BeginReplay) }
-                },
-                onTryOtherMode = onBackToLibrary,
-                onBackToLibrary = onBackToLibrary,
-                modifier = modifier,
-            )
-        } else {
-            PeerWaitingForHostScreen(
-                eyebrow = waitingEyebrow,
-                title = stringResource(Res.string.peer_postgame_title),
-                body = stringResource(Res.string.peer_postgame_body),
-                waitingHint = stringResource(Res.string.peer_leave_room),
-                modifier = modifier,
-            )
+
+        is WhodunitPhase.Reveal -> {
+            if (verdict == null) {
+                // Peer is waiting for the host's next PublicStateSnapshot that
+                // carries the verdict. Show a loading state rather than guess.
+                LoadingScreen(modifier)
+            } else {
+                RevealStageScreen(
+                    verdict = verdict,
+                    killerDisplayName = killerDisplayName(verdict, payload),
+                    revealNarrative = revealNarrativeFor(verdict, payload),
+                    onAcknowledge = { /* peer cannot acknowledge — host closes the reveal */ },
+                    modifier = modifier,
+                )
+            }
         }
+
+        is WhodunitPhase.PostGame -> PeerWaitingForHostScreen(
+            eyebrow = waitingEyebrow,
+            title = stringResource(Res.string.peer_postgame_title),
+            body = stringResource(Res.string.peer_postgame_body),
+            waitingHint = stringResource(Res.string.peer_leave_room),
+            modifier = modifier,
+        )
     }
 }
 
-private fun killerCharIdFromVerdict(verdict: Verdict?): String? = when (verdict) {
+// ================================================================== Shared helpers ==
+
+private fun killerCharIdFromVerdict(verdict: Verdict): String = when (verdict) {
     is Verdict.PlayersWin -> verdict.killerCharacterId
     is Verdict.KillerWins -> verdict.killerCharacterId
-    null -> null
 }
 
-private fun killerDisplayName(state: WhodunitState, payload: WhodunitCase): String {
-    // The public projection redacts hostOnly, so we don't have the killer's
-    // character id directly. Fall back to the resolved-vote target.
-    val accusedId = (state.public.voteState as? VoteState.Resolved)?.accusedPlayerId
-    val accusedPlayer = state.players.firstOrNull { it.id == accusedId }
-    return accusedPlayer?.displayName ?: payload.characters.firstOrNull()?.displayName.orEmpty()
+/**
+ * Resolves the killer's display name from the verdict, not from the vote
+ * target. The two diverge for [com.parlor.games.whodunit.domain.event.KillerWinCause.SurvivedToFinalTwo]
+ * — the killer was never accused — and for [com.parlor.games.whodunit.domain.event.KillerWinCause.TieUnresolved],
+ * where no single accused exists.
+ */
+private fun killerDisplayName(verdict: Verdict, payload: WhodunitCase): String {
+    val killerCharId = killerCharIdFromVerdict(verdict)
+    return payload.characters.firstOrNull { it.id == killerCharId }?.displayName.orEmpty()
 }
+
+private fun revealNarrativeFor(
+    verdict: Verdict,
+    payload: WhodunitCase,
+): String = payload.revealNarratives[killerCharIdFromVerdict(verdict)] ?: ""
 
 // =================================================================== Character reveal ==
+//
+// CharacterReveal is the simultaneous-reveal phase: every active-roster
+// player has to be added to `state.public.rolesViewed` before the host's
+// `AdvanceFromCharacterReveal` succeeds. `phase.playerIndex` is vestigial
+// (always 0) and MUST NOT be used to drive the UI.
+//
+// Three distinct UIs live below — one per topology — with no shared
+// "is selfPlayerId null?" branch:
+//
+//   - [SoloCharacterRevealSegment]    Solo. One human at the phone — show
+//     every dossier back-to-back, no hand-off or hide-and-pass.
+//
+//   - [LocalCharacterRevealSegment]   Pass-and-play. One device passed
+//     around the table, full Handoff → Gate → Dossier → Hide ceremony so
+//     each player only sees their own role.
+//
+//   - [SelfCharacterRevealSegment]    MultiDevice (host as player, or peer).
+//     Each device only ever renders for its own self player, then waits
+//     while peers finish. The host's Advance is auto-issued by the reducer's
+//     gate (or by PartyAwareSession in local modes — not used here).
 
+private enum class RevealStage { Handoff, Gate, Dossier, Hide }
+
+/**
+ * Solo character-reveal flow.
+ *
+ * One human at one phone — no second pair of eyes to hide from, so the
+ * full privacy ceremony is pointless. Walks the active roster, showing
+ * each player's dossier directly. When every dossier has been seen, the
+ * segment submits the host's `AdvanceFromCharacterReveal`.
+ */
 @Composable
-private fun CharacterRevealSegment(
+private fun SoloCharacterRevealSegment(
     session: SessionController<WhodunitState, WhodunitAction, WhodunitEvent>,
-    phase: WhodunitPhase.CharacterReveal,
+    roster: List<Player>,
+    rolesViewed: Set<PlayerId>,
+    droppedPlayers: Set<PlayerId>,
     payload: WhodunitCase,
-    players: List<Player>,
     modifier: Modifier = Modifier,
-    selfPlayerId: PlayerId? = null,
 ) {
     val scope = rememberCoroutineScope()
-    val phaseCurrentPlayer = players.getOrNull(phase.playerIndex) ?: return
+    val pending = roster.filter { it.id !in droppedPlayers && it.id !in rolesViewed }
+    val currentPlayer = pending.firstOrNull()
 
-    // Multi-device authority: only the device whose `selfPlayerId` matches the
-    // active reveal index renders the dossier ceremony. Every other peer
-    // shows a "waiting" screen — and crucially, never calls
-    // `session.privateStateFor(otherPlayer.id)`, which would throw on a
-    // shadow controller (each peer only holds its own private slice).
-    val localActor = resolveLocalRevealActor(phase, players, selfPlayerId)
-    if (localActor == null) {
-        com.parlor.games.whodunit.ui.screens.reveal.CharacterRevealWaitingScreen(
-            activePlayerName = phaseCurrentPlayer.displayName,
-            modifier = modifier,
-        )
+    if (currentPlayer == null) {
+        LaunchedEffect(Unit) {
+            session.submit(WhodunitAction.AdvanceFromCharacterReveal)
+        }
+        LoadingScreen(modifier)
         return
     }
 
-    val currentPlayer = localActor
-    val nextPlayer = players.getOrNull(phase.playerIndex + 1)
+    // Open the reveal so PassAndPlaySessionController projects the right
+    // private slice. No Gate/Handoff — the user is alone with the device.
+    LaunchedEffect(currentPlayer.id) {
+        session.setActiveViewer(ViewerContext.Player(currentPlayer.id))
+        session.submit(WhodunitAction.StartCharacterReveal(currentPlayer.id))
+    }
 
-    // Inform the session who is "holding" the device. The reducer doesn't
-    // care, but PassAndPlaySessionController's activeViewer is part of the
-    // privacy ceremony.
+    val privateProjection by session.privateStateFor(currentPlayer.id).collectAsState()
+    val privateData = privateProjection.state.privatePerPlayer[currentPlayer.id]
+    val role = privateData?.role
+    val characterId = privateData?.characterId?.raw
+    val character = characterId?.let { id -> payload.characters.firstOrNull { it.id == id } }
+
+    if (character == null || role == null) {
+        LoadingScreen(modifier)
+        return
+    }
+
+    DossierRevealScreen(
+        character = character,
+        role = role,
+        onDone = {
+            scope.launch {
+                session.setActiveViewer(ViewerContext.Public)
+                session.submit(WhodunitAction.CompleteCharacterReveal(currentPlayer.id))
+            }
+        },
+        modifier = modifier,
+        allCharacters = payload.characters,
+    )
+}
+
+/**
+ * Pass-and-play character-reveal flow.
+ *
+ * Drives a single local cursor: the first active-roster player not yet in
+ * `rolesViewed`. After the current player taps "Hide and Pass", the reducer
+ * adds them to `rolesViewed` and the recomposition picks the next pending
+ * player. Once everyone has confirmed, the segment submits the host's
+ * `AdvanceFromCharacterReveal` exactly once and the phase moves on.
+ */
+@Composable
+private fun LocalCharacterRevealSegment(
+    session: SessionController<WhodunitState, WhodunitAction, WhodunitEvent>,
+    roster: List<Player>,
+    rolesViewed: Set<PlayerId>,
+    droppedPlayers: Set<PlayerId>,
+    payload: WhodunitCase,
+    modifier: Modifier = Modifier,
+) {
+    val scope = rememberCoroutineScope()
+    val pending = roster.filter { it.id !in droppedPlayers && it.id !in rolesViewed }
+    val currentPlayer = pending.firstOrNull()
+
+    // Everyone has confirmed — advance the phase. The LaunchedEffect runs
+    // once per "all done" entry; the next state snapshot moves us out.
+    if (currentPlayer == null) {
+        LaunchedEffect(Unit) {
+            session.submit(WhodunitAction.AdvanceFromCharacterReveal)
+        }
+        LoadingScreen(modifier)
+        return
+    }
+
+    val nextPlayer = pending.getOrNull(1)
+
+    // Inform the session who is "holding" the device. PassAndPlaySessionController
+    // uses activeViewer as part of the privacy ceremony.
     LaunchedEffect(currentPlayer.id) {
         session.setActiveViewer(ViewerContext.Player(currentPlayer.id))
     }
@@ -284,7 +549,7 @@ private fun CharacterRevealSegment(
     val characterId = privateData?.characterId?.raw
     val character = characterId?.let { id -> payload.characters.firstOrNull { it.id == id } }
 
-    var stage by remember(phase.playerIndex) { mutableStateOf(RevealStage.Handoff) }
+    var stage by remember(currentPlayer.id) { mutableStateOf(RevealStage.Handoff) }
     var privacyOpen by remember { mutableStateOf(false) }
 
     Box(modifier = modifier.fillMaxSize()) {
@@ -311,6 +576,7 @@ private fun CharacterRevealSegment(
                         role = role,
                         onDone = { stage = RevealStage.Hide },
                         modifier = Modifier.fillMaxSize(),
+                        allCharacters = payload.characters,
                     )
                 }
             }
@@ -321,15 +587,13 @@ private fun CharacterRevealSegment(
                         session.setActiveViewer(ViewerContext.Public)
                         session.submit(WhodunitAction.CompleteCharacterReveal(currentPlayer.id))
                     }
+                    // The keyed remember(currentPlayer.id) resets `stage` to
+                    // Handoff when the cursor advances on recomposition.
                 },
                 modifier = Modifier.fillMaxSize(),
             )
         }
 
-        // Privacy-concern affordance: visible on the *cover* screens (Handoff
-        // and Hide) where no private dossier is on screen. Hidden during
-        // Gate and Dossier so it can't be triggered while a private card is
-        // actually visible.
         if (stage == RevealStage.Handoff || stage == RevealStage.Hide) {
             PrivacyConcernAffordance(
                 onOpen = { privacyOpen = true },
@@ -351,7 +615,116 @@ private fun CharacterRevealSegment(
     }
 }
 
-private enum class RevealStage { Handoff, Gate, Dossier, Hide }
+/**
+ * Multi-device character-reveal flow.
+ *
+ * Renders only for the local device's own [selfPlayerId]. Critically, the
+ * peer's [SessionController] is a `ShadowSessionController` that intentionally
+ * throws on `privateStateFor(otherPlayer.id)` — so this composable must never
+ * ask for any private slice but its own. Pre-9H, an earlier bug did exactly
+ * that and crashed peers; the [CharacterRevealAuthorityTest] still pins the
+ * "render only for self" rule.
+ *
+ * Stages:
+ *  - self in `rolesViewed`  → waiting screen (others are still viewing).
+ *  - self pending           → Handoff → Gate → Dossier → Hide, then submit
+ *                             `CompleteCharacterReveal(self)`.
+ */
+@Composable
+private fun SelfCharacterRevealSegment(
+    session: SessionController<WhodunitState, WhodunitAction, WhodunitEvent>,
+    roster: List<Player>,
+    rolesViewed: Set<PlayerId>,
+    selfPlayerId: PlayerId,
+    payload: WhodunitCase,
+    modifier: Modifier = Modifier,
+) {
+    val scope = rememberCoroutineScope()
+    val selfPlayer = roster.firstOrNull { it.id == selfPlayerId } ?: return
+
+    if (selfPlayer.id in rolesViewed) {
+        // Self has confirmed; wait while the rest of the table catches up.
+        val stillPending = roster.firstOrNull { it.id != selfPlayer.id && it.id !in rolesViewed }
+        com.parlor.games.whodunit.ui.screens.reveal.CharacterRevealWaitingScreen(
+            activePlayerName = stillPending?.displayName ?: selfPlayer.displayName,
+            modifier = modifier,
+        )
+        return
+    }
+
+    LaunchedEffect(selfPlayer.id) {
+        session.setActiveViewer(ViewerContext.Player(selfPlayer.id))
+    }
+
+    val privateProjection by session.privateStateFor(selfPlayer.id).collectAsState()
+    val privateData = privateProjection.state.privatePerPlayer[selfPlayer.id]
+    val role = privateData?.role
+    val characterId = privateData?.characterId?.raw
+    val character = characterId?.let { id -> payload.characters.firstOrNull { it.id == id } }
+
+    var stage by remember(selfPlayer.id) { mutableStateOf(RevealStage.Handoff) }
+    var privacyOpen by remember { mutableStateOf(false) }
+
+    Box(modifier = modifier.fillMaxSize()) {
+        when (stage) {
+            RevealStage.Handoff -> CharacterRevealHandoffScreen(
+                playerName = selfPlayer.displayName,
+                onContinue = { stage = RevealStage.Gate },
+                modifier = Modifier.fillMaxSize(),
+            )
+            RevealStage.Gate -> CharacterRevealGateScreen(
+                playerName = selfPlayer.displayName,
+                onRevealed = {
+                    scope.launch { session.submit(WhodunitAction.StartCharacterReveal(selfPlayer.id)) }
+                    stage = RevealStage.Dossier
+                },
+                modifier = Modifier.fillMaxSize(),
+            )
+            RevealStage.Dossier -> {
+                if (character == null || role == null) {
+                    LoadingScreen(Modifier.fillMaxSize())
+                } else {
+                    DossierRevealScreen(
+                        character = character,
+                        role = role,
+                        onDone = { stage = RevealStage.Hide },
+                        modifier = Modifier.fillMaxSize(),
+                        allCharacters = payload.characters,
+                    )
+                }
+            }
+            RevealStage.Hide -> HideAndPassScreen(
+                nextPlayerName = null,
+                onTap = {
+                    scope.launch {
+                        session.setActiveViewer(ViewerContext.Public)
+                        session.submit(WhodunitAction.CompleteCharacterReveal(selfPlayer.id))
+                    }
+                },
+                modifier = Modifier.fillMaxSize(),
+            )
+        }
+
+        if (stage == RevealStage.Handoff || stage == RevealStage.Hide) {
+            PrivacyConcernAffordance(
+                onOpen = { privacyOpen = true },
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(ParlorTheme.spacing.l),
+            )
+        }
+
+        if (privacyOpen) {
+            PrivacyConcernDialog(
+                onContinue = { privacyOpen = false },
+                onReroll = {
+                    privacyOpen = false
+                    scope.launch { session.submit(WhodunitAction.RequestReroll) }
+                },
+            )
+        }
+    }
+}
 
 // ============================================================================== Rounds ==
 
@@ -366,7 +739,14 @@ private fun RoundSegment(
     val scope = rememberCoroutineScope()
     val clueThisRound = state.public.revealedClues.firstOrNull { it.roundIndex == roundIndex }
     val timer = state.public.timer
-    val (title, tagline) = roundTitleAndTagline(roundIndex, state.players.size)
+    val display = resolveRoundDisplayConfig(
+        payload = payload,
+        roundIndex = roundIndex,
+        playerCount = state.players.size,
+    )
+    val title = display.title
+    val tagline = display.tagline
+    val discussionSeconds = display.discussionSeconds
 
     // Real-time discussion ticker. Keyed on the timer's stable id so:
     //  - a new round starting its own timer spawns a fresh loop,
@@ -393,7 +773,7 @@ private fun RoundSegment(
             clue = clueThisRound,
             onContinue = {
                 scope.launch {
-                    session.submit(WhodunitAction.StartDiscussionTimer(DISCUSSION_SECONDS))
+                    session.submit(WhodunitAction.StartDiscussionTimer(discussionSeconds))
                 }
             },
             modifier = modifier,
@@ -412,6 +792,25 @@ private fun RoundSegment(
             players = state.players,
             modifier = modifier,
         )
+        // Elimination mode: the room voted off a non-killer and the game
+        // continues. The reducer holds on `Resolved(wasKiller = false)` so
+        // we can surface "[Name] was innocent. The killer is still among
+        // you." (design doc §13). The host's Continue submits
+        // AcknowledgeRevealCard, which clears the announcement and advances
+        // the round.
+        state.public.voteState.let { it is VoteState.Resolved && !it.wasKiller } -> {
+            val resolved = state.public.voteState as VoteState.Resolved
+            val accusedName = state.players
+                .firstOrNull { it.id == resolved.accusedPlayerId }
+                ?.displayName ?: ""
+            EliminationInnocentOutcomeScreen(
+                eliminatedPlayerName = accusedName,
+                onContinue = {
+                    scope.launch { session.submit(WhodunitAction.AcknowledgeRevealCard) }
+                },
+                modifier = modifier,
+            )
+        }
         else -> RoundTitleCardScreen(
             roundIndex = roundIndex,
             title = title,
@@ -422,7 +821,66 @@ private fun RoundSegment(
     }
 }
 
-private fun roundTitleAndTagline(roundIndex: Int, playerCount: Int): Pair<String, String> {
+private data class RoundDisplayConfig(
+    val title: String,
+    val tagline: String,
+    val discussionSeconds: Int,
+)
+
+/**
+ * Resolve round title/tagline/discussionSeconds for a given round and player
+ * count, following this fallback order:
+ *  1. Exact player-count bucket in `roundConfigByPlayerCount`.
+ *  2. Nearest available bucket (by absolute distance to the player count).
+ *  3. On a tie, prefer the lower bucket.
+ *  4. If no bucket has the requested round (or no buckets are authored),
+ *     fall back to the hardcoded defaults.
+ *
+ * `roundIndex` is 1-based to match the router; the JSON `rounds` list is
+ * indexed `roundIndex - 1`.
+ */
+private fun resolveRoundDisplayConfig(
+    payload: WhodunitCase,
+    roundIndex: Int,
+    playerCount: Int,
+): RoundDisplayConfig {
+    val round = pickRoundFromConfig(payload.roundConfigByPlayerCount, roundIndex, playerCount)
+    val (defaultTitle, defaultTagline) = defaultRoundTitleAndTagline(roundIndex, playerCount)
+    return RoundDisplayConfig(
+        title = round?.titleCardText?.takeIf { it.isNotBlank() } ?: defaultTitle,
+        tagline = round?.taglineText?.takeIf { it.isNotBlank() } ?: defaultTagline,
+        discussionSeconds = round?.discussionSeconds?.takeIf { it > 0 } ?: DEFAULT_DISCUSSION_SECONDS,
+    )
+}
+
+private fun pickRoundFromConfig(
+    config: Map<String, RoundConfig>,
+    roundIndex: Int,
+    playerCount: Int,
+): Round? {
+    if (config.isEmpty()) return null
+    val buckets = config.entries
+        .mapNotNull { (key, cfg) -> key.toIntOrNull()?.let { it to cfg } }
+        .sortedBy { it.first }
+    if (buckets.isEmpty()) return null
+
+    // Exact match first.
+    buckets.firstOrNull { it.first == playerCount }
+        ?.second
+        ?.rounds
+        ?.getOrNull(roundIndex - 1)
+        ?.let { return it }
+
+    // Nearest by absolute distance; tie → lower bucket (sorted ascending, so
+    // sortedBy is stable and the lower one wins).
+    val ordered = buckets.sortedBy { kotlin.math.abs(it.first - playerCount) }
+    for ((_, cfg) in ordered) {
+        cfg.rounds.getOrNull(roundIndex - 1)?.let { return it }
+    }
+    return null
+}
+
+private fun defaultRoundTitleAndTagline(roundIndex: Int, playerCount: Int): Pair<String, String> {
     val isLast = if (playerCount <= 4) roundIndex >= 3 else roundIndex >= 4
     return when (roundIndex) {
         1 -> "Alibis" to "Where were you when it happened?"
@@ -437,7 +895,7 @@ private fun roundTitleAndTagline(roundIndex: Int, playerCount: Int): Pair<String
     }
 }
 
-private const val DISCUSSION_SECONDS = 180
+private const val DEFAULT_DISCUSSION_SECONDS = 180
 
 // ============================================================================== Voting ==
 

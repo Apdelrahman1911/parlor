@@ -9,6 +9,7 @@ import com.parlor.engine.reducer.Reduction
 import com.parlor.engine.reducer.ReducerContext
 import com.parlor.games.whodunit.WhodunitIds
 import com.parlor.games.whodunit.content.Clue
+import com.parlor.games.whodunit.content.CluePools
 import com.parlor.games.whodunit.domain.action.WhodunitAction
 import com.parlor.games.whodunit.domain.event.KillerWinCause
 import com.parlor.games.whodunit.domain.event.Verdict
@@ -74,7 +75,7 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
             is WhodunitAction.AbstainVote -> abstainVote(state, action.voter, refused = false)
             is WhodunitAction.RefuseToVote -> abstainVote(state, action.voter, refused = true)
             WhodunitAction.CloseVote -> closeVote(state)
-            WhodunitAction.AcknowledgeRevealCard -> Reduction(state)
+            WhodunitAction.AcknowledgeRevealCard -> acknowledgeRevealCard(state)
             WhodunitAction.AcknowledgeReveal -> advance(state, WhodunitPhase.PostGame)
             WhodunitAction.BeginReplay -> beginReplay(state, wctx)
 
@@ -427,17 +428,69 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
 
         val lastRound = isLastRound(state.players.size, roundIndex)
 
-        val candidatePool: List<Clue> = when {
-            lastRound -> pools.finalStrong[killerCharId].orEmpty()
-            roundIndex == 1 -> pools.publicUniversal +
-                pools.killerPointing[killerCharId].orEmpty()
-            else -> pools.killerPointing[killerCharId].orEmpty() +
-                pools.contradiction[killerCharId].orEmpty() +
-                pools.redHerring[killerCharId].orEmpty()
+        return when {
+            lastRound -> pickLateGameClue(pools, killerCharId, drawn, random)
+            roundIndex == 1 -> pickFromPool(
+                pools.publicUniversal + pools.killerPointing[killerCharId].orEmpty(),
+                drawn,
+                random,
+            )
+            else -> pickFromPool(
+                pools.killerPointing[killerCharId].orEmpty() +
+                    pools.contradiction[killerCharId].orEmpty() +
+                    pools.redHerring[killerCharId].orEmpty(),
+                drawn,
+                random,
+            )
         }
+    }
 
-        val available = candidatePool.filterNot { ClueId(it.id) in drawn }
+    private fun pickFromPool(
+        pool: List<Clue>,
+        drawn: Set<ClueId>,
+        random: RandomSource,
+    ): Clue? {
+        val available = pool.filterNot { ClueId(it.id) in drawn }
         return available.takeIf { it.isNotEmpty() }?.let { random.pick(it) }
+    }
+
+    /**
+     * Late-game clue picker. Treat `finalStrong[killer]` as one source in a
+     * weighted pool rather than the only source, so the last clue isn't
+     * always a smoking gun.
+     *
+     * Weights are applied by repetition: a higher weight means a clue appears
+     * more times in the working list before the seeded random pick. Same seed
+     * + same drawn set → same result; different seeds vary the pick.
+     *
+     * If everything is already drawn, returns null (no crash).
+     */
+    private fun pickLateGameClue(
+        pools: CluePools,
+        killerCharId: String,
+        drawn: Set<ClueId>,
+        random: RandomSource,
+    ): Clue? {
+        val finalStrong = pools.finalStrong[killerCharId].orEmpty()
+        val killerPointing = pools.killerPointing[killerCharId].orEmpty()
+        val contradiction = pools.contradiction[killerCharId].orEmpty()
+        val redHerring = pools.redHerring[killerCharId].orEmpty()
+        val publicUniversal = pools.publicUniversal
+
+        val undrawnFinalStrong = finalStrong.filterNot { ClueId(it.id) in drawn }
+        val undrawnKillerPointing = killerPointing.filterNot { ClueId(it.id) in drawn }
+        val undrawnContradiction = contradiction.filterNot { ClueId(it.id) in drawn }
+        val undrawnRedHerring = redHerring.filterNot { ClueId(it.id) in drawn }
+        val undrawnPublicUniversal = publicUniversal.filterNot { ClueId(it.id) in drawn }
+
+        val weighted = buildList {
+            repeat(LATE_FINAL_STRONG_WEIGHT) { addAll(undrawnFinalStrong) }
+            repeat(LATE_KILLER_POINTING_WEIGHT) { addAll(undrawnKillerPointing) }
+            repeat(LATE_CONTRADICTION_WEIGHT) { addAll(undrawnContradiction) }
+            repeat(LATE_RED_HERRING_WEIGHT) { addAll(undrawnRedHerring) }
+            repeat(LATE_PUBLIC_UNIVERSAL_WEIGHT) { addAll(undrawnPublicUniversal) }
+        }
+        return weighted.takeIf { it.isNotEmpty() }?.let { random.pick(it) }
     }
 
     private fun isLastRound(playerCount: Int, roundIndex: Int): Boolean =
@@ -491,7 +544,7 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
 
         return if (isElimination || lastRound) {
             val target = if (lastRound && !isElimination) WhodunitPhase.FinalVote else state.phase
-            openVote(state.copy(phase = target))
+            openVote(state.copy(phase = target, public = state.public.copy(timer = null)))
         } else {
             val next = WhodunitPhase.Round(round.index + 1)
             val newState = state.copy(
@@ -651,45 +704,44 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
             val newPublic = state.public.copy(voteState = resolved, eliminatedPlayers = eliminated)
 
             when {
-                wasKiller -> Reduction(
-                    state.copy(public = newPublic, phase = WhodunitPhase.Reveal),
-                    listOf(
-                        WhodunitEvent.VoteTallied(tally),
-                        WhodunitEvent.PlayerEliminated(accused, true),
-                        WhodunitEvent.WinnerDecided(Verdict.PlayersWin(state.hostOnly.killerCharacterId.raw)),
-                        WhodunitEvent.RevealNarrativePlaying,
-                    ),
-                )
-                (state.public.playersAtTable.map { it.id } - eliminated.toSet()).size <= 2 ->
+                wasKiller -> {
+                    val verdict = Verdict.PlayersWin(state.hostOnly.killerCharacterId.raw)
                     Reduction(
-                        state.copy(public = newPublic, phase = WhodunitPhase.Reveal),
+                        state.copy(public = newPublic.copy(verdict = verdict), phase = WhodunitPhase.Reveal),
                         listOf(
                             WhodunitEvent.VoteTallied(tally),
-                            WhodunitEvent.PlayerEliminated(accused, false),
-                            WhodunitEvent.WinnerDecided(
-                                Verdict.KillerWins(
-                                    state.hostOnly.killerCharacterId.raw,
-                                    KillerWinCause.SurvivedToFinalTwo,
-                                ),
-                            ),
+                            WhodunitEvent.PlayerEliminated(accused, true),
+                            WhodunitEvent.WinnerDecided(verdict),
                             WhodunitEvent.RevealNarrativePlaying,
                         ),
                     )
-                else -> {
-                    val nextRound = WhodunitPhase.Round(state.public.currentRound + 1)
+                }
+                (state.public.playersAtTable.map { it.id } - eliminated.toSet()).size <= 2 -> {
+                    val verdict = Verdict.KillerWins(
+                        state.hostOnly.killerCharacterId.raw,
+                        KillerWinCause.SurvivedToFinalTwo,
+                    )
                     Reduction(
-                        state.copy(
-                            public = newPublic.copy(
-                                currentRound = state.public.currentRound + 1,
-                                voteState = VoteState.Idle,
-                                timer = null,
-                            ),
-                            phase = nextRound,
-                        ),
+                        state.copy(public = newPublic.copy(verdict = verdict), phase = WhodunitPhase.Reveal),
                         listOf(
                             WhodunitEvent.VoteTallied(tally),
                             WhodunitEvent.PlayerEliminated(accused, false),
-                            WhodunitEvent.PhaseEntered(nextRound),
+                            WhodunitEvent.WinnerDecided(verdict),
+                            WhodunitEvent.RevealNarrativePlaying,
+                        ),
+                    )
+                }
+                else -> {
+                    // Innocent eliminated, game continues. Hold the room on
+                    // the Resolved announcement screen so the table sees the
+                    // verdict for the eliminated player ("[Name] was innocent.
+                    // The killer is still among you." — design doc §13). The
+                    // host's AcknowledgeRevealCard advances to the next round.
+                    Reduction(
+                        state.copy(public = newPublic.copy(timer = null)),
+                        listOf(
+                            WhodunitEvent.VoteTallied(tally),
+                            WhodunitEvent.PlayerEliminated(accused, false),
                         ),
                     )
                 }
@@ -701,7 +753,10 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
                 Verdict.KillerWins(state.hostOnly.killerCharacterId.raw, KillerWinCause.InnocentAccused)
             }
             Reduction(
-                state.copy(public = state.public.copy(voteState = resolved), phase = WhodunitPhase.Reveal),
+                state.copy(
+                    public = state.public.copy(voteState = resolved, verdict = verdict),
+                    phase = WhodunitPhase.Reveal,
+                ),
                 listOf(
                     WhodunitEvent.VoteTallied(tally),
                     WhodunitEvent.WinnerDecided(verdict),
@@ -711,12 +766,46 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
         }
     }
 
+    /**
+     * Consume the elimination-mode "innocent eliminated, game continues"
+     * announcement and advance to the next round. The reducer holds the room
+     * on `voteState = Resolved(wasKiller = false)` after such a vote so the
+     * table sees who was wrongly eliminated; AcknowledgeRevealCard is the
+     * host's tap-through that clears the announcement.
+     *
+     * Idempotent and shape-gated: only fires when we're in a Round phase with
+     * a Resolved-not-killer voteState. Otherwise a no-op so the action is safe
+     * to land late (e.g. a retried network submit).
+     */
+    private fun acknowledgeRevealCard(state: WhodunitState): Reduction<WhodunitState, WhodunitEvent> {
+        val phase = state.phase as? WhodunitPhase.Round ?: return Reduction(state)
+        val resolved = state.public.voteState as? VoteState.Resolved ?: return Reduction(state)
+        if (resolved.wasKiller) return Reduction(state)
+        val nextRoundIndex = phase.index + 1
+        val nextPhase = WhodunitPhase.Round(nextRoundIndex)
+        return Reduction(
+            state.copy(
+                phase = nextPhase,
+                public = state.public.copy(
+                    currentRound = nextRoundIndex,
+                    voteState = VoteState.Idle,
+                    timer = null,
+                ),
+            ),
+            listOf(WhodunitEvent.PhaseEntered(nextPhase)),
+        )
+    }
+
     private fun killerWins(state: WhodunitState, cause: KillerWinCause): Reduction<WhodunitState, WhodunitEvent> {
-        val newPublic = state.public.copy(voteState = VoteState.Resolved(state.hostOnly.killerId, true))
+        val verdict = Verdict.KillerWins(state.hostOnly.killerCharacterId.raw, cause)
+        val newPublic = state.public.copy(
+            voteState = VoteState.Resolved(state.hostOnly.killerId, true),
+            verdict = verdict,
+        )
         return Reduction(
             state.copy(public = newPublic, phase = WhodunitPhase.Reveal),
             listOf(
-                WhodunitEvent.WinnerDecided(Verdict.KillerWins(state.hostOnly.killerCharacterId.raw, cause)),
+                WhodunitEvent.WinnerDecided(verdict),
                 WhodunitEvent.RevealNarrativePlaying,
             ),
         )
@@ -738,6 +827,10 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
                 briefingCardIndex = 0,
                 timer = null,
                 paused = false,
+                verdict = null,
+                introAcknowledged = emptySet(),
+                briefingReady = emptySet(),
+                rolesViewed = emptySet(),
             ),
             privatePerPlayer = emptyMap(),
             phase = WhodunitPhase.Setup,
@@ -772,13 +865,15 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
 
     private fun endGameEarly(state: WhodunitState, withReveal: Boolean): Reduction<WhodunitState, WhodunitEvent> {
         return if (withReveal) {
+            val verdict = Verdict.KillerWins(
+                state.hostOnly.killerCharacterId.raw,
+                KillerWinCause.SurvivedToFinalTwo,
+            )
             Reduction(
-                state.copy(phase = WhodunitPhase.Reveal),
+                state.copy(public = state.public.copy(verdict = verdict), phase = WhodunitPhase.Reveal),
                 listOf(
                     WhodunitEvent.GameEndedEarly(true),
-                    WhodunitEvent.WinnerDecided(
-                        Verdict.KillerWins(state.hostOnly.killerCharacterId.raw, KillerWinCause.SurvivedToFinalTwo),
-                    ),
+                    WhodunitEvent.WinnerDecided(verdict),
                     WhodunitEvent.RevealNarrativePlaying,
                 ),
             )
@@ -823,4 +918,13 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
 
     private const val BRIEFING_CARD_COUNT = 4
     private const val TIE_DEBATE_SECONDS = 60
+
+    // Late-game clue weights. Higher = more likely to appear as the last
+    // clue. The mix is intentionally NOT dominated by finalStrong so the
+    // final round doesn't telegraph the killer.
+    private const val LATE_FINAL_STRONG_WEIGHT = 3
+    private const val LATE_KILLER_POINTING_WEIGHT = 2
+    private const val LATE_CONTRADICTION_WEIGHT = 2
+    private const val LATE_RED_HERRING_WEIGHT = 2
+    private const val LATE_PUBLIC_UNIVERSAL_WEIGHT = 1
 }

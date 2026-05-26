@@ -32,8 +32,8 @@
 
     <!-- Setup: rules briefing -->
     <string name="setup_briefing_eyebrow">HOW TO PLAY</string>
-    <string name="setup_briefing_card_1">One of you is the killer. Even you don\'t know who, until you see your character.</string>
-    <string name="setup_briefing_card_2">You may lie. You should lie. Especially if you\'re guilty.</string>
+    <string name="setup_briefing_card_1">One of you is the killer. Even you don't know who, until you see your character.</string>
+    <string name="setup_briefing_card_2">You may lie. You should lie. Especially if you're guilty.</string>
     <string name="setup_briefing_card_3">Each round, the app reveals a new clue. Discuss. Accuse. Suspect.</string>
     <string name="setup_briefing_card_4">Vote according to your chosen mode. Get it wrong, the killer wins.</string>
     <string name="setup_briefing_continue">Continue</string>
@@ -43,10 +43,10 @@
 
     <!-- Character reveal -->
     <string name="reveal_handoff_title_format">Pass to %1$s.</string>
-    <string name="reveal_handoff_subtitle">When you\'re alone with the phone, tap to continue.</string>
+    <string name="reveal_handoff_subtitle">When you're alone with the phone, tap to continue.</string>
     <string name="reveal_waiting_eyebrow">Hold tight</string>
     <string name="reveal_waiting_title_format">%1$s is reading their dossier.</string>
-    <string name="reveal_waiting_subtitle">When they\'re done, the room moves on. You\'ll see your own dossier when it\'s your turn.</string>
+    <string name="reveal_waiting_subtitle">When they're done, the room moves on. You'll see your own dossier when it's your turn.</string>
 
     <!-- Peer-side gating: host controls progression; peer sees these. -->
     <string name="peer_waiting_eyebrow">Round in progress</string>
@@ -54,7 +54,7 @@
     <string name="peer_intro_title">Listen carefully</string>
     <string name="peer_intro_body">The host is reading the case intro. When they advance, your screen will follow.</string>
     <string name="peer_briefing_title">Rules briefing</string>
-    <string name="peer_briefing_body">The host is reviewing the table rules. You\'ll continue together.</string>
+    <string name="peer_briefing_body">The host is reviewing the table rules. You'll continue together.</string>
     <string name="peer_round_title">Round under way</string>
     <string name="peer_round_body">The host is leading this round. Watch the table and contribute when prompted.</string>
     <string name="peer_reveal_ack_title">Verdict on screen</string>
@@ -88,16 +88,22 @@
     <string name="dossier_hide_optional">Hide details</string>
     <string name="dossier_show_optional_description">Show optional details about your character.</string>
     <string name="dossier_hide_optional_description">Hide optional details.</string>
-    <string name="dossier_done">I\'m Done</string>
+    <string name="dossier_done">I'm Done</string>
     <string name="dossier_done_description">Hide the dossier and pass the phone.</string>
     <string name="dossier_killer_goal_fallback">Stay hidden. Steer suspicion. Survive.</string>
     <string name="dossier_killer_must_hide_fallback">The truth.</string>
+    <string name="dossier_relationship_label">RELATIONSHIP TO THE VICTIM.</string>
+    <string name="dossier_killer_method_label">METHOD.</string>
+    <string name="dossier_killer_timeline_label">YOUR TIMELINE.</string>
+    <string name="dossier_killer_deflection_label">STEER SUSPICION TOWARD.</string>
+    <string name="dossier_killer_timeline_row_format">%1$s — %2$s</string>
+    <string name="dossier_killer_deflection_unknown_format">Unknown (%1$s)</string>
 
     <!-- Rounds -->
     <string name="round_eyebrow_format">ROUND %1$d</string>
     <string name="round_clue_eyebrow_format">ROUND %1$d  ·  CLUE</string>
     <string name="round_reveal_clue_button">Reveal the Clue</string>
-    <string name="round_reveal_clue_description">Reveal this round\'s clue.</string>
+    <string name="round_reveal_clue_description">Reveal this round's clue.</string>
     <string name="round_clue_eyebrow_label">NEW CLUE</string>
     <string name="round_begin_discussion">Begin Discussion</string>
     <string name="round_begin_discussion_description">Start the discussion timer.</string>
@@ -152,7 +158,7 @@
 
     <!-- Post-game -->
     <string name="postgame_eyebrow">AFTER THE GAME</string>
-    <string name="postgame_question">What\'s next?</string>
+    <string name="postgame_question">What's next?</string>
     <string name="postgame_replay">Play Again — New Killer</string>
     <string name="postgame_replay_description">Replay this case with a freshly randomized killer.</string>
     <string name="postgame_try_other_mode">Try the Other Mode</string>
@@ -188,9 +194,9 @@
 
     <!-- Overlays: privacy concern -->
     <string name="privacy_open">Privacy Concern?</string>
-    <string name="privacy_open_description">Open the privacy-concern menu — use this if someone saw a role they shouldn\'t have.</string>
+    <string name="privacy_open_description">Open the privacy-concern menu — use this if someone saw a role they shouldn't have.</string>
     <string name="privacy_title">Privacy concern</string>
-    <string name="privacy_body">Did someone see a dossier they shouldn\'t have?</string>
+    <string name="privacy_body">Did someone see a dossier they shouldn't have?</string>
     <string name="privacy_continue">Continue Anyway</string>
     <string name="privacy_continue_description">Continue the game with the existing roles.</string>
     <string name="privacy_reroll">Reroll All Roles</string>
@@ -199,21 +205,38 @@
     <!-- Whodunit loading / error states + per-screen utility copy. -->
     <string name="whodunit_loading_eyebrow">Setting up</string>
     <string name="whodunit_error_eyebrow">Case unavailable</string>
-    <string name="whodunit_error_title">We couldn\'t load the case.</string>
+    <string name="whodunit_error_title">We couldn't load the case.</string>
     <string name="whodunit_error_back">Back</string>
     <string name="whodunit_error_back_description">Return to the library.</string>
     <string name="whodunit_vote_counting">Counting…</string>
+
+    <!-- Elimination mode: shown after the room votes off a non-killer and the
+         game continues. Per design doc §13. -->
+    <string name="elim_innocent_eyebrow">INNOCENT</string>
+    <string name="elim_innocent_title_format">%1$s was innocent.</string>
+    <string name="elim_innocent_body">The killer is still among you.</string>
+    <string name="elim_innocent_continue">Continue to next round</string>
+    <string name="elim_innocent_continue_description">Acknowledge the outcome and start the next round.</string>
+    <string name="elim_innocent_peer_hint">Waiting for the host to start the next round…</string>
 
     <!-- Peer-side host-paused banner. -->
     <string name="peer_paused_eyebrow">Paused</string>
     <string name="peer_paused_body">The host paused the game.</string>
 
     <!-- Wave 9H Party Play action labels -->
-    <string name="whodunit_intro_understand">I\'ve read the case</string>
-    <string name="whodunit_briefing_ready">I\'m ready</string>
-    <string name="whodunit_reveal_seen">I\'ve seen my role</string>
+    <string name="whodunit_intro_understand">I've read the case</string>
+    <string name="whodunit_briefing_ready">I'm ready</string>
+    <string name="whodunit_reveal_seen">I've seen my role</string>
     <string name="whodunit_role_peek_label">View my role</string>
     <string name="whodunit_role_peek_description">Reopen your private dossier.</string>
     <string name="whodunit_role_peek_close">Close</string>
     <string name="whodunit_role_peek_close_description">Close the private dossier overlay.</string>
+
+    <!-- DataError → friendly subline on the Whodunit error screen. -->
+    <string name="whodunit_data_error_not_found">We couldn't find this case in the library.</string>
+    <string name="whodunit_data_error_corrupted">The case file looks corrupted.</string>
+    <string name="whodunit_data_error_io">A problem happened reading from storage.</string>
+    <string name="whodunit_data_error_disk_full">There isn't enough space to load this case.</string>
+    <string name="whodunit_data_error_permission_denied">Storage permission was denied.</string>
+    <string name="whodunit_data_error_unknown">An unexpected problem stopped the case from loading.</string>
 </resources>

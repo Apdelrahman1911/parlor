@@ -33,10 +33,16 @@ import com.parlor.games.whodunit.resources.dossier_freely_label
 import com.parlor.games.whodunit.resources.dossier_goal_label
 import com.parlor.games.whodunit.resources.dossier_hide_optional
 import com.parlor.games.whodunit.resources.dossier_hide_optional_description
+import com.parlor.games.whodunit.resources.dossier_killer_deflection_label
+import com.parlor.games.whodunit.resources.dossier_killer_deflection_unknown_format
 import com.parlor.games.whodunit.resources.dossier_killer_goal_fallback
+import com.parlor.games.whodunit.resources.dossier_killer_method_label
 import com.parlor.games.whodunit.resources.dossier_killer_must_hide_fallback
+import com.parlor.games.whodunit.resources.dossier_killer_timeline_label
+import com.parlor.games.whodunit.resources.dossier_killer_timeline_row_format
 import com.parlor.games.whodunit.resources.dossier_motive_label
 import com.parlor.games.whodunit.resources.dossier_must_hide_label
+import com.parlor.games.whodunit.resources.dossier_relationship_label
 import com.parlor.games.whodunit.resources.dossier_secret_label
 import com.parlor.games.whodunit.resources.dossier_show_optional
 import com.parlor.games.whodunit.resources.dossier_show_optional_description
@@ -48,6 +54,12 @@ import org.jetbrains.compose.resources.stringResource
 /**
  * Dossier card. Must Read + Optional Details. Renders text from validated case
  * content — never composes prose itself.
+ *
+ * [allCharacters] is used only on this local device to resolve killer-only
+ * `deflectionTargets` (character ids) into display names. It must never be
+ * combined with other players' private state and never sent off-device — the
+ * payload is always present locally because the router plumbs it from the
+ * loaded case, not from any per-player projection.
  */
 @Composable
 fun DossierCard(
@@ -55,6 +67,7 @@ fun DossierCard(
     role: PlayerRole,
     onDone: () -> Unit,
     modifier: Modifier = Modifier,
+    allCharacters: List<Character> = emptyList(),
 ) {
     val killerGoalFallback = stringResource(Res.string.dossier_killer_goal_fallback)
     val killerMustHideFallback = stringResource(Res.string.dossier_killer_must_hide_fallback)
@@ -81,6 +94,7 @@ fun DossierCard(
     var showOptional by remember { mutableStateOf(false) }
     val scroll = rememberScrollState()
 
+    val relationshipLabel = stringResource(Res.string.dossier_relationship_label)
     val secretLabel = stringResource(Res.string.dossier_secret_label)
     val motiveLabel = stringResource(Res.string.dossier_motive_label)
     val alibiLabel = stringResource(Res.string.dossier_alibi_label)
@@ -130,12 +144,20 @@ fun DossierCard(
             )
             Spacer(modifier = Modifier.height(ParlorTheme.spacing.s))
 
+            if (character.relationshipToVictim.isNotBlank()) {
+                LabeledLine(relationshipLabel, character.relationshipToVictim)
+            }
             LabeledLine(secretLabel, character.privateSecret)
             LabeledLine(motiveLabel, character.publicMotive)
             LabeledLine(alibiLabel, brief.alibi)
             LabeledLine(goalLabel, brief.goal)
             LabeledLine(freelyLabel, brief.canSay)
             LabeledLine(mustHideLabel, brief.mustHide)
+
+            if (role == PlayerRole.Killer) {
+                Spacer(modifier = Modifier.height(ParlorTheme.spacing.s))
+                KillerOnlySections(character = character, allCharacters = allCharacters)
+            }
 
             Spacer(modifier = Modifier.height(ParlorTheme.spacing.m))
 
@@ -196,6 +218,56 @@ private fun LabeledLine(label: String, value: String) {
             style = ParlorTheme.typography.bodyLarge,
             color = ParlorTheme.colors.textPrimary,
         )
+    }
+}
+
+/**
+ * Killer-only dossier sections (method / timeline / deflection targets).
+ *
+ * Composed only when the dossier owner is the killer. Sourced from the local
+ * case payload — no per-player or hostOnly state crosses the projection
+ * boundary to render this, so it cannot leak to peer devices: peer projections
+ * never carry the killer's `privatePerPlayer` slice, and `role == Killer` is
+ * therefore unreachable for any device but the killer's own.
+ */
+@Composable
+private fun KillerOnlySections(
+    character: Character,
+    allCharacters: List<Character>,
+) {
+    val methodLabel = stringResource(Res.string.dossier_killer_method_label)
+    val timelineLabel = stringResource(Res.string.dossier_killer_timeline_label)
+    val deflectionLabel = stringResource(Res.string.dossier_killer_deflection_label)
+    val timelineRowFormat = stringResource(Res.string.dossier_killer_timeline_row_format)
+
+    val guilty = character.guiltyBrief
+
+    Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m)) {
+        if (guilty.method.isNotBlank()) {
+            LabeledLine(methodLabel, guilty.method)
+        }
+        if (guilty.timeline.isNotEmpty()) {
+            Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.xxs)) {
+                EyebrowLabel(text = timelineLabel)
+                guilty.timeline.forEach { entry ->
+                    Text(
+                        text = timelineRowFormat
+                            .replace("%1\$s", entry.time)
+                            .replace("%2\$s", entry.action),
+                        style = ParlorTheme.typography.bodyLarge,
+                        color = ParlorTheme.colors.textPrimary,
+                    )
+                }
+            }
+        }
+        if (guilty.deflectionTargets.isNotEmpty()) {
+            val unknownFormat = stringResource(Res.string.dossier_killer_deflection_unknown_format)
+            val byId = allCharacters.associateBy { it.id }
+            val names = guilty.deflectionTargets.map { id ->
+                byId[id]?.displayName ?: unknownFormat.replace("%1\$s", id)
+            }
+            LabeledLine(deflectionLabel, names.joinToString(separator = " · "))
+        }
     }
 }
 

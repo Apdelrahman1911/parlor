@@ -26,6 +26,7 @@ fun PrivateReviewScreen(
     role: PlayerRole,
     onClose: () -> Unit,
     modifier: Modifier = Modifier,
+    allCharacters: List<Character> = emptyList(),
 ) {
     var stage by remember { mutableStateOf(Stage.Cover) }
 
@@ -45,6 +46,7 @@ fun PrivateReviewScreen(
             role = role,
             onDone = { stage = Stage.Hide },
             modifier = modifier,
+            allCharacters = allCharacters,
         )
         Stage.Hide -> HideAndPassScreen(
             nextPlayerName = null,
