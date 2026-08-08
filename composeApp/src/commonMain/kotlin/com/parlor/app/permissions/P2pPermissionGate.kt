@@ -1,6 +1,7 @@
 package com.parlor.app.permissions
 
 import androidx.compose.runtime.Composable
+import com.parlor.networking.transport.LocalNetworkAccess
 import kotlinx.coroutines.flow.StateFlow
 
 /**
@@ -10,19 +11,21 @@ import kotlinx.coroutines.flow.StateFlow
  * Wi-Fi network, so it requests no dangerous Android Nearby/Location
  * permission. The gate remains a platform seam for a future transport that
  * does require one, and exposes status, a request entry point, and an
- * `openAppSettings()` fallback for the permanently-denied case.
- *
- * On Desktop and iOS there is no runtime gate for LAN discovery, so the
- * actuals report [PermissionStatus.Granted] unconditionally and the rest
- * of the UI flow short-circuits the rationale screen entirely.
+ * `openAppSettings()` fallback. Apple Local Network access is deliberately
+ * modeled from real transport evidence because iOS has no truthful preflight
+ * API; an empty discovery result must never be called a proven denial.
  */
 interface P2pPermissionGate {
     val status: StateFlow<PermissionStatus>
 
+    /** Whether this platform exposes a relevant per-app network setting. */
+    val canOpenNetworkSettings: Boolean
+
     /**
      * Triggers the platform's permission prompt. Suspends until the user
-     * answers (or, on platforms without a prompt, returns immediately with
-     * [PermissionStatus.Granted]).
+     * answers. On iOS this only records that the player chose to continue;
+     * the system prompt appears when the following transport operation first
+     * advertises or browses.
      */
     suspend fun request(): PermissionStatus
 
@@ -35,27 +38,37 @@ interface P2pPermissionGate {
 }
 
 sealed interface PermissionStatus {
-    /** Permission has been granted (or is not required on this platform). */
-    data object Granted : PermissionStatus
+    /** This platform requires no runtime permission for Parlor's base LAN. */
+    data object NotRequired : PermissionStatus
 
-    /** Status not yet known — first run or no Activity context yet. */
-    data object NotRequested : PermissionStatus
+    /** A real advertise or authenticated-connect operation has succeeded. */
+    data object GrantedOperational : PermissionStatus
 
-    /** User denied once but can be asked again. */
-    data object Denied : PermissionStatus
+    /** Apple access is unknown until a real LAN operation is attempted. */
+    data object Unknown : PermissionStatus
 
-    /**
-     * "Don't ask again" / system-suppressed dialog — only the settings
-     * screen can flip this back. The UI surfaces an `openAppSettings()` CTA.
-     */
-    data object PermanentlyDenied : PermissionStatus
+    /** The transport is currently attempting to establish LAN operation. */
+    data object Requesting : PermissionStatus
+
+    /** A stable platform/API signal proved that Settings action is required. */
+    data object DeniedActionable : PermissionStatus
+
+    /** Failure was real, but could not truthfully be classified as denial. */
+    data object FailureUnclassified : PermissionStatus
 }
 
+val PermissionStatus.entersMultiplayerWithoutRationale: Boolean
+    get() = this == PermissionStatus.NotRequired || this == PermissionStatus.GrantedOperational
+
+val PermissionStatus.mayAttemptNetwork: Boolean
+    get() = this != PermissionStatus.DeniedActionable
+
 /**
- * Platform-bound Composable factory. The current Android, Desktop, and iOS
- * LAN actuals return a no-op granted gate; the OS handles Android firewall
- * and Apple Local Network prompts when the transport first touches the
- * network. Lives in commonMain so navigation does not import platform APIs.
+ * Platform-bound Composable factory. [networkAccess] is transport evidence,
+ * not a permission guess. Lives in commonMain so navigation does not import
+ * UIKit or Android APIs.
  */
 @Composable
-expect fun rememberP2pPermissionGate(): P2pPermissionGate
+expect fun rememberP2pPermissionGate(
+    networkAccess: StateFlow<LocalNetworkAccess>,
+): P2pPermissionGate

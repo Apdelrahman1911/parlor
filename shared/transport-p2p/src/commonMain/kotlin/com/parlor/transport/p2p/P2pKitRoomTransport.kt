@@ -24,6 +24,7 @@ import com.parlor.networking.room.SendTarget
 import com.parlor.networking.transport.HostConfig
 import com.parlor.networking.transport.HostedGameProtocol
 import com.parlor.networking.transport.JoinConfig
+import com.parlor.networking.transport.LocalNetworkAccess
 import com.parlor.networking.transport.RoomTransport
 import com.parlor.networking.transport.ResumableSessionInfo
 import com.parlor.networking.transport.TransportCapability
@@ -33,6 +34,7 @@ import com.parlor.storage.secure.SecureStorage
 import dev.p2pkit.core.AppId
 import dev.p2pkit.core.ConnectionState
 import dev.p2pkit.core.P2pKit
+import dev.p2pkit.core.P2pError
 import dev.p2pkit.core.P2pMessage
 import dev.p2pkit.core.P2pSession
 import dev.p2pkit.core.Peer
@@ -124,6 +126,9 @@ class P2pKitRoomTransport(
     private val peerFreshnessWindowMs: Long = DEFAULT_PEER_FRESHNESS_WINDOW_MS,
 ) : RoomTransport {
     private val credentialStore = ResumableCredentialStore(secureStorage)
+    private val _localNetworkAccess =
+        MutableStateFlow<LocalNetworkAccess>(LocalNetworkAccess.Unknown)
+    override val localNetworkAccess = _localNetworkAccess.asStateFlow()
 
     private sealed interface AppLifecycleEvent {
         data class Backgrounded(val atEpochMillis: Long) : AppLifecycleEvent
@@ -204,6 +209,20 @@ class P2pKitRoomTransport(
         lifecycleEvents.trySend(AppLifecycleEvent.RoomClosed(registrationId))
     }
 
+    private fun recordLocalNetworkFailure(failure: Throwable) {
+        // An authenticated connection or successful advertisement already
+        // proved the LAN path. A later application/protocol failure must not
+        // relabel that evidence as a permission or network problem.
+        if (_localNetworkAccess.value == LocalNetworkAccess.Operational) return
+        val permissionWasProven = generateSequence(failure as Throwable?) { it.cause }
+            .any { it is P2pError.PermissionMissing }
+        _localNetworkAccess.value = if (permissionWasProven) {
+            LocalNetworkAccess.PermissionDenied
+        } else {
+            LocalNetworkAccess.FailureUnclassified
+        }
+    }
+
     override val capability: TransportCapability = TransportCapability(
         // The UI currently uses explicit room-code entry. Do not claim the
         // RoomTransport discovery contract until discoverRooms() is mapped.
@@ -213,6 +232,7 @@ class P2pKitRoomTransport(
     )
 
     override suspend fun host(config: HostConfig): Result<LocalRoom, NetError> {
+        _localNetworkAccess.value = LocalNetworkAccess.Attempting
         p2pLog("host: entry roomDisplayName='${config.roomDisplayName}' deviceName='$deviceName'")
         return runCatching {
             val roomCode = generateRoomCode()
@@ -252,6 +272,7 @@ class P2pKitRoomTransport(
                 )
                 p2pLog("host: start() returned; calling startAdvertising()")
                 kit.startAdvertising()
+                _localNetworkAccess.value = LocalNetworkAccess.Operational
             } catch (t: Throwable) {
                 withContext(NonCancellable) {
                     if (room == null) {
@@ -271,6 +292,7 @@ class P2pKitRoomTransport(
             onSuccess = { Result.Success(it) },
             onFailure = {
                 it.rethrowIfCancellation()
+                recordLocalNetworkFailure(it)
                 p2pLog("host: FAILED message='${it.message}'")
                 Result.Failure(NetError.TransportFailure(it.message ?: "host failed"))
             },
@@ -285,11 +307,13 @@ class P2pKitRoomTransport(
         if (config.rejoinToken != null) {
             return Result.Failure(NetError.Unauthorized)
         }
+        _localNetworkAccess.value = LocalNetworkAccess.Attempting
         p2pLog("join: entry")
         val kit = try {
             kitFactory.createKit(appId = appId, deviceName = config.displayName)
         } catch (t: Throwable) {
             t.rethrowIfCancellation()
+            recordLocalNetworkFailure(t)
             return Result.Failure(NetError.TransportFailure(t.message ?: "kit initialization failed"))
         }
         try {
@@ -303,6 +327,7 @@ class P2pKitRoomTransport(
         } catch (t: Throwable) {
             kit.stopAfterFailure()
             t.rethrowIfCancellation()
+            recordLocalNetworkFailure(t)
             p2pLog("join: kit setup FAILED message='${t.message}'")
             return Result.Failure(NetError.TransportFailure(t.message ?: "join failed"))
         }
@@ -364,6 +389,9 @@ class P2pKitRoomTransport(
                     )
                     continue
                 }
+                // A completed authenticated P2pKit connection is stronger
+                // evidence than any permission preflight Apple makes public.
+                _localNetworkAccess.value = LocalNetworkAccess.Operational
                 val remainingFirstResponseBudgetMs = joinTimeoutMs -
                     startedAt.elapsedNow().inWholeMilliseconds
                 if (remainingFirstResponseBudgetMs <= 0L) {
@@ -446,11 +474,15 @@ class P2pKitRoomTransport(
             if (result is Result.Failure) {
                 runCatching { kit.stopDiscovery() }
                 kit.stopAfterFailure()
+                if (_localNetworkAccess.value != LocalNetworkAccess.Operational) {
+                    _localNetworkAccess.value = LocalNetworkAccess.FailureUnclassified
+                }
             }
             checkNotNull(result)
         } catch (t: Throwable) {
             kit.stopAfterFailure()
             t.rethrowIfCancellation()
+            recordLocalNetworkFailure(t)
             p2pLog("join: FAILED with exception type=${t::class.simpleName} message='${t.message}'")
             Result.Failure(NetError.TransportFailure(t.message ?: "join failed"))
         }
@@ -490,10 +522,12 @@ class P2pKitRoomTransport(
             credentialStore.clear()
             return Result.Failure(NetError.RejoinExpired)
         }
+        _localNetworkAccess.value = LocalNetworkAccess.Attempting
         val kit = try {
             kitFactory.createKit(appId = appId, deviceName = credential.displayName)
         } catch (failure: Throwable) {
             failure.rethrowIfCancellation()
+            recordLocalNetworkFailure(failure)
             return Result.Failure(
                 NetError.TransportFailure(failure.message ?: "resume initialization failed"),
             )
@@ -503,6 +537,7 @@ class P2pKitRoomTransport(
         } catch (failure: Throwable) {
             kit.stopAfterFailure()
             failure.rethrowIfCancellation()
+            recordLocalNetworkFailure(failure)
             return Result.Failure(
                 NetError.TransportFailure(failure.message ?: "resume initialization failed"),
             )
@@ -511,6 +546,9 @@ class P2pKitRoomTransport(
             when (val resumed = resumeConnection(kit, credential)) {
                 is Result.Failure -> {
                     kit.stopAfterFailure()
+                    if (_localNetworkAccess.value != LocalNetworkAccess.Operational) {
+                        _localNetworkAccess.value = LocalNetworkAccess.FailureUnclassified
+                    }
                     resumed
                 }
                 is Result.Success -> {
@@ -539,6 +577,7 @@ class P2pKitRoomTransport(
         } catch (failure: Throwable) {
             kit.stopAfterFailure()
             failure.rethrowIfCancellation()
+            recordLocalNetworkFailure(failure)
             Result.Failure(NetError.TransportFailure(failure.message ?: "resume failed"))
         }
     }
@@ -745,6 +784,7 @@ class P2pKitRoomTransport(
                         delay(ADMISSION_RETRY_MS)
                         continue
                     }
+                    _localNetworkAccess.value = LocalNetworkAccess.Operational
                     val identityMatches =
                         session.peer.id == hostPeer.id &&
                             session.peerIdentity.peerId == hostPeer.id &&

@@ -48,6 +48,11 @@ import com.parlor.games.mafia.resources.md_peer_reconnecting_leave_description
 import com.parlor.games.mafia.resources.md_peer_room_code_format
 import com.parlor.games.mafia.resources.md_peer_room_format
 import com.parlor.games.mafia.resources.md_peer_waiting_for_start
+import com.parlor.games.mafia.resources.md_network_open_settings
+import com.parlor.games.mafia.resources.md_network_open_settings_description
+import com.parlor.games.mafia.resources.md_network_recovery_help
+import com.parlor.games.mafia.resources.md_network_retry
+import com.parlor.games.mafia.resources.md_network_retry_description
 import com.parlor.games.mafia.resources.setup_back
 import com.parlor.games.mafia.resources.setup_back_description
 import com.parlor.networking.protocol.HostMessage
@@ -58,6 +63,7 @@ import com.parlor.networking.protocol.validateFor
 import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.NetError
 import com.parlor.networking.transport.RoomTransport
+import com.parlor.networking.transport.needsRecoveryGuidance
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.NonCancellable
@@ -78,16 +84,20 @@ fun MafiaPeerLobbyFlow(
     peerName: String,
     resumeExistingSession: Boolean = false,
     onBackToHome: () -> Unit,
+    onOpenNetworkSettings: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
 ) {
     var room by remember { mutableStateOf<LocalRoom?>(null) }
     var joinError by remember { mutableStateOf<NetError?>(null) }
     var sessionStart by remember { mutableStateOf<SessionStartingFromHost?>(null) }
+    var joinAttempt by remember { mutableStateOf(0) }
 
     var hostLost by remember { mutableStateOf(false) }
     var selfOffline by remember { mutableStateOf(false) }
 
-    LaunchedEffect(transport, code, resumeExistingSession) {
+    LaunchedEffect(transport, code, resumeExistingSession, joinAttempt) {
+        joinError = null
+        sessionStart = null
         val result = if (resumeExistingSession) {
             transport.resumeLastSession()
         } else {
@@ -153,6 +163,7 @@ fun MafiaPeerLobbyFlow(
     }
 
     val start = sessionStart
+    val localNetworkAccess by transport.localNetworkAccess.collectAsState()
 
     Box(modifier = modifier.fillMaxSize()) {
         Column(modifier = Modifier.fillMaxSize()) {
@@ -164,6 +175,11 @@ fun MafiaPeerLobbyFlow(
                     joinError != null -> MafiaPeerErrorState(
                         title = stringResource(Res.string.md_peer_error_title),
                         detail = stringResource(Res.string.md_peer_error_detail),
+                        showNetworkRecovery = localNetworkAccess.needsRecoveryGuidance,
+                        onRetry = { joinAttempt++ },
+                        onOpenNetworkSettings = onOpenNetworkSettings.takeIf {
+                            localNetworkAccess.needsRecoveryGuidance
+                        },
                         onBack = onBackToHome,
                         modifier = Modifier.fillMaxSize(),
                     )
@@ -282,12 +298,16 @@ private fun MafiaPeerErrorState(
     detail: String,
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
+    showNetworkRecovery: Boolean = false,
+    onRetry: (() -> Unit)? = null,
+    onOpenNetworkSettings: (() -> Unit)? = null,
 ) {
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(ParlorTheme.spacing.xl),
+                .padding(ParlorTheme.spacing.xl)
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l, Alignment.CenterVertically),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -303,6 +323,33 @@ private fun MafiaPeerErrorState(
                 color = ParlorTheme.colors.textTertiary,
                 textAlign = TextAlign.Center,
             )
+            if (showNetworkRecovery) {
+                Text(
+                    text = stringResource(Res.string.md_network_recovery_help),
+                    style = ParlorTheme.typography.bodyMedium,
+                    color = ParlorTheme.colors.textTertiary,
+                    textAlign = TextAlign.Center,
+                )
+            }
+            if (onRetry != null) {
+                ParlorButton(
+                    label = stringResource(Res.string.md_network_retry),
+                    contentDescription = stringResource(Res.string.md_network_retry_description),
+                    onClick = onRetry,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
+            if (onOpenNetworkSettings != null) {
+                ParlorButton(
+                    label = stringResource(Res.string.md_network_open_settings),
+                    contentDescription = stringResource(
+                        Res.string.md_network_open_settings_description,
+                    ),
+                    onClick = onOpenNetworkSettings,
+                    modifier = Modifier.fillMaxWidth(),
+                    variant = ParlorButtonVariant.Secondary,
+                )
+            }
             ParlorButton(
                 label = stringResource(Res.string.setup_back),
                 contentDescription = stringResource(Res.string.setup_back_description),

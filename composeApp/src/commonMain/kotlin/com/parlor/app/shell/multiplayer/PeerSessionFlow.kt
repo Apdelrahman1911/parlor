@@ -42,6 +42,11 @@ import com.parlor.app.resources.peer_loading_case
 import com.parlor.app.resources.peer_room_code_label_format
 import com.parlor.app.resources.peer_room_header_format
 import com.parlor.app.resources.peer_waiting_for_start
+import com.parlor.app.resources.network_open_settings
+import com.parlor.app.resources.network_open_settings_description
+import com.parlor.app.resources.network_recovery_help
+import com.parlor.app.resources.network_retry
+import com.parlor.app.resources.network_retry_description
 import com.parlor.content.repository.CaseRepository
 import com.parlor.content.validation.PayloadValidator
 import com.parlor.content.validation.ValidatedCase
@@ -71,6 +76,7 @@ import com.parlor.networking.protocol.validateFor
 import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.NetError
 import com.parlor.networking.transport.RoomTransport
+import com.parlor.networking.transport.needsRecoveryGuidance
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.NonCancellable
@@ -93,6 +99,7 @@ fun PeerSessionFlow(
     peerName: String,
     resumeExistingSession: Boolean = false,
     onBackToLibrary: () -> Unit,
+    onOpenNetworkSettings: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
 ) {
     var room by remember { mutableStateOf<LocalRoom?>(null) }
@@ -101,8 +108,11 @@ fun PeerSessionFlow(
     // straight to the user.
     var joinError by remember { mutableStateOf<NetError?>(null) }
     var sessionStart by remember { mutableStateOf<SessionStartingFromHost?>(null) }
+    var joinAttempt by remember { mutableStateOf(0) }
 
-    LaunchedEffect(transport, code, resumeExistingSession) {
+    LaunchedEffect(transport, code, resumeExistingSession, joinAttempt) {
+        joinError = null
+        sessionStart = null
         val result = if (resumeExistingSession) {
             transport.resumeLastSession()
         } else {
@@ -185,6 +195,7 @@ fun PeerSessionFlow(
     // bridge's SharedFlow into a PartyConnectionPresenter at this scope.
     var hostLost by remember { mutableStateOf(false) }
     var selfOffline by remember { mutableStateOf(false) }
+    val localNetworkAccess by transport.localNetworkAccess.collectAsState()
 
     Box(modifier = modifier.fillMaxSize()) {
         Column(modifier = Modifier.fillMaxSize()) {
@@ -194,7 +205,12 @@ fun PeerSessionFlow(
             Box(modifier = Modifier.fillMaxSize()) {
                 when {
                     joinError != null -> PeerErrorState(
-                        netErrorMessage(joinError!!),
+                        error = netErrorMessage(joinError!!),
+                        onRetry = { joinAttempt++ },
+                        onOpenNetworkSettings = onOpenNetworkSettings.takeIf {
+                            localNetworkAccess.needsRecoveryGuidance
+                        },
+                        showNetworkRecovery = localNetworkAccess.needsRecoveryGuidance,
                         onBack = onBackToLibrary,
                         modifier = Modifier.fillMaxSize(),
                     )
@@ -383,12 +399,20 @@ private fun PeerLoadingCase(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun PeerErrorState(error: String, onBack: () -> Unit, modifier: Modifier = Modifier) {
+private fun PeerErrorState(
+    error: String,
+    onBack: () -> Unit,
+    modifier: Modifier = Modifier,
+    onRetry: (() -> Unit)? = null,
+    onOpenNetworkSettings: (() -> Unit)? = null,
+    showNetworkRecovery: Boolean = false,
+) {
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(ParlorTheme.spacing.xl),
+                .padding(ParlorTheme.spacing.xl)
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l, Alignment.CenterVertically),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -404,6 +428,31 @@ private fun PeerErrorState(error: String, onBack: () -> Unit, modifier: Modifier
                 color = ParlorTheme.colors.textTertiary,
                 textAlign = TextAlign.Center,
             )
+            if (showNetworkRecovery) {
+                Text(
+                    text = stringResource(Res.string.network_recovery_help),
+                    style = ParlorTheme.typography.bodyMedium,
+                    color = ParlorTheme.colors.textTertiary,
+                    textAlign = TextAlign.Center,
+                )
+            }
+            if (onRetry != null) {
+                ParlorButton(
+                    label = stringResource(Res.string.network_retry),
+                    contentDescription = stringResource(Res.string.network_retry_description),
+                    onClick = onRetry,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
+            if (onOpenNetworkSettings != null) {
+                ParlorButton(
+                    label = stringResource(Res.string.network_open_settings),
+                    contentDescription = stringResource(Res.string.network_open_settings_description),
+                    onClick = onOpenNetworkSettings,
+                    modifier = Modifier.fillMaxWidth(),
+                    variant = ParlorButtonVariant.Secondary,
+                )
+            }
             ParlorButton(
                 label = stringResource(Res.string.error_back),
                 contentDescription = stringResource(Res.string.error_back_description),

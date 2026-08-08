@@ -55,6 +55,11 @@ import com.parlor.games.mafia.resources.md_host_start_pending
 import com.parlor.games.mafia.resources.md_host_start_too_many
 import com.parlor.games.mafia.resources.md_host_start_with_format
 import com.parlor.games.mafia.resources.md_host_waiting_for_players
+import com.parlor.games.mafia.resources.md_network_open_settings
+import com.parlor.games.mafia.resources.md_network_open_settings_description
+import com.parlor.games.mafia.resources.md_network_recovery_help
+import com.parlor.games.mafia.resources.md_network_retry
+import com.parlor.games.mafia.resources.md_network_retry_description
 import com.parlor.games.mafia.resources.setup_back
 import com.parlor.games.mafia.resources.setup_back_description
 import com.parlor.networking.room.LocalRoom
@@ -62,6 +67,7 @@ import com.parlor.networking.room.NetError
 import com.parlor.networking.transport.HostConfig
 import com.parlor.networking.transport.HostedGameProtocol
 import com.parlor.networking.transport.RoomTransport
+import com.parlor.networking.transport.needsRecoveryGuidance
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.awaitCancellation
@@ -80,15 +86,18 @@ fun MafiaHostLobbyFlow(
     transport: RoomTransport,
     hostName: String,
     onBackToHome: () -> Unit,
+    onOpenNetworkSettings: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
 ) {
     val scope = rememberCoroutineScope()
     var room by remember { mutableStateOf<LocalRoom?>(null) }
     var hostError by remember { mutableStateOf<NetError?>(null) }
+    var hostAttempt by remember { mutableStateOf(0) }
     var started by remember { mutableStateOf(false) }
     val seed = remember { RandomSource.system().nextLong() }
 
-    LaunchedEffect(transport) {
+    LaunchedEffect(transport, hostAttempt) {
+        hostError = null
         when (
             val result = transport.host(
                 HostConfig(
@@ -119,10 +128,16 @@ fun MafiaHostLobbyFlow(
         }
     }
 
+    val localNetworkAccess by transport.localNetworkAccess.collectAsState()
     when {
         hostError != null -> MafiaLobbyErrorState(
             title = stringResource(Res.string.md_host_error_title),
             detail = stringResource(Res.string.md_host_error_detail),
+            showNetworkRecovery = localNetworkAccess.needsRecoveryGuidance,
+            onRetry = { hostAttempt++ },
+            onOpenNetworkSettings = onOpenNetworkSettings.takeIf {
+                localNetworkAccess.needsRecoveryGuidance
+            },
             onBack = onBackToHome,
             modifier = modifier,
         )
@@ -360,12 +375,16 @@ private fun MafiaLobbyErrorState(
     detail: String,
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
+    showNetworkRecovery: Boolean = false,
+    onRetry: (() -> Unit)? = null,
+    onOpenNetworkSettings: (() -> Unit)? = null,
 ) {
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(ParlorTheme.spacing.xl),
+                .padding(ParlorTheme.spacing.xl)
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l, Alignment.CenterVertically),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -381,6 +400,33 @@ private fun MafiaLobbyErrorState(
                 color = ParlorTheme.colors.textTertiary,
                 textAlign = TextAlign.Center,
             )
+            if (showNetworkRecovery) {
+                Text(
+                    text = stringResource(Res.string.md_network_recovery_help),
+                    style = ParlorTheme.typography.bodyMedium,
+                    color = ParlorTheme.colors.textTertiary,
+                    textAlign = TextAlign.Center,
+                )
+            }
+            if (onRetry != null) {
+                ParlorButton(
+                    label = stringResource(Res.string.md_network_retry),
+                    contentDescription = stringResource(Res.string.md_network_retry_description),
+                    onClick = onRetry,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
+            if (onOpenNetworkSettings != null) {
+                ParlorButton(
+                    label = stringResource(Res.string.md_network_open_settings),
+                    contentDescription = stringResource(
+                        Res.string.md_network_open_settings_description,
+                    ),
+                    onClick = onOpenNetworkSettings,
+                    modifier = Modifier.fillMaxWidth(),
+                    variant = ParlorButtonVariant.Secondary,
+                )
+            }
             ParlorButton(
                 label = stringResource(Res.string.setup_back),
                 contentDescription = stringResource(Res.string.setup_back_description),

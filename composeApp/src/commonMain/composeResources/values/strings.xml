@@ -148,22 +148,25 @@
     <string name="settings_back_description">Return to the previous screen.</string>
     <string name="settings_open">Open settings.</string>
 
-    <!-- Runtime permission rationale (Android NEARBY_WIFI_DEVICES / FINE_LOCATION). -->
-    <string name="permission_eyebrow">Nearby devices</string>
-    <string name="permission_denied_eyebrow">Permission needed</string>
-    <string name="permission_permanently_denied_eyebrow">Permission blocked</string>
+    <!-- Apple Local Network rationale; Android base LAN needs no runtime permission. -->
+    <string name="permission_eyebrow">Local network</string>
+    <string name="permission_denied_eyebrow">Check local network</string>
+    <string name="permission_permanently_denied_eyebrow">Local network blocked</string>
     <string name="permission_title">Let Parlor find the room</string>
-    <string name="permission_body">To host or join a Party Play room, Parlor needs access to nearby devices on your Wi-Fi network. Your location is not used; the access only lets phones in the room see each other.</string>
-    <string name="permission_denied_body">Parlor still can't see nearby devices. Grant the permission to host or join a room — you can revoke it at any time.</string>
-    <string name="permission_permanently_denied_body">The permission was denied with "Don't ask again." Open Parlor's app settings, enable the Nearby devices (or Location) permission, then return to this screen.</string>
-    <string name="permission_grant">Allow access</string>
-    <string name="permission_grant_description">Open the system permission prompt for nearby devices.</string>
+    <string name="permission_body">Parlor uses your local Wi-Fi network and Bonjour to host or find Party Play rooms. On iPhone, the system may ask for Local Network access when the next network step begins. Parlor does not use your location.</string>
+    <string name="permission_denied_body">Parlor could not use the local network, but iOS did not say whether access was denied or the network was unavailable. Check Wi-Fi and Parlor's Local Network setting, then retry.</string>
+    <string name="permission_permanently_denied_body">Local Network access is blocked. Open Parlor's app settings, enable Local Network, then return and retry.</string>
     <string name="permission_open_settings">Open app settings</string>
-    <string name="permission_open_settings_description">Open Parlor's system settings page to grant nearby-devices access.</string>
-    <string name="permission_continue">I've granted it — continue</string>
-    <string name="permission_continue_description">Re-check the permission and continue if it's now granted.</string>
+    <string name="permission_open_settings_description">Open Parlor's system settings page to review Local Network access.</string>
+    <string name="permission_continue">Continue</string>
+    <string name="permission_continue_description">Continue and retry the real local-network operation.</string>
     <string name="permission_back">Back</string>
-    <string name="permission_back_description">Return to the home screen without granting the permission.</string>
+    <string name="permission_back_description">Return to the home screen without starting networking.</string>
+    <string name="network_recovery_help">Parlor could not confirm local-network access. Check Wi-Fi and, on iPhone, Parlor's Local Network setting. This failure can also be caused by routing, Bonjour, or the host being unavailable.</string>
+    <string name="network_retry">Retry</string>
+    <string name="network_retry_description">Retry the local-network operation.</string>
+    <string name="network_open_settings">Open app settings</string>
+    <string name="network_open_settings_description">Open Parlor's system settings to review Local Network access.</string>
 
     <!-- Loading / error states shared by host + peer + library. -->
     <string name="error_back">Back</string>

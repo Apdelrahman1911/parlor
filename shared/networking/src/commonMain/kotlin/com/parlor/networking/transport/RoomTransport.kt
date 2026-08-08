@@ -6,7 +6,12 @@ import com.parlor.networking.room.DiscoveredRoom
 import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.NetError
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flowOf
+
+private val unreportedLocalNetworkAccess =
+    MutableStateFlow<LocalNetworkAccess>(LocalNetworkAccess.NotApplicable)
 
 /**
  * Pluggable transport — the production app currently supplies the P2pKit
@@ -17,6 +22,18 @@ import kotlinx.coroutines.flow.flowOf
  */
 interface RoomTransport {
     val capability: TransportCapability
+
+    /**
+     * Evidence available to the app about the LAN path used by this transport.
+     *
+     * Apple exposes no truthful Local Network preflight API. Implementations
+     * therefore report [LocalNetworkAccess.Operational] only after a real
+     * advertise/connect operation succeeds and must not turn a timeout into a
+     * claimed permission denial. The default keeps non-LAN/test transports
+     * source compatible.
+     */
+    val localNetworkAccess: StateFlow<LocalNetworkAccess>
+        get() = unreportedLocalNetworkAccess
 
     suspend fun host(config: HostConfig): Result<LocalRoom, NetError>
     suspend fun join(code: String, displayName: String): Result<LocalRoom, NetError>
@@ -48,6 +65,34 @@ interface RoomTransport {
 
     fun notifyAppForegrounded() = Unit
 }
+
+/** Truthful, transport-observed local-network state; never a guessed OS grant. */
+sealed interface LocalNetworkAccess {
+    /** This transport/platform does not expose LAN-operational evidence. */
+    data object NotApplicable : LocalNetworkAccess
+
+    /** No real LAN operation has completed in this process yet. */
+    data object Unknown : LocalNetworkAccess
+
+    /** A host, join, or resume attempt is currently touching the LAN. */
+    data object Attempting : LocalNetworkAccess
+
+    /** Advertising or an authenticated peer connection succeeded. */
+    data object Operational : LocalNetworkAccess
+
+    /** A stable platform/API signal proved that user action is required. */
+    data object PermissionDenied : LocalNetworkAccess
+
+    /**
+     * LAN startup/discovery failed without proof of permission denial. This
+     * can be denial, Wi-Fi state, routing, Bonjour, firewall, or transport.
+     */
+    data object FailureUnclassified : LocalNetworkAccess
+}
+
+val LocalNetworkAccess.needsRecoveryGuidance: Boolean
+    get() = this == LocalNetworkAccess.PermissionDenied ||
+        this == LocalNetworkAccess.FailureUnclassified
 
 data class TransportCapability(
     val supportsDiscovery: Boolean,

@@ -2,6 +2,7 @@ package com.parlor.app.permissions
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import com.parlor.networking.transport.LocalNetworkAccess
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -12,11 +13,14 @@ import kotlinx.coroutines.flow.asStateFlow
  * gate so the shared rationale UI short-circuits cleanly.
  */
 @Composable
-actual fun rememberP2pPermissionGate(): P2pPermissionGate = remember { DesktopNoopGate }
+actual fun rememberP2pPermissionGate(
+    networkAccess: StateFlow<LocalNetworkAccess>,
+): P2pPermissionGate = remember { DesktopNoopGate }
 
 private object DesktopNoopGate : P2pPermissionGate {
-    private val _status = MutableStateFlow<PermissionStatus>(PermissionStatus.Granted)
+    override val canOpenNetworkSettings: Boolean = false
+    private val _status = MutableStateFlow<PermissionStatus>(PermissionStatus.NotRequired)
     override val status: StateFlow<PermissionStatus> = _status.asStateFlow()
-    override suspend fun request(): PermissionStatus = PermissionStatus.Granted
+    override suspend fun request(): PermissionStatus = PermissionStatus.NotRequired
     override fun openAppSettings() = Unit
 }

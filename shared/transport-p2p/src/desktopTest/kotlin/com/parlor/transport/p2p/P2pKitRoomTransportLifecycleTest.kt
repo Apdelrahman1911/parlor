@@ -26,9 +26,11 @@ import com.parlor.networking.room.RoomInfo
 import com.parlor.networking.room.RoomLifecycleState
 import com.parlor.networking.room.RoomMember
 import com.parlor.networking.room.SendTarget
+import com.parlor.networking.transport.LocalNetworkAccess
 import dev.p2pkit.core.AppId
 import dev.p2pkit.core.ConnectionState
 import dev.p2pkit.core.P2pKit
+import dev.p2pkit.core.P2pError
 import dev.p2pkit.core.P2pMessage
 import dev.p2pkit.core.P2pSession
 import dev.p2pkit.core.P2pState
@@ -40,6 +42,7 @@ import dev.p2pkit.core.NetworkPathStatus
 import dev.p2pkit.core.Platform
 import dev.p2pkit.core.TransportKind
 import dev.p2pkit.core.permission.P2pPermissionManager
+import dev.p2pkit.core.permission.P2pPermission
 import dev.p2pkit.core.provisioning.NetworkProvisioningManager
 import dev.p2pkit.core.transfer.P2pFileOffer
 import dev.p2pkit.core.transfer.P2pFileTransfer
@@ -598,6 +601,68 @@ class P2pKitRoomTransportLifecycleTest {
     }
 
     @Test
+    fun host_reports_operational_access_only_after_real_advertising_succeeds() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("host-pid"))
+        val transport = P2pKitRoomTransport(
+            AppId("com.parlor.test"),
+            "host-device",
+            testScope,
+            object : P2pKitFactory {
+                override suspend fun createKit(appId: AppId, deviceName: String): P2pKit = kit
+            },
+        )
+
+        val result = transport.host(com.parlor.networking.transport.HostConfig("Room"))
+
+        assertThat(result).isInstanceOf(Result.Success::class)
+        assertThat(transport.localNetworkAccess.value)
+            .isEqualTo(LocalNetworkAccess.Operational)
+        (result as Result.Success).data.leave()
+    }
+
+    @Test
+    fun host_keeps_generic_start_failure_unclassified_instead_of_guessing_denial() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("host-pid")).apply {
+            startHandler = { error("listener failed") }
+        }
+        val transport = P2pKitRoomTransport(
+            AppId("com.parlor.test"),
+            "host-device",
+            testScope,
+            object : P2pKitFactory {
+                override suspend fun createKit(appId: AppId, deviceName: String): P2pKit = kit
+            },
+        )
+
+        assertThat(transport.host(com.parlor.networking.transport.HostConfig("Room")))
+            .isInstanceOf(Result.Failure::class)
+        assertThat(transport.localNetworkAccess.value)
+            .isEqualTo(LocalNetworkAccess.FailureUnclassified)
+    }
+
+    @Test
+    fun host_reports_actionable_denial_only_for_typed_permission_evidence() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("host-pid")).apply {
+            startHandler = {
+                throw P2pError.PermissionMissing(listOf(P2pPermission.LocalNetwork))
+            }
+        }
+        val transport = P2pKitRoomTransport(
+            AppId("com.parlor.test"),
+            "host-device",
+            testScope,
+            object : P2pKitFactory {
+                override suspend fun createKit(appId: AppId, deviceName: String): P2pKit = kit
+            },
+        )
+
+        assertThat(transport.host(com.parlor.networking.transport.HostConfig("Room")))
+            .isInstanceOf(Result.Failure::class)
+        assertThat(transport.localNetworkAccess.value)
+            .isEqualTo(LocalNetworkAccess.PermissionDenied)
+    }
+
+    @Test
     fun host_emits_peer_left_and_removes_member_when_session_closes() = runBlocking {
         val kit = FakeP2pKit(P2pPeerId("host-pid"))
         val room = newHostRoom(kit)
@@ -1058,6 +1123,8 @@ class P2pKitRoomTransportLifecycleTest {
 
         assertThat(result).isInstanceOf(Result.Failure::class)
         assertThat((result as Result.Failure).error).isEqualTo(NetError.Timeout)
+        assertThat(transport.localNetworkAccess.value)
+            .isEqualTo(LocalNetworkAccess.FailureUnclassified)
         // Kit must be cleaned up on timeout — otherwise an abandoned
         // join leaks a discovering instance.
         assertThat(kit.stopCalls).isEqualTo(1)
@@ -1358,6 +1425,10 @@ class P2pKitRoomTransportLifecycleTest {
 
         assertThat(result).isInstanceOf(Result.Failure::class)
         assertThat((result as Result.Failure).error).isEqualTo(NetError.WrongCode)
+        // The secure connection and host response prove LAN operation even
+        // though the application-level room secret was wrong.
+        assertThat(transport.localNetworkAccess.value)
+            .isEqualTo(LocalNetworkAccess.Operational)
         assertThat(kit.stopCalls).isEqualTo(1)
     }
 

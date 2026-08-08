@@ -43,6 +43,11 @@ import com.parlor.app.resources.host_pending_eyebrow
 import com.parlor.app.resources.host_room_code_eyebrow
 import com.parlor.app.resources.host_starting
 import com.parlor.app.resources.host_title
+import com.parlor.app.resources.network_open_settings
+import com.parlor.app.resources.network_open_settings_description
+import com.parlor.app.resources.network_recovery_help
+import com.parlor.app.resources.network_retry
+import com.parlor.app.resources.network_retry_description
 import com.parlor.app.resources.host_hosting_as_format
 import com.parlor.app.resources.host_start_need_more_format
 import com.parlor.app.resources.host_start_pending
@@ -75,6 +80,7 @@ import com.parlor.networking.room.NetError
 import com.parlor.networking.transport.HostConfig
 import com.parlor.networking.transport.HostedGameProtocol
 import com.parlor.networking.transport.RoomTransport
+import com.parlor.networking.transport.needsRecoveryGuidance
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.awaitCancellation
@@ -96,6 +102,7 @@ fun HostSessionFlow(
     modeId: ModeId,
     hostName: String,
     onBackToLibrary: () -> Unit,
+    onOpenNetworkSettings: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
 ) {
     val repository: CaseRepository = koinInject()
@@ -105,6 +112,7 @@ fun HostSessionFlow(
     var room by remember { mutableStateOf<LocalRoom?>(null) }
     // Keep the typed error so the rendering site can localise it.
     var hostError by remember { mutableStateOf<NetError?>(null) }
+    var hostAttempt by remember { mutableStateOf(0) }
     var started by remember { mutableStateOf(false) }
     val seed = remember(caseId) { RandomSource.system().nextLong() }
 
@@ -115,7 +123,8 @@ fun HostSessionFlow(
         value = repository.loadCase(CaseId(caseId), payloadValidator)
     }
 
-    LaunchedEffect(transport) {
+    LaunchedEffect(transport, hostAttempt) {
+        hostError = null
         when (
             val result = transport.host(
                 HostConfig(
@@ -148,8 +157,18 @@ fun HostSessionFlow(
 
     val case = (caseResult as? Result.Success)?.data
     val caseError = (caseResult as? Result.Failure)?.error
+    val localNetworkAccess by transport.localNetworkAccess.collectAsState()
     when {
-        hostError != null -> HostErrorState(netErrorMessage(hostError!!), onBack = onBackToLibrary, modifier = modifier)
+        hostError != null -> HostErrorState(
+            error = netErrorMessage(hostError!!),
+            onRetry = { hostAttempt++ },
+            onOpenNetworkSettings = onOpenNetworkSettings.takeIf {
+                localNetworkAccess.needsRecoveryGuidance
+            },
+            showNetworkRecovery = localNetworkAccess.needsRecoveryGuidance,
+            onBack = onBackToLibrary,
+            modifier = modifier,
+        )
         caseError != null -> HostErrorState(
             dataErrorMessage(caseError),
             onBack = onBackToLibrary,
@@ -397,12 +416,20 @@ private fun HostLoadingState(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun HostErrorState(error: String, onBack: () -> Unit, modifier: Modifier = Modifier) {
+private fun HostErrorState(
+    error: String,
+    onBack: () -> Unit,
+    modifier: Modifier = Modifier,
+    onRetry: (() -> Unit)? = null,
+    onOpenNetworkSettings: (() -> Unit)? = null,
+    showNetworkRecovery: Boolean = false,
+) {
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(ParlorTheme.spacing.xl),
+                .padding(ParlorTheme.spacing.xl)
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l, Alignment.CenterVertically),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -418,6 +445,31 @@ private fun HostErrorState(error: String, onBack: () -> Unit, modifier: Modifier
                 color = ParlorTheme.colors.textTertiary,
                 textAlign = TextAlign.Center,
             )
+            if (showNetworkRecovery) {
+                Text(
+                    text = stringResource(Res.string.network_recovery_help),
+                    style = ParlorTheme.typography.bodyMedium,
+                    color = ParlorTheme.colors.textTertiary,
+                    textAlign = TextAlign.Center,
+                )
+            }
+            if (onRetry != null) {
+                ParlorButton(
+                    label = stringResource(Res.string.network_retry),
+                    contentDescription = stringResource(Res.string.network_retry_description),
+                    onClick = onRetry,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
+            if (onOpenNetworkSettings != null) {
+                ParlorButton(
+                    label = stringResource(Res.string.network_open_settings),
+                    contentDescription = stringResource(Res.string.network_open_settings_description),
+                    onClick = onOpenNetworkSettings,
+                    modifier = Modifier.fillMaxWidth(),
+                    variant = ParlorButtonVariant.Secondary,
+                )
+            }
             ParlorButton(
                 label = stringResource(Res.string.error_back),
                 contentDescription = stringResource(Res.string.error_back_description),

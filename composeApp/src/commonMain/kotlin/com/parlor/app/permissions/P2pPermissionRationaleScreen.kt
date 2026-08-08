@@ -27,8 +27,6 @@ import com.parlor.app.resources.permission_continue_description
 import com.parlor.app.resources.permission_denied_body
 import com.parlor.app.resources.permission_denied_eyebrow
 import com.parlor.app.resources.permission_eyebrow
-import com.parlor.app.resources.permission_grant
-import com.parlor.app.resources.permission_grant_description
 import com.parlor.app.resources.permission_open_settings
 import com.parlor.app.resources.permission_open_settings_description
 import com.parlor.app.resources.permission_permanently_denied_body
@@ -44,16 +42,15 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 
 /**
- * Sits in front of HostName / JoinName when [gate.status] isn't Granted.
- * Three states:
- *  - NotRequested / Denied → rationale + "Grant access" (calls `gate.request()`)
- *  - PermanentlyDenied → "Open Settings" instructions
- *  - Granted → automatically routed past this screen by the caller
+ * Sits in front of HostName / JoinName until the platform either needs no
+ * runtime gate, has proven LAN operation, or the player elects to make the
+ * first real iOS network attempt. A generic timeout is never presented as a
+ * proven Local Network denial.
  */
 @Composable
 fun P2pPermissionRationaleScreen(
     gate: P2pPermissionGate,
-    onGranted: () -> Unit,
+    onContinue: () -> Unit,
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -64,8 +61,8 @@ fun P2pPermissionRationaleScreen(
     // hand off to the caller automatically. Keep the callback in an effect:
     // invoking it directly during composition can mutate the parent
     // navigation state while Compose is still applying the current frame.
-    if (status == PermissionStatus.Granted) {
-        LaunchedEffect(Unit) { onGranted() }
+    if (status.entersMultiplayerWithoutRationale) {
+        LaunchedEffect(Unit) { onContinue() }
         return
     }
 
@@ -79,9 +76,9 @@ fun P2pPermissionRationaleScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             EyebrowLabel(
-                text = if (status == PermissionStatus.PermanentlyDenied) {
+                text = if (status == PermissionStatus.DeniedActionable) {
                     stringResource(Res.string.permission_permanently_denied_eyebrow)
-                } else if (status == PermissionStatus.Denied) {
+                } else if (status == PermissionStatus.FailureUnclassified) {
                     stringResource(Res.string.permission_denied_eyebrow)
                 } else {
                     stringResource(Res.string.permission_eyebrow)
@@ -104,9 +101,9 @@ fun P2pPermissionRationaleScreen(
             ) {
                 Text(
                     text = when (status) {
-                        PermissionStatus.PermanentlyDenied ->
+                        PermissionStatus.DeniedActionable ->
                             stringResource(Res.string.permission_permanently_denied_body)
-                        PermissionStatus.Denied ->
+                        PermissionStatus.FailureUnclassified ->
                             stringResource(Res.string.permission_denied_body)
                         else ->
                             stringResource(Res.string.permission_body)
@@ -118,7 +115,10 @@ fun P2pPermissionRationaleScreen(
 
             Spacer(modifier = Modifier.height(ParlorTheme.spacing.m))
 
-            if (status == PermissionStatus.PermanentlyDenied) {
+            if (
+                status == PermissionStatus.DeniedActionable ||
+                status == PermissionStatus.FailureUnclassified
+            ) {
                 ParlorButton(
                     label = stringResource(Res.string.permission_open_settings),
                     contentDescription = stringResource(Res.string.permission_open_settings_description),
@@ -129,19 +129,24 @@ fun P2pPermissionRationaleScreen(
                     label = stringResource(Res.string.permission_continue),
                     contentDescription = stringResource(Res.string.permission_continue_description),
                     onClick = {
-                        // The user has come back from Settings — re-check.
-                        scope.launch { gate.request() }
+                        // iOS cannot preflight Local Network access after the
+                        // user returns. Retry the real operation instead.
+                        scope.launch {
+                            val next = gate.request()
+                            if (next.mayAttemptNetwork) onContinue()
+                        }
                     },
                     modifier = Modifier.fillMaxWidth(),
                     variant = ParlorButtonVariant.Secondary,
                 )
             } else {
                 ParlorButton(
-                    label = stringResource(Res.string.permission_grant),
-                    contentDescription = stringResource(Res.string.permission_grant_description),
+                    label = stringResource(Res.string.permission_continue),
+                    contentDescription = stringResource(Res.string.permission_continue_description),
                     onClick = {
                         scope.launch {
-                            if (gate.request() == PermissionStatus.Granted) onGranted()
+                            val next = gate.request()
+                            if (next.mayAttemptNetwork) onContinue()
                         }
                     },
                     modifier = Modifier.fillMaxWidth(),

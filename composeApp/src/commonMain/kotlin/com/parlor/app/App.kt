@@ -18,7 +18,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.parlor.app.permissions.P2pPermissionRationaleScreen
-import com.parlor.app.permissions.PermissionStatus
+import com.parlor.app.permissions.P2pPermissionGate
+import com.parlor.app.permissions.entersMultiplayerWithoutRationale
 import com.parlor.app.permissions.rememberP2pPermissionGate
 import com.parlor.app.shell.home.HomeScreen
 import com.parlor.app.shell.library.CasePickerScreen
@@ -82,6 +83,12 @@ fun App() {
     val snapshotStore: SnapshotStore = koinInject()
     val caseRepository: CaseRepository = koinInject()
     val roomTransport: RoomTransport = koinInject()
+    val p2pPermissionGate = rememberP2pPermissionGate(roomTransport.localNetworkAccess)
+    val openNetworkSettings = if (p2pPermissionGate.canOpenNetworkSettings) {
+        p2pPermissionGate::openAppSettings
+    } else {
+        null
+    }
 
     val toastState = remember { ParlorToastState() }
 
@@ -239,26 +246,11 @@ fun App() {
                 )
 
                 // -------- Host branch --------
-                AppScreen.HostPermission -> {
-                    val gate = rememberP2pPermissionGate()
-                    val gateStatus by gate.status.collectAsState()
-                    LaunchedEffect(gateStatus) {
-                        if (gateStatus == PermissionStatus.Granted) {
-                            screen = AppScreen.HostName
-                        }
-                    }
-                    if (gateStatus == PermissionStatus.Granted) {
-                        // Brief flicker handled by the LaunchedEffect.
-                        Text(text = "")
-                    } else {
-                        P2pPermissionRationaleScreen(
-                            gate = gate,
-                            onGranted = { screen = AppScreen.HostName },
-                            onBack = backToHome,
-                            modifier = Modifier.fillMaxSize(),
-                        )
-                    }
-                }
+                AppScreen.HostPermission -> P2pPermissionRoute(
+                    gate = p2pPermissionGate,
+                    onContinue = { screen = AppScreen.HostName },
+                    onBack = backToHome,
+                )
                 AppScreen.HostName -> NameInputScreen(
                     isHost = true,
                     initial = hostName,
@@ -295,31 +287,18 @@ fun App() {
                             modeId = hostModeId,
                             hostName = hostName,
                             onBackToLibrary = backToHome,
+                            onOpenNetworkSettings = openNetworkSettings,
                             modifier = Modifier.fillMaxSize(),
                         )
                     }
                 }
 
                 // -------- Peer branch --------
-                AppScreen.JoinPermission -> {
-                    val gate = rememberP2pPermissionGate()
-                    val gateStatus by gate.status.collectAsState()
-                    LaunchedEffect(gateStatus) {
-                        if (gateStatus == PermissionStatus.Granted) {
-                            screen = AppScreen.JoinName
-                        }
-                    }
-                    if (gateStatus == PermissionStatus.Granted) {
-                        Text(text = "")
-                    } else {
-                        P2pPermissionRationaleScreen(
-                            gate = gate,
-                            onGranted = { screen = AppScreen.JoinName },
-                            onBack = backToHome,
-                            modifier = Modifier.fillMaxSize(),
-                        )
-                    }
-                }
+                AppScreen.JoinPermission -> P2pPermissionRoute(
+                    gate = p2pPermissionGate,
+                    onContinue = { screen = AppScreen.JoinName },
+                    onBack = backToHome,
+                )
                 AppScreen.JoinName -> NameInputScreen(
                     isHost = false,
                     initial = peerName,
@@ -347,6 +326,7 @@ fun App() {
                             code = pendingJoinCode,
                             peerName = peerName,
                             onBackToLibrary = backToHome,
+                            onOpenNetworkSettings = openNetworkSettings,
                             modifier = Modifier.fillMaxSize(),
                         )
                     }
@@ -377,25 +357,11 @@ fun App() {
                 )
 
                 // Mafia host branch — permission gate → name → lobby.
-                AppScreen.MafiaHostPermission -> {
-                    val gate = rememberP2pPermissionGate()
-                    val gateStatus by gate.status.collectAsState()
-                    LaunchedEffect(gateStatus) {
-                        if (gateStatus == PermissionStatus.Granted) {
-                            screen = AppScreen.MafiaHostName
-                        }
-                    }
-                    if (gateStatus == PermissionStatus.Granted) {
-                        Text(text = "")
-                    } else {
-                        P2pPermissionRationaleScreen(
-                            gate = gate,
-                            onGranted = { screen = AppScreen.MafiaHostName },
-                            onBack = backToHome,
-                            modifier = Modifier.fillMaxSize(),
-                        )
-                    }
-                }
+                AppScreen.MafiaHostPermission -> P2pPermissionRoute(
+                    gate = p2pPermissionGate,
+                    onContinue = { screen = AppScreen.MafiaHostName },
+                    onBack = backToHome,
+                )
                 AppScreen.MafiaHostName -> NameInputScreen(
                     isHost = true,
                     initial = mafiaHostName,
@@ -414,31 +380,18 @@ fun App() {
                             transport = roomTransport,
                             hostName = mafiaHostName,
                             onBackToHome = backToHome,
+                            onOpenNetworkSettings = openNetworkSettings,
                             modifier = Modifier.fillMaxSize(),
                         )
                     }
                 }
 
                 // Mafia join branch — permission gate → name → code → lobby.
-                AppScreen.MafiaJoinPermission -> {
-                    val gate = rememberP2pPermissionGate()
-                    val gateStatus by gate.status.collectAsState()
-                    LaunchedEffect(gateStatus) {
-                        if (gateStatus == PermissionStatus.Granted) {
-                            screen = AppScreen.MafiaJoinName
-                        }
-                    }
-                    if (gateStatus == PermissionStatus.Granted) {
-                        Text(text = "")
-                    } else {
-                        P2pPermissionRationaleScreen(
-                            gate = gate,
-                            onGranted = { screen = AppScreen.MafiaJoinName },
-                            onBack = backToHome,
-                            modifier = Modifier.fillMaxSize(),
-                        )
-                    }
-                }
+                AppScreen.MafiaJoinPermission -> P2pPermissionRoute(
+                    gate = p2pPermissionGate,
+                    onContinue = { screen = AppScreen.MafiaJoinName },
+                    onBack = backToHome,
+                )
                 AppScreen.MafiaJoinName -> NameInputScreen(
                     isHost = false,
                     initial = mafiaPeerName,
@@ -466,32 +419,23 @@ fun App() {
                             code = mafiaPendingJoinCode,
                             peerName = mafiaPeerName,
                             onBackToHome = backToHome,
+                            onOpenNetworkSettings = openNetworkSettings,
                             modifier = Modifier.fillMaxSize(),
                         )
                     }
                 }
 
                 AppScreen.MultiplayerResumePermission -> {
-                    val gate = rememberP2pPermissionGate()
-                    val gateStatus by gate.status.collectAsState()
                     val resumeTarget = when (resumableMultiplayer?.gameId?.raw) {
                         WHODUNIT_GAME_ID -> AppScreen.ResumeWhodunitPeer
                         MAFIA_GAME_ID -> AppScreen.ResumeMafiaPeer
                         else -> AppScreen.Home
                     }
-                    LaunchedEffect(gateStatus, resumeTarget) {
-                        if (gateStatus == PermissionStatus.Granted) screen = resumeTarget
-                    }
-                    if (gateStatus == PermissionStatus.Granted) {
-                        Text(text = "")
-                    } else {
-                        P2pPermissionRationaleScreen(
-                            gate = gate,
-                            onGranted = { screen = resumeTarget },
-                            onBack = backToHome,
-                            modifier = Modifier.fillMaxSize(),
-                        )
-                    }
+                    P2pPermissionRoute(
+                        gate = p2pPermissionGate,
+                        onContinue = { screen = resumeTarget },
+                        onBack = backToHome,
+                    )
                 }
                 AppScreen.ResumeWhodunitPeer -> PeerSessionFlow(
                     transport = roomTransport,
@@ -499,6 +443,7 @@ fun App() {
                     peerName = "",
                     resumeExistingSession = true,
                     onBackToLibrary = backToHome,
+                    onOpenNetworkSettings = openNetworkSettings,
                     modifier = Modifier.fillMaxSize(),
                 )
                 AppScreen.ResumeMafiaPeer -> MafiaPeerLobbyFlow(
@@ -507,6 +452,7 @@ fun App() {
                     peerName = "",
                     resumeExistingSession = true,
                     onBackToHome = backToHome,
+                    onOpenNetworkSettings = openNetworkSettings,
                     modifier = Modifier.fillMaxSize(),
                 )
 
@@ -525,6 +471,29 @@ fun App() {
             }
             }
         }
+    }
+}
+
+@Composable
+private fun P2pPermissionRoute(
+    gate: P2pPermissionGate,
+    onContinue: () -> Unit,
+    onBack: () -> Unit,
+) {
+    val status by gate.status.collectAsState()
+    LaunchedEffect(status) {
+        if (status.entersMultiplayerWithoutRationale) onContinue()
+    }
+    if (status.entersMultiplayerWithoutRationale) {
+        // Navigation is applied from the effect, outside composition.
+        Text(text = "")
+    } else {
+        P2pPermissionRationaleScreen(
+            gate = gate,
+            onContinue = onContinue,
+            onBack = onBack,
+            modifier = Modifier.fillMaxSize(),
+        )
     }
 }
 
