@@ -19,6 +19,8 @@ import com.parlor.engine.testing.fakes.RrState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.Instant
 import kotlin.test.Test
@@ -97,6 +99,27 @@ class RestoredStateTest {
         assertThat(finalState.announcedBy).isEqualTo(
             listOf(PlayerId("p1"), PlayerId("p2"), PlayerId("p3")),
         )
+        controller.close()
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun current_state_observes_the_committed_reduction_before_projection_flows_dispatch() = runTest {
+        val controllerScope = CoroutineScope(StandardTestDispatcher(testScheduler))
+        val controller = PassAndPlaySessionController(
+            RoundRobinAnnounceGame(),
+            fakeConfig(),
+            reducerCtx(),
+            controllerScope,
+        )
+
+        controller.submit(RrAction.Announce(PlayerId("p1")))
+
+        assertThat(controller.currentState().announcedBy).isEqualTo(listOf(PlayerId("p1")))
+        assertThat(controller.hostState.value.state.announcedBy).isEqualTo(emptyList())
+
+        runCurrent()
+        assertThat(controller.hostState.value.state.announcedBy).isEqualTo(listOf(PlayerId("p1")))
         controller.close()
     }
 }

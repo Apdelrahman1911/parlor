@@ -73,6 +73,7 @@ enum class CommandStatus {
     PayloadTooLarge,
     SessionEnded,
     UnknownCommand,
+    SessionSuspended,
 }
 
 @Serializable

@@ -95,6 +95,17 @@ class PassAndPlaySessionController<S : GameState, A : GameAction, E : GameEvent>
                 .stateIn(scope, SharingStarted.Eagerly, policy.toPlayer(state.value, playerId))
         }
 
+    /**
+     * Returns the canonical reducer state synchronously.
+     *
+     * Projection flows are intentionally asynchronous and are suitable for
+     * rendering, but protocol authorities must not read them immediately
+     * after [submit] to decide whether a command changed state. The reducer
+     * commits [state] before [submit] returns, so this read provides that
+     * ordering guarantee to host-side game bridges.
+     */
+    fun currentState(): S = state.value
+
     @Volatile private var closed: Boolean = false
     @Volatile private var paused: Boolean = false
     private var resumeBlocker: Job? = null

@@ -173,6 +173,7 @@ fun mapNetError(error: NetError): JoinError = when (error) {
     NetError.IncompatibleProtocol -> JoinError.Generic
     NetError.RateLimited -> JoinError.Generic
     NetError.CommandInFlight -> JoinError.Generic
+    NetError.SessionSuspended -> JoinError.Generic
     NetError.Unauthorized -> JoinError.Generic
     is NetError.TransportFailure -> JoinError.Generic
 }

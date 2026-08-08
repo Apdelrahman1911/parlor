@@ -33,6 +33,11 @@ interface RoomTransport {
      * transports that actually expose discovery override this.
      */
     fun discoverRooms(): Flow<List<DiscoveredRoom>> = flowOf(emptyList())
+
+    /** Ordered app lifecycle inputs. Implementations must be idempotent. */
+    fun notifyAppBackgrounded() = Unit
+
+    fun notifyAppForegrounded() = Unit
 }
 
 data class TransportCapability(

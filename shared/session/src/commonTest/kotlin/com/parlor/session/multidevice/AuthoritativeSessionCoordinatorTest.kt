@@ -17,6 +17,7 @@ import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.NetError
 import com.parlor.networking.room.PeerEvent
 import com.parlor.networking.room.RoomInfo
+import com.parlor.networking.room.RoomLifecycleState
 import com.parlor.networking.room.RoomMember
 import com.parlor.networking.room.SendTarget
 import kotlinx.coroutines.channels.Channel
@@ -424,6 +425,68 @@ class AuthoritativeSessionCoordinatorTest {
         coordinator.close()
     }
 
+    @Test
+    fun `host rejects commands while suspended without consuming id or sequence`() = runTest {
+        val room = RecordingRoom(isHost = true, selfPlayerId = PlayerId("host"))
+        var applied = 0
+        val coordinator = HostAuthoritativeSessionCoordinator(
+            room = room,
+            protocol = protocol,
+            remotePlayers = setOf(peerId),
+            scope = this,
+            applyCommand = { _, _ ->
+                applied += 1
+                CommandApplication.Applied
+            },
+            snapshotFor = { PlayerSnapshotPayload(byteArrayOf(), byteArrayOf()) },
+            heartbeatIntervalMs = 0,
+            idGenerator = { "host-lifecycle-000000000001" },
+        )
+        val first = command(id = COMMAND_ONE, clientSequence = 1, expectedRevision = 0)
+
+        room.lifecycleState.value = RoomLifecycleState.Suspended(120_000L)
+        room.receive(first)
+        advanceUntilIdle()
+
+        assertEquals(0, applied)
+        assertEquals(
+            listOf(CommandStatus.SessionSuspended),
+            room.sent.mapNotNull { (it.message as? HostMessage.CommandResult)?.status },
+        )
+
+        room.lifecycleState.value = RoomLifecycleState.Active
+        room.receive(first)
+        advanceUntilIdle()
+
+        assertEquals(1, applied)
+        assertEquals(1L, coordinator.revision.value)
+        assertEquals(
+            listOf(CommandStatus.SessionSuspended, CommandStatus.Applied),
+            room.sent.mapNotNull { (it.message as? HostMessage.CommandResult)?.status },
+        )
+        coordinator.close()
+    }
+
+    @Test
+    fun `peer cannot enqueue a command while room is suspended`() = runTest {
+        val room = RecordingRoom(isHost = false, selfPlayerId = peerId)
+        val coordinator = PeerAuthoritativeSessionCoordinator(
+            room = room,
+            protocol = protocol,
+            selfPlayerId = peerId,
+            scope = this,
+            onSnapshot = { _, _ -> },
+            idGenerator = { COMMAND_ONE },
+        )
+        room.lifecycleState.value = RoomLifecycleState.Suspended(120_000L)
+
+        val result = coordinator.submit(byteArrayOf(1))
+
+        assertEquals(NetError.SessionSuspended, (result as Result.Failure).error)
+        assertTrue(room.sentToHost.isEmpty())
+        coordinator.close()
+    }
+
     private fun command(
         id: String,
         clientSequence: Long,
@@ -483,6 +546,8 @@ private class RecordingRoom(
         RoomInfo("local", "Fixture", PlayerId("host"), RoomInfo.Status.Joined),
     )
     override val members = MutableStateFlow<List<RoomMember>>(emptyList())
+    val lifecycleState = MutableStateFlow<RoomLifecycleState>(RoomLifecycleState.Active)
+    override val lifecycle = lifecycleState
     val sent = mutableListOf<SentMessage>()
     val sentToHost = mutableListOf<PeerMessage>()
     var sendToHostError: NetError? = null

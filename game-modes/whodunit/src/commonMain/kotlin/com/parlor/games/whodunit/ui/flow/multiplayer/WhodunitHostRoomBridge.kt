@@ -19,6 +19,7 @@ import com.parlor.networking.protocol.SessionEnvelopeHeader
 import com.parlor.networking.protocol.SessionProtocol
 import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.PeerEvent
+import com.parlor.networking.room.RoomLifecycleState
 import com.parlor.networking.room.SendTarget
 import com.parlor.networking.security.SecureIds
 import com.parlor.session.multidevice.CommandApplication
@@ -65,6 +66,7 @@ class WhodunitHostRoomBridge(
     private val graceJobs = mutableMapOf<PlayerId, Job>()
     private var lastSessionStarting: HostMessage.SessionStarting? = null
     private var terminated = false
+    private var pausedByAppLifecycle = false
 
     private val coordinator = HostAuthoritativeSessionCoordinator(
         room = room,
@@ -78,6 +80,33 @@ class WhodunitHostRoomBridge(
 
     private val peerEventsJob = scope.launch {
         room.peerEvents.collect(::handlePeerEvent)
+    }
+
+    /**
+     * Freezes the canonical game clock for the whole transport interruption.
+     * A lifecycle-owned pause is resumed only after every retained peer has
+     * restored admission and the room is Active again. A pause chosen by a
+     * player before backgrounding remains a player-owned pause and is never
+     * lifted automatically.
+     */
+    private val roomLifecycleJob = scope.launch {
+        room.lifecycle.collect { lifecycle ->
+            when (lifecycle) {
+                RoomLifecycleState.Active -> {
+                    if (pausedByAppLifecycle && applyLifecycleAction(WhodunitAction.Resume)) {
+                        pausedByAppLifecycle = false
+                    }
+                }
+                is RoomLifecycleState.Suspended,
+                is RoomLifecycleState.Resuming -> {
+                    if (!controller.currentState().public.paused) {
+                        pausedByAppLifecycle = applyLifecycleAction(WhodunitAction.Pause)
+                    }
+                }
+                RoomLifecycleState.Expired,
+                RoomLifecycleState.Closed -> Unit
+            }
+        }
     }
 
     /**
@@ -133,6 +162,7 @@ class WhodunitHostRoomBridge(
         graceJobs.values.forEach(Job::cancel)
         graceJobs.clear()
         peerEventsJob.cancel()
+        roomLifecycleJob.cancel()
         coordinator.close()
     }
 
@@ -142,7 +172,7 @@ class WhodunitHostRoomBridge(
     ): CommandApplication {
         val action = runCatching { WhodunitActionCodec.decode(payload) }.getOrNull()
             ?: return CommandApplication.InvalidAction
-        val before = controller.hostState.value.state
+        val before = controller.currentState()
         if (before.public.paused) return CommandApplication.InvalidAction
         if (
             !WhodunitActionAuthority.isAllowed(
@@ -157,7 +187,7 @@ class WhodunitHostRoomBridge(
         return when (controller.submit(action)) {
             is Result.Failure -> CommandApplication.InvalidAction
             is Result.Success -> {
-                if (controller.hostState.value.state == before) {
+                if (controller.currentState() == before) {
                     CommandApplication.InvalidAction
                 } else {
                     CommandApplication.Applied
@@ -169,7 +199,7 @@ class WhodunitHostRoomBridge(
     private suspend fun snapshotFor(playerId: PlayerId): PlayerSnapshotPayload {
         // Read the canonical state exactly once so public and private bytes can
         // never describe different reducer revisions.
-        val state = controller.hostState.value.state
+        val state = controller.currentState()
         val publicState = WhodunitProjectionPolicy.toPublic(state).state
         val publicPayload = json
             .encodeToString(publicStateSerializer, publicState)
@@ -197,13 +227,13 @@ class WhodunitHostRoomBridge(
         if (playerId !in remotePlayers) return
         applyLifecycleAction(WhodunitAction.MarkPlayerDisconnected(playerId))
         if (
-            controller.hostState.value.state.phase != WhodunitPhase.PostGame &&
+            controller.currentState().phase != WhodunitPhase.PostGame &&
             graceJobs[playerId] == null
         ) {
             graceJobs[playerId] = scope.launch {
                 delay(rejoinGraceMs)
                 graceJobs.remove(playerId)
-                if (playerId in controller.hostState.value.state.public.disconnectedPlayers) {
+                if (playerId in controller.currentState().public.disconnectedPlayers) {
                     continueWithout(playerId)
                 }
             }
@@ -222,9 +252,9 @@ class WhodunitHostRoomBridge(
     }
 
     private suspend fun applyLifecycleAction(action: WhodunitAction): Boolean {
-        val before = controller.hostState.value.state
+        val before = controller.currentState()
         val result = controller.submit(action)
-        val changed = result is Result.Success && controller.hostState.value.state != before
+        val changed = result is Result.Success && controller.currentState() != before
         if (changed) coordinator.publishState()
         return changed
     }

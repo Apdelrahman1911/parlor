@@ -12,6 +12,7 @@ import com.parlor.networking.protocol.SessionProtocol
 import com.parlor.networking.protocol.validateFor
 import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.NetError
+import com.parlor.networking.room.RoomLifecycleState
 import com.parlor.networking.room.SendTarget
 import com.parlor.networking.security.SecureIds
 import kotlinx.coroutines.CoroutineScope
@@ -181,6 +182,10 @@ class HostAuthoritativeSessionCoordinator(
 
     private suspend fun processCommand(command: PeerMessage.ClientCommand) {
         val actor = command.actor
+        if (room.lifecycle.value != RoomLifecycleState.Active) {
+            sendResult(actor, command.commandId, CommandStatus.SessionSuspended, remember = false)
+            return
+        }
         val validation = command.validateFor(protocol)
         if (validation != ProtocolValidation.Valid) {
             val status = when (validation) {
@@ -404,6 +409,9 @@ class PeerAuthoritativeSessionCoordinator(
     }
 
     suspend fun submit(payload: ByteArray): Result<PeerCommandReceipt, NetError> {
+        if (room.lifecycle.value != RoomLifecycleState.Active) {
+            return Result.Failure(NetError.SessionSuspended)
+        }
         if (payload.size > com.parlor.networking.protocol.MAX_COMMAND_PAYLOAD_BYTES) {
             return Result.Failure(NetError.PayloadTooLarge)
         }

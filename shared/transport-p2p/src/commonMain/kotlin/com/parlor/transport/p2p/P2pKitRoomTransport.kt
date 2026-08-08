@@ -14,6 +14,7 @@ import com.parlor.networking.room.NetError
 import com.parlor.networking.room.PendingAdmission
 import com.parlor.networking.room.PeerEvent
 import com.parlor.networking.room.RoomInfo
+import com.parlor.networking.room.RoomLifecycleState
 import com.parlor.networking.room.RoomMember
 import com.parlor.networking.room.SendTarget
 import com.parlor.networking.transport.HostConfig
@@ -36,6 +37,7 @@ import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -64,6 +66,11 @@ import kotlinx.coroutines.withContext
  */
 @Suppress("UNUSED_PARAMETER")
 private fun p2pLog(message: String) = Unit
+
+internal interface AppLifecycleAwareRoom {
+    suspend fun appBackgrounded(atEpochMillis: Long)
+    suspend fun appForegrounded(atEpochMillis: Long)
+}
 
 /**
  * Adapts P2pKit (`dev.p2pkit.core.P2pKit`) to Parlor's [RoomTransport].
@@ -105,6 +112,85 @@ class P2pKitRoomTransport(
     private val peerFreshnessWindowMs: Long = DEFAULT_PEER_FRESHNESS_WINDOW_MS,
 ) : RoomTransport {
 
+    private sealed interface AppLifecycleEvent {
+        data class Backgrounded(val atEpochMillis: Long) : AppLifecycleEvent
+        data class Foregrounded(val atEpochMillis: Long) : AppLifecycleEvent
+        data class RoomClosed(val registrationId: String) : AppLifecycleEvent
+    }
+
+    private data class ActiveLifecycleRoom(
+        val registrationId: String,
+        val room: AppLifecycleAwareRoom,
+    )
+
+    private val lifecycleEvents = Channel<AppLifecycleEvent>(
+        capacity = APP_LIFECYCLE_EVENT_CAPACITY,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST,
+    )
+    private val activeLifecycleMutex = Mutex()
+    private var activeLifecycleRoom: ActiveLifecycleRoom? = null
+    private var appIsBackgrounded: Boolean = false
+    private var lastBackgroundedAt: Long? = null
+
+    init {
+        scope.launch {
+            for (event in lifecycleEvents) {
+                try {
+                    when (event) {
+                        is AppLifecycleEvent.Backgrounded -> {
+                            val room = activeLifecycleMutex.withLock {
+                                appIsBackgrounded = true
+                                lastBackgroundedAt = event.atEpochMillis
+                                activeLifecycleRoom?.room
+                            }
+                            room?.appBackgrounded(event.atEpochMillis)
+                        }
+                        is AppLifecycleEvent.Foregrounded -> {
+                            val room = activeLifecycleMutex.withLock {
+                                appIsBackgrounded = false
+                                activeLifecycleRoom?.room
+                            }
+                            room?.appForegrounded(event.atEpochMillis)
+                        }
+                        is AppLifecycleEvent.RoomClosed -> activeLifecycleMutex.withLock {
+                            if (activeLifecycleRoom?.registrationId == event.registrationId) {
+                                activeLifecycleRoom = null
+                            }
+                        }
+                    }
+                } catch (failure: Throwable) {
+                    failure.rethrowIfCancellation()
+                    p2pLog("lifecycle: transition failed (${failure::class.simpleName})")
+                }
+            }
+        }
+    }
+
+    override fun notifyAppBackgrounded() {
+        lifecycleEvents.trySend(AppLifecycleEvent.Backgrounded(nowMillis()))
+    }
+
+    override fun notifyAppForegrounded() {
+        lifecycleEvents.trySend(AppLifecycleEvent.Foregrounded(nowMillis()))
+    }
+
+    private suspend fun registerLifecycleRoom(
+        registrationId: String,
+        room: AppLifecycleAwareRoom,
+    ) {
+        val backgroundedAt = activeLifecycleMutex.withLock {
+            activeLifecycleRoom = ActiveLifecycleRoom(registrationId, room)
+            lastBackgroundedAt.takeIf { appIsBackgrounded }
+        }
+        if (backgroundedAt != null) {
+            room.appBackgrounded(backgroundedAt)
+        }
+    }
+
+    private fun roomClosed(registrationId: String) {
+        lifecycleEvents.trySend(AppLifecycleEvent.RoomClosed(registrationId))
+    }
+
     override val capability: TransportCapability = TransportCapability(
         // The UI currently uses explicit room-code entry. Do not claim the
         // RoomTransport discovery contract until discoverRooms() is mapped.
@@ -120,6 +206,7 @@ class P2pKitRoomTransport(
             // The low-entropy admission code never leaves the encrypted
             // channel. Discovery advertises only a generic Parlor room.
             val advertisedDeviceName = "$P2P_ROOM_PREFIX$deviceName"
+            val lifecycleRegistrationId = SecureIds.id128()
             p2pLog("host: generated a room code; advertising a generic Parlor service")
             val kit = kitFactory.createKit(
                 appId = appId,
@@ -143,6 +230,7 @@ class P2pKitRoomTransport(
                     hostPlayerId = PlayerId(kit.localPeerId.value),
                     scope = scope,
                     codec = codec,
+                    onClosed = { roomClosed(lifecycleRegistrationId) },
                 )
                 p2pLog("host: start() returned; calling startAdvertising()")
                 kit.startAdvertising()
@@ -158,7 +246,9 @@ class P2pKitRoomTransport(
                 throw t
             }
             p2pLog("host: startAdvertising() returned; ready to accept incoming sessions")
-            checkNotNull(room)
+            checkNotNull(room).also {
+                registerLifecycleRoom(lifecycleRegistrationId, it)
+            }
         }.fold(
             onSuccess = { Result.Success(it) },
             onFailure = {
@@ -228,16 +318,20 @@ class P2pKitRoomTransport(
                     ) {
                         is HostMessage.AdmissionAccepted -> {
                             kit.stopDiscovery()
+                            val lifecycleRegistrationId = SecureIds.id128()
+                            val peerRoom = PeerP2pRoom(
+                                kit = kit,
+                                session = session,
+                                hostPeer = hostPeer,
+                                roomCode = config.code,
+                                rejoinToken = admission.rejoinToken,
+                                scope = scope,
+                                codec = codec,
+                                onClosed = { roomClosed(lifecycleRegistrationId) },
+                            )
+                            registerLifecycleRoom(lifecycleRegistrationId, peerRoom)
                             admissionResult = Result.Success(
-                                PeerP2pRoom(
-                                    kit = kit,
-                                    session = session,
-                                    hostPeer = hostPeer,
-                                    roomCode = config.code,
-                                    rejoinToken = admission.rejoinToken,
-                                    scope = scope,
-                                    codec = codec,
-                                ),
+                                peerRoom,
                             )
                         }
                         is HostMessage.AdmissionRejected -> {
@@ -386,6 +480,8 @@ class P2pKitRoomTransport(
         // general 4 MiB transfer ceiling.
         internal const val MAX_ROOM_FRAME_BYTES: Int =
             com.parlor.networking.protocol.MAX_ROOM_FRAME_BYTES
+        internal const val APP_RESUME_GRACE_MS: Long = 120_000L
+        private const val APP_LIFECYCLE_EVENT_CAPACITY: Int = 8
     }
 }
 
@@ -423,7 +519,9 @@ internal class HostP2pRoom(
     private val hostPlayerId: PlayerId,
     private val scope: CoroutineScope,
     private val codec: RoomMessageCodec,
-) : LocalRoom {
+    private val onClosed: () -> Unit = {},
+    private val appResumeGraceMs: Long = P2pKitRoomTransport.APP_RESUME_GRACE_MS,
+) : LocalRoom, AppLifecycleAwareRoom {
 
     override val selfPlayerId: PlayerId = hostPlayerId
 
@@ -438,12 +536,14 @@ internal class HostP2pRoom(
     private val _members = MutableStateFlow<List<RoomMember>>(emptyList())
     private val _pendingAdmissions = MutableStateFlow<List<PendingAdmission>>(emptyList())
     private val _peerEvents = MutableSharedFlow<PeerEvent>(extraBufferCapacity = 64)
+    private val _lifecycle = MutableStateFlow<RoomLifecycleState>(RoomLifecycleState.Active)
 
     override val info = _info.asStateFlow()
     override val members = _members.asStateFlow()
     override val isHost: Boolean = true
     override val peerEvents: SharedFlow<PeerEvent> = _peerEvents.asSharedFlow()
     override val pendingAdmissions = _pendingAdmissions.asStateFlow()
+    override val lifecycle = _lifecycle.asStateFlow()
 
     // A room has exactly one protocol owner. A channel buffers startup frames
     // until that owner subscribes; replay-zero SharedFlow previously dropped
@@ -486,6 +586,7 @@ internal class HostP2pRoom(
     // is only ever called while this lock is held and never re-locks.
     // See PROBLEMS_PARLOR.md → p2p-001.
     private val stateMutex = Mutex()
+    private var lifecycleExpiryJob: Job? = null
 
     // p2p-016: leave() runs from a "Leave" tap AND from DisposableEffect.onDispose,
     // so a real double-call is expected. kit.stop() is terminal — a second call
@@ -767,6 +868,7 @@ internal class HostP2pRoom(
         } else {
             _peerEvents.emit(PeerEvent.PeerJoined(playerId, displayName))
         }
+        markActiveIfRestored()
     }
 
     private suspend fun rejectSession(
@@ -792,6 +894,118 @@ internal class HostP2pRoom(
         _pendingAdmissions.value = pendingByPlayer.map { (playerId, pending) ->
             PendingAdmission(playerId, pending.displayName, pending.isRejoin)
         }
+    }
+
+    override suspend fun appBackgrounded(atEpochMillis: Long) {
+        val expiry = stateMutex.withLock {
+            when (val current = _lifecycle.value) {
+                RoomLifecycleState.Active -> {
+                    val deadline = atEpochMillis + appResumeGraceMs
+                    _lifecycle.value = RoomLifecycleState.Suspended(
+                        deadline,
+                    )
+                    membersByPlayer.keys.toList().forEach { playerId ->
+                        membersByPlayer[playerId] =
+                            checkNotNull(membersByPlayer[playerId]).copy(connected = false)
+                    }
+                    publishMembers()
+                    deadline to appResumeGraceMs
+                }
+                is RoomLifecycleState.Resuming -> {
+                    _lifecycle.value = RoomLifecycleState.Suspended(
+                        current.resumeDeadlineEpochMillis,
+                    )
+                    current.resumeDeadlineEpochMillis to
+                        (current.resumeDeadlineEpochMillis - atEpochMillis).coerceAtLeast(0L)
+                }
+                is RoomLifecycleState.Suspended,
+                RoomLifecycleState.Expired,
+                RoomLifecycleState.Closed -> null
+            }
+        }
+        if (expiry == null) return
+        if (expiry.second == 0L) {
+            expireLifecycle(expiry.first)
+            return
+        }
+        scheduleLifecycleExpiry(expiry.first, expiry.second)
+        kit.notifyAppBackgrounded()
+        try {
+            // P2pKit's notification starts cleanup asynchronously. Await the
+            // host feature here so a rapid foreground cannot race an old stop.
+            kit.stopAdvertising()
+        } catch (failure: Throwable) {
+            failure.rethrowIfCancellation()
+            p2pLog("lifecycle: host stopAdvertising failed (${failure::class.simpleName})")
+        }
+    }
+
+    override suspend fun appForegrounded(atEpochMillis: Long) {
+        val deadline = stateMutex.withLock {
+            when (val current = _lifecycle.value) {
+                is RoomLifecycleState.Suspended -> current.resumeDeadlineEpochMillis
+                is RoomLifecycleState.Resuming -> current.resumeDeadlineEpochMillis
+                RoomLifecycleState.Active,
+                RoomLifecycleState.Expired,
+                RoomLifecycleState.Closed -> null
+            }
+        } ?: return
+        if (atEpochMillis >= deadline) {
+            expireLifecycle(deadline)
+            return
+        }
+        stateMutex.withLock {
+            _lifecycle.value = RoomLifecycleState.Resuming(deadline)
+        }
+        scheduleLifecycleExpiry(deadline, deadline - atEpochMillis)
+        kit.notifyAppForegrounded()
+        kit.startAdvertising()
+        markActiveIfRestored()
+    }
+
+    private suspend fun markActiveIfRestored() {
+        val expiryJob = stateMutex.withLock {
+            if (
+                _lifecycle.value is RoomLifecycleState.Resuming &&
+                membersByPlayer.values.all(RoomMember::connected)
+            ) {
+                _lifecycle.value = RoomLifecycleState.Active
+                lifecycleExpiryJob.also { lifecycleExpiryJob = null }
+            } else {
+                null
+            }
+        }
+        expiryJob?.cancel()
+    }
+
+    private suspend fun scheduleLifecycleExpiry(deadline: Long, delayMs: Long) {
+        stateMutex.withLock {
+            lifecycleExpiryJob?.cancel()
+            lifecycleExpiryJob = scope.launch {
+                delay(delayMs.coerceAtLeast(0L))
+                expireLifecycle(deadline)
+            }
+        }
+    }
+
+    private suspend fun expireLifecycle(deadline: Long) {
+        val shouldLeave = stateMutex.withLock {
+            val currentDeadline = when (val current = _lifecycle.value) {
+                is RoomLifecycleState.Suspended -> current.resumeDeadlineEpochMillis
+                is RoomLifecycleState.Resuming -> current.resumeDeadlineEpochMillis
+                RoomLifecycleState.Active,
+                RoomLifecycleState.Expired,
+                RoomLifecycleState.Closed -> null
+            }
+            if (currentDeadline == deadline) {
+                lifecycleExpiryJob = null
+                _lifecycle.value = RoomLifecycleState.Expired
+                true
+            } else {
+                false
+            }
+        }
+        if (shouldLeave) leave()
     }
 
     /**
@@ -883,11 +1097,17 @@ internal class HostP2pRoom(
         Result.Failure(NetError.Unauthorized)
 
     override suspend fun leave() {
-        if (left) {
+        val (shouldLeave, expiryJob) = stateMutex.withLock {
+            if (left) false to null else {
+                left = true
+                true to lifecycleExpiryJob.also { lifecycleExpiryJob = null }
+            }
+        }
+        if (!shouldLeave) {
             p2pLog("host: leave() ignored (already left)")
             return
         }
-        left = true
+        expiryJob?.cancel()
         p2pLog("host: leave() entry; closing ${sessionsByPlayer.size} sessions")
         // Stop advertising FIRST and give Bonjour a beat to actually push
         // the "service-removed" packet before the kit goes down. Skipping
@@ -915,6 +1135,10 @@ internal class HostP2pRoom(
         // kit.stop() is terminal; guard it so a late/duplicate teardown can't
         // throw out of a disposal path. See PROBLEMS_PARLOR.md → p2p-016.
         runCatching { kit.stop() }
+        if (_lifecycle.value != RoomLifecycleState.Expired) {
+            _lifecycle.value = RoomLifecycleState.Closed
+        }
+        onClosed()
         p2pLog("host: leave() done")
     }
 }
@@ -926,10 +1150,12 @@ internal class PeerP2pRoom(
     private val session: P2pSession,
     hostPeer: Peer,
     private val roomCode: String,
-    scope: CoroutineScope,
+    private val scope: CoroutineScope,
     private val codec: RoomMessageCodec,
     rejoinToken: String? = null,
-) : LocalRoom {
+    private val onClosed: () -> Unit = {},
+    private val appResumeGraceMs: Long = P2pKitRoomTransport.APP_RESUME_GRACE_MS,
+) : LocalRoom, AppLifecycleAwareRoom {
 
     override val selfPlayerId: PlayerId = PlayerId(kit.localPeerId.value)
 
@@ -951,11 +1177,13 @@ internal class PeerP2pRoom(
         ),
     )
     private val _peerEvents = MutableSharedFlow<PeerEvent>(extraBufferCapacity = 64)
+    private val _lifecycle = MutableStateFlow<RoomLifecycleState>(RoomLifecycleState.Active)
 
     override val info = _info.asStateFlow()
     override val members = _members.asStateFlow()
     override val isHost: Boolean = false
     override val peerEvents: SharedFlow<PeerEvent> = _peerEvents.asSharedFlow()
+    override val lifecycle = _lifecycle.asStateFlow()
 
     private val incomingHostMessages = Channel<RoomMessage>(Channel.UNLIMITED)
     override val incoming: Flow<RoomMessage> = incomingHostMessages.receiveAsFlow()
@@ -969,6 +1197,96 @@ internal class PeerP2pRoom(
     // p2p-016 (peer side): leave() runs from both a "Leave" tap and onDispose,
     // and kit.stop() is terminal — guard so the duplicate call is a no-op.
     private var left = false
+    private val lifecycleMutex = Mutex()
+    private var lifecycleExpiryJob: Job? = null
+
+    override suspend fun appBackgrounded(atEpochMillis: Long) {
+        val expiry = lifecycleMutex.withLock {
+            when (val current = _lifecycle.value) {
+                RoomLifecycleState.Active -> {
+                    val deadline = atEpochMillis + appResumeGraceMs
+                    _lifecycle.value = RoomLifecycleState.Suspended(
+                        deadline,
+                    )
+                    deadline to appResumeGraceMs
+                }
+                is RoomLifecycleState.Resuming -> {
+                    _lifecycle.value = RoomLifecycleState.Suspended(
+                        current.resumeDeadlineEpochMillis,
+                    )
+                    current.resumeDeadlineEpochMillis to
+                        (current.resumeDeadlineEpochMillis - atEpochMillis).coerceAtLeast(0L)
+                }
+                is RoomLifecycleState.Suspended,
+                RoomLifecycleState.Expired,
+                RoomLifecycleState.Closed -> null
+            }
+        }
+        if (expiry != null) {
+            if (expiry.second == 0L) {
+                expireLifecycle(expiry.first)
+                return
+            }
+            scheduleLifecycleExpiry(expiry.first, expiry.second)
+            kit.notifyAppBackgrounded()
+            markHostConnected(false)
+            _info.value = _info.value.copy(status = RoomInfo.Status.Lost)
+        }
+    }
+
+    override suspend fun appForegrounded(atEpochMillis: Long) {
+        val deadline = lifecycleMutex.withLock {
+            when (val current = _lifecycle.value) {
+                is RoomLifecycleState.Suspended -> current.resumeDeadlineEpochMillis
+                is RoomLifecycleState.Resuming -> current.resumeDeadlineEpochMillis
+                RoomLifecycleState.Active,
+                RoomLifecycleState.Expired,
+                RoomLifecycleState.Closed -> null
+            }
+        } ?: return
+        if (atEpochMillis >= deadline) {
+            expireLifecycle(deadline)
+            return
+        }
+        lifecycleMutex.withLock {
+            _lifecycle.value = RoomLifecycleState.Resuming(deadline)
+        }
+        scheduleLifecycleExpiry(deadline, deadline - atEpochMillis)
+        kit.notifyAppForegrounded()
+        // BackgroundPolicy.CloseActiveSessions makes this P2pSession
+        // terminal. P2P-02 replaces it through the protected rejoin flow;
+        // until then the room remains Resuming and rejects new intents.
+    }
+
+    private suspend fun scheduleLifecycleExpiry(deadline: Long, delayMs: Long) {
+        lifecycleMutex.withLock {
+            lifecycleExpiryJob?.cancel()
+            lifecycleExpiryJob = scope.launch {
+                delay(delayMs.coerceAtLeast(0L))
+                expireLifecycle(deadline)
+            }
+        }
+    }
+
+    private suspend fun expireLifecycle(deadline: Long) {
+        val shouldLeave = lifecycleMutex.withLock {
+            val currentDeadline = when (val current = _lifecycle.value) {
+                is RoomLifecycleState.Suspended -> current.resumeDeadlineEpochMillis
+                is RoomLifecycleState.Resuming -> current.resumeDeadlineEpochMillis
+                RoomLifecycleState.Active,
+                RoomLifecycleState.Expired,
+                RoomLifecycleState.Closed -> null
+            }
+            if (currentDeadline == deadline) {
+                lifecycleExpiryJob = null
+                _lifecycle.value = RoomLifecycleState.Expired
+                true
+            } else {
+                false
+            }
+        }
+        if (shouldLeave) leave(sendNotice = false)
+    }
 
     private val collectorJob: Job = scope.launch {
         session.incoming.collect { msg ->
@@ -1111,19 +1429,27 @@ internal class PeerP2pRoom(
         )
     }
 
-    override suspend fun leave() {
-        if (left) {
+    override suspend fun leave() = leave(sendNotice = true)
+
+    private suspend fun leave(sendNotice: Boolean) {
+        val (shouldLeave, expiryJob) = lifecycleMutex.withLock {
+            if (left) false to null else {
+                left = true
+                true to lifecycleExpiryJob.also { lifecycleExpiryJob = null }
+            }
+        }
+        if (!shouldLeave) {
             p2pLog("peer: leave() ignored (already left)")
             return
         }
-        left = true
+        expiryJob?.cancel()
         p2pLog("peer: leave() entry sessionState=${session.state.value}")
         // Best-effort: tell the host we're leaving so the lobby updates
         // immediately, instead of waiting for the TCP teardown to surface
         // (Closed/Failed). Guarded by Connected because send() is unsafe
         // otherwise; any send failure is non-fatal — the host's
         // state-watcher will still emit PeerLeft once the socket dies.
-        if (session.state.value == ConnectionState.Connected) {
+        if (sendNotice && session.state.value == ConnectionState.Connected) {
             runCatching {
                 val notice = P2pMessage.Binary(
                     codec.encode(PeerMessage.LeaveNotice),
@@ -1142,6 +1468,10 @@ internal class PeerP2pRoom(
         runCatching { session.close() }
         // kit.stop() is terminal — guard against a duplicate/late teardown.
         runCatching { kit.stop() }
+        if (_lifecycle.value != RoomLifecycleState.Expired) {
+            _lifecycle.value = RoomLifecycleState.Closed
+        }
+        onClosed()
         p2pLog("peer: leave() done")
     }
 

@@ -9,9 +9,21 @@ import ComposeApp
 /// `UIViewController` that wraps the shared `App()` composable and
 /// starts Koin on first call.
 struct ContentView: View {
+    @Environment(\.scenePhase) private var scenePhase
+
     var body: some View {
         ComposeView()
             .ignoresSafeArea()
+            .onChange(of: scenePhase) { phase in
+                switch phase {
+                case .active:
+                    MainViewControllerKt.NotifyAppForegrounded()
+                case .inactive, .background:
+                    MainViewControllerKt.NotifyAppBackgrounded()
+                @unknown default:
+                    MainViewControllerKt.NotifyAppBackgrounded()
+                }
+            }
     }
 }
 

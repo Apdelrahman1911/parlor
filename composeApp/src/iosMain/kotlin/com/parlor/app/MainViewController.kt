@@ -2,8 +2,10 @@ package com.parlor.app
 
 import androidx.compose.ui.window.ComposeUIViewController
 import com.parlor.app.di.allModules
+import com.parlor.networking.transport.RoomTransport
 import kotlin.concurrent.Volatile
 import org.koin.core.context.startKoin
+import org.koin.mp.KoinPlatform
 
 /**
  * iOS Compose Multiplatform entry. The Xcode wrapper (iosApp project) calls
@@ -28,4 +30,17 @@ private fun startKoinOnce() {
     if (koinStarted) return
     startKoin { modules(allModules) }
     koinStarted = true
+}
+
+/** SwiftUI scenePhase bridge; lifecycle policy remains common Kotlin code. */
+@Suppress("FunctionName", "Unused")
+fun NotifyAppBackgrounded() {
+    startKoinOnce()
+    KoinPlatform.getKoin().get<RoomTransport>().notifyAppBackgrounded()
+}
+
+@Suppress("FunctionName", "Unused")
+fun NotifyAppForegrounded() {
+    startKoinOnce()
+    KoinPlatform.getKoin().get<RoomTransport>().notifyAppForegrounded()
 }

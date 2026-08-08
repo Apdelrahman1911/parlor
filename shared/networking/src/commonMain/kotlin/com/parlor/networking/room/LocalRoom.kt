@@ -27,6 +27,10 @@ interface LocalRoom {
     val isHost: Boolean
     val incoming: Flow<RoomMessage>
 
+    /** Logical session lifecycle; game commands are legal only while active. */
+    val lifecycle: StateFlow<RoomLifecycleState>
+        get() = activeRoomLifecycle
+
     /**
      * The local device's player id. On the host this equals
      * [RoomInfo.hostPlayerId]; on a peer this is the peer's own id, distinct
@@ -73,6 +77,9 @@ internal val emptyPeerEvents: SharedFlow<PeerEvent> =
 internal val emptyPendingAdmissions: StateFlow<List<PendingAdmission>> =
     MutableStateFlow(emptyList())
 
+internal val activeRoomLifecycle: StateFlow<RoomLifecycleState> =
+    MutableStateFlow<RoomLifecycleState>(RoomLifecycleState.Active)
+
 sealed interface SendTarget {
     data object Broadcast : SendTarget
     data class Direct(val playerId: PlayerId) : SendTarget
@@ -112,6 +119,7 @@ sealed interface NetError {
     data object RateLimited : NetError
     /** A mutating command is already awaiting an authoritative outcome. */
     data object CommandInFlight : NetError
+    data object SessionSuspended : NetError
     data class TransportFailure(val reason: String) : NetError
     data object Unauthorized : NetError
 }

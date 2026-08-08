@@ -23,6 +23,9 @@ import com.parlor.games.whodunit.domain.phase.WhodunitPhase
 import com.parlor.games.whodunit.domain.reducer.WhodunitReducerContext
 import com.parlor.games.whodunit.domain.state.WhodunitState
 import com.parlor.games.whodunit.resources.Res
+import com.parlor.games.whodunit.ackBriefingForAll
+import com.parlor.games.whodunit.ackIntroForAll
+import com.parlor.games.whodunit.revealRolesAndAdvance
 import com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostRoomBridge
 import com.parlor.networking.protocol.HostMessage
 import com.parlor.networking.protocol.PeerMessage
@@ -32,6 +35,7 @@ import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.NetError
 import com.parlor.networking.room.PeerEvent
 import com.parlor.networking.room.RoomInfo
+import com.parlor.networking.room.RoomLifecycleState
 import com.parlor.networking.room.RoomMember
 import com.parlor.networking.room.SendTarget
 import com.parlor.session.multidevice.InMemoryRoomBus
@@ -211,6 +215,54 @@ class PartyConnectionEventsTest {
         peerBridge.close()
     }
 
+    @Test
+    fun app_lifecycle_suspension_freezes_and_then_resumes_the_authoritative_game() = runTest {
+        val scope = TestScope(UnconfinedTestDispatcher(testScheduler))
+        val session = buildHostSession(loadCase())
+        advanceToTimedRound(session)
+        val room = PartyEventsHostRoom(InMemoryRoomBus(), hostId)
+        val bridge = WhodunitHostRoomBridge(
+            session, room, players, scope, json, heartbeatIntervalMs = 0L,
+        )
+        runCurrent()
+
+        room.lifecycleState.value = RoomLifecycleState.Suspended(120_000L)
+        runCurrent()
+        assertThat(session.hostState.value.state.public.paused).isTrue()
+
+        room.lifecycleState.value = RoomLifecycleState.Resuming(120_000L)
+        runCurrent()
+        assertThat(session.hostState.value.state.public.paused).isTrue()
+        assertThat(session.hostState.value.state.public.disconnectedPlayers.isEmpty()).isTrue()
+
+        room.lifecycleState.value = RoomLifecycleState.Active
+        runCurrent()
+        assertThat(session.hostState.value.state.public.paused).isFalse()
+        bridge.close()
+    }
+
+    @Test
+    fun app_lifecycle_never_resumes_a_player_owned_pause() = runTest {
+        val scope = TestScope(UnconfinedTestDispatcher(testScheduler))
+        val session = buildHostSession(loadCase())
+        advanceToTimedRound(session)
+        val room = PartyEventsHostRoom(InMemoryRoomBus(), hostId)
+        val bridge = WhodunitHostRoomBridge(
+            session, room, players, scope, json, heartbeatIntervalMs = 0L,
+        )
+        runCurrent()
+        session.submit(WhodunitAction.Pause)
+        assertThat(session.hostState.value.state.public.paused).isTrue()
+
+        room.lifecycleState.value = RoomLifecycleState.Suspended(120_000L)
+        runCurrent()
+        room.lifecycleState.value = RoomLifecycleState.Active
+        runCurrent()
+
+        assertThat(session.hostState.value.state.public.paused).isTrue()
+        bridge.close()
+    }
+
     // ============================================================ Fixture ==
 
     private suspend fun loadCase(): WhodunitCase {
@@ -265,6 +317,18 @@ class PartyConnectionEventsTest {
         kotlinx.coroutines.runBlocking { session.submit(WhodunitAction.AssignRoles(42L)) }
         return session
     }
+
+    private suspend fun advanceToTimedRound(
+        session: PassAndPlaySessionController<WhodunitState, WhodunitAction, WhodunitEvent>,
+    ) {
+        session.ackIntroForAll(players)
+        session.submit(WhodunitAction.AdvanceFromIntro)
+        session.ackBriefingForAll(players)
+        for (index in 1..4) session.submit(WhodunitAction.AdvanceBriefingCard(index))
+        session.revealRolesAndAdvance(players)
+        session.submit(WhodunitAction.RevealNextClue)
+        session.submit(WhodunitAction.StartDiscussionTimer(60))
+    }
 }
 
 private class PartyEventsHostRoom(
@@ -288,6 +352,8 @@ private class PartyEventsHostRoom(
     override val selfPlayerId: PlayerId = hostId
     override val incoming: Flow<RoomMessage> = bus.hostMessagesIn
     override val peerEvents: SharedFlow<PeerEvent> = bus.peerEvents
+    val lifecycleState = MutableStateFlow<RoomLifecycleState>(RoomLifecycleState.Active)
+    override val lifecycle = lifecycleState.asStateFlow()
 
     override suspend fun send(target: SendTarget, message: HostMessage): com.parlor.core.result.Result<Unit, NetError> {
         sent += target to message

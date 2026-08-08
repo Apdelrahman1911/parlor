@@ -22,6 +22,7 @@ import com.parlor.networking.protocol.SessionEnvelopeHeader
 import com.parlor.networking.room.NetError
 import com.parlor.networking.room.PeerEvent
 import com.parlor.networking.room.RoomInfo
+import com.parlor.networking.room.RoomLifecycleState
 import com.parlor.networking.room.RoomMember
 import com.parlor.networking.room.SendTarget
 import dev.p2pkit.core.AppId
@@ -54,6 +55,9 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.advanceTimeBy
+import kotlinx.coroutines.test.runCurrent
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.withTimeout
 import kotlinx.coroutines.yield
 import kotlinx.io.RawSource
@@ -778,6 +782,125 @@ class P2pKitRoomTransportLifecycleTest {
         assertThat(kit.stopCalls).isEqualTo(1)
     }
 
+    // ------------------------------------------------------- App lifecycle ----
+
+    @Test
+    fun transport_serializes_platform_lifecycle_into_the_active_host_room() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("host-pid"))
+        val transport = P2pKitRoomTransport(
+            appId = AppId("com.parlor.test"),
+            deviceName = "host-device",
+            scope = testScope,
+            kitFactory = object : P2pKitFactory {
+                override suspend fun createKit(appId: AppId, deviceName: String): P2pKit = kit
+            },
+        )
+        val room = (transport.host(com.parlor.networking.transport.HostConfig("Room")) as Result.Success)
+            .data as HostP2pRoom
+
+        transport.notifyAppBackgrounded()
+        awaitCondition { room.lifecycle.value is RoomLifecycleState.Suspended }
+        assertThat(kit.backgroundCalls).isEqualTo(1)
+        assertThat(kit.stopAdvertisingCalls).isEqualTo(1)
+
+        transport.notifyAppForegrounded()
+        awaitCondition { room.lifecycle.value == RoomLifecycleState.Active }
+        assertThat(kit.foregroundCalls).isEqualTo(1)
+        assertThat(kit.startAdvertisingCalls).isEqualTo(2)
+
+        room.leave()
+    }
+
+    @Test
+    fun repeated_background_notification_is_idempotent_and_does_not_extend_deadline() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("host-pid"))
+        val room = newHostRoom(kit)
+
+        room.appBackgrounded(1_000L)
+        val first = room.lifecycle.value as RoomLifecycleState.Suspended
+        room.appBackgrounded(80_000L)
+
+        assertThat(room.lifecycle.value).isEqualTo(first)
+        assertThat(first.resumeDeadlineEpochMillis).isEqualTo(121_000L)
+        assertThat(kit.backgroundCalls).isEqualTo(1)
+        assertThat(kit.stopAdvertisingCalls).isEqualTo(1)
+        room.leave()
+    }
+
+    @Test
+    fun peer_foreground_within_grace_waits_for_a_replacement_session() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("peer-pid"))
+        val hostPeer = peer("host-pid", "Host Device")
+        val room = PeerP2pRoom(
+            kit,
+            FakeP2pSession(hostPeer),
+            hostPeer,
+            "ABCDEF",
+            testScope,
+            codec,
+        )
+
+        room.appBackgrounded(1_000L)
+        assertThat(room.lifecycle.value)
+            .isEqualTo(RoomLifecycleState.Suspended(121_000L))
+        assertThat(room.members.value.single().connected).isFalse()
+
+        room.appForegrounded(2_000L)
+        assertThat(room.lifecycle.value)
+            .isEqualTo(RoomLifecycleState.Resuming(121_000L))
+        assertThat(kit.backgroundCalls).isEqualTo(1)
+        assertThat(kit.foregroundCalls).isEqualTo(1)
+        room.leave()
+    }
+
+    @Test
+    fun lifecycle_grace_expiry_is_terminal_and_stops_the_kit_once() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("peer-pid"))
+        val hostPeer = peer("host-pid", "Host Device")
+        val room = PeerP2pRoom(
+            kit,
+            FakeP2pSession(hostPeer),
+            hostPeer,
+            "ABCDEF",
+            testScope,
+            codec,
+        )
+
+        room.appBackgrounded(1_000L)
+        room.appForegrounded(121_001L)
+
+        assertThat(room.lifecycle.value).isEqualTo(RoomLifecycleState.Expired)
+        assertThat(kit.stopCalls).isEqualTo(1)
+        room.leave()
+        assertThat(kit.stopCalls).isEqualTo(1)
+    }
+
+    @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
+    @Test
+    fun lifecycle_grace_expires_without_an_additional_platform_callback() = runTest {
+        val kit = FakeP2pKit(P2pPeerId("peer-pid"))
+        val hostPeer = peer("host-pid", "Host Device")
+        val room = PeerP2pRoom(
+            kit = kit,
+            session = FakeP2pSession(hostPeer),
+            hostPeer = hostPeer,
+            roomCode = "ABCDEF",
+            scope = this,
+            codec = codec,
+            appResumeGraceMs = 100L,
+        )
+
+        room.appBackgrounded(1_000L)
+        advanceTimeBy(99L)
+        runCurrent()
+        assertThat(room.lifecycle.value).isEqualTo(RoomLifecycleState.Suspended(1_100L))
+
+        advanceTimeBy(1L)
+        runCurrent()
+        assertThat(room.lifecycle.value).isEqualTo(RoomLifecycleState.Expired)
+        assertThat(kit.stopCalls).isEqualTo(1)
+    }
+
     // ------------------------------------------------------ Idempotent leave ----
 
     /**
@@ -1009,6 +1132,12 @@ internal class FakeP2pKit(
     val callLog: MutableList<String> = mutableListOf()
     var stopAdvertisingCalls: Int = 0
         private set
+    var startAdvertisingCalls: Int = 0
+        private set
+    var backgroundCalls: Int = 0
+        private set
+    var foregroundCalls: Int = 0
+        private set
     var stopCalls: Int = 0
         private set
     // Custom connect() handler for join-path tests; default throws so
@@ -1039,7 +1168,10 @@ internal class FakeP2pKit(
         callLog += "start"
         startHandler?.invoke()
     }
-    override suspend fun startAdvertising() { callLog += "startAdvertising" }
+    override suspend fun startAdvertising() {
+        callLog += "startAdvertising"
+        startAdvertisingCalls += 1
+    }
     override suspend fun stopAdvertising() {
         callLog += "stopAdvertising"
         stopAdvertisingCalls += 1
@@ -1054,8 +1186,12 @@ internal class FakeP2pKit(
         expectedFingerprint: PeerFingerprint,
     ): P2pSession = connect(peer)
     override fun lastSeen(peerId: P2pPeerId): Long? = lastSeenByPeer[peerId]
-    override fun notifyAppBackgrounded() = Unit
-    override fun notifyAppForegrounded() = Unit
+    override fun notifyAppBackgrounded() {
+        backgroundCalls += 1
+    }
+    override fun notifyAppForegrounded() {
+        foregroundCalls += 1
+    }
     override suspend fun stop() {
         // Faithful to the real kit: stop() is terminal and a second call throws
         // IllegalStateException (States.kt). The transport must guard against it.

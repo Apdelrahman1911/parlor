@@ -134,7 +134,7 @@ class MafiaHostRoomBridge(
     ): CommandApplication {
         val action = runCatching { MafiaActionCodec.decode(payload) }.getOrNull()
             ?: return CommandApplication.InvalidAction
-        val before = controller.hostState.value.state
+        val before = controller.currentState()
         // A transiently missing seat pauses Mafia at the orchestration
         // boundary. The domain remains topology-agnostic.
         if (before.public.disconnectedPlayers.isNotEmpty()) {
@@ -153,7 +153,7 @@ class MafiaHostRoomBridge(
         return when (controller.submit(action)) {
             is Result.Failure -> CommandApplication.InvalidAction
             is Result.Success -> {
-                if (controller.hostState.value.state == before) {
+                if (controller.currentState() == before) {
                     CommandApplication.InvalidAction
                 } else {
                     CommandApplication.Applied
@@ -163,7 +163,7 @@ class MafiaHostRoomBridge(
     }
 
     private suspend fun snapshotFor(playerId: PlayerId): PlayerSnapshotPayload {
-        val state = controller.hostState.value.state
+        val state = controller.currentState()
         val publicState = MafiaProjectionPolicy.toPublic(state).state
         val publicPayload = json
             .encodeToString(publicStateSerializer, publicState)
@@ -191,13 +191,13 @@ class MafiaHostRoomBridge(
         if (playerId !in remotePlayers) return
         applyLifecycleAction(MafiaAction.MarkPlayerDisconnected(playerId))
         if (
-            controller.hostState.value.state.phase != MafiaPhase.PostGame &&
+            controller.currentState().phase != MafiaPhase.PostGame &&
             graceJobs[playerId] == null
         ) {
             graceJobs[playerId] = scope.launch {
                 delay(rejoinGraceMs)
                 graceJobs.remove(playerId)
-                if (playerId in controller.hostState.value.state.public.disconnectedPlayers) {
+                if (playerId in controller.currentState().public.disconnectedPlayers) {
                     continueWithout(playerId)
                 }
             }
@@ -213,9 +213,9 @@ class MafiaHostRoomBridge(
     }
 
     private suspend fun applyLifecycleAction(action: MafiaAction): Boolean {
-        val before = controller.hostState.value.state
+        val before = controller.currentState()
         val result = controller.submit(action)
-        val changed = result is Result.Success && controller.hostState.value.state != before
+        val changed = result is Result.Success && controller.currentState() != before
         if (changed) coordinator.publishState()
         return changed
     }
