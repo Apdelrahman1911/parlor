@@ -1,5 +1,6 @@
 package com.parlor.networking.transport
 
+import com.parlor.core.ids.GameId
 import com.parlor.core.result.Result
 import com.parlor.networking.room.DiscoveredRoom
 import com.parlor.networking.room.LocalRoom
@@ -22,6 +23,14 @@ interface RoomTransport {
 
     suspend fun join(config: JoinConfig): Result<LocalRoom, NetError> =
         join(config.code, config.displayName)
+
+    /** Non-secret metadata for an encrypted resumable membership, if present. */
+    suspend fun resumableSession(): Result<ResumableSessionInfo?, NetError> =
+        Result.Success(null)
+
+    /** Resume the last protected membership on a fresh physical connection. */
+    suspend fun resumeLastSession(): Result<LocalRoom, NetError> =
+        Result.Failure(NetError.NotConnected)
 
     /**
      * Stream of rooms currently visible to this transport. Transports that
@@ -51,9 +60,20 @@ data class HostConfig(
     val visible: Boolean = true,
     /** Product seat limit excluding the host; enforced atomically by the transport. */
     val maxRemotePlayers: Int = 17,
+    /** Shipping game identity persisted into resumable membership credentials. */
+    val gameProtocol: HostedGameProtocol? = null,
 ) {
     init {
         require(maxRemotePlayers in 1..17) { "maxRemotePlayers must be in 1..17" }
+    }
+}
+
+data class HostedGameProtocol(
+    val gameId: GameId,
+    val gameVersion: Int,
+) {
+    init {
+        require(gameVersion > 0) { "gameVersion must be positive" }
     }
 }
 
@@ -61,4 +81,11 @@ data class JoinConfig(
     val code: String,
     val displayName: String,
     val rejoinToken: String? = null,
+)
+
+data class ResumableSessionInfo(
+    val gameId: GameId,
+    val gameVersion: Int,
+    val displayName: String,
+    val expiresAtEpochMillis: Long,
 )

@@ -17,7 +17,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 sealed interface RoomMessage
 
-const val PARLOR_PROTOCOL_MAJOR: Int = 2
+// v3 adds transactional admission/resume readiness barriers and cannot safely
+// interoperate with v2 peers, which may miss the first lobby/game snapshot.
+const val PARLOR_PROTOCOL_MAJOR: Int = 3
 const val PARLOR_PROTOCOL_MINOR: Int = 0
 const val MAX_COMMAND_PAYLOAD_BYTES: Int = 32 * 1024
 const val MAX_SNAPSHOT_PAYLOAD_BYTES: Int = 256 * 1024
@@ -249,6 +251,14 @@ sealed interface PeerMessage : RoomMessage {
         val generation: Long,
     ) : PeerMessage
 
+    /** Peer inbound collector is attached; host may now publish lobby/game frames. */
+    @Serializable
+    data class AdmissionReady(
+        val actor: PlayerId,
+        val offerId: String,
+        val generation: Long,
+    ) : PeerMessage
+
     /** Requests replacement of a dead physical connection for a logical membership. */
     @Serializable
     data class ResumeRequested(
@@ -271,6 +281,18 @@ sealed interface PeerMessage : RoomMessage {
     /** Best-effort acknowledgement that the rotated generation is active. */
     @Serializable
     data class ResumeCommitAck(
+        val actor: PlayerId,
+        val offerId: String,
+        val generation: Long,
+    ) : PeerMessage
+
+    /**
+     * Sent only after the peer has attached its replacement-session inbound
+     * collector. The host must not emit PeerReconnected/snapshots before this
+     * handoff barrier, otherwise replay-zero transport flows can lose them.
+     */
+    @Serializable
+    data class ResumeReady(
         val actor: PlayerId,
         val offerId: String,
         val generation: Long,

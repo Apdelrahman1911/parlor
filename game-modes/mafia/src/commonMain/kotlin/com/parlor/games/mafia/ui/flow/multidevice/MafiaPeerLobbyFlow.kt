@@ -76,6 +76,7 @@ fun MafiaPeerLobbyFlow(
     transport: RoomTransport,
     code: String,
     peerName: String,
+    resumeExistingSession: Boolean = false,
     onBackToHome: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -86,8 +87,13 @@ fun MafiaPeerLobbyFlow(
     var hostLost by remember { mutableStateOf(false) }
     var selfOffline by remember { mutableStateOf(false) }
 
-    LaunchedEffect(transport, code) {
-        when (val result = transport.join(code, peerName)) {
+    LaunchedEffect(transport, code, resumeExistingSession) {
+        val result = if (resumeExistingSession) {
+            transport.resumeLastSession()
+        } else {
+            transport.join(code, peerName)
+        }
+        when (result) {
             is Result.Success -> room = result.data
             is Result.Failure -> joinError = result.error
         }

@@ -59,6 +59,7 @@ class RoomMessageCodecTest {
             HostMessage.ResumeCommitted(offer.playerId, offer.offerId, offer.generation),
             PeerMessage.AdmissionConfirmed(offer.playerId, offer.offerId, offer.generation),
             PeerMessage.AdmissionCommitAck(offer.playerId, offer.offerId, offer.generation),
+            PeerMessage.AdmissionReady(offer.playerId, offer.offerId, offer.generation),
             PeerMessage.ResumeRequested(
                 protocol = ProtocolVersion(),
                 actor = offer.playerId,
@@ -69,6 +70,7 @@ class RoomMessageCodecTest {
             ),
             PeerMessage.ResumeConfirmed(offer.playerId, offer.offerId, offer.generation),
             PeerMessage.ResumeCommitAck(offer.playerId, offer.offerId, offer.generation),
+            PeerMessage.ResumeReady(offer.playerId, offer.offerId, offer.generation),
         )
 
         frames.forEach { frame ->

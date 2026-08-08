@@ -2,6 +2,8 @@ package com.parlor.transport.p2p
 
 import com.parlor.core.result.Result
 import com.parlor.storage.secure.SecureStorage
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -81,15 +83,20 @@ internal class ResumableCredentialStore(
         explicitNulls = true
     },
 ) {
+    /** Serializes read/modify/write transactions across lifecycle and game flows. */
+    private val mutex = Mutex()
+
     suspend fun loadResumeCandidate(): Result<ResumableSessionCredential?, CredentialStoreError> =
-        when (val loaded = loadRecord()) {
-            is Result.Failure -> loaded
-            is Result.Success -> Result.Success(loaded.data?.active ?: loaded.data?.pending)
+        mutex.withLock {
+            when (val loaded = loadRecord()) {
+                is Result.Failure -> loaded
+                is Result.Success -> Result.Success(loaded.data?.active ?: loaded.data?.pending)
+            }
         }
 
     suspend fun stage(
         credential: ResumableSessionCredential,
-    ): Result<Unit, CredentialStoreError> {
+    ): Result<Unit, CredentialStoreError> = mutex.withLock {
         val valid = runCatching { credential.requireValid() }
             .getOrElse { return Result.Failure(CredentialStoreError.Corrupted) }
         val current = when (val loaded = loadRecord()) {
@@ -104,18 +111,19 @@ internal class ResumableCredentialStore(
         )
     }
 
-    suspend fun commit(offerId: String, generation: Long): Result<Unit, CredentialStoreError> {
-        val current = when (val loaded = loadRecord()) {
-            is Result.Failure -> return loaded
-            is Result.Success -> loaded.data
+    suspend fun commit(offerId: String, generation: Long): Result<Unit, CredentialStoreError> =
+        mutex.withLock {
+            val current = when (val loaded = loadRecord()) {
+                is Result.Failure -> return loaded
+                is Result.Success -> loaded.data
+            }
+            val pending = current?.pending
+                ?.takeIf { it.offerId == offerId && it.generation == generation }
+                ?: return Result.Failure(CredentialStoreError.TransactionMismatch)
+            return writeRecord(StoredCredentialRecord(active = pending))
         }
-        val pending = current?.pending
-            ?.takeIf { it.offerId == offerId && it.generation == generation }
-            ?: return Result.Failure(CredentialStoreError.TransactionMismatch)
-        return writeRecord(StoredCredentialRecord(active = pending))
-    }
 
-    suspend fun discardPending(offerId: String): Result<Unit, CredentialStoreError> {
+    suspend fun discardPending(offerId: String): Result<Unit, CredentialStoreError> = mutex.withLock {
         val current = when (val loaded = loadRecord()) {
             is Result.Failure -> return loaded
             is Result.Success -> loaded.data
@@ -124,13 +132,17 @@ internal class ResumableCredentialStore(
             return Result.Failure(CredentialStoreError.TransactionMismatch)
         }
         val active = current.active
-        return if (active == null) clear() else writeRecord(StoredCredentialRecord(active = active))
+        return if (active == null) {
+            removeRecord()
+        } else {
+            writeRecord(StoredCredentialRecord(active = active))
+        }
     }
 
     suspend fun updateGame(
         gameId: String,
         gameVersion: Int,
-    ): Result<Unit, CredentialStoreError> {
+    ): Result<Unit, CredentialStoreError> = mutex.withLock {
         require(gameId.isSafeIdentifier() && gameVersion > 0)
         val current = when (val loaded = loadRecord()) {
             is Result.Failure -> return loaded
@@ -144,10 +156,13 @@ internal class ResumableCredentialStore(
         )
     }
 
-    suspend fun clear(): Result<Unit, CredentialStoreError> = when (storage.remove(STORAGE_KEY)) {
-        is Result.Success -> Result.Success(Unit)
-        is Result.Failure -> Result.Failure(CredentialStoreError.Unavailable)
-    }
+    suspend fun clear(): Result<Unit, CredentialStoreError> = mutex.withLock { removeRecord() }
+
+    private suspend fun removeRecord(): Result<Unit, CredentialStoreError> =
+        when (storage.remove(STORAGE_KEY)) {
+            is Result.Success -> Result.Success(Unit)
+            is Result.Failure -> Result.Failure(CredentialStoreError.Unavailable)
+        }
 
     private suspend fun loadRecord(): Result<StoredCredentialRecord?, CredentialStoreError> {
         val bytes = when (val loaded = storage.get(STORAGE_KEY)) {

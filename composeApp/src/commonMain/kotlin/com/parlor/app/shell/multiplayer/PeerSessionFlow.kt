@@ -91,6 +91,7 @@ fun PeerSessionFlow(
     transport: RoomTransport,
     code: String,
     peerName: String,
+    resumeExistingSession: Boolean = false,
     onBackToLibrary: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -101,8 +102,13 @@ fun PeerSessionFlow(
     var joinError by remember { mutableStateOf<NetError?>(null) }
     var sessionStart by remember { mutableStateOf<SessionStartingFromHost?>(null) }
 
-    LaunchedEffect(transport, code) {
-        when (val result = transport.join(code, peerName)) {
+    LaunchedEffect(transport, code, resumeExistingSession) {
+        val result = if (resumeExistingSession) {
+            transport.resumeLastSession()
+        } else {
+            transport.join(code, peerName)
+        }
+        when (result) {
             is Result.Success -> room = result.data
             is Result.Failure -> joinError = result.error
         }

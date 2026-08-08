@@ -58,6 +58,7 @@ actual val p2pTransportModule: Module = module {
             deviceName = "parlor-${randomDeviceTag()}",
             scope = get(qualifier = named("p2pTransport")),
             kitFactory = get(),
+            secureStorage = get(),
         )
     }
 }

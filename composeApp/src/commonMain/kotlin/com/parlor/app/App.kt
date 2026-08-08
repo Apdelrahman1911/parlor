@@ -132,6 +132,21 @@ fun App() {
                 }
             }
 
+            val resumableMultiplayer by produceState<com.parlor.networking.transport.ResumableSessionInfo?>(
+                initialValue = null,
+                key1 = screen,
+                key2 = unfinishedRefreshKey,
+            ) {
+                value = if (screen == AppScreen.Home) {
+                    when (val result = roomTransport.resumableSession()) {
+                        is Result.Success -> result.data
+                        is Result.Failure -> null
+                    }
+                } else {
+                    value
+                }
+            }
+
             val backToHome: () -> Unit = {
                 resumeSessionId = null
                 hostName = ""
@@ -177,6 +192,10 @@ fun App() {
                     onResume = { sessionId ->
                         resumeSessionId = sessionId
                         screen = AppScreen.Whodunit
+                    },
+                    hasResumableMultiplayer = resumableMultiplayer != null,
+                    onResumeMultiplayer = {
+                        screen = AppScreen.MultiplayerResumePermission
                     },
                 )
 
@@ -452,6 +471,45 @@ fun App() {
                     }
                 }
 
+                AppScreen.MultiplayerResumePermission -> {
+                    val gate = rememberP2pPermissionGate()
+                    val gateStatus by gate.status.collectAsState()
+                    val resumeTarget = when (resumableMultiplayer?.gameId?.raw) {
+                        WHODUNIT_GAME_ID -> AppScreen.ResumeWhodunitPeer
+                        MAFIA_GAME_ID -> AppScreen.ResumeMafiaPeer
+                        else -> AppScreen.Home
+                    }
+                    LaunchedEffect(gateStatus, resumeTarget) {
+                        if (gateStatus == PermissionStatus.Granted) screen = resumeTarget
+                    }
+                    if (gateStatus == PermissionStatus.Granted) {
+                        Text(text = "")
+                    } else {
+                        P2pPermissionRationaleScreen(
+                            gate = gate,
+                            onGranted = { screen = resumeTarget },
+                            onBack = backToHome,
+                            modifier = Modifier.fillMaxSize(),
+                        )
+                    }
+                }
+                AppScreen.ResumeWhodunitPeer -> PeerSessionFlow(
+                    transport = roomTransport,
+                    code = "",
+                    peerName = "",
+                    resumeExistingSession = true,
+                    onBackToLibrary = backToHome,
+                    modifier = Modifier.fillMaxSize(),
+                )
+                AppScreen.ResumeMafiaPeer -> MafiaPeerLobbyFlow(
+                    transport = roomTransport,
+                    code = "",
+                    peerName = "",
+                    resumeExistingSession = true,
+                    onBackToHome = backToHome,
+                    modifier = Modifier.fillMaxSize(),
+                )
+
                 AppScreen.Settings -> SettingsScreen(
                     onBack = backToHome,
                     modifier = Modifier.fillMaxSize(),
@@ -479,6 +537,7 @@ private enum class AppScreen {
     MafiaJoinPermission, MafiaJoinName, MafiaJoinPrompt, MafiaPeerLobby,
     HostPermission, HostName, HostCasePicker, HostMode, HostLobby,
     JoinPermission, JoinName, JoinPrompt, PeerLobby,
+    MultiplayerResumePermission, ResumeWhodunitPeer, ResumeMafiaPeer,
     Settings,
 }
 

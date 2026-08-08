@@ -1,12 +1,15 @@
 package com.parlor.transport.p2p
 
 import com.parlor.core.ids.PlayerId
+import com.parlor.core.ids.GameId
+import com.parlor.core.result.DataError
+import com.parlor.core.result.EmptyResult
 import com.parlor.core.result.Result
 import com.parlor.networking.protocol.AdmissionRejection
 import com.parlor.networking.protocol.HostMessage
-import com.parlor.networking.protocol.PARLOR_PROTOCOL_MAJOR
 import com.parlor.networking.protocol.PeerMessage
 import com.parlor.networking.protocol.ProtocolVersion
+import com.parlor.networking.protocol.ResumableCredentialOffer
 import com.parlor.networking.protocol.RoomMessage
 import com.parlor.networking.protocol.RoomMessageCodec
 import com.parlor.networking.room.LocalRoom
@@ -18,17 +21,23 @@ import com.parlor.networking.room.RoomLifecycleState
 import com.parlor.networking.room.RoomMember
 import com.parlor.networking.room.SendTarget
 import com.parlor.networking.transport.HostConfig
+import com.parlor.networking.transport.HostedGameProtocol
 import com.parlor.networking.transport.JoinConfig
 import com.parlor.networking.transport.RoomTransport
+import com.parlor.networking.transport.ResumableSessionInfo
 import com.parlor.networking.transport.TransportCapability
+import com.parlor.networking.security.SecureHashes
 import com.parlor.networking.security.SecureIds
+import com.parlor.storage.secure.SecureStorage
 import dev.p2pkit.core.AppId
 import dev.p2pkit.core.ConnectionState
 import dev.p2pkit.core.P2pKit
 import dev.p2pkit.core.P2pMessage
 import dev.p2pkit.core.P2pSession
 import dev.p2pkit.core.Peer
+import dev.p2pkit.core.PeerFingerprint
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -94,6 +103,7 @@ class P2pKitRoomTransport(
     private val deviceName: String,
     private val scope: CoroutineScope,
     private val kitFactory: P2pKitFactory,
+    secureStorage: SecureStorage = UnavailableSecureStorage,
     private val codec: RoomMessageCodec = RoomMessageCodec(),
     // Upper bound on how long [join] will wait for a matching, *fresh*
     // host advertisement before failing with [NetError.Timeout]. Kept
@@ -111,6 +121,7 @@ class P2pKitRoomTransport(
     // working.
     private val peerFreshnessWindowMs: Long = DEFAULT_PEER_FRESHNESS_WINDOW_MS,
 ) : RoomTransport {
+    private val credentialStore = ResumableCredentialStore(secureStorage)
 
     private sealed interface AppLifecycleEvent {
         data class Backgrounded(val atEpochMillis: Long) : AppLifecycleEvent
@@ -220,6 +231,9 @@ class P2pKitRoomTransport(
             var room: HostP2pRoom? = null
             try {
                 kit.start()
+                checkNotNull(kit.localFingerprint) {
+                    "P2pKit authenticated identity is unavailable"
+                }
                 // Construct the room first so its incomingSessions collector is
                 // subscribed before the service becomes discoverable. Otherwise a
                 // fast peer can connect into P2pKit's replay-zero session flow.
@@ -229,6 +243,7 @@ class P2pKitRoomTransport(
                     roomDisplayName = config.roomDisplayName,
                     hostPlayerId = PlayerId(kit.localPeerId.value),
                     maxRemotePlayers = config.maxRemotePlayers,
+                    gameProtocol = config.gameProtocol,
                     scope = scope,
                     codec = codec,
                     onClosed = { roomClosed(lifecycleRegistrationId) },
@@ -265,6 +280,9 @@ class P2pKitRoomTransport(
     }
 
     override suspend fun join(config: JoinConfig): Result<LocalRoom, NetError> {
+        if (config.rejoinToken != null) {
+            return Result.Failure(NetError.Unauthorized)
+        }
         p2pLog("join: entry")
         val kit = try {
             kitFactory.createKit(appId = appId, deviceName = config.displayName)
@@ -311,13 +329,13 @@ class P2pKitRoomTransport(
                     when (
                         val admission = awaitAdmission(
                             session = session,
+                            hostPeer = hostPeer,
                             code = config.code,
                             displayName = config.displayName,
-                            rejoinToken = config.rejoinToken,
                             selfPlayerId = PlayerId(kit.localPeerId.value),
                         )
                     ) {
-                        is HostMessage.AdmissionAccepted -> {
+                        is AdmissionOutcome.Accepted -> {
                             kit.stopDiscovery()
                             val lifecycleRegistrationId = SecureIds.id128()
                             val peerRoom = PeerP2pRoom(
@@ -325,17 +343,26 @@ class P2pKitRoomTransport(
                                 session = session,
                                 hostPeer = hostPeer,
                                 roomCode = config.code,
-                                rejoinToken = admission.rejoinToken,
+                                initialCredential = admission.credential,
+                                credentialStore = credentialStore,
+                                resumeConnector = { credential ->
+                                    resumeConnection(kit, credential)
+                                },
                                 scope = scope,
                                 codec = codec,
                                 onClosed = { roomClosed(lifecycleRegistrationId) },
                             )
-                            registerLifecycleRoom(lifecycleRegistrationId, peerRoom)
-                            admissionResult = Result.Success(
-                                peerRoom,
-                            )
+                            if (!peerRoom.finishInitialAdmissionHandoff(admission.credential)) {
+                                peerRoom.abandonFailedResume()
+                                admissionResult = Result.Failure(
+                                    NetError.TransportFailure("admission handoff failed"),
+                                )
+                            } else {
+                                registerLifecycleRoom(lifecycleRegistrationId, peerRoom)
+                                admissionResult = Result.Success(peerRoom)
+                            }
                         }
-                        is HostMessage.AdmissionRejected -> {
+                        is AdmissionOutcome.Rejected -> {
                             runCatching { session.close() }
                             if (admission.reason == AdmissionRejection.WrongCode) {
                                 val anotherVisibleHost = kit.peers.value.any {
@@ -345,7 +372,10 @@ class P2pKitRoomTransport(
                             }
                             admissionResult = Result.Failure(admission.reason.toNetError())
                         }
-                        else -> error("Admission wait returned a non-admission message")
+                        is AdmissionOutcome.Failed -> {
+                            runCatching { session.close() }
+                            admissionResult = Result.Failure(admission.error)
+                        }
                     }
                 }
                 admissionResult
@@ -370,40 +400,448 @@ class P2pKitRoomTransport(
         }
     }
 
+    override suspend fun resumableSession(): Result<ResumableSessionInfo?, NetError> =
+        when (val loaded = credentialStore.loadResumeCandidate()) {
+            is Result.Failure -> Result.Failure(NetError.SecureStorageUnavailable)
+            is Result.Success -> {
+                val credential = loaded.data ?: return Result.Success(null)
+                if (credential.expiresAtEpochMillis <= nowMillis()) {
+                    credentialStore.clear()
+                    Result.Success(null)
+                } else {
+                    val gameId = credential.gameId?.let(::GameId)
+                        ?: return Result.Failure(NetError.IncompatibleProtocol)
+                    val gameVersion = credential.gameVersion
+                        ?: return Result.Failure(NetError.IncompatibleProtocol)
+                    Result.Success(
+                        ResumableSessionInfo(
+                            gameId = gameId,
+                            gameVersion = gameVersion,
+                            displayName = credential.displayName,
+                            expiresAtEpochMillis = credential.expiresAtEpochMillis,
+                        ),
+                    )
+                }
+            }
+        }
+
+    override suspend fun resumeLastSession(): Result<LocalRoom, NetError> {
+        val credential = when (val loaded = credentialStore.loadResumeCandidate()) {
+            is Result.Failure -> return Result.Failure(NetError.SecureStorageUnavailable)
+            is Result.Success -> loaded.data ?: return Result.Failure(NetError.NotConnected)
+        }
+        if (credential.expiresAtEpochMillis <= nowMillis()) {
+            credentialStore.clear()
+            return Result.Failure(NetError.RejoinExpired)
+        }
+        val kit = try {
+            kitFactory.createKit(appId = appId, deviceName = credential.displayName)
+        } catch (failure: Throwable) {
+            failure.rethrowIfCancellation()
+            return Result.Failure(
+                NetError.TransportFailure(failure.message ?: "resume initialization failed"),
+            )
+        }
+        try {
+            kit.start()
+        } catch (failure: Throwable) {
+            kit.stopAfterFailure()
+            failure.rethrowIfCancellation()
+            return Result.Failure(
+                NetError.TransportFailure(failure.message ?: "resume initialization failed"),
+            )
+        }
+        return try {
+            when (val resumed = resumeConnection(kit, credential)) {
+                is Result.Failure -> {
+                    kit.stopAfterFailure()
+                    resumed
+                }
+                is Result.Success -> {
+                    val lifecycleRegistrationId = SecureIds.id128()
+                    val room = PeerP2pRoom(
+                        kit = kit,
+                        session = resumed.data.session,
+                        hostPeer = resumed.data.hostPeer,
+                        roomCode = resumed.data.credential.roomCode,
+                        scope = scope,
+                        codec = codec,
+                        initialCredential = resumed.data.credential,
+                        credentialStore = credentialStore,
+                        resumeConnector = { next -> resumeConnection(kit, next) },
+                        onClosed = { roomClosed(lifecycleRegistrationId) },
+                    )
+                    if (!room.finishInitialResumeHandoff(resumed.data)) {
+                        room.abandonFailedResume()
+                        Result.Failure(NetError.TransportFailure("resume handoff failed"))
+                    } else {
+                        registerLifecycleRoom(lifecycleRegistrationId, room)
+                        Result.Success(room)
+                    }
+                }
+            }
+        } catch (failure: Throwable) {
+            kit.stopAfterFailure()
+            failure.rethrowIfCancellation()
+            Result.Failure(NetError.TransportFailure(failure.message ?: "resume failed"))
+        }
+    }
+
+    private sealed interface AdmissionOutcome {
+        data class Accepted(val credential: ResumableSessionCredential) : AdmissionOutcome
+        data class Rejected(val reason: AdmissionRejection) : AdmissionOutcome
+        data class Failed(val error: NetError) : AdmissionOutcome
+    }
+
     private suspend fun awaitAdmission(
         session: P2pSession,
+        hostPeer: Peer,
         code: String,
         displayName: String,
-        rejoinToken: String?,
         selfPlayerId: PlayerId,
-    ): HostMessage = coroutineScope {
-        val response = async(start = CoroutineStart.UNDISPATCHED) {
+    ): AdmissionOutcome = coroutineScope {
+        val responses = Channel<HostMessage>(capacity = 8)
+        val collector = launch(start = CoroutineStart.UNDISPATCHED) {
             session.incoming
                 .filterIsInstance<P2pMessage.Binary>()
-                .mapNotNull { frame ->
-                    if (frame.bytes.size > MAX_ROOM_FRAME_BYTES) return@mapNotNull null
-                    runCatching {
+                .collect { frame ->
+                    if (frame.bytes.size > MAX_ROOM_FRAME_BYTES) return@collect
+                    val decoded = runCatching {
                         codec.decode(frame.bytes)
-                    }.getOrNull() as? HostMessage
-                }
-                .first {
-                    it is HostMessage.AdmissionAccepted || it is HostMessage.AdmissionRejected
+                    }.getOrNull() as? HostMessage ?: return@collect
+                    when (decoded) {
+                        is HostMessage.AdmissionOffered,
+                        is HostMessage.AdmissionCommitted,
+                        is HostMessage.AdmissionRejected,
+                        is HostMessage.AdmissionAccepted -> responses.send(decoded)
+                        else -> Unit
+                    }
                 }
         }
-        val request = PeerMessage.AdmissionRequest(
-            protocol = ProtocolVersion(),
-            actor = selfPlayerId,
-            roomCode = code,
-            displayName = displayName,
-            rejoinToken = rejoinToken,
-        )
-        val requestBytes = codec.encode(request)
-        check(requestBytes.size <= MAX_ROOM_FRAME_BYTES)
-        while (!response.isCompleted) {
-            session.send(P2pMessage.Binary(requestBytes))
-            delay(ADMISSION_RETRY_MS)
+        try {
+            val first = sendUntilResponse(
+                session = session,
+                responses = responses,
+                message = PeerMessage.AdmissionRequest(
+                    protocol = ProtocolVersion(),
+                    actor = selfPlayerId,
+                    roomCode = code,
+                    displayName = displayName,
+                ),
+            )
+            when (first) {
+                is HostMessage.AdmissionRejected -> AdmissionOutcome.Rejected(first.reason)
+                is HostMessage.AdmissionAccepted ->
+                    AdmissionOutcome.Rejected(AdmissionRejection.IncompatibleProtocol)
+                is HostMessage.AdmissionOffered -> {
+                    val credential = first.offer.toStoredCredentialOrNull(
+                        session = session,
+                        hostPeer = hostPeer,
+                        roomCode = code,
+                        displayName = displayName,
+                        selfPlayerId = selfPlayerId,
+                    ) ?: return@coroutineScope AdmissionOutcome.Rejected(
+                        AdmissionRejection.InvalidCredential,
+                    )
+                    when (credentialStore.stage(credential)) {
+                        is Result.Failure ->
+                            return@coroutineScope AdmissionOutcome.Failed(
+                                NetError.SecureStorageUnavailable,
+                            )
+                        is Result.Success -> Unit
+                    }
+                    val committed = sendUntilResponse(
+                        session = session,
+                        responses = responses,
+                        message = PeerMessage.AdmissionConfirmed(
+                            actor = selfPlayerId,
+                            offerId = credential.offerId,
+                            generation = credential.generation,
+                        ),
+                    )
+                    when (committed) {
+                        is HostMessage.AdmissionRejected -> {
+                            credentialStore.discardPending(credential.offerId)
+                            AdmissionOutcome.Rejected(committed.reason)
+                        }
+                        is HostMessage.AdmissionCommitted -> {
+                            if (
+                                committed.playerId != selfPlayerId ||
+                                committed.offerId != credential.offerId ||
+                                committed.generation != credential.generation
+                            ) {
+                                credentialStore.discardPending(credential.offerId)
+                                AdmissionOutcome.Rejected(AdmissionRejection.InvalidCredential)
+                            } else if (
+                                credentialStore.commit(
+                                    credential.offerId,
+                                    credential.generation,
+                                ) is Result.Failure
+                            ) {
+                                AdmissionOutcome.Failed(NetError.SecureStorageUnavailable)
+                            } else {
+                                AdmissionOutcome.Accepted(credential)
+                            }
+                        }
+                        else -> AdmissionOutcome.Rejected(AdmissionRejection.InvalidCredential)
+                    }
+                }
+                else -> AdmissionOutcome.Rejected(AdmissionRejection.InvalidCredential)
+            }
+        } finally {
+            collector.cancelAndJoin()
+            responses.close()
         }
-        response.await()
+    }
+
+    private suspend fun sendUntilResponse(
+        session: P2pSession,
+        responses: Channel<HostMessage>,
+        message: PeerMessage,
+    ): HostMessage {
+        while (true) {
+            sendRoomMessage(session, message)
+            withTimeoutOrNull(ADMISSION_RETRY_MS) { responses.receive() }?.let { return it }
+        }
+    }
+
+    private suspend fun sendRoomMessage(session: P2pSession, message: PeerMessage) {
+        val bytes = codec.encode(message)
+        check(bytes.size <= MAX_ROOM_FRAME_BYTES)
+        session.send(P2pMessage.Binary(bytes))
+    }
+
+    /**
+     * Replaces a terminal physical connection without changing logical player
+     * identity. Discovery is used only to locate the recorded host peer id;
+     * the connection is cryptographically pinned to the fingerprint captured
+     * during initial admission.
+     */
+    private suspend fun resumeConnection(
+        kit: P2pKit,
+        credential: ResumableSessionCredential,
+    ): Result<ResumedPeerConnection, NetError> {
+        if (credential.expiresAtEpochMillis <= nowMillis()) {
+            return Result.Failure(NetError.RejoinExpired)
+        }
+        val expectedFingerprint = runCatching {
+            PeerFingerprint(credential.hostFingerprint)
+        }.getOrElse {
+            return Result.Failure(NetError.Unauthorized)
+        }
+        return try {
+            kit.startDiscovery()
+            withTimeout(REJOIN_GRACE_MS) {
+                while (true) {
+                    val hostPeer = kit.peers.first { peers ->
+                        peers.any { peer ->
+                            peer.id.value == credential.hostPeerId &&
+                                peer.isFreshParlorHost(kit)
+                        }
+                    }.first { peer ->
+                        peer.id.value == credential.hostPeerId &&
+                            peer.isFreshParlorHost(kit)
+                    }
+                    val session = try {
+                        kit.connect(hostPeer, expectedFingerprint)
+                    } catch (failure: Throwable) {
+                        failure.rethrowIfCancellation()
+                        delay(ADMISSION_RETRY_MS)
+                        continue
+                    }
+                    val identityMatches =
+                        session.peer.id == hostPeer.id &&
+                            session.peerIdentity.peerId == hostPeer.id &&
+                            session.peerIdentity.fingerprint == expectedFingerprint
+                    if (!identityMatches) {
+                        runCatching { session.close() }
+                        return@withTimeout Result.Failure(NetError.Unauthorized)
+                    }
+                    when (val resumed = awaitResume(session, hostPeer, credential)) {
+                        is Result.Success -> return@withTimeout resumed
+                        is Result.Failure -> {
+                            runCatching { session.close() }
+                            if (
+                                resumed.error == NetError.Unauthorized ||
+                                resumed.error == NetError.RejoinExpired ||
+                                resumed.error == NetError.IncompatibleProtocol ||
+                                resumed.error == NetError.AlreadyConnected
+                            ) {
+                                return@withTimeout resumed
+                            }
+                            delay(ADMISSION_RETRY_MS)
+                        }
+                    }
+                }
+                @Suppress("UNREACHABLE_CODE")
+                Result.Failure(NetError.Timeout)
+            }
+        } catch (_: TimeoutCancellationException) {
+            Result.Failure(NetError.Timeout)
+        } catch (failure: Throwable) {
+            failure.rethrowIfCancellation()
+            Result.Failure(NetError.TransportFailure(failure.message ?: "resume failed"))
+        } finally {
+            runCatching { kit.stopDiscovery() }
+        }
+    }
+
+    private suspend fun awaitResume(
+        session: P2pSession,
+        hostPeer: Peer,
+        credential: ResumableSessionCredential,
+    ): Result<ResumedPeerConnection, NetError> = coroutineScope {
+        val responses = Channel<HostMessage>(capacity = 8)
+        val collector = launch(start = CoroutineStart.UNDISPATCHED) {
+            session.incoming.filterIsInstance<P2pMessage.Binary>().collect { frame ->
+                if (frame.bytes.size > MAX_ROOM_FRAME_BYTES) return@collect
+                val decoded = runCatching { codec.decode(frame.bytes) }.getOrNull()
+                    as? HostMessage ?: return@collect
+                when (decoded) {
+                    is HostMessage.ResumeOffered,
+                    is HostMessage.ResumeCommitted,
+                    is HostMessage.AdmissionRejected -> responses.send(decoded)
+                    else -> Unit
+                }
+            }
+        }
+        var stagedOfferId: String? = null
+        var committedCredential = false
+        try {
+            val first = sendUntilResponse(
+                session = session,
+                responses = responses,
+                message = PeerMessage.ResumeRequested(
+                    protocol = ProtocolVersion(),
+                    actor = PlayerId(credential.playerId),
+                    roomCode = credential.roomCode,
+                    displayName = credential.displayName,
+                    secret = credential.secret,
+                    generation = credential.generation,
+                ),
+            )
+            if (first is HostMessage.AdmissionRejected) {
+                return@coroutineScope Result.Failure(first.reason.toNetError())
+            }
+            val offer = (first as? HostMessage.ResumeOffered)?.offer
+                ?: return@coroutineScope Result.Failure(NetError.Unauthorized)
+            val rotated = offer.toRotatedCredentialOrNull(session, hostPeer, credential)
+                ?: return@coroutineScope Result.Failure(NetError.Unauthorized)
+            stagedOfferId = rotated.offerId
+            if (credentialStore.stage(rotated) is Result.Failure) {
+                return@coroutineScope Result.Failure(NetError.SecureStorageUnavailable)
+            }
+            when (
+                val committed = sendUntilResponse(
+                    session = session,
+                    responses = responses,
+                    message = PeerMessage.ResumeConfirmed(
+                        actor = PlayerId(rotated.playerId),
+                        offerId = rotated.offerId,
+                        generation = rotated.generation,
+                    ),
+                )
+            ) {
+                is HostMessage.AdmissionRejected -> {
+                    credentialStore.discardPending(rotated.offerId)
+                    Result.Failure(committed.reason.toNetError())
+                }
+                is HostMessage.ResumeCommitted -> {
+                    if (
+                        committed.playerId.raw != rotated.playerId ||
+                        committed.offerId != rotated.offerId ||
+                        committed.generation != rotated.generation
+                    ) {
+                        credentialStore.discardPending(rotated.offerId)
+                        Result.Failure(NetError.Unauthorized)
+                    } else if (
+                        credentialStore.commit(rotated.offerId, rotated.generation) is Result.Failure
+                    ) {
+                        Result.Failure(NetError.SecureStorageUnavailable)
+                    } else {
+                        committedCredential = true
+                        Result.Success(ResumedPeerConnection(session, hostPeer, rotated))
+                    }
+                }
+                else -> Result.Failure(NetError.Unauthorized)
+            }
+        } finally {
+            collector.cancelAndJoin()
+            responses.close()
+            val pending = stagedOfferId
+            if (pending != null && !committedCredential) {
+                // On an interrupted handshake retain the last committed
+                // generation and remove only this staged rotation.
+                credentialStore.discardPending(pending)
+            }
+        }
+    }
+
+    private fun ResumableCredentialOffer.toStoredCredentialOrNull(
+        session: P2pSession,
+        hostPeer: Peer,
+        roomCode: String,
+        displayName: String,
+        selfPlayerId: PlayerId,
+    ): ResumableSessionCredential? {
+        val authenticatedFingerprint = session.peerIdentity.fingerprint?.value ?: return null
+        val gameFieldsMatch = (gameId == null) == (gameVersion == null)
+        if (
+            playerId != selfPlayerId ||
+            hostPeer.id != session.peer.id ||
+            hostPeer.id.value != hostPeerId ||
+            authenticatedFingerprint != hostFingerprint ||
+            generation != INITIAL_CREDENTIAL_GENERATION ||
+            !gameFieldsMatch
+        ) {
+            return null
+        }
+        return runCatching {
+            ResumableSessionCredential(
+                offerId = offerId,
+                roomCode = roomCode,
+                displayName = displayName,
+                playerId = selfPlayerId.raw,
+                hostPeerId = hostPeerId,
+                hostFingerprint = hostFingerprint,
+                secret = secret,
+                generation = generation,
+                issuedAtEpochMillis = issuedAtEpochMillis,
+                expiresAtEpochMillis = expiresAtEpochMillis,
+                gameId = gameId,
+                gameVersion = gameVersion,
+            ).requireValid()
+        }.getOrNull()
+    }
+
+    private fun ResumableCredentialOffer.toRotatedCredentialOrNull(
+        session: P2pSession,
+        hostPeer: Peer,
+        current: ResumableSessionCredential,
+    ): ResumableSessionCredential? {
+        val authenticatedFingerprint = session.peerIdentity.fingerprint?.value ?: return null
+        if (
+            playerId.raw != current.playerId ||
+            hostPeer.id != session.peer.id ||
+            hostPeer.id.value != current.hostPeerId ||
+            hostPeerId != current.hostPeerId ||
+            authenticatedFingerprint != current.hostFingerprint ||
+            hostFingerprint != current.hostFingerprint ||
+            generation <= current.generation ||
+            gameId != current.gameId ||
+            gameVersion != current.gameVersion
+        ) {
+            return null
+        }
+        return runCatching {
+            current.copy(
+                offerId = offerId,
+                secret = secret,
+                generation = generation,
+                issuedAtEpochMillis = issuedAtEpochMillis,
+                expiresAtEpochMillis = expiresAtEpochMillis,
+            ).requireValid()
+        }.getOrNull()
     }
 
     private fun logPeerSnapshot(peers: List<Peer>, expectedPrefix: String, kit: P2pKit) {
@@ -461,6 +899,9 @@ class P2pKitRoomTransport(
         internal const val ADMISSION_RETRY_MS: Long = 400L
         internal const val ADMISSION_REJECTION_FLUSH_MS: Long = 100L
         internal const val REJOIN_GRACE_MS: Long = 120_000L
+        internal const val ADMISSION_CONFIRM_TIMEOUT_MS: Long = 60_000L
+        internal const val CREDENTIAL_MAX_AGE_MS: Long = 24L * 60L * 60L * 1_000L
+        internal const val INITIAL_CREDENTIAL_GENERATION: Long = 1L
         internal const val MAX_DISPLAY_NAME_LENGTH: Int = 32
         // P2pKit publishes lastSeen on every heartbeat; a live host on the
         // same LAN refreshes well inside a 5s window. Tightening this
@@ -484,6 +925,18 @@ class P2pKitRoomTransport(
         internal const val APP_RESUME_GRACE_MS: Long = 120_000L
         private const val APP_LIFECYCLE_EVENT_CAPACITY: Int = 8
     }
+}
+
+/** Source-compatible default that fails closed; production DI always supplies a device-bound store. */
+private data object UnavailableSecureStorage : SecureStorage {
+    override suspend fun put(key: String, value: ByteArray): EmptyResult<DataError> =
+        Result.Failure(DataError.PermissionDenied)
+
+    override suspend fun get(key: String): Result<ByteArray?, DataError> =
+        Result.Failure(DataError.PermissionDenied)
+
+    override suspend fun remove(key: String): EmptyResult<DataError> =
+        Result.Failure(DataError.PermissionDenied)
 }
 
 private fun Throwable.rethrowIfCancellation() {
@@ -522,6 +975,7 @@ internal class HostP2pRoom(
     roomDisplayName: String,
     private val hostPlayerId: PlayerId,
     private val maxRemotePlayers: Int,
+    private val gameProtocol: HostedGameProtocol? = null,
     private val scope: CoroutineScope,
     private val codec: RoomMessageCodec,
     private val onClosed: () -> Unit = {},
@@ -566,12 +1020,50 @@ internal class HostP2pRoom(
         val session: P2pSession,
         val displayName: String,
         val isRejoin: Boolean,
+        val peerFingerprint: String,
+        var transaction: AdmissionOfferTransaction? = null,
     )
+    private data class AdmissionOfferTransaction(
+        val offer: ResumableCredentialOffer,
+        val confirmation: CompletableDeferred<Unit>,
+        val kind: CredentialTransactionKind,
+    )
+    private data class ResumeReadyBarrier(
+        val session: P2pSession,
+        val offerId: String,
+        val generation: Long,
+        val signal: CompletableDeferred<Unit> = CompletableDeferred(),
+        var ready: Boolean = false,
+    )
+    private data class AdmissionReadyBarrier(
+        val session: P2pSession,
+        val offerId: String,
+        val generation: Long,
+        val signal: CompletableDeferred<Unit> = CompletableDeferred(),
+        var ready: Boolean = false,
+    )
+    private enum class CredentialTransactionKind { Admission, Resume }
+    private data class HostCredential(
+        val digest: ByteArray,
+        val generation: Long,
+        val peerFingerprint: String,
+        val offerId: String,
+        val expiresAtEpochMillis: Long,
+        var previousDigest: ByteArray? = null,
+        var previousGeneration: Long? = null,
+    ) {
+        fun wipe() {
+            digest.fill(0)
+            previousDigest?.fill(0)
+        }
+    }
     private val pendingByPlayer: MutableMap<PlayerId, PendingConnection> = mutableMapOf()
     /** Seats approved by the host but not yet committed after acceptance delivery. */
     private val admissionReservations: MutableSet<PlayerId> = mutableSetOf()
-    private val rejoinTokenByPlayer: MutableMap<PlayerId, String> = mutableMapOf()
+    private val credentialsByPlayer: MutableMap<PlayerId, HostCredential> = mutableMapOf()
     private val rejoinDeadlineByPlayer: MutableMap<PlayerId, Long> = mutableMapOf()
+    private val resumeReadyByPlayer: MutableMap<PlayerId, ResumeReadyBarrier> = mutableMapOf()
+    private val admissionReadyByPlayer: MutableMap<PlayerId, AdmissionReadyBarrier> = mutableMapOf()
     private var admissionsClosed: Boolean = false
     // Tracks every PlayerId we have ever accepted a session from in this
     // room's lifetime. A peer that fully disconnects (PeerLeft fired) and
@@ -611,6 +1103,14 @@ internal class HostP2pRoom(
     private suspend fun handleIncomingSession(session: P2pSession) {
         val playerId = PlayerId(session.peer.id.value)
         val displayName = session.peer.name
+        val peerFingerprint = session.peerIdentity.fingerprint?.value
+        if (
+            peerFingerprint == null ||
+            session.peerIdentity.peerId != session.peer.id
+        ) {
+            rejectSession(session, AdmissionRejection.InvalidCredential)
+            return
+        }
 
         collectorJobs += scope.launch {
             session.incoming.collect { msg ->
@@ -636,6 +1136,13 @@ internal class HostP2pRoom(
                 val decoded = when (rawDecoded) {
                     is PeerMessage.ActionSubmit -> rawDecoded.copy(sender = playerId)
                     is PeerMessage.AdmissionRequest -> rawDecoded.copy(actor = playerId)
+                    is PeerMessage.AdmissionConfirmed -> rawDecoded.copy(actor = playerId)
+                    is PeerMessage.AdmissionCommitAck -> rawDecoded.copy(actor = playerId)
+                    is PeerMessage.AdmissionReady -> rawDecoded.copy(actor = playerId)
+                    is PeerMessage.ResumeRequested -> rawDecoded.copy(actor = playerId)
+                    is PeerMessage.ResumeConfirmed -> rawDecoded.copy(actor = playerId)
+                    is PeerMessage.ResumeCommitAck -> rawDecoded.copy(actor = playerId)
+                    is PeerMessage.ResumeReady -> rawDecoded.copy(actor = playerId)
                     is PeerMessage.ClientCommand -> rawDecoded.copy(actor = playerId)
                     is PeerMessage.SnapshotRequest -> rawDecoded.copy(actor = playerId)
                     is PeerMessage.SessionHeartbeat -> rawDecoded.copy(actor = playerId)
@@ -645,21 +1152,105 @@ internal class HostP2pRoom(
                 val admitted = stateMutex.withLock {
                     sessionsByPlayer[playerId] === session
                 }
-                if (admitted && decoded is PeerMessage.AdmissionRequest) {
-                    val token = stateMutex.withLock { rejoinTokenByPlayer[playerId] }
-                    if (token != null) {
-                        sendRaw(session, HostMessage.AdmissionAccepted(playerId, token))
+                if (admitted) {
+                    when (decoded) {
+                        is PeerMessage.AdmissionRequest,
+                        is PeerMessage.AdmissionConfirmed -> {
+                            val credential = stateMutex.withLock {
+                                credentialsByPlayer[playerId]
+                            }
+                            if (credential != null) {
+                                sendRaw(
+                                    session,
+                                    HostMessage.AdmissionCommitted(
+                                        playerId = playerId,
+                                        offerId = credential.offerId,
+                                        generation = credential.generation,
+                                    ),
+                                )
+                            }
+                            return@collect
+                        }
+                        is PeerMessage.AdmissionCommitAck -> return@collect
+                        is PeerMessage.AdmissionReady -> {
+                            handleAdmissionReady(playerId, session, decoded)
+                            return@collect
+                        }
+                        is PeerMessage.ResumeCommitAck -> {
+                            acknowledgeResumeCommit(playerId, decoded)
+                            return@collect
+                        }
+                        is PeerMessage.ResumeReady -> {
+                            handleResumeReady(playerId, session, decoded)
+                            return@collect
+                        }
+                        is PeerMessage.ResumeConfirmed -> {
+                            val credential = stateMutex.withLock {
+                                credentialsByPlayer[playerId]
+                            }
+                            if (
+                                credential != null &&
+                                credential.offerId == decoded.offerId &&
+                                credential.generation == decoded.generation
+                            ) {
+                                sendRaw(
+                                    session,
+                                    HostMessage.ResumeCommitted(
+                                        playerId,
+                                        credential.offerId,
+                                        credential.generation,
+                                    ),
+                                )
+                            } else {
+                                rejectSession(session, AdmissionRejection.InvalidCredential)
+                            }
+                            return@collect
+                        }
+                        is PeerMessage.ResumeRequested -> {
+                            rejectSession(session, AdmissionRejection.AlreadyConnected)
+                            return@collect
+                        }
+                        else -> Unit
                     }
-                    return@collect
                 }
                 if (!admitted) {
-                    if (decoded is PeerMessage.AdmissionRequest) {
-                        handleAdmissionRequest(
-                            playerId = playerId,
-                            transportDisplayName = displayName,
-                            session = session,
-                            request = decoded,
+                    when (decoded) {
+                        is PeerMessage.AdmissionRequest -> handleAdmissionRequest(
+                            playerId,
+                            displayName,
+                            peerFingerprint,
+                            session,
+                            decoded,
                         )
+                        is PeerMessage.AdmissionConfirmed -> handleCredentialConfirmation(
+                            playerId,
+                            session,
+                            decoded.offerId,
+                            decoded.generation,
+                            CredentialTransactionKind.Admission,
+                        )
+                        is PeerMessage.ResumeRequested -> handleResumeRequest(
+                            playerId,
+                            displayName,
+                            peerFingerprint,
+                            session,
+                            decoded,
+                        )
+                        is PeerMessage.ResumeConfirmed -> handleCredentialConfirmation(
+                            playerId,
+                            session,
+                            decoded.offerId,
+                            decoded.generation,
+                            CredentialTransactionKind.Resume,
+                        )
+                        is PeerMessage.ResumeReady ->
+                            rejectSession(session, AdmissionRejection.InvalidCredential)
+                        is PeerMessage.AdmissionReady ->
+                            rejectSession(session, AdmissionRejection.InvalidCredential)
+                        is PeerMessage.ResumeCommitAck,
+                        is PeerMessage.AdmissionCommitAck ->
+                            rejectSession(session, AdmissionRejection.InvalidCredential)
+                        else -> Unit
                     }
                     // No gameplay or lifecycle frame is accepted before the
                     // encrypted room-code + host-approval handshake.
@@ -725,8 +1316,23 @@ internal class HostP2pRoom(
                         // for this playerId — a newer session may have
                         // superseded it via handleIncomingSession.
                         val removed = stateMutex.withLock {
+                            admissionReadyByPlayer[playerId]
+                                ?.takeIf { it.session === session }
+                                ?.let { barrier ->
+                                    admissionReadyByPlayer.remove(playerId)
+                                    barrier.signal.complete(Unit)
+                                }
+                            resumeReadyByPlayer[playerId]
+                                ?.takeIf { it.session === session }
+                                ?.let { barrier ->
+                                    resumeReadyByPlayer.remove(playerId)
+                                    barrier.signal.complete(Unit)
+                                }
                             if (pendingByPlayer[playerId]?.session === session) {
                                 pendingByPlayer.remove(playerId)
+                                    ?.transaction
+                                    ?.confirmation
+                                    ?.complete(Unit)
                                 admissionReservations.remove(playerId)
                                 publishPendingAdmissions()
                             }
@@ -760,15 +1366,20 @@ internal class HostP2pRoom(
     private suspend fun handleAdmissionRequest(
         playerId: PlayerId,
         transportDisplayName: String,
+        peerFingerprint: String,
         session: P2pSession,
         request: PeerMessage.AdmissionRequest,
     ) {
-        if (request.protocol.major != PARLOR_PROTOCOL_MAJOR) {
+        if (!request.protocol.isCompatibleWith(ProtocolVersion())) {
             rejectSession(session, AdmissionRejection.IncompatibleProtocol)
             return
         }
         if (request.roomCode != roomCode) {
             rejectSession(session, AdmissionRejection.WrongCode)
+            return
+        }
+        if (request.rejoinToken != null) {
+            rejectSession(session, AdmissionRejection.InvalidCredential)
             return
         }
         val displayName = transportDisplayName.trim()
@@ -778,36 +1389,6 @@ internal class HostP2pRoom(
             request.displayName.trim() != displayName
         ) {
             rejectSession(session, AdmissionRejection.InvalidRequest)
-            return
-        }
-
-        val now = kotlin.time.Clock.System.now().toEpochMilliseconds()
-        val validRejoin = stateMutex.withLock {
-            val expectedToken = rejoinTokenByPlayer[playerId]
-            val deadline = rejoinDeadlineByPlayer[playerId] ?: Long.MIN_VALUE
-            request.rejoinToken != null &&
-                request.rejoinToken == expectedToken &&
-                now <= deadline
-        }
-        if (validRejoin) {
-            val reserved = stateMutex.withLock {
-                if (playerId in admissionReservations) {
-                    false
-                } else {
-                    pendingByPlayer[playerId] = PendingConnection(
-                        session = session,
-                        displayName = displayName,
-                        isRejoin = true,
-                    )
-                    publishPendingAdmissions()
-                    true
-                }
-            }
-            if (reserved) {
-                admit(playerId, session, displayName, isRejoin = true)
-            } else {
-                rejectSession(session, AdmissionRejection.RateLimited)
-            }
             return
         }
 
@@ -824,6 +1405,7 @@ internal class HostP2pRoom(
                         session = session,
                         displayName = displayName,
                         isRejoin = isKnownPlayer,
+                        peerFingerprint = peerFingerprint,
                     )
                     publishPendingAdmissions()
                     PendingAdmission(playerId, displayName, isRejoin = isKnownPlayer) to true
@@ -841,6 +1423,352 @@ internal class HostP2pRoom(
                 ),
             )
         }
+    }
+
+    private suspend fun handleCredentialConfirmation(
+        playerId: PlayerId,
+        session: P2pSession,
+        offerId: String,
+        generation: Long,
+        kind: CredentialTransactionKind,
+    ) {
+        val matched = stateMutex.withLock {
+            val pending = pendingByPlayer[playerId]
+            val transaction = pending?.transaction
+            if (
+                pending?.session === session &&
+                transaction != null &&
+                transaction.offer.offerId == offerId &&
+                transaction.offer.generation == generation &&
+                transaction.kind == kind
+            ) {
+                transaction.confirmation.complete(Unit)
+                true
+            } else {
+                false
+            }
+        }
+        if (!matched) {
+            rejectSession(session, AdmissionRejection.InvalidCredential)
+        }
+    }
+
+    private suspend fun handleResumeRequest(
+        playerId: PlayerId,
+        transportDisplayName: String,
+        peerFingerprint: String,
+        session: P2pSession,
+        request: PeerMessage.ResumeRequested,
+    ) {
+        val displayName = transportDisplayName.trim()
+        if (
+            !request.protocol.isCompatibleWith(ProtocolVersion()) ||
+            request.roomCode != roomCode ||
+            displayName.isEmpty() ||
+            displayName.length > P2pKitRoomTransport.MAX_DISPLAY_NAME_LENGTH ||
+            request.displayName.trim() != displayName ||
+            request.secret.length != 64 ||
+            request.secret.any { it !in '0'..'9' && it !in 'a'..'f' }
+        ) {
+            rejectSession(session, AdmissionRejection.InvalidCredential)
+            return
+        }
+
+        val now = kotlin.time.Clock.System.now().toEpochMilliseconds()
+        val providedDigest = SecureHashes.sha256Utf8(request.secret)
+        val prepared = try {
+            stateMutex.withLock {
+                val credential = credentialsByPlayer[playerId]
+                    ?: return@withLock ResumePreparation.Rejected(
+                        AdmissionRejection.InvalidCredential,
+                    )
+                val member = membersByPlayer[playerId]
+                    ?: return@withLock ResumePreparation.Rejected(
+                        AdmissionRejection.InvalidCredential,
+                    )
+                val currentSession = sessionsByPlayer[playerId]
+                val deadline = rejoinDeadlineByPlayer[playerId] ?: Long.MIN_VALUE
+                when {
+                    currentSession?.state?.value == ConnectionState.Connected ->
+                        ResumePreparation.Rejected(AdmissionRejection.AlreadyConnected)
+                    playerId in admissionReservations || playerId in pendingByPlayer ->
+                        ResumePreparation.Rejected(AdmissionRejection.RateLimited)
+                    now > deadline || now > credential.expiresAtEpochMillis ->
+                        ResumePreparation.Rejected(AdmissionRejection.ExpiredCredential)
+                    member.displayName != displayName ||
+                        credential.peerFingerprint != peerFingerprint ->
+                        ResumePreparation.Rejected(AdmissionRejection.InvalidCredential)
+                    else -> {
+                        val matchedGeneration = when {
+                            request.generation == credential.generation &&
+                                SecureHashes.constantTimeEquals(
+                                    providedDigest,
+                                    credential.digest,
+                                ) -> credential.generation
+                            request.generation == credential.previousGeneration &&
+                                credential.previousDigest != null &&
+                                SecureHashes.constantTimeEquals(
+                                    providedDigest,
+                                    credential.previousDigest!!,
+                                ) -> checkNotNull(credential.previousGeneration)
+                            else -> null
+                        } ?: return@withLock ResumePreparation.Rejected(
+                            AdmissionRejection.InvalidCredential,
+                        )
+                        if (credential.generation == Long.MAX_VALUE) {
+                            return@withLock ResumePreparation.Rejected(
+                                AdmissionRejection.InvalidCredential,
+                            )
+                        }
+                        val offer = ResumableCredentialOffer(
+                            offerId = SecureIds.id128(),
+                            playerId = playerId,
+                            hostPeerId = kit.localPeerId.value,
+                            hostFingerprint = checkNotNull(kit.localFingerprint).value,
+                            secret = SecureIds.rejoinToken256(),
+                            generation = credential.generation + 1L,
+                            issuedAtEpochMillis = now,
+                            expiresAtEpochMillis = now + P2pKitRoomTransport.CREDENTIAL_MAX_AGE_MS,
+                            gameId = gameProtocol?.gameId?.raw,
+                            gameVersion = gameProtocol?.gameVersion,
+                        )
+                        val transaction = AdmissionOfferTransaction(
+                            offer = offer,
+                            confirmation = CompletableDeferred(),
+                            kind = CredentialTransactionKind.Resume,
+                        )
+                        pendingByPlayer[playerId] = PendingConnection(
+                            session = session,
+                            displayName = displayName,
+                            isRejoin = true,
+                            peerFingerprint = peerFingerprint,
+                            transaction = transaction,
+                        )
+                        admissionReservations += playerId
+                        publishPendingAdmissions()
+                        val matchedDigest = if (matchedGeneration == credential.generation) {
+                            credential.digest.copyOf()
+                        } else {
+                            checkNotNull(credential.previousDigest).copyOf()
+                        }
+                        ResumePreparation.Ready(transaction, matchedGeneration, matchedDigest)
+                    }
+                }
+            }
+        } finally {
+            providedDigest.fill(0)
+        }
+
+        when (prepared) {
+            is ResumePreparation.Rejected -> rejectSession(session, prepared.reason)
+            is ResumePreparation.Ready -> {
+                val job = scope.launch(start = CoroutineStart.LAZY) {
+                    completeResume(playerId, session, displayName, prepared)
+                }
+                stateMutex.withLock { collectorJobs += job }
+                job.start()
+            }
+        }
+    }
+
+    private suspend fun completeResume(
+        playerId: PlayerId,
+        session: P2pSession,
+        displayName: String,
+        prepared: ResumePreparation.Ready,
+    ) {
+        val transaction = prepared.transaction
+        try {
+            sendRaw(session, HostMessage.ResumeOffered(transaction.offer))
+            val confirmed = withTimeoutOrNull(P2pKitRoomTransport.ADMISSION_CONFIRM_TIMEOUT_MS) {
+                transaction.confirmation.await()
+                true
+            } ?: false
+            if (!confirmed) {
+                prepared.matchedDigest.fill(0)
+                rollbackAdmission(playerId, session)
+                runCatching { session.close() }
+                return
+            }
+        } catch (failure: Throwable) {
+            withContext(NonCancellable) {
+                rollbackAdmission(playerId, session)
+                runCatching { session.close() }
+            }
+            prepared.matchedDigest.fill(0)
+            failure.rethrowIfCancellation()
+            return
+        }
+
+        val commit = stateMutex.withLock {
+            val pending = pendingByPlayer[playerId]
+            val previousCredential = credentialsByPlayer[playerId]
+            if (
+                playerId !in admissionReservations ||
+                pending?.session !== session ||
+                pending.transaction !== transaction ||
+                previousCredential == null ||
+                session.state.value != ConnectionState.Connected
+            ) {
+                null
+            } else {
+                admissionReservations.remove(playerId)
+                pendingByPlayer.remove(playerId)
+                publishPendingAdmissions()
+                val oldSession = sessionsByPlayer[playerId]?.takeIf { it !== session }
+                sessionsByPlayer[playerId] = session
+                membersByPlayer[playerId] = RoomMember(playerId, displayName, connected = true)
+                rejoinDeadlineByPlayer.remove(playerId)
+                credentialsByPlayer[playerId] = HostCredential(
+                    digest = SecureHashes.sha256Utf8(transaction.offer.secret),
+                    generation = transaction.offer.generation,
+                    peerFingerprint = pending.peerFingerprint,
+                    offerId = transaction.offer.offerId,
+                    expiresAtEpochMillis = transaction.offer.expiresAtEpochMillis,
+                    previousDigest = prepared.matchedDigest.copyOf(),
+                    previousGeneration = prepared.matchedGeneration,
+                )
+                val readyBarrier = ResumeReadyBarrier(
+                    session = session,
+                    offerId = transaction.offer.offerId,
+                    generation = transaction.offer.generation,
+                )
+                resumeReadyByPlayer[playerId] = readyBarrier
+                publishMembers()
+                AdmissionCommit(oldSession, previousCredential, readyBarrier)
+            }
+        } ?: run {
+            prepared.matchedDigest.fill(0)
+            rollbackAdmission(playerId, session)
+            runCatching { session.close() }
+            return
+        }
+        prepared.matchedDigest.fill(0)
+        commit.previousSession?.let { runCatching { it.close() } }
+        commit.previousCredential?.wipe()
+        try {
+            sendRaw(
+                session,
+                HostMessage.ResumeCommitted(
+                    playerId = playerId,
+                    offerId = transaction.offer.offerId,
+                    generation = transaction.offer.generation,
+                ),
+            )
+        } catch (failure: Throwable) {
+            withContext(NonCancellable) { runCatching { session.close() } }
+            failure.rethrowIfCancellation()
+            return
+        }
+        val expectedBarrier = checkNotNull(commit.readyBarrier)
+        val ready = withTimeoutOrNull(P2pKitRoomTransport.ADMISSION_CONFIRM_TIMEOUT_MS) {
+            expectedBarrier.signal.await()
+            stateMutex.withLock {
+                val barrier = resumeReadyByPlayer[playerId]
+                if (
+                    barrier === expectedBarrier &&
+                    barrier.ready &&
+                    barrier.session === session &&
+                    sessionsByPlayer[playerId] === session &&
+                    session.state.value == ConnectionState.Connected
+                ) {
+                    resumeReadyByPlayer.remove(playerId)
+                    true
+                } else {
+                    false
+                }
+            }
+        } ?: false
+        if (!ready) {
+            stateMutex.withLock {
+                if (resumeReadyByPlayer[playerId] === expectedBarrier) {
+                    resumeReadyByPlayer.remove(playerId)
+                }
+            }
+            runCatching { session.close() }
+            return
+        }
+        _peerEvents.emit(PeerEvent.PeerReconnected(playerId, displayName))
+        markActiveIfRestored()
+    }
+
+    private suspend fun handleAdmissionReady(
+        playerId: PlayerId,
+        session: P2pSession,
+        ready: PeerMessage.AdmissionReady,
+    ) {
+        val matched = stateMutex.withLock {
+            val barrier = admissionReadyByPlayer[playerId]
+            if (
+                barrier != null &&
+                barrier.session === session &&
+                barrier.offerId == ready.offerId &&
+                barrier.generation == ready.generation
+            ) {
+                barrier.ready = true
+                barrier.signal.complete(Unit)
+                true
+            } else {
+                val credential = credentialsByPlayer[playerId]
+                credential?.offerId == ready.offerId &&
+                    credential.generation == ready.generation &&
+                    sessionsByPlayer[playerId] === session
+            }
+        }
+        if (!matched) rejectSession(session, AdmissionRejection.InvalidCredential)
+    }
+
+    private suspend fun handleResumeReady(
+        playerId: PlayerId,
+        session: P2pSession,
+        ready: PeerMessage.ResumeReady,
+    ) {
+        val matched = stateMutex.withLock {
+            val barrier = resumeReadyByPlayer[playerId]
+            if (
+                barrier != null &&
+                barrier.session === session &&
+                barrier.offerId == ready.offerId &&
+                barrier.generation == ready.generation
+            ) {
+                barrier.ready = true
+                barrier.signal.complete(Unit)
+                true
+            } else {
+                val credential = credentialsByPlayer[playerId]
+                credential?.offerId == ready.offerId &&
+                    credential.generation == ready.generation &&
+                    sessionsByPlayer[playerId] === session
+            }
+        }
+        if (!matched) rejectSession(session, AdmissionRejection.InvalidCredential)
+    }
+
+    private suspend fun acknowledgeResumeCommit(
+        playerId: PlayerId,
+        acknowledgement: PeerMessage.ResumeCommitAck,
+    ) {
+        val obsolete = stateMutex.withLock {
+            credentialsByPlayer[playerId]?.takeIf {
+                it.offerId == acknowledgement.offerId &&
+                    it.generation == acknowledgement.generation
+            }?.let { credential ->
+                credential.previousDigest.also {
+                    credential.previousDigest = null
+                    credential.previousGeneration = null
+                }
+            }
+        }
+        obsolete?.fill(0)
+    }
+
+    private sealed interface ResumePreparation {
+        data class Rejected(val reason: AdmissionRejection) : ResumePreparation
+        data class Ready(
+            val transaction: AdmissionOfferTransaction,
+            val matchedGeneration: Long,
+            val matchedDigest: ByteArray,
+        ) : ResumePreparation
     }
 
     override suspend fun approveAdmission(playerId: PlayerId): Result<Unit, NetError> {
@@ -886,11 +1814,11 @@ internal class HostP2pRoom(
         displayName: String,
         isRejoin: Boolean,
     ): Result<Unit, NetError> {
-        val token = when (val prepared = stateMutex.withLock {
+        val transaction = when (val prepared = stateMutex.withLock {
             val pending = pendingByPlayer[playerId]
             when {
                 pending?.session !== session -> null
-                playerId in admissionReservations -> null
+                playerId in admissionReservations -> AdmissionPreparation.InFlight
                 session.state.value != ConnectionState.Connected -> {
                     pendingByPlayer.remove(playerId)
                     publishPendingAdmissions()
@@ -901,40 +1829,81 @@ internal class HostP2pRoom(
                     maxRemotePlayers -> {
                     pendingByPlayer.remove(playerId)
                     publishPendingAdmissions()
-                    AdmissionPreparation.Rejected(NetError.RoomFull)
+                    AdmissionPreparation.Rejected(
+                        error = NetError.RoomFull,
+                        reason = AdmissionRejection.RoomFull,
+                    )
                 }
                 else -> {
-                    admissionReservations += playerId
-                    AdmissionPreparation.Ready(
-                        rejoinTokenByPlayer[playerId] ?: SecureIds.rejoinToken256(),
+                    val now = kotlin.time.Clock.System.now().toEpochMilliseconds()
+                    val offer = ResumableCredentialOffer(
+                        offerId = SecureIds.id128(),
+                        playerId = playerId,
+                        hostPeerId = kit.localPeerId.value,
+                        hostFingerprint = checkNotNull(kit.localFingerprint).value,
+                        secret = SecureIds.rejoinToken256(),
+                        generation = P2pKitRoomTransport.INITIAL_CREDENTIAL_GENERATION,
+                        issuedAtEpochMillis = now,
+                        expiresAtEpochMillis = now + P2pKitRoomTransport.CREDENTIAL_MAX_AGE_MS,
+                        gameId = gameProtocol?.gameId?.raw,
+                        gameVersion = gameProtocol?.gameVersion,
                     )
+                    val transaction = AdmissionOfferTransaction(
+                        offer = offer,
+                        confirmation = CompletableDeferred(),
+                        kind = CredentialTransactionKind.Admission,
+                    )
+                    admissionReservations += playerId
+                    pending.transaction = transaction
+                    AdmissionPreparation.Ready(transaction)
                 }
             }
         }) {
             null -> return Result.Failure(NetError.NotConnected)
             is AdmissionPreparation.Rejected -> {
-                rejectSession(session, AdmissionRejection.RoomFull)
+                rejectSession(session, prepared.reason)
                 return Result.Failure(prepared.error)
             }
-            is AdmissionPreparation.Ready -> prepared.token
+            AdmissionPreparation.InFlight -> return Result.Failure(NetError.CommandInFlight)
+            is AdmissionPreparation.Ready -> prepared.transaction
         }
 
         try {
-            sendRaw(session, HostMessage.AdmissionAccepted(playerId, token))
+            sendRaw(session, HostMessage.AdmissionOffered(transaction.offer))
         } catch (failure: Throwable) {
             withContext(NonCancellable) {
                 rollbackAdmission(playerId, session)
                 runCatching { session.close() }
             }
             failure.rethrowIfCancellation()
-            return Result.Failure(NetError.TransportFailure("admission acceptance failed"))
+            return Result.Failure(NetError.TransportFailure("admission offer failed"))
         }
 
-        val oldSession = stateMutex.withLock {
+        val confirmed = try {
+            withTimeoutOrNull(P2pKitRoomTransport.ADMISSION_CONFIRM_TIMEOUT_MS) {
+                transaction.confirmation.await()
+                true
+            } ?: false
+        } catch (failure: Throwable) {
+            withContext(NonCancellable) {
+                rollbackAdmission(playerId, session)
+                runCatching { session.close() }
+            }
+            failure.rethrowIfCancellation()
+            return Result.Failure(NetError.TransportFailure("admission confirmation failed"))
+        }
+        if (!confirmed) {
+            rollbackAdmission(playerId, session)
+            runCatching { session.close() }
+            return Result.Failure(NetError.Timeout)
+        }
+
+        val commit = stateMutex.withLock {
             val pending = pendingByPlayer[playerId]
             if (
                 playerId !in admissionReservations ||
                 pending?.session !== session ||
+                pending.transaction !== transaction ||
                 session.state.value != ConnectionState.Connected
             ) {
                 null
@@ -947,16 +1916,80 @@ internal class HostP2pRoom(
                 membersByPlayer[playerId] = RoomMember(playerId, displayName, connected = true)
                 previouslySeenPlayerIds += playerId
                 rejoinDeadlineByPlayer.remove(playerId)
-                rejoinTokenByPlayer[playerId] = token
+                val oldCredential = credentialsByPlayer.put(
+                    playerId,
+                    HostCredential(
+                        digest = SecureHashes.sha256Utf8(transaction.offer.secret),
+                        generation = transaction.offer.generation,
+                        peerFingerprint = pending.peerFingerprint,
+                        offerId = transaction.offer.offerId,
+                        expiresAtEpochMillis = transaction.offer.expiresAtEpochMillis,
+                    ),
+                )
+                val readyBarrier = AdmissionReadyBarrier(
+                    session = session,
+                    offerId = transaction.offer.offerId,
+                    generation = transaction.offer.generation,
+                )
+                admissionReadyByPlayer[playerId] = readyBarrier
                 publishMembers()
-                AdmissionCommit(old)
+                AdmissionCommit(
+                    previousSession = old,
+                    previousCredential = oldCredential,
+                    admissionReadyBarrier = readyBarrier,
+                )
             }
         } ?: run {
             rollbackAdmission(playerId, session)
             runCatching { session.close() }
             return Result.Failure(NetError.NotConnected)
         }
-        oldSession.previous?.let { runCatching { it.close() } }
+        commit.previousSession?.let { runCatching { it.close() } }
+        commit.previousCredential?.wipe()
+        try {
+            sendRaw(
+                session,
+                HostMessage.AdmissionCommitted(
+                    playerId = playerId,
+                    offerId = transaction.offer.offerId,
+                    generation = transaction.offer.generation,
+                ),
+            )
+        } catch (failure: Throwable) {
+            withContext(NonCancellable) { runCatching { session.close() } }
+            failure.rethrowIfCancellation()
+            // Confirmation proves that the peer durably owns this committed
+            // capability. A lost commit frame is recovered through resume;
+            // rolling back here would create a split-brain credential.
+        }
+        val expectedBarrier = checkNotNull(commit.admissionReadyBarrier)
+        val ready = withTimeoutOrNull(P2pKitRoomTransport.ADMISSION_CONFIRM_TIMEOUT_MS) {
+            expectedBarrier.signal.await()
+            stateMutex.withLock {
+                val barrier = admissionReadyByPlayer[playerId]
+                if (
+                    barrier === expectedBarrier &&
+                    barrier.ready &&
+                    barrier.session === session &&
+                    sessionsByPlayer[playerId] === session &&
+                    session.state.value == ConnectionState.Connected
+                ) {
+                    admissionReadyByPlayer.remove(playerId)
+                    true
+                } else {
+                    false
+                }
+            }
+        } ?: false
+        if (!ready) {
+            stateMutex.withLock {
+                if (admissionReadyByPlayer[playerId] === expectedBarrier) {
+                    admissionReadyByPlayer.remove(playerId)
+                }
+            }
+            runCatching { session.close() }
+            return Result.Failure(NetError.Timeout)
+        }
         if (isRejoin) {
             _peerEvents.emit(PeerEvent.PeerReconnected(playerId, displayName))
         } else {
@@ -977,8 +2010,12 @@ internal class HostP2pRoom(
     }
 
     private sealed interface AdmissionPreparation {
-        data class Ready(val token: String) : AdmissionPreparation
-        data class Rejected(val error: NetError) : AdmissionPreparation
+        data object InFlight : AdmissionPreparation
+        data class Ready(val transaction: AdmissionOfferTransaction) : AdmissionPreparation
+        data class Rejected(
+            val error: NetError,
+            val reason: AdmissionRejection,
+        ) : AdmissionPreparation
     }
 
     private sealed interface AdmissionRejectionResult {
@@ -987,7 +2024,12 @@ internal class HostP2pRoom(
         data class Ready(val connection: PendingConnection) : AdmissionRejectionResult
     }
 
-    private data class AdmissionCommit(val previous: P2pSession?)
+    private data class AdmissionCommit(
+        val previousSession: P2pSession?,
+        val previousCredential: HostCredential?,
+        val readyBarrier: ResumeReadyBarrier? = null,
+        val admissionReadyBarrier: AdmissionReadyBarrier? = null,
+    )
 
     private suspend fun rejectSession(
         session: P2pSession,
@@ -1149,8 +2191,10 @@ internal class HostP2pRoom(
             } else {
                 sessionsByPlayer.remove(playerId)
                 membersByPlayer.remove(playerId)
-                rejoinTokenByPlayer.remove(playerId)
+                credentialsByPlayer.remove(playerId)?.wipe()
                 rejoinDeadlineByPlayer.remove(playerId)
+                admissionReadyByPlayer.remove(playerId)?.signal?.complete(Unit)
+                resumeReadyByPlayer.remove(playerId)?.signal?.complete(Unit)
                 publishMembers()
                 true
             }
@@ -1244,8 +2288,13 @@ internal class HostP2pRoom(
             admissionReservations.clear()
             membersByPlayer.clear()
             previouslySeenPlayerIds.clear()
-            rejoinTokenByPlayer.clear()
+            credentialsByPlayer.values.forEach(HostCredential::wipe)
+            credentialsByPlayer.clear()
             rejoinDeadlineByPlayer.clear()
+            admissionReadyByPlayer.values.forEach { it.signal.complete(Unit) }
+            admissionReadyByPlayer.clear()
+            resumeReadyByPlayer.values.forEach { it.signal.complete(Unit) }
+            resumeReadyByPlayer.clear()
             publishMembers()
             publishPendingAdmissions()
             sessions
@@ -1262,16 +2311,26 @@ internal class HostP2pRoom(
     }
 }
 
+internal data class ResumedPeerConnection(
+    val session: P2pSession,
+    val hostPeer: Peer,
+    val credential: ResumableSessionCredential,
+)
+
 // ============================================================================ Peer room ==
 
 internal class PeerP2pRoom(
     private val kit: P2pKit,
-    private val session: P2pSession,
+    session: P2pSession,
     hostPeer: Peer,
     private val roomCode: String,
     private val scope: CoroutineScope,
     private val codec: RoomMessageCodec,
-    rejoinToken: String? = null,
+    initialCredential: ResumableSessionCredential? = null,
+    private val credentialStore: ResumableCredentialStore? = null,
+    private val resumeConnector: (
+        suspend (ResumableSessionCredential) -> Result<ResumedPeerConnection, NetError>
+    )? = null,
     private val onClosed: () -> Unit = {},
     private val appResumeGraceMs: Long = P2pKitRoomTransport.APP_RESUME_GRACE_MS,
 ) : LocalRoom, AppLifecycleAwareRoom {
@@ -1308,16 +2367,20 @@ internal class PeerP2pRoom(
     override val incoming: Flow<RoomMessage> = incomingHostMessages.receiveAsFlow()
 
     private val hostPlayerId: PlayerId = PlayerId(hostPeer.id.value)
-    private val activeRejoinToken = MutableStateFlow(rejoinToken)
+    private val activeCredential = MutableStateFlow(initialCredential)
     override val rejoinToken: String?
-        get() = activeRejoinToken.value
-    private val rejoinResponses = Channel<Boolean>(Channel.CONFLATED)
+        get() = null
 
     // p2p-016 (peer side): leave() runs from both a "Leave" tap and onDispose,
     // and kit.stop() is terminal — guard so the duplicate call is a no-op.
     private var left = false
     private val lifecycleMutex = Mutex()
+    private val sessionMutex = Mutex()
     private var lifecycleExpiryJob: Job? = null
+    private var resumeJob: Job? = null
+    private var activeSession: P2pSession = session
+    private var collectorJob: Job = launchIncomingCollector(session)
+    private var stateJob: Job = launchSessionStateCollector(session)
 
     override suspend fun appBackgrounded(atEpochMillis: Long) {
         val expiry = lifecycleMutex.withLock {
@@ -1342,6 +2405,10 @@ internal class PeerP2pRoom(
             }
         }
         if (expiry != null) {
+            val interruptedResume = lifecycleMutex.withLock {
+                resumeJob.also { resumeJob = null }
+            }
+            interruptedResume?.cancelAndJoin()
             if (expiry.second == 0L) {
                 expireLifecycle(expiry.first)
                 return
@@ -1372,9 +2439,178 @@ internal class PeerP2pRoom(
         }
         scheduleLifecycleExpiry(deadline, deadline - atEpochMillis)
         kit.notifyAppForegrounded()
-        // BackgroundPolicy.CloseActiveSessions makes this P2pSession
-        // terminal. P2P-02 replaces it through the protected rejoin flow;
-        // until then the room remains Resuming and rejects new intents.
+        resumeAfterForeground(deadline)
+    }
+
+    private suspend fun resumeAfterForeground(deadline: Long) {
+        val session = sessionMutex.withLock { activeSession }
+        if (session.state.value == ConnectionState.Connected) {
+            restoreActiveRoom(emitEvent = true)
+            return
+        }
+        val connector = resumeConnector ?: return
+        val credential = activeCredential.value ?: return
+        val job = scope.launch(start = CoroutineStart.LAZY) {
+                var candidate = credential
+                while (
+                    lifecycleMutex.withLock {
+                        !left &&
+                            (_lifecycle.value as? RoomLifecycleState.Resuming)
+                                ?.resumeDeadlineEpochMillis == deadline
+                    }
+                ) {
+                    when (val resumed = connector(candidate)) {
+                        is Result.Success -> {
+                            candidate = resumed.data.credential
+                            activeCredential.value = candidate
+                            if (replaceSession(resumed.data)) {
+                                restoreActiveRoom(emitEvent = true)
+                                return@launch
+                            }
+                        }
+                        is Result.Failure -> {
+                            if (
+                                resumed.error == NetError.RejoinExpired ||
+                                resumed.error == NetError.Unauthorized
+                            ) {
+                                expireLifecycle(deadline)
+                                return@launch
+                            }
+                        }
+                    }
+                    delay(P2pKitRoomTransport.ADMISSION_RETRY_MS)
+                }
+        }
+        val accepted = lifecycleMutex.withLock {
+            if (left || resumeJob?.isActive == true) {
+                false
+            } else {
+                resumeJob = job
+                true
+            }
+        }
+        if (!accepted) {
+            job.cancel()
+            return
+        }
+        job.invokeOnCompletion {
+            scope.launch {
+                lifecycleMutex.withLock {
+                    if (resumeJob === job) resumeJob = null
+                }
+            }
+        }
+        job.start()
+    }
+
+    private suspend fun replaceSession(resumed: ResumedPeerConnection): Boolean {
+        val old = sessionMutex.withLock {
+            if (left) return false
+            val previous = Triple(activeSession, collectorJob, stateJob)
+            activeSession = resumed.session
+            collectorJob = launchIncomingCollector(resumed.session)
+            stateJob = launchSessionStateCollector(resumed.session)
+            previous
+        }
+        old.second.cancelAndJoin()
+        old.third.cancelAndJoin()
+        runCatching { old.first.close() }
+        return signalResumeReady(resumed)
+    }
+
+    internal suspend fun finishInitialResumeHandoff(
+        resumed: ResumedPeerConnection,
+    ): Boolean = signalResumeReady(resumed)
+
+    internal suspend fun finishInitialAdmissionHandoff(
+        credential: ResumableSessionCredential,
+    ): Boolean {
+        val session = sessionMutex.withLock { activeSession }
+        try {
+            session.send(
+                P2pMessage.Binary(
+                    codec.encode(
+                        PeerMessage.AdmissionReady(
+                            actor = selfPlayerId,
+                            offerId = credential.offerId,
+                            generation = credential.generation,
+                        ),
+                    ),
+                ),
+            )
+        } catch (failure: Throwable) {
+            failure.rethrowIfCancellation()
+            runCatching { session.close() }
+            return false
+        }
+        try {
+            session.send(
+                P2pMessage.Binary(
+                    codec.encode(
+                        PeerMessage.AdmissionCommitAck(
+                            actor = selfPlayerId,
+                            offerId = credential.offerId,
+                            generation = credential.generation,
+                        ),
+                    ),
+                ),
+            )
+        } catch (failure: Throwable) {
+            failure.rethrowIfCancellation()
+        }
+        return true
+    }
+
+    internal suspend fun abandonFailedResume() {
+        leave(sendNotice = false, clearCredential = false)
+    }
+
+    private suspend fun signalResumeReady(resumed: ResumedPeerConnection): Boolean {
+        val credential = resumed.credential
+        try {
+            val ready = PeerMessage.ResumeReady(
+                actor = selfPlayerId,
+                offerId = credential.offerId,
+                generation = credential.generation,
+            )
+            resumed.session.send(P2pMessage.Binary(codec.encode(ready)))
+        } catch (failure: Throwable) {
+            failure.rethrowIfCancellation()
+            runCatching { resumed.session.close() }
+            return false
+        }
+        try {
+            val acknowledgement = PeerMessage.ResumeCommitAck(
+                actor = selfPlayerId,
+                offerId = credential.offerId,
+                generation = credential.generation,
+            )
+            resumed.session.send(P2pMessage.Binary(codec.encode(acknowledgement)))
+        } catch (failure: Throwable) {
+            failure.rethrowIfCancellation()
+            // Ready is the ordering barrier. A lost cleanup acknowledgement
+            // leaves one prior generation valid until the next successful
+            // rotation, but does not make this attached session unsafe.
+        }
+        return true
+    }
+
+    private suspend fun restoreActiveRoom(emitEvent: Boolean) {
+        val restored = lifecycleMutex.withLock {
+            if (left || _lifecycle.value == RoomLifecycleState.Expired) {
+                false
+            } else {
+                lifecycleExpiryJob?.cancel()
+                lifecycleExpiryJob = null
+                _lifecycle.value = RoomLifecycleState.Active
+                true
+            }
+        }
+        if (restored) {
+            markHostConnected(true)
+            _info.value = _info.value.copy(status = RoomInfo.Status.Joined)
+            if (emitEvent) _peerEvents.emit(PeerEvent.HostRestored)
+        }
     }
 
     private suspend fun scheduleLifecycleExpiry(deadline: Long, delayMs: Long) {
@@ -1407,7 +2643,7 @@ internal class PeerP2pRoom(
         if (shouldLeave) leave(sendNotice = false)
     }
 
-    private val collectorJob: Job = scope.launch {
+    private fun launchIncomingCollector(session: P2pSession): Job = scope.launch {
         session.incoming.collect { msg ->
             if (msg is P2pMessage.Binary) {
                 if (msg.bytes.size > P2pKitRoomTransport.MAX_ROOM_FRAME_BYTES) {
@@ -1423,20 +2659,19 @@ internal class PeerP2pRoom(
                     return@collect
                 }
                 when (decoded) {
-                    is HostMessage.AdmissionAccepted -> {
-                        activeRejoinToken.value = decoded.rejoinToken
-                        rejoinResponses.trySend(true)
-                    }
-                    is HostMessage.AdmissionRejected -> {
-                        rejoinResponses.trySend(false)
-                    }
+                    is HostMessage.AdmissionAccepted,
+                    is HostMessage.AdmissionOffered,
+                    is HostMessage.AdmissionCommitted,
+                    is HostMessage.ResumeOffered,
+                    is HostMessage.ResumeCommitted,
+                    is HostMessage.AdmissionRejected -> Unit
                     else -> incomingHostMessages.send(decoded)
                 }
             }
         }
     }
 
-    private val stateJob: Job = scope.launch {
+    private fun launchSessionStateCollector(session: P2pSession): Job = scope.launch {
         // The initial state emission for an already-Connected session must
         // not be reported as HostRestored; gate on whether we've previously
         // entered a lost state.
@@ -1456,10 +2691,8 @@ internal class PeerP2pRoom(
                 }
                 ConnectionState.Connected -> {
                     if (hostLost) {
-                        if (!reestablishAdmission()) return@collect
                         hostLost = false
-                        markHostConnected(true)
-                        _info.value = _info.value.copy(status = RoomInfo.Status.Joined)
+                        restoreActiveRoom(emitEvent = false)
                         p2pLog("peer: emitting HostRestored")
                         _peerEvents.tryEmit(PeerEvent.HostRestored)
                     }
@@ -1487,47 +2720,12 @@ internal class PeerP2pRoom(
         }
     }
 
-    /**
-     * P2pKit restores transport encryption before Parlor's room admission is
-     * restored. Re-send the opaque capability and wait for the host's answer so
-     * game code cannot race a snapshot/command onto an unauthorised session.
-     */
-    private suspend fun reestablishAdmission(): Boolean {
-        val token = activeRejoinToken.value ?: return true // legacy/test-only room
-        while (rejoinResponses.tryReceive().isSuccess) Unit
-        val request = PeerMessage.AdmissionRequest(
-            protocol = ProtocolVersion(),
-            actor = selfPlayerId,
-            roomCode = roomCode,
-            displayName = kit.localDeviceName,
-            rejoinToken = token,
-        )
-        val bytes = codec.encode(request)
-        val accepted = withTimeoutOrNull(REJOIN_ADMISSION_TIMEOUT_MS) {
-            var decision: Boolean? = null
-            while (decision == null) {
-                try {
-                    session.send(P2pMessage.Binary(bytes))
-                } catch (t: Throwable) {
-                    t.rethrowIfCancellation()
-                }
-                val received = rejoinResponses.tryReceive()
-                if (received.isSuccess) {
-                    decision = received.getOrThrow()
-                } else {
-                    delay(P2pKitRoomTransport.ADMISSION_RETRY_MS)
-                }
-            }
-            checkNotNull(decision)
-        } ?: false
-        return accepted
-    }
-
     /** A peer cannot author a [HostMessage]. */
     override suspend fun send(target: SendTarget, message: HostMessage): Result<Unit, NetError> =
         Result.Failure(NetError.Unauthorized)
 
     override suspend fun sendToHost(message: PeerMessage): Result<Unit, NetError> {
+        val session = sessionMutex.withLock { activeSession }
         if (session.state.value != ConnectionState.Connected) {
             return Result.Failure(NetError.NotConnected)
         }
@@ -1550,18 +2748,29 @@ internal class PeerP2pRoom(
 
     override suspend fun leave() = leave(sendNotice = true)
 
-    private suspend fun leave(sendNotice: Boolean) {
-        val (shouldLeave, expiryJob) = lifecycleMutex.withLock {
-            if (left) false to null else {
+    private suspend fun leave(
+        sendNotice: Boolean,
+        clearCredential: Boolean = true,
+    ) {
+        val (shouldLeave, jobs) = lifecycleMutex.withLock {
+            if (left) false to emptyList() else {
                 left = true
-                true to lifecycleExpiryJob.also { lifecycleExpiryJob = null }
+                val toCancel = listOfNotNull(lifecycleExpiryJob, resumeJob)
+                lifecycleExpiryJob = null
+                resumeJob = null
+                true to toCancel
             }
         }
         if (!shouldLeave) {
             p2pLog("peer: leave() ignored (already left)")
             return
         }
-        expiryJob?.cancel()
+        jobs.forEach { job ->
+            if (job != kotlinx.coroutines.currentCoroutineContext()[Job]) {
+                job.cancel()
+            }
+        }
+        val session = sessionMutex.withLock { activeSession }
         p2pLog("peer: leave() entry sessionState=${session.state.value}")
         // Best-effort: tell the host we're leaving so the lobby updates
         // immediately, instead of waiting for the TCP teardown to surface
@@ -1583,7 +2792,10 @@ internal class PeerP2pRoom(
         }
         collectorJob.cancelAndJoin()
         stateJob.cancelAndJoin()
-        rejoinResponses.close()
+        if (clearCredential) {
+            credentialStore?.clear()
+            activeCredential.value = null
+        }
         runCatching { session.close() }
         // kit.stop() is terminal — guard against a duplicate/late teardown.
         runCatching { kit.stop() }
@@ -1592,9 +2804,5 @@ internal class PeerP2pRoom(
         }
         onClosed()
         p2pLog("peer: leave() done")
-    }
-
-    private companion object {
-        const val REJOIN_ADMISSION_TIMEOUT_MS: Long = P2pKitRoomTransport.REJOIN_GRACE_MS
     }
 }

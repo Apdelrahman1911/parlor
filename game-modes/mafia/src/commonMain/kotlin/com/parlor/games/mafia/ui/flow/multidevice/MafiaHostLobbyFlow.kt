@@ -60,6 +60,7 @@ import com.parlor.games.mafia.resources.setup_back_description
 import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.NetError
 import com.parlor.networking.transport.HostConfig
+import com.parlor.networking.transport.HostedGameProtocol
 import com.parlor.networking.transport.RoomTransport
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.NonCancellable
@@ -93,6 +94,10 @@ fun MafiaHostLobbyFlow(
                 HostConfig(
                     roomDisplayName = hostName,
                     maxRemotePlayers = MafiaSettings.MAX_PLAYERS - 1,
+                    gameProtocol = HostedGameProtocol(
+                        gameId = com.parlor.games.mafia.MafiaIds.GameId,
+                        gameVersion = MafiaHostRoomBridge.GAME_VERSION,
+                    ),
                 ),
             )
         ) {

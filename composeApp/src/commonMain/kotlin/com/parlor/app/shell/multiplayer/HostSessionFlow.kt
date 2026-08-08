@@ -69,9 +69,11 @@ import com.parlor.engine.state.Player
 import com.parlor.games.whodunit.content.WhodunitCase
 import com.parlor.games.whodunit.WhodunitIds
 import com.parlor.games.whodunit.ui.flow.WhodunitMultiplayerHostFlow
+import com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostRoomBridge
 import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.NetError
 import com.parlor.networking.transport.HostConfig
+import com.parlor.networking.transport.HostedGameProtocol
 import com.parlor.networking.transport.RoomTransport
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.NonCancellable
@@ -116,7 +118,14 @@ fun HostSessionFlow(
     LaunchedEffect(transport) {
         when (
             val result = transport.host(
-                HostConfig(roomDisplayName = hostName, maxRemotePlayers = 5),
+                HostConfig(
+                    roomDisplayName = hostName,
+                    maxRemotePlayers = 5,
+                    gameProtocol = HostedGameProtocol(
+                        gameId = WhodunitIds.GameId,
+                        gameVersion = WhodunitHostRoomBridge.GAME_VERSION,
+                    ),
+                ),
             )
         ) {
             is Result.Success -> room = result.data

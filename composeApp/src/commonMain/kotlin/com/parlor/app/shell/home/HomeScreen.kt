@@ -33,6 +33,9 @@ import com.parlor.app.resources.home_mafia_title
 import com.parlor.app.resources.home_resume_tile_description
 import com.parlor.app.resources.home_resume_tile_subtitle
 import com.parlor.app.resources.home_resume_tile_title
+import com.parlor.app.resources.home_resume_multiplayer_description
+import com.parlor.app.resources.home_resume_multiplayer_subtitle
+import com.parlor.app.resources.home_resume_multiplayer_title
 import com.parlor.app.resources.home_settings_description
 import com.parlor.app.resources.home_subtitle
 import com.parlor.app.resources.home_whodunit_open
@@ -74,6 +77,8 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     unfinishedSessions: List<SessionId> = emptyList(),
     onResume: (SessionId) -> Unit = {},
+    hasResumableMultiplayer: Boolean = false,
+    onResumeMultiplayer: () -> Unit = {},
 ) {
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
         Column(
@@ -90,10 +95,12 @@ fun HomeScreen(
         ) {
             HomeTopBar(onSettings = onSettings)
 
-            if (unfinishedSessions.isNotEmpty()) {
+            if (unfinishedSessions.isNotEmpty() || hasResumableMultiplayer) {
                 ContinueSection(
                     sessions = unfinishedSessions,
                     onResume = onResume,
+                    hasResumableMultiplayer = hasResumableMultiplayer,
+                    onResumeMultiplayer = onResumeMultiplayer,
                 )
             }
 
@@ -145,6 +152,8 @@ private fun HomeTopBar(onSettings: () -> Unit) {
 private fun ContinueSection(
     sessions: List<SessionId>,
     onResume: (SessionId) -> Unit,
+    hasResumableMultiplayer: Boolean,
+    onResumeMultiplayer: () -> Unit,
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m)) {
         EyebrowLabel(text = stringResource(Res.string.home_continue_label), accent = false)
@@ -154,6 +163,16 @@ private fun ContinueSection(
                 subtitle = stringResource(Res.string.home_resume_tile_subtitle),
                 contentDescription = stringResource(Res.string.home_resume_tile_description),
                 onTap = { onResume(id) },
+            )
+        }
+        if (hasResumableMultiplayer) {
+            ResumeTile(
+                title = stringResource(Res.string.home_resume_multiplayer_title),
+                subtitle = stringResource(Res.string.home_resume_multiplayer_subtitle),
+                contentDescription = stringResource(
+                    Res.string.home_resume_multiplayer_description,
+                ),
+                onTap = onResumeMultiplayer,
             )
         }
     }
