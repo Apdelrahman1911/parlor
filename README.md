@@ -22,6 +22,7 @@ The current architecture and release contracts are documented in:
 - [`docs/HOW_TO_ADD_A_GAME.md`](docs/HOW_TO_ADD_A_GAME.md)
 - [`docs/P2P_MANUAL_TEST.md`](docs/P2P_MANUAL_TEST.md)
 - [`docs/P2P_REMEDIATION_STATUS.md`](docs/P2P_REMEDIATION_STATUS.md)
+- [`docs/P2PKIT_MAVEN_PROVENANCE.md`](docs/P2PKIT_MAVEN_PROVENANCE.md)
 - [`docs/RELEASE_GATES.md`](docs/RELEASE_GATES.md)
 - [`docs/PRIVACY_AND_COMPLIANCE.md`](docs/PRIVACY_AND_COMPLIANCE.md)
 
@@ -45,7 +46,9 @@ io.github.apdelrahman1911:p2p-transport-lan:0.7.0-rc2
 ```
 
 The build does not use `mavenLocal()`, a sibling checkout, or a repository
-override. Keep both P2pKit modules on the same pinned version.
+override. Keep both P2pKit modules on the same pinned version. Strict Gradle
+dependency verification pins the reviewed release bytes; see the provenance
+receipt before changing the coordinate or any checksum.
 
 ## Run
 

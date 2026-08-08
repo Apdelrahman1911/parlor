@@ -27,10 +27,17 @@ Android Gradle Plugin, Koin, Ktor, P2pKit, SQLDelight, Detekt, Konsist,
 JUnit, Turbine, and AssertK. Presence in the catalog does not prove a library
 is packaged; the resolved release graphs are authoritative.
 
-The published P2pKit 0.7.0-rc2 release declares the Apache-2.0 license.
-The published Maven artifact's POM, checksums/signatures, sources, license
-metadata, and actual resolved version still need to be checked in the release
-pipeline.
+The published P2pKit 0.7.0-rc2 release declares the Apache-2.0 license. Its
+current Maven Central POMs, selected Android/JVM/iOS artifacts, SHA-256 values,
+detached signatures, source tag reference, and resolution graph were inspected
+on 2026-08-09. Strict Gradle dependency verification and a regression contract
+pin the reviewed bytes. The exact evidence, limitations, and publisher-key
+trust boundary are in `P2PKIT_MAVEN_PROVENANCE.md`.
+
+Do not regenerate `gradle/verification-metadata.xml` as a mechanical response
+to a failure. Determine why the graph or bytes changed, review the new input,
+and update the explicit P2pKit checksum contract only as part of an approved
+dependency change.
 
 ## Open legal gates
 

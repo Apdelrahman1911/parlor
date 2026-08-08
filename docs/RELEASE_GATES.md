@@ -21,7 +21,9 @@ included game module therefore joins the desktop gate automatically.
 
 Production dependency resolution uses the pinned P2pKit Maven Central
 coordinates. Release CI must not use `mavenLocal()`, a sibling checkout, a
-repository override, or a developer home repository.
+repository override, or a developer home repository. Gradle's checked-in
+verification metadata is enforced in strict mode by default; generation mode
+is prohibited in ordinary CI and release builds.
 
 ## External gates
 

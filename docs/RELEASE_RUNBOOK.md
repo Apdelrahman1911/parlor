@@ -17,7 +17,11 @@ harness and is not shipped by this runbook.
 4. Resolve `io.github.apdelrahman1911:p2p-core:0.7.0-rc2` and
    `io.github.apdelrahman1911:p2p-transport-lan:0.7.0-rc2` from Maven Central.
    Do not use `mavenLocal()`, a sibling checkout, or a repository override.
-5. Freeze bundled EN/AR content and translations. This release has no remote
+5. Confirm strict dependency verification succeeds without
+   `--write-verification-metadata`. Compare P2pKit against
+   `P2PKIT_MAVEN_PROVENANCE.md`; a checksum change is a blocked dependency
+   review, not a cache problem to bypass.
+6. Freeze bundled EN/AR content and translations. This release has no remote
    case rollout to use as a substitute for an app release.
 
 ## 2. Automated verification
