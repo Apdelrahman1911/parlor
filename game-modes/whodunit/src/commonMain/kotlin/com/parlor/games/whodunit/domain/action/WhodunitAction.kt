@@ -47,14 +47,19 @@ sealed interface WhodunitAction : GameAction {
     // --- Party Play connection rules (Wave 9H) ---
     /** Host bridge submits when it detects a peer drop. HostOnly. */
     @Serializable data class MarkPlayerDisconnected(val playerId: PlayerId) : WhodunitAction
-    /** Host bridge submits when a previously-dropped peer reconnects. HostOnly. */
+    /** Host bridge submits when a disconnected peer rejoins within the grace period. HostOnly. */
     @Serializable data class MarkPlayerReconnected(val playerId: PlayerId) : WhodunitAction
-    /** Host opts to continue the game without [playerId]. Sticky. HostOnly. */
+    /**
+     * Compatibility name for the host's disconnect-grace expiry action.
+     * Whodunit cannot continue with a missing dossier, so this ends the
+     * session and reveals the case; it never removes [playerId] from the
+     * roster. HostOnly.
+     */
     @Serializable data class ContinueWithoutPlayer(val playerId: PlayerId) : WhodunitAction
     /**
-     * Host undoes a `ContinueWithoutPlayer` decision before the next
-     * phase advance. Only valid while still on the same phase as the
-     * original drop. HostOnly.
+     * Legacy snapshot compatibility for sessions created by versions that
+     * could mark players as dropped. New sessions never enter that state.
+     * HostOnly.
      */
     @Serializable data class ReadmitPlayer(val playerId: PlayerId) : WhodunitAction
 

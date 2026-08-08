@@ -119,7 +119,20 @@ class InMemoryPeerRoom(
 
     override suspend fun sendToHost(message: PeerMessage): Result<Unit, NetError> {
         if (simulateNotConnected) return Result.Failure(NetError.NotConnected)
-        bus.fromPeer(message)
+        // Stamp the transport-authenticated sender (this room's bound
+        // [selfPlayerId]) onto an ActionSubmit, mirroring the P2pKit host's
+        // session-bound stamp. A peer cannot claim to be a different seat, so
+        // ActionSubmit.sender reaching the host is always authenticated — the
+        // authority gate can trust it. See PROBLEMS_PARLOR.md → wu-ui-01/NN-03.
+        val authenticated = when (message) {
+            is PeerMessage.ActionSubmit -> message.copy(sender = selfPlayerId)
+            is PeerMessage.AdmissionRequest -> message.copy(actor = selfPlayerId)
+            is PeerMessage.ClientCommand -> message.copy(actor = selfPlayerId)
+            is PeerMessage.SnapshotRequest -> message.copy(actor = selfPlayerId)
+            is PeerMessage.SessionHeartbeat -> message.copy(actor = selfPlayerId)
+            else -> message
+        }
+        bus.fromPeer(authenticated)
         return Result.Success(Unit)
     }
 

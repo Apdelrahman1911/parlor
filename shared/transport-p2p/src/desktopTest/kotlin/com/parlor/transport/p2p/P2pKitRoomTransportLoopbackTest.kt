@@ -14,7 +14,12 @@ import com.parlor.networking.room.RoomInfo
 import com.parlor.networking.room.SendTarget
 import com.parlor.networking.transport.HostConfig
 import dev.p2pkit.core.AppId
+import dev.p2pkit.core.ExplicitSecurityRisk
+import dev.p2pkit.core.PeerAuthorizationPolicy
 import dev.p2pkit.core.P2pKit
+import dev.p2pkit.core.SecurityMode
+import dev.p2pkit.core.dsl.jvmSecureIdentityStore
+import dev.p2pkit.core.security.JvmSecureIdentityStore
 import dev.p2pkit.transport.lan.lan
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -52,20 +57,27 @@ import kotlin.time.Duration.Companion.seconds
  *    `docs/P2P_MANUAL_TEST.md` runbook), which mirrors how friends-testing
  *    will actually happen.
  *
- * **This test is opt-in.** It assumes the build was configured with
- * `parlor.p2p.enabled=true`. If the property is false the whole module
- * (including this test) is excluded from the build by `settings.gradle.kts`.
+ * P2pKit is a required production dependency. This module and test are always
+ * included and resolve the pinned publication from Maven Central.
  */
 class P2pKitRoomTransportLoopbackTest {
 
     private val testScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
     private val rooms: MutableList<LocalRoom> = mutableListOf()
+    private val identityStore = LoopbackIdentityStore()
 
+    @OptIn(ExplicitSecurityRisk::class)
     private val testKitFactory = object : P2pKitFactory {
         override fun createKit(appId: AppId, deviceName: String) = P2pKit.create {
             this.appId = appId
             this.deviceName = deviceName
             transports { lan() }
+            jvmSecureIdentityStore(identityStore)
+            security {
+                mode = SecurityMode.AuthenticatedV2(
+                    PeerAuthorizationPolicy.AcceptAnyAuthenticatedSameApp,
+                )
+            }
         }
     }
 
@@ -228,4 +240,19 @@ class P2pKitRoomTransportLoopbackTest {
 
     private fun randomTag(): String =
         (1..6).map { ('a'..'z').random() }.joinToString("")
+}
+
+private class LoopbackIdentityStore : JvmSecureIdentityStore {
+    private val values = mutableMapOf<String, ByteArray>()
+
+    override fun read(namespace: String): ByteArray? =
+        synchronized(values) { values[namespace]?.copyOf() }
+
+    override fun putIfAbsent(namespace: String, value: ByteArray): ByteArray =
+        synchronized(values) {
+            values.getOrPut(namespace) { value.copyOf() }.copyOf()
+        }
+
+    override fun delete(namespace: String): Boolean =
+        synchronized(values) { values.remove(namespace) != null }
 }

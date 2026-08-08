@@ -46,7 +46,10 @@ import com.parlor.networking.room.RoomInfo
 import com.parlor.networking.transport.HostConfig
 import com.parlor.networking.transport.RoomTransport
 import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.stringResource
 
 /**
@@ -82,6 +85,17 @@ fun HostLobbyScreen(
         }
     }
 
+    LaunchedEffect(room) {
+        val active = room ?: return@LaunchedEffect
+        try {
+            awaitCancellation()
+        } finally {
+            withContext(NonCancellable) {
+                runCatching { active.leave() }
+            }
+        }
+    }
+
     // String-resource lookups have to happen in the composable scope; pre-
     // resolve the format strings here so the non-composable LaunchedEffect
     // body can use them.
@@ -103,6 +117,10 @@ fun HostLobbyScreen(
                         "ActionSubmit (undecodable, ${msg.payload.size} bytes)"
                     }
                 }
+                is PeerMessage.AdmissionRequest -> "AdmissionRequest"
+                is PeerMessage.ClientCommand -> "ClientCommand(${msg.payload.size} bytes)"
+                is PeerMessage.SnapshotRequest -> "SnapshotRequest"
+                is PeerMessage.SessionHeartbeat -> "SessionHeartbeat"
                 is PeerMessage.JoinRequest -> "JoinRequest(${msg.displayName})"
                 is PeerMessage.LeaveNotice -> "LeaveNotice"
                 is PeerMessage.Heartbeat -> "Heartbeat"

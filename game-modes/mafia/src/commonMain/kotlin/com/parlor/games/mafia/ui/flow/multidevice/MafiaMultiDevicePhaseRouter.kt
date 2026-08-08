@@ -25,7 +25,6 @@ import com.parlor.games.mafia.domain.state.MafiaPrivate
 import com.parlor.games.mafia.domain.state.MafiaState
 import com.parlor.games.mafia.domain.state.PublicPlayerSlot
 import com.parlor.games.mafia.domain.state.Role
-import com.parlor.games.mafia.domain.state.Team
 import com.parlor.games.mafia.domain.state.VoteOutcome
 import com.parlor.games.mafia.resources.Res
 import com.parlor.games.mafia.resources.md_resolve_night
@@ -118,6 +117,18 @@ internal fun MafiaMultiDevicePhaseRouter(
         val selfPrivate = state.privatePerPlayer[selfPlayerId]
         val selfSlot = state.public.roster.firstOrNull { it.playerId == selfPlayerId }
 
+        // The host is the sole authority for the gated phase advances. Peers
+        // ack from their own devices but cannot submit the advance (the
+        // authority gate rejects it), and PartyAwareSession only auto-fills
+        // acks in LOCAL play — so in multi-device nothing drove
+        // AdvanceFromRoleAssignment / ResolveNight / OpenDiscussion / CloseVote /
+        // AdvanceFromVoteAnnouncement and the game deadlocked at the very first
+        // transition. The host drives them here once each readiness gate holds.
+        // See PROBLEMS_PARLOR.md → mafia-ui-001 (advance-trigger half).
+        if (isHost) {
+            HostPhaseProgressionDriver(state = state, session = session)
+        }
+
         when (phase) {
             MafiaPhase.Setup -> SetupSegment(
                 state = state,
@@ -155,8 +166,12 @@ internal fun MafiaMultiDevicePhaseRouter(
 
             is MafiaPhase.Discussion -> DiscussionScreen(
                 day = phase.day,
-                aliveNames = state.public.roster.filter { it.alive }.map { it.displayName },
-                deadNames = state.public.roster.filter { !it.alive }.map { it.displayName },
+                aliveNames = state.public.roster
+                    .filter { it.alive && it.playerId !in state.public.droppedPlayers }
+                    .map { it.displayName },
+                deadNames = state.public.roster
+                    .filter { !it.alive && it.playerId !in state.public.droppedPlayers }
+                    .map { it.displayName },
                 timerLabel = null,
                 isHost = isHost,
                 onOpenVote = {
@@ -183,12 +198,94 @@ internal fun MafiaMultiDevicePhaseRouter(
             )
 
             MafiaPhase.PostGame -> PostGameScreen(
-                winner = state.public.winner ?: Team.Town,
+                winner = state.public.winner,
                 finalRoles = finalRoles(state),
                 onExit = onBackToHome,
                 modifier = Modifier.fillMaxSize(),
             )
         }
+    }
+}
+
+// ==================================================================== Host progression ==
+
+/**
+ * Host-only driver for the gated phase advances. In multi-device the host owns
+ * every advance; peers only ack from their own devices, so without this the
+ * game deadlocked at RoleAssignment (and every later gate). Each advance is
+ * submitted once its readiness gate holds; the reducer re-checks the same gate
+ * and no-ops if not yet ready, so an early/duplicate fire is harmless. This
+ * mirrors the pass-and-play router's `LaunchedEffect` auto-fires — there
+ * `PartyAwareSession` auto-fills the acks; here the real acks arrive over the
+ * wire and these effects re-evaluate as each lands.
+ *
+ * `ResolveNight` is included so a host who has been eliminated can still resolve
+ * the night — the manual Resolve button lives only in the alive-host branch, so
+ * a dead host would otherwise be stuck forever (the night-resolution deadlock).
+ */
+@Composable
+private fun HostPhaseProgressionDriver(
+    state: MafiaState,
+    session: SessionController<MafiaState, MafiaAction, MafiaEvent>,
+) {
+    val advance = nextHostAdvance(state)
+    // Key on (phase, advance) so the effect re-evaluates as acks land: it stays
+    // dormant while `advance` is null and fires once the gate flips it non-null,
+    // and re-fires on a genuinely new phase (e.g. Night round 1 → round 2).
+    LaunchedEffect(state.phase, advance) {
+        if (advance != null) session.submit(advance)
+    }
+}
+
+/**
+ * Pure decision for [HostPhaseProgressionDriver]: the gated host advance that is
+ * ready to submit for [state] in multi-device, or `null` when none is (gate not
+ * yet satisfied, or the phase has no auto-advance — Setup/Discussion/PostGame).
+ * Extracted so the multi-device progression gating is unit-testable without a
+ * Compose harness. The reducer remains the canonical gate; this only decides
+ * *when the host offers* the advance.
+ */
+internal fun nextHostAdvance(state: MafiaState): MafiaAction? {
+    val active = state.players.map { it.id }.filterNot { it in state.public.droppedPlayers }
+    val aliveActive = active.filter { id ->
+        state.public.roster.firstOrNull { it.playerId == id }?.alive == true
+    }
+    return when (state.phase) {
+        MafiaPhase.RoleAssignment ->
+            MafiaAction.AdvanceFromRoleAssignment.takeIf {
+                active.isNotEmpty() &&
+                    active.all { state.privatePerPlayer[it]?.roleAcknowledged == true }
+            }
+        is MafiaPhase.Night ->
+            MafiaAction.ResolveNight.takeIf {
+                aliveActive.isNotEmpty() &&
+                    aliveActive.all { id ->
+                        val private = state.privatePerPlayer[id]
+                        private?.nightChoiceSubmitted == true &&
+                            (
+                                private.pendingDetectiveResult == null ||
+                                    private.detectiveResultAcknowledged
+                            )
+                    }
+            }
+        is MafiaPhase.NightAnnouncement ->
+            MafiaAction.OpenDiscussion.takeIf {
+                aliveActive.isNotEmpty() &&
+                    aliveActive.all { state.privatePerPlayer[it]?.nightAcknowledged == true }
+            }
+        is MafiaPhase.Voting -> {
+            val vote = state.public.activeVote
+            MafiaAction.CloseVote.takeIf {
+                vote != null && vote.ballot.isNotEmpty() &&
+                    vote.ballot.all { it in vote.castSoFar.keys || it in vote.abstained }
+            }
+        }
+        is MafiaPhase.VoteAnnouncement ->
+            MafiaAction.AdvanceFromVoteAnnouncement.takeIf {
+                aliveActive.isNotEmpty() &&
+                    aliveActive.all { state.privatePerPlayer[it]?.voteAcknowledged == true }
+            }
+        else -> null
     }
 }
 
@@ -291,12 +388,12 @@ private fun NightSegment(
     }
 
     // Detective who already inspected this night: show the private result first.
-    if (priv.pendingDetectiveResult != null && !priv.detectiveResultAcknowledged) {
-        val result = priv.pendingDetectiveResult!!
+    val detectiveResult = priv.pendingDetectiveResult
+    if (detectiveResult != null && !priv.detectiveResultAcknowledged) {
         DetectiveResultScreen(
             detectiveName = self.displayName,
-            inspectedName = displayNameOf(state, result.target) ?: result.target.raw,
-            seesAs = result.seesAs,
+            inspectedName = displayNameOf(state, detectiveResult.target) ?: detectiveResult.target.raw,
+            seesAs = detectiveResult.seesAs,
             onAcknowledged = {
                 scope.launch { session.submit(MafiaAction.AcknowledgeDetectiveResult(self.id)) }
             },
@@ -305,8 +402,12 @@ private fun NightSegment(
         return
     }
 
-    // If self has already submitted their night choice for this round, wait.
-    if (priv.pendingNightChoice != null) {
+    // If self has already submitted their night action for this round, wait.
+    // Gate on nightChoiceSubmitted (not pendingNightChoice): Civilians and any
+    // role that Skips leave pendingNightChoice null yet HAVE submitted, so the
+    // old gate left them on the action screen forever — able to resubmit and
+    // blocking the host's ResolveNight. See PROBLEMS_PARLOR.md → mafia-ui-002.
+    if (priv.nightChoiceSubmitted) {
         WaitingScreen(
             eyebrow = stringResource(Res.string.waiting_night_eyebrow),
             headline = stringResource(Res.string.waiting_night_submitted_headline),
@@ -443,13 +544,15 @@ private fun VotingSegment(
         )
         return
     }
-    val candidates = activeVote.candidates.map { id ->
-        val slot = state.public.roster.firstOrNull { it.playerId == id }
-        PickableTarget(
-            id = id,
-            name = slot?.displayName ?: id.raw,
-        )
-    }
+    val candidates = activeVote.candidates
+        .filter { state.public.settings.allowSelfVote || it != self.id }
+        .map { id ->
+            val slot = state.public.roster.firstOrNull { it.playerId == id }
+            PickableTarget(
+                id = id,
+                name = slot?.displayName ?: id.raw,
+            )
+        }
     VoteCastScreen(
         voterName = self.displayName,
         candidates = candidates,
@@ -551,20 +654,29 @@ private fun buildTargets(
     settings: com.parlor.games.mafia.domain.settings.MafiaSettings,
     coordinationRound: Int,
 ): List<PickableTarget> {
-    val alive = state.public.roster.filter { it.alive }
+    val alive = state.public.roster.filter {
+        it.alive && it.playerId !in state.public.droppedPlayers
+    }
     return alive
         .filter { slot ->
             when (role) {
                 Role.Mafia -> {
-                    if (settings.mafiaCanTargetMafia) {
+                    if (slot.playerId == selfPlayerId) {
+                        false
+                    } else if (settings.mafiaCanTargetMafia) {
                         true
                     } else {
-                        // Self always excluded.
-                        slot.playerId != selfPlayerId &&
-                            slot.playerId !in (state.privatePerPlayer[selfPlayerId]?.knownTeammates.orEmpty())
+                        slot.playerId !in
+                            state.privatePerPlayer[selfPlayerId]?.knownTeammates.orEmpty()
                     }
                 }
-                Role.Doctor -> if (settings.doctorCanSelfHeal) true else slot.playerId != selfPlayerId
+                Role.Doctor -> {
+                    val canTargetSelf = settings.doctorCanSelfHeal || slot.playerId != selfPlayerId
+                    val previousTarget = state.privatePerPlayer[selfPlayerId]?.previousDoctorProtect
+                    val notConsecutive = settings.doctorCanProtectSamePlayerConsecutively ||
+                        slot.playerId != previousTarget
+                    canTargetSelf && notConsecutive
+                }
                 Role.Detective -> if (settings.detectiveCanInspectSelf) true else slot.playerId != selfPlayerId
                 Role.Civilian -> slot.playerId != selfPlayerId
             }

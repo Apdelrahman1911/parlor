@@ -18,13 +18,10 @@ import com.parlor.engine.session.SessionConfig
 import com.parlor.engine.state.Player
 import com.parlor.games.whodunit.WhodunitDefinition
 import com.parlor.games.whodunit.WhodunitIds
-import com.parlor.games.whodunit.ackBriefingForAll
-import com.parlor.games.whodunit.ackIntroForAll
 import com.parlor.games.whodunit.content.BundledWhodunitCases
 import com.parlor.games.whodunit.content.WhodunitCase
 import com.parlor.games.whodunit.content.WhodunitPayloadValidator
 import com.parlor.games.whodunit.domain.action.WhodunitAction
-import com.parlor.games.whodunit.domain.action.WhodunitActionCodec
 import com.parlor.games.whodunit.domain.event.WhodunitEvent
 import com.parlor.games.whodunit.domain.phase.WhodunitPhase
 import com.parlor.games.whodunit.domain.reducer.WhodunitReducerContext
@@ -129,16 +126,22 @@ class MultiDevicePartyPlayContractTest {
             scope = scope,
         )
         val hostRoom = TestHostRoom(bus, hostId = hostId)
-        val hostBridge = WhodunitHostRoomBridge(hostSession, hostRoom, players, scope, json)
+        val hostBridge = WhodunitHostRoomBridge(
+            hostSession, hostRoom, players, scope, json, heartbeatIntervalMs = 0L,
+        )
 
         // Two peer bridges, each with their own InMemoryPeerRoom over the bus.
         val aliceRoom = InMemoryPeerRoom(bus, selfPlayerId = alice, displayName = "Alice", hostId = hostId)
         val bobRoom = InMemoryPeerRoom(bus, selfPlayerId = bob, displayName = "Bob", hostId = hostId)
-        val aliceBridge = WhodunitPeerRoomBridge(aliceRoom, alice, hostSession.publicState.value.state, scope, json)
-        val bobBridge = WhodunitPeerRoomBridge(bobRoom, bob, hostSession.publicState.value.state, scope, json)
+        val aliceBridge = WhodunitPeerRoomBridge(
+            aliceRoom, alice, hostSession.publicState.value.state, scope, hostBridge.protocol, json,
+        )
+        val bobBridge = WhodunitPeerRoomBridge(
+            bobRoom, bob, hostSession.publicState.value.state, scope, hostBridge.protocol, json,
+        )
 
         // Host starts the game — this seeds roles + advances to PublicIntro.
-        hostSession.submit(WhodunitAction.AssignRoles(seed = 42L))
+        submitHost(hostSession, hostBridge, WhodunitAction.AssignRoles(seed = 42L))
         runCurrent()
 
         // Verify host is in PublicIntro and peers received the snapshot.
@@ -147,12 +150,7 @@ class MultiDevicePartyPlayContractTest {
         // -- Authority case 1: HostOnly from peer is rejected.
         val phaseBefore = hostSession.publicState.value.state.phase
         // Alice attempts to advance from intro — host-only. Bridge must drop.
-        aliceRoom.sendToHost(
-            PeerMessage.ActionSubmit(
-                sender = alice,
-                payload = WhodunitActionCodec.encode(WhodunitAction.AdvanceFromIntro),
-            ),
-        )
+        aliceBridge.controller.submit(WhodunitAction.AdvanceFromIntro)
         runCurrent()
         val phaseAfter = hostSession.publicState.value.state.phase
         assertThat(phaseAfter == phaseBefore).isTrue()  // unchanged
@@ -160,29 +158,28 @@ class MultiDevicePartyPlayContractTest {
         // -- Authority case 2: SelfActor with impersonated actor is rejected.
         // Bob tries to send CompleteCharacterReveal claiming to be Alice.
         // Host advances to CharacterReveal first so the action is otherwise valid.
-        hostSession.ackIntroForAll(players)
-        hostSession.submit(WhodunitAction.AdvanceFromIntro)
+        players.forEach {
+            submitHost(hostSession, hostBridge, WhodunitAction.AcknowledgeIntro(it.id))
+        }
+        submitHost(hostSession, hostBridge, WhodunitAction.AdvanceFromIntro)
         runCurrent()
         // Skip through briefing.
-        hostSession.ackBriefingForAll(players)
+        players.forEach {
+            submitHost(hostSession, hostBridge, WhodunitAction.AcknowledgeBriefing(it.id))
+        }
         var safety = 0
         while (hostSession.publicState.value.state.phase is WhodunitPhase.RulesBriefing && safety < 10) {
-            hostSession.submit(WhodunitAction.AdvanceBriefingCard(safety + 1))
+            submitHost(hostSession, hostBridge, WhodunitAction.AdvanceBriefingCard(safety + 1))
             runCurrent()
             safety++
         }
         // Now CharacterReveal at index 0 (host) — kick to reveal index 1 (alice).
         // Host completes their own reveal so the controller moves to alice's.
-        hostSession.submit(WhodunitAction.CompleteCharacterReveal(hostId))
+        submitHost(hostSession, hostBridge, WhodunitAction.CompleteCharacterReveal(hostId))
         runCurrent()
 
         val phaseBeforeImpersonation = hostSession.publicState.value.state.phase
-        bobRoom.sendToHost(
-            PeerMessage.ActionSubmit(
-                sender = bob,
-                payload = WhodunitActionCodec.encode(WhodunitAction.CompleteCharacterReveal(alice)),
-            ),
-        )
+        bobBridge.controller.submit(WhodunitAction.CompleteCharacterReveal(alice))
         runCurrent()
         val phaseAfterImpersonation = hostSession.publicState.value.state.phase
         assertThat(phaseBeforeImpersonation == phaseAfterImpersonation).isTrue()
@@ -193,12 +190,7 @@ class MultiDevicePartyPlayContractTest {
         // here is: the canonical state mutates in response to alice's
         // correctly-attested action.
         val rolesViewedBefore = hostSession.publicState.value.state.public.rolesViewed
-        aliceRoom.sendToHost(
-            PeerMessage.ActionSubmit(
-                sender = alice,
-                payload = WhodunitActionCodec.encode(WhodunitAction.CompleteCharacterReveal(alice)),
-            ),
-        )
+        aliceBridge.controller.submit(WhodunitAction.CompleteCharacterReveal(alice))
         runCurrent()
         val rolesViewedAfter = hostSession.publicState.value.state.public.rolesViewed
         assertThat(alice in rolesViewedAfter).isTrue()
@@ -251,41 +243,40 @@ class MultiDevicePartyPlayContractTest {
             scope = scope,
         )
         val hostRoom = TestHostRoom(bus, hostId = hostId)
-        val hostBridge = WhodunitHostRoomBridge(hostSession, hostRoom, players, scope, json)
+        val hostBridge = WhodunitHostRoomBridge(
+            hostSession, hostRoom, players, scope, json, heartbeatIntervalMs = 0L,
+        )
 
         val aliceRoom = InMemoryPeerRoom(bus, selfPlayerId = alice, displayName = "Alice", hostId = hostId)
         val bobRoom = InMemoryPeerRoom(bus, selfPlayerId = bob, displayName = "Bob", hostId = hostId)
-        val aliceBridge = WhodunitPeerRoomBridge(aliceRoom, alice, hostSession.publicState.value.state, scope, json)
-        val bobBridge = WhodunitPeerRoomBridge(bobRoom, bob, hostSession.publicState.value.state, scope, json)
+        val aliceBridge = WhodunitPeerRoomBridge(
+            aliceRoom, alice, hostSession.publicState.value.state, scope, hostBridge.protocol, json,
+        )
+        val bobBridge = WhodunitPeerRoomBridge(
+            bobRoom, bob, hostSession.publicState.value.state, scope, hostBridge.protocol, json,
+        )
 
         // --- AssignRoles → PublicIntro ---
-        hostSession.submit(WhodunitAction.AssignRoles(seed = 99L))
+        submitHost(hostSession, hostBridge, WhodunitAction.AssignRoles(seed = 99L))
         runCurrent()
         assertThat(hostSession.publicState.value.state.phase is WhodunitPhase.PublicIntro).isTrue()
 
         // --- PublicIntro: every active player acks ---
         for (player in players) {
             // Each peer submits via the wire so authority + bridge are exercised.
-            val room = when (player.id) {
-                hostId -> null  // host submits locally
-                alice -> aliceRoom
-                bob -> bobRoom
-                else -> null
-            }
-            if (room != null) {
-                room.sendToHost(
-                    PeerMessage.ActionSubmit(
-                        sender = player.id,
-                        payload = WhodunitActionCodec.encode(WhodunitAction.AcknowledgeIntro(player.id)),
-                    ),
+            when (player.id) {
+                alice -> aliceBridge.controller.submit(WhodunitAction.AcknowledgeIntro(player.id))
+                bob -> bobBridge.controller.submit(WhodunitAction.AcknowledgeIntro(player.id))
+                else -> submitHost(
+                    hostSession,
+                    hostBridge,
+                    WhodunitAction.AcknowledgeIntro(player.id),
                 )
-            } else {
-                hostSession.submit(WhodunitAction.AcknowledgeIntro(player.id))
             }
             runCurrent()
         }
         // Readiness invariant satisfied — host advances.
-        hostSession.submit(WhodunitAction.AdvanceFromIntro)
+        submitHost(hostSession, hostBridge, WhodunitAction.AdvanceFromIntro)
         testScheduler.advanceUntilIdle()
         assertThat(hostSession.publicState.value.state.phase is WhodunitPhase.RulesBriefing).isTrue()
 
@@ -295,25 +286,23 @@ class MultiDevicePartyPlayContractTest {
             // Ack each card-step gate at the LAST card; earlier cards advance freely.
             if (safety == 3) {
                 for (player in players) {
-                    val room = when (player.id) {
-                        alice -> aliceRoom
-                        bob -> bobRoom
-                        else -> null
-                    }
-                    if (room != null) {
-                        room.sendToHost(
-                            PeerMessage.ActionSubmit(
-                                sender = player.id,
-                                payload = WhodunitActionCodec.encode(WhodunitAction.AcknowledgeBriefing(player.id)),
-                            ),
+                    when (player.id) {
+                        alice -> aliceBridge.controller.submit(
+                            WhodunitAction.AcknowledgeBriefing(player.id),
                         )
-                    } else {
-                        hostSession.submit(WhodunitAction.AcknowledgeBriefing(player.id))
+                        bob -> bobBridge.controller.submit(
+                            WhodunitAction.AcknowledgeBriefing(player.id),
+                        )
+                        else -> submitHost(
+                            hostSession,
+                            hostBridge,
+                            WhodunitAction.AcknowledgeBriefing(player.id),
+                        )
                     }
                     runCurrent()
                 }
             }
-            hostSession.submit(WhodunitAction.AdvanceBriefingCard(safety + 1))
+            submitHost(hostSession, hostBridge, WhodunitAction.AdvanceBriefingCard(safety + 1))
             runCurrent()
             safety++
         }
@@ -322,25 +311,23 @@ class MultiDevicePartyPlayContractTest {
 
         // --- CharacterReveal: simultaneous — every player confirms ---
         for (player in players) {
-            val room = when (player.id) {
-                alice -> aliceRoom
-                bob -> bobRoom
-                else -> null
-            }
-            if (room != null) {
-                room.sendToHost(
-                    PeerMessage.ActionSubmit(
-                        sender = player.id,
-                        payload = WhodunitActionCodec.encode(WhodunitAction.CompleteCharacterReveal(player.id)),
-                    ),
+            when (player.id) {
+                alice -> aliceBridge.controller.submit(
+                    WhodunitAction.CompleteCharacterReveal(player.id),
                 )
-            } else {
-                hostSession.submit(WhodunitAction.CompleteCharacterReveal(player.id))
+                bob -> bobBridge.controller.submit(
+                    WhodunitAction.CompleteCharacterReveal(player.id),
+                )
+                else -> submitHost(
+                    hostSession,
+                    hostBridge,
+                    WhodunitAction.CompleteCharacterReveal(player.id),
+                )
             }
             runCurrent()
         }
         // Readiness met — host advances to Round 1.
-        hostSession.submit(WhodunitAction.AdvanceFromCharacterReveal)
+        submitHost(hostSession, hostBridge, WhodunitAction.AdvanceFromCharacterReveal)
         testScheduler.advanceUntilIdle()
         val finalPhase = hostSession.publicState.value.state.phase
         assertThat(finalPhase is WhodunitPhase.Round && finalPhase.index == 1).isTrue()
@@ -355,17 +342,9 @@ class MultiDevicePartyPlayContractTest {
         bobBridge.close()
     }
 
-    /**
-     * Wave 9H-9: end-to-end with one peer dropped mid-flow. Bob disconnects
-     * during PublicIntro; host calls ContinueWithoutPlayer(bob); the
-     * readiness invariant satisfies on host + alice; the flow advances.
-     * Bob reconnects mid-CharacterReveal; the host bridge re-sends the
-     * snapshot; bob's shadow catches up to the current phase as a
-     * spectator (in droppedPlayers); bob cannot ack and the gate doesn't
-     * regress.
-     */
+    /** A peer departure pauses canonical play and grace expiry ends the case. */
     @Test
-    fun continue_without_dropped_peer_keeps_advancing_then_reconnect_is_spectator() = runTest {
+    fun disconnected_peer_cannot_be_dropped_to_continue_and_expiry_is_terminal() = runTest {
         val dispatcher = UnconfinedTestDispatcher(testScheduler)
         val scope = TestScope(dispatcher)
         val bus = InMemoryRoomBus()
@@ -390,63 +369,57 @@ class MultiDevicePartyPlayContractTest {
             scope = scope,
         )
         val hostRoom = TestHostRoom(bus, hostId = hostId)
-        val hostBridge = WhodunitHostRoomBridge(hostSession, hostRoom, players, scope, json)
+        val hostBridge = WhodunitHostRoomBridge(
+            hostSession,
+            hostRoom,
+            players,
+            scope,
+            json,
+            rejoinGraceMs = 200L,
+            heartbeatIntervalMs = 0L,
+        )
         val aliceRoom = InMemoryPeerRoom(bus, selfPlayerId = alice, displayName = "Alice", hostId = hostId)
         val bobRoom = InMemoryPeerRoom(bus, selfPlayerId = bob, displayName = "Bob", hostId = hostId)
-        val aliceBridge = WhodunitPeerRoomBridge(aliceRoom, alice, hostSession.publicState.value.state, scope, json)
-        val bobBridge = WhodunitPeerRoomBridge(bobRoom, bob, hostSession.publicState.value.state, scope, json)
+        val aliceBridge = WhodunitPeerRoomBridge(
+            aliceRoom, alice, hostSession.publicState.value.state, scope, hostBridge.protocol, json,
+        )
+        val bobBridge = WhodunitPeerRoomBridge(
+            bobRoom, bob, hostSession.publicState.value.state, scope, hostBridge.protocol, json,
+        )
 
-        hostSession.submit(WhodunitAction.AssignRoles(seed = 77L))
+        submitHost(hostSession, hostBridge, WhodunitAction.AssignRoles(seed = 77L))
         runCurrent()
 
         // Bob disconnects (synthesised on the bus).
         bus.emitPeerLeft(bob, "Bob")
         runCurrent()
         assertThat(bob in hostSession.publicState.value.state.public.disconnectedPlayers).isTrue()
+        assertThat(hostSession.publicState.value.state.public.paused).isTrue()
 
-        // Host explicitly drops bob, then alice + host ack.
-        hostSession.submit(WhodunitAction.ContinueWithoutPlayer(bob))
+        // Grace expiry is dispatched by the bridge, not a host UI action.
+        testScheduler.advanceTimeBy(201L)
         runCurrent()
-        assertThat(bob in hostSession.publicState.value.state.public.droppedPlayers).isTrue()
-
-        hostSession.submit(WhodunitAction.AcknowledgeIntro(hostId))
-        aliceRoom.sendToHost(
-            PeerMessage.ActionSubmit(
-                sender = alice,
-                payload = WhodunitActionCodec.encode(WhodunitAction.AcknowledgeIntro(alice)),
-            ),
-        )
-        runCurrent()
-
-        // With bob dropped, only host + alice need to ack — gate should open.
-        hostSession.submit(WhodunitAction.AdvanceFromIntro)
-        runCurrent()
-        assertThat(hostSession.publicState.value.state.phase is WhodunitPhase.RulesBriefing).isTrue()
-
-        // Bob reconnects — the host bridge resnaps and bob's shadow catches
-        // up to the current phase. Bob is still in droppedPlayers (the host
-        // hasn't readmitted), so any ack bob sends is rejected.
-        bus.emitPeerReconnected(bob, "Bob")
-        testScheduler.advanceUntilIdle()
-        // Host canonical state should now treat bob as reconnected-but-still-
-        // dropped — disconnectedPlayers cleared, droppedPlayers intact.
-        assertThat(bob !in hostSession.publicState.value.state.public.disconnectedPlayers).isTrue()
-        assertThat(bob in hostSession.publicState.value.state.public.droppedPlayers).isTrue()
-
-        // Bob attempts to ack briefing — host rejects (authority gate + reducer
-        // both block). State should not record bob in briefingReady.
-        bobRoom.sendToHost(
-            PeerMessage.ActionSubmit(
-                sender = bob,
-                payload = WhodunitActionCodec.encode(WhodunitAction.AcknowledgeBriefing(bob)),
-            ),
-        )
-        testScheduler.advanceUntilIdle()
-        kotlin.test.assertTrue(bob !in hostSession.publicState.value.state.public.briefingReady)
+        val terminal = hostSession.publicState.value.state
+        assertThat(terminal.phase is WhodunitPhase.Reveal).isTrue()
+        assertThat(terminal.public.paused).isEqualTo(false)
+        assertThat(terminal.public.droppedPlayers.isEmpty()).isTrue()
+        assertThat(terminal.players.map { it.id }).isEqualTo(players.map { it.id })
 
         hostBridge.close()
         aliceBridge.close()
         bobBridge.close()
+    }
+
+    private suspend fun submitHost(
+        session: PassAndPlaySessionController<WhodunitState, WhodunitAction, WhodunitEvent>,
+        bridge: WhodunitHostRoomBridge,
+        action: WhodunitAction,
+    ) {
+        val before = session.hostState.value.state
+        val result = session.submit(action)
+        if (result is Result.Success && session.hostState.value.state != before) {
+            bridge.publishHostMutation()
+        }
     }
 
     private suspend fun loadCase(): ValidatedCase<WhodunitCase> {

@@ -116,6 +116,7 @@ class PartyPlayPassAndPlayParityTest {
             players = players,
             scope = partyPlayHost.scope,
             json = json,
+            heartbeatIntervalMs = 0L,
         )
         runCurrent()
 
@@ -159,7 +160,8 @@ class PartyPlayPassAndPlayParityTest {
         }
         val killer = killerHint()
         for (voter in players.map { it.id }) {
-            driver(WhodunitAction.CastVote(voter, killer))
+            if (voter == killer) driver(WhodunitAction.AbstainVote(voter))
+            else driver(WhodunitAction.CastVote(voter, killer))
         }
         driver(WhodunitAction.CloseVote)
         // Reveal → PostGame.

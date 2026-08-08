@@ -61,20 +61,16 @@ data class WhodunitPublic(
     /**
      * Players the host bridge has detected as transiently offline.
      * Submitted via `MarkPlayerDisconnected` / `MarkPlayerReconnected`.
-     * Disconnected players are NOT auto-dropped; they still count
-     * toward readiness invariants until the host explicitly
-     * `ContinueWithoutPlayer`s them.
+     * A disconnect pauses the canonical game until every disconnected
+     * player rejoins. Grace-period expiry ends the session; Whodunit never
+     * removes a live session's player because every dossier is required.
      */
     val disconnectedPlayers: Set<PlayerId> = emptySet(),
 
     /**
-     * Players the host has explicitly chosen to continue without via
-     * `ContinueWithoutPlayer`. Sticky for the session — only
-     * `ReadmitPlayer` clears the slot, and only before the next host
-     * phase advance. Dropped players are excluded from the active
-     * roster everywhere: readiness invariants, vote ballots, all
-     * SelfActor actions (authority + reducer enforce, see
-     * `WhodunitActionAuthority.isAllowed`).
+     * Legacy snapshot compatibility for sessions saved by versions that
+     * permitted continuing without a player. New reducers never add entries:
+     * a missing player makes the current case impossible to continue safely.
      */
     val droppedPlayers: Set<PlayerId> = emptySet(),
 

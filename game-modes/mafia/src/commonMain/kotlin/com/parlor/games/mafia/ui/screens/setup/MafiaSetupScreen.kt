@@ -38,11 +38,17 @@ import com.parlor.games.mafia.resources.role_detective
 import com.parlor.games.mafia.resources.role_doctor
 import com.parlor.games.mafia.resources.role_mafia
 import com.parlor.games.mafia.resources.settings_error_duration_too_short_format
+import com.parlor.games.mafia.resources.settings_error_detective_above_max_format
+import com.parlor.games.mafia.resources.settings_error_detective_negative_format
+import com.parlor.games.mafia.resources.settings_error_doctor_above_max_format
+import com.parlor.games.mafia.resources.settings_error_doctor_negative_format
 import com.parlor.games.mafia.resources.settings_error_mafia_below_one
 import com.parlor.games.mafia.resources.settings_error_mafia_not_minority_format
 import com.parlor.games.mafia.resources.settings_error_negative_max_revotes_format
 import com.parlor.games.mafia.resources.settings_error_not_enough_civilians_format
+import com.parlor.games.mafia.resources.settings_error_player_count_above_maximum_format
 import com.parlor.games.mafia.resources.settings_error_player_count_below_minimum_format
+import com.parlor.games.mafia.resources.settings_error_timers_not_supported
 import com.parlor.games.mafia.resources.settings_player_count_format
 import com.parlor.games.mafia.resources.settings_role_count_decrement_description_format
 import com.parlor.games.mafia.resources.settings_role_count_decrement_label
@@ -205,7 +211,7 @@ private fun RoleCountsEditorCard(
                 onDecrement = { onDetectiveChange(roleCounts.detective - 1) },
                 onIncrement = { onDetectiveChange(roleCounts.detective + 1) },
                 decEnabled = roleCounts.detective > 0,
-                incEnabled = canIncrement,
+                incEnabled = canIncrement && roleCounts.detective < MafiaSettings.MAX_DETECTIVES,
             )
             RoleCountStepperRow(
                 name = doctorLabel,
@@ -213,7 +219,7 @@ private fun RoleCountsEditorCard(
                 onDecrement = { onDoctorChange(roleCounts.doctor - 1) },
                 onIncrement = { onDoctorChange(roleCounts.doctor + 1) },
                 decEnabled = roleCounts.doctor > 0,
-                incEnabled = canIncrement,
+                incEnabled = canIncrement && roleCounts.doctor < MafiaSettings.MAX_DOCTORS,
             )
             RoleCountReadOnlyRow(
                 name = civilianLabel,
@@ -322,7 +328,30 @@ private fun validationErrorText(error: MafiaSettingsError): String = when (error
         MafiaSettings.MIN_PLAYERS,
         error.playerCount,
     )
+    is MafiaSettingsError.PlayerCountAboveMaximum -> stringResource(
+        Res.string.settings_error_player_count_above_maximum_format,
+        MafiaSettings.MAX_PLAYERS,
+        error.playerCount,
+    )
     MafiaSettingsError.MafiaCountBelowOne -> stringResource(Res.string.settings_error_mafia_below_one)
+    is MafiaSettingsError.NegativeDetectiveCount -> stringResource(
+        Res.string.settings_error_detective_negative_format,
+        error.count,
+    )
+    is MafiaSettingsError.NegativeDoctorCount -> stringResource(
+        Res.string.settings_error_doctor_negative_format,
+        error.count,
+    )
+    is MafiaSettingsError.TooManyDetectives -> stringResource(
+        Res.string.settings_error_detective_above_max_format,
+        MafiaSettings.MAX_DETECTIVES,
+        error.count,
+    )
+    is MafiaSettingsError.TooManyDoctors -> stringResource(
+        Res.string.settings_error_doctor_above_max_format,
+        MafiaSettings.MAX_DOCTORS,
+        error.count,
+    )
     is MafiaSettingsError.NotEnoughCivilians -> stringResource(
         Res.string.settings_error_not_enough_civilians_format,
         error.computed,
@@ -336,6 +365,8 @@ private fun validationErrorText(error: MafiaSettingsError): String = when (error
         Res.string.settings_error_negative_max_revotes_format,
         error.value,
     )
+    MafiaSettingsError.TimersNotSupported ->
+        stringResource(Res.string.settings_error_timers_not_supported)
     is MafiaSettingsError.DurationTooShort -> stringResource(
         Res.string.settings_error_duration_too_short_format,
         error.kind,

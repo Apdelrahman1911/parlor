@@ -22,6 +22,7 @@ import com.parlor.games.whodunit.WhodunitDefinition
 import com.parlor.games.whodunit.WhodunitIds
 import com.parlor.games.whodunit.ackBriefingForAll
 import com.parlor.games.whodunit.ackIntroForAll
+import com.parlor.games.whodunit.accuseWithAllOtherVoters
 import com.parlor.games.whodunit.revealRolesAndAdvance
 import com.parlor.games.whodunit.content.BundledWhodunitCases
 import com.parlor.games.whodunit.content.WhodunitCase
@@ -198,7 +199,7 @@ class FullGameDriveTest {
         // Everyone votes for the actual killer → PlayersWin
         val killerId = hostState(session).hostOnly.killerId
         val ballot = (atVote.public.voteState as VoteState.Collecting).ballotPlayerIds
-        for (voter in ballot) session.submit(WhodunitAction.CastVote(voter, killerId))
+        session.accuseWithAllOtherVoters(ballot, killerId)
         session.submit(WhodunitAction.CloseVote)
 
         val final = stateOf(session)
@@ -242,7 +243,7 @@ class FullGameDriveTest {
         val killerId = hostState(session).hostOnly.killerId
         val innocent = players.first { it.id != killerId }.id
         val ballot = (stateOf(session).public.voteState as VoteState.Collecting).ballotPlayerIds
-        for (voter in ballot) session.submit(WhodunitAction.CastVote(voter, innocent))
+        session.accuseWithAllOtherVoters(ballot, innocent)
         session.submit(WhodunitAction.CloseVote)
 
         val verdict = events.filterIsInstance<WhodunitEvent.WinnerDecided>().last().winner
@@ -280,7 +281,7 @@ class FullGameDriveTest {
         // Vote out the killer immediately.
         val killerId = hostState(session).hostOnly.killerId
         val ballot = (stateOf(session).public.voteState as VoteState.Collecting).ballotPlayerIds
-        for (voter in ballot) session.submit(WhodunitAction.CastVote(voter, killerId))
+        session.accuseWithAllOtherVoters(ballot, killerId)
         session.submit(WhodunitAction.CloseVote)
 
         assertThat(phaseOf(session)).isInstanceOf(WhodunitPhase.Reveal::class)
@@ -324,7 +325,7 @@ class FullGameDriveTest {
         val killerId = hostState(session).hostOnly.killerId
         val innocent = players.first { it.id != killerId }.id
         val ballot = (stateOf(session).public.voteState as VoteState.Collecting).ballotPlayerIds
-        for (voter in ballot) session.submit(WhodunitAction.CastVote(voter, innocent))
+        session.accuseWithAllOtherVoters(ballot, innocent)
         session.submit(WhodunitAction.CloseVote)
 
         // The reducer holds on the announcement: phase still Round(1),
@@ -375,7 +376,7 @@ class FullGameDriveTest {
         }
         val killerId = hostState(session).hostOnly.killerId
         val ballot = (stateOf(session).public.voteState as VoteState.Collecting).ballotPlayerIds
-        for (voter in ballot) session.submit(WhodunitAction.CastVote(voter, killerId))
+        session.accuseWithAllOtherVoters(ballot, killerId)
         session.submit(WhodunitAction.CloseVote)
         session.submit(WhodunitAction.AcknowledgeReveal)
         assertThat(phaseOf(session)).isInstanceOf(WhodunitPhase.PostGame::class)

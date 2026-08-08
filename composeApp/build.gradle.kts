@@ -6,27 +6,27 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
-// Phase 8 opt-in: when parlor.p2p.enabled=true the composeApp depends on the
-// :shared:transport-p2p adapter and compiles the `p2pEnabledMain` source set,
-// which exposes `p2pBootstrapModules()` returning the real Koin transport
-// module. With the flag off the alternate `p2pDisabledMain` source set
-// returns an empty list and no P2pKit symbol is ever referenced.
-//
-// Resolution mirrors settings.gradle.kts: strip inline `#` comments (.properties
-// files don't do that natively) and trim before parsing. Auto-detect from
-// mavenLocal when the property isn't set explicitly.
-val p2pEnabled: Boolean = run {
-    val raw = project.findProperty("parlor.p2p.enabled") as? String
-    val explicit = raw?.substringBefore('#')?.trim()?.takeIf { it.isNotEmpty() }
-        ?.let { it.toBooleanStrictOrNull() ?: it.toBoolean() }
-    if (explicit != null) return@run explicit
-    val home = System.getProperty("user.home").orEmpty()
-    if (home.isBlank()) return@run false
-    val core = file("$home/.m2/repository/dev/p2pkit/p2p-core/0.6.0/p2p-core-0.6.0.jar")
-    val lan = file("$home/.m2/repository/dev/p2pkit/p2p-transport-lan/0.6.0/p2p-transport-lan-0.6.0.module")
-    core.exists() && lan.exists()
-}
-println("[parlor:composeApp] P2pKit dep: ${if (p2pEnabled) "ON" else "OFF"}")
+// Release signing material is intentionally external to the repository.
+// Environment variables are preferred in CI; equivalent Gradle properties
+// make local store builds possible without changing this file.
+val releaseStoreFile = providers.environmentVariable("PARLOR_ANDROID_KEYSTORE_PATH")
+    .orElse(providers.gradleProperty("parlor.android.signing.storeFile"))
+    .orNull
+val releaseStorePassword = providers.environmentVariable("PARLOR_ANDROID_KEYSTORE_PASSWORD")
+    .orElse(providers.gradleProperty("parlor.android.signing.storePassword"))
+    .orNull
+val releaseKeyAlias = providers.environmentVariable("PARLOR_ANDROID_KEY_ALIAS")
+    .orElse(providers.gradleProperty("parlor.android.signing.keyAlias"))
+    .orNull
+val releaseKeyPassword = providers.environmentVariable("PARLOR_ANDROID_KEY_PASSWORD")
+    .orElse(providers.gradleProperty("parlor.android.signing.keyPassword"))
+    .orNull
+val releaseSigningConfigured = listOf(
+    releaseStoreFile,
+    releaseStorePassword,
+    releaseKeyAlias,
+    releaseKeyPassword,
+).all { !it.isNullOrBlank() }
 
 kotlin {
     androidTarget {
@@ -48,11 +48,6 @@ kotlin {
 
     sourceSets {
         commonMain {
-            // One of these two source dirs supplies `p2pBootstrapModules()`;
-            // the inactive directory's file is simply not seen by the compiler.
-            kotlin.srcDir(
-                if (p2pEnabled) "src/p2pEnabledMain/kotlin" else "src/p2pDisabledMain/kotlin",
-            )
             dependencies {
                 // Shared layers
                 implementation(project(":shared:core"))
@@ -63,9 +58,7 @@ kotlin {
                 implementation(project(":shared:networking"))
                 implementation(project(":shared:storage"))
                 implementation(project(":shared:navigation"))
-                if (p2pEnabled) {
-                    implementation(project(":shared:transport-p2p"))
-                }
+                implementation(project(":shared:transport-p2p"))
 
                 // Game modules
                 implementation(project(":game-modes:whodunit"))
@@ -84,11 +77,6 @@ kotlin {
                 implementation(libs.koin.compose)
                 implementation(libs.koin.compose.viewmodel)
 
-                // Ktor + the in-process MockEngine for dev. Production builds
-                // swap MockEngine for a real platform engine.
-                implementation(libs.bundles.ktor.common)
-                implementation(libs.ktor.client.mock)
-
                 // Kotlinx
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.kotlinx.serialization.json)
@@ -96,16 +84,11 @@ kotlin {
         }
         androidMain.dependencies {
             implementation(libs.koin.android)
-            implementation(libs.ktor.client.okhttp)
             implementation("androidx.activity:activity-compose:1.9.3")
-        }
-        iosMain.dependencies {
-            implementation(libs.ktor.client.darwin)
         }
         val desktopMain by getting {
             dependencies {
                 implementation(compose.desktop.currentOs)
-                implementation(libs.ktor.client.cio)
             }
         }
     }
@@ -113,14 +96,51 @@ kotlin {
 
 android {
     namespace = "com.parlor.app"
-    compileSdk = 36
+    compileSdk = libs.versions.android.compile.sdk.get().toInt()
+
     defaultConfig {
         applicationId = "com.parlor.app"
-        minSdk = 26
-        targetSdk = 35
+        minSdk = libs.versions.android.min.sdk.get().toInt()
+        targetSdk = libs.versions.android.target.sdk.get().toInt()
         versionCode = 1
         versionName = "1.0.0"
     }
+
+    signingConfigs {
+        if (releaseSigningConfigured) {
+            create("release") {
+                storeFile = rootProject.file(requireNotNull(releaseStoreFile))
+                storePassword = requireNotNull(releaseStorePassword)
+                keyAlias = requireNotNull(releaseKeyAlias)
+                keyPassword = requireNotNull(releaseKeyPassword)
+                enableV1Signing = true
+                enableV2Signing = true
+                enableV3Signing = true
+                enableV4Signing = true
+            }
+        }
+    }
+
+    buildTypes {
+        getByName("release") {
+            isDebuggable = false
+            isJniDebuggable = false
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro",
+            )
+            ndk {
+                // Preserve native symbols for Play Console crash symbolication.
+                debugSymbolLevel = "FULL"
+            }
+            if (releaseSigningConfigured) {
+                signingConfig = signingConfigs.getByName("release")
+            }
+        }
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
@@ -133,8 +153,53 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
+    lint {
+        abortOnError = true
+        checkReleaseBuilds = true
+    }
+
     // Case JSON lives inside the Whodunit module's Compose Multiplatform
     // resources, not in app-level Android assets. See game-modes/whodunit/.
+}
+
+val verifyReleaseSigning by tasks.registering {
+    group = "verification"
+    description = "Fails unless store-release Android signing is configured externally."
+    // The task deliberately inspects process/environment credentials and a
+    // filesystem path supplied by the protected release runner. It is an
+    // external gate, not a cacheable build input.
+    notCompatibleWithConfigurationCache(
+        "Signing credentials and the keystore are external release-runner inputs",
+    )
+    doLast {
+        check(releaseSigningConfigured) {
+            """
+            Android store signing is not configured. Set all of:
+              PARLOR_ANDROID_KEYSTORE_PATH
+              PARLOR_ANDROID_KEYSTORE_PASSWORD
+              PARLOR_ANDROID_KEY_ALIAS
+              PARLOR_ANDROID_KEY_PASSWORD
+            (or the matching parlor.android.signing.* Gradle properties).
+            """.trimIndent()
+        }
+        check(rootProject.file(requireNotNull(releaseStoreFile)).isFile) {
+            "PARLOR_ANDROID_KEYSTORE_PATH does not identify a readable file."
+        }
+    }
+}
+
+// `bundleRelease` is intentionally an unsigned verification artifact when no
+// external key is configured. Store delivery must use the explicit signing
+// gate below; keeping the two artifacts separate lets CI exercise shrinking,
+// packaging, and lint without ever inventing or checking in a key.
+val verifyStoreRelease by tasks.registering {
+    group = "verification"
+    description = "Verifies external signing material before a store release."
+    notCompatibleWithConfigurationCache(
+        "The dependent signing gate uses external release-runner inputs",
+    )
+    dependsOn(verifyReleaseSigning, "bundleRelease")
 }
 
 // Compose Multiplatform resources for shell strings (Home, settings, etc.).

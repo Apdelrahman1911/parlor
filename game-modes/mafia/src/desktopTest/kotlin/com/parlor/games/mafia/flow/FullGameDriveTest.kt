@@ -101,7 +101,11 @@ class FullGameDriveTest {
                 val mafiaPick = wrongVoteForTown(state)
                 if (mafiaPick != null) {
                     for (voter in state.public.activeVote!!.ballot) {
-                        state = step(state, MafiaAction.CastVote(voter, mafiaPick), c)
+                        state = if (voter == mafiaPick) {
+                            step(state, MafiaAction.AbstainVote(voter), c)
+                        } else {
+                            step(state, MafiaAction.CastVote(voter, mafiaPick), c)
+                        }
                     }
                 }
                 state = step(state, MafiaAction.CloseVote, c)
@@ -137,6 +141,7 @@ class FullGameDriveTest {
         for (m in mafiaIds) {
             state = step(state, MafiaAction.SubmitMafiaKillVote(m, target = null), c)
         }
+        state = submitUnsubmittedNightActions(state, c)
         state = step(state, MafiaAction.ResolveNight, c)
         // No one was killed — proceed.
         if (state.phase is MafiaPhase.NightAnnouncement) {
@@ -148,7 +153,11 @@ class FullGameDriveTest {
             // Everyone alive votes for the Mafia → eliminated.
             val mafiaId = mafiaIds.first { it in alive(state) }
             for (voter in state.public.activeVote!!.ballot) {
-                state = step(state, MafiaAction.CastVote(voter, mafiaId), c)
+                state = if (voter == mafiaId) {
+                    step(state, MafiaAction.AbstainVote(voter), c)
+                } else {
+                    step(state, MafiaAction.CastVote(voter, mafiaId), c)
+                }
             }
             state = step(state, MafiaAction.CloseVote, c)
         }
@@ -225,9 +234,29 @@ class FullGameDriveTest {
                 state = step(state, MafiaAction.SubmitMafiaKillVote(m, target), c)
             }
         }
-        // Doctor (if any) protects no one to keep things simple.
-        // Detective inspects no one. Civilians submit no suspicion.
+        // Every other living role explicitly skips its action. The reducer,
+        // not the UI, owns the all-seats-submitted readiness gate.
+        state = submitUnsubmittedNightActions(state, c)
         state = step(state, MafiaAction.ResolveNight, c)
+        return state
+    }
+
+    private fun submitUnsubmittedNightActions(
+        initial: MafiaState,
+        c: ReducerContext,
+    ): MafiaState {
+        var state = initial
+        for (id in alive(state)) {
+            val private = state.privatePerPlayer[id] ?: continue
+            if (private.nightChoiceSubmitted) continue
+            val action = when (private.role) {
+                Role.Mafia -> MafiaAction.SubmitMafiaKillVote(id, null)
+                Role.Doctor -> MafiaAction.SubmitDoctorProtect(id, null)
+                Role.Detective -> MafiaAction.SubmitDetectiveInspect(id, null)
+                Role.Civilian -> MafiaAction.SubmitCivilianSuspicion(id, null)
+            }
+            state = step(state, action, c)
+        }
         return state
     }
 

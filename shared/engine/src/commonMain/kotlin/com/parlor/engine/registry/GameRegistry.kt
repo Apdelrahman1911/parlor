@@ -24,6 +24,19 @@ class DefaultGameRegistry(
     private val definitions: List<GameDefinition<*, *, *>>,
 ) : GameRegistry {
     override val all: List<GameDefinition<*, *, *>> = definitions.toList()
+
+    init {
+        val duplicateIds = all
+            .groupingBy { it.id }
+            .eachCount()
+            .filterValues { count -> count > 1 }
+            .keys
+            .sortedBy { id -> id.raw }
+        require(duplicateIds.isEmpty()) {
+            "Duplicate game ids are not allowed: ${duplicateIds.joinToString { it.raw }}"
+        }
+    }
+
     private val byId: Map<GameId, GameDefinition<*, *, *>> = all.associateBy { it.id }
     override fun byId(id: GameId): GameDefinition<*, *, *>? = byId[id]
 }

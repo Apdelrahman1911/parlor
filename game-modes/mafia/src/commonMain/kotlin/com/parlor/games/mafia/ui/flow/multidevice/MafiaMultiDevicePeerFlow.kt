@@ -21,11 +21,18 @@ import com.parlor.games.mafia.domain.action.MafiaAction
 import com.parlor.games.mafia.domain.event.MafiaEvent
 import com.parlor.games.mafia.domain.party.MafiaReadinessGate
 import com.parlor.games.mafia.domain.state.MafiaState
+import com.parlor.games.mafia.resources.Res
+import com.parlor.games.mafia.resources.md_peer_reconnecting
+import com.parlor.games.mafia.resources.md_peer_reconnecting_leave
+import com.parlor.games.mafia.resources.md_peer_reconnecting_leave_description
+import com.parlor.networking.protocol.SessionProtocol
 import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.PeerEvent
 import com.parlor.session.PlayMode
 import com.parlor.session.SessionController
 import com.parlor.session.party.PartyAwareSession
+import com.parlor.designsystem.components.ReconnectingOverlay
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 /**
@@ -56,6 +63,7 @@ fun MafiaMultiDevicePeerFlow(
     selfPlayerId: PlayerId,
     seed: Long,
     room: LocalRoom,
+    protocol: SessionProtocol,
     onBackToHome: () -> Unit,
     modifier: Modifier = Modifier,
     onHostLostChanged: (Boolean) -> Unit = {},
@@ -76,12 +84,13 @@ fun MafiaMultiDevicePeerFlow(
         )
     }
 
-    val bridge = remember(room, selfPlayerId) {
+    val bridge = remember(room, selfPlayerId, protocol) {
         MafiaPeerRoomBridge(
             room = room,
             selfPlayerId = selfPlayerId,
             initialPublic = initialState,
             scope = scope,
+            protocol = protocol,
         )
     }
     DisposableEffect(bridge) { onDispose { bridge.close() } }
@@ -125,5 +134,16 @@ fun MafiaMultiDevicePeerFlow(
             onBackToHome = onBackToHome,
             modifier = Modifier.fillMaxSize(),
         )
+        if (state.public.disconnectedPlayers.isNotEmpty()) {
+            ReconnectingOverlay(
+                title = stringResource(Res.string.md_peer_reconnecting),
+                leaveLabel = stringResource(Res.string.md_peer_reconnecting_leave),
+                leaveContentDescription = stringResource(
+                    Res.string.md_peer_reconnecting_leave_description,
+                ),
+                onLeave = onBackToHome,
+                modifier = Modifier.fillMaxSize(),
+            )
+        }
     }
 }

@@ -28,6 +28,7 @@ import com.parlor.games.whodunit.WhodunitDefinition
 import com.parlor.games.whodunit.WhodunitIds
 import com.parlor.games.whodunit.ackBriefingForAll
 import com.parlor.games.whodunit.ackIntroForAll
+import com.parlor.games.whodunit.castSplitVote
 import com.parlor.games.whodunit.revealRolesAndAdvance
 import com.parlor.games.whodunit.content.BundledWhodunitCases
 import com.parlor.games.whodunit.content.WhodunitCase
@@ -222,10 +223,7 @@ class WhodunitSnapshotRoundTripTest {
         val targetB = innocents[1].id
         val ballot =
             (session.publicState.value.state.public.voteState as VoteState.Collecting).ballotPlayerIds
-        session.submit(WhodunitAction.CastVote(ballot[0], targetA))
-        session.submit(WhodunitAction.CastVote(ballot[1], targetA))
-        session.submit(WhodunitAction.CastVote(ballot[2], targetB))
-        session.submit(WhodunitAction.CastVote(ballot[3], targetB))
+        session.castSplitVote(ballot, targetA, 2, targetB, 2)
         session.submit(WhodunitAction.CloseVote)
         session.submit(WhodunitAction.OpenVote)
 
@@ -305,4 +303,3 @@ class WhodunitSnapshotRoundTripTest {
         assertThat(result).isInstanceOf(Result.Failure::class)
     }
 }
-

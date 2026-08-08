@@ -1,6 +1,7 @@
 package com.parlor.games.whodunit
 
 import com.parlor.engine.state.Player
+import com.parlor.core.ids.PlayerId
 import com.parlor.games.whodunit.domain.action.WhodunitAction
 import com.parlor.games.whodunit.domain.event.WhodunitEvent
 import com.parlor.games.whodunit.domain.state.WhodunitState
@@ -38,4 +39,61 @@ internal suspend fun PassAndPlaySessionController<WhodunitState, WhodunitAction,
         submit(WhodunitAction.CompleteCharacterReveal(player.id))
     }
     submit(WhodunitAction.AdvanceFromCharacterReveal)
+}
+
+/**
+ * Cast a unanimous valid accusation. The accused cannot vote for themselves,
+ * so their own ballot is recorded as an abstention.
+ */
+internal suspend fun PassAndPlaySessionController<WhodunitState, WhodunitAction, WhodunitEvent>.accuseWithAllOtherVoters(
+    ballot: List<PlayerId>,
+    target: PlayerId,
+) {
+    for (voter in ballot) {
+        if (voter == target) submit(WhodunitAction.AbstainVote(voter))
+        else submit(WhodunitAction.CastVote(voter, target))
+    }
+}
+
+/**
+ * Produce a valid two-way split without ever allowing a self-vote. Any
+ * remaining voters abstain (or explicitly refuse when [refuseRemainder] is
+ * true). The common 4-player 2–2 and 5-player 2–2–abstain fixtures are both
+ * covered.
+ */
+internal suspend fun PassAndPlaySessionController<WhodunitState, WhodunitAction, WhodunitEvent>.castSplitVote(
+    ballot: List<PlayerId>,
+    targetA: PlayerId,
+    votesForA: Int,
+    targetB: PlayerId,
+    votesForB: Int,
+    refuseRemainder: Boolean = false,
+) {
+    var remainingA = votesForA
+    var remainingB = votesForB
+    for (voter in ballot) {
+        when {
+            remainingA > 0 && voter != targetA -> {
+                submit(WhodunitAction.CastVote(voter, targetA))
+                remainingA -= 1
+            }
+            remainingB > 0 && voter != targetB -> {
+                submit(WhodunitAction.CastVote(voter, targetB))
+                remainingB -= 1
+            }
+            remainingA > 0 -> {
+                submit(WhodunitAction.CastVote(voter, targetA))
+                remainingA -= 1
+            }
+            remainingB > 0 -> {
+                submit(WhodunitAction.CastVote(voter, targetB))
+                remainingB -= 1
+            }
+            refuseRemainder -> submit(WhodunitAction.RefuseToVote(voter))
+            else -> submit(WhodunitAction.AbstainVote(voter))
+        }
+    }
+    check(remainingA == 0 && remainingB == 0) {
+        "Unable to construct requested split for the supplied ballot"
+    }
 }

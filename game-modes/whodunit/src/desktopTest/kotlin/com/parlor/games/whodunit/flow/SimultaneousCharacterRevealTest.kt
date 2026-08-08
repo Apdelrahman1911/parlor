@@ -4,6 +4,7 @@ import assertk.assertThat
 import assertk.assertions.contains
 import assertk.assertions.doesNotContain
 import assertk.assertions.isEmpty
+import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
 import com.parlor.content.datasource.InMemoryCachedCaseDataSource
 import com.parlor.content.datasource.KtorRemoteCaseDataSource
@@ -126,7 +127,7 @@ class SimultaneousCharacterRevealTest {
     }
 
     @Test
-    fun dropped_player_does_not_block_character_reveal_advance() = runTest {
+    fun disconnect_during_character_reveal_pauses_and_expiry_ends_the_case() = runTest {
         val payload = loadCase()
         val (session, _) = buildSession(payload, WhodunitIds.ClassicVoteModeId, players, seed = 3L)
         session.submit(WhodunitAction.AssignRoles(seed = 3L))
@@ -135,15 +136,19 @@ class SimultaneousCharacterRevealTest {
         session.ackBriefingForAll(players)
         for (i in 1..4) session.submit(WhodunitAction.AdvanceBriefingCard(i))
 
-        // Drop the fourth player BEFORE they confirm.
-        session.submit(WhodunitAction.ContinueWithoutPlayer(players[3].id))
+        session.submit(WhodunitAction.MarkPlayerDisconnected(players[3].id))
+        assertThat(stateOf(session).public.paused).isEqualTo(true)
 
-        // Now only three active-roster players need to confirm.
+        // Private readiness submitted after the disconnect cannot advance a
+        // partially revealed case.
         session.submit(WhodunitAction.CompleteCharacterReveal(players[0].id))
         session.submit(WhodunitAction.CompleteCharacterReveal(players[1].id))
         session.submit(WhodunitAction.CompleteCharacterReveal(players[2].id))
         session.submit(WhodunitAction.AdvanceFromCharacterReveal)
-        assertThat(phaseOf(session)).isInstanceOf(WhodunitPhase.Round::class)
+        assertThat(phaseOf(session)).isInstanceOf(WhodunitPhase.CharacterReveal::class)
+
+        session.submit(WhodunitAction.ContinueWithoutPlayer(players[3].id))
+        assertThat(phaseOf(session)).isInstanceOf(WhodunitPhase.Reveal::class)
     }
 
     // ============================================================ Fixture ==

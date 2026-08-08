@@ -28,6 +28,19 @@ class DefaultNavGraphRegistry(
     private val graphs: List<ModuleNavGraph>,
 ) : NavGraphRegistry {
     override val all: List<ModuleNavGraph> = graphs.toList()
+
+    init {
+        val duplicateIds = all
+            .groupingBy { it.gameId }
+            .eachCount()
+            .filterValues { count -> count > 1 }
+            .keys
+            .sortedBy { id -> id.raw }
+        require(duplicateIds.isEmpty()) {
+            "Duplicate navigation graphs are not allowed: ${duplicateIds.joinToString { it.raw }}"
+        }
+    }
+
     private val byId = all.associateBy { it.gameId }
     override fun byGameId(id: GameId): ModuleNavGraph? = byId[id]
 }

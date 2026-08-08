@@ -11,6 +11,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -60,9 +61,11 @@ fun P2pPermissionRationaleScreen(
     val scope = rememberCoroutineScope()
 
     // If the OS state flips to Granted (e.g. user came back from Settings),
-    // hand off to the caller automatically.
+    // hand off to the caller automatically. Keep the callback in an effect:
+    // invoking it directly during composition can mutate the parent
+    // navigation state while Compose is still applying the current frame.
     if (status == PermissionStatus.Granted) {
-        onGranted()
+        LaunchedEffect(Unit) { onGranted() }
         return
     }
 

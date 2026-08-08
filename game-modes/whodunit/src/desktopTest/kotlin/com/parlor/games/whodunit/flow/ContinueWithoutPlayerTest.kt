@@ -31,6 +31,8 @@ import com.parlor.games.whodunit.content.BundledWhodunitCases
 import com.parlor.games.whodunit.content.WhodunitCase
 import com.parlor.games.whodunit.content.WhodunitPayloadValidator
 import com.parlor.games.whodunit.domain.action.WhodunitAction
+import com.parlor.games.whodunit.domain.event.KillerWinCause
+import com.parlor.games.whodunit.domain.event.Verdict
 import com.parlor.games.whodunit.domain.event.WhodunitEvent
 import com.parlor.games.whodunit.domain.phase.WhodunitPhase
 import com.parlor.games.whodunit.domain.reducer.WhodunitReducerContext
@@ -56,8 +58,11 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import kotlin.test.Test
 
 /**
- * Reducer-driven tests for the connection-rule actions and the
- * dropped-player invariants.
+ * Reducer-driven tests for Whodunit's disconnect/rejoin contract.
+ *
+ * A dossier is essential case information, so a live game never shrinks its
+ * roster. Disconnect pauses the canonical state, rejoin preserves the exact
+ * point of play, and grace-period expiry ends with a truthful early reveal.
  */
 @OptIn(ExperimentalResourceApi::class, ExperimentalCoroutinesApi::class)
 class ContinueWithoutPlayerTest {
@@ -76,157 +81,113 @@ class ContinueWithoutPlayerTest {
     )
 
     @Test
-    fun continue_without_player_drops_them_from_active_roster_and_unblocks_readiness() = runTest {
+    fun disconnect_blocks_progress_until_rejoin_and_explicit_resume() = runTest {
         val payload = loadCase()
         val (session, _) = buildSession(payload, WhodunitIds.ClassicVoteModeId, players, seed = 1L)
         session.submit(WhodunitAction.AssignRoles(seed = 1L))
+        session.ackIntroForAll(players)
+        session.submit(WhodunitAction.MarkPlayerDisconnected(players[3].id))
 
-        // Three of four ack; advance is blocked.
-        session.submit(WhodunitAction.AcknowledgeIntro(players[0].id))
-        session.submit(WhodunitAction.AcknowledgeIntro(players[1].id))
-        session.submit(WhodunitAction.AcknowledgeIntro(players[2].id))
+        assertThat(stateOf(session).public.disconnectedPlayers).contains(players[3].id)
+        assertThat(stateOf(session).public.paused).isEqualTo(true)
+
+        // Neither phase progress nor an explicit resume is legal while a seat
+        // is still disconnected.
+        session.submit(WhodunitAction.AdvanceFromIntro)
+        session.submit(WhodunitAction.Resume)
+        assertThat(phaseOf(session)).isInstanceOf(WhodunitPhase.PublicIntro::class)
+        assertThat(stateOf(session).public.paused).isEqualTo(true)
+
+        // Rejoin restores the seat but deliberately leaves the session paused:
+        // the table must explicitly agree to resume.
+        session.submit(WhodunitAction.MarkPlayerReconnected(players[3].id))
+        assertThat(stateOf(session).public.disconnectedPlayers).isEmpty()
+        assertThat(stateOf(session).public.paused).isEqualTo(true)
         session.submit(WhodunitAction.AdvanceFromIntro)
         assertThat(phaseOf(session)).isInstanceOf(WhodunitPhase.PublicIntro::class)
 
-        // Host drops the fourth player → active roster shrinks, advance now succeeds.
-        session.submit(WhodunitAction.ContinueWithoutPlayer(players[3].id))
-        assertThat(stateOf(session).public.droppedPlayers).contains(players[3].id)
+        session.submit(WhodunitAction.Resume)
         session.submit(WhodunitAction.AdvanceFromIntro)
         assertThat(phaseOf(session)).isInstanceOf(WhodunitPhase.RulesBriefing::class)
-
-        // droppedPlayers persists across phase change.
-        assertThat(stateOf(session).public.droppedPlayers).contains(players[3].id)
     }
 
     @Test
-    fun dropped_player_ack_is_a_noop_via_reducer_defense() = runTest {
+    fun disconnect_freezes_round_timer_and_rejects_delayed_progress() = runTest {
         val payload = loadCase()
         val (session, _) = buildSession(payload, WhodunitIds.ClassicVoteModeId, players, seed = 2L)
         session.submit(WhodunitAction.AssignRoles(seed = 2L))
+        session.ackIntroForAll(players)
+        session.submit(WhodunitAction.AdvanceFromIntro)
+        session.ackBriefingForAll(players)
+        for (i in 1..4) session.submit(WhodunitAction.AdvanceBriefingCard(i))
+        session.revealRolesAndAdvance(players)
+        session.submit(WhodunitAction.RevealNextClue)
+        session.submit(WhodunitAction.StartDiscussionTimer(60))
+        session.submit(WhodunitAction.MarkPlayerDisconnected(players[3].id))
 
-        // Drop the player BEFORE they ack.
-        session.submit(WhodunitAction.ContinueWithoutPlayer(players[3].id))
+        assertThat(stateOf(session).public.paused).isEqualTo(true)
+        assertThat(stateOf(session).public.timer?.paused).isEqualTo(true)
+        assertThat(stateOf(session).public.timer?.remainingSeconds).isEqualTo(60)
 
-        // A stale or queued ack arrives from the dropped player → no-op.
-        // (Authority would reject this on the wire too; defensive belt + suspenders.)
-        session.submit(WhodunitAction.AcknowledgeIntro(players[3].id))
-        assertThat(stateOf(session).public.introAcknowledged).doesNotContain(players[3].id)
+        // In-flight messages from before the disconnect cannot consume time or
+        // advance the round.
+        session.submit(WhodunitAction.TimerTicked(12))
+        session.submit(WhodunitAction.TimerExpired)
+        session.submit(WhodunitAction.AdvanceFromDiscussion)
+        assertThat((phaseOf(session) as WhodunitPhase.Round).index).isEqualTo(1)
+        assertThat(stateOf(session).public.timer?.remainingSeconds).isEqualTo(60)
+
+        session.submit(WhodunitAction.MarkPlayerReconnected(players[3].id))
+        session.submit(WhodunitAction.Resume)
+        assertThat(stateOf(session).public.timer?.paused).isEqualTo(false)
+        session.submit(WhodunitAction.TimerExpired)
+        assertThat((phaseOf(session) as WhodunitPhase.Round).index).isEqualTo(2)
     }
 
     @Test
-    fun continue_without_player_clears_existing_ack_for_them() = runTest {
+    fun grace_expiry_reveals_case_and_never_shrinks_the_roster() = runTest {
         val payload = loadCase()
         val (session, _) = buildSession(payload, WhodunitIds.ClassicVoteModeId, players, seed = 3L)
         session.submit(WhodunitAction.AssignRoles(seed = 3L))
-
-        // Player acks first.
-        session.submit(WhodunitAction.AcknowledgeIntro(players[3].id))
-        assertThat(stateOf(session).public.introAcknowledged).contains(players[3].id)
-
-        // Then host drops them.
+        session.submit(WhodunitAction.MarkPlayerDisconnected(players[3].id))
         session.submit(WhodunitAction.ContinueWithoutPlayer(players[3].id))
-        assertThat(stateOf(session).public.introAcknowledged).doesNotContain(players[3].id)
+
+        val state = stateOf(session)
+        assertThat(state.phase).isInstanceOf(WhodunitPhase.Reveal::class)
+        assertThat(state.public.paused).isEqualTo(false)
+        assertThat(state.public.timer).isEqualTo(null)
+        assertThat(state.public.disconnectedPlayers).isEmpty()
+        assertThat(state.public.droppedPlayers).isEmpty()
+        assertThat(state.players.map { it.id }).containsExactlyInAnyOrder(*players.map { it.id }.toTypedArray())
+        assertThat(state.public.verdict as Any).isInstanceOf(Verdict.KillerWins::class)
+        assertThat((state.public.verdict as Verdict.KillerWins).cause)
+            .isEqualTo(KillerWinCause.GameEndedEarly)
     }
 
     @Test
-    fun readmit_player_works_in_intro_phase_and_restores_the_ack_gate() = runTest {
+    fun grace_expiry_action_is_rejected_without_a_current_disconnect() = runTest {
         val payload = loadCase()
         val (session, _) = buildSession(payload, WhodunitIds.ClassicVoteModeId, players, seed = 4L)
         session.submit(WhodunitAction.AssignRoles(seed = 4L))
+        val before = stateOf(session)
 
-        // Drop and readmit while still in PublicIntro.
         session.submit(WhodunitAction.ContinueWithoutPlayer(players[3].id))
-        session.submit(WhodunitAction.ReadmitPlayer(players[3].id))
-        assertThat(stateOf(session).public.droppedPlayers).isEmpty()
 
-        // Now all four must ack to advance.
-        players.take(3).forEach { session.submit(WhodunitAction.AcknowledgeIntro(it.id)) }
-        session.submit(WhodunitAction.AdvanceFromIntro)
-        assertThat(phaseOf(session)).isInstanceOf(WhodunitPhase.PublicIntro::class)
-
-        session.submit(WhodunitAction.AcknowledgeIntro(players[3].id))
-        session.submit(WhodunitAction.AdvanceFromIntro)
-        assertThat(phaseOf(session)).isInstanceOf(WhodunitPhase.RulesBriefing::class)
+        assertThat(stateOf(session)).isEqualTo(before)
     }
 
     @Test
-    fun readmit_player_rejected_after_round_phase_starts() = runTest {
+    fun duplicate_and_unknown_disconnect_events_are_idempotent() = runTest {
         val payload = loadCase()
         val (session, _) = buildSession(payload, WhodunitIds.ClassicVoteModeId, players, seed = 5L)
         session.submit(WhodunitAction.AssignRoles(seed = 5L))
-        session.ackIntroForAll(players)
-        session.submit(WhodunitAction.AdvanceFromIntro)
-        session.ackBriefingForAll(players)
-        for (i in 1..4) session.submit(WhodunitAction.AdvanceBriefingCard(i))
-        // Drive through character reveal to Round(1).
-        session.revealRolesAndAdvance(players)
-        assertThat(phaseOf(session)).isInstanceOf(WhodunitPhase.Round::class)
-
-        // Drop and then try to readmit — rejected because we're past the
-        // readiness-gated phases.
-        session.submit(WhodunitAction.ContinueWithoutPlayer(players[3].id))
-        session.submit(WhodunitAction.ReadmitPlayer(players[3].id))
-        assertThat(stateOf(session).public.droppedPlayers).contains(players[3].id)
-    }
-
-    @Test
-    fun mark_player_disconnected_and_reconnected_toggles_set() = runTest {
-        val payload = loadCase()
-        val (session, _) = buildSession(payload, WhodunitIds.ClassicVoteModeId, players, seed = 6L)
-        session.submit(WhodunitAction.AssignRoles(seed = 6L))
+        session.submit(WhodunitAction.MarkPlayerDisconnected(players[1].id))
+        val afterFirst = stateOf(session)
 
         session.submit(WhodunitAction.MarkPlayerDisconnected(players[1].id))
-        assertThat(stateOf(session).public.disconnectedPlayers).contains(players[1].id)
+        session.submit(WhodunitAction.MarkPlayerDisconnected(PlayerId("unknown")))
 
-        session.submit(WhodunitAction.MarkPlayerReconnected(players[1].id))
-        assertThat(stateOf(session).public.disconnectedPlayers).isEmpty()
-    }
-
-    @Test
-    fun disconnected_player_still_blocks_readiness_until_host_drops_them() = runTest {
-        val payload = loadCase()
-        val (session, _) = buildSession(payload, WhodunitIds.ClassicVoteModeId, players, seed = 7L)
-        session.submit(WhodunitAction.AssignRoles(seed = 7L))
-
-        // Three players ack; fourth is disconnected but NOT dropped.
-        session.submit(WhodunitAction.AcknowledgeIntro(players[0].id))
-        session.submit(WhodunitAction.AcknowledgeIntro(players[1].id))
-        session.submit(WhodunitAction.AcknowledgeIntro(players[2].id))
-        session.submit(WhodunitAction.MarkPlayerDisconnected(players[3].id))
-
-        // Advance is still blocked — the disconnected player is in the active roster.
-        session.submit(WhodunitAction.AdvanceFromIntro)
-        assertThat(phaseOf(session)).isInstanceOf(WhodunitPhase.PublicIntro::class)
-
-        // Now host explicitly drops them → advance unblocks.
-        session.submit(WhodunitAction.ContinueWithoutPlayer(players[3].id))
-        session.submit(WhodunitAction.AdvanceFromIntro)
-        assertThat(phaseOf(session)).isInstanceOf(WhodunitPhase.RulesBriefing::class)
-    }
-
-    @Test
-    fun open_vote_excludes_dropped_players_from_the_ballot() = runTest {
-        val payload = loadCase()
-        val (session, _) = buildSession(payload, WhodunitIds.ClassicVoteModeId, players, seed = 8L)
-        session.submit(WhodunitAction.AssignRoles(seed = 8L))
-        session.ackIntroForAll(players)
-        session.submit(WhodunitAction.AdvanceFromIntro)
-        session.ackBriefingForAll(players)
-        for (i in 1..4) session.submit(WhodunitAction.AdvanceBriefingCard(i))
-        session.revealRolesAndAdvance(players)
-
-        // Drop a player BEFORE OpenVote rebuilds the ballot from the active roster.
-        session.submit(WhodunitAction.ContinueWithoutPlayer(players[3].id))
-
-        for (roundIndex in 1..3) {
-            session.submit(WhodunitAction.RevealNextClue)
-            session.submit(WhodunitAction.StartDiscussionTimer(60))
-            session.submit(WhodunitAction.AdvanceFromDiscussion)
-        }
-        val voteState = stateOf(session).public.voteState
-        assertThat(voteState).isInstanceOf(VoteState.Collecting::class)
-        val ballot = (voteState as VoteState.Collecting).ballotPlayerIds
-        assertThat(ballot).doesNotContain(players[3].id)
+        assertThat(stateOf(session)).isEqualTo(afterFirst)
     }
 
     // ============================================================ Fixture ==

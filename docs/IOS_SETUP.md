@@ -199,7 +199,7 @@ The first iOS link on a fresh Mac downloads the Kotlin/Native toolchain
 | `xcodebuild: error: SDK iphonesimulator cannot be located` | Xcode command-line tools point at the wrong Xcode. | `sudo xcode-select -s /Applications/Xcode.app` |
 | Android Studio shows no **iOS App** run config | Kotlin Multiplatform plugin missing or disabled. | Settings → Plugins → enable "Kotlin Multiplatform" → restart AS. |
 | Build prints "Kotlin/Native targets cannot be built on this machine" | You're on Windows / Linux. | Expected — open the project on macOS to link iOS binaries. |
-| `linkDebugFrameworkIosSimulatorArm64` fails with `KLIB resolver` errors | P2pKit module mismatch — Parlor and P2pKit Gradle versions differ. | Pass `-Pparlor.p2p.enabled=false` to disable the optional transport while iterating on iOS. |
+| `linkDebugFrameworkIosSimulatorArm64` fails with `KLIB resolver` errors | Stale or mismatched P2pKit variants in the Gradle cache. | Confirm the catalog pins both P2pKit modules to the same published version, then retry with `--refresh-dependencies`. |
 | Sim screen blank on launch | Framework loaded but Koin bootstrap silently failed. | Open the Xcode console — Kotlin stack traces appear as `os_log` entries; look for `[parlor]` lines. |
 
 ---

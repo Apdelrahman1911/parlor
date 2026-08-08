@@ -32,8 +32,8 @@ data class MafiaPublic(
     val day: Int = 0,
     /**
      * Public view of each seat. While alive, `role == null` — roles are
-     * never disclosed publicly until death (and even then, only if
-     * `settings.revealRoleOnDeath`).
+     * never disclosed publicly during play. A death may reveal its role when
+     * `settings.revealRoleOnDeath` is enabled; PostGame reveals every role.
      */
     val roster: List<PublicPlayerSlot>,
     val lastNight: NightAnnouncement? = null,
@@ -55,7 +55,7 @@ data class PublicPlayerSlot(
     val displayName: String,
     val seat: Int,
     val alive: Boolean = true,
-    /** Non-null only after death AND settings.revealRoleOnDeath is true. */
+    /** Non-null after an enabled death reveal, and for every seat in PostGame. */
     val revealedRole: Role? = null,
 )
 
@@ -116,6 +116,12 @@ data class MafiaPrivate(
     /** Civilian-only private pick. No game effect. */
     val lastSuspicion: PlayerId? = null,
     /**
+     * Doctor-only record of the previous night's effective protection.
+     * Kept in the Doctor's private bucket so remote and local UIs can exclude
+     * an illegal consecutive target without exposing it publicly.
+     */
+    val previousDoctorProtect: PlayerId? = null,
+    /**
      * Own-only night submission (Mafia kill vote, Doctor protect, Detective inspect,
      * Civilian suspicion). Cleared on night resolution.
      */
@@ -128,6 +134,16 @@ data class MafiaPrivate(
     val voteAcknowledged: Boolean = false,
     /** True after the Detective has viewed their private result this night. */
     val detectiveResultAcknowledged: Boolean = false,
+    /**
+     * True once this player has submitted their night action THIS night —
+     * including a Civilian suspicion and including a Skip (null target), neither
+     * of which sets [pendingNightChoice]. The night-action UI gates the
+     * "submitted / waiting" screen on this flag (not pendingNightChoice), so
+     * Civilians and skippers stop being able to resubmit and the host's
+     * ResolveNight unblocks. Cleared on night resolution / mafia revote.
+     * See PROBLEMS_PARLOR.md → mafia-ui-002.
+     */
+    val nightChoiceSubmitted: Boolean = false,
 )
 
 /**

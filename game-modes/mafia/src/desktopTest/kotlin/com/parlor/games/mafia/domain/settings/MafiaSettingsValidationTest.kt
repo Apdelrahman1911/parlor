@@ -43,10 +43,33 @@ class MafiaSettingsValidationTest {
     }
 
     @Test
+    fun rejects_player_count_above_shipping_maximum() {
+        val settings = MafiaSettingsPresets.forPlayerCount(17)
+        val v = settings.validate(playerCount = 17) as MafiaSettingsValidation.Invalid
+        assertThat(v.errors).contains(MafiaSettingsError.PlayerCountAboveMaximum(17))
+    }
+
+    @Test
     fun rejects_zero_mafia() {
         val settings = base(mafia = 0)
         val v = settings.validate(playerCount = 5) as MafiaSettingsValidation.Invalid
         assertThat(v.errors).contains(MafiaSettingsError.MafiaCountBelowOne)
+    }
+
+    @Test
+    fun rejects_negative_optional_role_counts() {
+        val detective = base(detective = -1).validate(5) as MafiaSettingsValidation.Invalid
+        val doctor = base(doctor = -1).validate(5) as MafiaSettingsValidation.Invalid
+        assertThat(detective.errors).contains(MafiaSettingsError.NegativeDetectiveCount(-1))
+        assertThat(doctor.errors).contains(MafiaSettingsError.NegativeDoctorCount(-1))
+    }
+
+    @Test
+    fun rejects_multiple_detectives_or_doctors_for_single_role_ruleset() {
+        val detective = base(detective = 2).validate(7) as MafiaSettingsValidation.Invalid
+        val doctor = base(doctor = 2).validate(7) as MafiaSettingsValidation.Invalid
+        assertThat(detective.errors).contains(MafiaSettingsError.TooManyDetectives(2))
+        assertThat(doctor.errors).contains(MafiaSettingsError.TooManyDoctors(2))
     }
 
     @Test
@@ -108,6 +131,14 @@ class MafiaSettingsValidationTest {
         val v = settings.validate(playerCount = 5) as MafiaSettingsValidation.Invalid
         val hasDur = v.errors.any { it is MafiaSettingsError.DurationTooShort && it.kind == "night" }
         assertThat(hasDur).isEqualTo(true)
+        assertThat(v.errors).contains(MafiaSettingsError.TimersNotSupported)
+    }
+
+    @Test
+    fun rejects_non_null_timer_until_timer_transitions_are_implemented() {
+        val settings = base(nightSec = 60)
+        val v = settings.validate(playerCount = 5) as MafiaSettingsValidation.Invalid
+        assertThat(v.errors).contains(MafiaSettingsError.TimersNotSupported)
     }
 
     @Test

@@ -28,6 +28,7 @@ import com.parlor.games.mafia.domain.state.Team
 import com.parlor.games.mafia.domain.state.VoteAnnouncement
 import com.parlor.games.mafia.domain.state.VoteOutcome
 import com.parlor.games.mafia.domain.state.VoteRoundRecord
+import com.parlor.games.mafia.domain.state.detectiveSeesAs
 import com.parlor.games.mafia.domain.state.team
 
 /**
@@ -42,8 +43,8 @@ import com.parlor.games.mafia.domain.state.team
  *   - Detective inspection results live only in the detective's MafiaPrivate.
  *   - Doctor / Civilian / own night picks live only in the submitter's MafiaPrivate.
  *   - Full role map lives only in MafiaHostOnly.
- *   - PublicPlayerSlot.revealedRole is set only when the player dies AND
- *     settings.revealRoleOnDeath is true.
+ *   - PublicPlayerSlot.revealedRole is set only for an enabled death reveal
+ *     during play; every role is deliberately revealed in PostGame.
  */
 object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
 
@@ -107,6 +108,7 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
         ctx: ReducerContext,
     ): Reduction<MafiaState, MafiaEvent> {
         if (state.phase != MafiaPhase.Setup) return Reduction(state)
+        if (state.public.droppedPlayers.isNotEmpty()) return Reduction(state)
         val playerCount = state.players.size
         if (state.public.settings.validate(playerCount) !is MafiaSettingsValidation.Valid) {
             return Reduction(state)
@@ -195,8 +197,11 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
     }
 
     private fun ackDetectiveResult(state: MafiaState, by: PlayerId): Reduction<MafiaState, MafiaEvent> {
+        if (state.phase !is MafiaPhase.Night) return Reduction(state)
         val priv = state.privatePerPlayer[by] ?: return Reduction(state)
         if (priv.role != Role.Detective) return Reduction(state)
+        if (!isActiveAlive(state, by)) return Reduction(state)
+        if (priv.pendingDetectiveResult == null) return Reduction(state)
         if (priv.detectiveResultAcknowledged) return Reduction(state)
         return Reduction(
             state.copy(
@@ -227,8 +232,10 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
         val night = state.phase as? MafiaPhase.Night ?: return Reduction(state)
         val priv = state.privatePerPlayer[by] ?: return Reduction(state)
         if (priv.role != Role.Mafia) return Reduction(state)
-        if (!isAlive(state, by)) return Reduction(state)
-        if (target != null && !isAlive(state, target)) return Reduction(state)
+        if (!isActiveAlive(state, by)) return Reduction(state)
+        if (priv.nightChoiceSubmitted) return Reduction(state)
+        if (target != null && !isActiveAlive(state, target)) return Reduction(state)
+        if (target == by) return Reduction(state)
         if (target != null && !state.public.settings.mafiaCanTargetMafia) {
             // Can't target another Mafia (unless allowed by settings).
             if (state.privatePerPlayer[target]?.role == Role.Mafia) return Reduction(state)
@@ -241,6 +248,7 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
         // Also stash the submitter's pending choice.
         val withChoice = updated.privatePerPlayer + (by to updated.privatePerPlayer.getValue(by).copy(
             pendingNightChoice = target,
+            nightChoiceSubmitted = true,
         ))
         return Reduction(updated.copy(privatePerPlayer = withChoice))
     }
@@ -253,12 +261,21 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
         if (state.phase !is MafiaPhase.Night) return Reduction(state)
         val priv = state.privatePerPlayer[by] ?: return Reduction(state)
         if (priv.role != Role.Doctor) return Reduction(state)
-        if (!isAlive(state, by)) return Reduction(state)
-        if (target != null && !isAlive(state, target)) return Reduction(state)
+        if (!isActiveAlive(state, by)) return Reduction(state)
+        if (priv.nightChoiceSubmitted) return Reduction(state)
+        if (target != null && !isActiveAlive(state, target)) return Reduction(state)
         if (target == by && !state.public.settings.doctorCanSelfHeal) return Reduction(state)
+        if (
+            target != null &&
+            !state.public.settings.doctorCanProtectSamePlayerConsecutively &&
+            target == priv.previousDoctorProtect
+        ) {
+            return Reduction(state)
+        }
         return Reduction(
             state.copy(
-                privatePerPlayer = state.privatePerPlayer + (by to priv.copy(pendingNightChoice = target)),
+                privatePerPlayer = state.privatePerPlayer +
+                    (by to priv.copy(pendingNightChoice = target, nightChoiceSubmitted = true)),
             ),
         )
     }
@@ -268,15 +285,33 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
         by: PlayerId,
         target: PlayerId?,
     ): Reduction<MafiaState, MafiaEvent> {
-        if (state.phase !is MafiaPhase.Night) return Reduction(state)
+        val night = state.phase as? MafiaPhase.Night ?: return Reduction(state)
         val priv = state.privatePerPlayer[by] ?: return Reduction(state)
         if (priv.role != Role.Detective) return Reduction(state)
-        if (!isAlive(state, by)) return Reduction(state)
-        if (target != null && !isAlive(state, target)) return Reduction(state)
+        if (!isActiveAlive(state, by)) return Reduction(state)
+        if (priv.nightChoiceSubmitted) return Reduction(state)
+        if (target != null && !isActiveAlive(state, target)) return Reduction(state)
         if (target == by && !state.public.settings.detectiveCanInspectSelf) return Reduction(state)
+        val result = target?.let { inspected ->
+            state.hostOnly.fullRoleMap[inspected]?.let { role ->
+                DetectiveResult(
+                    day = night.day,
+                    target = inspected,
+                    seesAs = role.detectiveSeesAs(),
+                )
+            }
+        }
         return Reduction(
             state.copy(
-                privatePerPlayer = state.privatePerPlayer + (by to priv.copy(pendingNightChoice = target)),
+                privatePerPlayer = state.privatePerPlayer +
+                    (
+                        by to priv.copy(
+                            pendingNightChoice = target,
+                            pendingDetectiveResult = result,
+                            detectiveResultAcknowledged = result == null,
+                            nightChoiceSubmitted = true,
+                        )
+                    ),
             ),
         )
     }
@@ -289,10 +324,13 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
         if (state.phase !is MafiaPhase.Night) return Reduction(state)
         val priv = state.privatePerPlayer[by] ?: return Reduction(state)
         if (priv.role != Role.Civilian) return Reduction(state)
-        if (!isAlive(state, by)) return Reduction(state)
+        if (!isActiveAlive(state, by)) return Reduction(state)
+        if (priv.nightChoiceSubmitted) return Reduction(state)
+        if (target != null && (!isActiveAlive(state, target) || target == by)) return Reduction(state)
         return Reduction(
             state.copy(
-                privatePerPlayer = state.privatePerPlayer + (by to priv.copy(lastSuspicion = target)),
+                privatePerPlayer = state.privatePerPlayer +
+                    (by to priv.copy(lastSuspicion = target, nightChoiceSubmitted = true)),
             ),
         )
     }
@@ -301,9 +339,10 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
 
     private fun resolveNight(
         state: MafiaState,
-        ctx: ReducerContext,
+        @Suppress("UNUSED_PARAMETER") ctx: ReducerContext,
     ): Reduction<MafiaState, MafiaEvent> {
         val night = state.phase as? MafiaPhase.Night ?: return Reduction(state)
+        if (!isNightReadyToResolve(state)) return Reduction(state)
 
         // Tally the current coordination round's mafia kill votes.
         val mafiaSubmissions = aliveMafiaSubmissions(state)
@@ -324,7 +363,9 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
         // Otherwise: actually resolve the night.
         val doctorPick = aliveDoctorChoice(state)
         val detectivePick = aliveDetectiveChoice(state)
-        val doctorPrev = previousNightDoctorProtect(state)
+        val doctorPrev = state.privatePerPlayer.values
+            .firstOrNull { it.role == Role.Doctor }
+            ?.previousDoctorProtect
 
         val resolution = NightResolution.resolve(
             inputs = NightResolution.Inputs(
@@ -334,10 +375,20 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
                 doctorProtectedPreviousNight = doctorPrev,
                 detectiveTarget = detectivePick,
                 rolesByPlayer = state.hostOnly.fullRoleMap,
-                alive = aliveSet(state),
+                alive = activeAliveSet(state),
             ),
             settings = state.public.settings,
-            random = ctx.random,
+            // Deterministic per-night RNG derived from the seeded hostOnly seed
+            // (NOT ctx.random, which is a shared, randomly-seeded, advancing
+            // app-wide stream). Using ctx.random made resolveNight non-pure: the
+            // RANDOM_TIED / revote tie-break drew from process entropy, so the
+            // same (state, action) produced different kills and a restored
+            // snapshot could diverge. See PROBLEMS_PARLOR.md → mafia-001.
+            random = RandomSource.seeded(
+                state.hostOnly.randomSeed xor
+                    (night.day.toLong() shl 16) xor
+                    night.mafiaCoordinationRound.toLong(),
+            ),
         )
 
         val killed = resolution.killed
@@ -358,35 +409,36 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
             wasSaved = resolution.wasSaved,
         )
 
-        // Detective gets their private result.
+        // The Detective result is derived and stored at submission time, before
+        // the night can resolve. That guarantees the Detective can view it even
+        // when they are tonight's victim. Resolution only records the outcome;
+        // it must not re-open or overwrite an already acknowledged result.
         val detectiveResult = resolution.detectiveResult
         val detectivePlayer = detectiveByPlayer(state)
-        val privatesAfterDetective = if (detectivePlayer != null && detectiveResult != null) {
-            val priv = state.privatePerPlayer.getValue(detectivePlayer)
-            state.privatePerPlayer + (detectivePlayer to priv.copy(
-                pendingDetectiveResult = DetectiveResult(
-                    day = night.day,
-                    target = detectiveResult.first,
-                    seesAs = detectiveResult.second,
-                ),
-                detectiveResultAcknowledged = false,
-            ))
-        } else state.privatePerPlayer
 
         // Reset all pending night choices + ack flags; reset mafia coordination snapshot.
-        val privatesReset = privatesAfterDetective.mapValues { (_, priv) ->
+        // Snapshot is rebuilt at the start of the next Night phase by updateMafiaCoordination,
+        // so we always clear it here regardless of team — Town's was already null.
+        val privatesReset = state.privatePerPlayer.mapValues { (_, priv) ->
             priv.copy(
                 pendingNightChoice = null,
+                nightChoiceSubmitted = false,
                 nightAcknowledged = false,
-                lastSuspicion = priv.lastSuspicion, // keep
-                mafiaCoordination = if (priv.team == Team.Mafia && isAlive(state, priv.role, killed)) {
-                    null // reset; will be re-initialised on next Night
-                } else null,
+                lastSuspicion = priv.lastSuspicion,
+                previousDoctorProtect = if (priv.role == Role.Doctor) {
+                    resolution.effectiveDoctorTarget
+                } else {
+                    priv.previousDoctorProtect
+                },
+                mafiaCoordination = null,
             )
         }
 
-        // Win-check off the new alive set.
-        val newAlive = aliveSet(state) - listOfNotNull(killed).toSet()
+        // Win-check off the new alive set. A dropped player (ContinueWithoutPlayer)
+        // has left the game and must NOT count toward parity — otherwise a
+        // dropped-but-not-killed Mafia keeps tipping the Mafia-vs-Town math.
+        // See PROBLEMS_PARLOR.md → mafia-002.
+        val newAlive = activeAliveSet(state) - listOfNotNull(killed).toSet()
         val winner = WinCheck.evaluate(newAlive, state.hostOnly.fullRoleMap)
 
         val nightRecord = NightResolutionRecord(
@@ -405,7 +457,7 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
             MafiaPhase.NightAnnouncement(night.day)
         }
 
-        val newState = state.copy(
+        val resolvedState = state.copy(
             privatePerPlayer = privatesReset,
             public = state.public.copy(
                 roster = newRoster,
@@ -417,6 +469,11 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
             ),
             phase = nextPhase,
         )
+        val newState = if (winner != null) {
+            finishGame(resolvedState, winner)
+        } else {
+            resolvedState
+        }
 
         val events = buildList {
             add(MafiaEvent.NightResolved(night.day, killed, resolution.wasSaved))
@@ -450,7 +507,9 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
         val withSnapshot = updateMafiaCoordination(state, snapshot)
         // Clear pending kill-vote choices on Mafia members so the UI resets.
         val cleared = withSnapshot.privatePerPlayer.mapValues { (_, priv) ->
-            if (priv.team == Team.Mafia) priv.copy(pendingNightChoice = null) else priv
+            // Mafia re-submit in round 2, so clear both their pending pick and
+            // the submitted flag so the night-action UI reopens for them.
+            if (priv.team == Team.Mafia) priv.copy(pendingNightChoice = null, nightChoiceSubmitted = false) else priv
         }
         val nextPhase = night.copy(mafiaCoordinationRound = newRound)
         return Reduction(
@@ -483,21 +542,16 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
     // ============================================================ Voting ==
 
     private fun openVote(state: MafiaState): Reduction<MafiaState, MafiaEvent> {
-        val day = when (val p = state.phase) {
-            is MafiaPhase.Discussion -> p.day
-            is MafiaPhase.VoteAnnouncement -> p.day // revote case
-            else -> return Reduction(state)
-        }
+        val day = (state.phase as? MafiaPhase.Discussion)?.day ?: return Reduction(state)
         val alive = state.public.roster.filter { it.alive }.map { it.playerId }
         val active = alive - state.public.droppedPlayers
-        // Candidates default to everyone alive. On a revote opened from VoteAnnouncement
-        // with a tied outcome, the host bridge will have set state.public.activeVote
-        // candidates already — but typically the reducer does it here for the first
-        // vote of the day.
+        // Candidates default to everyone active and alive. Tied revotes are
+        // created directly by [applyVoteTied], never by reopening this phase.
+        // allowSelfVote affects whether `target == voter` is a valid CastVote in
+        // [castVote] below, not who appears on the candidate list. Candidates ==
+        // active living players for all settings.
         val ballot = active
-        val candidates = if (state.public.settings.allowSelfVote) active else active
-        // Note: allowSelfVote affects whether `target == voter` is a valid CastVote,
-        // not who appears on the candidate list. We keep candidates == active.
+        val candidates = active
         val vote = ActiveVote(
             day = day,
             revoteRound = 0,
@@ -515,11 +569,12 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
     }
 
     private fun castVote(state: MafiaState, by: PlayerId, target: PlayerId): Reduction<MafiaState, MafiaEvent> {
-        val voting = state.phase as? MafiaPhase.Voting ?: return Reduction(state)
+        if (state.phase !is MafiaPhase.Voting) return Reduction(state)
         val vote = state.public.activeVote ?: return Reduction(state)
         if (by !in vote.ballot) return Reduction(state)
         if (target !in vote.candidates) return Reduction(state)
         if (target == by && !state.public.settings.allowSelfVote) return Reduction(state)
+        if (by in vote.castSoFar || by in vote.abstained) return Reduction(state)
         val updated = vote.copy(
             castSoFar = vote.castSoFar + (by to target),
             abstained = vote.abstained - by,
@@ -534,6 +589,7 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
         if (state.phase !is MafiaPhase.Voting) return Reduction(state)
         val vote = state.public.activeVote ?: return Reduction(state)
         if (by !in vote.ballot) return Reduction(state)
+        if (by in vote.castSoFar || by in vote.abstained) return Reduction(state)
         val updated = vote.copy(
             castSoFar = vote.castSoFar - by,
             abstained = vote.abstained + by,
@@ -547,6 +603,9 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
     private fun closeVote(state: MafiaState): Reduction<MafiaState, MafiaEvent> {
         val voting = state.phase as? MafiaPhase.Voting ?: return Reduction(state)
         val vote = state.public.activeVote ?: return Reduction(state)
+        if (vote.ballot.isEmpty()) return Reduction(state)
+        val submitted = vote.castSoFar.keys + vote.abstained
+        if (!vote.ballot.all { it in submitted }) return Reduction(state)
 
         val outcome = VoteResolution.resolve(
             inputs = VoteResolution.Inputs(
@@ -561,15 +620,16 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
 
         val day = voting.day
         return when (outcome) {
-            is VoteResolution.Outcome.Resolved -> applyVoteResolved(state, day, outcome)
+            is VoteResolution.Outcome.Resolved -> applyVoteResolved(state, day, vote.revoteRound, outcome)
             is VoteResolution.Outcome.Tied -> applyVoteTied(state, day, vote, outcome)
-            is VoteResolution.Outcome.Skipped -> applyVoteSkipped(state, day, outcome)
+            is VoteResolution.Outcome.Skipped -> applyVoteSkipped(state, day, vote.revoteRound, outcome)
         }
     }
 
     private fun applyVoteResolved(
         state: MafiaState,
         day: Int,
+        revoteRound: Int,
         outcome: VoteResolution.Outcome.Resolved,
     ): Reduction<MafiaState, MafiaEvent> {
         val eliminated = outcome.eliminated
@@ -589,31 +649,34 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
             eliminatedPlayerId = eliminated,
             outcome = VoteOutcome.Eliminated,
         )
-        val newAlive = aliveSet(state) - eliminated
+        // Dropped players don't count toward win parity (see mafia-002).
+        val newAlive = activeAliveSet(state) - eliminated
         val winner = WinCheck.evaluate(newAlive, state.hostOnly.fullRoleMap)
         val nextPhase = if (winner != null) MafiaPhase.PostGame else MafiaPhase.VoteAnnouncement(day)
         val privatesCleared = state.privatePerPlayer.mapValues { (_, priv) ->
             priv.copy(voteAcknowledged = false)
         }
-        return Reduction(
-            state.copy(
-                phase = nextPhase,
-                public = state.public.copy(
-                    roster = newRoster,
-                    lastVote = announcement,
-                    activeVote = null,
-                    winner = winner,
-                ),
-                hostOnly = state.hostOnly.copy(
-                    voteLog = state.hostOnly.voteLog + VoteRoundRecord(
-                        day = day,
-                        revoteRound = 0,
-                        tally = outcome.tally,
-                        eliminatedPlayerId = eliminated,
-                    ),
-                ),
-                privatePerPlayer = privatesCleared,
+        val resolvedState = state.copy(
+            phase = nextPhase,
+            public = state.public.copy(
+                roster = newRoster,
+                lastVote = announcement,
+                activeVote = null,
+                winner = winner,
             ),
+            hostOnly = state.hostOnly.copy(
+                voteLog = state.hostOnly.voteLog + VoteRoundRecord(
+                    day = day,
+                    revoteRound = revoteRound,
+                    tally = outcome.tally,
+                    eliminatedPlayerId = eliminated,
+                ),
+            ),
+            privatePerPlayer = privatesCleared,
+        )
+        val newState = if (winner != null) finishGame(resolvedState, winner) else resolvedState
+        return Reduction(
+            newState,
             buildList {
                 add(MafiaEvent.VoteResolved(day, eliminated))
                 if (winner != null) add(MafiaEvent.WinnerDecided(winner))
@@ -652,6 +715,7 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
     private fun applyVoteSkipped(
         state: MafiaState,
         day: Int,
+        revoteRound: Int,
         outcome: VoteResolution.Outcome.Skipped,
     ): Reduction<MafiaState, MafiaEvent> {
         val announcement = VoteAnnouncement(
@@ -674,7 +738,7 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
                 hostOnly = state.hostOnly.copy(
                     voteLog = state.hostOnly.voteLog + VoteRoundRecord(
                         day = day,
-                        revoteRound = 0,
+                        revoteRound = revoteRound,
                         tally = outcome.tally,
                         eliminatedPlayerId = null,
                     ),
@@ -689,7 +753,7 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
         val ann = state.phase as? MafiaPhase.VoteAnnouncement ?: return Reduction(state)
         if (state.public.winner != null) {
             return Reduction(
-                state.copy(phase = MafiaPhase.PostGame),
+                finishGame(state, state.public.winner),
                 listOf(MafiaEvent.PhaseEntered(MafiaPhase.PostGame)),
             )
         }
@@ -703,7 +767,11 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
             MafiaCoordinationSnapshot(round = 1),
         )
         val cleared = withSnapshot.privatePerPlayer.mapValues { (_, priv) ->
-            priv.copy(voteAcknowledged = false)
+            priv.copy(
+                voteAcknowledged = false,
+                pendingDetectiveResult = null,
+                detectiveResultAcknowledged = false,
+            )
         }
         val nextPhase = MafiaPhase.Night(day = nextDay, mafiaCoordinationRound = 1)
         return Reduction(
@@ -717,9 +785,17 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
     }
 
     private fun endGame(state: MafiaState): Reduction<MafiaState, MafiaEvent> {
+        if (state.phase == MafiaPhase.PostGame) return Reduction(state)
+        val winner = state.public.winner ?: evaluateCurrentWinner(state)
         return Reduction(
-            state.copy(phase = MafiaPhase.PostGame),
-            listOf(MafiaEvent.GameEnded, MafiaEvent.PhaseEntered(MafiaPhase.PostGame)),
+            finishGame(state, winner),
+            buildList {
+                add(MafiaEvent.GameEnded)
+                if (winner != null && state.public.winner == null) {
+                    add(MafiaEvent.WinnerDecided(winner))
+                }
+                add(MafiaEvent.PhaseEntered(MafiaPhase.PostGame))
+            },
         )
     }
 
@@ -745,19 +821,63 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
     }
 
     private fun continueWithout(state: MafiaState, id: PlayerId): Reduction<MafiaState, MafiaEvent> {
+        if (state.phase == MafiaPhase.PostGame) return Reduction(state)
         if (id !in state.players.map { it.id }) return Reduction(state)
         if (id in state.public.droppedPlayers) return Reduction(state)
-        return Reduction(
-            state.copy(public = state.public.copy(
+        val activeVote = state.public.activeVote?.let { vote ->
+            vote.copy(
+                candidates = vote.candidates - id,
+                ballot = vote.ballot - id,
+                castSoFar = vote.castSoFar - id,
+                abstained = vote.abstained - id,
+            )
+        }
+        val coordinationCleaned = state.privatePerPlayer.mapValues { (playerId, private) ->
+            val cleanedSnapshot = private.mafiaCoordination?.copy(
+                submissions = private.mafiaCoordination.submissions
+                    .filterKeys { it != id }
+                    .filterValues { it != id },
+            )
+            if (playerId == id) {
+                private.copy(
+                    pendingNightChoice = null,
+                    nightChoiceSubmitted = false,
+                    mafiaCoordination = cleanedSnapshot,
+                )
+            } else {
+                private.copy(mafiaCoordination = cleanedSnapshot)
+            }
+        }
+        val dropped = state.copy(
+            privatePerPlayer = coordinationCleaned,
+            public = state.public.copy(
                 droppedPlayers = state.public.droppedPlayers + id,
-            )),
+                disconnectedPlayers = state.public.disconnectedPlayers - id,
+                activeVote = activeVote,
+            ),
+        )
+        if (state.phase == MafiaPhase.Setup) return Reduction(dropped)
+
+        // Session orchestration owns the 120-second grace period. Once it
+        // dispatches ContinueWithoutPlayer during an active game, Mafia cannot
+        // preserve hidden-role fairness with an absent seat, so the game ends.
+        val winner = evaluateCurrentWinner(dropped)
+        return Reduction(
+            finishGame(dropped, winner),
+            buildList {
+                add(MafiaEvent.GameEnded)
+                if (winner != null && state.public.winner == null) {
+                    add(MafiaEvent.WinnerDecided(winner))
+                }
+                add(MafiaEvent.PhaseEntered(MafiaPhase.PostGame))
+            },
         )
     }
 
     private fun readmit(state: MafiaState, id: PlayerId): Reduction<MafiaState, MafiaEvent> {
         if (id !in state.public.droppedPlayers) return Reduction(state)
-        // Only readmit before the first Night begins.
-        val canReadmit = state.phase == MafiaPhase.Setup || state.phase == MafiaPhase.RoleAssignment
+        // A dropped Setup seat must be restored before StartGame can proceed.
+        val canReadmit = state.phase == MafiaPhase.Setup
         if (!canReadmit) return Reduction(state)
         return Reduction(
             state.copy(public = state.public.copy(
@@ -771,37 +891,88 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
     private fun isAlive(state: MafiaState, id: PlayerId): Boolean =
         state.public.roster.firstOrNull { it.playerId == id }?.alive == true
 
-    @Suppress("UNUSED_PARAMETER")
-    private fun isAlive(state: MafiaState, role: Role, killedThisStep: PlayerId?): Boolean = true
-
     private fun aliveSet(state: MafiaState): Set<PlayerId> =
         state.public.roster.filter { it.alive }.map { it.playerId }.toSet()
+
+    private fun activeAliveSet(state: MafiaState): Set<PlayerId> =
+        aliveSet(state) - state.public.droppedPlayers
 
     private fun activeRoster(state: MafiaState): List<PlayerId> =
         state.players.map { it.id }.filterNot { it in state.public.droppedPlayers }
 
+    // A dropped player (ContinueWithoutPlayer) has left the game and must not
+    // still cast a night action, even if their roster slot is still `alive`.
+    // See PROBLEMS_PARLOR.md → mafia-002.
+    private fun isActiveAlive(state: MafiaState, id: PlayerId): Boolean =
+        isAlive(state, id) && id !in state.public.droppedPlayers
+
+    /**
+     * Reducer-owned night close gate. UI readiness is advisory; a duplicated,
+     * stale, or malicious host command still cannot resolve until every active
+     * living seat has submitted exactly once and any Detective result has been
+     * viewed. The round-two Mafia revote clears only Mafia submission flags, so
+     * this same predicate remains valid for both rounds.
+     */
+    private fun isNightReadyToResolve(state: MafiaState): Boolean {
+        val activeAlive = activeRoster(state).filter { isAlive(state, it) }
+        if (activeAlive.isEmpty()) return false
+        return activeAlive.all { id ->
+            val private = state.privatePerPlayer[id] ?: return@all false
+            private.nightChoiceSubmitted &&
+                (private.pendingDetectiveResult == null || private.detectiveResultAcknowledged)
+        }
+    }
+
     private fun aliveMafiaSubmissions(state: MafiaState): Map<PlayerId, PlayerId?> =
         state.privatePerPlayer
-            .filter { (id, priv) -> priv.role == Role.Mafia && isAlive(state, id) }
+            .filter { (id, priv) -> priv.role == Role.Mafia && isActiveAlive(state, id) }
             .mapValues { (_, priv) -> priv.pendingNightChoice }
 
     private fun aliveDoctorChoice(state: MafiaState): PlayerId? =
         state.privatePerPlayer.entries.firstOrNull { (id, priv) ->
-            priv.role == Role.Doctor && isAlive(state, id)
+            priv.role == Role.Doctor && isActiveAlive(state, id)
         }?.value?.pendingNightChoice
 
     private fun aliveDetectiveChoice(state: MafiaState): PlayerId? =
         state.privatePerPlayer.entries.firstOrNull { (id, priv) ->
-            priv.role == Role.Detective && isAlive(state, id)
+            priv.role == Role.Detective && isActiveAlive(state, id)
         }?.value?.pendingNightChoice
 
     private fun detectiveByPlayer(state: MafiaState): PlayerId? =
         state.privatePerPlayer.entries.firstOrNull { (id, priv) ->
-            priv.role == Role.Detective && isAlive(state, id)
+            priv.role == Role.Detective && isActiveAlive(state, id)
         }?.key
 
-    private fun previousNightDoctorProtect(state: MafiaState): PlayerId? =
-        state.hostOnly.nightLog.lastOrNull()?.doctorProtect
+    /**
+     * Evaluate a winner only when a complete role map exists. In Setup (or a
+     * malformed/restored state) treating an empty map as "zero Mafia" would
+     * incorrectly award Town an early host-ended game.
+     */
+    private fun evaluateCurrentWinner(state: MafiaState): Team? {
+        val alive = activeAliveSet(state)
+        if (alive.isEmpty() || !state.hostOnly.fullRoleMap.keys.containsAll(alive)) return null
+        return WinCheck.evaluate(alive, state.hostOnly.fullRoleMap)
+    }
+
+    /**
+     * Terminal-state invariant: every role becomes public at game end,
+     * independent of revealRoleOnDeath. This lets every peer render the same
+     * complete post-game result without receiving host-only/private buckets.
+     */
+    private fun finishGame(state: MafiaState, winner: Team?): MafiaState =
+        state.copy(
+            phase = MafiaPhase.PostGame,
+            public = state.public.copy(
+                winner = winner,
+                activeVote = null,
+                roster = state.public.roster.map { slot ->
+                    slot.copy(
+                        revealedRole = state.hostOnly.fullRoleMap[slot.playerId]
+                            ?: slot.revealedRole,
+                    )
+                },
+            ),
+        )
 
     /**
      * Replicate the Mafia coordination snapshot into every living Mafia
@@ -815,7 +986,7 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
         snapshot: MafiaCoordinationSnapshot,
     ): MafiaState {
         val updated = state.privatePerPlayer.mapValues { (id, priv) ->
-            if (priv.team == Team.Mafia && isAlive(state, id)) {
+            if (priv.team == Team.Mafia && isActiveAlive(state, id)) {
                 priv.copy(mafiaCoordination = snapshot)
             } else {
                 priv.copy(mafiaCoordination = null)

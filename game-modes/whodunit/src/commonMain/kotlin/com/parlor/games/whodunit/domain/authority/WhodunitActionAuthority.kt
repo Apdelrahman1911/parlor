@@ -31,7 +31,6 @@ object WhodunitActionAuthority {
         is WhodunitAction.AssignRoles,
         WhodunitAction.AdvanceFromIntro,
         is WhodunitAction.AdvanceBriefingCard,
-        is WhodunitAction.StartCharacterReveal,
         WhodunitAction.RevealNextClue,
         is WhodunitAction.StartDiscussionTimer,
         WhodunitAction.PauseDiscussionTimer,
@@ -55,6 +54,7 @@ object WhodunitActionAuthority {
         WhodunitAction.AdvanceFromCharacterReveal -> AuthorityScope.HostOnly
 
         // Self-actor: only the named player may submit.
+        is WhodunitAction.StartCharacterReveal -> AuthorityScope.SelfActor(action.playerId)
         is WhodunitAction.CompleteCharacterReveal -> AuthorityScope.SelfActor(action.playerId)
         is WhodunitAction.OpenPrivateReview -> AuthorityScope.SelfActor(action.playerId)
         is WhodunitAction.CloseHide -> AuthorityScope.SelfActor(action.playerId)

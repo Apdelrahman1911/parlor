@@ -78,10 +78,16 @@
     <string name="settings_role_count_increment_description_format">زد عدد %1$s</string>
     <string name="settings_validation_card_title">راجع هذه قبل البدء</string>
     <string name="settings_error_player_count_below_minimum_format">تحتاج على الأقل %1$d لاعبين للبدء (لديك %2$d).</string>
+    <string name="settings_error_player_count_above_maximum_format">تدعم اللعبة %1$d لاعبًا كحد أقصى (لديك %2$d).</string>
     <string name="settings_error_mafia_below_one">يجب أن يكون هناك حرامي واحد على الأقل.</string>
+    <string name="settings_error_detective_negative_format">لا يمكن أن يكون عدد المحققين سالبًا (كان %1$d).</string>
+    <string name="settings_error_doctor_negative_format">لا يمكن أن يكون عدد الدكاترة سالبًا (كان %1$d).</string>
+    <string name="settings_error_detective_above_max_format">تدعم هذه القواعد %1$d محقق كحد أقصى (كان %2$d).</string>
+    <string name="settings_error_doctor_above_max_format">تدعم هذه القواعد %1$d دكتور كحد أقصى (كان %2$d).</string>
     <string name="settings_error_not_enough_civilians_format">يلزم مدني واحد على الأقل (الحالي %1$d).</string>
     <string name="settings_error_mafia_not_minority_format">يجب أن يكون عدد الحرامية (%1$d) أقل من بقية الظباط في جلسة من %2$d لاعبين.</string>
     <string name="settings_error_negative_max_revotes_format">لا يمكن أن يكون عدد إعادات التصويت سالبًا (كان %1$d).</string>
+    <string name="settings_error_timers_not_supported">المراحل المؤقتة غير متاحة في هذا الإصدار.</string>
     <string name="settings_error_duration_too_short_format">مدة %1$s يجب أن تكون %2$d ثوانٍ على الأقل.</string>
 
     <!-- Role reveal -->
@@ -178,6 +184,7 @@
     <string name="postgame_eyebrow">انتهت اللعبة</string>
     <string name="postgame_mafia_wins">فاز الحرامية</string>
     <string name="postgame_town_wins">فاز الظباط</string>
+    <string name="postgame_ended_without_winner">انتهت اللعبة</string>
     <string name="postgame_roles_card">الأدوار</string>
     <string name="postgame_exit">العودة إلى الصفحة الرئيسية</string>
     <string name="postgame_exit_description">الخروج من لعبة حرامية وظباط</string>
@@ -188,18 +195,41 @@
     <string name="md_host_hosting_as_format">تستضيف باسم %1$s</string>
     <string name="md_host_players_in_room">اللاعبون في الغرفة</string>
     <string name="md_host_waiting_for_players">في انتظار اللاعبين…</string>
+    <string name="md_host_pending_eyebrow">بانتظار الموافقة</string>
+    <string name="md_host_join_request_format">يريد %1$s الانضمام</string>
+    <string name="md_host_approve">موافقة</string>
+    <string name="md_host_approve_description">وافق على انضمام %1$s إلى هذه الغرفة.</string>
+    <string name="md_host_decline">رفض</string>
+    <string name="md_host_decline_description">ارفض طلب %1$s وأغلق اتصاله.</string>
+    <string name="md_host_start_pending">راجع طلبات الانضمام قبل البدء</string>
     <string name="md_host_player_bullet_format">· %1$s</string>
     <string name="md_host_start_with_format">ابدأ بـ %1$d لاعبين</string>
     <string name="md_host_start_need_more">ابدأ (يلزم 5 لاعبين على الأقل)</string>
+    <string name="md_host_start_too_many">ابدأ (الحد الأقصى %1$d لاعبًا)</string>
     <string name="md_host_start_description">ابدأ لعبة حرامية وظباط</string>
     <string name="md_host_cancel">إلغاء</string>
     <string name="md_host_cancel_description">إلغاء الاستضافة والعودة إلى الصفحة الرئيسية</string>
     <string name="md_host_opening_room">جاري فتح الغرفة…</string>
     <string name="md_host_error_title">تعذّر فتح الغرفة</string>
+    <string name="md_host_error_detail">تحقق من الشبكة المحلية ثم حاول مجددًا.</string>
+
+    <!-- استرداد المضيف عند انقطاع لاعب -->
+    <string name="md_host_peer_away_title">لاعب غير متصل</string>
+    <string name="md_host_peer_away_body_format">انقطع اتصال %1$s. يمكنك انتظاره أو إنهاء اللعبة الآن.</string>
+    <string name="md_host_continue_without_format">إنهاء اللعبة بدون %1$s</string>
+    <string name="md_host_continue_without_description_format">إنهاء هذه اللعبة بدون %1$s وكشف جميع الأدوار.</string>
+    <string name="md_host_leave_session">مغادرة الجلسة</string>
+    <string name="md_host_leave_session_description">إنهاء الغرفة والعودة إلى الصفحة الرئيسية.</string>
+    <string name="md_host_continue_without_dialog_title_format">إنهاء اللعبة بدون %1$s؟</string>
+    <string name="md_host_continue_without_dialog_body_format">لا يمكن متابعة حرامية وظباط بعدل من دون مقعد %1$s ذي الدور السري. ستنتهي اللعبة وتُكشف جميع الأدوار.</string>
+    <string name="md_host_continue_without_dialog_cancel">انتظار</string>
+    <string name="md_host_continue_without_dialog_confirm_format">إنهاء وكشف الأدوار</string>
+    <string name="md_host_continue_without_dialog_confirm_description_format">تأكيد إنهاء اللعبة بدون %1$s وكشف جميع الأدوار.</string>
 
     <!-- Multi-device peer lobby -->
     <string name="md_peer_offline_banner">أنت غير متصل — لن تتم مزامنة أفعالك حتى تعود إلى الاتصال.</string>
     <string name="md_peer_error_title">تعذّر الانضمام إلى الغرفة</string>
+    <string name="md_peer_error_detail">رفض المضيف الطلب أو الغرفة غير متاحة أو إصدار اللعبة غير متوافق.</string>
     <string name="md_peer_connecting_format">جاري الاتصال بالغرفة %1$s…</string>
     <string name="md_peer_eyebrow">حرامية وظباط · انضممت</string>
     <string name="md_peer_room_format">%1$s · %2$s</string>

@@ -1,48 +1,43 @@
 package com.parlor.games.whodunit.ui.flow.multiplayer
 
 import com.parlor.core.ids.PlayerId
+import com.parlor.core.ids.SessionId
+import com.parlor.core.result.Result
 import com.parlor.engine.state.Player
 import com.parlor.games.whodunit.WhodunitIds
 import com.parlor.games.whodunit.domain.action.WhodunitAction
 import com.parlor.games.whodunit.domain.action.WhodunitActionCodec
 import com.parlor.games.whodunit.domain.authority.WhodunitActionAuthority
 import com.parlor.games.whodunit.domain.event.WhodunitEvent
+import com.parlor.games.whodunit.domain.phase.WhodunitPhase
 import com.parlor.games.whodunit.domain.projection.WhodunitProjectionPolicy
 import com.parlor.games.whodunit.domain.state.WhodunitPrivate
 import com.parlor.games.whodunit.domain.state.WhodunitState
 import com.parlor.networking.protocol.HostMessage
-import com.parlor.networking.protocol.PeerMessage
+import com.parlor.networking.protocol.SessionEndReason
+import com.parlor.networking.protocol.SessionEnvelopeHeader
+import com.parlor.networking.protocol.SessionProtocol
 import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.PeerEvent
 import com.parlor.networking.room.SendTarget
+import com.parlor.networking.security.SecureIds
+import com.parlor.session.multidevice.CommandApplication
+import com.parlor.session.multidevice.HostAuthoritativeSessionCoordinator
+import com.parlor.session.multidevice.PlayerSnapshotPayload
 import com.parlor.session.passandplay.PassAndPlaySessionController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.drop
-import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.serialization.builtins.MapSerializer
 import kotlinx.serialization.json.Json
 
 /**
- * Host-side bridge between a canonical [PassAndPlaySessionController] and the
- * room transport.
+ * Owns Whodunit's host-authoritative wire protocol.
  *
- * Responsibilities:
- *  1. Broadcast the public projection as `HostMessage.PublicStateSnapshot`
- *     on every host-state emission (after the projection policy strips
- *     `hostOnly` + `privatePerPlayer`).
- *  2. Send each peer **only their own** `WhodunitPrivate` whenever the
- *     `privatePerPlayer` map changes. A peer never sees another peer's
- *     private bucket; the redaction is enforced at the wire level here.
- *  3. Decode inbound `PeerMessage.ActionSubmit` and feed the action into
- *     the canonical controller. The host's reducer remains the only
- *     mutator of game state.
- *
- * Lifecycle: created when the host taps "Start" in the lobby, kept alive
- * by the enclosing Compose scope, torn down by [close] when the flow
- * leaves the game.
+ * The reducer on the host is the sole state mutator. Peer commands are
+ * authenticated by the transport, actor-authorized here, ordered/deduplicated
+ * by [HostAuthoritativeSessionCoordinator], and answered with a single atomic
+ * public + own-private snapshot at one revision.
  */
 class WhodunitHostRoomBridge(
     private val controller: PassAndPlaySessionController<WhodunitState, WhodunitAction, WhodunitEvent>,
@@ -54,164 +49,189 @@ class WhodunitHostRoomBridge(
         isLenient = false
         encodeDefaults = true
     },
+    private val rejoinGraceMs: Long = REJOIN_GRACE_MS,
+    heartbeatIntervalMs: Long = HEARTBEAT_INTERVAL_MS,
+    sessionIdGenerator: () -> String = SecureIds::id128,
 ) {
+    val protocol: SessionProtocol = SessionProtocol(
+        sessionId = SessionId(sessionIdGenerator()),
+        gameId = WhodunitIds.GameId,
+        gameVersion = GAME_VERSION,
+    )
+
     private val publicStateSerializer = WhodunitState.serializer()
     private val privateSerializer = WhodunitPrivate.serializer()
+    private val remotePlayers = players.map(Player::id).toSet() - room.selfPlayerId
+    private val graceJobs = mutableMapOf<PlayerId, Job>()
+    private var lastSessionStarting: HostMessage.SessionStarting? = null
+    private var terminated = false
 
-    private val jobs: MutableList<Job> = mutableListOf()
+    private val coordinator = HostAuthoritativeSessionCoordinator(
+        room = room,
+        protocol = protocol,
+        remotePlayers = remotePlayers,
+        scope = scope,
+        applyCommand = ::applyRemoteCommand,
+        snapshotFor = ::snapshotFor,
+        heartbeatIntervalMs = heartbeatIntervalMs,
+    )
 
-    init {
-        startBroadcasts()
-        startActionInbox()
-        startPeerEventsListener()
+    private val peerEventsJob = scope.launch {
+        room.peerEvents.collect(::handlePeerEvent)
     }
 
     /**
-     * Send the SessionStarting envelope. Called once by the lobby after the
-     * controller and bridge are set up so peers know to transition into the
-     * game flow.
+     * Announces the immutable protocol tuple before publishing revision zero.
+     * The nonce is public and never contains the reducer's role-assignment seed.
      */
-    suspend fun announceStart(caseId: String, modeId: String, seed: Long) {
-        room.send(
-            target = SendTarget.Broadcast,
-            message = HostMessage.SessionStarting(
-                caseId = caseId,
-                modeId = modeId,
-                players = players,
-                seed = seed,
+    suspend fun announceStart(caseId: String, modeId: String) {
+        val starting = HostMessage.SessionStarting(
+            caseId = caseId,
+            modeId = modeId,
+            players = players,
+            sessionNonce = room.info.value.code.hashCode().toLong(),
+            header = SessionEnvelopeHeader(
+                protocol = protocol.protocol,
+                sessionId = protocol.sessionId,
+                gameId = protocol.gameId,
+                gameVersion = protocol.gameVersion,
+                messageId = SecureIds.id128(),
+                sequence = 0L,
             ),
         )
-        // Send the initial state immediately so peers have something to render
-        // before the first action arrives.
-        broadcastPublicSnapshot()
-        broadcastPrivatesForAllPlayers()
+        lastSessionStarting = starting
+        room.send(SendTarget.Broadcast, starting)
+        coordinator.publishState(incrementRevision = false)
+    }
+
+    /** Called after a successful host-originated reducer mutation. */
+    suspend fun publishHostMutation() {
+        coordinator.publishState()
+    }
+
+    /** Delivers a terminal envelope before the caller navigates away. */
+    suspend fun terminate(reason: SessionEndReason = SessionEndReason.HostLeft) {
+        if (terminated) return
+        terminated = true
+        coordinator.end(reason)
+    }
+
+    /**
+     * Applies the host's explicit decision before the grace timer expires.
+     *
+     * Keeping this transition on the bridge prevents gameplay controllers from
+     * opening a bypass around the orchestration pause and guarantees that the
+     * pending expiry job cannot race a confirmed host action.
+     */
+    suspend fun continueWithout(playerId: PlayerId): Boolean {
+        if (terminated || playerId !in remotePlayers) return false
+        graceJobs.remove(playerId)?.cancel()
+        return applyLifecycleAction(WhodunitAction.ContinueWithoutPlayer(playerId))
     }
 
     fun close() {
-        jobs.forEach { it.cancel() }
-        jobs.clear()
+        graceJobs.values.forEach(Job::cancel)
+        graceJobs.clear()
+        peerEventsJob.cancel()
+        coordinator.close()
     }
 
-    // ============================================================ Broadcasts ==
-
-    private fun startBroadcasts() {
-        // PublicStateSnapshot on every host-state change. drop(1) avoids
-        // re-broadcasting the initial value the controller emits on subscribe
-        // — `announceStart()` already shipped that explicitly.
-        jobs += scope.launch {
-            controller.publicState
-                .drop(1)
-                .distinctUntilChanged()
-                .collect { _ -> broadcastPublicSnapshot() }
+    private suspend fun applyRemoteCommand(
+        actor: PlayerId,
+        payload: ByteArray,
+    ): CommandApplication {
+        val action = runCatching { WhodunitActionCodec.decode(payload) }.getOrNull()
+            ?: return CommandApplication.InvalidAction
+        val before = controller.hostState.value.state
+        if (before.public.paused) return CommandApplication.InvalidAction
+        if (
+            !WhodunitActionAuthority.isAllowed(
+                action = action,
+                senderId = actor,
+                hostId = room.selfPlayerId,
+                droppedPlayers = before.public.droppedPlayers,
+            )
+        ) {
+            return CommandApplication.Unauthorized
         }
-
-        // PrivateStateForPlayer: whenever any peer's WhodunitPrivate changes,
-        // direct-message that peer. The map identity change is sufficient —
-        // distinctUntilChanged dedupes redundant emissions.
-        jobs += scope.launch {
-            controller.hostState!!
-                .drop(1)
-                .distinctUntilChanged { old, new ->
-                    old.state.privatePerPlayer === new.state.privatePerPlayer ||
-                        old.state.privatePerPlayer == new.state.privatePerPlayer
+        return when (controller.submit(action)) {
+            is Result.Failure -> CommandApplication.InvalidAction
+            is Result.Success -> {
+                if (controller.hostState.value.state == before) {
+                    CommandApplication.InvalidAction
+                } else {
+                    CommandApplication.Applied
                 }
-                .collect { _ -> broadcastPrivatesForAllPlayers() }
+            }
         }
     }
 
-    private suspend fun broadcastPublicSnapshot() {
-        val publicState = WhodunitProjectionPolicy.toPublic(
-            controller.hostState!!.value.state,
-        ).state
-        val payload = json
+    private suspend fun snapshotFor(playerId: PlayerId): PlayerSnapshotPayload {
+        // Read the canonical state exactly once so public and private bytes can
+        // never describe different reducer revisions.
+        val state = controller.hostState.value.state
+        val publicState = WhodunitProjectionPolicy.toPublic(state).state
+        val publicPayload = json
             .encodeToString(publicStateSerializer, publicState)
             .encodeToByteArray()
-        room.send(SendTarget.Broadcast, HostMessage.PublicStateSnapshot(payload))
+        val privatePayload = state.privatePerPlayer[playerId]?.let { slice ->
+            json.encodeToString(privateSerializer, slice).encodeToByteArray()
+        } ?: ByteArray(0)
+        return PlayerSnapshotPayload(publicPayload, privatePayload)
     }
 
-    private suspend fun broadcastPrivatesForAllPlayers() {
-        val map = controller.hostState!!.value.state.privatePerPlayer
-        // The host doesn't know which `PeerId` (P2pKit's identifier) maps to
-        // which game `PlayerId` yet — Phase 8 sends every private slice as a
-        // broadcast targeted by player id; each peer's filter only accepts
-        // its own. Future hardening can swap to true SendTarget.Direct once
-        // peer↔player mapping is established at join time.
-        for ((playerId, slice) in map) {
-            val bytes = json
-                .encodeToString(privateSerializer, slice)
-                .encodeToByteArray()
-            room.send(
-                target = SendTarget.Direct(playerId),
-                message = HostMessage.PrivateStateForPlayer(
-                    target = playerId,
-                    payload = bytes,
-                ),
-            )
+    private suspend fun handlePeerEvent(event: PeerEvent) {
+        when (event) {
+            is PeerEvent.PeerLeft -> handlePeerLeft(event.playerId)
+            is PeerEvent.PeerReconnected -> handlePeerReconnected(event.playerId)
+            is PeerEvent.AdmissionRequested,
+            is PeerEvent.PeerJoined,
+            PeerEvent.HostLost,
+            PeerEvent.HostRestored,
+            PeerEvent.SelfOffline,
+            PeerEvent.SelfOnline -> Unit
         }
     }
 
-    // ============================================================ Inbox ==
-
-    private fun startActionInbox() {
-        val hostId = room.info.value.hostPlayerId
-        jobs += scope.launch {
-            room.incoming.filterIsInstance<PeerMessage.ActionSubmit>().collect { msg ->
-                val action = runCatching { WhodunitActionCodec.decode(msg.payload) }.getOrNull()
-                    ?: return@collect
-                // Authority gate also enforces the dropped-spectator rule —
-                // a stale or queued action from a dropped peer is rejected
-                // here regardless of sender attestation.
-                val droppedPlayers = controller.publicState.value.state.public.droppedPlayers
-                if (!WhodunitActionAuthority.isAllowed(action, msg.sender, hostId, droppedPlayers)) {
-                    return@collect
-                }
-                controller.submit(action)
-            }
-        }
-    }
-
-    /**
-     * Wave 9H-5: subscribe to [LocalRoom.peerEvents] and translate
-     * transport-level connection transitions into canonical game actions:
-     *  - PeerLeft → MarkPlayerDisconnected (recorded in public state).
-     *  - PeerReconnected → MarkPlayerReconnected + targeted re-send of the
-     *    current public snapshot AND the reconnected peer's private slice,
-     *    so the peer's shadow catches up to the current screen without a
-     *    "rejoin lobby" detour.
-     */
-    private fun startPeerEventsListener() {
-        jobs += scope.launch {
-            room.peerEvents.collect { event ->
-                when (event) {
-                    is PeerEvent.PeerLeft -> {
-                        controller.submit(WhodunitAction.MarkPlayerDisconnected(event.playerId))
-                    }
-                    is PeerEvent.PeerReconnected -> {
-                        controller.submit(WhodunitAction.MarkPlayerReconnected(event.playerId))
-                        resendSnapshotTo(event.playerId)
-                    }
-                    is PeerEvent.PeerJoined -> Unit  // initial join handled by JoinRequest
-                    // Peer-side events ignored on the host.
-                    PeerEvent.HostLost,
-                    PeerEvent.HostRestored,
-                    PeerEvent.SelfOffline,
-                    PeerEvent.SelfOnline -> Unit
+    private suspend fun handlePeerLeft(playerId: PlayerId) {
+        if (playerId !in remotePlayers) return
+        applyLifecycleAction(WhodunitAction.MarkPlayerDisconnected(playerId))
+        if (
+            controller.hostState.value.state.phase != WhodunitPhase.PostGame &&
+            graceJobs[playerId] == null
+        ) {
+            graceJobs[playerId] = scope.launch {
+                delay(rejoinGraceMs)
+                graceJobs.remove(playerId)
+                if (playerId in controller.hostState.value.state.public.disconnectedPlayers) {
+                    continueWithout(playerId)
                 }
             }
         }
     }
 
-    /** Send the current snapshot + the target peer's private slice. */
-    private suspend fun resendSnapshotTo(playerId: PlayerId) {
-        val state = controller.hostState!!.value.state
-        val publicState = WhodunitProjectionPolicy.toPublic(state).state
-        val publicBytes = json.encodeToString(publicStateSerializer, publicState).encodeToByteArray()
-        room.send(SendTarget.Direct(playerId), HostMessage.PublicStateSnapshot(publicBytes))
-        val slice = state.privatePerPlayer[playerId] ?: return
-        val privateBytes = json.encodeToString(privateSerializer, slice).encodeToByteArray()
-        room.send(
-            target = SendTarget.Direct(playerId),
-            message = HostMessage.PrivateStateForPlayer(target = playerId, payload = privateBytes),
-        )
+    private suspend fun handlePeerReconnected(playerId: PlayerId) {
+        if (playerId !in remotePlayers) return
+        graceJobs.remove(playerId)?.cancel()
+        // A fresh rejoin flow needs the start envelope before its first atomic
+        // snapshot. An already-running bridge consumes and ignores this
+        // idempotent legacy transition message.
+        lastSessionStarting?.let { room.send(SendTarget.Direct(playerId), it) }
+        val changed = applyLifecycleAction(WhodunitAction.MarkPlayerReconnected(playerId))
+        if (!changed) coordinator.publishState(incrementRevision = false)
+    }
+
+    private suspend fun applyLifecycleAction(action: WhodunitAction): Boolean {
+        val before = controller.hostState.value.state
+        val result = controller.submit(action)
+        val changed = result is Result.Success && controller.hostState.value.state != before
+        if (changed) coordinator.publishState()
+        return changed
+    }
+
+    companion object {
+        const val GAME_VERSION: Int = 1
+        const val REJOIN_GRACE_MS: Long = 120_000L
+        const val HEARTBEAT_INTERVAL_MS: Long = 10_000L
     }
 }

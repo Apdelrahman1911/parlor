@@ -76,6 +76,19 @@ class PassAndPlaySessionController<S : GameState, A : GameAction, E : GameEvent>
 
     private val privateFlows: MutableMap<PlayerId, StateFlow<PrivateProjection<S>>> = mutableMapOf()
 
+    init {
+        // Pre-seed the private-flow cache for every known player so
+        // privateStateFor is a read-only lookup on the hot path. The player set
+        // is fixed for a session, so this removes the unsynchronized getOrPut
+        // first-touch race (concurrent first calls on a multithreaded dispatcher
+        // could install a duplicate eagerly-started flow or corrupt the map).
+        // See PROBLEMS_PARLOR.md → session-02.
+        config.players.forEach { player ->
+            privateFlows[player.id] = state.map { policy.toPlayer(it, player.id) }
+                .stateIn(scope, SharingStarted.Eagerly, policy.toPlayer(state.value, player.id))
+        }
+    }
+
     override fun privateStateFor(playerId: PlayerId): StateFlow<PrivateProjection<S>> =
         privateFlows.getOrPut(playerId) {
             state.map { policy.toPlayer(it, playerId) }
@@ -86,13 +99,21 @@ class PassAndPlaySessionController<S : GameState, A : GameAction, E : GameEvent>
     @Volatile private var paused: Boolean = false
     private var resumeBlocker: Job? = null
 
-    override suspend fun submit(action: A): Result<Unit, SubmitError> = mutex.withLock {
-        if (closed) return Result.Failure(SubmitError.SessionClosed)
-        val current = state.value
-        val reduction = reducer.reduce(current, action, reducerContext)
-        state.value = reduction.newState
+    override suspend fun submit(action: A): Result<Unit, SubmitError> {
+        // Serialize ONLY the state mutation under the lock. Emitting events
+        // (a SUSPEND-overflow SharedFlow) while holding the mutex let a slow or
+        // momentarily-absent collector back-pressure and stall every other
+        // submit (UI, host bridge, PartyAwareSession ack bursts).
+        // See PROBLEMS_PARLOR.md → session-01.
+        val reduction = mutex.withLock {
+            if (closed) return Result.Failure(SubmitError.SessionClosed)
+            val current = state.value
+            val reduction = reducer.reduce(current, action, reducerContext)
+            state.value = reduction.newState
+            reduction
+        }
         reduction.events.forEach { _events.emit(it) }
-        Result.Success(Unit)
+        return Result.Success(Unit)
     }
 
     override suspend fun setActiveViewer(viewer: ViewerContext) {

@@ -1,61 +1,141 @@
-# Parlor — Release Runbook
+# Parlor release runbook
 
-> Operational doc for cutting a release and rolling back a broken case.
+Android and iOS are the production targets. Desktop is a development/test
+harness and is not shipped by this runbook.
 
-## Pre-flight (every release)
+## 1. Open the release candidate
 
-1. **Architecture lint** green: `./gradlew :shared:engine:desktopTest` (Konsist purity tests).
-2. **All unit tests** green: `./gradlew test`.
-3. **Shape test** green: `./gradlew :shared:session:allTests`.
-4. **Compose UI tests** green on Android (cover→reveal→hide ceremony, voting flow, reveal stage).
-5. **Real-device QA** completed for the device matrix (`docs/MOTION_DOWNGRADE.md` §validation).
-6. **Accessibility audit** complete (`docs/ACCESSIBILITY_AUDIT.md`).
-7. **Bundled case refreshed** — the in-repo `content/last-dinner.draft.json` matches the latest approved live API version (or, if intentionally lagging, the delta is recorded in the release notes).
-8. **Crash-free session rate** ≥ 95th-percentile target over the prior dogfood window.
+1. Create the release branch from the approved commit. Record both Parlor and
+   P2pKit commit IDs.
+2. Confirm the worktree is clean and the diff contains no generated caches,
+   credentials, signing assets, local repository paths, or debug-only
+   transport/logging switches.
+3. Set Android `versionCode`/`versionName` and iOS
+   `CURRENT_PROJECT_VERSION`/`MARKETING_VERSION`. Record the protocol major,
+   game protocol versions, content versions, and P2pKit coordinate.
+4. Resolve `io.github.apdelrahman1911:p2p-core:0.7.0-rc2` and
+   `io.github.apdelrahman1911:p2p-transport-lan:0.7.0-rc2` from Maven Central.
+   Do not use `mavenLocal()`, a sibling checkout, or a repository override.
+5. Freeze bundled EN/AR content and translations. This release has no remote
+   case rollout to use as a substitute for an app release.
 
-## Build and ship — Android
+## 2. Automated verification
 
-1. Bump `versionCode` and `versionName` in `composeApp/build.gradle.kts`.
-2. `./gradlew :composeApp:bundleRelease`.
-3. Sign with the release keystore (out-of-band; do not commit keystore credentials).
-4. Upload `.aab` to Play Console; promote through Internal → Closed → Open → Production per Play's review schedule.
+On Linux or macOS with JDK 21 and Android SDK 36:
 
-## Build and ship — iOS
+```bash
+./gradlew productionCheck --no-daemon --stacktrace --console=plain
+# In the protected signing environment, add:
+./gradlew productionAndroidSigningCheck --no-daemon --no-configuration-cache --stacktrace --console=plain
+```
 
-1. Bump `MARKETING_VERSION` and `CURRENT_PROJECT_VERSION` in the Xcode wrapper project.
-2. Build with `./gradlew :composeApp:assembleXCFramework` followed by Xcode archive.
-3. Notarize and submit to App Store Connect for TestFlight, then App Store review.
+On macOS with the release Xcode toolchain:
 
-## Build and ship — Desktop
+```bash
+./gradlew productionAppleCheck --no-daemon --stacktrace --console=plain
+```
 
-1. Bump `compose.desktop.application.nativeDistributions.packageVersion`.
-2. `./gradlew :composeApp:packageDmg` (macOS), `:packageMsi` (Windows), `:packageDeb` (Linux).
-3. Sign each installer per platform requirements.
-4. Upload to the chosen distribution channel.
+Archive:
 
-## Rolling back a broken case
+- Gradle and Xcode versions;
+- full command logs;
+- XML/HTML test and lint reports;
+- dependency graphs and P2pKit provenance;
+- unsigned Android AAB checksum; and
+- linked iOS framework checksums.
 
-A case can be broken in two ways: invalid (fails validation for some users) or unbalanced (one killer wins 90% of games, or a clue contains a typo that breaks the mystery).
+A successful compiler or simulator result does not pass device, signing,
+privacy, or store gates. See `docs/RELEASE_GATES.md`.
 
-1. **Identify the broken version.** Look at telemetry for `ValidationError` events tagged with the broken `caseId` + `version`, or for crash reports referencing the case.
-2. **Choose the last-known-good version.** Cached cases are keyed on `(caseId, version)`; the most recent approved older version is the rollback target.
-3. **Re-publish the older version with a fresh timestamp.** The case-management mock backend (and, post-MVP, the real backend) supports re-publishing an older case as the current version — same content, fresh manifest entry.
-4. **Verify cache invalidation.** On next app open, clients fetch the new manifest, see a newer-than-cached `version` for that `caseId`, and refresh.
-5. **Confirm** by manually opening the case on a fresh install — should serve the rolled-back content.
+## 3. Manual two-device matrix
 
-**Drill.** Before any production release, rehearse this drill against the mock backend. Time-to-rollback target: under 5 minutes.
+Use physical devices on representative home, office, guest/client-isolated,
+IPv4/IPv6, and network-switching Wi-Fi. Cover Android↔Android, iOS↔iOS, and
+Android↔iOS where the supported versions permit.
 
-## Telemetry to monitor in the first 24 hours
+For both Whodunit and Mafia, verify:
 
-- Crash-free session rate per platform.
-- Validation failures by `caseId` × `version`.
-- Time-to-completion p50 and p90 (Classic vs Elimination).
-- Killer-wins rate per killer variant (target: 30–50% balanced).
-- Replay rate after first game.
+1. discovery, room code, authenticated connection, explicit host approval,
+   wrong-code rejection, decline, full room, and closed admissions;
+2. complete normal play and rematch;
+3. duplicate, delayed, reordered, malformed, unknown, oversized, and
+   incompatible protocol/game messages using the deterministic harness;
+4. simultaneous actions and illegal actor/target combinations;
+5. background/foreground, screen lock, network loss/change, peer disconnect,
+   same-host rejoin within 120 seconds, grace expiry, and stale-token refusal;
+6. host exit/host death as terminal with no migration;
+7. repeated create/join/play/leave cycles with no lingering discovery,
+   sockets, coroutines, or stale sessions; and
+8. TalkBack/VoiceOver, EN/AR, RTL, reduced motion, large text, orientation, and
+   supported phone/tablet layouts.
 
-Filter all telemetry through `:shared:core/logging`'s no-private-leak helper. Private dossier text and host-only fields must never appear in payloads.
+Record model, OS version, network topology, build number, result, logs with
+sensitive values redacted, and issue links. Anything not run is `UNVERIFIED`.
 
-## Communication
+## 4. Compliance and observability
 
-- File a runbook entry in the team's incident tracker for each rollback, including the `caseId × version` rolled from and to and the reason.
-- Notify the content team so they can fix the broken version offline.
+Complete `docs/PRIVACY_AND_COMPLIANCE.md` and
+`docs/DEPENDENCY_REVIEW.md`.
+
+- Analytics and crash reporting are separate opt-ins and default off.
+- Verify the no-consent path emits no provider traffic.
+- Verify consent withdrawal stops future collection.
+- Inspect captured events/crashes for player names, room/peer/session IDs,
+  room codes, tokens, private/host content, and payloads.
+- Complete store privacy/data-safety, encryption/export, age-rating, support,
+  and content-rights reviews.
+- Legal must approve the project license, SBOM, and third-party notices.
+
+## 5. Sign and stage
+
+### Android
+
+1. Build the final AAB from the already-verified commit in the protected
+   signing environment.
+2. Supply the upload key only through the secret store; never copy a keystore
+   or password into the repository or logs.
+3. Confirm the artifact is release/minified as configured, signed by the
+   expected upload certificate, and byte-identical in inputs to the unsigned
+   candidate other than signing.
+4. Upload to Play internal testing. Re-run install, startup, LAN multiplayer,
+   background/rejoin, and telemetry-consent smokes from the delivered build.
+
+### iOS
+
+1. Archive the same commit with the protected distribution certificate,
+   provisioning profile, bundle ID, and App Store configuration.
+2. Validate the archive and privacy manifest in Xcode/Organizer.
+3. Upload to TestFlight. Re-run install, startup, LAN multiplayer,
+   background/rejoin, and telemetry-consent smokes from the delivered build.
+
+Promote through internal/TestFlight cohorts before broader rollout. Store
+submission is blocked while any Blocker/Critical/High issue is open without
+written risk acceptance.
+
+## 6. Rollout and rollback
+
+Start with the smallest store cohort that provides useful operational evidence.
+Monitor only consented, sanitized crash/analytics aggregates plus support
+reports. Do not inspect or retain gameplay payloads to diagnose a release.
+
+Stop rollout for crashes, privacy/security regressions, incompatible peers,
+state corruption, inability to finish either game, or discovery/session leaks.
+
+Rollback means halting store rollout and promoting the last approved signed app
+build where the store permits. Because rules and content are bundled, fixing a
+broken game/content version requires a new app build. Preserve protocol
+compatibility during staged rollout or explicitly reject incompatible peers
+with user-readable copy.
+
+## 7. Close the release
+
+Store one release evidence record containing:
+
+- source commits and clean-tree proof;
+- version/protocol/content coordinates;
+- automated logs and reports;
+- dependency/SBOM/license review;
+- signed artifact identifiers/checksums;
+- physical-device, accessibility, privacy, and store receipts;
+- accepted risks and residual `UNVERIFIED` checks; and
+- rollout/rollback owner and decision timestamps.

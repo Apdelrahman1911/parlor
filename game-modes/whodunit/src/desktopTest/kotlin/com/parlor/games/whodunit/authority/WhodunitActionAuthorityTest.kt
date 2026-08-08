@@ -36,7 +36,6 @@ class WhodunitActionAuthorityTest {
             WhodunitAction.AssignRoles(seed = 42L),
             WhodunitAction.AdvanceFromIntro,
             WhodunitAction.AdvanceBriefingCard(1),
-            WhodunitAction.StartCharacterReveal(alice),
             WhodunitAction.RevealNextClue,
             WhodunitAction.StartDiscussionTimer(60),
             WhodunitAction.PauseDiscussionTimer,
@@ -75,6 +74,7 @@ class WhodunitActionAuthorityTest {
     @Test
     fun self_actor_reveal_lifecycle_only_named_player() {
         val actions = listOf<WhodunitAction>(
+            WhodunitAction.StartCharacterReveal(alice),
             WhodunitAction.CompleteCharacterReveal(alice),
             WhodunitAction.OpenPrivateReview(alice),
             WhodunitAction.CloseHide(alice),
@@ -146,6 +146,7 @@ class WhodunitActionAuthorityTest {
             WhodunitAction.AcknowledgeIntro(alice),
             WhodunitAction.AcknowledgeBriefing(alice),
             WhodunitAction.ConfirmRoleViewed(alice),
+            WhodunitAction.StartCharacterReveal(alice),
             WhodunitAction.CompleteCharacterReveal(alice),
             WhodunitAction.OpenPrivateReview(alice),
             WhodunitAction.CloseHide(alice),
@@ -179,7 +180,8 @@ class WhodunitActionAuthorityTest {
     @Test
     fun host_only_actions_pass_through_dropped_set_unaffected() {
         // Dropped set should not change host-only enforcement: host can submit
-        // ContinueWithoutPlayer even for already-dropped players (idempotent).
+        // Grace-expiry is host-only even if stale state already contains a
+        // legacy dropped-player entry; reducer phase/state guards decide it.
         val dropped = setOf(alice)
         assertTrue(
             WhodunitActionAuthority.isAllowed(

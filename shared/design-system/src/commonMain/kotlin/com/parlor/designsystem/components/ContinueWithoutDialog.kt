@@ -1,6 +1,7 @@
 package com.parlor.designsystem.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,10 +20,9 @@ import com.parlor.designsystem.theme.ParlorTheme
 
 /**
  * Confirmation modal for the host's destructive "Continue without
- * [name]" action. The action is the only way to unblock a readiness
- * gate while a peer is offline, and the only undo is `ReadmitPlayer`
- * *before* the next phase advance — so a single-tap accident here is
- * costly. The dialog is the cheap safety net.
+ * [name]" lifecycle action. Individual games decide whether that action drops
+ * a setup seat or ends an active hidden-role game; either outcome is costly,
+ * so the transition always requires a second explicit tap.
  *
  * Localization: every text comes in pre-formatted. The "%1$s" in the
  * EN/AR strings is interpolated by the caller against the offline
@@ -51,6 +52,7 @@ fun ContinueWithoutDialog(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
                 .clip(RoundedCornerShape(ParlorTheme.radii.elevated))
                 .background(colors.surfaceElevated)
                 .padding(ParlorTheme.spacing.l),

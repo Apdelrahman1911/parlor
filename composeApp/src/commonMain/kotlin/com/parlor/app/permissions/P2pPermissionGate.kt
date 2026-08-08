@@ -6,10 +6,11 @@ import kotlinx.coroutines.flow.StateFlow
 /**
  * Platform boundary for the runtime permissions required by Party Play.
  *
- * On Android, hosting or joining a LAN room needs `NEARBY_WIFI_DEVICES`
- * (API 33+) or `ACCESS_FINE_LOCATION` (API ≤ 32). The user must grant
- * these at runtime; the gate exposes status, a request entry point, and
- * an `openAppSettings()` fallback for the permanently-denied case.
+ * Parlor's shipped transport is NSD/JmDNS plus TCP. It does not provision a
+ * Wi-Fi network, so it requests no dangerous Android Nearby/Location
+ * permission. The gate remains a platform seam for a future transport that
+ * does require one, and exposes status, a request entry point, and an
+ * `openAppSettings()` fallback for the permanently-denied case.
  *
  * On Desktop and iOS there is no runtime gate for LAN discovery, so the
  * actuals report [PermissionStatus.Granted] unconditionally and the rest
@@ -51,10 +52,10 @@ sealed interface PermissionStatus {
 }
 
 /**
- * Platform-bound Composable factory. Android wires `LocalContext` +
- * `ActivityResultContracts.RequestMultiplePermissions`; Desktop and iOS
- * return a no-op gate. Lives in commonMain so the navigation code can
- * call it without an `expect class` import.
+ * Platform-bound Composable factory. The current Android, Desktop, and iOS
+ * LAN actuals return a no-op granted gate; the OS handles Android firewall
+ * and Apple Local Network prompts when the transport first touches the
+ * network. Lives in commonMain so navigation does not import platform APIs.
  */
 @Composable
 expect fun rememberP2pPermissionGate(): P2pPermissionGate

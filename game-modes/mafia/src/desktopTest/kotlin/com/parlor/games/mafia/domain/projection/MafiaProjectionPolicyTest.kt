@@ -230,6 +230,35 @@ class MafiaProjectionPolicyTest {
     }
 
     @Test
+    fun post_game_public_and_player_projections_reveal_every_final_role() {
+        val ps = players(7)
+        val assignment = RoleAssignment.assign(
+            players = ps,
+            counts = MafiaRoleCounts(mafia = 2, detective = 1, doctor = 1),
+            random = RandomSource.seeded(77L),
+        )
+        val terminal = buildState(
+            players = ps,
+            roles = assignment.roles,
+            knownTeammates = assignment.knownTeammates,
+            seed = 77L,
+            phase = MafiaPhase.PostGame,
+        )
+
+        val public = MafiaProjectionPolicy.toPublic(terminal).state
+        val player = MafiaProjectionPolicy.toPlayer(terminal, ps.first().id).state
+
+        for (slot in public.public.roster) {
+            assertThat(slot.revealedRole).isEqualTo(assignment.roles[slot.playerId])
+        }
+        for (slot in player.public.roster) {
+            assertThat(slot.revealedRole).isEqualTo(assignment.roles[slot.playerId])
+        }
+        assertThat(public.hostOnly.fullRoleMap).isEmpty()
+        assertThat(player.hostOnly.fullRoleMap).isEmpty()
+    }
+
+    @Test
     fun property_no_non_mafia_projection_references_any_mafia_role() {
         // Property: for several random seeds, after assignment, for every
         // non-Mafia player p and every Mafia player m: toPlayer(p) contains

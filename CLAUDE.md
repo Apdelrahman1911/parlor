@@ -68,17 +68,17 @@ Each `GameDefinition` ships a `ProjectionPolicy` that strips host-only fields fr
 
 The reducer is **pure** and **topology-agnostic**. The I/O boundary is `SessionController`. Pass-and-play (the MVP topology) and future local-multiplayer share the same reducer and same UI — only the controller implementation differs. Privacy enforcement is UI ceremony in pass-and-play (cover screens, hold-to-reveal, hide-and-pass) and transport-level in multi-device (the host never sends another player's private state). If you find yourself branching reducer logic on topology, the design is wrong.
 
-## P2P (multi-device) is opt-in
+## P2P (multi-device) is a production dependency
 
-Multi-device support depends on the external **P2pKit** library, which is not on Maven Central. The flag `parlor.p2p.enabled` controls integration in three steps (settings.gradle.kts has the full comment):
+Multi-device support depends on P2pKit. Both P2pKit modules are pinned in the
+version catalog and resolved from Maven Central; keep the modules on the same
+version. `:shared:transport-p2p` is always included and is the only module that
+may import P2pKit. Do not add `mavenLocal()`, sibling-source auto-detection, or
+a build flag that silently produces a different pass-and-play-only app.
 
-1. Explicit override in `gradle.properties` or `-P` always wins.
-2. Auto-detect: enabled when P2pKit 0.6.0 is published to `~/.m2/.../dev/p2pkit/`.
-3. Default off.
-
-When off: `:shared:transport-p2p` is excluded from the build, and `composeApp` compiles `src/p2pDisabledMain/` (which returns an empty Koin modules list from `p2pBootstrapModules()`). When on: the alternate `src/p2pEnabledMain/` source dir is compiled and wires the real transport. **The pass-and-play code path must remain entirely independent of P2P** — never import from `:shared:transport-p2p` outside the `p2pEnabledMain` source dir or the transport module itself.
-
-Note: `gradle.properties` currently sets `parlor.p2p.enabled=true` — builds will fail unless P2pKit 0.6.0 is in mavenLocal. To build without it, override with `-Pparlor.p2p.enabled=false` or edit the property.
+**The pass-and-play code path must remain independent of P2P runtime APIs.**
+Game modules depend on transport-independent session/networking contracts and
+must never import P2pKit directly.
 
 ## Player counts are declared, never hardcoded (ARCHITECTURE.md §1.4)
 
@@ -89,7 +89,6 @@ The effective player range is the intersection of: engine absolute (`3..16`), `G
 ```
 composeApp/                          # KMP+CMP app — shell, DI assembly, platform entry points
   src/commonMain/.../app/            # App.kt, di/, shell/ (home/library/settings/multiplayer), permissions/, storage/
-  src/p2pEnabledMain | p2pDisabledMain   # Mutually exclusive — see "P2P is opt-in"
   src/{android,ios,desktop}Main      # Platform launchers + expect/actual shims only
 
 shared/core                          # Pure Kotlin: Result, ids, clock, random, logger, UiText
@@ -101,7 +100,7 @@ shared/content                       # Case schema base, repository, validator, 
 shared/networking                    # LocalRoom + transport contracts (interfaces)
 shared/storage                       # Snapshot persistence, settings, secure storage
 shared/navigation                    # Type-safe routes, NavGraphRegistry
-shared/transport-p2p                 # P2pKit adapter — only included when parlor.p2p.enabled
+shared/transport-p2p                 # Required P2pKit adapter; sole P2pKit import boundary
 
 game-modes/whodunit                  # Whodunit module: domain/ (pure), ui/, snapshot/, di/, content/
 content/                             # Case JSON drafts (e.g., last-dinner.draft.json)

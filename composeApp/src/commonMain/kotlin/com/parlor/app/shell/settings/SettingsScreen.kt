@@ -12,8 +12,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -22,17 +24,29 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import com.parlor.app.resources.Res
+import com.parlor.app.resources.settings_analytics_description
+import com.parlor.app.resources.settings_analytics_title
 import com.parlor.app.resources.settings_appearance_dark
 import com.parlor.app.resources.settings_appearance_label
 import com.parlor.app.resources.settings_appearance_light
 import com.parlor.app.resources.settings_appearance_system
 import com.parlor.app.resources.settings_back
 import com.parlor.app.resources.settings_back_description
+import com.parlor.app.resources.settings_crash_reporting_description
+import com.parlor.app.resources.settings_crash_reporting_title
+import com.parlor.app.resources.settings_experience_label
 import com.parlor.app.resources.settings_language_arabic
 import com.parlor.app.resources.settings_language_english
 import com.parlor.app.resources.settings_language_label
+import com.parlor.app.resources.settings_privacy_label
+import com.parlor.app.resources.settings_privacy_note
+import com.parlor.app.resources.settings_reduced_motion_description
+import com.parlor.app.resources.settings_reduced_motion_title
+import com.parlor.app.resources.settings_sound_description
+import com.parlor.app.resources.settings_sound_title
 import com.parlor.app.resources.settings_title
 import com.parlor.designsystem.backdrop.HeroBackdrop
 import com.parlor.designsystem.components.ParlorCard
@@ -46,7 +60,8 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 /**
- * Settings — language and appearance pickers. Persists immediately via
+ * Settings — language, appearance, accessibility, and privacy controls.
+ * Persists immediately via
  * [SettingsStore]; the running UI updates in place because `App.kt` collects
  * the same flows and wires them to [ParlorTheme] + `ProvideAppLanguage`.
  *
@@ -63,6 +78,10 @@ fun SettingsScreen(
 
     val languageTag by settings.languageOverride.collectAsState(initial = null)
     val themeModeTag by settings.themeMode.collectAsState(initial = ThemeMode.Default.tag)
+    val soundEnabled by settings.soundEnabled.collectAsState(initial = true)
+    val reducedMotion by settings.reducedMotion.collectAsState(initial = false)
+    val analyticsEnabled by settings.analyticsEnabled.collectAsState(initial = false)
+    val crashReportingEnabled by settings.crashReportingEnabled.collectAsState(initial = false)
 
     val currentLanguage = AppLanguage.fromTag(languageTag)
     val currentThemeMode = ThemeMode.fromTag(themeModeTag)
@@ -122,6 +141,49 @@ fun SettingsScreen(
                 )
             }
 
+            SettingsSection(label = stringResource(Res.string.settings_experience_label)) {
+                ToggleOption(
+                    title = stringResource(Res.string.settings_sound_title),
+                    description = stringResource(Res.string.settings_sound_description),
+                    checked = soundEnabled,
+                    onCheckedChange = { enabled ->
+                        scope.launch { settings.setSoundEnabled(enabled) }
+                    },
+                )
+                ToggleOption(
+                    title = stringResource(Res.string.settings_reduced_motion_title),
+                    description = stringResource(Res.string.settings_reduced_motion_description),
+                    checked = reducedMotion,
+                    onCheckedChange = { enabled ->
+                        scope.launch { settings.setReducedMotion(enabled) }
+                    },
+                )
+            }
+
+            SettingsSection(label = stringResource(Res.string.settings_privacy_label)) {
+                ToggleOption(
+                    title = stringResource(Res.string.settings_analytics_title),
+                    description = stringResource(Res.string.settings_analytics_description),
+                    checked = analyticsEnabled,
+                    onCheckedChange = { enabled ->
+                        scope.launch { settings.setAnalyticsEnabled(enabled) }
+                    },
+                )
+                ToggleOption(
+                    title = stringResource(Res.string.settings_crash_reporting_title),
+                    description = stringResource(Res.string.settings_crash_reporting_description),
+                    checked = crashReportingEnabled,
+                    onCheckedChange = { enabled ->
+                        scope.launch { settings.setCrashReportingEnabled(enabled) }
+                    },
+                )
+                Text(
+                    text = stringResource(Res.string.settings_privacy_note),
+                    style = ParlorTheme.typography.bodySmall,
+                    color = ParlorTheme.colors.textSecondary,
+                )
+            }
+
             // Back is in the ScreenHeader; no bottom button needed.
         }
     }
@@ -162,6 +224,55 @@ private fun AppearanceOption(
     selected: Boolean,
     onSelected: () -> Unit,
 ) = OptionRow(label = label, selected = selected, onSelected = onSelected)
+
+@Composable
+private fun ToggleOption(
+    title: String,
+    description: String,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit,
+) {
+    val colors = ParlorTheme.colors
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(ParlorTheme.radii.card))
+            .background(colors.surfaceHigher)
+            .border(
+                width = 1.dp,
+                color = colors.borderElevated,
+                shape = RoundedCornerShape(ParlorTheme.radii.card),
+            )
+            .toggleable(
+                value = checked,
+                role = Role.Switch,
+                onValueChange = onCheckedChange,
+            )
+            .padding(horizontal = ParlorTheme.spacing.l, vertical = ParlorTheme.spacing.m),
+        horizontalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.xs),
+        ) {
+            Text(
+                text = title,
+                style = ParlorTheme.typography.bodyLarge,
+                color = colors.textPrimary,
+            )
+            Text(
+                text = description,
+                style = ParlorTheme.typography.bodySmall,
+                color = colors.textSecondary,
+            )
+        }
+        Switch(
+            checked = checked,
+            onCheckedChange = null,
+        )
+    }
+}
 
 @Composable
 private fun OptionRow(

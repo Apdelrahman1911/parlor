@@ -7,11 +7,11 @@ import com.parlor.engine.state.Player
  * Pure helpers for the Party Play readiness invariant: "have all active-roster
  * players acknowledged this step yet?"
  *
- * Active roster = players minus dropped players. Disconnected players are NOT
- * subtracted — they still count, so the host must either wait for them to
- * reconnect or explicitly drop them via `ContinueWithoutPlayer`. This rule is
- * enforced by reducer + UI both reading [isComplete] from this helper, so
- * there is one source of truth for "is the advance gate open".
+ * Active roster = players minus legacy dropped-player snapshot entries.
+ * Disconnected players are never subtracted: the canonical game pauses while
+ * the transport retains their seat for the rejoin grace period, then ends if
+ * they do not return. Reducer + UI both read [isComplete], so there is one
+ * source of truth for "is the advance gate open".
  *
  * All functions are pure and side-effect free; takeable from reducer or UI.
  */
@@ -20,7 +20,7 @@ object PartyReadiness {
     /**
      * Active roster: the set of players whose acknowledgements (or votes,
      * or role-views) the host is *currently* waiting on. Dropped players
-     * are excluded — the host has explicitly chosen to continue without them.
+     * are excluded only for backward compatibility with older snapshots.
      */
     fun activeRoster(
         players: List<Player>,

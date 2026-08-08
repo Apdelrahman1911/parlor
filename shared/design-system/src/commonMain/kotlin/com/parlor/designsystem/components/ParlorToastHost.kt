@@ -19,6 +19,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -110,13 +111,6 @@ fun ParlorToastHost(
 ) {
     val toasts by state.toasts.collectAsState()
 
-    // Schedule auto-dismiss for each currently-shown toast.
-    LaunchedEffect(toasts.lastOrNull()?.id) {
-        val current = toasts.lastOrNull() ?: return@LaunchedEffect
-        delay(state.durationFor(current))
-        state.dismiss(current.id)
-    }
-
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -125,12 +119,22 @@ fun ParlorToastHost(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         toasts.forEach { toast ->
-            AnimatedVisibility(
-                visible = true,
-                enter = fadeIn() + slideInVertically(initialOffsetY = { it / 2 }),
-                exit = fadeOut() + slideOutVertically(targetOffsetY = { it / 2 }),
-            ) {
-                ToastChip(toast)
+            // Per-toast auto-dismiss keyed on the stable toast id, so EVERY
+            // queued toast expires — not just the newest. The previous single
+            // LaunchedEffect keyed on toasts.lastOrNull() left older toasts
+            // stranded forever (see PROBLEMS_PARLOR.md → ds-01).
+            key(toast.id) {
+                LaunchedEffect(toast.id) {
+                    delay(state.durationFor(toast))
+                    state.dismiss(toast.id)
+                }
+                AnimatedVisibility(
+                    visible = true,
+                    enter = fadeIn() + slideInVertically(initialOffsetY = { it / 2 }),
+                    exit = fadeOut() + slideOutVertically(targetOffsetY = { it / 2 }),
+                ) {
+                    ToastChip(toast)
+                }
             }
         }
     }

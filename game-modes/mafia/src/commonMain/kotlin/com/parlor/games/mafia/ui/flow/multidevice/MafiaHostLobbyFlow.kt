@@ -10,7 +10,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -32,18 +31,28 @@ import com.parlor.designsystem.components.ParlorCard
 import com.parlor.designsystem.components.StickyActionBar
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.engine.state.Player
+import com.parlor.games.mafia.domain.settings.MafiaSettings
 import com.parlor.games.mafia.resources.Res
 import com.parlor.games.mafia.resources.md_host_cancel
 import com.parlor.games.mafia.resources.md_host_cancel_description
+import com.parlor.games.mafia.resources.md_host_approve
+import com.parlor.games.mafia.resources.md_host_approve_description
+import com.parlor.games.mafia.resources.md_host_decline
+import com.parlor.games.mafia.resources.md_host_decline_description
+import com.parlor.games.mafia.resources.md_host_error_detail
 import com.parlor.games.mafia.resources.md_host_error_title
 import com.parlor.games.mafia.resources.md_host_eyebrow
 import com.parlor.games.mafia.resources.md_host_hosting_as_format
 import com.parlor.games.mafia.resources.md_host_opening_room
+import com.parlor.games.mafia.resources.md_host_join_request_format
+import com.parlor.games.mafia.resources.md_host_pending_eyebrow
 import com.parlor.games.mafia.resources.md_host_player_bullet_format
 import com.parlor.games.mafia.resources.md_host_players_in_room
 import com.parlor.games.mafia.resources.md_host_room_code
 import com.parlor.games.mafia.resources.md_host_start_description
 import com.parlor.games.mafia.resources.md_host_start_need_more
+import com.parlor.games.mafia.resources.md_host_start_pending
+import com.parlor.games.mafia.resources.md_host_start_too_many
 import com.parlor.games.mafia.resources.md_host_start_with_format
 import com.parlor.games.mafia.resources.md_host_waiting_for_players
 import com.parlor.games.mafia.resources.setup_back
@@ -53,6 +62,9 @@ import com.parlor.networking.room.NetError
 import com.parlor.networking.transport.HostConfig
 import com.parlor.networking.transport.RoomTransport
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.stringResource
 
 /**
@@ -82,20 +94,23 @@ fun MafiaHostLobbyFlow(
         }
     }
 
-    DisposableEffect(Unit) {
-        onDispose {
-            val active = room
-            if (active != null) {
-                scope.launch { runCatching { active.leave() } }
+    val current = room
+    LaunchedEffect(current) {
+        if (current != null) {
+            try {
+                awaitCancellation()
+            } finally {
+                withContext(NonCancellable) {
+                    current.leave()
+                }
             }
         }
     }
 
-    val current = room
     when {
         hostError != null -> MafiaLobbyErrorState(
             title = stringResource(Res.string.md_host_error_title),
-            detail = hostError.toString(),
+            detail = stringResource(Res.string.md_host_error_detail),
             onBack = onBackToHome,
             modifier = modifier,
         )
@@ -106,8 +121,18 @@ fun MafiaHostLobbyFlow(
         !started -> MafiaHostLobbyContent(
             room = current,
             hostName = hostName,
-            onStart = { started = true },
-            onLeave = onBackToHome,
+            onStart = {
+                scope.launch {
+                    current.closeAdmissions()
+                    started = true
+                }
+            },
+            onLeave = {
+                scope.launch {
+                    current.leave()
+                    onBackToHome()
+                }
+            },
             modifier = modifier,
         )
         else -> {
@@ -144,6 +169,8 @@ private fun MafiaHostLobbyContent(
 ) {
     val info by room.info.collectAsState()
     val members by room.members.collectAsState()
+    val pendingAdmissions by room.pendingAdmissions.collectAsState()
+    val scope = rememberCoroutineScope()
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
         Box(modifier = Modifier.fillMaxSize()) {
             Column(
@@ -202,13 +229,76 @@ private fun MafiaHostLobbyContent(
                         )
                     }
                 }
+
+                if (pendingAdmissions.isNotEmpty()) {
+                    EyebrowLabel(
+                        text = stringResource(Res.string.md_host_pending_eyebrow),
+                        accent = false,
+                    )
+                    pendingAdmissions.forEach { admission ->
+                        ParlorCard(
+                            modifier = Modifier.fillMaxWidth(),
+                            contentPadding = ParlorTheme.spacing.m,
+                        ) {
+                            Column(
+                                verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s),
+                            ) {
+                                Text(
+                                    text = stringResource(
+                                        Res.string.md_host_join_request_format,
+                                        admission.displayName,
+                                    ),
+                                    style = ParlorTheme.typography.bodyLarge,
+                                    color = ParlorTheme.colors.textPrimary,
+                                )
+                                ParlorButton(
+                                    label = stringResource(Res.string.md_host_approve),
+                                    contentDescription = stringResource(
+                                        Res.string.md_host_approve_description,
+                                        admission.displayName,
+                                    ),
+                                    onClick = {
+                                        scope.launch {
+                                            room.approveAdmission(admission.playerId)
+                                        }
+                                    },
+                                    modifier = Modifier.fillMaxWidth(),
+                                )
+                                ParlorButton(
+                                    label = stringResource(Res.string.md_host_decline),
+                                    contentDescription = stringResource(
+                                        Res.string.md_host_decline_description,
+                                        admission.displayName,
+                                    ),
+                                    onClick = {
+                                        scope.launch {
+                                            room.rejectAdmission(admission.playerId)
+                                        }
+                                    },
+                                    modifier = Modifier.fillMaxWidth(),
+                                    variant = ParlorButtonVariant.Secondary,
+                                )
+                            }
+                        }
+                    }
+                }
             }
 
-            val canStart = members.size + 1 >= 5
-            val startLabel = if (members.isEmpty()) {
-                stringResource(Res.string.md_host_start_need_more)
-            } else {
-                stringResource(Res.string.md_host_start_with_format, members.size + 1)
+            val playerCount = members.size + 1
+            val canStart =
+                playerCount in MafiaSettings.MIN_PLAYERS..MafiaSettings.MAX_PLAYERS &&
+                    pendingAdmissions.isEmpty()
+            val startLabel = when {
+                pendingAdmissions.isNotEmpty() ->
+                    stringResource(Res.string.md_host_start_pending)
+                playerCount < MafiaSettings.MIN_PLAYERS ->
+                    stringResource(Res.string.md_host_start_need_more)
+                playerCount > MafiaSettings.MAX_PLAYERS ->
+                    stringResource(
+                        Res.string.md_host_start_too_many,
+                        MafiaSettings.MAX_PLAYERS,
+                    )
+                else -> stringResource(Res.string.md_host_start_with_format, playerCount)
             }
             StickyActionBar(modifier = Modifier.align(Alignment.BottomCenter)) {
                 ParlorButton(

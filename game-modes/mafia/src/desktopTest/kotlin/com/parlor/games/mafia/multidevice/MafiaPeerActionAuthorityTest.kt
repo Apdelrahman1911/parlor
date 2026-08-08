@@ -26,6 +26,8 @@ import com.parlor.games.mafia.ui.flow.multidevice.MafiaHostRoomBridge
 import com.parlor.networking.protocol.HostMessage
 import com.parlor.networking.protocol.PeerMessage
 import com.parlor.networking.protocol.RoomMessage
+import com.parlor.networking.protocol.SessionEnvelopeHeader
+import com.parlor.networking.protocol.SessionProtocol
 import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.NetError
 import com.parlor.networking.room.PeerEvent
@@ -40,6 +42,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runCurrent
@@ -121,7 +125,9 @@ class MafiaPeerActionAuthorityTest {
             scope = scope,
         )
         val hostRoom = TestHostRoom(bus, hostId)
-        val bridge = MafiaHostRoomBridge(hostSession, hostRoom, players, scope, json)
+        val bridge = MafiaHostRoomBridge(
+            hostSession, hostRoom, players, scope, json, heartbeatIntervalMs = 0L,
+        )
 
         // Apply settings + start the game so we reach Night with assigned
         // roles. Use the preset for 7 players adjusted to 2 mafia.
@@ -160,10 +166,11 @@ class MafiaPeerActionAuthorityTest {
             // Pick any other living player as the target.
             val target = state.players.first { it.id != detectiveId }.id
             val result = detectiveRoom.sendToHost(
-                PeerMessage.ActionSubmit(
-                    sender = detectiveId,
+                command(
+                    protocol = f.bridge.protocol,
+                    claimedActor = detectiveId,
                     payload = MafiaActionCodec.encode(
-                        MafiaAction.SubmitDetectiveInspect(by = detectiveId, target = target),
+                        MafiaAction.SubmitDetectiveInspect(detectiveId, target),
                     ),
                 ),
             )
@@ -199,17 +206,62 @@ class MafiaPeerActionAuthorityTest {
 
             val before = f.session.hostState.value.state.privatePerPlayer[detectiveId]
             imposterRoom.sendToHost(
-                PeerMessage.ActionSubmit(
-                    sender = townImposter,
+                command(
+                    protocol = f.bridge.protocol,
+                    claimedActor = townImposter,
                     payload = MafiaActionCodec.encode(
-                        // SelfActor authority gate requires by == sender.
-                        MafiaAction.SubmitDetectiveInspect(by = detectiveId, target = target),
+                        MafiaAction.SubmitDetectiveInspect(detectiveId, target),
                     ),
                 ),
             )
             scope.runCurrent()
             val after = f.session.hostState.value.state.privatePerPlayer[detectiveId]
             // Detective's slice must NOT have been mutated by the imposter.
+            assertThat(after?.pendingNightChoice == before?.pendingNightChoice).isTrue()
+        } finally {
+            f.bridge.close()
+        }
+    }
+
+    /**
+     * wu-ui-01 / NN-03 regression: a peer FORGES `ActionSubmit.sender` to the
+     * victim's id (so sender == by, which would sail through the authority gate
+     * if the host trusted the body field). The transport stamps the
+     * authenticated sender (the imposter's own bound id), so the gate sees
+     * sender=imposter != by=victim and rejects. Fails before the fix
+     * (forgery accepted), passes after.
+     */
+    @Test
+    fun peer_cannot_forge_sender_to_impersonate_another_player() = runTest {
+        val scope = TestScope(UnconfinedTestDispatcher(testScheduler))
+        val f = startedFixture(scope)
+        try {
+            val state = f.session.hostState.value.state
+            val detectiveId = state.privatePerPlayer.entries
+                .first { it.value.role == Role.Detective }.key
+            val townImposter = state.privatePerPlayer.entries
+                .first { it.value.role == Role.Civilian }.key
+            val imposterRoom = InMemoryPeerRoom(
+                bus = f.bus, selfPlayerId = townImposter,
+                displayName = state.players.first { it.id == townImposter }.displayName,
+                hostId = hostId,
+            )
+            val target = state.players.first { it.id != detectiveId }.id
+            val before = f.session.hostState.value.state.privatePerPlayer[detectiveId]
+            imposterRoom.sendToHost(
+                command(
+                    protocol = f.bridge.protocol,
+                    // FORGED: the in-memory transport overwrites this actor
+                    // with the room-bound townImposter identity.
+                    claimedActor = detectiveId,
+                    payload = MafiaActionCodec.encode(
+                        MafiaAction.SubmitDetectiveInspect(detectiveId, target),
+                    ),
+                ),
+            )
+            scope.runCurrent()
+            val after = f.session.hostState.value.state.privatePerPlayer[detectiveId]
+            // Transport-authenticated sender (townImposter) != by (detective) → rejected.
             assertThat(after?.pendingNightChoice == before?.pendingNightChoice).isTrue()
         } finally {
             f.bridge.close()
@@ -235,8 +287,9 @@ class MafiaPeerActionAuthorityTest {
 
             val phaseBefore = f.session.hostState.value.state.phase
             peerRoom.sendToHost(
-                PeerMessage.ActionSubmit(
-                    sender = detectiveId,
+                command(
+                    protocol = f.bridge.protocol,
+                    claimedActor = detectiveId,
                     payload = MafiaActionCodec.encode(MafiaAction.ResolveNight),
                 ),
             )
@@ -272,10 +325,11 @@ class MafiaPeerActionAuthorityTest {
             val target = state.players.first { it.id != detectiveId }.id
             val before = f.session.hostState.value.state.privatePerPlayer[detectiveId]
             droppedRoom.sendToHost(
-                PeerMessage.ActionSubmit(
-                    sender = detectiveId,
+                command(
+                    protocol = f.bridge.protocol,
+                    claimedActor = detectiveId,
                     payload = MafiaActionCodec.encode(
-                        MafiaAction.SubmitDetectiveInspect(by = detectiveId, target = target),
+                        MafiaAction.SubmitDetectiveInspect(detectiveId, target),
                     ),
                 ),
             )
@@ -304,14 +358,43 @@ class MafiaPeerActionAuthorityTest {
             )
             // Garbage bytes — codec will fail. Bridge swallows the error.
             peerRoom.sendToHost(
-                PeerMessage.ActionSubmit(
-                    sender = alice,
+                command(
+                    protocol = f.bridge.protocol,
+                    claimedActor = alice,
                     payload = byteArrayOf(0xDE.toByte(), 0xAD.toByte(), 0xBE.toByte(), 0xEF.toByte()),
                 ),
             )
             scope.runCurrent()
             // State unchanged.
             assertThat(f.session.hostState.value.state.phase == phaseBefore).isTrue()
+        } finally {
+            f.bridge.close()
+        }
+    }
+
+    /**
+     * NN-01 regression: the broadcast `SessionStarting` must NOT carry the
+     * role-assignment seed (which deterministically derives the mafia/role
+     * map). The host ships only a public nonce. Guards against a future change
+     * re-shipping `hostOnly.randomSeed` over the wire.
+     */
+    @Test
+    fun session_starting_does_not_leak_role_seed() = runTest {
+        val scope = TestScope(UnconfinedTestDispatcher(testScheduler))
+        val f = startedFixture(scope)
+        try {
+            var captured: HostMessage.SessionStarting? = null
+            val job = scope.launch {
+                f.bus.peerMessagesIn(alice)
+                    .filterIsInstance<HostMessage.SessionStarting>()
+                    .collect { captured = it }
+            }
+            f.bridge.announceStart("default", MafiaIds.ClassicModeId.raw)
+            scope.runCurrent()
+            job.cancel()
+            val roleSeed = f.session.hostState.value.state.hostOnly.randomSeed
+            assertThat(captured != null).isTrue()
+            assertThat(captured!!.sessionNonce != roleSeed).isTrue()
         } finally {
             f.bridge.close()
         }
@@ -325,6 +408,29 @@ class MafiaPeerActionAuthorityTest {
         val hostRoom: TestHostRoom,
         val bridge: MafiaHostRoomBridge,
     )
+
+    private fun command(
+        protocol: SessionProtocol,
+        claimedActor: PlayerId,
+        payload: ByteArray,
+    ): PeerMessage.ClientCommand {
+        val commandId = "mafia-command-000000000001"
+        return PeerMessage.ClientCommand(
+            header = SessionEnvelopeHeader(
+                protocol = protocol.protocol,
+                sessionId = protocol.sessionId,
+                gameId = protocol.gameId,
+                gameVersion = protocol.gameVersion,
+                messageId = commandId,
+                sequence = 0L,
+            ),
+            actor = claimedActor,
+            commandId = commandId,
+            clientSequence = 1L,
+            expectedRevision = 0L,
+            payload = payload,
+        )
+    }
 
     /**
      * Test-only host-side room: routes outbound to the bus, exposes the
@@ -363,4 +469,3 @@ class MafiaPeerActionAuthorityTest {
         override suspend fun leave() {}
     }
 }
-

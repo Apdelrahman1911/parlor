@@ -1,8 +1,12 @@
-# Parlor — Application Architecture
+# Parlor — Original Application Architecture
 
-> Companion to `whodunit-game-design.md`.
-> This document defines the application architecture **before any code is written**.
-> It is the reference for every implementation decision that follows.
+> **Status (2026-07-28): historical design baseline.** This document records
+> the original pre-implementation design and is retained for decision history.
+> It is not authoritative where it describes Whodunit as the only game,
+> multi-device play as future work, remote content as required, or Desktop as a
+> shipping target. The implemented production architecture is documented in
+> [`docs/PRODUCTION_ARCHITECTURE.md`](docs/PRODUCTION_ARCHITECTURE.md), with
+> accepted decisions in [`docs/adr/`](docs/adr/).
 
 ---
 

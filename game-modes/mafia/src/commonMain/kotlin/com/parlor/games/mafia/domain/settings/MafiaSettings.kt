@@ -29,7 +29,16 @@ data class MafiaSettings(
     fun validate(playerCount: Int): MafiaSettingsValidation {
         val errors = mutableListOf<MafiaSettingsError>()
         if (playerCount < MIN_PLAYERS) errors += MafiaSettingsError.PlayerCountBelowMinimum(playerCount)
+        if (playerCount > MAX_PLAYERS) errors += MafiaSettingsError.PlayerCountAboveMaximum(playerCount)
         if (roleCounts.mafia < 1) errors += MafiaSettingsError.MafiaCountBelowOne
+        if (roleCounts.detective < 0) errors += MafiaSettingsError.NegativeDetectiveCount(roleCounts.detective)
+        if (roleCounts.doctor < 0) errors += MafiaSettingsError.NegativeDoctorCount(roleCounts.doctor)
+        if (roleCounts.detective > MAX_DETECTIVES) {
+            errors += MafiaSettingsError.TooManyDetectives(roleCounts.detective)
+        }
+        if (roleCounts.doctor > MAX_DOCTORS) {
+            errors += MafiaSettingsError.TooManyDoctors(roleCounts.doctor)
+        }
         val civ = roleCounts.civilians(playerCount)
         if (civ < 1) errors += MafiaSettingsError.NotEnoughCivilians(civ)
         // Town must start with strict majority.
@@ -37,6 +46,13 @@ data class MafiaSettings(
             errors += MafiaSettingsError.MafiaNotMinority(roleCounts.mafia, playerCount)
         }
         if (maxRevotes < 0) errors += MafiaSettingsError.NegativeMaxRevotes(maxRevotes)
+        if (
+            nightDurationSeconds != null ||
+            discussionDurationSeconds != null ||
+            voteDurationSeconds != null
+        ) {
+            errors += MafiaSettingsError.TimersNotSupported
+        }
         nightDurationSeconds?.let { if (it < MIN_DURATION_SECONDS) errors += MafiaSettingsError.DurationTooShort("night", it) }
         discussionDurationSeconds?.let { if (it < MIN_DURATION_SECONDS) errors += MafiaSettingsError.DurationTooShort("discussion", it) }
         voteDurationSeconds?.let { if (it < MIN_DURATION_SECONDS) errors += MafiaSettingsError.DurationTooShort("vote", it) }
@@ -45,6 +61,9 @@ data class MafiaSettings(
 
     companion object {
         const val MIN_PLAYERS = 5
+        const val MAX_PLAYERS = 16
+        const val MAX_DETECTIVES = 1
+        const val MAX_DOCTORS = 1
         const val MIN_DURATION_SECONDS = 5
     }
 }
@@ -90,10 +109,16 @@ sealed interface MafiaSettingsValidation {
 
 sealed interface MafiaSettingsError {
     data class PlayerCountBelowMinimum(val playerCount: Int) : MafiaSettingsError
+    data class PlayerCountAboveMaximum(val playerCount: Int) : MafiaSettingsError
     data object MafiaCountBelowOne : MafiaSettingsError
+    data class NegativeDetectiveCount(val count: Int) : MafiaSettingsError
+    data class NegativeDoctorCount(val count: Int) : MafiaSettingsError
+    data class TooManyDetectives(val count: Int) : MafiaSettingsError
+    data class TooManyDoctors(val count: Int) : MafiaSettingsError
     data class NotEnoughCivilians(val computed: Int) : MafiaSettingsError
     data class MafiaNotMinority(val mafiaCount: Int, val playerCount: Int) : MafiaSettingsError
     data class NegativeMaxRevotes(val value: Int) : MafiaSettingsError
+    data object TimersNotSupported : MafiaSettingsError
     data class DurationTooShort(val kind: String, val seconds: Int) : MafiaSettingsError
 }
 

@@ -2,16 +2,22 @@ package com.parlor.games.whodunit.multidevice
 
 import assertk.assertThat
 import assertk.assertions.contains
+import assertk.assertions.isFalse
+import assertk.assertions.isTrue
 import com.parlor.core.ids.CaseId
 import com.parlor.core.ids.CharacterId
 import com.parlor.core.ids.ModeId
 import com.parlor.core.ids.PlayerId
+import com.parlor.core.ids.SessionId
 import com.parlor.engine.state.Player
+import com.parlor.games.whodunit.WhodunitIds
 import com.parlor.games.whodunit.domain.phase.WhodunitPhase
 import com.parlor.games.whodunit.domain.state.WhodunitHostOnly
 import com.parlor.games.whodunit.domain.state.WhodunitPublic
 import com.parlor.games.whodunit.domain.state.WhodunitState
+import com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostRoomBridge
 import com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitPeerRoomBridge
+import com.parlor.networking.protocol.SessionProtocol
 import com.parlor.networking.room.PeerEvent
 import com.parlor.session.multidevice.InMemoryPeerRoom
 import com.parlor.session.multidevice.InMemoryRoomBus
@@ -22,26 +28,25 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
-import kotlinx.serialization.json.Json
 import kotlin.test.Test
 
 /**
- * Wave 9H-5: when no `PublicStateSnapshot` arrives within
- * `hostLostTimeoutMs`, the peer bridge synthesises
- * [PeerEvent.HostLost]. A subsequent snapshot emits
- * [PeerEvent.HostRestored].
- *
- * The tests inject a very short timeout (200 ms of virtual time) and
- * drive the [TestScope] with `advanceTimeBy` to verify both transitions
- * deterministically.
+ * Host reachability comes from the transport rather than snapshot cadence.
+ * A loss starts the 120-second product grace period; restore cancels it and a
+ * loss that survives the grace period ends the peer flow.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 class HostLostTimeoutTest {
 
     private val hostId = PlayerId("host")
     private val alice = PlayerId("alice")
+    private val protocol = SessionProtocol(
+        sessionId = SessionId("whodunit-session-0001"),
+        gameId = WhodunitIds.GameId,
+        gameVersion = WhodunitHostRoomBridge.GAME_VERSION,
+    )
 
-    private val initialState: WhodunitState = WhodunitState(
+    private val initialState = WhodunitState(
         public = WhodunitPublic(
             caseId = CaseId("c"),
             modeId = ModeId("m"),
@@ -60,71 +65,71 @@ class HostLostTimeoutTest {
     )
 
     @Test
-    fun host_silence_for_threshold_emits_host_lost() = runTest {
-        val dispatcher = UnconfinedTestDispatcher(testScheduler)
-        val scope = TestScope(dispatcher)
+    fun transport_host_loss_that_outlives_grace_ends_peer_session() = runTest {
+        val scope = TestScope(UnconfinedTestDispatcher(testScheduler))
         val bus = InMemoryRoomBus()
         bus.registerPeer(alice)
         val room = InMemoryPeerRoom(bus, alice, "Alice", hostId)
-
         val bridge = WhodunitPeerRoomBridge(
             room = room,
             selfPlayerId = alice,
             initialPublic = initialState,
             scope = scope,
-            json = Json { ignoreUnknownKeys = false; isLenient = false; encodeDefaults = true },
+            protocol = protocol,
             hostLostTimeoutMs = 200L,
         )
-
-        val received = mutableListOf<PeerEvent>()
-        val collector = scope.launch { bridge.connectionEvents.collect { received += it } }
+        val events = mutableListOf<PeerEvent>()
+        var ended = false
+        val eventCollector = scope.launch { bridge.connectionEvents.collect { events += it } }
+        val endCollector = scope.launch { bridge.hostDisconnected.collect { ended = true } }
         runCurrent()
 
-        // No snapshot arrives — after 250ms the watchdog should fire HostLost.
-        advanceTimeBy(250)
+        bus.emitHostLost()
         runCurrent()
+        assertThat(events).contains(PeerEvent.HostLost)
+        assertThat(ended).isFalse()
 
-        assertThat(received).contains(PeerEvent.HostLost)
-        collector.cancel()
+        advanceTimeBy(201)
+        runCurrent()
+        assertThat(ended).isTrue()
+
+        eventCollector.cancel()
+        endCollector.cancel()
         bridge.close()
     }
 
     @Test
-    fun snapshot_after_host_lost_emits_host_restored() = runTest {
-        val dispatcher = UnconfinedTestDispatcher(testScheduler)
-        val scope = TestScope(dispatcher)
+    fun host_restore_within_grace_cancels_terminal_timeout() = runTest {
+        val scope = TestScope(UnconfinedTestDispatcher(testScheduler))
         val bus = InMemoryRoomBus()
         bus.registerPeer(alice)
         val room = InMemoryPeerRoom(bus, alice, "Alice", hostId)
-
-        val json = Json { ignoreUnknownKeys = false; isLenient = false; encodeDefaults = true }
         val bridge = WhodunitPeerRoomBridge(
             room = room,
             selfPlayerId = alice,
             initialPublic = initialState,
             scope = scope,
-            json = json,
+            protocol = protocol,
             hostLostTimeoutMs = 200L,
         )
-
-        val received = mutableListOf<PeerEvent>()
-        val collector = scope.launch { bridge.connectionEvents.collect { received += it } }
+        val events = mutableListOf<PeerEvent>()
+        var ended = false
+        val eventCollector = scope.launch { bridge.connectionEvents.collect { events += it } }
+        val endCollector = scope.launch { bridge.hostDisconnected.collect { ended = true } }
         runCurrent()
 
-        advanceTimeBy(250)
-        runCurrent()
-        check(received.contains(PeerEvent.HostLost)) { "HostLost should have fired" }
-
-        // Host re-emits a snapshot — bridge should clear HostLost and emit HostRestored.
-        val snapshotBytes = json.encodeToString(WhodunitState.serializer(), initialState).encodeToByteArray()
-        bus.fromHost(
-            target = com.parlor.networking.room.SendTarget.Direct(alice),
-            message = com.parlor.networking.protocol.HostMessage.PublicStateSnapshot(snapshotBytes),
-        )
+        bus.emitHostLost()
+        advanceTimeBy(100)
+        bus.emitHostRestored()
+        advanceTimeBy(200)
         runCurrent()
 
-        assertThat(received).contains(PeerEvent.HostRestored)
-        collector.cancel()
+        assertThat(events).contains(PeerEvent.HostLost)
+        assertThat(events).contains(PeerEvent.HostRestored)
+        assertThat(ended).isFalse()
+
+        eventCollector.cancel()
+        endCollector.cancel()
         bridge.close()
     }
 }

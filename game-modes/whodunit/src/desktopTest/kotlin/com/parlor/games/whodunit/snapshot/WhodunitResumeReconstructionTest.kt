@@ -11,10 +11,12 @@ import com.parlor.content.datasource.KtorRemoteCaseDataSource
 import com.parlor.content.repository.DefaultCaseRepository
 import com.parlor.content.validation.DefaultCaseValidator
 import com.parlor.core.ids.CaseId
+import com.parlor.core.ids.GameId
 import com.parlor.core.ids.ModeId
 import com.parlor.core.ids.PlayerId
 import com.parlor.core.ids.SessionId
 import com.parlor.core.random.RandomSource
+import com.parlor.core.result.DataError
 import com.parlor.core.result.Result
 import com.parlor.core.time.FakeClock
 import com.parlor.core.versioning.SemVer
@@ -34,6 +36,7 @@ import com.parlor.games.whodunit.domain.phase.WhodunitPhase
 import com.parlor.games.whodunit.domain.reducer.WhodunitReducerContext
 import com.parlor.games.whodunit.domain.state.WhodunitState
 import com.parlor.games.whodunit.resources.Res
+import com.parlor.games.whodunit.ui.flow.loadResumedSession
 import com.parlor.session.passandplay.PassAndPlaySessionController
 import com.parlor.storage.snapshot.FileBackedSnapshotStore
 import com.parlor.storage.snapshot.SnapshotStore
@@ -227,6 +230,48 @@ class WhodunitResumeReconstructionTest {
     }
 
     @Test
+    fun resume_rejects_another_game_before_decoding_its_payload() = runTest {
+        val sessionId = SessionId("wrong-game")
+        val store: SnapshotStore = FileBackedSnapshotStore(InMemorySnapshotFileSystem(), json)
+        store.save(
+            GameSnapshot(
+                sessionId = sessionId,
+                gameId = GameId("mafia"),
+                engineVersion = engineVersion,
+                createdAt = Instant.fromEpochSeconds(1_700_000_020),
+                phaseId = "not-whodunit",
+                payload = "not a Whodunit payload".encodeToByteArray(),
+            ),
+        )
+
+        val result = loadResumedSession(store, WhodunitDefinition(json), sessionId)
+
+        assertThat(result).isInstanceOf(Result.Failure::class)
+        assertThat((result as Result.Failure).error).isEqualTo(DataError.CorruptedData)
+    }
+
+    @Test
+    fun resume_rejects_a_future_engine_version_before_decoding_its_payload() = runTest {
+        val sessionId = SessionId("future-engine")
+        val store: SnapshotStore = FileBackedSnapshotStore(InMemorySnapshotFileSystem(), json)
+        store.save(
+            GameSnapshot(
+                sessionId = sessionId,
+                gameId = WhodunitIds.GameId,
+                engineVersion = SemVer(2, 0, 0),
+                createdAt = Instant.fromEpochSeconds(1_700_000_021),
+                phaseId = "not-whodunit",
+                payload = "not a Whodunit payload".encodeToByteArray(),
+            ),
+        )
+
+        val result = loadResumedSession(store, WhodunitDefinition(json), sessionId)
+
+        assertThat(result).isInstanceOf(Result.Failure::class)
+        assertThat((result as Result.Failure).error).isEqualTo(DataError.CorruptedData)
+    }
+
+    @Test
     fun deleting_snapshot_removes_it_from_listUnfinished() = runTest {
         val payload = loadCase()
         val players = fourPlayers()
@@ -280,4 +325,3 @@ class WhodunitResumeReconstructionTest {
         controller.close()
     }
 }
-

@@ -6,19 +6,20 @@ import com.parlor.core.result.EmptyOk
 import com.parlor.core.result.EmptyResult
 import com.parlor.core.result.Result
 import com.parlor.engine.snapshot.GameSnapshot
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 
 /**
  * File-backed snapshot store. Persists one JSON file per session under the
  * provided directory.
  *
- * Phase 6 ships this implementation in commonMain delegating actual filesystem
- * operations to an injected [SnapshotFileSystem] — platform actuals provide
- * the concrete read/write/list/delete. Encryption-at-rest is added in a thin
- * wrapper around the filesystem (Android Keystore, iOS Keychain, Desktop
- * derived key) without changing this class.
+ * Platform implementations of [SnapshotFileSystem] are responsible for
+ * authenticated encryption and OS storage protection before bytes reach disk.
+ * Keeping protection below this class also makes atomic replacement and
+ * platform key lifecycle one indivisible concern.
  */
 class FileBackedSnapshotStore(
     private val fileSystem: SnapshotFileSystem,
@@ -27,54 +28,69 @@ class FileBackedSnapshotStore(
     private val mutex = Mutex()
 
     override suspend fun save(snapshot: GameSnapshot): EmptyResult<DataError> = mutex.withLock {
-        runCatching {
+        try {
             val payload = json.encodeToString(GameSnapshot.serializer(), snapshot)
             fileSystem.write(fileName(snapshot.sessionId), payload.encodeToByteArray())
-        }.fold(
-            onSuccess = { EmptyOk },
-            onFailure = { mapToDataError(it).let { e -> Result.Failure(e) } },
-        )
+            EmptyOk
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (failure: Throwable) {
+            Result.Failure(mapToDataError(failure))
+        }
     }
 
     override suspend fun load(sessionId: SessionId): Result<GameSnapshot, DataError> = mutex.withLock {
-        runCatching {
+        try {
             val bytes = fileSystem.read(fileName(sessionId))
-                ?: return@runCatching null
-            json.decodeFromString(GameSnapshot.serializer(), bytes.decodeToString())
-        }.fold(
-            onSuccess = { snapshot ->
-                if (snapshot == null) Result.Failure(DataError.NotFound)
-                else Result.Success(snapshot)
-            },
-            onFailure = { Result.Failure(mapToDataError(it)) },
-        )
+                ?: return@withLock Result.Failure(DataError.NotFound)
+            Result.Success(json.decodeFromString(GameSnapshot.serializer(), bytes.decodeToString()))
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (failure: Throwable) {
+            Result.Failure(mapToDataError(failure))
+        }
     }
 
     override suspend fun delete(sessionId: SessionId): EmptyResult<DataError> = mutex.withLock {
-        runCatching { fileSystem.delete(fileName(sessionId)) }.fold(
-            onSuccess = { EmptyOk },
-            onFailure = { Result.Failure(mapToDataError(it)) },
-        )
+        try {
+            fileSystem.delete(fileName(sessionId))
+            EmptyOk
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (failure: Throwable) {
+            Result.Failure(mapToDataError(failure))
+        }
     }
 
     override suspend fun listUnfinished(): Result<List<SessionId>, DataError> = mutex.withLock {
-        runCatching { fileSystem.list() }.fold(
-            onSuccess = { fileNames ->
-                Result.Success(
-                    fileNames
-                        .filter { it.endsWith(SUFFIX) }
-                        .map { SessionId(it.removeSuffix(SUFFIX)) },
-                )
-            },
-            onFailure = { Result.Failure(mapToDataError(it)) },
-        )
+        try {
+            Result.Success(
+                fileSystem.list()
+                    .asSequence()
+                    .filter(::isSafeSnapshotFileName)
+                    .filter { it.endsWith(SUFFIX) }
+                    .map { it.removeSuffix(SUFFIX) }
+                    .filter { it.isNotBlank() }
+                    .distinct()
+                    .sorted()
+                    .map(::SessionId)
+                    .toList(),
+            )
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (failure: Throwable) {
+            Result.Failure(mapToDataError(failure))
+        }
     }
 
     private fun fileName(sessionId: SessionId) = "${sessionId.raw}$SUFFIX"
 
     private fun mapToDataError(t: Throwable): DataError = when (t) {
-        is kotlinx.serialization.SerializationException -> DataError.CorruptedData
-        else -> DataError.IoError(t.message ?: "io")
+        is SerializationException,
+        is SnapshotProtectionException -> DataError.CorruptedData
+        // Do not copy exception text into a domain error: platform exceptions
+        // commonly contain private container paths or key aliases.
+        else -> DataError.IoError("snapshot_io")
     }
 
     companion object {
@@ -93,3 +109,35 @@ interface SnapshotFileSystem {
     suspend fun delete(name: String)
     suspend fun list(): List<String>
 }
+
+/**
+ * Signals that protected snapshot bytes failed format or authenticity checks.
+ * The store maps this to [DataError.CorruptedData] without exposing crypto or
+ * filesystem details to the UI.
+ */
+class SnapshotProtectionException(
+    message: String = "snapshot protection failed",
+    cause: Throwable? = null,
+) : Exception(message, cause)
+
+/**
+ * Rejects traversal and temporary-file names at every platform boundary.
+ *
+ * Session ids are generated by Parlor today, but treating a future restored or
+ * network-provided id as a safe path component would be an unnecessary risk.
+ */
+fun requireSafeSnapshotFileName(name: String) {
+    require(isSafeSnapshotFileName(name)) {
+        "Invalid snapshot file name"
+    }
+}
+
+fun isSafeSnapshotFileName(name: String): Boolean =
+    name.isNotBlank() &&
+        name.length <= MAX_SNAPSHOT_FILE_NAME_LENGTH &&
+        name != "." &&
+        name != ".." &&
+        !name.endsWith(".tmp") &&
+        name.none { it == '/' || it == '\\' || it == '\u0000' }
+
+private const val MAX_SNAPSHOT_FILE_NAME_LENGTH = 240

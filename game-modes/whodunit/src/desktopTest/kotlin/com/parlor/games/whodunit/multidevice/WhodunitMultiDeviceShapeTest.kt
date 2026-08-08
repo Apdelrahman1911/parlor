@@ -244,7 +244,12 @@ class WhodunitMultiDeviceShapeTest {
         val killer = host.hostState!!.value.state.hostOnly.killerId
         val ballot = (stateOf(host).public.voteState as VoteState.Collecting).ballotPlayerIds
         for (voter in ballot) {
-            host.submit(WhodunitAction.CastVote(voter, killer))
+            val action = if (voter == killer) {
+                WhodunitAction.AbstainVote(voter)
+            } else {
+                WhodunitAction.CastVote(voter, killer)
+            }
+            host.submit(action)
             assertPeerMirrorsHostAndRedactsHostOnly(host, peers, "cast by $voter")
         }
         host.submit(WhodunitAction.CloseVote)
@@ -317,7 +322,10 @@ class WhodunitMultiDeviceShapeTest {
         }
         val killer = host.hostState!!.value.state.hostOnly.killerId
         val ballot = (stateOf(host).public.voteState as VoteState.Collecting).ballotPlayerIds
-        for (v in ballot) host.submit(WhodunitAction.CastVote(v, killer))
+        for (v in ballot) {
+            if (v == killer) host.submit(WhodunitAction.AbstainVote(v))
+            else host.submit(WhodunitAction.CastVote(v, killer))
+        }
         pin("FinalVote-cast-complete")
         host.submit(WhodunitAction.CloseVote); pin("Reveal")
         host.submit(WhodunitAction.AcknowledgeReveal); pin("PostGame")
@@ -347,6 +355,13 @@ class WhodunitMultiDeviceShapeTest {
         host.submit(WhodunitAction.AssignRoles(13L))
         host.ackIntroForAll(players)
         host.submit(WhodunitAction.AdvanceFromIntro)
+        host.ackBriefingForAll(players)
+        for (i in 1..4) host.submit(WhodunitAction.AdvanceBriefingCard(i))
+        for (player in players) {
+            host.submit(WhodunitAction.StartCharacterReveal(player.id))
+            host.submit(WhodunitAction.CompleteCharacterReveal(player.id))
+        }
+        host.submit(WhodunitAction.AdvanceFromCharacterReveal)
         host.submit(WhodunitAction.Pause)
 
         val peerState = peer.state.value

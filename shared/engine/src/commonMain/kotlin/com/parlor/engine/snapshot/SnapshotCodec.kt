@@ -33,7 +33,10 @@ data class GameSnapshot(
         if (this === other) return true
         if (other !is GameSnapshot) return false
         if (sessionId != other.sessionId) return false
+        if (gameId != other.gameId) return false
         if (engineVersion != other.engineVersion) return false
+        if (createdAt != other.createdAt) return false
+        if (phaseId != other.phaseId) return false
         if (!payload.contentEquals(other.payload)) return false
         if (metadata != other.metadata) return false
         return true
@@ -41,7 +44,10 @@ data class GameSnapshot(
 
     override fun hashCode(): Int {
         var result = sessionId.hashCode()
+        result = 31 * result + gameId.hashCode()
         result = 31 * result + engineVersion.hashCode()
+        result = 31 * result + createdAt.hashCode()
+        result = 31 * result + phaseId.hashCode()
         result = 31 * result + payload.contentHashCode()
         result = 31 * result + metadata.hashCode()
         return result

@@ -22,6 +22,7 @@ import com.parlor.games.mafia.domain.state.Role
 import com.parlor.games.mafia.domain.state.Team
 import com.parlor.games.mafia.resources.Res
 import com.parlor.games.mafia.resources.postgame_eyebrow
+import com.parlor.games.mafia.resources.postgame_ended_without_winner
 import com.parlor.games.mafia.resources.postgame_exit
 import com.parlor.games.mafia.resources.postgame_exit_description
 import com.parlor.games.mafia.resources.postgame_mafia_wins
@@ -32,7 +33,7 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun PostGameScreen(
-    winner: Team,
+    winner: Team?,
     finalRoles: List<Pair<String, Role>>,
     onExit: () -> Unit,
     modifier: Modifier = Modifier,
@@ -92,7 +93,8 @@ fun PostGameScreen(
 }
 
 @Composable
-private fun winLine(team: Team): String = when (team) {
+private fun winLine(team: Team?): String = when (team) {
     Team.Mafia -> stringResource(Res.string.postgame_mafia_wins)
     Team.Town -> stringResource(Res.string.postgame_town_wins)
+    null -> stringResource(Res.string.postgame_ended_without_winner)
 }

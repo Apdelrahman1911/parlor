@@ -7,14 +7,15 @@ import com.parlor.networking.protocol.PeerMessage
 import com.parlor.networking.protocol.RoomMessage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 
 /**
- * The local-multi-device room abstraction. Phase 7 implements an in-memory
- * stub; Post-MVP wires real transports per platform (Android Nearby, iOS
- * Multipeer, Desktop mDNS+WebSocket).
+ * The local-multi-device room abstraction. Production binds this contract to
+ * P2pKit's authenticated LAN/TCP transport; in-memory implementations are
+ * retained for deterministic tests.
  *
  * Multi-device privacy is enforced at this layer: the host computes per-player
  * private projections and uses [send] with [SendTarget.Direct] to deliver them;
@@ -43,6 +44,23 @@ interface LocalRoom {
     val peerEvents: SharedFlow<PeerEvent>
         get() = emptyPeerEvents
 
+    /** Authenticated peers that supplied the correct room code and await host approval. */
+    val pendingAdmissions: StateFlow<List<PendingAdmission>>
+        get() = emptyPendingAdmissions
+
+    /** Rejoin capability issued after admission; peer-side only. Never log it. */
+    val rejoinToken: String?
+        get() = null
+
+    suspend fun approveAdmission(playerId: PlayerId): Result<Unit, NetError> =
+        Result.Failure(NetError.Unauthorized)
+
+    suspend fun rejectAdmission(playerId: PlayerId): Result<Unit, NetError> =
+        Result.Failure(NetError.Unauthorized)
+
+    /** Stop accepting new seats once gameplay begins. Existing rejoin remains allowed. */
+    suspend fun closeAdmissions() = Unit
+
     suspend fun send(target: SendTarget, message: HostMessage): Result<Unit, NetError>
     suspend fun sendToHost(message: PeerMessage): Result<Unit, NetError>
     suspend fun leave()
@@ -51,6 +69,9 @@ interface LocalRoom {
 /** Shared empty flow for transports that don't emit peer events. */
 internal val emptyPeerEvents: SharedFlow<PeerEvent> =
     MutableSharedFlow<PeerEvent>(replay = 0, extraBufferCapacity = 0).asSharedFlow()
+
+internal val emptyPendingAdmissions: StateFlow<List<PendingAdmission>> =
+    MutableStateFlow(emptyList())
 
 sealed interface SendTarget {
     data object Broadcast : SendTarget
@@ -72,10 +93,23 @@ data class RoomMember(
     val connected: Boolean,
 )
 
+data class PendingAdmission(
+    val playerId: PlayerId,
+    val displayName: String,
+    val isRejoin: Boolean,
+)
+
 /** Network/transport errors. */
 sealed interface NetError {
     data object NotConnected : NetError
     data object Timeout : NetError
+    data object PayloadTooLarge : NetError
+    data object WrongCode : NetError
+    data object HostDeclined : NetError
+    data object RoomFull : NetError
+    data object SessionStarted : NetError
+    data object IncompatibleProtocol : NetError
+    data object RateLimited : NetError
     data class TransportFailure(val reason: String) : NetError
     data object Unauthorized : NetError
 }

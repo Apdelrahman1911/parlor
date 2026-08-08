@@ -8,17 +8,20 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
 /**
- * Pluggable transport — Android Nearby, iOS Multipeer, Desktop mDNS+WebSocket,
- * or an in-memory test stub.
+ * Pluggable transport — the production app currently supplies the P2pKit
+ * authenticated LAN adapter; in-memory implementations remain test-only.
  *
- * Phase 7 ships an in-memory stub only. Post-MVP wires real implementations
- * via expect/actual or DI.
+ * The interface deliberately stays independent of P2pKit so additional
+ * transports can be added without changing game/session code.
  */
 interface RoomTransport {
     val capability: TransportCapability
 
     suspend fun host(config: HostConfig): Result<LocalRoom, NetError>
     suspend fun join(code: String, displayName: String): Result<LocalRoom, NetError>
+
+    suspend fun join(config: JoinConfig): Result<LocalRoom, NetError> =
+        join(config.code, config.displayName)
 
     /**
      * Stream of rooms currently visible to this transport. Transports that
@@ -41,4 +44,10 @@ data class TransportCapability(
 data class HostConfig(
     val roomDisplayName: String,
     val visible: Boolean = true,
+)
+
+data class JoinConfig(
+    val code: String,
+    val displayName: String,
+    val rejoinToken: String? = null,
 )

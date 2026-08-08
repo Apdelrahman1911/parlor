@@ -7,10 +7,9 @@ import com.parlor.core.result.Result
 import com.parlor.engine.snapshot.GameSnapshot
 
 /**
- * Persistence boundary for game state snapshots. Phase 6 wires this in;
- * MVP backing is a simple per-session file under the platform's
- * documents directory. Production hardens with encrypted-at-rest storage via
- * platform keystore.
+ * Persistence boundary for complete game-state snapshots, including
+ * host-private state. Production implementations must use authenticated
+ * encryption at rest plus the strongest practical platform file protection.
  *
  * The interface is fixed; the implementation may evolve without changes to
  * call sites.

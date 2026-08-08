@@ -38,6 +38,7 @@ import com.parlor.games.whodunit.resources.Res
 import com.parlor.games.whodunit.resources.reveal_stage_continue
 import com.parlor.games.whodunit.resources.reveal_stage_continue_description
 import com.parlor.games.whodunit.resources.reveal_stage_eyebrow
+import com.parlor.games.whodunit.resources.reveal_stage_game_ended_subhead
 import com.parlor.games.whodunit.resources.reveal_stage_killer_finaltwo_subhead
 import com.parlor.games.whodunit.resources.reveal_stage_killer_innocent_subhead
 import com.parlor.games.whodunit.resources.reveal_stage_killer_tie_subhead
@@ -98,6 +99,8 @@ fun RevealStageScreen(
                 stringResource(Res.string.reveal_stage_killer_tie_subhead)
             KillerWinCause.SurvivedToFinalTwo ->
                 stringResource(Res.string.reveal_stage_killer_finaltwo_subhead)
+            KillerWinCause.GameEndedEarly ->
+                stringResource(Res.string.reveal_stage_game_ended_subhead)
             null -> stringResource(Res.string.reveal_stage_killer_innocent_subhead)
         }
     }

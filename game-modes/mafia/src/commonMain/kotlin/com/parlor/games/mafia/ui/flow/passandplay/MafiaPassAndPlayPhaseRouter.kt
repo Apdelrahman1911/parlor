@@ -17,7 +17,6 @@ import com.parlor.games.mafia.domain.phase.MafiaPhase
 import com.parlor.games.mafia.domain.state.MafiaState
 import com.parlor.games.mafia.domain.state.PublicPlayerSlot
 import com.parlor.games.mafia.domain.state.Role
-import com.parlor.games.mafia.domain.state.Team
 import com.parlor.games.mafia.resources.Res
 import com.parlor.games.mafia.resources.night_detective_reveal_eyebrow
 import com.parlor.games.mafia.resources.night_eyebrow_civilian
@@ -128,7 +127,7 @@ internal fun MafiaPassAndPlayPhaseRouter(
                 modifier = Modifier.fillMaxSize(),
             )
             MafiaPhase.PostGame -> PostGameScreen(
-                winner = state.public.winner ?: Team.Town,
+                winner = state.public.winner,
                 finalRoles = finalRoles(state),
                 onExit = onBackToHome,
                 modifier = Modifier.fillMaxSize(),
@@ -239,6 +238,27 @@ private fun NightSegment(
     modifier: Modifier = Modifier,
 ) {
     val aliveActive = aliveActivePlayers(state)
+
+    // Inspection results are available as soon as the Detective submits, and
+    // must be privately viewed before the host may resolve the night. This
+    // prevents a same-night kill or a conflated remote snapshot from losing the
+    // result before its owner can see it.
+    val pendingDetective = aliveActive.firstOrNull { player ->
+        val private = state.privatePerPlayer[player.id]
+        private?.role == Role.Detective &&
+            private.pendingDetectiveResult != null &&
+            !private.detectiveResultAcknowledged
+    }
+    if (pendingDetective != null) {
+        DetectivePrivateResultSegment(
+            detective = pendingDetective,
+            state = state,
+            session = session,
+            scope = scope,
+            modifier = modifier,
+        )
+        return
+    }
 
     // `tracker` resets when the round bumps (or the day rolls over) — the keyed
     // remember handles that. Round 1 uses it for every role (no shared
@@ -379,8 +399,13 @@ private fun NightChooseScreen(
             )
         }
         Role.Doctor -> {
+            val previousTarget = state.privatePerPlayer[current.id]?.previousDoctorProtect
             val targets = aliveIds
                 .filter { settings.doctorCanSelfHeal || it != current.id }
+                .filter {
+                    settings.doctorCanProtectSamePlayerConsecutively ||
+                        it != previousTarget
+                }
                 .map { id -> PickableTarget(id = id, name = displayNameOf(state, id) ?: id.raw) }
             DoctorProtectScreen(
                 doctorName = current.displayName,

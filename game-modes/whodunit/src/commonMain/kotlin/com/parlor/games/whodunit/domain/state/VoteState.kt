@@ -16,7 +16,19 @@ sealed interface VoteState {
     @Serializable
     data class Collecting(
         val isElimination: Boolean,
+        /** Active players who still have a ballot in this vote. */
         val ballotPlayerIds: List<PlayerId>,
+        /**
+         * Players who may be accused.
+         *
+         * This is normally the same active roster as [ballotPlayerIds]. During
+         * a tied revote it is deliberately narrower: every active player still
+         * votes, but only the suspects tied in the first ballot are eligible.
+         *
+         * The default preserves decoding of snapshots written before this
+         * field was introduced.
+         */
+        val candidatePlayerIds: List<PlayerId> = ballotPlayerIds,
         val castSoFar: Map<PlayerId, PlayerId> = emptyMap(),
         val abstained: Set<PlayerId> = emptySet(),
         val currentVoterIndex: Int = 0,

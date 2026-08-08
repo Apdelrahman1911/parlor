@@ -13,6 +13,7 @@ import io.ktor.client.plugins.HttpRequestTimeoutException
 import io.ktor.client.plugins.ServerResponseException
 import io.ktor.client.request.get
 import io.ktor.http.HttpStatusCode
+import io.ktor.http.isSuccess
 import kotlinx.serialization.SerializationException
 
 /**
@@ -28,14 +29,24 @@ class KtorRemoteCaseDataSource(
 ) : RemoteCaseDataSource {
 
     override suspend fun listCases(gameId: GameId): Result<List<CaseSummary>, NetworkError> = runCatching {
-        val response: List<CaseSummary> = client.get("$baseUrl/games/${gameId.raw}/cases").body()
-        Result.Success(response) as Result<List<CaseSummary>, NetworkError>
+        val resp = client.get("$baseUrl/games/${gameId.raw}/cases")
+        // Explicit status check: the injected client does NOT set expectSuccess,
+        // so Ktor never throws ClientRequestException/ServerResponseException —
+        // a non-2xx would otherwise reach .body() and fail as a confusing
+        // deserialization error. See PROBLEMS_PARLOR.md → content-01.
+        if (!resp.status.isSuccess()) return Result.Failure(statusToError(resp.status))
+        Result.Success(resp.body<List<CaseSummary>>()) as Result<List<CaseSummary>, NetworkError>
     }.getOrElse { it.toNetworkErrorResult() }
 
     override suspend fun fetchCase(id: CaseId): Result<CaseEnvelope, NetworkError> = runCatching {
-        val response: CaseEnvelope = client.get("$baseUrl/cases/${id.raw}").body()
-        Result.Success(response) as Result<CaseEnvelope, NetworkError>
+        val resp = client.get("$baseUrl/cases/${id.raw}")
+        if (!resp.status.isSuccess()) return Result.Failure(statusToError(resp.status))
+        Result.Success(resp.body<CaseEnvelope>()) as Result<CaseEnvelope, NetworkError>
     }.getOrElse { it.toNetworkErrorResult() }
+
+    private fun statusToError(status: HttpStatusCode): NetworkError =
+        if (status.value == HttpStatusCode.Unauthorized.value) NetworkError.Unauthorized
+        else NetworkError.Server(status.value)
 
     private fun <T> Throwable.toNetworkErrorResult(): Result<T, NetworkError> = when (this) {
         is HttpRequestTimeoutException -> Result.Failure(NetworkError.Timeout)

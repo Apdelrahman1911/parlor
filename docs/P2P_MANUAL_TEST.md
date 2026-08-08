@@ -6,14 +6,9 @@ explains how to validate that path end-to-end on real machines.
 
 ## Prerequisites
 
-- P2pKit cloned alongside Parlor: `D:/P2pKit` (or wherever Parlor's `..`
-  resolves to). `git clone https://github.com/Apdelrahman1911/P2pKit.git ../P2pKit`
-- P2pKit artifacts published locally:
-  ```bash
-  cd ../P2pKit
-  ./gradlew :p2p-core:publishToMavenLocal :p2p-transport-lan:publishToMavenLocal
-  ```
-- Parlor's `gradle.properties` has `parlor.p2p.enabled=true`.
+- Maven Central access. Gradle resolves P2pKit `0.7.0-rc2` from
+  `io.github.apdelrahman1911`; no sibling checkout or local publication is
+  required.
 - Two devices on the **same Wi-Fi LAN**. Home Wi-Fi or a phone hotspot —
   corporate / guest / hotel networks often block mDNS multicast.
 
@@ -67,7 +62,8 @@ seconds. If it doesn't:
    `P2pKit.permissions.requiredPermissions()` (`NEARBY_WIFI_DEVICES` on
    API 33+, plus the manifest entries listed in P2pKit's README).
 4. On iOS, the host app's `Info.plist` must include
-   `NSLocalNetworkUsageDescription` and `NSBonjourServices` (`_p2pkit._tcp`).
+   `NSLocalNetworkUsageDescription` and `NSBonjourServices`
+   (`_p2pkit2._tcp`).
 
 ## Action round-trip (Phase 8 follow-up)
 
@@ -89,8 +85,9 @@ real-device validation.
 
 - **mDNS only** — no relay / cloud signalling. Both devices must be on the
   same broadcast domain.
-- **Plaintext over TCP** — P2pKit v0.3 ships `SecurityMode.NoneForMvp`.
-  Don't share secrets that a network observer shouldn't see.
+- **Authenticated encrypted TCP** — P2pKit 0.7 secure protocol v2 uses
+  Noise XX by default. Parlor still owns room admission and player
+  authorization; transport authentication alone does not identify a person.
 - **No background advertising on iOS** — App Store rules; P2pKit honours
   the platform constraint and ceases advertising when the app backgrounds.
 - **iOS Network Provisioning is permanently `Unsupported`** — Apple

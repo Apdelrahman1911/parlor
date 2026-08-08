@@ -28,6 +28,7 @@ import com.parlor.games.whodunit.WhodunitDefinition
 import com.parlor.games.whodunit.WhodunitIds
 import com.parlor.games.whodunit.ackBriefingForAll
 import com.parlor.games.whodunit.ackIntroForAll
+import com.parlor.games.whodunit.castSplitVote
 import com.parlor.games.whodunit.revealRolesAndAdvance
 import com.parlor.games.whodunit.content.BundledWhodunitCases
 import com.parlor.games.whodunit.content.WhodunitCase
@@ -395,10 +396,11 @@ class PauseRefuseLeaveTest {
 
         // Two votes for the killer, two refusers. With only 2 cast votes both
         // on the killer, killer is the top tally → PlayersWin.
-        session.submit(WhodunitAction.CastVote(ballot[0], killer))
-        session.submit(WhodunitAction.CastVote(ballot[1], killer))
-        val refuserA = ballot.first { it != ballot[0] && it != ballot[1] }
-        val refuserB = ballot.last { it != ballot[0] && it != ballot[1] && it != refuserA }
+        val accusingVoters = ballot.filterNot { it == killer }.take(2)
+        session.submit(WhodunitAction.CastVote(accusingVoters[0], killer))
+        session.submit(WhodunitAction.CastVote(accusingVoters[1], killer))
+        val refuserA = ballot.first { it !in accusingVoters }
+        val refuserB = ballot.last { it !in accusingVoters && it != refuserA }
         session.submit(WhodunitAction.RefuseToVote(refuserA))
         session.submit(WhodunitAction.RefuseToVote(refuserB))
         session.submit(WhodunitAction.CloseVote)
@@ -435,11 +437,14 @@ class PauseRefuseLeaveTest {
         // 2 vs 2 split with one refuser — a normal tie. The reducer must enter
         // TiedRevote regardless of how many refused (refused doesn't break
         // ties).
-        session.submit(WhodunitAction.CastVote(ballot[0], targetA))
-        session.submit(WhodunitAction.CastVote(ballot[1], targetA))
-        session.submit(WhodunitAction.CastVote(ballot[2], targetB))
-        session.submit(WhodunitAction.CastVote(ballot[3], targetB))
-        session.submit(WhodunitAction.RefuseToVote(ballot[4]))
+        session.castSplitVote(
+            ballot = ballot,
+            targetA = targetA,
+            votesForA = 2,
+            targetB = targetB,
+            votesForB = 2,
+            refuseRemainder = true,
+        )
         session.submit(WhodunitAction.CloseVote)
 
         assertThat(stateOf(session).phase).isInstanceOf(WhodunitPhase.TiedRevote::class)
@@ -475,11 +480,14 @@ class PauseRefuseLeaveTest {
         val ballot = (firstVoteOpened as VoteState.Collecting).ballotPlayerIds
 
         // First vote: 2 vs 2 tie, plus 1 refuser.
-        session.submit(WhodunitAction.CastVote(ballot[0], targetA))
-        session.submit(WhodunitAction.CastVote(ballot[1], targetA))
-        session.submit(WhodunitAction.CastVote(ballot[2], targetB))
-        session.submit(WhodunitAction.CastVote(ballot[3], targetB))
-        session.submit(WhodunitAction.RefuseToVote(ballot[4]))
+        session.castSplitVote(
+            ballot = ballot,
+            targetA = targetA,
+            votesForA = 2,
+            targetB = targetB,
+            votesForB = 2,
+            refuseRemainder = true,
+        )
         session.submit(WhodunitAction.CloseVote)
 
         // Elimination tie → enter TiedRevote phase, voteState becomes Tied.
@@ -494,11 +502,14 @@ class PauseRefuseLeaveTest {
         // Second vote: same 2-2 tie pattern, again with a refuser. Per design
         // doc §13, Elimination second tie advances to next round without
         // eliminating anyone.
-        session.submit(WhodunitAction.CastVote(ballot[0], targetA))
-        session.submit(WhodunitAction.CastVote(ballot[1], targetA))
-        session.submit(WhodunitAction.CastVote(ballot[2], targetB))
-        session.submit(WhodunitAction.CastVote(ballot[3], targetB))
-        session.submit(WhodunitAction.RefuseToVote(ballot[4]))
+        session.castSplitVote(
+            ballot = ballot,
+            targetA = targetA,
+            votesForA = 2,
+            targetB = targetB,
+            votesForB = 2,
+            refuseRemainder = true,
+        )
         session.submit(WhodunitAction.CloseVote)
 
         val afterSecondTie = stateOf(session)
@@ -530,10 +541,10 @@ class PauseRefuseLeaveTest {
         // Three players vote for the same innocent (a different innocent than
         // the killer); one refuses. Innocent wins the tally → KillerWins via
         // InnocentAccused.
-        session.submit(WhodunitAction.CastVote(ballot[0], anInnocent))
-        session.submit(WhodunitAction.CastVote(ballot[1], anInnocent))
-        session.submit(WhodunitAction.CastVote(ballot[2], anInnocent))
-        val refuser = ballot[3]
+        for (voter in ballot.filterNot { it == anInnocent }) {
+            session.submit(WhodunitAction.CastVote(voter, anInnocent))
+        }
+        val refuser = anInnocent
         session.submit(WhodunitAction.RefuseToVote(refuser))
         session.submit(WhodunitAction.CloseVote)
 

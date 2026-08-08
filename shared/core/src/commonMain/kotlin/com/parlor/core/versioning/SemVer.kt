@@ -26,13 +26,28 @@ data class SemVer(val major: Int, val minor: Int, val patch: Int) : Comparable<S
     override fun toString(): String = "$major.$minor.$patch"
 
     companion object {
+        /**
+         * Strict parse. Every present component must be a non-negative integer;
+         * absent trailing components default to 0 (so "1" → 1.0.0, "1.2" → 1.2.0).
+         * Malformed ("1.x", "1.2.beta", "1.", "1..3"), negative ("-1.0.0"), or
+         * over-long inputs throw [IllegalArgumentException]. This matters because
+         * untrusted content version strings (CaseEnvelope.version / minimumAppVersion)
+         * deserialize through here; the content validator maps the thrown
+         * IllegalArgumentException to a MalformedField error instead of silently
+         * coercing garbage to a low version that would slip past the
+         * AppUpdateRequired gate. See PROBLEMS_PARLOR.md → core-002/003.
+         */
         fun parse(s: String): SemVer {
             val parts = s.trim().split(".")
             require(parts.size in 1..3) { "Invalid SemVer: '$s'" }
-            val major = parts.getOrNull(0)?.toIntOrNull() ?: error("Invalid major in '$s'")
-            val minor = parts.getOrNull(1)?.toIntOrNull() ?: 0
-            val patch = parts.getOrNull(2)?.toIntOrNull() ?: 0
-            return SemVer(major, minor, patch)
+            fun component(index: Int, name: String): Int {
+                if (index >= parts.size) return 0
+                val value = parts[index].toIntOrNull()
+                    ?: throw IllegalArgumentException("Invalid $name in SemVer '$s'")
+                require(value >= 0) { "Negative $name in SemVer '$s'" }
+                return value
+            }
+            return SemVer(component(0, "major"), component(1, "minor"), component(2, "patch"))
         }
 
         val ZERO = SemVer(0, 0, 0)

@@ -38,7 +38,10 @@ import com.parlor.games.whodunit.domain.action.WhodunitActionCodec
 import com.parlor.networking.protocol.PeerMessage
 import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.transport.RoomTransport
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.stringResource
 
 /**
@@ -71,6 +74,17 @@ fun PeerLobbyScreen(
         when (val result = transport.join(code, displayName)) {
             is Result.Success -> room = result.data
             is Result.Failure -> joinError = result.error.toString()
+        }
+    }
+
+    LaunchedEffect(room) {
+        val active = room ?: return@LaunchedEffect
+        try {
+            awaitCancellation()
+        } finally {
+            withContext(NonCancellable) {
+                runCatching { active.leave() }
+            }
         }
     }
 

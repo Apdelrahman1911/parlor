@@ -11,10 +11,8 @@ kotlin {
             implementation(project(":shared:session"))
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.serialization.json)
-            // P2pKit artifacts — resolved from mavenLocal after the user
-            // runs `./gradlew publishToMavenLocal` inside ../P2pKit.
-            implementation("dev.p2pkit:p2p-core:0.6.0")
-            implementation("dev.p2pkit:p2p-transport-lan:0.6.0")
+            implementation(libs.p2pkit.core)
+            implementation(libs.p2pkit.transport.lan)
             implementation(libs.koin.core)
         }
         // Koin Android exposes androidContext() which we need for

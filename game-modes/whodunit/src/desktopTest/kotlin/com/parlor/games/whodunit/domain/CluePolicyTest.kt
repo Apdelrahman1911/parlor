@@ -28,9 +28,9 @@ import kotlinx.datetime.Instant
 import kotlin.test.Test
 
 /**
- * Clue-selection policy tests. Asserts the late-game pool is a weighted union
- * of multiple pools — NOT a guaranteed pull from `finalStrong[killer]` — so
- * the final round doesn't telegraph the killer.
+ * Clue-selection policy tests. The game-design contract requires the final
+ * round to carry the strongest clue, so validated content must draw from the
+ * killer variant's `finalStrong` pool before any defensive fallback.
  *
  * Determinism: each test pins seeds [1..50] and drives the reducer through
  * `RevealNextClue` actions. Same seed → same sequence; different seeds
@@ -85,17 +85,12 @@ class CluePolicyTest {
     )
 
     @Test
-    fun lastRoundIsNotAlwaysFinalStrong() {
+    fun lastRoundAlwaysUsesFinalStrongWhenAvailable() {
         val finalStrongIds = finalStrongClues.map { it.id }.toSet()
-        var sawNonFinalStrong = false
         for (seed in 1L..50L) {
             val clueId = pickLateRoundClueId(seed)
-            if (clueId !in finalStrongIds) {
-                sawNonFinalStrong = true
-                break
-            }
+            assertThat(clueId in finalStrongIds).isTrue()
         }
-        assertThat(sawNonFinalStrong).isTrue()
     }
 
     @Test
@@ -172,9 +167,9 @@ class CluePolicyTest {
     }
 
     /**
-     * Drive multiple successive `RevealNextClue` actions through the late round
-     * to get a *sequence* (so two seeds that pick the same first clue can still
-     * be distinguished by later picks). Stops when no more clues come out.
+     * Repeated delivery of the same command is idempotent: each round reveals
+     * at most one clue. The returned single-item sequence still lets us assert
+     * deterministic variation across seeds.
      */
     private fun driveCluesThroughFinalRound(seed: Long): List<String> {
         val ctx = ctxFor(case)

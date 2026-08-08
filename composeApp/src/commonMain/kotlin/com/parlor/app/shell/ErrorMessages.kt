@@ -44,6 +44,13 @@ fun netErrorMessage(error: NetError): String = stringResource(
     when (error) {
         is NetError.NotConnected -> Res.string.net_error_not_connected
         is NetError.Timeout -> Res.string.net_error_timeout
+        is NetError.PayloadTooLarge,
+        is NetError.WrongCode,
+        is NetError.HostDeclined,
+        is NetError.RoomFull,
+        is NetError.SessionStarted,
+        is NetError.IncompatibleProtocol,
+        is NetError.RateLimited,
         is NetError.TransportFailure -> Res.string.net_error_transport
         is NetError.Unauthorized -> Res.string.net_error_unauthorized
     },

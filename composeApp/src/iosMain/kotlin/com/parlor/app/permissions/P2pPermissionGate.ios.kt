@@ -7,10 +7,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 /**
- * iOS asks for Multipeer / Bluetooth permissions inline at the OS level when
- * the framework first tries to advertise / discover. There's no app-side
- * prompt to manage, so this gate reports [Granted] and the rationale UI is
- * skipped. The Info.plist string handles the user-facing copy.
+ * iOS asks for Local Network access inline when Network.framework first tries
+ * to advertise or discover the Bonjour service. There is no app-side runtime
+ * permission API to manage, so this gate reports [Granted] and the rationale
+ * UI is skipped. The Info.plist usage description handles the copy.
  */
 @Composable
 actual fun rememberP2pPermissionGate(): P2pPermissionGate = remember { IosNoopGate }

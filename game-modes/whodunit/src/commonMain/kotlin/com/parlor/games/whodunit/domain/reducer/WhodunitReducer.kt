@@ -37,6 +37,9 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
     ): Reduction<WhodunitState, WhodunitEvent> {
         val wctx = ctx as? WhodunitReducerContext
             ?: error("WhodunitReducer requires WhodunitReducerContext")
+        if (state.public.paused && !action.isAllowedWhilePaused()) {
+            return Reduction(state)
+        }
         return when (action) {
             // Lifecycle / reveal (Phase 4)
             is WhodunitAction.AssignRoles -> assignRoles(state, action.seed, wctx)
@@ -76,7 +79,7 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
             is WhodunitAction.RefuseToVote -> abstainVote(state, action.voter, refused = true)
             WhodunitAction.CloseVote -> closeVote(state)
             WhodunitAction.AcknowledgeRevealCard -> acknowledgeRevealCard(state)
-            WhodunitAction.AcknowledgeReveal -> advance(state, WhodunitPhase.PostGame)
+            WhodunitAction.AcknowledgeReveal -> acknowledgeReveal(state)
             WhodunitAction.BeginReplay -> beginReplay(state, wctx)
 
             // Safety (Phase 6)
@@ -94,10 +97,15 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
         seed: Long,
         ctx: WhodunitReducerContext,
     ): Reduction<WhodunitState, WhodunitEvent> {
+        if (state.phase != WhodunitPhase.Setup) return Reduction(state)
         val random = RandomSource.seeded(seed)
         val players = state.players
         val characters = ctx.case.characters
-        require(players.size <= characters.size)
+        // Guard rather than throw: this is a pure reducer and AssignRoles is
+        // auto-submitted on every Setup/replay/reroll entry, so a degenerate
+        // roster (empty, or more players than the case has characters) must
+        // be a safe no-op instead of crashing the reducer.
+        if (players.isEmpty() || players.size > characters.size) return Reduction(state)
 
         val picked = random.shuffled(characters).take(players.size)
         val seatToCharacter: Map<PlayerId, CharacterId> = players
@@ -106,7 +114,8 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
 
         val killerPlayer = random.pick(players)
         val killerCharacterId = seatToCharacter.getValue(killerPlayer.id)
-        val killerChar = characters.first { it.id == killerCharacterId.raw }
+        val killerChar = characters.firstOrNull { it.id == killerCharacterId.raw }
+            ?: return Reduction(state)
         val deflection = killerChar.guiltyBrief.deflectionTargets
             .map { CharacterId(it) }
             .filter { target -> seatToCharacter.values.any { it == target } }
@@ -155,6 +164,7 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
      * the canonical enforcer.
      */
     private fun advanceFromIntro(state: WhodunitState): Reduction<WhodunitState, WhodunitEvent> {
+        if (state.phase != WhodunitPhase.PublicIntro) return Reduction(state)
         val active = activeRoster(state)
         if (!PartyReadiness.isComplete(state.public.introAcknowledged, active)) {
             return Reduction(state)
@@ -168,8 +178,9 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
     }
 
     private fun advanceBriefingCard(state: WhodunitState, index: Int): Reduction<WhodunitState, WhodunitEvent> {
-        val newIndex = index.coerceAtLeast(0)
-        return if (newIndex >= BRIEFING_CARD_COUNT) {
+        if (state.phase != WhodunitPhase.RulesBriefing) return Reduction(state)
+        if (index != state.public.briefingCardIndex + 1) return Reduction(state)
+        return if (index == BRIEFING_CARD_COUNT) {
             // Final advance: gated by briefing readiness.
             val active = activeRoster(state)
             if (!PartyReadiness.isComplete(state.public.briefingReady, active)) {
@@ -184,8 +195,7 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
             )
             Reduction(newState, listOf(WhodunitEvent.PhaseEntered(newState.phase)))
         } else {
-            // Card-by-card advance: unchanged, not gated by readiness.
-            Reduction(state.copy(public = state.public.copy(briefingCardIndex = newIndex)))
+            Reduction(state.copy(public = state.public.copy(briefingCardIndex = index)))
         }
     }
 
@@ -236,12 +246,19 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
     ): Reduction<WhodunitState, WhodunitEvent> {
         if (playerId !in state.players.map { it.id }) return Reduction(state)
         if (playerId in state.public.disconnectedPlayers) return Reduction(state)
+        val activeGame = state.phase != WhodunitPhase.Setup &&
+            state.phase != WhodunitPhase.Reveal &&
+            state.phase != WhodunitPhase.PostGame
+        val shouldEngagePause = activeGame && !state.public.paused
         return Reduction(
             state.copy(
                 public = state.public.copy(
                     disconnectedPlayers = state.public.disconnectedPlayers + playerId,
+                    paused = state.public.paused || activeGame,
+                    timer = if (activeGame) state.public.timer?.copy(paused = true) else state.public.timer,
                 ),
             ),
+            if (shouldEngagePause) listOf(WhodunitEvent.PauseEngaged) else emptyList(),
         )
     }
 
@@ -250,6 +267,9 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
         playerId: PlayerId,
     ): Reduction<WhodunitState, WhodunitEvent> {
         if (playerId !in state.public.disconnectedPlayers) return Reduction(state)
+        // Legacy dropped-player snapshots require explicit readmission; a
+        // transport reconnect must not silently mutate that persisted state.
+        if (playerId in state.public.droppedPlayers) return Reduction(state)
         return Reduction(
             state.copy(
                 public = state.public.copy(
@@ -263,30 +283,11 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
         state: WhodunitState,
         playerId: PlayerId,
     ): Reduction<WhodunitState, WhodunitEvent> {
-        if (playerId !in state.players.map { it.id }) return Reduction(state)
-        if (playerId in state.public.droppedPlayers) return Reduction(state)
-        // Also remove from any open vote ballot — dropped players don't vote.
-        val newVote = when (val v = state.public.voteState) {
-            is VoteState.Collecting -> v.copy(
-                ballotPlayerIds = v.ballotPlayerIds - playerId,
-                castSoFar = v.castSoFar - playerId,
-                abstained = v.abstained - playerId,
-            )
-            else -> v
-        }
-        return Reduction(
-            state.copy(
-                public = state.public.copy(
-                    droppedPlayers = state.public.droppedPlayers + playerId,
-                    // Clean the player's id out of all readiness sets so
-                    // their absence flips the relevant gate open immediately.
-                    introAcknowledged = state.public.introAcknowledged - playerId,
-                    briefingReady = state.public.briefingReady - playerId,
-                    rolesViewed = state.public.rolesViewed - playerId,
-                    voteState = newVote,
-                ),
-            ),
-        )
+        if (playerId !in state.public.disconnectedPlayers) return Reduction(state)
+        // A missing dossier makes the case invalid. The compatibility action
+        // name is retained for the wire/snapshot API, but its only legal
+        // meaning is "the rejoin grace period expired: reveal and end."
+        return endGameEarly(state, withReveal = true)
     }
 
     /**
@@ -322,7 +323,11 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
         state: WhodunitState,
         playerId: PlayerId,
     ): Reduction<WhodunitState, WhodunitEvent> {
+        if (state.phase !is WhodunitPhase.CharacterReveal) return Reduction(state)
+        if (playerId in state.public.droppedPlayers) return Reduction(state)
+        if (playerId in state.public.rolesViewed) return Reduction(state)
         val priv = state.privatePerPlayer[playerId] ?: return Reduction(state)
+        if (priv.dossierUnlocked) return Reduction(state)
         val updated = state.privatePerPlayer + (playerId to priv.copy(dossierUnlocked = true))
         return Reduction(
             state.copy(privatePerPlayer = updated),
@@ -387,8 +392,13 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
     }
 
     private fun openPrivateReview(state: WhodunitState, playerId: PlayerId): Reduction<WhodunitState, WhodunitEvent> {
-        if (state.public.voteState is VoteState.Collecting) return Reduction(state)
+        if (state.phase !is WhodunitPhase.Round) return Reduction(state)
+        if (state.public.voteState != VoteState.Idle) return Reduction(state)
+        if (playerId in state.public.droppedPlayers || playerId in state.public.eliminatedPlayers) {
+            return Reduction(state)
+        }
         val priv = state.privatePerPlayer[playerId] ?: return Reduction(state)
+        if (priv.privateReviewOpen) return Reduction(state)
         val updated = state.privatePerPlayer + (playerId to priv.copy(privateReviewOpen = true))
         return Reduction(state.copy(privatePerPlayer = updated), listOf(WhodunitEvent.PrivateRevealRequested(playerId)))
     }
@@ -406,6 +416,12 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
         ctx: WhodunitReducerContext,
     ): Reduction<WhodunitState, WhodunitEvent> {
         val round = state.phase as? WhodunitPhase.Round ?: return Reduction(state)
+        if (state.public.voteState != VoteState.Idle || state.public.timer != null) {
+            return Reduction(state)
+        }
+        if (state.public.revealedClues.any { it.roundIndex == round.index }) {
+            return Reduction(state)
+        }
         val clue = pickNextClue(state, ctx, round.index) ?: return Reduction(state)
         val revealed = RevealedClue(id = ClueId(clue.id), text = clue.text, roundIndex = round.index)
         val newPublic = state.public.copy(revealedClues = state.public.revealedClues + revealed)
@@ -455,15 +471,10 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
     }
 
     /**
-     * Late-game clue picker. Treat `finalStrong[killer]` as one source in a
-     * weighted pool rather than the only source, so the last clue isn't
-     * always a smoking gun.
-     *
-     * Weights are applied by repetition: a higher weight means a clue appears
-     * more times in the working list before the seeded random pick. Same seed
-     * + same drawn set → same result; different seeds vary the pick.
-     *
-     * If everything is already drawn, returns null (no crash).
+     * The design contract is explicit: the last round always carries the
+     * strongest clue. Prefer an undrawn `finalStrong` clue deterministically.
+     * The broader pools are only a defensive fallback for legacy/invalid
+     * content; validated shipping cases are required to provide final clues.
      */
     private fun pickLateGameClue(
         pools: CluePools,
@@ -483,20 +494,29 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
         val undrawnRedHerring = redHerring.filterNot { ClueId(it.id) in drawn }
         val undrawnPublicUniversal = publicUniversal.filterNot { ClueId(it.id) in drawn }
 
-        val weighted = buildList {
-            repeat(LATE_FINAL_STRONG_WEIGHT) { addAll(undrawnFinalStrong) }
-            repeat(LATE_KILLER_POINTING_WEIGHT) { addAll(undrawnKillerPointing) }
-            repeat(LATE_CONTRADICTION_WEIGHT) { addAll(undrawnContradiction) }
-            repeat(LATE_RED_HERRING_WEIGHT) { addAll(undrawnRedHerring) }
-            repeat(LATE_PUBLIC_UNIVERSAL_WEIGHT) { addAll(undrawnPublicUniversal) }
-        }
-        return weighted.takeIf { it.isNotEmpty() }?.let { random.pick(it) }
+        if (undrawnFinalStrong.isNotEmpty()) return random.pick(undrawnFinalStrong)
+
+        val fallback = undrawnKillerPointing +
+            undrawnContradiction +
+            undrawnRedHerring +
+            undrawnPublicUniversal
+        return fallback.takeIf { it.isNotEmpty() }?.let { random.pick(it) }
     }
 
     private fun isLastRound(playerCount: Int, roundIndex: Int): Boolean =
         if (playerCount <= 4) roundIndex >= 3 else roundIndex >= 4
 
     private fun startDiscussionTimer(state: WhodunitState, seconds: Int): Reduction<WhodunitState, WhodunitEvent> {
+        val round = state.phase as? WhodunitPhase.Round ?: return Reduction(state)
+        if (state.public.voteState != VoteState.Idle || state.public.timer != null) {
+            return Reduction(state)
+        }
+        if (state.public.revealedClues.none { it.roundIndex == round.index }) {
+            return Reduction(state)
+        }
+        if (seconds !in MIN_DISCUSSION_SECONDS..MAX_DISCUSSION_SECONDS) {
+            return Reduction(state)
+        }
         val timer = PublicTimerState(
             timerId = "discussion-${state.public.currentRound}",
             totalSeconds = seconds,
@@ -507,12 +527,16 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
     }
 
     private fun pauseDiscussionTimer(state: WhodunitState): Reduction<WhodunitState, WhodunitEvent> {
+        if (state.phase !is WhodunitPhase.Round) return Reduction(state)
         val t = state.public.timer ?: return Reduction(state)
+        if (t.paused) return Reduction(state)
         return Reduction(state.copy(public = state.public.copy(timer = t.copy(paused = true))))
     }
 
     private fun resumeDiscussionTimer(state: WhodunitState): Reduction<WhodunitState, WhodunitEvent> {
+        if (state.phase !is WhodunitPhase.Round) return Reduction(state)
         val t = state.public.timer ?: return Reduction(state)
+        if (!t.paused) return Reduction(state)
         return Reduction(state.copy(public = state.public.copy(timer = t.copy(paused = false))))
     }
 
@@ -525,6 +549,9 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
         val t = state.public.timer ?: return Reduction(state)
         if (t.paused) return Reduction(state)
         val clamped = remaining.coerceAtLeast(0)
+        // A delayed/duplicated ticker action must never move time backwards
+        // (increase the remaining duration) or emit a second warning.
+        if (clamped >= t.remainingSeconds) return Reduction(state)
         val newT = t.copy(remainingSeconds = clamped)
         val events = mutableListOf<WhodunitEvent>()
         if (clamped in 1..10 && t.remainingSeconds > 10) {
@@ -533,11 +560,26 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
         return Reduction(state.copy(public = state.public.copy(timer = newT)), events)
     }
 
-    private fun timerExpired(state: WhodunitState): Reduction<WhodunitState, WhodunitEvent> =
-        Reduction(state.copy(public = state.public.copy(timer = null)), listOf(WhodunitEvent.TimerExhausted))
+    private fun timerExpired(state: WhodunitState): Reduction<WhodunitState, WhodunitEvent> {
+        val timer = state.public.timer ?: return Reduction(state)
+        if (state.phase !is WhodunitPhase.Round || timer.paused) return Reduction(state)
+
+        // Expiry is a real state-machine transition, not merely a timer clear.
+        // Clearing in-place made the router redisplay the clue CTA, which could
+        // restart the same discussion forever.
+        val progressed = advanceFromDiscussion(state)
+        if (progressed.newState == state) return Reduction(state)
+        return progressed.copy(events = listOf(WhodunitEvent.TimerExhausted) + progressed.events)
+    }
 
     private fun advanceFromDiscussion(state: WhodunitState): Reduction<WhodunitState, WhodunitEvent> {
         val round = state.phase as? WhodunitPhase.Round ?: return Reduction(state)
+        if (state.public.timer == null || state.public.voteState != VoteState.Idle) {
+            return Reduction(state)
+        }
+        if (state.public.revealedClues.none { it.roundIndex == round.index }) {
+            return Reduction(state)
+        }
         val isElimination = state.public.modeId == WhodunitIds.EliminationModeId
         val playerCount = state.public.playersAtTable.size
         val lastRound = isLastRound(playerCount, round.index)
@@ -559,18 +601,33 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
 
     private fun openVote(state: WhodunitState): Reduction<WhodunitState, WhodunitEvent> {
         val isElimination = state.public.modeId == WhodunitIds.EliminationModeId
-        // If we're opening from a Tied state, this is the revote — preserve
-        // that marker forward so handleTie can apply the second-tie rule.
-        val isSecondRound = state.public.voteState is VoteState.Tied
+        val tied = state.public.voteState as? VoteState.Tied
+        val isSecondRound = tied != null
+        val validEntry = when {
+            tied != null -> state.phase == WhodunitPhase.TiedRevote
+            isElimination -> state.phase is WhodunitPhase.Round &&
+                state.public.voteState == VoteState.Idle &&
+                state.public.timer == null
+            else -> state.phase == WhodunitPhase.FinalVote &&
+                state.public.voteState == VoteState.Idle
+        }
+        if (!validEntry) return Reduction(state)
+
         val tableIds = state.public.playersAtTable.map { it.id }
         // Active roster excludes dropped players (Wave 9H-2 — host has
         // explicitly chosen to continue without them).
         val active = tableIds - state.public.droppedPlayers
         val survivors = active - state.public.eliminatedPlayers.toSet()
         val ballot = if (isElimination) survivors else active
+        val candidates = tied
+            ?.tiedPlayerIds
+            ?.filter { it in ballot }
+            ?: ballot
+        if (ballot.isEmpty() || candidates.isEmpty()) return Reduction(state)
         val vote = VoteState.Collecting(
             isElimination = isElimination,
             ballotPlayerIds = ballot,
+            candidatePlayerIds = candidates,
             castSoFar = emptyMap(),
             abstained = emptySet(),
             currentVoterIndex = 0,
@@ -588,11 +645,20 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
         target: PlayerId,
     ): Reduction<WhodunitState, WhodunitEvent> {
         if (voter in state.public.droppedPlayers) return Reduction(state)
+        // A dropped player is a spectator, not a candidate: they must not be
+        // a votable target (the ballot UI also filters them out). Without this
+        // a dropped seat could be "eliminated", skewing the survivor count.
+        if (target in state.public.droppedPlayers) return Reduction(state)
         val vote = state.public.voteState as? VoteState.Collecting ?: return Reduction(state)
         if (voter !in vote.ballotPlayerIds) return Reduction(state)
+        if (target !in vote.candidatePlayerIds) return Reduction(state)
+        if (target in state.public.eliminatedPlayers) return Reduction(state)
+        if (voter == target) return Reduction(state)
+        // First submission wins. Duplicate, delayed, or malicious recasts are
+        // idempotent no-ops and cannot alter a secret ballot already cast.
+        if (voter in vote.castSoFar || voter in vote.abstained) return Reduction(state)
         val advanced = vote.copy(
             castSoFar = vote.castSoFar + (voter to target),
-            abstained = vote.abstained - voter,
             currentVoterIndex = vote.currentVoterIndex + 1,
         )
         return Reduction(
@@ -614,6 +680,7 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
         if (voter in state.public.droppedPlayers) return Reduction(state)
         val vote = state.public.voteState as? VoteState.Collecting ?: return Reduction(state)
         if (voter !in vote.ballotPlayerIds) return Reduction(state)
+        if (voter in vote.castSoFar || voter in vote.abstained) return Reduction(state)
         val advanced = vote.copy(
             abstained = vote.abstained + voter,
             currentVoterIndex = vote.currentVoterIndex + 1,
@@ -624,16 +691,38 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
 
     private fun closeVote(state: WhodunitState): Reduction<WhodunitState, WhodunitEvent> {
         val vote = state.public.voteState as? VoteState.Collecting ?: return Reduction(state)
+        val completed = vote.castSoFar.keys + vote.abstained
+        if (!completed.containsAll(vote.ballotPlayerIds)) return Reduction(state)
         val tally = vote.castSoFar.values.groupingBy { it }.eachCount()
 
         if (tally.isEmpty()) {
-            return Reduction(
-                state.copy(public = state.public.copy(voteState = VoteState.NoResolution("all-abstained"))),
-            )
+            // Every voter abstained or refused — the table failed to accuse
+            // anyone. Resolve it the same way an unresolved tie does (design
+            // doc §13: the table not deciding favours the killer / yields no
+            // elimination) instead of parking on a `NoResolution` state that
+            // no screen consumes — that left the game on a permanent blank
+            // screen with no host escape.
+            return if (vote.isElimination) {
+                val nextRoundIndex = state.public.currentRound + 1
+                val nextPhase = WhodunitPhase.Round(nextRoundIndex)
+                Reduction(
+                    state.copy(
+                        phase = nextPhase,
+                        public = state.public.copy(
+                            currentRound = nextRoundIndex,
+                            voteState = VoteState.Idle,
+                            timer = null,
+                        ),
+                    ),
+                    listOf(WhodunitEvent.PhaseEntered(nextPhase)),
+                )
+            } else {
+                killerWins(state, KillerWinCause.TieUnresolved)
+            }
         }
 
         val maxCount = tally.values.max()
-        val topTargets = tally.filterValues { it == maxCount }.keys.toList()
+        val topTargets = vote.candidatePlayerIds.filter { tally[it] == maxCount }
 
         return if (topTargets.size > 1) {
             handleTie(state, topTargets, vote.isElimination, vote.isSecondRound)
@@ -666,6 +755,17 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
     ): Reduction<WhodunitState, WhodunitEvent> {
         if (isSecondRound) {
             return if (isElimination) {
+                // Final-two cap: once only two non-eliminated, non-dropped
+                // players remain, repeated tied revotes can never produce a
+                // majority, so advancing rounds forever is an unbounded loop.
+                // The killer surviving to the final two is a killer win
+                // (mirrors resolveVote's final-two branch).
+                val survivors = state.public.playersAtTable.map { it.id }
+                    .filterNot { it in state.public.eliminatedPlayers }
+                    .filterNot { it in state.public.droppedPlayers }
+                if (survivors.size <= 2) {
+                    return killerWins(state, KillerWinCause.SurvivedToFinalTwo)
+                }
                 val nextRoundIndex = state.public.currentRound + 1
                 val nextPhase = WhodunitPhase.Round(nextRoundIndex)
                 Reduction(
@@ -716,7 +816,11 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
                         ),
                     )
                 }
-                (state.public.playersAtTable.map { it.id } - eliminated.toSet()).size <= 2 -> {
+                state.public.playersAtTable
+                    .map { it.id }
+                    .filterNot { it in eliminated }
+                    .filterNot { it in state.public.droppedPlayers }
+                    .size <= 2 -> {
                     val verdict = Verdict.KillerWins(
                         state.hostOnly.killerCharacterId.raw,
                         KillerWinCause.SurvivedToFinalTwo,
@@ -737,8 +841,19 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
                     // verdict for the eliminated player ("[Name] was innocent.
                     // The killer is still among you." — design doc §13). The
                     // host's AcknowledgeRevealCard advances to the next round.
+                    //
+                    // Normalise the phase back to the current Round. A *revote*
+                    // (opened from a tie) reaches this branch with
+                    // phase == TiedRevote; acknowledgeRevealCard only fires when
+                    // phase is a Round, so without this the room is stranded on
+                    // a blank TiedRevote screen with no way forward. On the
+                    // first-round path the phase is already Round(currentRound),
+                    // so this is a no-op there.
                     Reduction(
-                        state.copy(public = newPublic.copy(timer = null)),
+                        state.copy(
+                            phase = WhodunitPhase.Round(state.public.currentRound),
+                            public = newPublic.copy(timer = null),
+                        ),
                         listOf(
                             WhodunitEvent.VoteTallied(tally),
                             WhodunitEvent.PlayerEliminated(accused, false),
@@ -811,12 +926,20 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
         )
     }
 
+    private fun acknowledgeReveal(state: WhodunitState): Reduction<WhodunitState, WhodunitEvent> {
+        if (state.phase != WhodunitPhase.Reveal || state.public.verdict == null) {
+            return Reduction(state)
+        }
+        return advance(state, WhodunitPhase.PostGame)
+    }
+
     // ====================================================================== Replay (P5) ==
 
     private fun beginReplay(
         state: WhodunitState,
         ctx: WhodunitReducerContext,
     ): Reduction<WhodunitState, WhodunitEvent> {
+        if (state.phase != WhodunitPhase.PostGame) return Reduction(state)
         val newSeed = state.hostOnly.randomSeed * 31 + 17
         val fresh = state.copy(
             public = state.public.copy(
@@ -831,6 +954,8 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
                 introAcknowledged = emptySet(),
                 briefingReady = emptySet(),
                 rolesViewed = emptySet(),
+                disconnectedPlayers = emptySet(),
+                droppedPlayers = emptySet(),
             ),
             privatePerPlayer = emptyMap(),
             phase = WhodunitPhase.Setup,
@@ -847,6 +972,11 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
      */
     private fun pauseSession(state: WhodunitState): Reduction<WhodunitState, WhodunitEvent> {
         if (state.public.paused) return Reduction(state)
+        if (state.phase !is WhodunitPhase.Round) return Reduction(state)
+        if (state.public.voteState is VoteState.Collecting) return Reduction(state)
+        if (state.privatePerPlayer.values.any { it.privateReviewOpen || it.dossierUnlocked }) {
+            return Reduction(state)
+        }
         val frozenTimer = state.public.timer?.copy(paused = true)
         return Reduction(
             state.copy(public = state.public.copy(paused = true, timer = frozenTimer)),
@@ -856,6 +986,7 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
 
     private fun resumeSession(state: WhodunitState): Reduction<WhodunitState, WhodunitEvent> {
         if (!state.public.paused) return Reduction(state)
+        if (state.public.disconnectedPlayers.isNotEmpty()) return Reduction(state)
         val unfrozenTimer = state.public.timer?.copy(paused = false)
         return Reduction(
             state.copy(public = state.public.copy(paused = false, timer = unfrozenTimer)),
@@ -864,13 +995,27 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
     }
 
     private fun endGameEarly(state: WhodunitState, withReveal: Boolean): Reduction<WhodunitState, WhodunitEvent> {
+        if (state.phase == WhodunitPhase.Setup ||
+            state.phase == WhodunitPhase.Reveal ||
+            state.phase == WhodunitPhase.PostGame
+        ) {
+            return Reduction(state)
+        }
         return if (withReveal) {
             val verdict = Verdict.KillerWins(
                 state.hostOnly.killerCharacterId.raw,
-                KillerWinCause.SurvivedToFinalTwo,
+                KillerWinCause.GameEndedEarly,
             )
             Reduction(
-                state.copy(public = state.public.copy(verdict = verdict), phase = WhodunitPhase.Reveal),
+                state.copy(
+                    public = state.public.copy(
+                        verdict = verdict,
+                        paused = false,
+                        timer = null,
+                        disconnectedPlayers = emptySet(),
+                    ),
+                    phase = WhodunitPhase.Reveal,
+                ),
                 listOf(
                     WhodunitEvent.GameEndedEarly(true),
                     WhodunitEvent.WinnerDecided(verdict),
@@ -879,7 +1024,14 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
             )
         } else {
             Reduction(
-                state.copy(phase = WhodunitPhase.PostGame),
+                state.copy(
+                    public = state.public.copy(
+                        paused = false,
+                        timer = null,
+                        disconnectedPlayers = emptySet(),
+                    ),
+                    phase = WhodunitPhase.PostGame,
+                ),
                 listOf(WhodunitEvent.GameEndedEarly(false), WhodunitEvent.PhaseEntered(WhodunitPhase.PostGame)),
             )
         }
@@ -889,16 +1041,27 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
         state: WhodunitState,
         ctx: WhodunitReducerContext,
     ): Reduction<WhodunitState, WhodunitEvent> {
+        if (state.phase !is WhodunitPhase.CharacterReveal) return Reduction(state)
         val newSeed = state.hostOnly.randomSeed * 1103515245 + 12345
         val reset = state.copy(
             privatePerPlayer = emptyMap(),
-            phase = WhodunitPhase.CharacterReveal(playerIndex = 0),
+            phase = WhodunitPhase.Setup,
             public = state.public.copy(
                 revealedClues = emptyList(),
                 voteState = VoteState.Idle,
                 currentRound = 0,
                 timer = null,
                 paused = false,
+                // Reroll produces a fresh killer/seat map, so prior per-player
+                // readiness and outcome state are stale: without clearing these,
+                // advanceFromCharacterReveal's PartyReadiness gate sees old
+                // rolesViewed ids and never re-prompts players to view their NEW
+                // role (see PROBLEMS_PARLOR.md → wd-01). Mirror beginReplay's reset.
+                rolesViewed = emptySet(),
+                introAcknowledged = emptySet(),
+                briefingReady = emptySet(),
+                eliminatedPlayers = emptyList(),
+                verdict = null,
             ),
         )
         val priorPhaseId = state.phase.id
@@ -918,13 +1081,16 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
 
     private const val BRIEFING_CARD_COUNT = 4
     private const val TIE_DEBATE_SECONDS = 60
+    private const val MIN_DISCUSSION_SECONDS = 1
+    private const val MAX_DISCUSSION_SECONDS = 30 * 60
 
-    // Late-game clue weights. Higher = more likely to appear as the last
-    // clue. The mix is intentionally NOT dominated by finalStrong so the
-    // final round doesn't telegraph the killer.
-    private const val LATE_FINAL_STRONG_WEIGHT = 3
-    private const val LATE_KILLER_POINTING_WEIGHT = 2
-    private const val LATE_CONTRADICTION_WEIGHT = 2
-    private const val LATE_RED_HERRING_WEIGHT = 2
-    private const val LATE_PUBLIC_UNIVERSAL_WEIGHT = 1
+    private fun WhodunitAction.isAllowedWhilePaused(): Boolean = when (this) {
+        WhodunitAction.Pause,
+        WhodunitAction.Resume,
+        is WhodunitAction.EndGameEarly,
+        is WhodunitAction.MarkPlayerDisconnected,
+        is WhodunitAction.MarkPlayerReconnected,
+        is WhodunitAction.ContinueWithoutPlayer -> true
+        else -> false
+    }
 }

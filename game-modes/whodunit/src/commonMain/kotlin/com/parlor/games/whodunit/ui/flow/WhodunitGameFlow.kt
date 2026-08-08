@@ -41,11 +41,14 @@ import com.parlor.core.result.Result
 import com.parlor.core.time.Clock
 import com.parlor.designsystem.backdrop.HeroBackdrop
 import com.parlor.designsystem.components.CandleFlame
+import com.parlor.designsystem.components.ContinueWithoutDialog
 import com.parlor.designsystem.components.EyebrowLabel
+import com.parlor.designsystem.components.HostDisconnectedOverlay
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorButtonVariant
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.engine.session.SessionConfig
+import com.parlor.engine.session.SubmitError
 import com.parlor.engine.state.Player
 import com.parlor.games.whodunit.WhodunitDefinition
 import com.parlor.games.whodunit.WhodunitIds
@@ -75,6 +78,17 @@ import com.parlor.games.whodunit.ui.screens.safety.PrivacyConcernDialog
 import com.parlor.games.whodunit.ui.timer.runDiscussionTickerLoop
 import com.parlor.games.whodunit.resources.Res
 import com.parlor.games.whodunit.resources.pause_open_description
+import com.parlor.games.whodunit.resources.host_continue_without_description_format
+import com.parlor.games.whodunit.resources.host_continue_without_dialog_body_format
+import com.parlor.games.whodunit.resources.host_continue_without_dialog_cancel
+import com.parlor.games.whodunit.resources.host_continue_without_dialog_confirm_description_format
+import com.parlor.games.whodunit.resources.host_continue_without_dialog_confirm_format
+import com.parlor.games.whodunit.resources.host_continue_without_dialog_title_format
+import com.parlor.games.whodunit.resources.host_continue_without_format
+import com.parlor.games.whodunit.resources.host_leave_session
+import com.parlor.games.whodunit.resources.host_leave_session_description
+import com.parlor.games.whodunit.resources.host_peer_away_body_format
+import com.parlor.games.whodunit.resources.host_peer_away_title
 import com.parlor.games.whodunit.resources.peer_briefing_body
 import com.parlor.games.whodunit.resources.peer_briefing_title
 import com.parlor.games.whodunit.resources.peer_intro_body
@@ -115,9 +129,9 @@ import com.parlor.games.whodunit.ui.screens.vote.VoteBallotScreen
 import com.parlor.games.whodunit.ui.screens.vote.VoteHandoffScreen
 import com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostRoomBridge
 import com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitPeerRoomBridge
-import com.parlor.networking.protocol.HostMessage
+import com.parlor.networking.protocol.SessionEndReason
+import com.parlor.networking.protocol.SessionProtocol
 import com.parlor.networking.room.LocalRoom
-import com.parlor.networking.room.SendTarget
 import com.parlor.games.whodunit.domain.party.WhodunitReadinessGate
 import com.parlor.session.PlayMode
 import com.parlor.session.SessionController
@@ -125,8 +139,11 @@ import com.parlor.session.ViewerContext
 import com.parlor.session.party.PartyAwareSession
 import com.parlor.session.passandplay.PassAndPlaySessionController
 import com.parlor.storage.snapshot.SnapshotStore
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.compose.koinInject
 import org.koin.core.qualifier.named
 
@@ -232,7 +249,7 @@ fun WhodunitGameFlow(
 }
 
 /** Result of decoding a persisted snapshot: ready to feed into `SessionDrivenFlow`. */
-private data class ResumedSession(
+internal data class ResumedSession(
     val sessionId: SessionId,
     val state: WhodunitState,
     /**
@@ -263,14 +280,29 @@ private fun playModeFromMetadata(raw: String?): PlayMode? = when (raw) {
     else -> null
 }
 
-private suspend fun loadResumedSession(
+internal suspend fun loadResumedSession(
     snapshotStore: SnapshotStore,
     definition: WhodunitDefinition,
     sessionId: SessionId,
 ): Result<ResumedSession, DataError> = when (val loaded = snapshotStore.load(sessionId)) {
     is Result.Failure -> Result.Failure(loaded.error)
     is Result.Success -> runCatching {
+        val snapshot = loaded.data
+        // The snapshot envelope is authoritative for routing. Never try to
+        // decode another game's bytes with Whodunit's codec, and never restore
+        // a future/incompatible engine schema merely because its payload
+        // happens to deserialize today.
+        if (snapshot.sessionId != sessionId ||
+            snapshot.gameId != WhodunitIds.GameId ||
+            snapshot.engineVersion.major != ENGINE_VERSION.major ||
+            snapshot.engineVersion > ENGINE_VERSION
+        ) {
+            return@runCatching Result.Failure(DataError.CorruptedData)
+        }
         val state = definition.snapshotCodec().decode(loaded.data.payload)
+        if (snapshot.phaseId != state.phase.id) {
+            return@runCatching Result.Failure(DataError.CorruptedData)
+        }
         val playMode = playModeFromMetadata(loaded.data.metadata[PLAY_MODE_KEY])
         Result.Success(ResumedSession(sessionId, state, playMode))
     }.getOrElse { Result.Failure(DataError.CorruptedData) }
@@ -545,7 +577,10 @@ private fun SessionDrivenFlow(
         // Pause chrome — visible on every in-game screen except during the
         // overlay itself. Tapping it submits the Pause action; the reducer
         // flips public.paused, the snapshot writer fires on PauseEngaged.
-        if (!state.public.paused && state.phase !is WhodunitPhase.PostGame) {
+        if (!state.public.paused &&
+            state.phase is WhodunitPhase.Round &&
+            state.public.voteState !is VoteState.Collecting
+        ) {
             PauseAffordance(
                 onPause = { scope.launch { session.submit(WhodunitAction.Pause) } },
                 modifier = Modifier
@@ -630,12 +665,20 @@ fun WhodunitMultiplayerHostFlow(
     val definition: WhodunitDefinition = koinInject()
     val scope = rememberCoroutineScope()
 
-    val sessionConfig = remember(case.envelope.caseId, modeId, players, seed) {
+    // Freeze the roster at game start. `players` is recomputed by the caller
+    // from the live room membership on every change, so keying the canonical
+    // session on it meant a peer dropping or returning mid-game rebuilt the
+    // controller and wiped roles/phase/votes. Membership churn after start is
+    // handled through the bridge (MarkPlayerDisconnected/Reconnected), never by
+    // reconstructing the session. See PROBLEMS_PARLOR.md → CC-01.
+    val rosterAtStart = remember { players }
+
+    val sessionConfig = remember(case.envelope.caseId, modeId, rosterAtStart, seed) {
         SessionConfig(
             sessionId = SessionId("mp-host-${seed.toString(16)}"),
             caseId = CaseId(case.envelope.caseId),
             modeId = modeId,
-            players = players,
+            players = rosterAtStart,
             randomSeed = seed,
         )
     }
@@ -659,25 +702,48 @@ fun WhodunitMultiplayerHostFlow(
     // mode the wrapper is a transparent pass-through — peers ack themselves
     // — but using the wrapper everywhere keeps the surrounding code uniform
     // with the local entries.
-    val session: SessionController<WhodunitState, WhodunitAction, WhodunitEvent> =
+    val partySession: SessionController<WhodunitState, WhodunitAction, WhodunitEvent> =
         remember(rawSession, hostPlayMode) {
             PartyAwareSession(rawSession, hostPlayMode, WhodunitReadinessGate)
         }
-    val bridge = remember(rawSession, room, players) {
-        WhodunitHostRoomBridge(rawSession, room, players, scope)
+    val bridge = remember(rawSession, room, rosterAtStart) {
+        WhodunitHostRoomBridge(rawSession, room, rosterAtStart, scope)
     }
+    val session: SessionController<WhodunitState, WhodunitAction, WhodunitEvent> =
+        remember(partySession, bridge) {
+            PublishingWhodunitSessionController(partySession, bridge)
+        }
     LaunchedEffect(bridge) {
-        bridge.announceStart(
-            caseId = case.envelope.caseId,
-            modeId = modeId.raw,
-            seed = seed,
-        )
+        try {
+            bridge.announceStart(
+                caseId = case.envelope.caseId,
+                modeId = modeId.raw,
+            )
+            awaitCancellation()
+        } finally {
+            withContext(NonCancellable) {
+                bridge.terminate(SessionEndReason.HostLeft)
+                bridge.close()
+            }
+        }
     }
-    DisposableEffect(bridge) { onDispose { bridge.close() } }
 
     val publicProjection by session.publicState.collectAsState()
     val state = publicProjection.state
     val payload = case.payload
+    var confirmContinueFor by remember { mutableStateOf<Player?>(null) }
+    val disconnectedPlayer = state.public.disconnectedPlayers
+        .asSequence()
+        .mapNotNull { playerId -> state.players.firstOrNull { it.id == playerId } }
+        .firstOrNull()
+
+    LaunchedEffect(disconnectedPlayer?.id) {
+        if (disconnectedPlayer == null) {
+            confirmContinueFor = null
+        } else if (confirmContinueFor?.id != disconnectedPlayer.id) {
+            confirmContinueFor = null
+        }
+    }
 
     LaunchedEffect(state.phase) {
         if (state.phase is WhodunitPhase.Setup) {
@@ -696,14 +762,17 @@ fun WhodunitMultiplayerHostFlow(
             scope = scope,
             onBackToLibrary = {
                 scope.launch {
-                    runCatching { room.send(SendTarget.Broadcast, HostMessage.EndSession) }
+                    bridge.terminate(SessionEndReason.HostLeft)
                     onBackToLibrary()
                 }
             },
             modifier = Modifier.fillMaxSize(),
         )
 
-        if (!state.public.paused && state.phase !is WhodunitPhase.PostGame) {
+        if (!state.public.paused &&
+            state.phase is WhodunitPhase.Round &&
+            state.public.voteState !is VoteState.Collecting
+        ) {
             PauseAffordance(
                 onPause = { scope.launch { session.submit(WhodunitAction.Pause) } },
                 modifier = Modifier
@@ -718,11 +787,71 @@ fun WhodunitMultiplayerHostFlow(
                 onResumeLater = { onBackToLibrary() },
                 onEndNow = {
                     scope.launch {
-                        runCatching { room.send(SendTarget.Broadcast, HostMessage.EndSession) }
+                        bridge.terminate(SessionEndReason.Cancelled)
                         onBackToLibrary()
                     }
                 },
             )
+        }
+        if (disconnectedPlayer != null && state.phase !is WhodunitPhase.PostGame) {
+            val playerName = disconnectedPlayer.displayName
+            if (confirmContinueFor?.id == disconnectedPlayer.id) {
+                ContinueWithoutDialog(
+                    title = stringResource(
+                        Res.string.host_continue_without_dialog_title_format,
+                        playerName,
+                    ),
+                    body = stringResource(
+                        Res.string.host_continue_without_dialog_body_format,
+                        playerName,
+                    ),
+                    cancelLabel = stringResource(Res.string.host_continue_without_dialog_cancel),
+                    confirmLabel = stringResource(
+                        Res.string.host_continue_without_dialog_confirm_format,
+                        playerName,
+                    ),
+                    confirmContentDescription = stringResource(
+                        Res.string.host_continue_without_dialog_confirm_description_format,
+                        playerName,
+                    ),
+                    onCancel = { confirmContinueFor = null },
+                    onConfirm = {
+                        confirmContinueFor = null
+                        scope.launch {
+                            bridge.continueWithout(disconnectedPlayer.id)
+                        }
+                    },
+                    modifier = Modifier.fillMaxSize(),
+                )
+            } else {
+                HostDisconnectedOverlay(
+                    title = stringResource(Res.string.host_peer_away_title),
+                    body = stringResource(
+                        Res.string.host_peer_away_body_format,
+                        playerName,
+                    ),
+                    continueLabel = stringResource(
+                        Res.string.host_continue_without_format,
+                        playerName,
+                    ),
+                    continueContentDescription = stringResource(
+                        Res.string.host_continue_without_description_format,
+                        playerName,
+                    ),
+                    leaveLabel = stringResource(Res.string.host_leave_session),
+                    leaveContentDescription = stringResource(
+                        Res.string.host_leave_session_description,
+                    ),
+                    onContinue = { confirmContinueFor = disconnectedPlayer },
+                    onLeave = {
+                        scope.launch {
+                            bridge.terminate(SessionEndReason.Cancelled)
+                            onBackToLibrary()
+                        }
+                    },
+                    modifier = Modifier.fillMaxSize(),
+                )
+            }
         }
     }
 }
@@ -742,6 +871,7 @@ fun WhodunitMultiplayerPeerFlow(
     selfPlayerId: PlayerId,
     seed: Long,
     room: LocalRoom,
+    protocol: SessionProtocol,
     onBackToLibrary: () -> Unit,
     modifier: Modifier = Modifier,
     /**
@@ -770,12 +900,13 @@ fun WhodunitMultiplayerPeerFlow(
         )
     }
 
-    val bridge = remember(room, selfPlayerId) {
+    val bridge = remember(room, selfPlayerId, protocol) {
         WhodunitPeerRoomBridge(
             room = room,
             selfPlayerId = selfPlayerId,
             initialPublic = initialState,
             scope = scope,
+            protocol = protocol,
         )
     }
     DisposableEffect(bridge) { onDispose { bridge.close() } }
@@ -834,6 +965,29 @@ fun WhodunitMultiplayerPeerFlow(
         if (state.public.paused) {
             PeerHostPausedBanner(modifier = Modifier.align(Alignment.Center))
         }
+    }
+}
+
+/**
+ * Publishes host-originated mutations through the same ordered coordinator
+ * used by peer commands. No state-flow observer is involved, so one reducer
+ * mutation always advances exactly one authoritative revision.
+ */
+private class PublishingWhodunitSessionController(
+    private val delegate: SessionController<WhodunitState, WhodunitAction, WhodunitEvent>,
+    private val bridge: WhodunitHostRoomBridge,
+) : SessionController<WhodunitState, WhodunitAction, WhodunitEvent> by delegate {
+    override suspend fun submit(action: WhodunitAction): Result<Unit, SubmitError> {
+        val before = delegate.hostState?.value?.state
+        val result = delegate.submit(action)
+        if (
+            result is Result.Success &&
+            before != null &&
+            delegate.hostState?.value?.state != before
+        ) {
+            bridge.publishHostMutation()
+        }
+        return result
     }
 }
 

@@ -393,7 +393,7 @@ class TickerAndRerollTest {
     }
 
     @Test
-    fun reroll_clears_pause_so_post_reroll_game_starts_unpaused() = runTest {
+    fun pause_is_rejected_during_character_reveal_and_reroll_stays_interactive() = runTest {
         val payload = loadCase()
         val players = fourPlayers()
         val seed = 9002L
@@ -403,13 +403,15 @@ class TickerAndRerollTest {
         session.submit(WhodunitAction.AdvanceFromIntro)
         session.ackBriefingForAll(players)
         for (i in 1..4) session.submit(WhodunitAction.AdvanceBriefingCard(i))
-        // Pause during CharacterReveal, then reroll.
+        // The design explicitly hides/disallows pause during private dossier
+        // delivery: a pause overlay could leave secret material exposed.
         session.submit(WhodunitAction.Pause)
-        assertThat(stateOf(session).public.paused).isTrue()
+        assertThat(stateOf(session).public.paused).isEqualTo(false)
 
         session.submit(WhodunitAction.RequestReroll)
 
-        // Reroll resets paused so the new reveal flow is interactive immediately.
+        // Reroll remains available as the role-exposure recovery action.
+        assertThat(stateOf(session).phase).isInstanceOf(WhodunitPhase.CharacterReveal::class)
         assertThat(stateOf(session).public.paused).isEqualTo(false)
         session.close()
     }

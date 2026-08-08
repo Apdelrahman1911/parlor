@@ -12,7 +12,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -33,12 +32,22 @@ import com.parlor.app.resources.host_start_description
 import com.parlor.app.resources.host_start_solo
 import com.parlor.app.resources.host_start_with_players_format
 import com.parlor.app.resources.host_cancel_description
+import com.parlor.app.resources.host_approve
+import com.parlor.app.resources.host_approve_description
+import com.parlor.app.resources.host_decline
+import com.parlor.app.resources.host_decline_description
+import com.parlor.app.resources.host_join_request_format
 import com.parlor.app.resources.host_members_empty
 import com.parlor.app.resources.host_members_eyebrow
+import com.parlor.app.resources.host_pending_eyebrow
 import com.parlor.app.resources.host_room_code_eyebrow
 import com.parlor.app.resources.host_starting
 import com.parlor.app.resources.host_title
 import com.parlor.app.resources.host_hosting_as_format
+import com.parlor.app.resources.host_start_need_more_format
+import com.parlor.app.resources.host_start_pending
+import com.parlor.app.resources.host_start_too_many_format
+import com.parlor.app.shell.dataErrorMessage
 import com.parlor.app.shell.netErrorMessage
 import com.parlor.content.repository.CaseRepository
 import com.parlor.content.validation.PayloadValidator
@@ -58,12 +67,16 @@ import com.parlor.designsystem.components.StickyActionBar
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.engine.state.Player
 import com.parlor.games.whodunit.content.WhodunitCase
+import com.parlor.games.whodunit.WhodunitIds
 import com.parlor.games.whodunit.ui.flow.WhodunitMultiplayerHostFlow
 import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.NetError
 import com.parlor.networking.transport.HostConfig
 import com.parlor.networking.transport.RoomTransport
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.core.qualifier.named
@@ -107,26 +120,50 @@ fun HostSessionFlow(
         }
     }
 
-    DisposableEffect(Unit) {
-        onDispose {
-            val active = room
-            if (active != null) {
-                scope.launch { runCatching { active.leave() } }
+    val current = room
+    LaunchedEffect(current) {
+        if (current != null) {
+            try {
+                awaitCancellation()
+            } finally {
+                withContext(NonCancellable) {
+                    current.leave()
+                }
             }
         }
     }
 
-    val current = room
     val case = (caseResult as? Result.Success)?.data
+    val caseError = (caseResult as? Result.Failure)?.error
     when {
         hostError != null -> HostErrorState(netErrorMessage(hostError!!), onBack = onBackToLibrary, modifier = modifier)
+        caseError != null -> HostErrorState(
+            dataErrorMessage(caseError),
+            onBack = onBackToLibrary,
+            modifier = modifier,
+        )
         current == null || case == null -> HostLoadingState(modifier = modifier)
         !started -> HostLobbyContent(
             room = current,
             hostName = hostName,
+            supportedPlayerCounts = if (modeId == WhodunitIds.EliminationModeId) {
+                5..minOf(6, case.payload.characters.size)
+            } else {
+                4..minOf(6, case.payload.characters.size)
+            },
             modifier = modifier,
-            onStart = { started = true },
-            onLeave = onBackToLibrary,
+            onStart = {
+                scope.launch {
+                    current.closeAdmissions()
+                    started = true
+                }
+            },
+            onLeave = {
+                scope.launch {
+                    current.leave()
+                    onBackToLibrary()
+                }
+            },
         )
         else -> {
             val members by current.members.collectAsState()
@@ -158,12 +195,15 @@ fun HostSessionFlow(
 private fun HostLobbyContent(
     room: LocalRoom,
     hostName: String,
+    supportedPlayerCounts: IntRange,
     onStart: () -> Unit,
     onLeave: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val info by room.info.collectAsState()
     val members by room.members.collectAsState()
+    val pendingAdmissions by room.pendingAdmissions.collectAsState()
+    val scope = rememberCoroutineScope()
 
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
         Box(modifier = Modifier.fillMaxSize()) {
@@ -230,11 +270,74 @@ private fun HostLobbyContent(
                 }
             }
 
+            if (pendingAdmissions.isNotEmpty()) {
+                EyebrowLabel(
+                    text = stringResource(Res.string.host_pending_eyebrow),
+                    accent = false,
+                )
+                pendingAdmissions.forEach { admission ->
+                    ParlorCard(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentPadding = ParlorTheme.spacing.m,
+                    ) {
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s),
+                        ) {
+                            Text(
+                                text = stringResource(
+                                    Res.string.host_join_request_format,
+                                    admission.displayName,
+                                ),
+                                style = ParlorTheme.typography.bodyLarge,
+                                color = ParlorTheme.colors.textPrimary,
+                            )
+                            ParlorButton(
+                                label = stringResource(Res.string.host_approve),
+                                contentDescription = stringResource(
+                                    Res.string.host_approve_description,
+                                    admission.displayName,
+                                ),
+                                onClick = {
+                                    scope.launch { room.approveAdmission(admission.playerId) }
+                                },
+                                modifier = Modifier.fillMaxWidth(),
+                            )
+                            ParlorButton(
+                                label = stringResource(Res.string.host_decline),
+                                contentDescription = stringResource(
+                                    Res.string.host_decline_description,
+                                    admission.displayName,
+                                ),
+                                onClick = {
+                                    scope.launch { room.rejectAdmission(admission.playerId) }
+                                },
+                                modifier = Modifier.fillMaxWidth(),
+                                variant = ParlorButtonVariant.Secondary,
+                            )
+                        }
+                    }
+                }
+            }
+
         }
 
-        val startLabel = if (members.isEmpty()) {
-            stringResource(Res.string.host_start_solo)
-        } else {
+        val playerCount = members.size + 1
+        val canStart =
+            playerCount in supportedPlayerCounts && pendingAdmissions.isEmpty()
+        val startLabel = when {
+            pendingAdmissions.isNotEmpty() ->
+                stringResource(Res.string.host_start_pending)
+            playerCount < supportedPlayerCounts.first ->
+                stringResource(
+                    Res.string.host_start_need_more_format,
+                    supportedPlayerCounts.first.toString(),
+                )
+            playerCount > supportedPlayerCounts.last ->
+                stringResource(
+                    Res.string.host_start_too_many_format,
+                    supportedPlayerCounts.last.toString(),
+                )
+            else ->
             stringResource(Res.string.host_start_with_players_format)
                 .replace("%1\$s", (members.size + 1).toString())
         }
@@ -244,6 +347,7 @@ private fun HostLobbyContent(
                 contentDescription = stringResource(Res.string.host_start_description),
                 onClick = onStart,
                 modifier = Modifier.fillMaxWidth(),
+                enabled = canStart,
             )
             ParlorButton(
                 label = stringResource(Res.string.host_cancel),

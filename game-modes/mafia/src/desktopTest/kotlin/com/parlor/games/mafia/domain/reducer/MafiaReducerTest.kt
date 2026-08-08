@@ -259,6 +259,7 @@ class MafiaReducerTest {
         // First Mafia targets town[0], second Mafia targets town[1] → tied 1-1.
         state = MafiaReducer.reduce(state, MafiaAction.SubmitMafiaKillVote(mafiaIds[0], town[0]), ctx()).newState
         state = MafiaReducer.reduce(state, MafiaAction.SubmitMafiaKillVote(mafiaIds[1], town[1]), ctx()).newState
+        state = submitUnsubmittedNightActions(state)
         state = MafiaReducer.reduce(state, MafiaAction.ResolveNight, ctx()).newState
 
         val night = state.phase as MafiaPhase.Night
@@ -293,6 +294,7 @@ class MafiaReducerTest {
         // Round 1 tie:
         state = MafiaReducer.reduce(state, MafiaAction.SubmitMafiaKillVote(mafiaIds[0], town[0]), ctx()).newState
         state = MafiaReducer.reduce(state, MafiaAction.SubmitMafiaKillVote(mafiaIds[1], town[1]), ctx()).newState
+        state = submitUnsubmittedNightActions(state)
         state = MafiaReducer.reduce(state, MafiaAction.ResolveNight, ctx()).newState
         // Round 2 still tied:
         state = MafiaReducer.reduce(state, MafiaAction.SubmitMafiaKillVote(mafiaIds[0], town[0]), ctx()).newState
@@ -329,6 +331,9 @@ class MafiaReducerTest {
         val state = initialState(7)
         val ended = MafiaReducer.reduce(state, MafiaAction.EndGame, ctx()).newState
         assertThat(ended.phase).isEqualTo(MafiaPhase.PostGame)
+        // Roles have not been assigned in Setup, so an early end must not
+        // fabricate a Town victory.
+        assertThat(ended.public.winner).isNull()
     }
 
     // ----------------------------------------------------------------------
@@ -348,12 +353,37 @@ class MafiaReducerTest {
         for (m in mafiaIds) {
             state = MafiaReducer.reduce(state, MafiaAction.SubmitMafiaKillVote(m, target = null), ctx()).newState
         }
+        state = submitUnsubmittedNightActions(state)
         state = MafiaReducer.reduce(state, MafiaAction.ResolveNight, ctx()).newState
         // Everyone acks night announcement.
         for (p in state.players) {
             state = MafiaReducer.reduce(state, MafiaAction.AcknowledgeNightAnnouncement(p.id), ctx()).newState
         }
         state = MafiaReducer.reduce(state, MafiaAction.OpenDiscussion, ctx()).newState
+        return state
+    }
+
+    /**
+     * Submit a deterministic skip for every active living seat that has not
+     * already acted. Tests that care about a Mafia target submit it first, then
+     * use this helper to satisfy the reducer-owned readiness gate.
+     */
+    private fun submitUnsubmittedNightActions(initial: MafiaState): MafiaState {
+        var state = initial
+        val activeAlive = state.public.roster
+            .filter { it.alive && it.playerId !in state.public.droppedPlayers }
+            .map { it.playerId }
+        for (id in activeAlive) {
+            val private = state.privatePerPlayer[id] ?: continue
+            if (private.nightChoiceSubmitted) continue
+            val action = when (private.role) {
+                Role.Mafia -> MafiaAction.SubmitMafiaKillVote(id, null)
+                Role.Doctor -> MafiaAction.SubmitDoctorProtect(id, null)
+                Role.Detective -> MafiaAction.SubmitDetectiveInspect(id, null)
+                Role.Civilian -> MafiaAction.SubmitCivilianSuspicion(id, null)
+            }
+            state = MafiaReducer.reduce(state, action, ctx()).newState
+        }
         return state
     }
 }

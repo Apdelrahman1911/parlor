@@ -24,6 +24,7 @@ import com.parlor.games.whodunit.domain.action.WhodunitAction
 import com.parlor.games.whodunit.domain.event.Verdict
 import com.parlor.games.whodunit.domain.event.WhodunitEvent
 import com.parlor.games.whodunit.domain.phase.WhodunitPhase
+import com.parlor.games.whodunit.domain.state.PartyReadiness
 import com.parlor.games.whodunit.domain.state.VoteState
 import com.parlor.games.whodunit.domain.state.WhodunitState
 import com.parlor.games.whodunit.resources.Res
@@ -153,6 +154,40 @@ private fun HostPhaseScreens(
     onBackToLibrary: () -> Unit,
     modifier: Modifier,
 ) {
+    val multiDeviceSelf = (playMode as? PlayMode.MultiDevice)?.selfPlayerId
+    var introAdvanceRequested by remember(phase, multiDeviceSelf) { mutableStateOf(false) }
+    var briefingAdvanceRequested by remember(phase, multiDeviceSelf) { mutableStateOf(false) }
+
+    if (multiDeviceSelf != null) {
+        LaunchedEffect(phase, multiDeviceSelf) {
+            when (phase) {
+                WhodunitPhase.PublicIntro ->
+                    session.submit(WhodunitAction.AcknowledgeIntro(multiDeviceSelf))
+                WhodunitPhase.RulesBriefing ->
+                    session.submit(WhodunitAction.AcknowledgeBriefing(multiDeviceSelf))
+                else -> Unit
+            }
+        }
+
+        val active = PartyReadiness.activeRoster(state.players, state.public.droppedPlayers)
+        val introReady = PartyReadiness.isComplete(state.public.introAcknowledged, active)
+        val briefingReady = PartyReadiness.isComplete(state.public.briefingReady, active)
+        LaunchedEffect(phase, introAdvanceRequested, introReady) {
+            if (phase == WhodunitPhase.PublicIntro && introAdvanceRequested && introReady) {
+                session.submit(WhodunitAction.AdvanceFromIntro)
+            }
+        }
+        LaunchedEffect(phase, briefingAdvanceRequested, briefingReady, state.public.briefingCardIndex) {
+            if (phase == WhodunitPhase.RulesBriefing &&
+                briefingAdvanceRequested &&
+                briefingReady &&
+                state.public.briefingCardIndex == LAST_BRIEFING_CARD_INDEX
+            ) {
+                session.submit(WhodunitAction.AdvanceBriefingCard(BRIEFING_COMPLETION_INDEX))
+            }
+        }
+    }
+
     when (phase) {
         is WhodunitPhase.Setup -> LoadingScreen(modifier)
 
@@ -160,13 +195,19 @@ private fun HostPhaseScreens(
             title = case.envelope.title,
             intro = payload.publicIntro,
             bedrockClues = payload.bedrockClues,
-            onContinue = { scope.launch { session.submit(WhodunitAction.AdvanceFromIntro) } },
+            onContinue = {
+                introAdvanceRequested = true
+                scope.launch { session.submit(WhodunitAction.AdvanceFromIntro) }
+            },
             modifier = modifier,
         )
 
         is WhodunitPhase.RulesBriefing -> RulesBriefingScreen(
             cardIndex = state.public.briefingCardIndex,
-            onAdvance = { next -> scope.launch { session.submit(WhodunitAction.AdvanceBriefingCard(next)) } },
+            onAdvance = { next ->
+                if (next == BRIEFING_COMPLETION_INDEX) briefingAdvanceRequested = true
+                scope.launch { session.submit(WhodunitAction.AdvanceBriefingCard(next)) }
+            },
             modifier = modifier,
         )
 
@@ -199,7 +240,9 @@ private fun HostPhaseScreens(
                 session = session,
                 roster = state.players,
                 rolesViewed = state.public.rolesViewed,
+                droppedPlayers = state.public.droppedPlayers,
                 selfPlayerId = playMode.selfPlayerId,
+                isHost = true,
                 payload = payload,
                 modifier = modifier,
             )
@@ -281,6 +324,15 @@ private fun PeerPhaseScreens(
 ) {
     val waitingHint = stringResource(Res.string.peer_waiting_for_host)
     val waitingEyebrow = stringResource(Res.string.peer_waiting_eyebrow)
+    LaunchedEffect(phase, playMode.selfPlayerId) {
+        when (phase) {
+            WhodunitPhase.PublicIntro ->
+                session.submit(WhodunitAction.AcknowledgeIntro(playMode.selfPlayerId))
+            WhodunitPhase.RulesBriefing ->
+                session.submit(WhodunitAction.AcknowledgeBriefing(playMode.selfPlayerId))
+            else -> Unit
+        }
+    }
     when (phase) {
         is WhodunitPhase.Setup -> LoadingScreen(modifier)
 
@@ -304,7 +356,9 @@ private fun PeerPhaseScreens(
             session = session,
             roster = state.players,
             rolesViewed = state.public.rolesViewed,
+            droppedPlayers = state.public.droppedPlayers,
             selfPlayerId = playMode.selfPlayerId,
+            isHost = false,
             payload = payload,
             modifier = modifier,
         )
@@ -635,16 +689,24 @@ private fun SelfCharacterRevealSegment(
     session: SessionController<WhodunitState, WhodunitAction, WhodunitEvent>,
     roster: List<Player>,
     rolesViewed: Set<PlayerId>,
+    droppedPlayers: Set<PlayerId>,
     selfPlayerId: PlayerId,
+    isHost: Boolean,
     payload: WhodunitCase,
     modifier: Modifier = Modifier,
 ) {
     val scope = rememberCoroutineScope()
     val selfPlayer = roster.firstOrNull { it.id == selfPlayerId } ?: return
+    val pending = roster.filter { it.id !in droppedPlayers && it.id !in rolesViewed }
 
     if (selfPlayer.id in rolesViewed) {
+        if (isHost && pending.isEmpty()) {
+            LaunchedEffect(session, rolesViewed) {
+                session.submit(WhodunitAction.AdvanceFromCharacterReveal)
+            }
+        }
         // Self has confirmed; wait while the rest of the table catches up.
-        val stillPending = roster.firstOrNull { it.id != selfPlayer.id && it.id !in rolesViewed }
+        val stillPending = pending.firstOrNull { it.id != selfPlayer.id }
         com.parlor.games.whodunit.ui.screens.reveal.CharacterRevealWaitingScreen(
             activePlayerName = stillPending?.displayName ?: selfPlayer.displayName,
             modifier = modifier,
@@ -756,7 +818,14 @@ private fun RoundSegment(
     //    the LaunchedEffect.
     val timerId = timer?.timerId
     LaunchedEffect(timerId, session) {
-        if (timerId != null) {
+        // Only the AUTHORITATIVE controller (host / pass-and-play, hostState != null)
+        // drives the timer reducer. A peer's ShadowSessionController has
+        // hostState == null and forwards every submit to the host — running the
+        // ticker there would spam the host with one TimerTicked per second that
+        // its authority gate rejects (TimerTicked is HostOnly), pure wasted
+        // chatter competing with real actions. Peers render the countdown from
+        // the host's snapshots instead. Perf/UX: cuts peer→host network noise.
+        if (timerId != null && session.hostState != null) {
             runDiscussionTickerLoop(session, timerId)
         }
     }
@@ -896,6 +965,8 @@ private fun defaultRoundTitleAndTagline(roundIndex: Int, playerCount: Int): Pair
 }
 
 private const val DEFAULT_DISCUSSION_SECONDS = 180
+private const val LAST_BRIEFING_CARD_INDEX = 3
+private const val BRIEFING_COMPLETION_INDEX = 4
 
 // ============================================================================== Voting ==
 
@@ -964,7 +1035,7 @@ private fun VoteSegment(
         )
     } else {
         val candidates = players
-            .filter { it.id !in state.public.eliminatedPlayers }
+            .filter { it.id in vote.candidatePlayerIds }
             .filter { it.id != nextVoter }   // can't vote for yourself
             .map { it.id to it.displayName }
         VoteBallotScreen(

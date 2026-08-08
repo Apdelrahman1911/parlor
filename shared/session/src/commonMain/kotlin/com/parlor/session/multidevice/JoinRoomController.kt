@@ -165,6 +165,13 @@ class JoinRoomController(
 fun mapNetError(error: NetError): JoinError = when (error) {
     NetError.NotConnected -> JoinError.HostUnreachable
     NetError.Timeout -> JoinError.ConnectionTimeout
+    NetError.PayloadTooLarge -> JoinError.Generic
+    NetError.WrongCode -> JoinError.WrongCode
+    NetError.HostDeclined -> JoinError.Generic
+    NetError.RoomFull -> JoinError.RoomFull
+    NetError.SessionStarted -> JoinError.GameAlreadyStarted
+    NetError.IncompatibleProtocol -> JoinError.Generic
+    NetError.RateLimited -> JoinError.Generic
     NetError.Unauthorized -> JoinError.Generic
     is NetError.TransportFailure -> JoinError.Generic
 }

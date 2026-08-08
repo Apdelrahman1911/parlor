@@ -16,6 +16,7 @@ import com.parlor.games.mafia.domain.phase.MafiaPhase
 import com.parlor.games.mafia.domain.projection.MafiaProjectionPolicy
 import com.parlor.games.mafia.domain.reducer.MafiaReducer
 import com.parlor.games.mafia.domain.settings.MafiaSettingsPresets
+import com.parlor.games.mafia.domain.settings.MafiaSettings
 import com.parlor.games.mafia.domain.state.MafiaHostOnly
 import com.parlor.games.mafia.domain.state.MafiaPublic
 import com.parlor.games.mafia.domain.state.MafiaState
@@ -38,7 +39,8 @@ class MafiaDefinition(
     )
 
     override val supportedModes: List<GameMode> = listOf(ClassicMode)
-    override val supportedPlayerCounts: IntRange = 5..16
+    override val supportedPlayerCounts: IntRange =
+        MafiaSettings.MIN_PLAYERS..MafiaSettings.MAX_PLAYERS
 
     override fun createInitialState(config: SessionConfig): MafiaState {
         val preset = MafiaSettingsPresets.forPlayerCount(config.players.size)

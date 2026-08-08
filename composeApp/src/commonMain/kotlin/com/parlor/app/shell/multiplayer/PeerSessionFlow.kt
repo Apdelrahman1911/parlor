@@ -12,14 +12,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -59,16 +57,25 @@ import com.parlor.designsystem.components.ParlorButtonVariant
 import com.parlor.designsystem.components.ParlorCard
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.engine.state.Player
+import com.parlor.games.whodunit.WhodunitIds
 import com.parlor.games.whodunit.content.WhodunitCase
 import com.parlor.games.whodunit.ui.flow.WhodunitMultiplayerPeerFlow
+import com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostRoomBridge
 import com.parlor.app.shell.dataErrorMessage
 import com.parlor.app.shell.netErrorMessage
 import com.parlor.networking.protocol.HostMessage
+import com.parlor.networking.protocol.PARLOR_PROTOCOL_MAJOR
+import com.parlor.networking.protocol.ProtocolValidation
+import com.parlor.networking.protocol.SessionProtocol
+import com.parlor.networking.protocol.validateFor
 import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.NetError
 import com.parlor.networking.transport.RoomTransport
 import kotlinx.coroutines.flow.filterIsInstance
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -87,8 +94,6 @@ fun PeerSessionFlow(
     onBackToLibrary: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val scope = rememberCoroutineScope()
-
     var room by remember { mutableStateOf<LocalRoom?>(null) }
     // Keep the typed error so the rendering site can localise it. Stringifying
     // here would lose the type and ship "NetError$TransportFailure(reason=...)"
@@ -105,21 +110,60 @@ fun PeerSessionFlow(
 
     LaunchedEffect(room) {
         val active = room ?: return@LaunchedEffect
-        active.incoming.filterIsInstance<HostMessage.SessionStarting>().collect { msg ->
-            sessionStart = SessionStartingFromHost(
-                caseId = msg.caseId,
-                modeId = msg.modeId,
-                players = msg.players,
-                seed = msg.seed,
+        // Consume exactly one start frame, then release the Channel-backed
+        // inbox to WhodunitPeerRoomBridge. Keeping this collector alive would
+        // race the coordinator and nondeterministically steal snapshots.
+        val msg = active.incoming.filterIsInstance<HostMessage.SessionStarting>().first()
+        val header = msg.header
+        val candidate = header?.let {
+            SessionProtocol(
+                sessionId = it.sessionId,
+                gameId = WhodunitIds.GameId,
+                gameVersion = WhodunitHostRoomBridge.GAME_VERSION,
             )
         }
+        val ids = msg.players.map(Player::id)
+        val validPlayerCount = when (msg.modeId) {
+            WhodunitIds.ClassicVoteModeId.raw -> msg.players.size in 4..6
+            WhodunitIds.EliminationModeId.raw -> msg.players.size in 5..6
+            else -> false
+        }
+        if (
+            header == null ||
+            candidate == null ||
+            header.protocol.major != PARLOR_PROTOCOL_MAJOR ||
+            header.sequence != 0L ||
+            header.validateFor(candidate) != ProtocolValidation.Valid ||
+            msg.caseId.isBlank() ||
+            !validPlayerCount ||
+            active.selfPlayerId !in ids ||
+            active.info.value.hostPlayerId !in ids ||
+            ids.distinct().size != ids.size
+        ) {
+            joinError = NetError.IncompatibleProtocol
+            return@LaunchedEffect
+        }
+        sessionStart = SessionStartingFromHost(
+            caseId = msg.caseId,
+            modeId = msg.modeId,
+            players = msg.players,
+            seed = msg.sessionNonce,
+            protocol = candidate,
+        )
     }
 
-    DisposableEffect(Unit) {
-        onDispose {
-            val active = room
-            if (active != null) {
-                scope.launch { runCatching { active.leave() } }
+    // Keep room teardown alive through composition cancellation. Launching
+    // from `onDispose` on a rememberCoroutineScope is racy because that scope
+    // is cancelled as the composition is removed, which can strand discovery
+    // and sockets. The owner effect mirrors the host/Mafia flows and performs
+    // the terminal leave in a NonCancellable section.
+    LaunchedEffect(room) {
+        val active = room ?: return@LaunchedEffect
+        try {
+            awaitCancellation()
+        } finally {
+            withContext(NonCancellable) {
+                runCatching { active.leave() }
             }
         }
     }
@@ -218,6 +262,7 @@ private fun PeerSessionWithCase(
                 selfPlayerId = selfId,
                 seed = start.seed,
                 room = room,
+                protocol = start.protocol,
                 onBackToLibrary = onBackToLibrary,
                 modifier = modifier,
                 onHostLostChanged = onHostLostChanged,
@@ -370,4 +415,5 @@ private data class SessionStartingFromHost(
     val modeId: String,
     val players: List<Player>,
     val seed: Long,
+    val protocol: SessionProtocol,
 )

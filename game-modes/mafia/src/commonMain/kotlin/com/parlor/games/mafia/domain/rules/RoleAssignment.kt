@@ -4,6 +4,7 @@ import com.parlor.core.ids.PlayerId
 import com.parlor.core.random.RandomSource
 import com.parlor.engine.state.Player
 import com.parlor.games.mafia.domain.settings.MafiaRoleCounts
+import com.parlor.games.mafia.domain.settings.MafiaSettings
 import com.parlor.games.mafia.domain.state.Role
 import com.parlor.games.mafia.domain.state.team
 
@@ -27,6 +28,12 @@ object RoleAssignment {
         random: RandomSource,
     ): Result {
         require(counts.mafia >= 1) { "Need at least 1 Mafia" }
+        require(counts.detective in 0..MafiaSettings.MAX_DETECTIVES) {
+            "Detective count must be between 0 and ${MafiaSettings.MAX_DETECTIVES}"
+        }
+        require(counts.doctor in 0..MafiaSettings.MAX_DOCTORS) {
+            "Doctor count must be between 0 and ${MafiaSettings.MAX_DOCTORS}"
+        }
         val total = counts.mafia + counts.detective + counts.doctor
         require(total <= players.size) { "Role counts exceed player count" }
 

@@ -23,6 +23,13 @@ import com.parlor.core.ids.PlayerId
  */
 sealed interface PeerEvent {
 
+    /** Correct room code; encrypted authenticated peer awaits explicit host approval. */
+    data class AdmissionRequested(
+        val playerId: PlayerId,
+        val displayName: String,
+        val isRejoin: Boolean,
+    ) : PeerEvent
+
     /** A peer has joined the room. Host-side. */
     data class PeerJoined(val playerId: PlayerId, val displayName: String) : PeerEvent
 

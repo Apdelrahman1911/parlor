@@ -53,7 +53,6 @@ import com.parlor.session.PlayMode
 import com.parlor.storage.settings.SettingsStore
 import com.parlor.storage.snapshot.SnapshotStore
 import org.koin.compose.koinInject
-import org.koin.mp.KoinPlatform
 
 /**
  * Parlor's root composable. Owns the high-level navigation state machine.
@@ -65,7 +64,7 @@ import org.koin.mp.KoinPlatform
  *    the user makes the "how" decision once, up front.
  *  - From Setup, single-device branches go to the case picker then the game;
  *    multi-device branches go through the existing permission + name + case
- *    + mode pipeline. Multiplayer is gated on whether RoomTransport is wired.
+ *    + mode pipeline. The production app always supplies RoomTransport.
  *
  * Case discovery is dynamic — any JSON registered in
  * `WhodunitDiModule.knownCaseIds` shows up in the picker automatically.
@@ -75,21 +74,22 @@ fun App() {
     val settings: SettingsStore = koinInject()
     val languageTag by settings.languageOverride.collectAsState(initial = null)
     val themeModeTag by settings.themeMode.collectAsState(initial = ThemeMode.Default.tag)
+    val reducedMotion by settings.reducedMotion.collectAsState(initial = false)
     val language = AppLanguage.fromTag(languageTag)
     val themeMode = ThemeMode.fromTag(themeModeTag)
     LaunchedEffect(language) { customAppLocale = language.tag }
 
     val snapshotStore: SnapshotStore = koinInject()
     val caseRepository: CaseRepository = koinInject()
-    // RoomTransport is only registered when `parlor.p2p.enabled=true`. Pulled
-    // through KoinPlatform.getKoin().getOrNull(...) so the default build
-    // doesn't need to declare a Koin binding for it.
-    val roomTransport: RoomTransport? = remember { KoinPlatform.getKoin().getOrNull() }
+    val roomTransport: RoomTransport = koinInject()
 
     val toastState = remember { ParlorToastState() }
 
     ProvideAppLanguage(language = language) {
-        ParlorTheme(themeMode = themeMode) {
+        ParlorTheme(
+            themeMode = themeMode,
+            reducedMotion = reducedMotion,
+        ) {
             CompositionLocalProvider(LocalParlorToastState provides toastState) {
             var screen: AppScreen by remember { mutableStateOf(AppScreen.Home) }
             var resumeSessionId: SessionId? by remember { mutableStateOf(null) }
@@ -158,7 +158,7 @@ fun App() {
             ) {
                 Crossfade(
                     targetState = screen,
-                    animationSpec = tween(durationMillis = 220),
+                    animationSpec = tween(durationMillis = if (reducedMotion) 0 else 220),
                     modifier = Modifier.fillMaxSize(),
                     label = "parlor-screen-transition",
                 ) { current ->
@@ -188,14 +188,10 @@ fun App() {
                         soloPlayMode = mode
                         screen = AppScreen.SoloCasePicker
                     },
-                    onHost = {
-                        if (roomTransport != null) screen = AppScreen.HostPermission
-                    },
-                    onJoin = {
-                        if (roomTransport != null) screen = AppScreen.JoinPermission
-                    },
+                    onHost = { screen = AppScreen.HostPermission },
+                    onJoin = { screen = AppScreen.JoinPermission },
                     onBack = backToHome,
-                    multiplayerEnabled = roomTransport != null,
+                    multiplayerEnabled = true,
                     modifier = Modifier.fillMaxSize(),
                 )
 
@@ -271,12 +267,11 @@ fun App() {
                     modifier = Modifier.fillMaxSize(),
                 )
                 AppScreen.HostLobby -> {
-                    val transport = roomTransport
-                    if (transport == null || hostCaseId.isBlank() || hostName.isBlank()) {
+                    if (hostCaseId.isBlank() || hostName.isBlank()) {
                         screen = AppScreen.Home
                     } else {
                         HostSessionFlow(
-                            transport = transport,
+                            transport = roomTransport,
                             caseId = hostCaseId,
                             modeId = hostModeId,
                             hostName = hostName,
@@ -325,12 +320,11 @@ fun App() {
                     modifier = Modifier.fillMaxSize(),
                 )
                 AppScreen.PeerLobby -> {
-                    val transport = roomTransport
-                    if (transport == null || pendingJoinCode.isBlank() || peerName.isBlank()) {
+                    if (pendingJoinCode.isBlank() || peerName.isBlank()) {
                         screen = AppScreen.Home
                     } else {
                         PeerSessionFlow(
-                            transport = transport,
+                            transport = roomTransport,
                             code = pendingJoinCode,
                             peerName = peerName,
                             onBackToLibrary = backToHome,
@@ -351,14 +345,10 @@ fun App() {
                         // expects.
                         screen = AppScreen.Mafia
                     },
-                    onHost = {
-                        if (roomTransport != null) screen = AppScreen.MafiaHostPermission
-                    },
-                    onJoin = {
-                        if (roomTransport != null) screen = AppScreen.MafiaJoinPermission
-                    },
+                    onHost = { screen = AppScreen.MafiaHostPermission },
+                    onJoin = { screen = AppScreen.MafiaJoinPermission },
                     onBack = backToHome,
-                    multiplayerEnabled = roomTransport != null,
+                    multiplayerEnabled = true,
                     soloEnabled = false,
                     modifier = Modifier.fillMaxSize(),
                 )
@@ -398,12 +388,11 @@ fun App() {
                     modifier = Modifier.fillMaxSize(),
                 )
                 AppScreen.MafiaHostLobby -> {
-                    val transport = roomTransport
-                    if (transport == null || mafiaHostName.isBlank()) {
+                    if (mafiaHostName.isBlank()) {
                         screen = AppScreen.Home
                     } else {
                         MafiaHostLobbyFlow(
-                            transport = transport,
+                            transport = roomTransport,
                             hostName = mafiaHostName,
                             onBackToHome = backToHome,
                             modifier = Modifier.fillMaxSize(),
@@ -450,12 +439,11 @@ fun App() {
                     modifier = Modifier.fillMaxSize(),
                 )
                 AppScreen.MafiaPeerLobby -> {
-                    val transport = roomTransport
-                    if (transport == null || mafiaPendingJoinCode.isBlank() || mafiaPeerName.isBlank()) {
+                    if (mafiaPendingJoinCode.isBlank() || mafiaPeerName.isBlank()) {
                         screen = AppScreen.Home
                     } else {
                         MafiaPeerLobbyFlow(
-                            transport = transport,
+                            transport = roomTransport,
                             code = mafiaPendingJoinCode,
                             peerName = mafiaPeerName,
                             onBackToHome = backToHome,

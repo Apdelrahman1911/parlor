@@ -4,14 +4,14 @@ import com.parlor.core.result.DataError
 import com.parlor.core.result.EmptyOk
 import com.parlor.core.result.EmptyResult
 import com.parlor.core.result.Result
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
 /**
- * Production [SecureStorage] backed by a platform-provided [SecureKeyValueBacking].
- * The backing is supplied per platform: Android Keystore-backed
- * EncryptedSharedPreferences, iOS Keychain, Desktop a derived-key-encrypted
- * file. The contract is the same.
+ * [SecureStorage] adapter backed by a caller-provided
+ * [SecureKeyValueBacking]. Security is only as strong as that backing; DI must
+ * not bind [InMemorySecureKeyValueBacking] in production.
  */
 class PlatformKeyedSecureStorage(
     private val backing: SecureKeyValueBacking,
@@ -19,21 +19,35 @@ class PlatformKeyedSecureStorage(
     private val mutex = Mutex()
 
     override suspend fun put(key: String, value: ByteArray): EmptyResult<DataError> = mutex.withLock {
-        runCatching { backing.put(key, value) }
-            .fold(onSuccess = { EmptyOk }, onFailure = { Result.Failure(DataError.IoError(it.message ?: "io")) })
+        try {
+            backing.put(key, value)
+            EmptyOk
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (_: Throwable) {
+            Result.Failure(DataError.IoError("secure_storage_io"))
+        }
     }
 
     override suspend fun get(key: String): Result<ByteArray?, DataError> = mutex.withLock {
-        runCatching { backing.get(key) }
-            .fold(
-                onSuccess = { Result.Success(it) },
-                onFailure = { Result.Failure(DataError.IoError(it.message ?: "io")) },
-            )
+        try {
+            Result.Success(backing.get(key))
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (_: Throwable) {
+            Result.Failure(DataError.IoError("secure_storage_io"))
+        }
     }
 
     override suspend fun remove(key: String): EmptyResult<DataError> = mutex.withLock {
-        runCatching { backing.remove(key) }
-            .fold(onSuccess = { EmptyOk }, onFailure = { Result.Failure(DataError.IoError(it.message ?: "io")) })
+        try {
+            backing.remove(key)
+            EmptyOk
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (_: Throwable) {
+            Result.Failure(DataError.IoError("secure_storage_io"))
+        }
     }
 }
 
@@ -50,7 +64,20 @@ interface SecureKeyValueBacking {
  */
 class InMemorySecureKeyValueBacking : SecureKeyValueBacking {
     private val map = mutableMapOf<String, ByteArray>()
-    override suspend fun put(key: String, value: ByteArray) { map[key] = value }
-    override suspend fun get(key: String): ByteArray? = map[key]
-    override suspend fun remove(key: String) { map.remove(key) }
+    private val mutex = Mutex()
+
+    override suspend fun put(key: String, value: ByteArray) {
+        mutex.withLock {
+            map.put(key, value.copyOf())?.fill(0)
+        }
+    }
+
+    override suspend fun get(key: String): ByteArray? =
+        mutex.withLock { map[key]?.copyOf() }
+
+    override suspend fun remove(key: String) {
+        mutex.withLock {
+            map.remove(key)?.fill(0)
+        }
+    }
 }

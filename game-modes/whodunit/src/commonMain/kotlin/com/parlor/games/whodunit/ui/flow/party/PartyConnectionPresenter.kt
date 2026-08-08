@@ -65,7 +65,8 @@ class PartyConnectionPresenter(
                 ToastKey.PeerReconnected(event.displayName),
                 ParlorToastSeverity.Success,
             )
-            is PeerEvent.PeerJoined -> Unit  // initial join handled by lobby
+            is PeerEvent.AdmissionRequested,
+            is PeerEvent.PeerJoined -> Unit  // admission / initial join handled by lobby
             PeerEvent.HostLost -> onHostLostChanged(true)
             PeerEvent.HostRestored -> {
                 onHostLostChanged(false)

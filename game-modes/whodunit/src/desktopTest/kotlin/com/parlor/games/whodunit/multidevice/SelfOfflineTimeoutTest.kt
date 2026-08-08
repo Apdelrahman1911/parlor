@@ -6,13 +6,17 @@ import com.parlor.core.ids.CaseId
 import com.parlor.core.ids.CharacterId
 import com.parlor.core.ids.ModeId
 import com.parlor.core.ids.PlayerId
+import com.parlor.core.ids.SessionId
 import com.parlor.engine.state.Player
 import com.parlor.games.whodunit.domain.action.WhodunitAction
 import com.parlor.games.whodunit.domain.phase.WhodunitPhase
 import com.parlor.games.whodunit.domain.state.WhodunitHostOnly
 import com.parlor.games.whodunit.domain.state.WhodunitPublic
 import com.parlor.games.whodunit.domain.state.WhodunitState
+import com.parlor.games.whodunit.WhodunitIds
+import com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostRoomBridge
 import com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitPeerRoomBridge
+import com.parlor.networking.protocol.SessionProtocol
 import com.parlor.networking.room.PeerEvent
 import com.parlor.session.multidevice.InMemoryPeerRoom
 import com.parlor.session.multidevice.InMemoryRoomBus
@@ -67,6 +71,11 @@ class SelfOfflineTimeoutTest {
             selfPlayerId = alice,
             initialPublic = initialState,
             scope = scope,
+            protocol = SessionProtocol(
+                sessionId = SessionId("whodunit-session-0001"),
+                gameId = WhodunitIds.GameId,
+                gameVersion = WhodunitHostRoomBridge.GAME_VERSION,
+            ),
             json = Json { ignoreUnknownKeys = false; isLenient = false; encodeDefaults = true },
             hostLostTimeoutMs = 1_000_000L,  // arbitrarily long — irrelevant to this test
         )

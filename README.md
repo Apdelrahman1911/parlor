@@ -1,80 +1,98 @@
 # Parlor
 
-A party-games app built on Kotlin Multiplatform + Compose Multiplatform. Whodunit is the first game module; *The Last Dinner* is the first case.
+Parlor is a Kotlin Multiplatform party-game container for Android and iOS.
+It currently ships two game modules:
 
-This repository is the result of Phase 0 (planning + content/schema audit) and Phase 1+ (project skeleton, shared modules, premium design-system baseline, generic engine, content system, Whodunit module, …).
+- **Whodunit** — *The Last Dinner*, with Classic Vote and Elimination modes.
+- **Mafia** — a host-authoritative social-deduction game.
 
-See:
-- `whodunit-game-design.md` — game design source of truth.
-- `ARCHITECTURE.md` — system architecture source of truth.
-- `docs/APP_PLAN.md` — product execution plan, Phase 0–8 + Post-MVP.
+Both games support local play and same-LAN multi-device play through P2pKit.
+Desktop is a development and deterministic-test target, not a shipping target.
+
+The current architecture and release contracts are documented in:
+
+- [`docs/PRODUCTION_ARCHITECTURE.md`](docs/PRODUCTION_ARCHITECTURE.md)
+- [`ARCHITECTURE.md`](ARCHITECTURE.md) — original design history
+- [`docs/adr/0001-game-module-registration.md`](docs/adr/0001-game-module-registration.md)
+- [`docs/HOW_TO_ADD_A_GAME.md`](docs/HOW_TO_ADD_A_GAME.md)
+- [`docs/RELEASE_GATES.md`](docs/RELEASE_GATES.md)
+- [`docs/PRIVACY_AND_COMPLIANCE.md`](docs/PRIVACY_AND_COMPLIANCE.md)
 
 ## Requirements
 
-- **JDK 21+**
-- **Android Studio Iguana or newer** with Android SDK (`compileSdk = 35`, `minSdk = 26`)
-- **Xcode 16+** (only required to build/run the iOS target; not required for Android or Desktop)
+- JDK 21
+- Android SDK 36 (`minSdk = 26`, `targetSdk = 36`)
+- Xcode 16 or newer for Apple builds (minimum iOS 16)
+- P2pKit 0.7.0-rc2 from Maven Central
 
-## First-time bootstrap
+The checked-in Gradle 8.13 wrapper is the build entry point.
 
-The Gradle wrapper jar is not committed. Once Gradle is on `PATH` (or via Android Studio's bundled distribution), run:
+## Dependency provenance
 
-```bash
-gradle wrapper --gradle-version 8.11.1
+Production and local builds resolve the pinned P2pKit modules directly from
+Maven Central:
+
+```kotlin
+io.github.apdelrahman1911:p2p-core:0.7.0-rc2
+io.github.apdelrahman1911:p2p-transport-lan:0.7.0-rc2
 ```
 
-This materializes `gradle/wrapper/gradle-wrapper.jar`. Subsequent builds use `./gradlew`.
+The build does not use `mavenLocal()`, a sibling checkout, or a repository
+override. Keep both P2pKit modules on the same pinned version.
 
 ## Run
 
-Android (device or emulator):
-
 ```bash
+# Android device or emulator
 ./gradlew :composeApp:installDebug
-```
 
-Desktop (JVM):
-
-```bash
+# Desktop development target
 ./gradlew :composeApp:run
 ```
 
-iOS: open `iosApp/iosApp.xcodeproj` in Xcode and run.
+For iOS, open `iosApp/iosApp.xcodeproj`, select a local development team, and
+run the app from Xcode.
 
-## Tests
+## Production verification
 
 ```bash
-./gradlew test
-./gradlew :shared:engine:allTests
+# All common/desktop tests plus unsigned Android release bundle and lint
+./gradlew productionCheck
+
+# Release Kotlin frameworks for physical iOS and Apple-silicon simulator
+./gradlew productionAppleCheck
 ```
 
-## Architecture checks
-
-The project enforces purity and dependency rules from `ARCHITECTURE.md` §3.2 and §3.3 via Konsist tests. They run with `./gradlew test`.
+These commands prove local source and unsigned-artifact quality. Store signing,
+physical two-device networking, accessibility with TalkBack/VoiceOver, store
+privacy forms, and provider configuration remain explicit external gates; see
+`docs/RELEASE_GATES.md`.
 
 ## Project layout
 
-```
+```text
 parlor/
-├── build-logic/                   # Gradle convention plugins
-├── composeApp/                    # KMP+CMP app module
-├── iosApp/                        # Xcode wrapper (not Gradle) — generated later
-├── shared/
-│   ├── core/                      # Pure Kotlin: Result, ids, time, logging
-│   ├── design-system/             # Parlor base tokens, components, motion
-│   ├── engine/                    # Generic game engine (no Whodunit refs)
-│   ├── session/                   # SessionController + pass-and-play impl
-│   ├── content/                   # Case schema, repository, validation
-│   ├── networking/                # LocalRoom + transport contracts (stubs)
-│   ├── storage/                   # Snapshots, settings, secure storage
-│   └── navigation/                # Type-safe routes, NavGraphRegistry
+├── build-logic/                  # Gradle convention plugins
+├── composeApp/                   # Shared Compose app and platform entry points
+├── iosApp/                       # Thin Xcode wrapper
 ├── game-modes/
-│   └── whodunit/                  # Whodunit module: definition, modes, UI
-├── content/                       # Case JSON drafts (e.g., last-dinner.draft.json)
-├── docs/                          # Planning + spec docs
-└── gradle/libs.versions.toml      # Version catalog
+│   ├── whodunit/                 # Rules, protocol adapter, UI, assets, tests
+│   └── mafia/                    # Rules, protocol adapter, UI, assets, tests
+├── shared/
+│   ├── core/                     # IDs, result, time, logging, telemetry contracts
+│   ├── design-system/            # Tokens, components, localization, motion
+│   ├── engine/                   # Generic game contracts and registry
+│   ├── engine-testing/           # Non-shipping extensibility fixture
+│   ├── session/                  # Local and host-authoritative session logic
+│   ├── networking/               # Versioned transport-independent protocol
+│   ├── transport-p2p/            # The only P2pKit adapter
+│   ├── content/                  # Bundled offline content and validation
+│   ├── storage/                  # Settings and protected snapshots
+│   └── navigation/               # Module navigation descriptors
+└── docs/                         # Rules, ADRs, test matrices, release runbooks
 ```
 
-## Status
-
-This is the post-Phase-1 scaffold. Phases 2–8 fill in engine logic, content delivery, gameplay screens, safety/persistence, multi-device shape test, and production polish. See `docs/APP_PLAN.md` §5 for the full breakdown.
+Game modules do not import P2pKit. Discovery, admission, reconnect, ordering,
+deduplication, and terminal behavior belong to shared session/networking code.
+The non-shipping second-game fixture proves that a definition can be registered
+and exercised without changing that networking core.

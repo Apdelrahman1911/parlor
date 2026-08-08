@@ -54,4 +54,15 @@ sealed interface Verdict {
 }
 
 @Serializable
-enum class KillerWinCause { InnocentAccused, TieUnresolved, SurvivedToFinalTwo }
+enum class KillerWinCause {
+    InnocentAccused,
+    TieUnresolved,
+    SurvivedToFinalTwo,
+    /**
+     * The session ended before a valid accusation because a player left or
+     * the table explicitly ended the game. This is not a gameplay victory;
+     * it exists so the reveal screen never misreports an early termination as
+     * "the killer survived to the final two."
+     */
+    GameEndedEarly,
+}
