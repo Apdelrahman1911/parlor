@@ -1,10 +1,13 @@
 # Parlor + P2pKit 0.7.0-rc2 production remediation plan
 
-Document status: complete design and implementation plan only.
+Document status: approved historical implementation blueprint.
 
-Implementation status: not started by this document. No remediation phase may
-begin until the owner reviews and approves this plan and resolves the decisions
-listed near the end.
+The findings/verdicts below describe the pre-remediation baseline and are not
+current operational truth. Implementation began after owner approval and is
+recorded in Git as separate remediation checkpoints. Current behavior lives in
+`PRODUCTION_ARCHITECTURE.md`; current release evidence requirements live in
+`RELEASE_GATES.md` and `P2P_MANUAL_TEST.md`. ADR-0002 resolved the plan's
+manual/direct-connect question as unsupported for the first release.
 
 Review basis: the current Parlor repository, the local P2pKit repository,
 P2pKit tag v0.7.0-rc2, the Maven-resolved 0.7.0-rc2 artifacts, existing tests,
@@ -1708,22 +1711,23 @@ Before and after every phase:
 
 ## 14. Decisions requiring owner input
 
-These are genuine product/release decisions:
+Manual/direct endpoint connection was resolved after this plan was approved:
+it is unsupported for release one under ADR-0002. The remaining historical
+owner questions were:
 
-1. Is manual/direct connection required for the first production release?
-2. Which Android/iPhone models, OS versions and hotspot configurations are in
+1. Which Android/iPhone models, OS versions and hotspot configurations are in
    the explicit support promise?
-3. Is first-contact trust AcceptAny with authenticated pairing, or must users
+2. Is first-contact trust AcceptAny with authenticated pairing, or must users
    verify an out-of-band host fingerprint/QR?
-4. Are any deployed protocol-v1 clients required to interoperate, or may v2
+3. Are any deployed protocol-v1 clients required to interoperate, or may v2
    reject them with UpdateRequired?
-5. May P2pKit publish an additive version if operational health/error APIs are
+4. May P2pKit publish an additive version if operational health/error APIs are
    needed?
-6. Which signing/store accounts, privacy disclosures, analytics and
+5. Which signing/store accounts, privacy disclosures, analytics and
    crash-reporting systems are mandatory?
-7. Should desktop/development builds persist a resume credential, or remain
+6. Should desktop/development builds persist a resume credential, or remain
    intentionally ephemeral?
-8. Which existing dirty Parlor files belong to current user work when a phase
+7. Which existing dirty Parlor files belong to current user work when a phase
    needs to touch the same file?
 
 The following can be decided technically and should remain unless the owner
@@ -1763,4 +1767,3 @@ The remediation is complete only when:
 
 Until all required physical rows pass consistently, Parlor must not claim 100
 percent Android, iOS, cross-platform, or hotspot compatibility.
-

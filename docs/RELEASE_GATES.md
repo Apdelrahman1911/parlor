@@ -32,8 +32,10 @@ receipt:
 |---|---|
 | Android signing | `./gradlew productionAndroidSigningCheck --no-configuration-cache` with protected credentials, then a signed AAB receipt; Play App Signing enrollment confirmed; key fingerprints recorded out of band. |
 | iOS archive/signing | Successful Release archive using the distribution certificate and provisioning profile in the intended App Store Connect team. |
-| Android devices | Full two-peer lifecycle on the supported API/device matrix, including denied permissions, background/foreground, network change, disconnect/rejoin, host exit, rematch, and repeated sessions. |
-| Apple devices | The same lifecycle on physical iPhone/iPad pairs and mixed Android/iOS pairs on representative Wi-Fi networks. |
+| Android devices | Canonical `P2P_MANUAL_TEST.md` rows on supported APIs: Android-to-Android in both host directions, three-device play, normal LAN, relevant hotspot topologies, background/foreground, network change, transient resume versus final Leave, host exit, rematch, and repeated sessions. Confirm no Nearby/Location runtime prompt appears. |
+| Apple devices | Canonical rows on physical iPhone/iPad pairs and mixed Android/iOS pairs in both host directions, including Local Network denial/Settings recovery, three devices, normal LAN, applicable Personal Hotspot topologies, lifecycle/process death, and repeated sessions. |
+| Cross-platform synchronization | Both games complete on Android host/iOS peer and iOS host/Android peer; simultaneous commands, snapshots, resume, terminal state, and private-state isolation have dated evidence. |
+| Signed multiplayer artifacts | Required device rows rerun from Play internal and TestFlight-delivered candidates with artifact build IDs/checksums, not debug installs. |
 | Accessibility | TalkBack and VoiceOver passes in EN and AR, 200% text, reduced motion, contrast, touch targets, and RTL. |
 | Store/privacy | Final privacy policy/support URLs, Google Data safety, Apple privacy answers/manifest, age-rating questionnaires, export-compliance answer, and reviewer notes approved. |
 | Legal | Product distribution license, third-party notices, content rights, trademarks, and dependency licenses approved. |

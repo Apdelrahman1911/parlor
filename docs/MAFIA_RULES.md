@@ -140,7 +140,10 @@ must pause/block gameplay while a required seat is offline. The approved
 shipping policy is:
 
 - reserve the same seat for a same-host rejoin for 120 seconds;
-- accept a valid rejoin token only for that seat and session;
+- accept a valid device-protected, host-fingerprint-pinned resumable credential
+  only for that player/seat, room, and game version, and rotate it after use;
+- preserve that credential for transient disconnect, backgrounding, and peer
+  process death, but permanently delete it on explicit Leave;
 - show the host a confirmation-gated option to continue without the missing
   seat before the deadline;
 - after the grace period, dispatch `ContinueWithoutPlayer`;

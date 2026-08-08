@@ -1,5 +1,10 @@
 # Phase 8 Validation
 
+> **Status: historical 2026 Phase 8 receipt.** It preserves the protocol,
+> permission, transport flags, commands, and test counts that existed at that
+> checkpoint. Do not use it as current behavior or release evidence. Use
+> `PRODUCTION_ARCHITECTURE.md`, `P2P_MANUAL_TEST.md`, and `RELEASE_GATES.md`.
+
 Phase 8 v3 = production-quality Party Play + UI/UX rebuild. This doc is the
 acceptance receipt: what's wired, what's tested, what's not.
 

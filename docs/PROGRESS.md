@@ -1,7 +1,9 @@
 # Parlor — Progress (Phases 0 → 8 + Post-MVP scoping)
 
-> Snapshot of the project state after the autonomous build pass.
-> Source of truth for what's done, what's stubbed, and what remains for production hardening.
+> **Status: historical phase snapshot.** This is not the current source of
+> truth and intentionally retains statements from before P2pKit multiplayer,
+> Mafia, and the production remediation. Use `PRODUCTION_ARCHITECTURE.md`,
+> `RELEASE_GATES.md`, and current Git history for present status.
 
 ---
 

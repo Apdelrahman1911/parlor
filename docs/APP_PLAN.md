@@ -1,5 +1,11 @@
 # Parlor — Application Execution Plan
 
+> **Status: historical pre-implementation plan.** This file preserves the
+> original sequencing and may describe multi-device play as future work or
+> name transports Parlor never shipped. It is not current implementation or
+> release truth. Use `PRODUCTION_ARCHITECTURE.md`, `RELEASE_GATES.md`, the
+> accepted ADRs, and `P2P_MANUAL_TEST.md`.
+
 > Companion to `whodunit-game-design.md` (product design) and `ARCHITECTURE.md` (system architecture).
 > This document is the **product-level execution plan** — what gets built, in what order, with what acceptance bars.
 > It is the reference plan from product idea to MVP to Post-MVP roadmap.

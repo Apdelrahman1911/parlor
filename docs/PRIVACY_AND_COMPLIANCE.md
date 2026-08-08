@@ -17,11 +17,12 @@ the published privacy policy.
 
 | Data | Purpose and recipients | Retention contract |
 |---|---|---|
-| Player display name | Labels the local session; sent only to admitted room peers as required by gameplay. It is not an authenticated identity. | Memory for the session; if present in a resume snapshot, local only and deleted with that unfinished session. Never telemetry or release logs. |
-| Room code | Human admission secret shown by the host and entered by peers. | Session only. Never advertisements, analytics, crash reports, or release logs. |
-| Rejoin token | Restores the same admitted seat to the same host. | In memory for the documented 120-second grace period, then invalidated. Never UI, analytics, or logs. |
+| Player display name | Labels the local session; sent only to admitted room peers as required by gameplay. It is not an authenticated identity. | Memory for the room and, on a peer, inside the protected resumable credential. Cleared with that capability. Never telemetry or release logs. |
+| Room code | Human admission secret shown by the host and entered by peers. | Memory for the host room and, on a peer, inside the protected resumable credential. Never advertisements, analytics, crash reports, or release logs. |
+| Resumable credential and rejoin secret | Restores the same admitted player/host/game binding after transient disconnect, backgrounding, or peer process death. | Device-protected secure storage on the peer; the host retains only the secret digest in room memory. Rotated on successful resume. Cleared on explicit Leave, terminal invalidation, corruption, or expiry. Cryptographic maximum is 24 hours, but a host reserves a disconnected seat for only 120 seconds. Never UI, telemetry, or logs. |
 | Game state | Enables play and (currently for Whodunit) optional local resume. Includes public, per-player private, and host-only buckets. | Local snapshot only when the game supplies a snapshot adapter; protected by platform storage/file protection and removed at session completion or explicit deletion. Host-only state never leaves the host. |
 | P2P cryptographic identity | Authenticates encrypted same-app transport sessions; it is not a Parlor account. | Device-local protected storage until app data is cleared or the app is removed. Never analytics. |
+| Local multiplayer diagnostics | Fixed event/result/reason vocabulary plus sequence, elapsed time, role, and coarse count bucket. | In-process ring of at most 256 records; platform console output is rate-limited to ten lines/second with a one-record backlog. No upload by Parlor. OS/device log retention is platform-controlled. |
 | Analytics events | Optional aggregate product behavior from an allowlist with no names, peer IDs, room codes, rejoin tokens, content prose, or network payloads. | No collection until separate analytics opt-in. Provider retention must be documented before enabling. |
 | Crash diagnostics | Optional stack/build/device diagnostics. Network payloads and identifiers must be removed before provider submission. | No collection until separate crash-reporting opt-in. Provider retention must be documented before enabling. |
 
@@ -35,9 +36,17 @@ transport. A release reviewer must compare the final manifests/plists against
 P2pKit behavior and reject unused nearby, Bluetooth, location, contacts,
 camera, microphone, advertising, or tracking access.
 
-The Apple build needs the local-network usage description and exact Bonjour
-service declaration used by P2pKit. Android needs only the network/Wi-Fi and
-multicast capabilities required by NSD/TCP on the supported OS versions.
+The Apple build needs `NSLocalNetworkUsageDescription` and the exact
+`_p2pkit2._tcp` Bonjour service declaration used by P2pKit. It does not use
+MultipeerConnectivity or Bluetooth and must not declare Bluetooth purpose
+strings for this transport.
+
+The Android base LAN transport declares only `INTERNET`,
+`ACCESS_NETWORK_STATE`, `ACCESS_WIFI_STATE`, and
+`CHANGE_WIFI_MULTICAST_STATE`. It uses NSD/JmDNS plus TCP and requests no
+Nearby Devices or Location runtime permission. Provisioning-only permissions
+must not be added unless Parlor actually ships and reviews the corresponding
+P2pKit provisioning feature.
 
 ## Store disclosures
 
@@ -58,9 +67,13 @@ inspection alone is not sufficient.
 
 ## Logging and incident response
 
-Release logging is allowlist-only. Do not interpolate player-supplied text,
-exception messages from decoded peer payloads, room codes, session/peer IDs,
-rejoin tokens, private content, host-only state, or raw packets.
+Release logging is allowlist-only. `ParlorP2p` accepts closed enums and numeric
+or coarse-bucket metadata; callers cannot supply arbitrary strings. Do not
+interpolate player-supplied text, exception messages, IP addresses,
+fingerprints, room codes, player/session/peer IDs, rejoin tokens, private
+content, host-only state, or raw packets. The local diagnostic stream is not a
+substitute for consented crash reporting and must never be uploaded by a
+provider without a separate privacy review.
 
 A suspected privacy leak stops rollout. Preserve only sanitized diagnostic
 metadata, rotate any affected backend/provider credentials, invalidate the

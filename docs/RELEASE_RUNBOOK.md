@@ -5,8 +5,9 @@ harness and is not shipped by this runbook.
 
 ## 1. Open the release candidate
 
-1. Create the release branch from the approved commit. Record both Parlor and
-   P2pKit commit IDs.
+1. Create the release branch from the approved commit. Record the Parlor commit,
+   resolved P2pKit 0.7.0-rc2 coordinates/checksums, and upstream release-tag
+   provenance. A sibling P2pKit checkout is not the executed dependency.
 2. Confirm the worktree is clean and the diff contains no generated caches,
    credentials, signing assets, local repository paths, or debug-only
    transport/logging switches.
@@ -47,30 +48,32 @@ Archive:
 A successful compiler or simulator result does not pass device, signing,
 privacy, or store gates. See `docs/RELEASE_GATES.md`.
 
-## 3. Manual two-device matrix
+## 3. Physical multiplayer matrix
 
-Use physical devices on representative home, office, guest/client-isolated,
-IPv4/IPv6, and network-switching Wi-Fi. Cover Android↔Android, iOS↔iOS, and
-Android↔iOS where the supported versions permit.
+Execute every applicable row in [`P2P_MANUAL_TEST.md`](P2P_MANUAL_TEST.md)
+against the exact candidate. That runbook is canonical; do not substitute an
+older smoke document.
 
-For both Whodunit and Mafia, verify:
+At minimum it requires:
 
-1. discovery, room code, authenticated connection, explicit host approval,
-   wrong-code rejection, decline, full room, and closed admissions;
-2. complete normal play and rematch;
-3. duplicate, delayed, reordered, malformed, unknown, oversized, and
-   incompatible protocol/game messages using the deterministic harness;
-4. simultaneous actions and illegal actor/target combinations;
-5. background/foreground, screen lock, network loss/change, peer disconnect,
-   same-host rejoin within 120 seconds, grace expiry, and stale-token refusal;
-6. host exit/host death as terminal with no migration;
-7. repeated create/join/play/leave cycles with no lingering discovery,
-   sockets, coroutines, or stale sessions; and
-8. TalkBack/VoiceOver, EN/AR, RTL, reduced motion, large text, orientation, and
-   supported phone/tablet layouts.
+1. Android-to-Android, iOS-to-iOS, and Android-to-iOS in both hosting
+   directions, plus a mixed room of at least three devices;
+2. normal Wi-Fi and every hotspot topology claimed by the release, including
+   hotspot-owner participation and connected-client-to-connected-client host;
+3. discovery, multiple rooms, wrong code, authenticated connection, explicit
+   host approval, decline, atomic capacity, timeout, and closed admission;
+4. both games through completion/rematch, simultaneous actions, and protocol
+   fault-injection results;
+5. short/long background and screen lock, network switch, transient peer loss,
+   process-death Resume, final Leave, host disappearance, and grace expiry;
+6. ten repeated room lifecycles plus a sustained session; and
+7. iOS Local Network denial/Settings recovery, Android's no-runtime-permission
+   path, accessibility/localization, and signed Play/TestFlight artifacts.
 
 Record model, OS version, network topology, build number, result, logs with
 sensitive values redacted, and issue links. Anything not run is `UNVERIFIED`.
+Raw-IP/manual endpoint connection is `N/A` under ADR-0002, not a passed
+fallback. Do not claim universal hotspot support from a single successful run.
 
 ## 4. Compliance and observability
 
@@ -80,8 +83,9 @@ Complete `docs/PRIVACY_AND_COMPLIANCE.md` and
 - Analytics and crash reporting are separate opt-ins and default off.
 - Verify the no-consent path emits no provider traffic.
 - Verify consent withdrawal stops future collection.
-- Inspect captured events/crashes for player names, room/peer/session IDs,
-  room codes, tokens, private/host content, and payloads.
+- Inspect captured events/crashes for player names, room/peer/session IDs, IP
+  addresses, fingerprints, room codes, tokens, private/host content, exception
+  text, and payloads. `ParlorP2p` must retain only its fixed event fields.
 - Complete store privacy/data-safety, encryption/export, age-rating, support,
   and content-rights reviews.
 - Legal must approve the project license, SBOM, and third-party notices.

@@ -1,6 +1,12 @@
 # Mobile Party App — Game Design Document (v2)
 ## Working titles: **Parlor** (the app) / **Whodunit** (the murder mystery mode)
 
+> **Status: historical product/design vision.** It preserves phased roadmap
+> language, including multi-device play as future work and unshipped QR/invite
+> options. Current multiplayer architecture and release scope are defined by
+> `docs/PRODUCTION_ARCHITECTURE.md`, accepted ADRs, and
+> `docs/P2P_MANUAL_TEST.md`; reducer/tests remain executable rules truth.
+
 ---
 
 ## How to Read This Document

@@ -1,66 +1,109 @@
-# Parlor — Two-Device Multiplayer Playtest Checklist
+# Multiplayer experience playtest
 
-Targeted on-device test plan for the multiplayer (P2P) experience. Focus: **does it feel fast, smooth, and fun** — connection speed, lobby/join, action latency, reconnection, UI clarity.
+Document status: current UX supplement.
 
-> The code-level review behind this checklist is in `PROBLEMS_PARLOR.md` (§ multiplayer pass). Items flagged **⚠ watch** below are things the review predicts you may notice; report back if they bite and I'll fix them.
+Use this after the objective physical rows in
+[`P2P_MANUAL_TEST.md`](P2P_MANUAL_TEST.md). This checklist evaluates whether a
+technically correct session is understandable and enjoyable; it does not
+replace the release evidence matrix.
 
-## 0. Setup
+## Setup
 
-- **Two real devices on the same Wi-Fi/LAN** (Android↔Android, Android↔iOS, or one Desktop + one phone). mDNS/Bonjour multicast must work on the network (some guest/corporate Wi-Fi blocks it — use a phone hotspot or home router if join never finds the host).
-- Build/run (P2pKit resolves from Maven Central and is always included):
-  ```bash
-  ./gradlew :composeApp:installDebug     # Android
-  ./gradlew :composeApp:run              # Desktop host
-  # iOS: open iosApp in Xcode
-  ```
-- **Watch the transport logs** — every transport event is tagged:
-  - Android: `adb logcat | grep ParlorP2p`
-  - Desktop: stdout of the `:run` process
-  - iOS: Xcode console, filter `ParlorP2p`
-  - The logs print host/join/freshness/session-state lines with peer ids and room codes — use them to time each step.
+- Use at least three physical devices and a signed candidate when judging
+  release quality.
+- Record device model, OS, Parlor SHA/build, roles, game, and network topology.
+- Capture the privacy-safe `ParlorP2p` diagnostics described in the canonical
+  runbook. They contain fixed event codes and coarse counts only. They do not
+  contain names, room codes, peer IDs, tokens, payloads, or private state.
+- Test normal Wi-Fi first. Treat hotspot behavior as a separate topology with
+  its own required rows; do not infer it from normal-LAN success.
 
-## 1. Connection speed
-1. Device A: create/host a room. Note the **room code** shown.
-2. Device B: enter the code and Join. **Time from tapping Join → "connected".**
-   - Target: well under the 10 s join budget (`DEFAULT_JOIN_TIMEOUT_MS`).
-   - In B's logs: `join: matched host peer … calling connect()` → `join: connect() returned`. The gap is discovery time.
-3. ⚠ **watch:** if B never finds the room, check A's logs for `startAdvertising() returned` and B's for `kit.peers emitted size=…`. Size 0 forever = multicast blocked on this network (not an app bug).
-4. Repeat with B joining a *second* time after A re-hosts — confirm no stale "ghost room" appears (freshness window is 5 s).
+## Connection and lobby
 
-## 2. Lobby / join flow
-1. With 3+ devices, join them one by one. Each should appear in the **host lobby roster** within a second of connecting.
-2. Confirm display names are correct and the host sees the right player count.
-3. Host taps **Start** — all peers should transition from "waiting for host" → the game's first screen together.
-4. ⚠ **watch:** a peer that joins *after* Start — does it get cleanly handled or stuck? (Late-join is not a core MVP path.)
+1. Time Host tap to visible room code.
+2. Time Join tap to the peer's pending-approval screen, then host approval to
+   the waiting lobby. The technical total discovery/dial/first-response budget
+   is 30 seconds; a valid request then has a separate 60-second host-approval
+   budget. UX should normally feel much faster on a healthy LAN.
+3. Confirm wrong-code, host-declined, full-room, game-started, permission,
+   timeout, and unclassified-network failures use distinct, localized copy and
+   always offer a useful next action.
+4. Confirm it is obvious that entering a room code still needs LAN discovery;
+   Parlor has no raw-IP/direct-connect fallback.
+5. With multiple pending peers, confirm the host understands who is awaiting
+   approval and cannot approve beyond the game's capacity.
 
-## 3. Action latency
-1. Get into a phase where a peer acts (Whodunit: cast a vote; Mafia: a night action / vote).
-2. **Time from the peer tapping → the result showing on the host and on other peers.** Should feel instant on a healthy LAN (host broadcasts the new state immediately after reducing).
-3. Fire several actions quickly (e.g., everyone votes at once) — confirm no action is lost or doubled and the host tally is correct.
-4. Confirm a peer **cannot** act out of turn / as someone else (authority is enforced host-side; this is also unit-tested).
+## Gameplay responsiveness
 
-## 4. Reconnection behavior
-1. Mid-game, turn **Wi-Fi off on a peer** for ~5 s, then back on.
-   - Peer should show a **reconnecting overlay / offline banner**, then recover and resync to the current screen (no "rejoin lobby" detour).
-   - Host should mark that player disconnected, then reconnected (roster dot).
-   - In logs: peer `session state -> Reconnecting … -> Connected`; host `emitting PeerLeft/PeerReconnected`.
-2. Turn a peer's Wi-Fi off and **leave it off** — the host must see a
-   confirmation-gated "end game without {player}" action. Confirm either a
-   rejoin or the host decision clears the blocked state and that the pending
-   120-second expiry does not fire a second transition.
-3. ⚠ **watch:** time-to-detect a *silent* host disappearance. Fast path is transport-driven (`Reconnecting`/`Closed`); the fallback "snapshot silence" watchdog is **8 s** — if loss detection feels sluggish in a silent-drop case, that's the knob to lower.
-4. Kill and relaunch a peer app entirely — does it rejoin with the same identity and resume?
+For both Whodunit and Mafia:
 
-## 5. UI clarity
-- Lobby: is it obvious how to share the code, who's connected, and when you can Start?
-- Waiting-for-host / connecting / reconnecting / offline states: are they distinct and reassuring (not a frozen blank screen)?
-- Privacy ceremony: on the **host's own device**, can you see your role and take your action? (Fixed this pass — was previously impossible on multi-device Mafia.) On peers, is private info (role/dossier) shown only to the owner?
-- Error states (bad code, host left, transport failure): clear message + a way back, no dead-end.
+1. Measure tap-to-result latency for peer actions and host actions.
+2. Have several players act at nearly the same time. Confirm every command
+   receives a result, invalid/stale actions show actionable feedback, and no
+   tap is applied twice.
+3. Compare all screens after each phase transition. Public phase/outcome must
+   match while role/dossier information remains visible only to its owner.
+4. Exercise invalid targets, out-of-turn actions, repeated taps, and disabled
+   controls. The UI must agree with host-side authority instead of appearing
+   to accept something that the host rejected.
+5. Complete a full game and rematch. Note pacing, clarity, animation comfort,
+   and any point where players stop looking at one another because the app
+   demands too much attention.
 
-## 6. Smoothness & fun
-- **Discussion timer:** watch a peer's screen during the discussion countdown. ⚠ **watch:** the host currently re-broadcasts the **full game state once per second** while the timer ticks (the protocol's lightweight `TimerSync` is unused). On a peer this can cause a subtle per-second re-render/flicker. If you see jank, that's the #1 perf change to make (drive the peer timer locally from a deadline + stop per-tick full-state broadcasts) — I left it unimplemented because it needs *your* eyes to confirm it's worth the change and that it feels right.
-- Phase transitions, reveals, vote results: do they feel responsive and "game-show" snappy, or laggy?
-- Overall: would you enjoy playing a full round end-to-end with friends? Note anything that breaks immersion.
+## Interruption experience
 
-## What to send back
-For anything rough, capture: **which device**, **what you did**, **what you saw vs expected**, and the **`ParlorP2p` log lines** around that moment. With that I can pinpoint and fix — especially the timer-smoothness change (§6) and any reconnection-timing tuning (§4.3), which are the two I deliberately left for after your on-device read.
+1. Briefly disconnect one peer without tapping Leave. The host should explain
+   that play is paused/blocked for that seat; the peer should show recovery,
+   return to the current authoritative snapshot, and never revisit setup.
+2. Background and foreground a peer and then the host. A short interruption
+   should preserve the room; a 120-second expiry should become terminal and
+   explain why.
+3. Force-terminate a peer and relaunch inside the grace window. The Home screen
+   should offer multiplayer Resume and recovery should require no room code.
+4. Tap explicit Leave. Relaunch and confirm Resume is gone. This distinction
+   must be clear: transient interruption is resumable; Leave is final.
+5. Exit or terminate the host. Peers must understand that the room ended and
+   that no host migration exists.
+
+## Permission and recovery UX
+
+- On iOS, deny Local Network access, retry, open app Settings, enable it, and
+  retry again. The app must not claim permission was granted until a real
+  advertise or authenticated connection succeeds.
+- A timeout, Wi-Fi-off state, firewall, or blocked Bonjour path must not be
+  mislabeled as proven permission denial.
+- Android's shipped NSD/TCP path needs no Nearby Devices or Location runtime
+  prompt. Seeing one is a release failure.
+
+## Accessibility and localization
+
+Run the complete lobby, error, reconnect, and one full-game path with:
+
+- TalkBack and VoiceOver;
+- English LTR and Arabic RTL;
+- 200% text or the largest supported accessibility size;
+- reduced motion;
+- portrait and landscape where supported; and
+- phone plus representative tablet size.
+
+Record focus order, announcements for changing connection state, button labels,
+touch targets, clipped text, contrast, and whether time-sensitive feedback is
+available without color alone.
+
+## Report format
+
+For each observation record:
+
+```text
+Device/OS/build/role/network:
+Game and phase:
+Action taken:
+Expected experience:
+Observed experience:
+PASS / FAIL / UNVERIFIED:
+Video/screenshot and redacted ParlorP2p sequence numbers:
+```
+
+Do not paste secrets or enable verbose P2pKit payload/frame traces in a release
+build. The fixed-shape Parlor diagnostics plus screen evidence are the supported
+production debugging surface.

@@ -1,5 +1,9 @@
 # Phase 0 Validation Report — *The Last Dinner* against `CONTENT_SCHEMA.md`
 
+> **Status: historical content-design receipt.** Results and future-tense
+> implementation notes describe Phase 0 only. Current executable validation
+> and release status live in the game/content tests and `RELEASE_GATES.md`.
+
 > Dry-run validation of `content/last-dinner.draft.json` against the schema locked in `docs/CONTENT_SCHEMA.md`.
 > This is a manual structural check performed before any code is written.
 
