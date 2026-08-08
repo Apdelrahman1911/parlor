@@ -114,7 +114,11 @@ fun HostSessionFlow(
     }
 
     LaunchedEffect(transport) {
-        when (val result = transport.host(HostConfig(roomDisplayName = hostName))) {
+        when (
+            val result = transport.host(
+                HostConfig(roomDisplayName = hostName, maxRemotePlayers = 5),
+            )
+        ) {
             is Result.Success -> room = result.data
             is Result.Failure -> hostError = result.error
         }

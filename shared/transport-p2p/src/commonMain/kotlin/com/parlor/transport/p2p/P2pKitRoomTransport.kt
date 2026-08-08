@@ -228,6 +228,7 @@ class P2pKitRoomTransport(
                     roomCode = roomCode,
                     roomDisplayName = config.roomDisplayName,
                     hostPlayerId = PlayerId(kit.localPeerId.value),
+                    maxRemotePlayers = config.maxRemotePlayers,
                     scope = scope,
                     codec = codec,
                     onClosed = { roomClosed(lifecycleRegistrationId) },
@@ -517,6 +518,7 @@ internal class HostP2pRoom(
     private val roomCode: String,
     roomDisplayName: String,
     private val hostPlayerId: PlayerId,
+    private val maxRemotePlayers: Int,
     private val scope: CoroutineScope,
     private val codec: RoomMessageCodec,
     private val onClosed: () -> Unit = {},
@@ -563,6 +565,8 @@ internal class HostP2pRoom(
         val isRejoin: Boolean,
     )
     private val pendingByPlayer: MutableMap<PlayerId, PendingConnection> = mutableMapOf()
+    /** Seats approved by the host but not yet committed after acceptance delivery. */
+    private val admissionReservations: MutableSet<PlayerId> = mutableSetOf()
     private val rejoinTokenByPlayer: MutableMap<PlayerId, String> = mutableMapOf()
     private val rejoinDeadlineByPlayer: MutableMap<PlayerId, Long> = mutableMapOf()
     private var admissionsClosed: Boolean = false
@@ -720,6 +724,7 @@ internal class HostP2pRoom(
                         val removed = stateMutex.withLock {
                             if (pendingByPlayer[playerId]?.session === session) {
                                 pendingByPlayer.remove(playerId)
+                                admissionReservations.remove(playerId)
                                 publishPendingAdmissions()
                             }
                             if (sessionsByPlayer[playerId] === session) {
@@ -782,7 +787,24 @@ internal class HostP2pRoom(
                 now <= deadline
         }
         if (validRejoin) {
-            admit(playerId, session, displayName, isRejoin = true)
+            val reserved = stateMutex.withLock {
+                if (playerId in admissionReservations) {
+                    false
+                } else {
+                    pendingByPlayer[playerId] = PendingConnection(
+                        session = session,
+                        displayName = displayName,
+                        isRejoin = true,
+                    )
+                    publishPendingAdmissions()
+                    true
+                }
+            }
+            if (reserved) {
+                admit(playerId, session, displayName, isRejoin = true)
+            } else {
+                rejectSession(session, AdmissionRejection.RateLimited)
+            }
             return
         }
 
@@ -821,25 +843,36 @@ internal class HostP2pRoom(
     override suspend fun approveAdmission(playerId: PlayerId): Result<Unit, NetError> {
         val pending = stateMutex.withLock { pendingByPlayer[playerId] }
             ?: return Result.Failure(NetError.NotConnected)
-        admit(playerId, pending.session, pending.displayName, pending.isRejoin)
-        return Result.Success(Unit)
+        return admit(playerId, pending.session, pending.displayName, pending.isRejoin)
     }
 
     override suspend fun rejectAdmission(playerId: PlayerId): Result<Unit, NetError> {
         val pending = stateMutex.withLock {
-            pendingByPlayer.remove(playerId).also { publishPendingAdmissions() }
-        } ?: return Result.Failure(NetError.NotConnected)
-        rejectSession(pending.session, AdmissionRejection.HostDeclined)
+            if (playerId in admissionReservations) {
+                AdmissionRejectionResult.InFlight
+            } else {
+                pendingByPlayer.remove(playerId)?.let(AdmissionRejectionResult::Ready)
+                    ?: AdmissionRejectionResult.Missing
+            }.also { publishPendingAdmissions() }
+        }
+        when (pending) {
+            AdmissionRejectionResult.InFlight -> return Result.Failure(NetError.CommandInFlight)
+            AdmissionRejectionResult.Missing -> return Result.Failure(NetError.NotConnected)
+            is AdmissionRejectionResult.Ready -> Unit
+        }
+        rejectSession(pending.connection.session, AdmissionRejection.HostDeclined)
         return Result.Success(Unit)
     }
 
     override suspend fun closeAdmissions() {
         val pending = stateMutex.withLock {
             admissionsClosed = true
-            pendingByPlayer.values.toList().also {
-                pendingByPlayer.clear()
-                publishPendingAdmissions()
-            }
+            pendingByPlayer.keys
+                .filterNot(admissionReservations::contains)
+                .mapNotNull(pendingByPlayer::remove)
+                .also {
+                    publishPendingAdmissions()
+                }
         }
         pending.forEach { rejectSession(it.session, AdmissionRejection.SessionStarted) }
     }
@@ -849,27 +882,109 @@ internal class HostP2pRoom(
         session: P2pSession,
         displayName: String,
         isRejoin: Boolean,
-    ) {
-        val (token, oldSession) = stateMutex.withLock {
-            pendingByPlayer.remove(playerId)
-            publishPendingAdmissions()
-            val old = sessionsByPlayer[playerId]?.takeIf { it !== session }
-            sessionsByPlayer[playerId] = session
-            membersByPlayer[playerId] = RoomMember(playerId, displayName, connected = true)
-            previouslySeenPlayerIds += playerId
-            rejoinDeadlineByPlayer.remove(playerId)
-            publishMembers()
-            rejoinTokenByPlayer.getOrPut(playerId, SecureIds::rejoinToken256) to old
+    ): Result<Unit, NetError> {
+        val token = when (val prepared = stateMutex.withLock {
+            val pending = pendingByPlayer[playerId]
+            when {
+                pending?.session !== session -> null
+                playerId in admissionReservations -> null
+                session.state.value != ConnectionState.Connected -> {
+                    pendingByPlayer.remove(playerId)
+                    publishPendingAdmissions()
+                    null
+                }
+                playerId !in membersByPlayer &&
+                    membersByPlayer.size + admissionReservations.count { it !in membersByPlayer } >=
+                    maxRemotePlayers -> {
+                    pendingByPlayer.remove(playerId)
+                    publishPendingAdmissions()
+                    AdmissionPreparation.Rejected(NetError.RoomFull)
+                }
+                else -> {
+                    admissionReservations += playerId
+                    AdmissionPreparation.Ready(
+                        rejoinTokenByPlayer[playerId] ?: SecureIds.rejoinToken256(),
+                    )
+                }
+            }
+        }) {
+            null -> return Result.Failure(NetError.NotConnected)
+            is AdmissionPreparation.Rejected -> {
+                rejectSession(session, AdmissionRejection.RoomFull)
+                return Result.Failure(prepared.error)
+            }
+            is AdmissionPreparation.Ready -> prepared.token
         }
-        oldSession?.let { runCatching { it.close() } }
-        sendRaw(session, HostMessage.AdmissionAccepted(playerId, token))
+
+        try {
+            sendRaw(session, HostMessage.AdmissionAccepted(playerId, token))
+        } catch (failure: Throwable) {
+            withContext(NonCancellable) {
+                rollbackAdmission(playerId, session)
+                runCatching { session.close() }
+            }
+            failure.rethrowIfCancellation()
+            return Result.Failure(NetError.TransportFailure("admission acceptance failed"))
+        }
+
+        val oldSession = stateMutex.withLock {
+            val pending = pendingByPlayer[playerId]
+            if (
+                playerId !in admissionReservations ||
+                pending?.session !== session ||
+                session.state.value != ConnectionState.Connected
+            ) {
+                null
+            } else {
+                admissionReservations.remove(playerId)
+                pendingByPlayer.remove(playerId)
+                publishPendingAdmissions()
+                val old = sessionsByPlayer[playerId]?.takeIf { it !== session }
+                sessionsByPlayer[playerId] = session
+                membersByPlayer[playerId] = RoomMember(playerId, displayName, connected = true)
+                previouslySeenPlayerIds += playerId
+                rejoinDeadlineByPlayer.remove(playerId)
+                rejoinTokenByPlayer[playerId] = token
+                publishMembers()
+                AdmissionCommit(old)
+            }
+        } ?: run {
+            rollbackAdmission(playerId, session)
+            runCatching { session.close() }
+            return Result.Failure(NetError.NotConnected)
+        }
+        oldSession.previous?.let { runCatching { it.close() } }
         if (isRejoin) {
             _peerEvents.emit(PeerEvent.PeerReconnected(playerId, displayName))
         } else {
             _peerEvents.emit(PeerEvent.PeerJoined(playerId, displayName))
         }
         markActiveIfRestored()
+        return Result.Success(Unit)
     }
+
+    private suspend fun rollbackAdmission(playerId: PlayerId, session: P2pSession) {
+        stateMutex.withLock {
+            admissionReservations.remove(playerId)
+            if (pendingByPlayer[playerId]?.session === session) {
+                pendingByPlayer.remove(playerId)
+                publishPendingAdmissions()
+            }
+        }
+    }
+
+    private sealed interface AdmissionPreparation {
+        data class Ready(val token: String) : AdmissionPreparation
+        data class Rejected(val error: NetError) : AdmissionPreparation
+    }
+
+    private sealed interface AdmissionRejectionResult {
+        data object InFlight : AdmissionRejectionResult
+        data object Missing : AdmissionRejectionResult
+        data class Ready(val connection: PendingConnection) : AdmissionRejectionResult
+    }
+
+    private data class AdmissionCommit(val previous: P2pSession?)
 
     private suspend fun rejectSession(
         session: P2pSession,
@@ -1123,6 +1238,7 @@ internal class HostP2pRoom(
                 pendingByPlayer.values.map(PendingConnection::session)
             sessionsByPlayer.clear()
             pendingByPlayer.clear()
+            admissionReservations.clear()
             membersByPlayer.clear()
             previouslySeenPlayerIds.clear()
             rejoinTokenByPlayer.clear()

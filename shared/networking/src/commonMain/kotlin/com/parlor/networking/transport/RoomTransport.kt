@@ -49,7 +49,13 @@ data class TransportCapability(
 data class HostConfig(
     val roomDisplayName: String,
     val visible: Boolean = true,
-)
+    /** Product seat limit excluding the host; enforced atomically by the transport. */
+    val maxRemotePlayers: Int = 17,
+) {
+    init {
+        require(maxRemotePlayers in 1..17) { "maxRemotePlayers must be in 1..17" }
+    }
+}
 
 data class JoinConfig(
     val code: String,

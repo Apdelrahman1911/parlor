@@ -13,6 +13,7 @@ import com.parlor.core.ids.GameId
 import com.parlor.core.ids.PlayerId
 import com.parlor.core.ids.SessionId
 import com.parlor.core.result.Result
+import com.parlor.networking.protocol.AdmissionRejection
 import com.parlor.networking.protocol.HostMessage
 import com.parlor.networking.protocol.PeerMessage
 import com.parlor.networking.protocol.ProtocolVersion
@@ -41,6 +42,7 @@ import dev.p2pkit.core.permission.P2pPermissionManager
 import dev.p2pkit.core.provisioning.NetworkProvisioningManager
 import dev.p2pkit.core.transfer.P2pFileOffer
 import dev.p2pkit.core.transfer.P2pFileTransfer
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -154,6 +156,145 @@ class P2pKitRoomTransportLifecycleTest {
         assertThat(room.approveAdmission(PlayerId("alice-pid")))
             .isInstanceOf(Result.Success::class)
         awaitCondition { room.members.value.singleOrNull()?.connected == true }
+        assertThat(room.pendingAdmissions.value).isEmpty()
+    }
+
+    @Test
+    fun host_capacity_is_atomic_across_concurrent_approvals() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("host-pid"))
+        val room = newHostRoom(kit, maxRemotePlayers = 1)
+        val alice = FakeP2pSession(peer("alice-pid", "Alice"))
+        val bob = FakeP2pSession(peer("bob-pid", "Bob"))
+        requestAdmission(room, kit, alice)
+        requestAdmission(room, kit, bob)
+
+        val acceptanceStarted = CompletableDeferred<Unit>()
+        val releaseAcceptance = CompletableDeferred<Unit>()
+        alice.sendHandler = { message ->
+            if (message.isAdmissionAccepted()) {
+                acceptanceStarted.complete(Unit)
+                releaseAcceptance.await()
+            }
+        }
+
+        val aliceApproval = testScope.async {
+            room.approveAdmission(PlayerId("alice-pid"))
+        }
+        acceptanceStarted.await()
+
+        val bobApproval = room.approveAdmission(PlayerId("bob-pid"))
+        assertThat(bobApproval).isInstanceOf(Result.Failure::class)
+        assertThat((bobApproval as Result.Failure).error).isEqualTo(NetError.RoomFull)
+        assertThat(room.members.value).isEmpty()
+
+        releaseAcceptance.complete(Unit)
+        assertThat(aliceApproval.await()).isInstanceOf(Result.Success::class)
+        assertThat(room.members.value.map(RoomMember::playerId))
+            .containsExactly(PlayerId("alice-pid"))
+        assertThat(bob.admissionRejections()).containsExactly(AdmissionRejection.RoomFull)
+    }
+
+    @Test
+    fun failed_acceptance_delivery_rolls_back_the_seat_without_a_ghost_member() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("host-pid"))
+        val room = newHostRoom(kit, maxRemotePlayers = 1)
+        val alice = FakeP2pSession(peer("alice-pid", "Alice"))
+        requestAdmission(room, kit, alice)
+        alice.sendHandler = { message ->
+            if (message.isAdmissionAccepted()) error("injected send failure")
+        }
+
+        val failure = room.approveAdmission(PlayerId("alice-pid"))
+        assertThat(failure).isInstanceOf(Result.Failure::class)
+        assertThat((failure as Result.Failure).error)
+            .isEqualTo(NetError.TransportFailure("admission acceptance failed"))
+        assertThat(room.members.value).isEmpty()
+        assertThat(room.pendingAdmissions.value).isEmpty()
+
+        val bob = FakeP2pSession(peer("bob-pid", "Bob"))
+        requestAdmission(room, kit, bob)
+        assertThat(room.approveAdmission(PlayerId("bob-pid")))
+            .isInstanceOf(Result.Success::class)
+        assertThat(room.members.value.map(RoomMember::playerId))
+            .containsExactly(PlayerId("bob-pid"))
+    }
+
+    @Test
+    fun disconnect_during_acceptance_rolls_back_the_seat_without_a_ghost_member() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("host-pid"))
+        val room = newHostRoom(kit, maxRemotePlayers = 1)
+        val alice = FakeP2pSession(peer("alice-pid", "Alice"))
+        requestAdmission(room, kit, alice)
+        alice.sendHandler = { message ->
+            if (message.isAdmissionAccepted()) {
+                alice.stateFlow.value = ConnectionState.Closed
+                yield()
+            }
+        }
+
+        val failure = room.approveAdmission(PlayerId("alice-pid"))
+        assertThat(failure).isInstanceOf(Result.Failure::class)
+        assertThat((failure as Result.Failure).error).isEqualTo(NetError.NotConnected)
+        assertThat(room.members.value).isEmpty()
+        assertThat(room.pendingAdmissions.value).isEmpty()
+
+        val bob = FakeP2pSession(peer("bob-pid", "Bob"))
+        requestAdmission(room, kit, bob)
+        assertThat(room.approveAdmission(PlayerId("bob-pid")))
+            .isInstanceOf(Result.Success::class)
+    }
+
+    @Test
+    fun cancellation_during_acceptance_propagates_after_rolling_back_the_seat() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("host-pid"))
+        val room = newHostRoom(kit, maxRemotePlayers = 1)
+        val alice = FakeP2pSession(peer("alice-pid", "Alice"))
+        requestAdmission(room, kit, alice)
+        alice.sendHandler = { message ->
+            if (message.isAdmissionAccepted()) throw CancellationException("cancel acceptance")
+        }
+
+        assertFailsWith<CancellationException> {
+            room.approveAdmission(PlayerId("alice-pid"))
+        }
+        assertThat(room.members.value).isEmpty()
+        assertThat(room.pendingAdmissions.value).isEmpty()
+
+        val bob = FakeP2pSession(peer("bob-pid", "Bob"))
+        requestAdmission(room, kit, bob)
+        assertThat(room.approveAdmission(PlayerId("bob-pid")))
+            .isInstanceOf(Result.Success::class)
+    }
+
+    @Test
+    fun closing_admissions_rejects_waiters_but_does_not_abort_an_in_flight_approval() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("host-pid"))
+        val room = newHostRoom(kit, maxRemotePlayers = 2)
+        val alice = FakeP2pSession(peer("alice-pid", "Alice"))
+        val bob = FakeP2pSession(peer("bob-pid", "Bob"))
+        requestAdmission(room, kit, alice)
+        requestAdmission(room, kit, bob)
+
+        val acceptanceStarted = CompletableDeferred<Unit>()
+        val releaseAcceptance = CompletableDeferred<Unit>()
+        alice.sendHandler = { message ->
+            if (message.isAdmissionAccepted()) {
+                acceptanceStarted.complete(Unit)
+                releaseAcceptance.await()
+            }
+        }
+        val approval = testScope.async { room.approveAdmission(PlayerId("alice-pid")) }
+        acceptanceStarted.await()
+
+        room.closeAdmissions()
+        assertThat(bob.admissionRejections()).containsExactly(AdmissionRejection.SessionStarted)
+        assertThat(room.pendingAdmissions.value.map { it.playerId })
+            .containsExactly(PlayerId("alice-pid"))
+
+        releaseAcceptance.complete(Unit)
+        assertThat(approval.await()).isInstanceOf(Result.Success::class)
+        assertThat(room.members.value.map(RoomMember::playerId))
+            .containsExactly(PlayerId("alice-pid"))
         assertThat(room.pendingAdmissions.value).isEmpty()
     }
 
@@ -1034,14 +1175,48 @@ class P2pKitRoomTransportLifecycleTest {
 
     // -------------------------------------------------------------- Helpers ----
 
-    private fun newHostRoom(kit: FakeP2pKit): HostP2pRoom = HostP2pRoom(
+    private fun newHostRoom(
+        kit: FakeP2pKit,
+        maxRemotePlayers: Int = 17,
+    ): HostP2pRoom = HostP2pRoom(
         kit = kit,
         roomCode = "ABCDEF",
         roomDisplayName = "Parlor Room",
         hostPlayerId = PlayerId(kit.localPeerId.value),
+        maxRemotePlayers = maxRemotePlayers,
         scope = testScope,
         codec = codec,
     )
+
+    private suspend fun requestAdmission(
+        room: HostP2pRoom,
+        kit: FakeP2pKit,
+        session: FakeP2pSession,
+        rejoinToken: String? = null,
+    ) {
+        kit.incomingSessionsFlow.emit(session)
+        yield()
+        session.incomingFlow.emit(
+            P2pMessage.Binary(
+                codec.encode(
+                    PeerMessage.AdmissionRequest(
+                        protocol = ProtocolVersion(),
+                        actor = PlayerId("forged-body-id"),
+                        roomCode = "ABCDEF",
+                        displayName = session.peer.name,
+                        rejoinToken = rejoinToken,
+                    ),
+                ),
+            ),
+        )
+        if (rejoinToken == null) {
+            awaitCondition {
+                room.pendingAdmissions.value.any {
+                    it.playerId == PlayerId(session.peer.id.value)
+                }
+            }
+        }
+    }
 
     private suspend fun admit(
         room: HostP2pRoom,
@@ -1049,24 +1224,8 @@ class P2pKitRoomTransportLifecycleTest {
         session: FakeP2pSession,
         rejoinToken: String? = null,
     ): String {
-        kit.incomingSessionsFlow.emit(session)
-        yield()
-        val request = PeerMessage.AdmissionRequest(
-            protocol = ProtocolVersion(),
-            actor = PlayerId("forged-body-id"),
-            roomCode = "ABCDEF",
-            displayName = session.peer.name,
-            rejoinToken = rejoinToken,
-        )
-        session.incomingFlow.emit(
-            P2pMessage.Binary(
-                codec.encode(request),
-            ),
-        )
+        requestAdmission(room, kit, session, rejoinToken)
         if (rejoinToken == null) {
-            awaitCondition {
-                room.pendingAdmissions.value.any { it.playerId == PlayerId(session.peer.id.value) }
-            }
             assertThat(room.approveAdmission(PlayerId(session.peer.id.value)))
                 .isInstanceOf(Result.Success::class)
         }
@@ -1085,6 +1244,15 @@ class P2pKitRoomTransportLifecycleTest {
             .last()
             .rejoinToken
     }
+
+    private fun P2pMessage.isAdmissionAccepted(): Boolean =
+        this is P2pMessage.Binary && codec.decode(bytes) is HostMessage.AdmissionAccepted
+
+    private fun FakeP2pSession.admissionRejections(): List<AdmissionRejection> = sent
+        .filterIsInstance<P2pMessage.Binary>()
+        .map { codec.decode(it.bytes) }
+        .filterIsInstance<HostMessage.AdmissionRejected>()
+        .map(HostMessage.AdmissionRejected::reason)
 
     private fun peer(id: String, name: String): Peer = Peer(
         id = P2pPeerId(id),

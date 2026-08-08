@@ -88,7 +88,14 @@ fun MafiaHostLobbyFlow(
     val seed = remember { RandomSource.system().nextLong() }
 
     LaunchedEffect(transport) {
-        when (val result = transport.host(HostConfig(roomDisplayName = hostName))) {
+        when (
+            val result = transport.host(
+                HostConfig(
+                    roomDisplayName = hostName,
+                    maxRemotePlayers = MafiaSettings.MAX_PLAYERS - 1,
+                ),
+            )
+        ) {
             is Result.Success -> room = result.data
             is Result.Failure -> hostError = result.error
         }
