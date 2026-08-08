@@ -21,7 +21,12 @@ class ProtocolValidationTest {
         )
         assertEquals(
             ProtocolValidation.IncompatibleProtocol,
-            header(protocol = ProtocolVersion(PARLOR_PROTOCOL_MAJOR, 1)).validateFor(session),
+            header(
+                protocol = ProtocolVersion(
+                    PARLOR_PROTOCOL_MAJOR,
+                    PARLOR_PROTOCOL_MINOR + 1,
+                ),
+            ).validateFor(session),
         )
         assertEquals(
             ProtocolValidation.WrongGame,

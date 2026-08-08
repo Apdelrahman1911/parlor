@@ -20,7 +20,9 @@ sealed interface RoomMessage
 // v3 adds transactional admission/resume readiness barriers and cannot safely
 // interoperate with v2 peers, which may miss the first lobby/game snapshot.
 const val PARLOR_PROTOCOL_MAJOR: Int = 3
-const val PARLOR_PROTOCOL_MINOR: Int = 0
+// v3.1 adds an explicit admission-pending state so discovery/handshake and
+// human host-approval deadlines are independent and observable.
+const val PARLOR_PROTOCOL_MINOR: Int = 1
 const val MAX_COMMAND_PAYLOAD_BYTES: Int = 32 * 1024
 const val MAX_SNAPSHOT_PAYLOAD_BYTES: Int = 256 * 1024
 const val MAX_CONTROL_PAYLOAD_BYTES: Int = 8 * 1024
@@ -125,6 +127,10 @@ sealed interface HostMessage : RoomMessage {
     /** Initial host approval; the peer must durably stage [offer] before confirming. */
     @Serializable
     data class AdmissionOffered(val offer: ResumableCredentialOffer) : HostMessage
+
+    /** Valid room request is waiting for an explicit host decision. */
+    @Serializable
+    data class AdmissionPending(val playerId: PlayerId) : HostMessage
 
     /** Initial admission is authoritative and the staged credential may be promoted. */
     @Serializable

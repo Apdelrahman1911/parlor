@@ -60,7 +60,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.mapNotNull
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
@@ -68,6 +67,7 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withTimeout
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.coroutines.withContext
+import kotlin.time.TimeSource
 
 /**
  * Transport diagnostics are disabled by default. Room codes, peer identifiers,
@@ -307,93 +307,147 @@ class P2pKitRoomTransport(
             return Result.Failure(NetError.TransportFailure(t.message ?: "join failed"))
         }
         return try {
-            val result = withTimeout<Result<LocalRoom, NetError>>(joinTimeoutMs) {
-                val attemptedPeerIds = mutableSetOf<String>()
-                var admissionResult: Result<LocalRoom, NetError>? = null
-                while (admissionResult == null) {
-                    val hostPeer = kit.peers
-                        .onEach { peers -> logPeerSnapshot(peers, P2P_ROOM_PREFIX, kit) }
-                        .first { peers ->
-                            peers.any {
-                                it.id.value !in attemptedPeerIds && it.isFreshParlorHost(kit)
-                            }
-                        }
-                        .first {
-                            it.id.value !in attemptedPeerIds && it.isFreshParlorHost(kit)
-                        }
-                    attemptedPeerIds += hostPeer.id.value
-                    val session = try {
-                        kit.connect(hostPeer)
-                    } catch (t: Throwable) {
-                        t.rethrowIfCancellation()
-                        continue
+            val startedAt = TimeSource.Monotonic.markNow()
+            val scheduler = DiscoveryCandidateScheduler(totalDeadlineMs = joinTimeoutMs)
+            var result: Result<LocalRoom, NetError>? = null
+            while (result == null && startedAt.elapsedNow().inWholeMilliseconds < joinTimeoutMs) {
+                val elapsedMs = startedAt.elapsedNow().inWholeMilliseconds
+                val visiblePeers = kit.peers.value.filter { it.isFreshParlorHost(kit) }
+                logPeerSnapshot(visiblePeers, P2P_ROOM_PREFIX, kit)
+                scheduler.update(
+                    visiblePeers.map { peer ->
+                        DiscoveryCandidate(peer.id.value, peer.endpointVersion())
+                    },
+                    nowMs = elapsedMs,
+                )
+                val candidate = scheduler.next(elapsedMs)
+                if (candidate == null) {
+                    val remainingMs = joinTimeoutMs - elapsedMs
+                    val wakeDelayMs = minOf(
+                        scheduler.nextWakeDelayMs(elapsedMs),
+                        DISCOVERY_REFRESH_POLL_MS,
+                        remainingMs,
+                    ).coerceAtLeast(1L)
+                    val snapshot = kit.peers.value
+                    withTimeoutOrNull(wakeDelayMs) {
+                        kit.peers.first { it != snapshot }
                     }
-                    when (
-                        val admission = awaitAdmission(
+                    continue
+                }
+                val hostPeer = visiblePeers.firstOrNull {
+                    it.id.value == candidate.key && it.endpointVersion() == candidate.endpointVersion
+                }
+                if (hostPeer == null) {
+                    scheduler.recordResult(
+                        candidate,
+                        DiscoveryAttemptResult.TransientFailure,
+                        elapsedMs,
+                    )
+                    continue
+                }
+                val remainingDialBudgetMs = joinTimeoutMs -
+                    startedAt.elapsedNow().inWholeMilliseconds
+                if (remainingDialBudgetMs <= 0L) break
+                val session = try {
+                    withTimeoutOrNull(minOf(DIAL_AND_HANDSHAKE_TIMEOUT_MS, remainingDialBudgetMs)) {
+                        kit.connect(hostPeer)
+                    }
+                } catch (failure: Throwable) {
+                    failure.rethrowIfCancellation()
+                    null
+                }
+                if (session == null) {
+                    scheduler.recordResult(
+                        candidate,
+                        DiscoveryAttemptResult.TransientFailure,
+                        startedAt.elapsedNow().inWholeMilliseconds,
+                    )
+                    continue
+                }
+                val remainingFirstResponseBudgetMs = joinTimeoutMs -
+                    startedAt.elapsedNow().inWholeMilliseconds
+                if (remainingFirstResponseBudgetMs <= 0L) {
+                    runCatching { session.close() }
+                    break
+                }
+                when (
+                    val admission = awaitAdmission(
+                        session = session,
+                        hostPeer = hostPeer,
+                        code = config.code,
+                        displayName = config.displayName,
+                        selfPlayerId = PlayerId(kit.localPeerId.value),
+                        firstResponseTimeoutMs = minOf(
+                            FIRST_ADMISSION_RESPONSE_TIMEOUT_MS,
+                            remainingFirstResponseBudgetMs,
+                        ),
+                    )
+                ) {
+                    is AdmissionOutcome.Accepted -> {
+                        kit.stopDiscovery()
+                        val lifecycleRegistrationId = SecureIds.id128()
+                        val peerRoom = PeerP2pRoom(
+                            kit = kit,
                             session = session,
                             hostPeer = hostPeer,
-                            code = config.code,
-                            displayName = config.displayName,
-                            selfPlayerId = PlayerId(kit.localPeerId.value),
+                            roomCode = config.code,
+                            initialCredential = admission.credential,
+                            credentialStore = credentialStore,
+                            resumeConnector = { credential ->
+                                resumeConnection(kit, credential)
+                            },
+                            scope = scope,
+                            codec = codec,
+                            onClosed = { roomClosed(lifecycleRegistrationId) },
                         )
-                    ) {
-                        is AdmissionOutcome.Accepted -> {
-                            kit.stopDiscovery()
-                            val lifecycleRegistrationId = SecureIds.id128()
-                            val peerRoom = PeerP2pRoom(
-                                kit = kit,
-                                session = session,
-                                hostPeer = hostPeer,
-                                roomCode = config.code,
-                                initialCredential = admission.credential,
-                                credentialStore = credentialStore,
-                                resumeConnector = { credential ->
-                                    resumeConnection(kit, credential)
-                                },
-                                scope = scope,
-                                codec = codec,
-                                onClosed = { roomClosed(lifecycleRegistrationId) },
+                        if (!peerRoom.finishInitialAdmissionHandoff(admission.credential)) {
+                            peerRoom.abandonFailedResume()
+                            result = Result.Failure(
+                                NetError.TransportFailure("admission handoff failed"),
                             )
-                            if (!peerRoom.finishInitialAdmissionHandoff(admission.credential)) {
-                                peerRoom.abandonFailedResume()
-                                admissionResult = Result.Failure(
-                                    NetError.TransportFailure("admission handoff failed"),
-                                )
-                            } else {
-                                registerLifecycleRoom(lifecycleRegistrationId, peerRoom)
-                                admissionResult = Result.Success(peerRoom)
-                            }
-                        }
-                        is AdmissionOutcome.Rejected -> {
-                            runCatching { session.close() }
-                            if (admission.reason == AdmissionRejection.WrongCode) {
-                                val anotherVisibleHost = kit.peers.value.any {
-                                    it.id.value !in attemptedPeerIds && it.isFreshParlorHost(kit)
-                                }
-                                if (anotherVisibleHost) continue
-                            }
-                            admissionResult = Result.Failure(admission.reason.toNetError())
-                        }
-                        is AdmissionOutcome.Failed -> {
-                            runCatching { session.close() }
-                            admissionResult = Result.Failure(admission.error)
+                        } else {
+                            registerLifecycleRoom(lifecycleRegistrationId, peerRoom)
+                            result = Result.Success(peerRoom)
                         }
                     }
+                    is AdmissionOutcome.Rejected -> {
+                        runCatching { session.close() }
+                        when (admission.reason) {
+                            AdmissionRejection.WrongCode -> scheduler.recordResult(
+                                candidate,
+                                DiscoveryAttemptResult.WrongRoom,
+                                startedAt.elapsedNow().inWholeMilliseconds,
+                            )
+                            AdmissionRejection.IncompatibleProtocol -> scheduler.recordResult(
+                                candidate,
+                                DiscoveryAttemptResult.IncompatibleProtocol,
+                                startedAt.elapsedNow().inWholeMilliseconds,
+                            )
+                            else -> result = Result.Failure(admission.reason.toNetError())
+                        }
+                    }
+                    is AdmissionOutcome.TransientFailure -> {
+                        runCatching { session.close() }
+                        scheduler.recordResult(
+                            candidate,
+                            DiscoveryAttemptResult.TransientFailure,
+                            startedAt.elapsedNow().inWholeMilliseconds,
+                        )
+                    }
+                    is AdmissionOutcome.Failed -> {
+                        runCatching { session.close() }
+                        result = Result.Failure(admission.error)
+                    }
                 }
-                admissionResult
+            }
+            if (result == null) {
+                result = Result.Failure(scheduler.finalError().toNetError())
             }
             if (result is Result.Failure) {
                 runCatching { kit.stopDiscovery() }
                 kit.stopAfterFailure()
             }
-            result
-        } catch (_: TimeoutCancellationException) {
-            // No fresh advertisement appeared within the budget: clean up
-            // the kit we started so we don't leak a discovering instance
-            // for an abandoned join attempt.
-            p2pLog("join: TIMEOUT")
-            kit.stopAfterFailure()
-            Result.Failure(NetError.Timeout)
+            checkNotNull(result)
         } catch (t: Throwable) {
             kit.stopAfterFailure()
             t.rethrowIfCancellation()
@@ -492,6 +546,7 @@ class P2pKitRoomTransport(
     private sealed interface AdmissionOutcome {
         data class Accepted(val credential: ResumableSessionCredential) : AdmissionOutcome
         data class Rejected(val reason: AdmissionRejection) : AdmissionOutcome
+        data class TransientFailure(val error: NetError) : AdmissionOutcome
         data class Failed(val error: NetError) : AdmissionOutcome
     }
 
@@ -501,6 +556,7 @@ class P2pKitRoomTransport(
         code: String,
         displayName: String,
         selfPlayerId: PlayerId,
+        firstResponseTimeoutMs: Long,
     ): AdmissionOutcome = coroutineScope {
         val responses = Channel<HostMessage>(capacity = 8)
         val collector = launch(start = CoroutineStart.UNDISPATCHED) {
@@ -513,6 +569,7 @@ class P2pKitRoomTransport(
                     }.getOrNull() as? HostMessage ?: return@collect
                     when (decoded) {
                         is HostMessage.AdmissionOffered,
+                        is HostMessage.AdmissionPending,
                         is HostMessage.AdmissionCommitted,
                         is HostMessage.AdmissionRejected,
                         is HostMessage.AdmissionAccepted -> responses.send(decoded)
@@ -521,22 +578,55 @@ class P2pKitRoomTransport(
                 }
         }
         try {
-            val first = sendUntilResponse(
-                session = session,
-                responses = responses,
-                message = PeerMessage.AdmissionRequest(
-                    protocol = ProtocolVersion(),
-                    actor = selfPlayerId,
-                    roomCode = code,
-                    displayName = displayName,
-                ),
-            )
-            when (first) {
-                is HostMessage.AdmissionRejected -> AdmissionOutcome.Rejected(first.reason)
+            val first = try {
+                sendUntilResponse(
+                    session = session,
+                    responses = responses,
+                    message = PeerMessage.AdmissionRequest(
+                        protocol = ProtocolVersion(),
+                        actor = selfPlayerId,
+                        roomCode = code,
+                        displayName = displayName,
+                    ),
+                    timeoutMs = firstResponseTimeoutMs,
+                )
+            } catch (_: TimeoutCancellationException) {
+                return@coroutineScope AdmissionOutcome.TransientFailure(NetError.Timeout)
+            }
+            val decision = if (first is HostMessage.AdmissionPending) {
+                if (first.playerId != selfPlayerId) {
+                    return@coroutineScope AdmissionOutcome.Rejected(
+                        AdmissionRejection.InvalidCredential,
+                    )
+                }
+                try {
+                    withTimeout<HostMessage>(HOST_APPROVAL_TIMEOUT_MS) {
+                        var next: HostMessage? = null
+                        while (next == null) {
+                            val received = responses.receive()
+                            next = if (
+                                received is HostMessage.AdmissionPending &&
+                                received.playerId == selfPlayerId
+                            ) {
+                                null
+                            } else {
+                                received
+                            }
+                        }
+                        next
+                    }
+                } catch (_: TimeoutCancellationException) {
+                    return@coroutineScope AdmissionOutcome.Failed(NetError.Timeout)
+                }
+            } else {
+                first
+            }
+            when (decision) {
+                is HostMessage.AdmissionRejected -> AdmissionOutcome.Rejected(decision.reason)
                 is HostMessage.AdmissionAccepted ->
                     AdmissionOutcome.Rejected(AdmissionRejection.IncompatibleProtocol)
                 is HostMessage.AdmissionOffered -> {
-                    val credential = first.offer.toStoredCredentialOrNull(
+                    val credential = decision.offer.toStoredCredentialOrNull(
                         session = session,
                         hostPeer = hostPeer,
                         roomCode = code,
@@ -560,6 +650,7 @@ class P2pKitRoomTransport(
                             offerId = credential.offerId,
                             generation = credential.generation,
                         ),
+                        timeoutMs = DIAL_AND_HANDSHAKE_TIMEOUT_MS,
                     )
                     when (committed) {
                         is HostMessage.AdmissionRejected -> {
@@ -600,11 +691,14 @@ class P2pKitRoomTransport(
         session: P2pSession,
         responses: Channel<HostMessage>,
         message: PeerMessage,
-    ): HostMessage {
-        while (true) {
+        timeoutMs: Long,
+    ): HostMessage = withTimeout<HostMessage>(timeoutMs) {
+        var response: HostMessage? = null
+        while (response == null) {
             sendRoomMessage(session, message)
-            withTimeoutOrNull(ADMISSION_RETRY_MS) { responses.receive() }?.let { return it }
+            response = withTimeoutOrNull(ADMISSION_RETRY_MS) { responses.receive() }
         }
+        response
     }
 
     private suspend fun sendRoomMessage(session: P2pSession, message: PeerMessage) {
@@ -721,6 +815,7 @@ class P2pKitRoomTransport(
                     secret = credential.secret,
                     generation = credential.generation,
                 ),
+                timeoutMs = FIRST_ADMISSION_RESPONSE_TIMEOUT_MS,
             )
             if (first is HostMessage.AdmissionRejected) {
                 return@coroutineScope Result.Failure(first.reason.toNetError())
@@ -742,6 +837,7 @@ class P2pKitRoomTransport(
                         offerId = rotated.offerId,
                         generation = rotated.generation,
                     ),
+                    timeoutMs = ADMISSION_CONFIRM_TIMEOUT_MS,
                 )
             ) {
                 is HostMessage.AdmissionRejected -> {
@@ -883,6 +979,14 @@ class P2pKitRoomTransport(
         return fresh
     }
 
+    private fun Peer.endpointVersion(): String = buildString {
+        append(name)
+        append('|')
+        append(platform.name)
+        append('|')
+        supportedTransports.map { it.name }.sorted().joinTo(this, separator = ",")
+    }
+
     @Suppress("NOTHING_TO_INLINE")
     private inline fun nowMillis(): Long =
         kotlin.time.Clock.System.now().toEpochMilliseconds()
@@ -894,10 +998,13 @@ class P2pKitRoomTransport(
         const val P2P_ROOM_PREFIX = "parlor-room|"
         // Unambiguous alphabet — no 0/O, no 1/I — for in-person dictation.
         private const val ROOM_CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
-        // Production budget for join() discovery + connect. The user can
-        // dictate a 6-char code, hit Join, and within 10s either see a
-        // room or get "no room found" — anything longer feels broken.
-        internal const val DEFAULT_JOIN_TIMEOUT_MS: Long = 120_000L
+        /** Discovery, dial, secure handshake and first admission-state response budget. */
+        internal const val DEFAULT_JOIN_TIMEOUT_MS: Long = 30_000L
+        internal const val DIAL_AND_HANDSHAKE_TIMEOUT_MS: Long = 5_000L
+        internal const val FIRST_ADMISSION_RESPONSE_TIMEOUT_MS: Long = 5_000L
+        /** Starts only after a valid request receives AdmissionPending. */
+        internal const val HOST_APPROVAL_TIMEOUT_MS: Long = 60_000L
+        internal const val DISCOVERY_REFRESH_POLL_MS: Long = 1_000L
         internal const val ADMISSION_RETRY_MS: Long = 400L
         internal const val ADMISSION_REJECTION_FLUSH_MS: Long = 100L
         internal const val REJOIN_GRACE_MS: Long = 120_000L
@@ -973,6 +1080,12 @@ private fun AdmissionRejection.toNetError(): NetError = when (this) {
     AdmissionRejection.InvalidCredential -> NetError.Unauthorized
     AdmissionRejection.ExpiredCredential -> NetError.RejoinExpired
     AdmissionRejection.AlreadyConnected -> NetError.AlreadyConnected
+}
+
+private fun DiscoveryFinalError.toNetError(): NetError = when (this) {
+    DiscoveryFinalError.IncompatibleProtocol -> NetError.IncompatibleProtocol
+    DiscoveryFinalError.WrongCode -> NetError.WrongCode
+    DiscoveryFinalError.Timeout -> NetError.Timeout
 }
 
 // ============================================================================ Host room ==
@@ -1488,14 +1601,26 @@ internal class HostP2pRoom(
         }
         when (requestEvent) {
             is AdmissionRequestResult.Rejected -> rejectSession(session, requestEvent.reason)
-            is AdmissionRequestResult.Accepted -> if (requestEvent.emitEvent) {
-                _peerEvents.emit(
-                    PeerEvent.AdmissionRequested(
-                        playerId = requestEvent.admission.playerId,
-                        displayName = requestEvent.admission.displayName,
-                        isRejoin = requestEvent.admission.isRejoin,
-                    ),
-                )
+            is AdmissionRequestResult.Accepted -> {
+                try {
+                    sendRaw(
+                        session,
+                        HostMessage.AdmissionPending(requestEvent.admission.playerId),
+                    )
+                } catch (failure: Throwable) {
+                    failure.rethrowIfCancellation()
+                    runCatching { session.close() }
+                    return
+                }
+                if (requestEvent.emitEvent) {
+                    _peerEvents.emit(
+                        PeerEvent.AdmissionRequested(
+                            playerId = requestEvent.admission.playerId,
+                            displayName = requestEvent.admission.displayName,
+                            isRejoin = requestEvent.admission.isRejoin,
+                        ),
+                    )
+                }
             }
         }
     }
@@ -2820,6 +2945,7 @@ internal class PeerP2pRoom(
             when (decoded) {
                 is HostMessage.AdmissionAccepted,
                 is HostMessage.AdmissionOffered,
+                is HostMessage.AdmissionPending,
                 is HostMessage.AdmissionCommitted,
                 is HostMessage.ResumeOffered,
                 is HostMessage.ResumeCommitted,
