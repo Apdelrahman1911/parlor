@@ -13,7 +13,7 @@ remain separate evidence.
 |---|---|---|
 | Common/domain/desktop tests | `./gradlew productionDesktopCheck` | Every KMP module's `desktopTest` passes; the app's desktop main code compiles as a dependency. |
 | Android release | `./gradlew productionAndroidCheck` | Unsigned release AAB builds and `lintRelease` reports no blocking finding. |
-| iOS KMP release | `./gradlew productionAppleCheck` on macOS | Release frameworks link for `iosArm64` and `iosSimulatorArm64`. |
+| iOS KMP release | `./gradlew productionAppleCheck` on macOS | Release frameworks link serially for `iosArm64`, `iosSimulatorArm64`, and `iosX64` without concurrent-LTO heap pressure. |
 | Host-independent aggregate | `./gradlew productionCheck` | Desktop/common and unsigned Android gates pass. Apple remains a separate macOS job. |
 
 The root tasks discover KMP modules through the multiplatform plugin. A newly

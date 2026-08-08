@@ -178,7 +178,7 @@ targets on non-Mac hosts.
 ### From macOS (the real validation)
 
 ```bash
-# Production release framework and configured Apple tests:
+# Production release frameworks for iosArm64, iosSimulatorArm64, and iosX64:
 ./gradlew productionAppleCheck --no-daemon --stacktrace --console=plain
 
 # Focused debug simulator framework:

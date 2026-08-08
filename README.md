@@ -66,7 +66,7 @@ run the app from Xcode.
 # All common/desktop tests plus unsigned Android release bundle and lint
 ./gradlew productionCheck
 
-# Release Kotlin frameworks for physical iOS and Apple-silicon simulator
+# Release Kotlin frameworks for physical iOS and both simulator architectures
 ./gradlew productionAppleCheck
 ```
 

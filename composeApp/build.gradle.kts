@@ -94,6 +94,21 @@ kotlin {
     }
 }
 
+// Release Kotlin/Native LTO is memory intensive. With Gradle parallelism
+// enabled, linking multiple Compose frameworks in one JVM can exhaust even the
+// configured 6 GiB heap although every target links successfully in isolation.
+// Keep compilation parallel, but serialize only the three release link tasks
+// that form the production Apple gate.
+tasks.named("linkReleaseFrameworkIosSimulatorArm64") {
+    mustRunAfter("linkReleaseFrameworkIosArm64")
+}
+tasks.named("linkReleaseFrameworkIosX64") {
+    mustRunAfter(
+        "linkReleaseFrameworkIosArm64",
+        "linkReleaseFrameworkIosSimulatorArm64",
+    )
+}
+
 android {
     namespace = "com.parlor.app"
     compileSdk = libs.versions.android.compile.sdk.get().toInt()

@@ -35,10 +35,11 @@ val productionAndroidSigningCheck = tasks.register("productionAndroidSigningChec
 
 tasks.register("productionAppleCheck") {
     group = "verification"
-    description = "Links release frameworks for physical and Apple-silicon simulator iOS targets."
+    description = "Links release frameworks for physical, Apple-silicon simulator, and Intel simulator iOS targets."
     dependsOn(
         ":composeApp:linkReleaseFrameworkIosArm64",
         ":composeApp:linkReleaseFrameworkIosSimulatorArm64",
+        ":composeApp:linkReleaseFrameworkIosX64",
     )
 }
 
