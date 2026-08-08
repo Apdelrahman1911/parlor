@@ -130,6 +130,7 @@ class InMemoryPeerRoom(
             is PeerMessage.ClientCommand -> message.copy(actor = selfPlayerId)
             is PeerMessage.SnapshotRequest -> message.copy(actor = selfPlayerId)
             is PeerMessage.SessionHeartbeat -> message.copy(actor = selfPlayerId)
+            is PeerMessage.CommandOutcomeRequest -> message.copy(actor = selfPlayerId)
             else -> message
         }
         bus.fromPeer(authenticated)

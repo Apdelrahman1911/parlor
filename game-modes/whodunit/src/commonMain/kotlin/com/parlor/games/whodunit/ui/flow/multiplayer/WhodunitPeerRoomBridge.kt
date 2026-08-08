@@ -130,7 +130,11 @@ class WhodunitPeerRoomBridge(
             }
             is Result.Failure -> {
                 if (sent.error == NetError.NotConnected) markSelfOffline()
-                Result.Failure(SubmitError.SessionClosed)
+                if (sent.error == NetError.CommandInFlight) {
+                    Result.Failure(SubmitError.CommandPending)
+                } else {
+                    Result.Failure(SubmitError.SessionClosed)
+                }
             }
         }
     }

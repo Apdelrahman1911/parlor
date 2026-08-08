@@ -121,6 +121,7 @@ fun HostLobbyScreen(
                 is PeerMessage.ClientCommand -> "ClientCommand(${msg.payload.size} bytes)"
                 is PeerMessage.SnapshotRequest -> "SnapshotRequest"
                 is PeerMessage.SessionHeartbeat -> "SessionHeartbeat"
+                is PeerMessage.CommandOutcomeRequest -> "CommandOutcomeRequest"
                 is PeerMessage.JoinRequest -> "JoinRequest(${msg.displayName})"
                 is PeerMessage.LeaveNotice -> "LeaveNotice"
                 is PeerMessage.Heartbeat -> "Heartbeat"

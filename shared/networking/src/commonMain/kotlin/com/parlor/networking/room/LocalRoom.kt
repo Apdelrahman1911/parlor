@@ -110,6 +110,8 @@ sealed interface NetError {
     data object SessionStarted : NetError
     data object IncompatibleProtocol : NetError
     data object RateLimited : NetError
+    /** A mutating command is already awaiting an authoritative outcome. */
+    data object CommandInFlight : NetError
     data class TransportFailure(val reason: String) : NetError
     data object Unauthorized : NetError
 }

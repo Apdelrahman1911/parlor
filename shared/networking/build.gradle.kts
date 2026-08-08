@@ -12,6 +12,7 @@ kotlin {
             // through host -> peer setup.
             api(project(":shared:engine"))
             implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.kotlinx.serialization.cbor)
             implementation(libs.kotlinx.serialization.json)
         }
         commonTest.dependencies {

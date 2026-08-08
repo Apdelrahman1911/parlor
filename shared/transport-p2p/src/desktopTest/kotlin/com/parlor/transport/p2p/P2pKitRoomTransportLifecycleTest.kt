@@ -17,6 +17,7 @@ import com.parlor.networking.protocol.HostMessage
 import com.parlor.networking.protocol.PeerMessage
 import com.parlor.networking.protocol.ProtocolVersion
 import com.parlor.networking.protocol.RoomMessage
+import com.parlor.networking.protocol.RoomMessageCodec
 import com.parlor.networking.protocol.SessionEnvelopeHeader
 import com.parlor.networking.room.NetError
 import com.parlor.networking.room.PeerEvent
@@ -55,7 +56,6 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
 import kotlinx.coroutines.yield
 import kotlinx.io.RawSource
-import kotlinx.serialization.json.Json
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.time.Duration.Companion.seconds
@@ -88,7 +88,7 @@ class P2pKitRoomTransportLifecycleTest {
     // — `kit.incomingSessions` is a SharedFlow with replay=0, and emissions made
     // before the production-side collector subscribes are otherwise lost.
     private val testScope = CoroutineScope(SupervisorJob() + Dispatchers.Unconfined)
-    private val json = Json { encodeDefaults = true }
+    private val codec = RoomMessageCodec()
 
     @AfterTest
     fun cancelScope() {
@@ -131,15 +131,14 @@ class P2pKitRoomTransportLifecycleTest {
         yield()
         alice.incomingFlow.emit(
             P2pMessage.Binary(
-                json.encodeToString(
-                    RoomMessage.serializer(),
+                codec.encode(
                     PeerMessage.AdmissionRequest(
                         protocol = ProtocolVersion(),
                         actor = PlayerId("forged-body-id"),
                         roomCode = "ABCDEF",
                         displayName = "Alice",
                     ),
-                ).encodeToByteArray(),
+                ),
             ),
         )
 
@@ -161,15 +160,14 @@ class P2pKitRoomTransportLifecycleTest {
         yield()
         alice.incomingFlow.emit(
             P2pMessage.Binary(
-                json.encodeToString(
-                    RoomMessage.serializer(),
+                codec.encode(
                     PeerMessage.AdmissionRequest(
                         protocol = ProtocolVersion(),
                         actor = PlayerId("alice-pid"),
                         roomCode = "WRONG2",
                         displayName = "Alice",
                     ),
-                ).encodeToByteArray(),
+                ),
             ),
         )
 
@@ -177,7 +175,7 @@ class P2pKitRoomTransportLifecycleTest {
         val rejection = alice.sent
             .filterIsInstance<P2pMessage.Binary>()
             .map {
-                json.decodeFromString(RoomMessage.serializer(), it.bytes.decodeToString())
+                codec.decode(it.bytes)
             }
             .filterIsInstance<HostMessage.AdmissionRejected>()
             .single()
@@ -212,7 +210,7 @@ class P2pKitRoomTransportLifecycleTest {
         )
         alice.incomingFlow.emit(
             P2pMessage.Binary(
-                json.encodeToString(RoomMessage.serializer(), forged).encodeToByteArray(),
+                codec.encode(forged),
             ),
         )
 
@@ -396,7 +394,7 @@ class P2pKitRoomTransportLifecycleTest {
             hostPeer = hostPeer,
             roomCode = "ABCDEF",
             scope = testScope,
-            json = json,
+            codec = codec,
         )
 
         val events = mutableListOf<PeerEvent>()
@@ -424,19 +422,18 @@ class P2pKitRoomTransportLifecycleTest {
         val requests = mutableListOf<PeerMessage.AdmissionRequest>()
         session.sendHandler = { message ->
             val decoded = (message as? P2pMessage.Binary)?.let {
-                json.decodeFromString(RoomMessage.serializer(), it.bytes.decodeToString())
+                codec.decode(it.bytes)
             }
             if (decoded is PeerMessage.AdmissionRequest) {
                 requests += decoded
                 session.incomingFlow.emit(
                     P2pMessage.Binary(
-                        json.encodeToString(
-                            RoomMessage.serializer(),
+                        codec.encode(
                             HostMessage.AdmissionAccepted(
                                 playerId = PlayerId("peer-pid"),
                                 rejoinToken = "rejoin-token",
                             ),
-                        ).encodeToByteArray(),
+                        ),
                     ),
                 )
             }
@@ -447,7 +444,7 @@ class P2pKitRoomTransportLifecycleTest {
             hostPeer = hostPeer,
             roomCode = "ABCDEF",
             scope = testScope,
-            json = json,
+            codec = codec,
             rejoinToken = "rejoin-token",
         )
         val events = mutableListOf<PeerEvent>()
@@ -473,7 +470,7 @@ class P2pKitRoomTransportLifecycleTest {
         val kit = FakeP2pKit(P2pPeerId("peer-pid"))
         val hostPeer = peer("host-pid", "Host Device")
         val session = FakeP2pSession(hostPeer)
-        val room = PeerP2pRoom(kit, session, hostPeer, "ABCDEF", testScope, json)
+        val room = PeerP2pRoom(kit, session, hostPeer, "ABCDEF", testScope, codec)
         val events = mutableListOf<PeerEvent>()
         val collector = testScope.async { room.peerEvents.collect { events += it } }
         yield()
@@ -489,7 +486,7 @@ class P2pKitRoomTransportLifecycleTest {
         val kit = FakeP2pKit(P2pPeerId("peer-pid"))
         val hostPeer = peer("host-pid", "Host Device")
         val session = FakeP2pSession(hostPeer)
-        val room = PeerP2pRoom(kit, session, hostPeer, "ABCDEF", testScope, json)
+        val room = PeerP2pRoom(kit, session, hostPeer, "ABCDEF", testScope, codec)
         yield()
 
         // While Connected: send succeeds.
@@ -532,10 +529,7 @@ class P2pKitRoomTransportLifecycleTest {
 
         // Peer-side simulation: the JSON-encoded LeaveNotice arrives on
         // the session's incoming binary channel.
-        val noticeBytes = json.encodeToString(
-            RoomMessage.serializer(),
-            PeerMessage.LeaveNotice,
-        ).encodeToByteArray()
+        val noticeBytes = codec.encode(PeerMessage.LeaveNotice)
         alice.incomingFlow.emit(P2pMessage.Binary(noticeBytes))
 
         awaitCondition { events.any { it is PeerEvent.PeerLeft } }
@@ -565,14 +559,14 @@ class P2pKitRoomTransportLifecycleTest {
         val kit = FakeP2pKit(P2pPeerId("peer-pid"))
         val hostPeer = peer("host-pid", "Host Device")
         val session = FakeP2pSession(hostPeer)
-        val room = PeerP2pRoom(kit, session, hostPeer, "ABCDEF", testScope, json)
+        val room = PeerP2pRoom(kit, session, hostPeer, "ABCDEF", testScope, codec)
         yield()
 
         room.leave()
 
         val decoded: List<RoomMessage> = session.sent
             .filterIsInstance<P2pMessage.Binary>()
-            .map { json.decodeFromString(RoomMessage.serializer(), it.bytes.decodeToString()) }
+            .map { codec.decode(it.bytes) }
         assertThat(decoded).contains(PeerMessage.LeaveNotice)
         assertThat(session.stateFlow.value).isEqualTo(ConnectionState.Closed)
         // And the kit was stopped on the way out.
@@ -716,7 +710,7 @@ class P2pKitRoomTransportLifecycleTest {
         val fakeSession = FakeP2pSession(hostPeer)
         fakeSession.sendHandler = { message ->
             val request = (message as? P2pMessage.Binary)
-                ?.let { json.decodeFromString(RoomMessage.serializer(), it.bytes.decodeToString()) }
+                ?.let { codec.decode(it.bytes) }
             if (request is PeerMessage.AdmissionRequest) {
                 val accepted = HostMessage.AdmissionAccepted(
                     playerId = PlayerId("self-pid"),
@@ -724,7 +718,7 @@ class P2pKitRoomTransportLifecycleTest {
                 )
                 fakeSession.incomingFlow.emit(
                     P2pMessage.Binary(
-                        json.encodeToString(RoomMessage.serializer(), accepted).encodeToByteArray(),
+                        codec.encode(accepted),
                     ),
                 )
             }
@@ -759,16 +753,15 @@ class P2pKitRoomTransportLifecycleTest {
         val fakeSession = FakeP2pSession(hostPeer)
         fakeSession.sendHandler = { message ->
             val request = (message as? P2pMessage.Binary)
-                ?.let { json.decodeFromString(RoomMessage.serializer(), it.bytes.decodeToString()) }
+                ?.let { codec.decode(it.bytes) }
             if (request is PeerMessage.AdmissionRequest) {
                 fakeSession.incomingFlow.emit(
                     P2pMessage.Binary(
-                        json.encodeToString(
-                            RoomMessage.serializer(),
+                        codec.encode(
                             HostMessage.AdmissionRejected(
                                 com.parlor.networking.protocol.AdmissionRejection.WrongCode,
                             ),
-                        ).encodeToByteArray(),
+                        ),
                     ),
                 )
             }
@@ -811,7 +804,7 @@ class P2pKitRoomTransportLifecycleTest {
         val kit = FakeP2pKit(P2pPeerId("peer-pid"))
         val hostPeer = peer("host-pid", "Host Device")
         val session = FakeP2pSession(hostPeer)
-        val room = PeerP2pRoom(kit, session, hostPeer, "ABCDEF", testScope, json)
+        val room = PeerP2pRoom(kit, session, hostPeer, "ABCDEF", testScope, codec)
         yield()
 
         room.leave()
@@ -845,7 +838,7 @@ class P2pKitRoomTransportLifecycleTest {
         roomDisplayName = "Parlor Room",
         hostPlayerId = PlayerId(kit.localPeerId.value),
         scope = testScope,
-        json = json,
+        codec = codec,
     )
 
     private suspend fun admit(
@@ -865,7 +858,7 @@ class P2pKitRoomTransportLifecycleTest {
         )
         session.incomingFlow.emit(
             P2pMessage.Binary(
-                json.encodeToString(RoomMessage.serializer(), request).encodeToByteArray(),
+                codec.encode(request),
             ),
         )
         if (rejoinToken == null) {
@@ -884,7 +877,7 @@ class P2pKitRoomTransportLifecycleTest {
             .filterIsInstance<P2pMessage.Binary>()
             .mapNotNull {
                 runCatching {
-                    json.decodeFromString(RoomMessage.serializer(), it.bytes.decodeToString())
+                    codec.decode(it.bytes)
                 }.getOrNull() as? HostMessage.AdmissionAccepted
             }
             .last()

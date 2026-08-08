@@ -87,8 +87,7 @@ class AuthoritativeSessionCoordinatorTest {
 
         assertEquals(1, domainValue)
         val statuses = room.sent.mapNotNull { (it.message as? HostMessage.CommandResult)?.status }
-        assertTrue(CommandStatus.Applied in statuses)
-        assertTrue(CommandStatus.Duplicate in statuses)
+        assertEquals(2, statuses.count { it == CommandStatus.Applied })
         assertTrue(CommandStatus.SequenceGap in statuses)
         assertTrue(CommandStatus.StaleRevision in statuses)
         coordinator.close()
@@ -113,6 +112,75 @@ class AuthoritativeSessionCoordinatorTest {
 
         val terminal = room.sent.single().message as HostMessage.SessionEnded
         assertEquals(SessionEndReason.HostLeft, terminal.reason)
+    }
+
+    @Test
+    fun `host outcome query returns recorded result without applying command again`() = runTest {
+        val room = RecordingRoom(isHost = true, selfPlayerId = PlayerId("host"))
+        var domainValue = 0
+        var id = 0
+        val coordinator = HostAuthoritativeSessionCoordinator(
+            room = room,
+            protocol = protocol,
+            remotePlayers = setOf(peerId),
+            scope = this,
+            applyCommand = { _, _ ->
+                domainValue += 1
+                CommandApplication.Applied
+            },
+            snapshotFor = { PlayerSnapshotPayload(byteArrayOf(), byteArrayOf()) },
+            heartbeatIntervalMs = 0,
+            idGenerator = { "host-outcome-${(++id).toString().padStart(16, '0')}" },
+        )
+
+        room.receive(command(id = COMMAND_ONE, clientSequence = 1, expectedRevision = 0))
+        advanceUntilIdle()
+        room.receive(
+            PeerMessage.CommandOutcomeRequest(
+                header = header(sequence = 0, messageId = COMMAND_ONE),
+                actor = peerId,
+                commandId = COMMAND_ONE,
+            ),
+        )
+        advanceUntilIdle()
+
+        assertEquals(1, domainValue)
+        val outcomes = room.sent.mapNotNull { it.message as? HostMessage.CommandResult }
+        assertEquals(listOf(CommandStatus.Applied, CommandStatus.Applied), outcomes.map { it.status })
+        assertEquals(listOf(1L, 1L), outcomes.map { it.authoritativeRevision })
+        assertEquals(listOf(2L, 2L), outcomes.map { it.nextExpectedClientSequence })
+        coordinator.close()
+    }
+
+    @Test
+    fun `malformed command id is dropped without killing host command processing`() = runTest {
+        val room = RecordingRoom(isHost = true, selfPlayerId = PlayerId("host"))
+        var applied = 0
+        var id = 0
+        val coordinator = HostAuthoritativeSessionCoordinator(
+            room = room,
+            protocol = protocol,
+            remotePlayers = setOf(peerId),
+            scope = this,
+            applyCommand = { _, _ ->
+                applied += 1
+                CommandApplication.Applied
+            },
+            snapshotFor = { PlayerSnapshotPayload(byteArrayOf(), byteArrayOf()) },
+            heartbeatIntervalMs = 0,
+            idGenerator = { "host-malformed-${(++id).toString().padStart(16, '0')}" },
+        )
+
+        room.receive(command(id = "bad", clientSequence = 1, expectedRevision = 0))
+        room.receive(command(id = COMMAND_ONE, clientSequence = 1, expectedRevision = 0))
+        advanceUntilIdle()
+
+        assertEquals(1, applied)
+        assertEquals(
+            listOf(CommandStatus.Applied),
+            room.sent.mapNotNull { (it.message as? HostMessage.CommandResult)?.status },
+        )
+        coordinator.close()
     }
 
     @Test
@@ -216,37 +284,31 @@ class AuthoritativeSessionCoordinatorTest {
     }
 
     @Test
-    fun `peer retains sequence gap command and retries pending commands after snapshot`() = runTest {
+    fun `peer never replays sequence gap command and requests a fresh snapshot`() = runTest {
         val room = RecordingRoom(isHost = false, selfPlayerId = peerId)
-        var id = 0
         val coordinator = PeerAuthoritativeSessionCoordinator(
             room = room,
             protocol = protocol,
             selfPlayerId = peerId,
             scope = this,
             onSnapshot = { _, _ -> },
-            idGenerator = { "peer-command-${(++id).toString().padStart(16, '0')}" },
+            idGenerator = { COMMAND_ONE },
         )
         coordinator.submit(byteArrayOf(1))
-        coordinator.submit(byteArrayOf(2))
-        val initial = room.sentToHost.filterIsInstance<PeerMessage.ClientCommand>()
-        val second = initial.single { it.clientSequence == 2L }
         room.sentToHost.clear()
 
         room.receive(
             HostMessage.CommandResult(
                 header = header(sequence = 1),
-                commandId = second.commandId,
+                commandId = COMMAND_ONE,
                 status = CommandStatus.SequenceGap,
                 authoritativeRevision = 0L,
             ),
         )
-        room.receive(snapshot(sequence = 2, revision = 0, public = 0, private = 0))
         advanceUntilIdle()
 
-        val retried = room.sentToHost.filterIsInstance<PeerMessage.ClientCommand>()
-        assertEquals(listOf(1L, 2L), retried.map(PeerMessage.ClientCommand::clientSequence))
-        assertEquals(second.commandId, retried.last().commandId)
+        assertTrue(room.sentToHost.none { it is PeerMessage.ClientCommand })
+        assertTrue(room.sentToHost.any { it is PeerMessage.SnapshotRequest })
         coordinator.close()
     }
 
@@ -286,7 +348,7 @@ class AuthoritativeSessionCoordinatorTest {
     }
 
     @Test
-    fun `peer retries a sequence gap immediately when its snapshot arrived first`() = runTest {
+    fun `peer allows only one mutating command in flight`() = runTest {
         val room = RecordingRoom(isHost = false, selfPlayerId = peerId)
         var id = 0
         val coordinator = PeerAuthoritativeSessionCoordinator(
@@ -297,32 +359,16 @@ class AuthoritativeSessionCoordinatorTest {
             onSnapshot = { _, _ -> },
             idGenerator = { "peer-command-${(++id).toString().padStart(16, '0')}" },
         )
-        coordinator.submit(byteArrayOf(1))
-        coordinator.submit(byteArrayOf(2))
-        val second = room.sentToHost
-            .filterIsInstance<PeerMessage.ClientCommand>()
-            .single { it.clientSequence == 2L }
-        room.sentToHost.clear()
+        assertTrue(coordinator.submit(byteArrayOf(1)) is Result.Success)
+        val second = coordinator.submit(byteArrayOf(2))
 
-        room.receive(snapshot(sequence = 9, revision = 0, public = 0, private = 0))
-        room.receive(
-            HostMessage.CommandResult(
-                header = header(sequence = 3),
-                commandId = second.commandId,
-                status = CommandStatus.SequenceGap,
-                authoritativeRevision = 0L,
-            ),
-        )
-        advanceUntilIdle()
-
-        val retried = room.sentToHost.filterIsInstance<PeerMessage.ClientCommand>()
-        assertEquals(listOf(1L, 2L), retried.map(PeerMessage.ClientCommand::clientSequence))
-        assertEquals(second.commandId, retried.last().commandId)
+        assertEquals(NetError.CommandInFlight, (second as Result.Failure).error)
+        assertEquals(1, room.sentToHost.filterIsInstance<PeerMessage.ClientCommand>().size)
         coordinator.close()
     }
 
     @Test
-    fun `peer retains a prevalidated command across send failure and retries on restore`() = runTest {
+    fun `peer queries ambiguous send outcome on restore without replaying command`() = runTest {
         val room = RecordingRoom(isHost = false, selfPlayerId = peerId)
         room.sendToHostError = NetError.Timeout
         val coordinator = PeerAuthoritativeSessionCoordinator(
@@ -341,7 +387,40 @@ class AuthoritativeSessionCoordinatorTest {
         room.emitEvent(PeerEvent.HostRestored)
         advanceUntilIdle()
 
-        assertTrue(room.sentToHost.any { it is PeerMessage.ClientCommand })
+        assertTrue(room.sentToHost.none { it is PeerMessage.ClientCommand })
+        assertTrue(room.sentToHost.any { it is PeerMessage.CommandOutcomeRequest })
+        coordinator.close()
+    }
+
+    @Test
+    fun `unknown command outcome releases in flight command and reuses host sequence`() = runTest {
+        val room = RecordingRoom(isHost = false, selfPlayerId = peerId)
+        var id = 0
+        val coordinator = PeerAuthoritativeSessionCoordinator(
+            room = room,
+            protocol = protocol,
+            selfPlayerId = peerId,
+            scope = this,
+            onSnapshot = { _, _ -> },
+            idGenerator = { "peer-command-${(++id).toString().padStart(16, '0')}" },
+        )
+
+        val first = coordinator.submit(byteArrayOf(1))
+        assertTrue(first is Result.Success)
+        room.receive(
+            HostMessage.CommandResult(
+                header = header(sequence = 1),
+                commandId = first.data.commandId,
+                status = CommandStatus.UnknownCommand,
+                authoritativeRevision = 0L,
+                nextExpectedClientSequence = 1L,
+            ),
+        )
+        advanceUntilIdle()
+
+        val second = coordinator.submit(byteArrayOf(2))
+        assertTrue(second is Result.Success)
+        assertEquals(1L, second.data.clientSequence)
         coordinator.close()
     }
 

@@ -8,6 +8,7 @@ import com.parlor.networking.protocol.PARLOR_PROTOCOL_MAJOR
 import com.parlor.networking.protocol.PeerMessage
 import com.parlor.networking.protocol.ProtocolVersion
 import com.parlor.networking.protocol.RoomMessage
+import com.parlor.networking.protocol.RoomMessageCodec
 import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.NetError
 import com.parlor.networking.room.PendingAdmission
@@ -52,7 +53,6 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withTimeout
 import kotlinx.coroutines.withTimeoutOrNull
-import kotlinx.serialization.json.Json
 
 /**
  * Transport diagnostics are disabled by default. Room codes, peer identifiers,
@@ -75,8 +75,7 @@ private fun p2pLog(message: String) = Unit
  *    nearby Parlor peers, connects, and proves the room code inside the
  *    encrypted channel before returning a [PeerP2pRoom].
  *
- * Wire format: `RoomMessage` is `@Serializable`, so we JSON-encode the
- * `HostMessage` / `PeerMessage` envelope and ship it as
+ * Wire format: `RoomMessage` is compact CBOR encoded and shipped as
  * `P2pMessage.Binary`. P2pKit's text channel is reserved; only the binary
  * path is used so Parlor can enforce a smaller application-frame ceiling than
  * P2pKit's general transfer API.
@@ -86,11 +85,7 @@ class P2pKitRoomTransport(
     private val deviceName: String,
     private val scope: CoroutineScope,
     private val kitFactory: P2pKitFactory,
-    private val json: Json = Json {
-        ignoreUnknownKeys = false
-        isLenient = false
-        encodeDefaults = true
-    },
+    private val codec: RoomMessageCodec = RoomMessageCodec(),
     // Upper bound on how long [join] will wait for a matching, *fresh*
     // host advertisement before failing with [NetError.Timeout]. Kept
     // configurable so tests can fail quickly instead of waiting the full
@@ -143,7 +138,7 @@ class P2pKitRoomTransport(
                 roomDisplayName = config.roomDisplayName,
                 hostPlayerId = PlayerId(kit.localPeerId.value),
                 scope = scope,
-                json = json,
+                codec = codec,
             )
             try {
                 p2pLog("host: start() returned; calling startAdvertising()")
@@ -227,7 +222,7 @@ class P2pKitRoomTransport(
                                     roomCode = config.code,
                                     rejoinToken = admission.rejoinToken,
                                     scope = scope,
-                                    json = json,
+                                    codec = codec,
                                 ),
                             )
                         }
@@ -279,7 +274,7 @@ class P2pKitRoomTransport(
                 .mapNotNull { frame ->
                     if (frame.bytes.size > MAX_ROOM_FRAME_BYTES) return@mapNotNull null
                     runCatching {
-                        json.decodeFromString(RoomMessage.serializer(), frame.bytes.decodeToString())
+                        codec.decode(frame.bytes)
                     }.getOrNull() as? HostMessage
                 }
                 .first {
@@ -293,9 +288,7 @@ class P2pKitRoomTransport(
             displayName = displayName,
             rejoinToken = rejoinToken,
         )
-        val requestBytes = json
-            .encodeToString(RoomMessage.serializer(), request)
-            .encodeToByteArray()
+        val requestBytes = codec.encode(request)
         check(requestBytes.size <= MAX_ROOM_FRAME_BYTES)
         while (!response.isCompleted) {
             session.send(P2pMessage.Binary(requestBytes))
@@ -377,7 +370,8 @@ class P2pKitRoomTransport(
         internal const val LEAVE_NOTICE_FLUSH_MS: Long = 100L
         // Application messages are intentionally much smaller than P2pKit's
         // general 4 MiB transfer ceiling.
-        internal const val MAX_ROOM_FRAME_BYTES: Int = 600 * 1024
+        internal const val MAX_ROOM_FRAME_BYTES: Int =
+            com.parlor.networking.protocol.MAX_ROOM_FRAME_BYTES
     }
 }
 
@@ -403,7 +397,7 @@ internal class HostP2pRoom(
     roomDisplayName: String,
     private val hostPlayerId: PlayerId,
     private val scope: CoroutineScope,
-    private val json: Json,
+    private val codec: RoomMessageCodec,
 ) : LocalRoom {
 
     override val selfPlayerId: PlayerId = hostPlayerId
@@ -496,7 +490,7 @@ internal class HostP2pRoom(
                 // throw out of this collect — that would cancel the coroutine and
                 // permanently kill THIS session's inbound stream. Skip + log.
                 val rawDecoded = runCatching {
-                    json.decodeFromString(RoomMessage.serializer(), msg.bytes.decodeToString())
+                    codec.decode(msg.bytes)
                 }.getOrElse {
                     p2pLog("host: dropping undecodable frame from peerId=${playerId.raw} (${it::class.simpleName})")
                     return@collect
@@ -512,6 +506,7 @@ internal class HostP2pRoom(
                     is PeerMessage.ClientCommand -> rawDecoded.copy(actor = playerId)
                     is PeerMessage.SnapshotRequest -> rawDecoded.copy(actor = playerId)
                     is PeerMessage.SessionHeartbeat -> rawDecoded.copy(actor = playerId)
+                    is PeerMessage.CommandOutcomeRequest -> rawDecoded.copy(actor = playerId)
                     else -> rawDecoded
                 }
                 val admitted = stateMutex.withLock {
@@ -759,7 +754,7 @@ internal class HostP2pRoom(
     }
 
     private suspend fun sendRaw(session: P2pSession, message: HostMessage) {
-        val bytes = json.encodeToString(RoomMessage.serializer(), message).encodeToByteArray()
+        val bytes = codec.encode(message)
         check(bytes.size <= P2pKitRoomTransport.MAX_ROOM_FRAME_BYTES)
         session.send(P2pMessage.Binary(bytes))
     }
@@ -816,8 +811,9 @@ internal class HostP2pRoom(
     }
 
     override suspend fun send(target: SendTarget, message: HostMessage): Result<Unit, NetError> {
-        val bytes = json.encodeToString(RoomMessage.serializer(), message).encodeToByteArray()
-        if (bytes.size > P2pKitRoomTransport.MAX_ROOM_FRAME_BYTES) {
+        val bytes = try {
+            codec.encode(message)
+        } catch (_: IllegalArgumentException) {
             return Result.Failure(NetError.PayloadTooLarge)
         }
         val payload = P2pMessage.Binary(bytes)
@@ -905,7 +901,7 @@ internal class PeerP2pRoom(
     hostPeer: Peer,
     private val roomCode: String,
     scope: CoroutineScope,
-    private val json: Json,
+    private val codec: RoomMessageCodec,
     rejoinToken: String? = null,
 ) : LocalRoom {
 
@@ -958,7 +954,7 @@ internal class PeerP2pRoom(
                 // p2p-002: a malformed host frame must not cancel this collector
                 // (which would permanently sever the peer's inbound stream).
                 val decoded = runCatching {
-                    json.decodeFromString(RoomMessage.serializer(), msg.bytes.decodeToString())
+                    codec.decode(msg.bytes)
                 }.getOrElse {
                     p2pLog("peer: dropping undecodable host frame (${it::class.simpleName})")
                     return@collect
@@ -1043,7 +1039,7 @@ internal class PeerP2pRoom(
             displayName = kit.localDeviceName,
             rejoinToken = token,
         )
-        val bytes = json.encodeToString(RoomMessage.serializer(), request).encodeToByteArray()
+        val bytes = codec.encode(request)
         val accepted = withTimeoutOrNull(REJOIN_ADMISSION_TIMEOUT_MS) {
             var decision: Boolean? = null
             while (decision == null) {
@@ -1072,11 +1068,12 @@ internal class PeerP2pRoom(
         if (session.state.value != ConnectionState.Connected) {
             return Result.Failure(NetError.NotConnected)
         }
+        val bytes = try {
+            codec.encode(message)
+        } catch (_: IllegalArgumentException) {
+            return Result.Failure(NetError.PayloadTooLarge)
+        }
         return runCatching {
-            val bytes = json.encodeToString(RoomMessage.serializer(), message).encodeToByteArray()
-            if (bytes.size > P2pKitRoomTransport.MAX_ROOM_FRAME_BYTES) {
-                return Result.Failure(NetError.PayloadTooLarge)
-            }
             val payload = P2pMessage.Binary(bytes)
             session.send(payload)
         }.fold(
@@ -1100,10 +1097,7 @@ internal class PeerP2pRoom(
         if (session.state.value == ConnectionState.Connected) {
             runCatching {
                 val notice = P2pMessage.Binary(
-                    json.encodeToString(
-                        RoomMessage.serializer(),
-                        PeerMessage.LeaveNotice,
-                    ).encodeToByteArray(),
+                    codec.encode(PeerMessage.LeaveNotice),
                 )
                 session.send(notice)
                 p2pLog("peer: sent LeaveNotice to host")

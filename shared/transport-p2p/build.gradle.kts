@@ -10,7 +10,6 @@ kotlin {
             api(project(":shared:networking"))
             implementation(project(":shared:session"))
             implementation(libs.kotlinx.coroutines.core)
-            implementation(libs.kotlinx.serialization.json)
             implementation(libs.p2pkit.core)
             implementation(libs.p2pkit.transport.lan)
             implementation(libs.koin.core)

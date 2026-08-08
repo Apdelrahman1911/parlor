@@ -17,7 +17,11 @@ class ProtocolValidationTest {
     fun `rejects incompatible protocol game and session`() {
         assertEquals(
             ProtocolValidation.IncompatibleProtocol,
-            header(protocol = ProtocolVersion(2, 0)).validateFor(session),
+            header(protocol = ProtocolVersion(PARLOR_PROTOCOL_MAJOR + 1, 0)).validateFor(session),
+        )
+        assertEquals(
+            ProtocolValidation.IncompatibleProtocol,
+            header(protocol = ProtocolVersion(PARLOR_PROTOCOL_MAJOR, 1)).validateFor(session),
         )
         assertEquals(
             ProtocolValidation.WrongGame,
@@ -63,14 +67,46 @@ class ProtocolValidationTest {
         val snapshot = HostMessage.PlayerSnapshot(
             header = header(sequence = 8),
             revision = 8,
-            publicPayload = ByteArray(MAX_SNAPSHOT_PAYLOAD_BYTES),
-            privatePayload = ByteArray(MAX_SNAPSHOT_PAYLOAD_BYTES),
+            publicPayload = ByteArray(MAX_SNAPSHOT_PAYLOAD_BYTES / 2),
+            privatePayload = ByteArray(MAX_SNAPSHOT_PAYLOAD_BYTES / 2),
         )
         assertEquals(ProtocolValidation.Valid, snapshot.validateFor(session))
         assertEquals(
             ProtocolValidation.SnapshotPayloadTooLarge,
-            snapshot.copy(privatePayload = ByteArray(MAX_SNAPSHOT_PAYLOAD_BYTES + 1))
+            snapshot.copy(privatePayload = ByteArray(MAX_SNAPSHOT_PAYLOAD_BYTES / 2 + 1))
                 .validateFor(session),
+        )
+    }
+
+    @Test
+    fun `validates epoch and control message semantics`() {
+        assertEquals(
+            ProtocolValidation.WrongConnectionEpoch,
+            header().copy(connectionEpoch = 2L).validateFor(session),
+        )
+        assertEquals(
+            ProtocolValidation.InvalidRevision,
+            HostMessage.CommandResult(
+                header = header(sequence = 1),
+                commandId = MESSAGE_ID,
+                status = CommandStatus.Applied,
+                authoritativeRevision = -1,
+            ).validateFor(session),
+        )
+        assertEquals(
+            ProtocolValidation.InvalidRevision,
+            HostMessage.Heartbeat(
+                header = header(sequence = 2),
+                authoritativeRevision = -1,
+            ).validateFor(session),
+        )
+        assertEquals(
+            ProtocolValidation.InvalidRevision,
+            HostMessage.SessionEnded(
+                header = header(sequence = 3),
+                reason = SessionEndReason.HostLeft,
+                finalRevision = -1,
+            ).validateFor(session),
         )
     }
 

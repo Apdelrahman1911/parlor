@@ -36,5 +36,7 @@ sealed interface SubmitError {
     data object IllegalForPhase : SubmitError
     data object UnknownPlayer : SubmitError
     data class RejectedByReducer(val reason: String) : SubmitError
+    /** Another host-authoritative mutation is awaiting an explicit outcome. */
+    data object CommandPending : SubmitError
     data object SessionClosed : SubmitError
 }

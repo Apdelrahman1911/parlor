@@ -66,10 +66,11 @@ class HostAuthoritativeSessionCoordinator(
         data object Heartbeat : Work
     }
 
-    private val mailbox = Channel<Work>(Channel.UNLIMITED)
+    private val mailbox = Channel<Work>(HOST_MAILBOX_CAPACITY)
     private val nextClientSequence = mutableMapOf<PlayerId, Long>()
-    private val commandResults = mutableMapOf<String, HostMessage.CommandResult>()
-    private val commandOrder = ArrayDeque<String>()
+    private data class CommandKey(val actor: PlayerId, val commandId: String)
+    private val commandResults = mutableMapOf<CommandKey, HostMessage.CommandResult>()
+    private val commandOrder = ArrayDeque<CommandKey>()
     private var hostSequence: Long = 0L
 
     private val _revision = MutableStateFlow(0L)
@@ -132,7 +133,7 @@ class HostAuthoritativeSessionCoordinator(
             is PeerMessage.SnapshotRequest -> {
                 if (
                     message.actor in remotePlayers &&
-                    message.header.validateFor(protocol) == ProtocolValidation.Valid
+                    message.validateFor(protocol) == ProtocolValidation.Valid
                 ) {
                     sendSnapshot(message.actor)
                 }
@@ -140,13 +141,41 @@ class HostAuthoritativeSessionCoordinator(
             is PeerMessage.SessionHeartbeat -> {
                 if (
                     message.actor in remotePlayers &&
-                    message.header.validateFor(protocol) == ProtocolValidation.Valid &&
+                    message.validateFor(protocol) == ProtocolValidation.Valid &&
                     message.lastAppliedRevision < _revision.value
                 ) {
                     sendSnapshot(message.actor)
                 }
             }
+            is PeerMessage.CommandOutcomeRequest -> processOutcomeRequest(message)
             else -> Unit
+        }
+    }
+
+    private suspend fun processOutcomeRequest(request: PeerMessage.CommandOutcomeRequest) {
+        if (
+            request.actor !in remotePlayers ||
+            request.validateFor(protocol) != ProtocolValidation.Valid
+        ) {
+            return
+        }
+        val recorded = commandResults[CommandKey(request.actor, request.commandId)]
+        if (recorded == null) {
+            sendResult(
+                actor = request.actor,
+                commandId = request.commandId,
+                status = CommandStatus.UnknownCommand,
+                remember = false,
+            )
+        } else {
+            sendResult(
+                actor = request.actor,
+                commandId = request.commandId,
+                status = recorded.status,
+                authoritativeRevision = recorded.authoritativeRevision,
+                nextExpectedClientSequence = recorded.nextExpectedClientSequence,
+                remember = false,
+            )
         }
     }
 
@@ -170,9 +199,17 @@ class HostAuthoritativeSessionCoordinator(
             return
         }
 
-        val cached = commandResults[command.commandId]
+        val commandKey = CommandKey(actor, command.commandId)
+        val cached = commandResults[commandKey]
         if (cached != null) {
-            sendResult(actor, command.commandId, CommandStatus.Duplicate, remember = false)
+            sendResult(
+                actor = actor,
+                commandId = command.commandId,
+                status = cached.status,
+                authoritativeRevision = cached.authoritativeRevision,
+                nextExpectedClientSequence = cached.nextExpectedClientSequence,
+                remember = false,
+            )
             return
         }
 
@@ -233,21 +270,33 @@ class HostAuthoritativeSessionCoordinator(
         commandId: String,
         status: CommandStatus,
         remember: Boolean,
+        authoritativeRevision: Long = _revision.value,
+        nextExpectedClientSequence: Long = nextClientSequence[actor] ?: 1L,
     ) {
         if (actor !in remotePlayers) return
         val result = HostMessage.CommandResult(
             header = nextHeader(),
             commandId = commandId,
             status = status,
-            authoritativeRevision = _revision.value,
+            authoritativeRevision = authoritativeRevision,
+            nextExpectedClientSequence = nextExpectedClientSequence,
         )
-        if (remember) remember(result)
+        when (val validation = result.validateFor(protocol)) {
+            ProtocolValidation.Valid -> Unit
+            // The command id is supplied by an untrusted peer. There is no
+            // safe correlation id for a rejection when it is malformed, so
+            // drop it instead of crashing the host's single-writer loop.
+            ProtocolValidation.InvalidMessageId -> return
+            else -> error("Host generated an invalid command result: $validation")
+        }
+        if (remember) remember(actor, result)
         room.send(SendTarget.Direct(actor), result)
     }
 
-    private fun remember(result: HostMessage.CommandResult) {
-        commandResults[result.commandId] = result
-        commandOrder.addLast(result.commandId)
+    private fun remember(actor: PlayerId, result: HostMessage.CommandResult) {
+        val key = CommandKey(actor, result.commandId)
+        commandResults[key] = result
+        commandOrder.addLast(key)
         while (commandOrder.size > MAX_REMEMBERED_COMMANDS) {
             commandResults.remove(commandOrder.removeFirst())
         }
@@ -258,6 +307,7 @@ class HostAuthoritativeSessionCoordinator(
             header = nextHeader(),
             authoritativeRevision = _revision.value,
         )
+        check(message.validateFor(protocol) == ProtocolValidation.Valid)
         room.send(SendTarget.Broadcast, message)
     }
 
@@ -267,6 +317,7 @@ class HostAuthoritativeSessionCoordinator(
             reason = reason,
             finalRevision = _revision.value,
         )
+        check(message.validateFor(protocol) == ProtocolValidation.Valid)
         room.send(SendTarget.Broadcast, message)
     }
 
@@ -277,11 +328,13 @@ class HostAuthoritativeSessionCoordinator(
         gameVersion = protocol.gameVersion,
         messageId = idGenerator(),
         sequence = ++hostSequence,
+        connectionEpoch = protocol.connectionEpoch,
     )
 
     private companion object {
         const val DEFAULT_HEARTBEAT_INTERVAL_MS = 10_000L
-        const val MAX_REMEMBERED_COMMANDS = 1_024
+        const val HOST_MAILBOX_CAPACITY = 8
+        const val MAX_REMEMBERED_COMMANDS = 256
     }
 }
 
@@ -316,13 +369,12 @@ class PeerAuthoritativeSessionCoordinator(
     private val _revision = MutableStateFlow(0L)
     val revision: StateFlow<Long> = _revision.asStateFlow()
 
-    private val _results = MutableSharedFlow<HostMessage.CommandResult>(extraBufferCapacity = 64)
+    private val _results = MutableSharedFlow<HostMessage.CommandResult>(extraBufferCapacity = 16)
     val results: SharedFlow<HostMessage.CommandResult> = _results.asSharedFlow()
 
     private val pending = linkedMapOf<String, PeerMessage.ClientCommand>()
     private var nextClientSequence = 1L
     private var lastInstalledSnapshotRevision = -1L
-    private var retryAfterSnapshot = false
     private var terminalAccepted = false
     private val seenHostMessageIds = mutableSetOf<String>()
     private val seenHostMessageOrder = ArrayDeque<String>()
@@ -345,7 +397,7 @@ class PeerAuthoritativeSessionCoordinator(
             room.peerEvents.collect { event ->
                 if (event == com.parlor.networking.room.PeerEvent.HostRestored) {
                     requestSnapshot()
-                    retryPending()
+                    requestPendingOutcomes()
                 }
             }
         }
@@ -356,6 +408,7 @@ class PeerAuthoritativeSessionCoordinator(
             return Result.Failure(NetError.PayloadTooLarge)
         }
         val command = stateMutex.withLock {
+            if (pending.isNotEmpty()) return Result.Failure(NetError.CommandInFlight)
             val commandId = idGenerator()
             val clientSequence = nextClientSequence++
             PeerMessage.ClientCommand(
@@ -418,19 +471,14 @@ class PeerAuthoritativeSessionCoordinator(
             ),
             snapshot.revision,
         )
-        val shouldRetry = stateMutex.withLock {
-            retryAfterSnapshot.also { retryAfterSnapshot = false }
-        }
-        if (shouldRetry) retryPending()
     }
 
     private suspend fun acceptResult(result: HostMessage.CommandResult) {
-        val validation = result.header.validateFor(protocol)
+        val validation = result.validateFor(protocol)
         if (validation != ProtocolValidation.Valid) {
             onProtocolViolation(validation)
             return
         }
-        var retryNow = false
         val accepted = stateMutex.withLock {
             if (
                 terminalAccepted ||
@@ -439,25 +487,23 @@ class PeerAuthoritativeSessionCoordinator(
             ) {
                 false
             } else {
-                if (result.status == CommandStatus.SequenceGap) {
-                    if (lastInstalledSnapshotRevision >= result.authoritativeRevision) {
-                        retryNow = true
-                    } else {
-                        retryAfterSnapshot = true
-                    }
-                } else {
-                    pending.remove(result.commandId)
-                }
+                nextClientSequence = result.nextExpectedClientSequence
+                pending.remove(result.commandId)
                 true
             }
         }
         if (!accepted) return
         _results.tryEmit(result)
-        if (retryNow) retryPending()
+        if (
+            result.status == CommandStatus.SequenceGap ||
+            result.status == CommandStatus.StaleRevision
+        ) {
+            requestSnapshot()
+        }
     }
 
     private suspend fun acceptHeartbeat(heartbeat: HostMessage.Heartbeat) {
-        val validation = heartbeat.header.validateFor(protocol)
+        val validation = heartbeat.validateFor(protocol)
         if (validation != ProtocolValidation.Valid) {
             onProtocolViolation(validation)
             return
@@ -476,7 +522,7 @@ class PeerAuthoritativeSessionCoordinator(
     }
 
     private suspend fun acceptSessionEnded(ended: HostMessage.SessionEnded) {
-        val validation = ended.header.validateFor(protocol)
+        val validation = ended.validateFor(protocol)
         if (validation != ProtocolValidation.Valid) {
             onProtocolViolation(validation)
             return
@@ -492,7 +538,6 @@ class PeerAuthoritativeSessionCoordinator(
                 terminalAccepted = true
                 _revision.value = ended.finalRevision
                 pending.clear()
-                retryAfterSnapshot = false
                 true
             }
         }
@@ -515,13 +560,24 @@ class PeerAuthoritativeSessionCoordinator(
         return true
     }
 
-    private suspend fun retryPending() {
-        val commands = stateMutex.withLock {
-            pending.values.toList().sortedBy(PeerMessage.ClientCommand::clientSequence)
+    /**
+     * Reconcile an ambiguous local send after reconnect without replaying a
+     * potentially non-idempotent game action.
+     */
+    suspend fun requestPendingOutcomes(): Result<Unit, NetError> {
+        val commands = stateMutex.withLock { pending.values.toList() }
+        for (command in commands) {
+            val request = PeerMessage.CommandOutcomeRequest(
+                header = peerHeader(command.commandId),
+                actor = selfPlayerId,
+                commandId = command.commandId,
+            )
+            when (val sent = room.sendToHost(request)) {
+                is Result.Success -> Unit
+                is Result.Failure -> return Result.Failure(sent.error)
+            }
         }
-        commands.forEach { command ->
-            room.sendToHost(command)
-        }
+        return Result.Success(Unit)
     }
 
     private fun peerHeader(messageId: String): SessionEnvelopeHeader = SessionEnvelopeHeader(
@@ -531,6 +587,7 @@ class PeerAuthoritativeSessionCoordinator(
         gameVersion = protocol.gameVersion,
         messageId = messageId,
         sequence = 0L,
+        connectionEpoch = protocol.connectionEpoch,
     )
 
     private companion object {

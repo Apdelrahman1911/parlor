@@ -2,13 +2,16 @@ package com.parlor.games.whodunit.multidevice
 
 import assertk.assertThat
 import assertk.assertions.hasSize
+import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
-import assertk.assertions.isNotEqualTo
+import assertk.assertions.isInstanceOf
 import com.parlor.core.ids.CaseId
 import com.parlor.core.ids.CharacterId
 import com.parlor.core.ids.ModeId
 import com.parlor.core.ids.PlayerId
 import com.parlor.core.ids.SessionId
+import com.parlor.core.result.Result
+import com.parlor.engine.session.SubmitError
 import com.parlor.engine.state.Player
 import com.parlor.games.whodunit.WhodunitIds
 import com.parlor.games.whodunit.domain.action.WhodunitAction
@@ -23,9 +26,6 @@ import com.parlor.networking.protocol.SessionProtocol
 import com.parlor.session.multidevice.InMemoryPeerRoom
 import com.parlor.session.multidevice.InMemoryRoomBus
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.filterIsInstance
-import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -34,10 +34,9 @@ import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 
 /**
- * Offline intent is retained as its original immutable ClientCommand. Retries
- * preserve the id/sequence for host deduplication, while multiple intents keep
- * increasing sequences and the same expected revision so only a valid
- * authoritative order can apply.
+ * Ambiguous offline intent is never replayed. Restore sends an idempotent
+ * outcome query for the original command id, and a second mutation is rejected
+ * until the host resolves that command.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 class QueuedActionSafetyTest {
@@ -76,15 +75,22 @@ class QueuedActionSafetyTest {
     )
 
     @Test
-    fun repeated_restore_retries_the_same_command_identity() = runTest {
+    fun repeated_restore_queries_the_same_command_without_replaying_it() = runTest {
         val scope = TestScope(UnconfinedTestDispatcher(testScheduler))
         val bus = InMemoryRoomBus()
         bus.registerPeer(alice)
         val room = InMemoryPeerRoom(bus, alice, "Alice", hostId)
         val bridge = bridge(scope, room)
         val commands = mutableListOf<PeerMessage.ClientCommand>()
+        val outcomeQueries = mutableListOf<PeerMessage.CommandOutcomeRequest>()
         val collector = scope.launch {
-            bus.hostMessagesIn.filterIsInstance<PeerMessage.ClientCommand>().take(2).toList(commands)
+            bus.hostMessagesIn.collect { message ->
+                when (message) {
+                    is PeerMessage.ClientCommand -> commands += message
+                    is PeerMessage.CommandOutcomeRequest -> outcomeQueries += message
+                    else -> Unit
+                }
+            }
         }
 
         room.simulateNotConnected = true
@@ -95,40 +101,44 @@ class QueuedActionSafetyTest {
         bus.emitHostRestored()
         runCurrent()
 
-        assertThat(commands).hasSize(2)
-        assertThat(commands[1].commandId).isEqualTo(commands[0].commandId)
-        assertThat(commands[1].clientSequence).isEqualTo(commands[0].clientSequence)
-        assertThat(commands[1].expectedRevision).isEqualTo(commands[0].expectedRevision)
+        assertThat(commands).isEmpty()
+        assertThat(outcomeQueries).hasSize(2)
+        assertThat(outcomeQueries[1].commandId).isEqualTo(outcomeQueries[0].commandId)
 
         collector.cancel()
         bridge.close()
     }
 
     @Test
-    fun multiple_offline_intents_keep_order_and_cannot_share_command_identity() = runTest {
+    fun second_offline_intent_is_rejected_while_first_outcome_is_unknown() = runTest {
         val scope = TestScope(UnconfinedTestDispatcher(testScheduler))
         val bus = InMemoryRoomBus()
         bus.registerPeer(alice)
         val room = InMemoryPeerRoom(bus, alice, "Alice", hostId)
         val bridge = bridge(scope, room)
         val commands = mutableListOf<PeerMessage.ClientCommand>()
+        val outcomeQueries = mutableListOf<PeerMessage.CommandOutcomeRequest>()
         val collector = scope.launch {
-            bus.hostMessagesIn.filterIsInstance<PeerMessage.ClientCommand>().take(2).toList(commands)
+            bus.hostMessagesIn.collect { message ->
+                when (message) {
+                    is PeerMessage.ClientCommand -> commands += message
+                    is PeerMessage.CommandOutcomeRequest -> outcomeQueries += message
+                    else -> Unit
+                }
+            }
         }
 
         room.simulateNotConnected = true
         bridge.controller.submit(WhodunitAction.AcknowledgeIntro(alice))
-        bridge.controller.submit(WhodunitAction.AcknowledgeBriefing(alice))
+        val second = bridge.controller.submit(WhodunitAction.AcknowledgeBriefing(alice))
         room.simulateNotConnected = false
         bus.emitHostRestored()
         runCurrent()
 
-        assertThat(commands).hasSize(2)
-        assertThat(commands[0].clientSequence).isEqualTo(1L)
-        assertThat(commands[1].clientSequence).isEqualTo(2L)
-        assertThat(commands[0].commandId).isNotEqualTo(commands[1].commandId)
-        assertThat(commands[0].expectedRevision).isEqualTo(0L)
-        assertThat(commands[1].expectedRevision).isEqualTo(0L)
+        assertThat(second).isInstanceOf(Result.Failure::class)
+        assertThat((second as Result.Failure).error).isEqualTo(SubmitError.CommandPending)
+        assertThat(commands).isEmpty()
+        assertThat(outcomeQueries).hasSize(1)
 
         collector.cancel()
         bridge.close()

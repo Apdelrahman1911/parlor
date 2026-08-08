@@ -31,8 +31,9 @@ import kotlin.test.Test
 
 /**
  * Wave 9H-5: when `sendToHost` returns [com.parlor.networking.room.NetError.NotConnected],
- * the peer bridge emits [PeerEvent.SelfOffline] and queues the failed
- * action. The next successful send emits [PeerEvent.SelfOnline].
+ * the peer bridge emits [PeerEvent.SelfOffline]. A transport restoration
+ * emits [PeerEvent.SelfOnline] while the coordinator reconciles the ambiguous
+ * command through an outcome query rather than replaying the action.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 class SelfOfflineTimeoutTest {
@@ -59,7 +60,7 @@ class SelfOfflineTimeoutTest {
     )
 
     @Test
-    fun send_failure_emits_self_offline_and_next_success_emits_self_online() = runTest {
+    fun send_failure_emits_self_offline_and_host_restore_emits_self_online() = runTest {
         val dispatcher = UnconfinedTestDispatcher(testScheduler)
         val scope = TestScope(dispatcher)
         val bus = InMemoryRoomBus()
@@ -92,9 +93,10 @@ class SelfOfflineTimeoutTest {
 
         assertThat(received).contains(PeerEvent.SelfOffline)
 
-        // Restore the transport and let the next submit complete.
+        // Restore the transport. The original action remains pending until an
+        // authoritative outcome; it is not silently replayed.
         room.simulateNotConnected = false
-        bridge.controller.submit(WhodunitAction.AcknowledgeBriefing(alice))
+        bus.emitHostRestored()
         runCurrent()
 
         assertThat(received).contains(PeerEvent.SelfOnline)

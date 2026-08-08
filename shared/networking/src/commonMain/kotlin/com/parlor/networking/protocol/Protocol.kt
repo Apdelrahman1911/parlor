@@ -17,17 +17,24 @@ import kotlinx.serialization.Serializable
 @Serializable
 sealed interface RoomMessage
 
-const val PARLOR_PROTOCOL_MAJOR: Int = 1
+const val PARLOR_PROTOCOL_MAJOR: Int = 2
 const val PARLOR_PROTOCOL_MINOR: Int = 0
 const val MAX_COMMAND_PAYLOAD_BYTES: Int = 32 * 1024
 const val MAX_SNAPSHOT_PAYLOAD_BYTES: Int = 256 * 1024
+const val MAX_CONTROL_PAYLOAD_BYTES: Int = 8 * 1024
+const val MAX_ROOM_FRAME_BYTES: Int = 272 * 1024
 
 @Serializable
 data class ProtocolVersion(
     val major: Int = PARLOR_PROTOCOL_MAJOR,
     val minor: Int = PARLOR_PROTOCOL_MINOR,
 ) {
-    fun isCompatibleWith(other: ProtocolVersion): Boolean = major == other.major
+    /**
+     * Parlor currently uses a strict schema. Minor versions are therefore
+     * compatible only when they are equal; claiming major-only compatibility
+     * would let a newer optional field fail an older strict decoder.
+     */
+    fun isCompatibleWith(other: ProtocolVersion): Boolean = this == other
 }
 
 @Serializable
@@ -39,6 +46,8 @@ data class SessionEnvelopeHeader(
     val messageId: String,
     /** Host message sequence. Peer messages use zero; commands have clientSequence. */
     val sequence: Long,
+    /** Rejects delayed frames from a replaced physical connection. */
+    val connectionEpoch: Long = 1L,
 )
 
 @Serializable
@@ -63,6 +72,7 @@ enum class CommandStatus {
     IncompatibleVersion,
     PayloadTooLarge,
     SessionEnded,
+    UnknownCommand,
 }
 
 @Serializable
@@ -109,6 +119,8 @@ sealed interface HostMessage : RoomMessage {
         val commandId: String,
         val status: CommandStatus,
         val authoritativeRevision: Long,
+        /** The next client sequence the host will accept for this actor. */
+        val nextExpectedClientSequence: Long = 1L,
     ) : HostMessage
 
     @Serializable
@@ -203,6 +215,14 @@ sealed interface PeerMessage : RoomMessage {
         val header: SessionEnvelopeHeader,
         val actor: PlayerId,
         val lastAppliedRevision: Long,
+    ) : PeerMessage
+
+    /** Queries an idempotency-ledger outcome without replaying the command. */
+    @Serializable
+    data class CommandOutcomeRequest(
+        val header: SessionEnvelopeHeader,
+        val actor: PlayerId,
+        val commandId: String,
     ) : PeerMessage
 
     @Serializable
