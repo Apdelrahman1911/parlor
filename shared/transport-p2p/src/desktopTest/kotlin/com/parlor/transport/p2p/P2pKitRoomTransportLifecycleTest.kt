@@ -409,6 +409,164 @@ class P2pKitRoomTransportLifecycleTest {
     }
 
     @Test
+    fun host_application_queue_applies_bounded_backpressure_without_dropping_gameplay() =
+        runBlocking {
+            val kit = FakeP2pKit(P2pPeerId("host-pid"))
+            val room = newHostRoom(kit)
+            val alice = FakeP2pSession(
+                peer = peer("alice-pid", "Alice"),
+                incomingExtraBufferCapacity = 0,
+            )
+            admit(room, kit, alice)
+            val heartbeat = P2pMessage.Binary(codec.encode(PeerMessage.Heartbeat))
+
+            val producer = async {
+                // One frame may already be executing inside the collector in
+                // addition to the channel's configured buffered capacity.
+                repeat(P2pTrafficLimits.HOST_APPLICATION_QUEUE_CAPACITY + 2) {
+                    alice.incomingFlow.emit(heartbeat)
+                }
+            }
+            yield()
+            assertThat(producer.isCompleted).isFalse()
+
+            assertThat(withTimeout(2_000) { room.incoming.first() })
+                .isEqualTo(PeerMessage.Heartbeat)
+            withTimeout(2_000) { producer.await() }
+            assertThat(alice.state.value).isEqualTo(ConnectionState.Connected)
+        }
+
+    @Test
+    fun wrong_direction_frames_disconnect_only_the_modified_peer_after_three_strikes() =
+        runBlocking {
+            val kit = FakeP2pKit(P2pPeerId("host-pid"))
+            val room = newHostRoom(kit, maxRemotePlayers = 2)
+            val alice = FakeP2pSession(peer("alice-pid", "Alice"))
+            val bob = FakeP2pSession(peer("bob-pid", "Bob"))
+            admit(room, kit, alice)
+            admit(room, kit, bob)
+            val hostOnlyFrame = P2pMessage.Binary(codec.encode(HostMessage.EndSession))
+
+            repeat(P2pTrafficLimits.MAX_TRAFFIC_VIOLATIONS) {
+                alice.incomingFlow.emit(hostOnlyFrame)
+            }
+
+            awaitCondition { alice.state.value == ConnectionState.Closed }
+            assertThat(bob.state.value).isEqualTo(ConnectionState.Connected)
+            assertThat(
+                room.members.value.single { it.playerId == PlayerId("bob-pid") }.connected,
+            ).isTrue()
+        }
+
+    @Test
+    fun retransmitted_request_on_same_pending_session_is_idempotent_not_rate_limited() =
+        runBlocking {
+            val kit = FakeP2pKit(P2pPeerId("host-pid"))
+            val room = newHostRoom(kit)
+            val alice = FakeP2pSession(peer("alice-pid", "Alice"))
+            val request = P2pMessage.Binary(
+                codec.encode(
+                    PeerMessage.AdmissionRequest(
+                        protocol = ProtocolVersion(),
+                        actor = PlayerId("forged"),
+                        roomCode = "ABCDEF",
+                        displayName = "Alice",
+                    ),
+                ),
+            )
+            kit.incomingSessionsFlow.emit(alice)
+            yield()
+
+            repeat(10) { alice.incomingFlow.emit(request) }
+
+            awaitCondition { room.pendingAdmissions.value.size == 1 }
+            assertThat(alice.state.value).isEqualTo(ConnectionState.Connected)
+            assertThat(alice.admissionRejections()).isEmpty()
+        }
+
+    @Test
+    fun fourth_fresh_wrong_code_attempt_from_same_identity_is_rate_limited() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("host-pid"))
+        val room = newHostRoom(kit)
+        val attempts = mutableListOf<FakeP2pSession>()
+
+        repeat(P2pTrafficLimits.ADMISSION_PER_PEER_BURST + 1) {
+            val session = FakeP2pSession(peer("attacker-pid", "Attacker"))
+            attempts += session
+            kit.incomingSessionsFlow.emit(session)
+            yield()
+            session.incomingFlow.emit(
+                P2pMessage.Binary(
+                    codec.encode(
+                        PeerMessage.AdmissionRequest(
+                            protocol = ProtocolVersion(),
+                            actor = PlayerId("forged"),
+                            roomCode = "WRONG2",
+                            displayName = "Attacker",
+                        ),
+                    ),
+                ),
+            )
+            awaitCondition { session.state.value == ConnectionState.Closed }
+        }
+
+        attempts.take(P2pTrafficLimits.ADMISSION_PER_PEER_BURST).forEach { session ->
+            assertThat(session.admissionRejections())
+                .containsExactly(AdmissionRejection.WrongCode)
+        }
+        assertThat(attempts.last().admissionRejections())
+            .containsExactly(AdmissionRejection.RateLimited)
+    }
+
+    @Test
+    fun pending_admissions_and_pre_admission_sessions_have_hard_room_limits() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("host-pid"))
+        val room = newHostRoom(kit)
+        repeat(P2pTrafficLimits.MAX_PENDING_ADMISSION_REQUESTS) { index ->
+            requestAdmission(
+                room,
+                kit,
+                FakeP2pSession(peer("pending-$index", "Player $index")),
+            )
+        }
+        assertThat(room.pendingAdmissions.value)
+            .hasSize(P2pTrafficLimits.MAX_PENDING_ADMISSION_REQUESTS)
+
+        val overflow = FakeP2pSession(peer("pending-overflow", "Overflow"))
+        kit.incomingSessionsFlow.emit(overflow)
+        yield()
+        overflow.incomingFlow.emit(
+            P2pMessage.Binary(
+                codec.encode(
+                    PeerMessage.AdmissionRequest(
+                        protocol = ProtocolVersion(),
+                        actor = PlayerId("forged"),
+                        roomCode = "ABCDEF",
+                        displayName = "Overflow",
+                    ),
+                ),
+            ),
+        )
+        awaitCondition { overflow.state.value == ConnectionState.Closed }
+        assertThat(overflow.admissionRejections())
+            .containsExactly(AdmissionRejection.RateLimited)
+
+        val smallKit = FakeP2pKit(P2pPeerId("small-host"))
+        val smallRoom = newHostRoom(smallKit, maxRemotePlayers = 1)
+        repeat(1 + P2pTrafficLimits.SESSION_ADMISSION_HEADROOM) { index ->
+            smallKit.incomingSessionsFlow.emit(
+                FakeP2pSession(peer("idle-$index", "Idle $index")),
+            )
+        }
+        val sessionOverflow = FakeP2pSession(peer("idle-overflow", "Idle overflow"))
+        smallKit.incomingSessionsFlow.emit(sessionOverflow)
+        awaitCondition { sessionOverflow.state.value == ConnectionState.Closed }
+        assertThat(sessionOverflow.admissionRejections())
+            .containsExactly(AdmissionRejection.RateLimited)
+        smallRoom.leave()
+    }
+
+    @Test
     fun host_advertisement_never_contains_the_room_code() = runBlocking {
         val kit = FakeP2pKit(P2pPeerId("host-pid"))
         var advertisedName: String? = null
@@ -591,6 +749,60 @@ class P2pKitRoomTransportLifecycleTest {
     }
 
     // ---------------------------------------------------------------- Peer ----
+
+    @Test
+    fun peer_application_queue_applies_bounded_backpressure_to_host_snapshots() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("peer-pid"))
+        val hostPeer = peer("host-pid", "Host Device")
+        val session = FakeP2pSession(hostPeer, incomingExtraBufferCapacity = 0)
+        val room = PeerP2pRoom(
+            kit = kit,
+            session = session,
+            hostPeer = hostPeer,
+            roomCode = "ABCDEF",
+            scope = testScope,
+            codec = codec,
+        )
+        val frame = P2pMessage.Binary(codec.encode(HostMessage.EndSession))
+
+        val producer = async {
+            // One frame may already be executing inside the collector in
+            // addition to the channel's configured buffered capacity.
+            repeat(P2pTrafficLimits.PEER_APPLICATION_QUEUE_CAPACITY + 2) {
+                session.incomingFlow.emit(frame)
+            }
+        }
+        yield()
+        assertThat(producer.isCompleted).isFalse()
+
+        assertThat(withTimeout(2_000) { room.incoming.first() })
+            .isEqualTo(HostMessage.EndSession)
+        withTimeout(2_000) { producer.await() }
+        assertThat(session.state.value).isEqualTo(ConnectionState.Connected)
+        room.leave()
+    }
+
+    @Test
+    fun peer_disconnects_a_modified_host_that_sends_peer_protocol_frames() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("peer-pid"))
+        val hostPeer = peer("host-pid", "Host Device")
+        val session = FakeP2pSession(hostPeer)
+        PeerP2pRoom(
+            kit = kit,
+            session = session,
+            hostPeer = hostPeer,
+            roomCode = "ABCDEF",
+            scope = testScope,
+            codec = codec,
+        )
+        val wrongDirection = P2pMessage.Binary(codec.encode(PeerMessage.Heartbeat))
+
+        repeat(P2pTrafficLimits.MAX_TRAFFIC_VIOLATIONS) {
+            session.incomingFlow.emit(wrongDirection)
+        }
+
+        awaitCondition { session.state.value == ConnectionState.Closed }
+    }
 
     @Test
     fun peer_emits_host_lost_then_host_restored_on_reconnect_cycle() = runBlocking {
@@ -1664,11 +1876,14 @@ internal class FakeP2pKit(
 
 internal class FakeP2pSession(
     override val peer: Peer,
+    incomingExtraBufferCapacity: Int = 16,
 ) : P2pSession {
     override val id: String = "fake-${peer.id.value}"
     override val peerIdentity: PeerIdentity = PeerIdentity(peer.id, TEST_PEER_FINGERPRINT)
     val stateFlow: MutableStateFlow<ConnectionState> = MutableStateFlow(ConnectionState.Connected)
-    val incomingFlow: MutableSharedFlow<P2pMessage> = MutableSharedFlow(extraBufferCapacity = 16)
+    val incomingFlow: MutableSharedFlow<P2pMessage> = MutableSharedFlow(
+        extraBufferCapacity = incomingExtraBufferCapacity,
+    )
     private val incomingFilesFlow: MutableSharedFlow<P2pFileOffer> = MutableSharedFlow()
     val sent: MutableList<P2pMessage> = mutableListOf()
     var sendHandler: (suspend (P2pMessage) -> Unit)? = null

@@ -7,6 +7,7 @@ import com.parlor.core.result.EmptyResult
 import com.parlor.core.result.Result
 import com.parlor.networking.protocol.AdmissionRejection
 import com.parlor.networking.protocol.HostMessage
+import com.parlor.networking.protocol.MAX_COMMAND_PAYLOAD_BYTES
 import com.parlor.networking.protocol.PeerMessage
 import com.parlor.networking.protocol.ProtocolVersion
 import com.parlor.networking.protocol.ResumableCredentialOffer
@@ -42,6 +43,7 @@ import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancelAndJoin
@@ -943,6 +945,12 @@ private fun Throwable.rethrowIfCancellation() {
     if (this is CancellationException) throw this
 }
 
+private fun PeerMessage.hasValidPeerPayloadBounds(): Boolean = when (this) {
+    is PeerMessage.ClientCommand -> payload.size <= MAX_COMMAND_PAYLOAD_BYTES
+    is PeerMessage.ActionSubmit -> payload.size <= MAX_COMMAND_PAYLOAD_BYTES
+    else -> true
+}
+
 /** Ensure a partially-started kit is released even when its owner is cancelled. */
 private suspend fun P2pKit.stopAfterFailure() {
     withContext(NonCancellable) {
@@ -1007,13 +1015,14 @@ internal class HostP2pRoom(
     // A room has exactly one protocol owner. A channel buffers startup frames
     // until that owner subscribes; replay-zero SharedFlow previously dropped
     // SessionStarting/snapshots during content loading.
-    private val incomingPeerMessages = Channel<RoomMessage>(Channel.UNLIMITED)
+    private val incomingPeerMessages = Channel<RoomMessage>(
+        capacity = P2pTrafficLimits.HOST_APPLICATION_QUEUE_CAPACITY,
+    )
     override val incoming: Flow<RoomMessage> = incomingPeerMessages.receiveAsFlow()
 
     // Authoritative per-player membership. Survives transient session drops so
     // a returning peer is recognised as a reconnect (same playerId) rather
-    // than a brand-new join. Updated under the assumption all session-state
-    // callbacks run on [scope], so coarse mutex-free mutation is safe.
+    // than a brand-new join. Every access is serialized by [stateMutex].
     private val membersByPlayer: MutableMap<PlayerId, RoomMember> = mutableMapOf()
     private val sessionsByPlayer: MutableMap<PlayerId, P2pSession> = mutableMapOf()
     private data class PendingConnection(
@@ -1073,7 +1082,12 @@ internal class HostP2pRoom(
     // emitting the wrong event would strand the recovered peer in a
     // disconnected state forever.
     private val previouslySeenPlayerIds: MutableSet<PlayerId> = mutableSetOf()
-    private val collectorJobs: MutableList<Job> = mutableListOf()
+    private val trackedSessions: MutableSet<P2pSession> = mutableSetOf()
+    private val admissionAttemptLimiter = AdmissionAttemptLimiter(nowMillis())
+
+    /** Session collectors/transactions are children of this room, not the app scope. */
+    private val sessionSupervisor = SupervisorJob(scope.coroutineContext[Job])
+    private val sessionScope = CoroutineScope(scope.coroutineContext + sessionSupervisor)
 
     // p2p-001: serialize every access to the membership maps above. `scope` is
     // Dispatchers.Default (multi-threaded) and the accept loop, each per-session
@@ -1094,7 +1108,7 @@ internal class HostP2pRoom(
     // additionally runCatching-guarded; no cross-platform @Volatile needed.)
     private var left = false
 
-    private val acceptJob: Job = scope.launch {
+    private val acceptJob: Job = sessionScope.launch {
         kit.incomingSessions.collect { session ->
             handleIncomingSession(session)
         }
@@ -1112,11 +1126,41 @@ internal class HostP2pRoom(
             return
         }
 
-        collectorJobs += scope.launch {
+        val trackingDecision = stateMutex.withLock {
+            when {
+                session in trackedSessions -> null
+                left || trackedSessions.size >= trackedSessionLimit() -> false
+                else -> true.also { trackedSessions += session }
+            }
+        }
+        if (trackingDecision == null) return
+        if (!trackingDecision) {
+            rejectSession(session, AdmissionRejection.RateLimited)
+            return
+        }
+
+        val trafficGuard = InboundTrafficGuard(
+            maxFrameBytes = P2pTrafficLimits.MAX_PEER_TO_HOST_FRAME_BYTES,
+            nowMillis = nowMillis(),
+        )
+
+        val incomingJob = sessionScope.launch {
             session.incoming.collect { msg ->
-                if (msg !is P2pMessage.Binary) return@collect
-                if (msg.bytes.size > P2pKitRoomTransport.MAX_ROOM_FRAME_BYTES) {
-                    p2pLog("host: dropping oversized frame")
+                if (msg !is P2pMessage.Binary) {
+                    enforceTrafficDecision(
+                        trafficGuard.malformedFrame(nowMillis()),
+                        session,
+                        "unexpected-frame-type",
+                    )
+                    return@collect
+                }
+                if (
+                    !enforceTrafficDecision(
+                        trafficGuard.inspectFrame(msg.bytes.size, nowMillis()),
+                        session,
+                        "frame-budget",
+                    )
+                ) {
                     return@collect
                 }
                 // p2p-002: never let a malformed/oversized/version-skewed frame
@@ -1125,7 +1169,19 @@ internal class HostP2pRoom(
                 val rawDecoded = runCatching {
                     codec.decode(msg.bytes)
                 }.getOrElse {
-                    p2pLog("host: dropping undecodable frame from peerId=${playerId.raw} (${it::class.simpleName})")
+                    enforceTrafficDecision(
+                        trafficGuard.malformedFrame(nowMillis()),
+                        session,
+                        "malformed-frame",
+                    )
+                    return@collect
+                }
+                if (rawDecoded !is PeerMessage || !rawDecoded.hasValidPeerPayloadBounds()) {
+                    enforceTrafficDecision(
+                        trafficGuard.malformedFrame(nowMillis()),
+                        session,
+                        "invalid-direction-or-payload",
+                    )
                     return@collect
                 }
                 // wu-ui-01 / NN-03: the actor identity is the AUTHENTICATED
@@ -1271,7 +1327,7 @@ internal class HostP2pRoom(
             }
         }
 
-        collectorJobs += scope.launch {
+        sessionScope.launch {
             // Tracks whether THIS session has previously dropped into a
             // soft-disconnect (Reconnecting) state, so the Connected
             // transition out of it can emit PeerReconnected without
@@ -1312,6 +1368,7 @@ internal class HostP2pRoom(
                         }
                     }
                     ConnectionState.Closed, ConnectionState.Failed -> {
+                        incomingJob.cancel()
                         // Only act if this is still the registered session
                         // for this playerId — a newer session may have
                         // superseded it via handleIncomingSession.
@@ -1336,6 +1393,7 @@ internal class HostP2pRoom(
                                 admissionReservations.remove(playerId)
                                 publishPendingAdmissions()
                             }
+                            trackedSessions.remove(session)
                             if (sessionsByPlayer[playerId] === session) {
                                 sessionsByPlayer.remove(playerId)
                                 membersByPlayer[playerId]?.let { current ->
@@ -1370,6 +1428,14 @@ internal class HostP2pRoom(
         session: P2pSession,
         request: PeerMessage.AdmissionRequest,
     ) {
+        val attemptAllowed = stateMutex.withLock {
+            pendingByPlayer[playerId]?.session === session ||
+                admissionAttemptLimiter.tryAcquire(playerId.raw, nowMillis())
+        }
+        if (!attemptAllowed) {
+            rejectSession(session, AdmissionRejection.RateLimited)
+            return
+        }
         if (!request.protocol.isCompatibleWith(ProtocolVersion())) {
             rejectSession(session, AdmissionRejection.IncompatibleProtocol)
             return
@@ -1393,14 +1459,19 @@ internal class HostP2pRoom(
         }
 
         val requestEvent = stateMutex.withLock {
-            if (admissionsClosed) {
-                null
-            } else {
-                val existing = pendingByPlayer[playerId]
-                val isKnownPlayer = playerId in previouslySeenPlayerIds
-                if (existing?.session === session) {
-                    PendingAdmission(playerId, displayName, isRejoin = isKnownPlayer) to false
-                } else {
+            val existing = pendingByPlayer[playerId]
+            val isKnownPlayer = playerId in previouslySeenPlayerIds
+            when {
+                admissionsClosed -> AdmissionRequestResult.Rejected(
+                    AdmissionRejection.SessionStarted,
+                )
+                existing?.session === session -> AdmissionRequestResult.Accepted(
+                    PendingAdmission(playerId, displayName, isRejoin = isKnownPlayer),
+                    emitEvent = false,
+                )
+                existing != null || pendingByPlayer.size >= pendingAdmissionLimit() ->
+                    AdmissionRequestResult.Rejected(AdmissionRejection.RateLimited)
+                else -> {
                     pendingByPlayer[playerId] = PendingConnection(
                         session = session,
                         displayName = displayName,
@@ -1408,20 +1479,24 @@ internal class HostP2pRoom(
                         peerFingerprint = peerFingerprint,
                     )
                     publishPendingAdmissions()
-                    PendingAdmission(playerId, displayName, isRejoin = isKnownPlayer) to true
+                    AdmissionRequestResult.Accepted(
+                        PendingAdmission(playerId, displayName, isRejoin = isKnownPlayer),
+                        emitEvent = true,
+                    )
                 }
             }
         }
-        if (requestEvent == null) {
-            rejectSession(session, AdmissionRejection.SessionStarted)
-        } else if (requestEvent.second) {
-            _peerEvents.emit(
-                PeerEvent.AdmissionRequested(
-                    playerId = requestEvent.first.playerId,
-                    displayName = requestEvent.first.displayName,
-                    isRejoin = requestEvent.first.isRejoin,
-                ),
-            )
+        when (requestEvent) {
+            is AdmissionRequestResult.Rejected -> rejectSession(session, requestEvent.reason)
+            is AdmissionRequestResult.Accepted -> if (requestEvent.emitEvent) {
+                _peerEvents.emit(
+                    PeerEvent.AdmissionRequested(
+                        playerId = requestEvent.admission.playerId,
+                        displayName = requestEvent.admission.displayName,
+                        isRejoin = requestEvent.admission.isRejoin,
+                    ),
+                )
+            }
         }
     }
 
@@ -1460,6 +1535,21 @@ internal class HostP2pRoom(
         session: P2pSession,
         request: PeerMessage.ResumeRequested,
     ) {
+        val repeatedPendingRequest = stateMutex.withLock {
+            pendingByPlayer[playerId]?.let { pending ->
+                pending.session === session &&
+                    pending.transaction?.kind == CredentialTransactionKind.Resume
+            } == true
+        }
+        if (repeatedPendingRequest) return
+        if (
+            !stateMutex.withLock {
+                admissionAttemptLimiter.tryAcquire(playerId.raw, nowMillis())
+            }
+        ) {
+            rejectSession(session, AdmissionRejection.RateLimited)
+            return
+        }
         val displayName = transportDisplayName.trim()
         if (
             !request.protocol.isCompatibleWith(ProtocolVersion()) ||
@@ -1491,7 +1581,8 @@ internal class HostP2pRoom(
                 when {
                     currentSession?.state?.value == ConnectionState.Connected ->
                         ResumePreparation.Rejected(AdmissionRejection.AlreadyConnected)
-                    playerId in admissionReservations || playerId in pendingByPlayer ->
+                    playerId in admissionReservations || playerId in pendingByPlayer ||
+                        pendingByPlayer.size >= pendingAdmissionLimit() ->
                         ResumePreparation.Rejected(AdmissionRejection.RateLimited)
                     now > deadline || now > credential.expiresAtEpochMillis ->
                         ResumePreparation.Rejected(AdmissionRejection.ExpiredCredential)
@@ -1562,10 +1653,9 @@ internal class HostP2pRoom(
         when (prepared) {
             is ResumePreparation.Rejected -> rejectSession(session, prepared.reason)
             is ResumePreparation.Ready -> {
-                val job = scope.launch(start = CoroutineStart.LAZY) {
+                val job = sessionScope.launch(start = CoroutineStart.LAZY) {
                     completeResume(playerId, session, displayName, prepared)
                 }
-                stateMutex.withLock { collectorJobs += job }
                 job.start()
             }
         }
@@ -2018,6 +2108,15 @@ internal class HostP2pRoom(
         ) : AdmissionPreparation
     }
 
+    private sealed interface AdmissionRequestResult {
+        data class Accepted(
+            val admission: PendingAdmission,
+            val emitEvent: Boolean,
+        ) : AdmissionRequestResult
+
+        data class Rejected(val reason: AdmissionRejection) : AdmissionRequestResult
+    }
+
     private sealed interface AdmissionRejectionResult {
         data object InFlight : AdmissionRejectionResult
         data object Missing : AdmissionRejectionResult
@@ -2030,6 +2129,37 @@ internal class HostP2pRoom(
         val readyBarrier: ResumeReadyBarrier? = null,
         val admissionReadyBarrier: AdmissionReadyBarrier? = null,
     )
+
+    private fun pendingAdmissionLimit(): Int =
+        (maxRemotePlayers + P2pTrafficLimits.SESSION_ADMISSION_HEADROOM)
+            .coerceAtMost(P2pTrafficLimits.MAX_PENDING_ADMISSION_REQUESTS)
+
+    private fun trackedSessionLimit(): Int =
+        (maxRemotePlayers + P2pTrafficLimits.SESSION_ADMISSION_HEADROOM)
+            .coerceAtMost(P2pTrafficLimits.MAX_TRACKED_SESSIONS)
+
+    private suspend fun enforceTrafficDecision(
+        decision: InboundTrafficDecision,
+        session: P2pSession,
+        event: String,
+    ): Boolean = when (decision) {
+        InboundTrafficDecision.Accept -> true
+        InboundTrafficDecision.Drop -> {
+            p2pLog("security: inbound frame dropped event=$event")
+            false
+        }
+        InboundTrafficDecision.Disconnect -> {
+            p2pLog("security: inbound session disconnected event=$event")
+            try {
+                session.close()
+            } catch (failure: Throwable) {
+                failure.rethrowIfCancellation()
+            }
+            false
+        }
+    }
+
+    private fun nowMillis(): Long = kotlin.time.Clock.System.now().toEpochMilliseconds()
 
     private suspend fun rejectSession(
         session: P2pSession,
@@ -2277,14 +2407,12 @@ internal class HostP2pRoom(
         // lobbies for the entire Bonjour eviction window (5–30s on iOS).
         runCatching { kit.stopAdvertising() }
         delay(P2pKitRoomTransport.BONJOUR_GOODBYE_FLUSH_MS)
-        acceptJob.cancelAndJoin()
-        collectorJobs.forEach { it.cancelAndJoin() }
-        collectorJobs.clear()
+        sessionSupervisor.cancelAndJoin()
         val toClose = stateMutex.withLock {
-            val sessions = sessionsByPlayer.values.toList() +
-                pendingByPlayer.values.map(PendingConnection::session)
+            val sessions = trackedSessions.toList()
             sessionsByPlayer.clear()
             pendingByPlayer.clear()
+            trackedSessions.clear()
             admissionReservations.clear()
             membersByPlayer.clear()
             previouslySeenPlayerIds.clear()
@@ -2306,6 +2434,7 @@ internal class HostP2pRoom(
         if (_lifecycle.value != RoomLifecycleState.Expired) {
             _lifecycle.value = RoomLifecycleState.Closed
         }
+        incomingPeerMessages.close()
         onClosed()
         p2pLog("host: leave() done")
     }
@@ -2363,7 +2492,9 @@ internal class PeerP2pRoom(
     override val peerEvents: SharedFlow<PeerEvent> = _peerEvents.asSharedFlow()
     override val lifecycle = _lifecycle.asStateFlow()
 
-    private val incomingHostMessages = Channel<RoomMessage>(Channel.UNLIMITED)
+    private val incomingHostMessages = Channel<RoomMessage>(
+        capacity = P2pTrafficLimits.PEER_APPLICATION_QUEUE_CAPACITY,
+    )
     override val incoming: Flow<RoomMessage> = incomingHostMessages.receiveAsFlow()
 
     private val hostPlayerId: PlayerId = PlayerId(hostPeer.id.value)
@@ -2644,32 +2775,82 @@ internal class PeerP2pRoom(
     }
 
     private fun launchIncomingCollector(session: P2pSession): Job = scope.launch {
+        val trafficGuard = InboundTrafficGuard(
+            maxFrameBytes = P2pTrafficLimits.MAX_HOST_TO_PEER_FRAME_BYTES,
+            nowMillis = nowMillis(),
+        )
         session.incoming.collect { msg ->
-            if (msg is P2pMessage.Binary) {
-                if (msg.bytes.size > P2pKitRoomTransport.MAX_ROOM_FRAME_BYTES) {
-                    p2pLog("peer: dropping oversized host frame")
-                    return@collect
-                }
-                // p2p-002: a malformed host frame must not cancel this collector
-                // (which would permanently sever the peer's inbound stream).
-                val decoded = runCatching {
-                    codec.decode(msg.bytes)
-                }.getOrElse {
-                    p2pLog("peer: dropping undecodable host frame (${it::class.simpleName})")
-                    return@collect
-                }
-                when (decoded) {
-                    is HostMessage.AdmissionAccepted,
-                    is HostMessage.AdmissionOffered,
-                    is HostMessage.AdmissionCommitted,
-                    is HostMessage.ResumeOffered,
-                    is HostMessage.ResumeCommitted,
-                    is HostMessage.AdmissionRejected -> Unit
-                    else -> incomingHostMessages.send(decoded)
-                }
+            if (msg !is P2pMessage.Binary) {
+                enforceTrafficDecision(
+                    trafficGuard.malformedFrame(nowMillis()),
+                    session,
+                    "unexpected-frame-type",
+                )
+                return@collect
+            }
+            if (
+                !enforceTrafficDecision(
+                    trafficGuard.inspectFrame(msg.bytes.size, nowMillis()),
+                    session,
+                    "frame-budget",
+                )
+            ) {
+                return@collect
+            }
+            // p2p-002: a malformed host frame must not cancel this collector
+            // (which would permanently sever the peer's inbound stream).
+            val decoded = runCatching {
+                codec.decode(msg.bytes)
+            }.getOrElse {
+                enforceTrafficDecision(
+                    trafficGuard.malformedFrame(nowMillis()),
+                    session,
+                    "malformed-frame",
+                )
+                return@collect
+            }
+            if (decoded !is HostMessage) {
+                enforceTrafficDecision(
+                    trafficGuard.malformedFrame(nowMillis()),
+                    session,
+                    "invalid-direction",
+                )
+                return@collect
+            }
+            when (decoded) {
+                is HostMessage.AdmissionAccepted,
+                is HostMessage.AdmissionOffered,
+                is HostMessage.AdmissionCommitted,
+                is HostMessage.ResumeOffered,
+                is HostMessage.ResumeCommitted,
+                is HostMessage.AdmissionRejected -> Unit
+                else -> incomingHostMessages.send(decoded)
             }
         }
     }
+
+    private suspend fun enforceTrafficDecision(
+        decision: InboundTrafficDecision,
+        session: P2pSession,
+        event: String,
+    ): Boolean = when (decision) {
+        InboundTrafficDecision.Accept -> true
+        InboundTrafficDecision.Drop -> {
+            p2pLog("security: host frame dropped event=$event")
+            false
+        }
+        InboundTrafficDecision.Disconnect -> {
+            p2pLog("security: host session disconnected event=$event")
+            try {
+                session.close()
+            } catch (failure: Throwable) {
+                failure.rethrowIfCancellation()
+            }
+            false
+        }
+    }
+
+    private fun nowMillis(): Long = kotlin.time.Clock.System.now().toEpochMilliseconds()
 
     private fun launchSessionStateCollector(session: P2pSession): Job = scope.launch {
         // The initial state emission for an already-Connected session must
@@ -2802,6 +2983,7 @@ internal class PeerP2pRoom(
         if (_lifecycle.value != RoomLifecycleState.Expired) {
             _lifecycle.value = RoomLifecycleState.Closed
         }
+        incomingHostMessages.close()
         onClosed()
         p2pLog("peer: leave() done")
     }
