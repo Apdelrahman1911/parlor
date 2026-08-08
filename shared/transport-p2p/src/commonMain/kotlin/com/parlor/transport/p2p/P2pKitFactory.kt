@@ -20,5 +20,9 @@ import dev.p2pkit.core.P2pKit
  * [P2pTransportModule]).
  */
 interface P2pKitFactory {
-    fun createKit(appId: AppId, deviceName: String): P2pKit
+    /**
+     * Kit construction may load or create durable identity material. It is
+     * suspending so each platform can keep that work off its UI thread.
+     */
+    suspend fun createKit(appId: AppId, deviceName: String): P2pKit
 }

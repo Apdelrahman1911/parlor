@@ -41,6 +41,7 @@ import dev.p2pkit.core.provisioning.NetworkProvisioningManager
 import dev.p2pkit.core.transfer.P2pFileOffer
 import dev.p2pkit.core.transfer.P2pFileTransfer
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
@@ -58,6 +59,7 @@ import kotlinx.coroutines.yield
 import kotlinx.io.RawSource
 import kotlin.test.AfterTest
 import kotlin.test.Test
+import kotlin.test.assertFailsWith
 import kotlin.time.Duration.Companion.seconds
 
 /**
@@ -227,7 +229,7 @@ class P2pKitRoomTransportLifecycleTest {
             deviceName = "host-device",
             scope = testScope,
             kitFactory = object : P2pKitFactory {
-                override fun createKit(appId: AppId, deviceName: String): P2pKit {
+                override suspend fun createKit(appId: AppId, deviceName: String): P2pKit {
                     advertisedName = deviceName
                     return kit
                 }
@@ -610,7 +612,7 @@ class P2pKitRoomTransportLifecycleTest {
     fun join_times_out_when_no_matching_room_appears() = runBlocking {
         val kit = FakeP2pKit(P2pPeerId("self-pid"))
         val factory = object : P2pKitFactory {
-            override fun createKit(appId: AppId, deviceName: String): P2pKit = kit
+            override suspend fun createKit(appId: AppId, deviceName: String): P2pKit = kit
         }
         val transport = P2pKitRoomTransport(
             appId = AppId("com.parlor.test"),
@@ -648,7 +650,7 @@ class P2pKitRoomTransportLifecycleTest {
     fun join_rejects_stale_peer_whose_last_seen_is_too_old() = runBlocking {
         val kit = FakeP2pKit(P2pPeerId("self-pid"))
         val factory = object : P2pKitFactory {
-            override fun createKit(appId: AppId, deviceName: String): P2pKit = kit
+            override suspend fun createKit(appId: AppId, deviceName: String): P2pKit = kit
         }
         val transport = P2pKitRoomTransport(
             appId = AppId("com.parlor.test"),
@@ -690,7 +692,7 @@ class P2pKitRoomTransportLifecycleTest {
     fun join_accepts_peer_with_null_last_seen_when_name_matches_room_code() = runBlocking {
         val kit = FakeP2pKit(P2pPeerId("self-pid"))
         val factory = object : P2pKitFactory {
-            override fun createKit(appId: AppId, deviceName: String): P2pKit = kit
+            override suspend fun createKit(appId: AppId, deviceName: String): P2pKit = kit
         }
         val transport = P2pKitRoomTransport(
             appId = AppId("com.parlor.test"),
@@ -742,7 +744,7 @@ class P2pKitRoomTransportLifecycleTest {
             deviceName = "self-device",
             scope = testScope,
             kitFactory = object : P2pKitFactory {
-                override fun createKit(appId: AppId, deviceName: String): P2pKit = kit
+                override suspend fun createKit(appId: AppId, deviceName: String): P2pKit = kit
             },
             joinTimeoutMs = 2_000L,
         )
@@ -828,6 +830,83 @@ class P2pKitRoomTransportLifecycleTest {
 
         assertThat(result).isInstanceOf(Result.Failure::class)
         assertThat((result as Result.Failure).error).isEqualTo(NetError.NotConnected)
+    }
+
+    @Test
+    fun host_send_propagates_coroutine_cancellation() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("host-pid"))
+        val room = newHostRoom(kit)
+        val alice = FakeP2pSession(peer("alice-pid", "Alice"))
+        admit(room, kit, alice)
+        alice.sendHandler = { throw CancellationException("cancel host send") }
+
+        assertFailsWith<CancellationException> {
+            room.send(SendTarget.Direct(PlayerId("alice-pid")), HostMessage.EndSession)
+        }
+    }
+
+    @Test
+    fun peer_send_propagates_coroutine_cancellation() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("peer-pid"))
+        val hostPeer = peer("host-pid", "Host Device")
+        val session = FakeP2pSession(hostPeer).apply {
+            sendHandler = { throw CancellationException("cancel peer send") }
+        }
+        val room = PeerP2pRoom(kit, session, hostPeer, "ABCDEF", testScope, codec)
+
+        assertFailsWith<CancellationException> {
+            room.sendToHost(PeerMessage.LeaveNotice)
+        }
+    }
+
+    @Test
+    fun kit_factory_cancellation_is_never_mapped_to_transport_failure() = runBlocking {
+        val transport = P2pKitRoomTransport(
+            appId = AppId("com.parlor.test"),
+            deviceName = "self-device",
+            scope = testScope,
+            kitFactory = object : P2pKitFactory {
+                override suspend fun createKit(appId: AppId, deviceName: String): P2pKit {
+                    throw CancellationException("cancel kit initialization")
+                }
+            },
+        )
+
+        assertFailsWith<CancellationException> {
+            transport.host(com.parlor.networking.transport.HostConfig("Room"))
+        }
+        assertFailsWith<CancellationException> {
+            transport.join("ABCDEF", "Alice")
+        }
+    }
+
+    @Test
+    fun cancellation_during_kit_start_cleans_up_and_still_propagates() = runBlocking {
+        suspend fun assertPathCleansUp(host: Boolean) {
+            val kit = FakeP2pKit(P2pPeerId(if (host) "host-pid" else "peer-pid")).apply {
+                startHandler = { throw CancellationException("cancel kit start") }
+            }
+            val transport = P2pKitRoomTransport(
+                appId = AppId("com.parlor.test"),
+                deviceName = "self-device",
+                scope = testScope,
+                kitFactory = object : P2pKitFactory {
+                    override suspend fun createKit(appId: AppId, deviceName: String): P2pKit = kit
+                },
+            )
+
+            assertFailsWith<CancellationException> {
+                if (host) {
+                    transport.host(com.parlor.networking.transport.HostConfig("Room"))
+                } else {
+                    transport.join("ABCDEF", "Alice")
+                }
+            }
+            assertThat(kit.stopCalls).isEqualTo(1)
+        }
+
+        assertPathCleansUp(host = true)
+        assertPathCleansUp(host = false)
     }
 
     // -------------------------------------------------------------- Helpers ----
@@ -935,6 +1014,7 @@ internal class FakeP2pKit(
     // Custom connect() handler for join-path tests; default throws so
     // accidental invocations stand out instead of silently no-op'ing.
     var connectHandler: (suspend (Peer) -> P2pSession)? = null
+    var startHandler: (suspend () -> Unit)? = null
 
     override val appId: AppId = AppId("com.parlor.test")
     override val localDeviceName: String = "fake-device"
@@ -955,7 +1035,10 @@ internal class FakeP2pKit(
     override val networkProvisioning: NetworkProvisioningManager =
         dev.p2pkit.core.provisioning.UnsupportedNetworkProvisioningManager()
 
-    override suspend fun start() { callLog += "start" }
+    override suspend fun start() {
+        callLog += "start"
+        startHandler?.invoke()
+    }
     override suspend fun startAdvertising() { callLog += "startAdvertising" }
     override suspend fun stopAdvertising() {
         callLog += "stopAdvertising"

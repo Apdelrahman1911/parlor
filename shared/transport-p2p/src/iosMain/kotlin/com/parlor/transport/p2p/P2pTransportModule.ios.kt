@@ -8,8 +8,10 @@ import dev.p2pkit.core.ReconnectPolicy
 import dev.p2pkit.core.SecurityMode
 import dev.p2pkit.transport.lan.lan
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.withContext
 import org.koin.core.module.Module
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -20,22 +22,29 @@ import com.parlor.networking.transport.RoomTransport
  * `nw_listener_t` handle interface selection internally.
  */
 @OptIn(ExplicitSecurityRisk::class)
-private class IosP2pKitFactory : P2pKitFactory {
-    override fun createKit(appId: AppId, deviceName: String): P2pKit = P2pKit.create {
-        this.appId = appId
-        this.deviceName = deviceName
-        transports { lan() }
-        security {
-            // Encrypted authenticated transport; Parlor owns room admission.
-            mode = SecurityMode.AuthenticatedV2(
-                PeerAuthorizationPolicy.AcceptAnyAuthenticatedSameApp,
-            )
+private class IosP2pKitFactory(
+    private val initializationDispatcher: CoroutineDispatcher = Dispatchers.Default,
+) : P2pKitFactory {
+    override suspend fun createKit(appId: AppId, deviceName: String): P2pKit =
+        withContext(initializationDispatcher) {
+            P2pKit.create {
+                this.appId = appId
+                this.deviceName = deviceName
+                transports { lan() }
+                security {
+                    // Encrypted authenticated transport; Parlor owns room admission.
+                    mode = SecurityMode.AuthenticatedV2(
+                        PeerAuthorizationPolicy.AcceptAnyAuthenticatedSameApp,
+                    )
+                }
+                lifecycle {
+                    reconnectPolicy = ReconnectPolicy.Enabled(
+                        maxAttempts = 10,
+                        retryDelayMillis = 3_000,
+                    )
+                }
+            }
         }
-        // Auto-recover a peer's outgoing session from a transient drop (the SDK
-        // default is Disabled → terminal HostLost on any blip). See the desktop
-        // factory + PROBLEMS_PARLOR.md → p2p-003 / peer-recovery.
-        lifecycle { reconnectPolicy = ReconnectPolicy.Enabled(maxAttempts = 10, retryDelayMillis = 3_000) }
-    }
 }
 
 actual val p2pTransportModule: Module = module {

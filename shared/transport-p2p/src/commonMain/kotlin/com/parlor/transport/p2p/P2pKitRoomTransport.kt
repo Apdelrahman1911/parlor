@@ -31,6 +31,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancelAndJoin
@@ -53,6 +54,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withTimeout
 import kotlinx.coroutines.withTimeoutOrNull
+import kotlinx.coroutines.withContext
 
 /**
  * Transport diagnostics are disabled by default. Room codes, peer identifiers,
@@ -128,28 +130,35 @@ class P2pKitRoomTransport(
             // propagating — otherwise the started instance (sockets, JmDNS/NSD
             // registration, kit scope) leaks for the process lifetime. join()
             // already does this; host() didn't.
-            kit.start()
-            // Construct the room first so its incomingSessions collector is
-            // subscribed before the service becomes discoverable. Otherwise a
-            // fast peer can connect into P2pKit's replay-zero session flow.
-            val room = HostP2pRoom(
-                kit = kit,
-                roomCode = roomCode,
-                roomDisplayName = config.roomDisplayName,
-                hostPlayerId = PlayerId(kit.localPeerId.value),
-                scope = scope,
-                codec = codec,
-            )
+            var room: HostP2pRoom? = null
             try {
+                kit.start()
+                // Construct the room first so its incomingSessions collector is
+                // subscribed before the service becomes discoverable. Otherwise a
+                // fast peer can connect into P2pKit's replay-zero session flow.
+                room = HostP2pRoom(
+                    kit = kit,
+                    roomCode = roomCode,
+                    roomDisplayName = config.roomDisplayName,
+                    hostPlayerId = PlayerId(kit.localPeerId.value),
+                    scope = scope,
+                    codec = codec,
+                )
                 p2pLog("host: start() returned; calling startAdvertising()")
                 kit.startAdvertising()
             } catch (t: Throwable) {
+                withContext(NonCancellable) {
+                    if (room == null) {
+                        kit.stopAfterFailure()
+                    } else {
+                        room.leave()
+                    }
+                }
                 t.rethrowIfCancellation()
-                room.leave()
                 throw t
             }
             p2pLog("host: startAdvertising() returned; ready to accept incoming sessions")
-            room
+            checkNotNull(room)
         }.fold(
             onSuccess = { Result.Success(it) },
             onFailure = {
@@ -166,7 +175,12 @@ class P2pKitRoomTransport(
 
     override suspend fun join(config: JoinConfig): Result<LocalRoom, NetError> {
         p2pLog("join: entry")
-        val kit = kitFactory.createKit(appId = appId, deviceName = config.displayName)
+        val kit = try {
+            kitFactory.createKit(appId = appId, deviceName = config.displayName)
+        } catch (t: Throwable) {
+            t.rethrowIfCancellation()
+            return Result.Failure(NetError.TransportFailure(t.message ?: "kit initialization failed"))
+        }
         try {
             kit.also {
                 p2pLog("join: kit created localPeerId=${it.localPeerId.value}; calling start()")
@@ -176,8 +190,8 @@ class P2pKitRoomTransport(
                 p2pLog("join: startDiscovery() returned; awaiting fresh host advertisement")
             }
         } catch (t: Throwable) {
+            kit.stopAfterFailure()
             t.rethrowIfCancellation()
-            runCatching { kit.stop() }
             p2pLog("join: kit setup FAILED message='${t.message}'")
             return Result.Failure(NetError.TransportFailure(t.message ?: "join failed"))
         }
@@ -243,7 +257,7 @@ class P2pKitRoomTransport(
             }
             if (result is Result.Failure) {
                 runCatching { kit.stopDiscovery() }
-                runCatching { kit.stop() }
+                kit.stopAfterFailure()
             }
             result
         } catch (_: TimeoutCancellationException) {
@@ -251,12 +265,12 @@ class P2pKitRoomTransport(
             // the kit we started so we don't leak a discovering instance
             // for an abandoned join attempt.
             p2pLog("join: TIMEOUT")
-            runCatching { kit.stop() }
+            kit.stopAfterFailure()
             Result.Failure(NetError.Timeout)
         } catch (t: Throwable) {
+            kit.stopAfterFailure()
             t.rethrowIfCancellation()
             p2pLog("join: FAILED with exception type=${t::class.simpleName} message='${t.message}'")
-            runCatching { kit.stop() }
             Result.Failure(NetError.TransportFailure(t.message ?: "join failed"))
         }
     }
@@ -377,6 +391,17 @@ class P2pKitRoomTransport(
 
 private fun Throwable.rethrowIfCancellation() {
     if (this is CancellationException) throw this
+}
+
+/** Ensure a partially-started kit is released even when its owner is cancelled. */
+private suspend fun P2pKit.stopAfterFailure() {
+    withContext(NonCancellable) {
+        try {
+            stop()
+        } catch (failure: Throwable) {
+            p2pLog("cleanup: kit stop failed (${failure::class.simpleName})")
+        }
+    }
 }
 
 private fun AdmissionRejection.toNetError(): NetError = when (this) {
@@ -848,6 +873,7 @@ internal class HostP2pRoom(
                 }
             }
         }.getOrElse {
+            it.rethrowIfCancellation()
             Result.Failure(NetError.TransportFailure(it.message ?: "send failed"))
         }
     }
@@ -1078,7 +1104,10 @@ internal class PeerP2pRoom(
             session.send(payload)
         }.fold(
             onSuccess = { Result.Success(Unit) },
-            onFailure = { Result.Failure(NetError.TransportFailure(it.message ?: "send failed")) },
+            onFailure = {
+                it.rethrowIfCancellation()
+                Result.Failure(NetError.TransportFailure(it.message ?: "send failed"))
+            },
         )
     }
 

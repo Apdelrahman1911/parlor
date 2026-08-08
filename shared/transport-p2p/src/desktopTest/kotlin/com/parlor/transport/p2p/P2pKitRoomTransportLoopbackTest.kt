@@ -68,7 +68,7 @@ class P2pKitRoomTransportLoopbackTest {
 
     @OptIn(ExplicitSecurityRisk::class)
     private val testKitFactory = object : P2pKitFactory {
-        override fun createKit(appId: AppId, deviceName: String) = P2pKit.create {
+        override suspend fun createKit(appId: AppId, deviceName: String) = P2pKit.create {
             this.appId = appId
             this.deviceName = deviceName
             transports { lan() }
