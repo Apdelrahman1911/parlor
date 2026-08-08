@@ -17,9 +17,9 @@ top of that checkpoint; no baseline change was reset, cleaned, or rewritten.
 - The P2P architecture now has explicit host authority, bounded traffic,
   transactional admission/resume, deterministic lifecycle and discovery
   state, truthful Local Network UX, and privacy-safe diagnostics.
-- At committed remediation input `738c6db`, the strict checksum-verified
+- At committed remediation input `aab673f`, the strict checksum-verified
   `productionCheck`, `productionAppleCheck`, and repository-wide `allTests`
-  matrix passed together: 1,150 actionable tasks, 21 executed and 1,129
+  matrix passed together: 1,150 actionable tasks, 27 executed and 1,123
   up-to-date. Android release compilation, R8, lint, unsigned AAB packaging,
   all three iOS release framework architectures, Desktop/common tests,
   Android unit variants, and executable Apple-simulator tests were included.
@@ -56,9 +56,12 @@ top of that checkpoint; no baseline change was reset, cleaned, or rewritten.
 | `72182c7` | Least-privilege Android LAN manifest contract. |
 | `8815ddb` | Serialized three-architecture Apple release linkage. |
 | `738c6db` | Strict artifact checksums, Maven provenance receipt, and regression guard. |
+| `aab673f` | Repository-contract input tracking and final automated evidence ledger. |
 
 Every entry is a separate checkpoint above the approved baseline. Do not
-squash any remediation into `8186f7d` when reviewing or rolling back.
+squash any remediation into `8186f7d` when reviewing or rolling back. A later
+ledger-only commit may record these results without becoming a new executable
+remediation boundary.
 
 ## Additional verification findings closed
 
@@ -98,8 +101,8 @@ squash any remediation into `8186f7d` when reviewing or rolling back.
 | Gate | Current disposition | Final acceptance evidence |
 |---|---|---|
 | Maven Central provenance | PASS for checksum enforcement: exact 0.7.0-rc2 Android/JVM/iOS artifacts match current Maven Central SHA-256 values and are pinned in strict Gradle verification; no sibling build, `mavenLocal()`, or provisioning sidecar resolves. POMs declare Apache-2.0 and GitHub SCM; two AAR signatures validate against fingerprint `273D 83EA EDCC 24BA 90CA 4E78 6FD7 A2F6 DE03 19E7`. | `P2PKIT_MAVEN_PROVENANCE.md`, dependency graphs, strict build, and checksum contract are present. Publisher fingerprint approval, final SBOM/transitive license review, and third-party notices remain external gates. |
-| Android/JVM/common compilation | PASS at `738c6db`: strict aggregate includes release Kotlin compilation, lint, R8/AAB packaging, Desktop/common, Android debug/release unit variants, and P2P adapter tests. | Repeat on the exact final release SHA and archive full logs/reports. |
-| Apple compilation/linkage | PASS at `738c6db`: release frameworks link serially for `iosArm64`, `iosSimulatorArm64`, and `iosX64`; executable simulator tests pass where tests exist. x64 test execution is skipped by the existing Apple-Silicon host policy, not counted as a runtime pass. | Repeat linkage on the final SHA; physical arm64 runtime remains a device gate. |
+| Android/JVM/common compilation | PASS at `aab673f`: strict aggregate includes release Kotlin compilation, lint, R8/AAB packaging, Desktop/common, Android debug/release unit variants, and P2P adapter tests. | Repeat on the exact final release SHA and archive full logs/reports. |
+| Apple compilation/linkage | PASS at `aab673f`: release frameworks link serially for `iosArm64`, `iosSimulatorArm64`, and `iosX64`; executable simulator tests pass where tests exist. x64 test execution is skipped by the existing Apple-Silicon host policy, not counted as a runtime pass. | Repeat linkage on the final SHA; physical arm64 runtime remains a device gate. |
 | Manifest/plist | PASS for source and unsigned merged output: Android min 26/target 36 with only four base LAN permissions, cleartext and backup disabled; `plutil` accepts the plist with Local Network usage and `_p2pkit2._tcp`, without Bluetooth wording. | Archive the signed merged manifest/app plist and repeat platform inspection. |
 | Encryption/authenticated identity | Parlor relies on P2pKit authenticated-v2 encrypted sessions and pins the authenticated host fingerprint for resume. It does not claim account identity or an internet trust anchor. | P2pKit artifact/API provenance, adapter tests, and physical authenticated connection/rejoin receipts; residual first-contact threat documented. |
 | Host authority/actor binding | Implemented at transport and coordinator boundaries. | Modified-client actor-spoof tests, both game authority tests, and physical private-state/command results. |
@@ -139,8 +142,8 @@ evidence, not physical-device, signing, or store evidence.
 
 | Command/check | Result |
 |---|---|
-| `./gradlew productionCheck productionAppleCheck allTests --dependency-verification=strict --no-daemon --stacktrace --console=plain` | PASS at `738c6db` in 24 seconds; 1,150 actionable tasks, 21 executed, 1,129 up-to-date. |
-| `./gradlew :shared:transport-p2p:desktopTest --dependency-verification=strict --no-daemon --stacktrace --console=plain` | PASS in 19 seconds; 24 actionable tasks. Includes two-ended loopback, fault injection, docs, manifest/plist, and Maven provenance contracts. |
+| `./gradlew productionCheck productionAppleCheck allTests --dependency-verification=strict --no-daemon --stacktrace --console=plain` | PASS at `aab673f` in 28 seconds; 1,150 actionable tasks, 27 executed, 1,123 up-to-date. |
+| `./gradlew :shared:transport-p2p:desktopTest --dependency-verification=strict --no-daemon --stacktrace --console=plain` after a ledger edit | PASS in 14 seconds; 20 actionable tasks, 7 executed. This proves repository-file input changes invalidate the result. Includes two-ended loopback, fault injection, docs, manifest/plist, and Maven provenance contracts. |
 | Android/JVM/iOS `dependencyInsight` for `p2p` | PASS: only exact `io.github.apdelrahman1911` 0.7.0-rc2 core and LAN variants resolve; no local source/provisioning artifact. |
 | Maven Central checksum comparison | PASS for all 15 selected root/platform runtime artifacts; values are in `P2PKIT_MAVEN_PROVENANCE.md` and the strict allowlist. |
 | Detached signature verification | PASS cryptographically for the two Android P2pKit AARs; publisher-key ownership remains UNVERIFIED out of band. |
@@ -151,7 +154,7 @@ Produced unsigned/local artifacts at that receipt point:
 
 | Artifact | Size | SHA-256 |
 |---|---:|---|
-| Android release AAB (confirmed unsigned with `jarsigner`) | 8,094,486 bytes | `44899bd38039abbb8ac470d48de87417ef6e3154c3a960bce2cc61d14b36c2fc` |
+| Android release AAB (confirmed unsigned with `jarsigner`) | 8,094,485 bytes | `22f143535e647142fcabc67470b9a62fc956ce527cbd33a3d22a9e39dd1f1d3e` |
 | R8 mapping | 51,293,267 bytes | `0bd000c67da12de898566138080ee92d2e0bb09adaf6f5aad62ffcc52d45b5e7` |
 | iOS arm64 framework executable | 136,939,224 bytes | `d64f0a3a0a1b7fc5d9520d56ffba8472d2bcb2092c5c66c5a341186e58da06d8` |
 | iOS simulator arm64 framework executable | 136,680,184 bytes | `1edb4dd5b4a6a34dcbee74a77581b2e10e5b58cff4fefc9a192a7eb14d7ee8e6` |
