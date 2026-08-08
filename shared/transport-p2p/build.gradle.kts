@@ -28,3 +28,25 @@ kotlin {
         }
     }
 }
+
+// Desktop contract tests inspect repository-owned documentation and platform
+// configuration outside this module's source sets. Declare those files as
+// inputs so Gradle cannot reuse a stale PASS after a runbook, manifest, plist,
+// coordinate, or checksum changes.
+tasks.named("desktopTest") {
+    inputs.files(
+        rootProject.file("README.md"),
+        rootProject.file("ARCHITECTURE.md"),
+        rootProject.file("whodunit-game-design.md"),
+        rootProject.file("settings.gradle.kts"),
+        rootProject.file("gradle/libs.versions.toml"),
+        rootProject.file("gradle/verification-metadata.xml"),
+        rootProject.file("composeApp/src/androidMain/AndroidManifest.xml"),
+        rootProject.file("iosApp/iosApp/Info.plist"),
+        rootProject.fileTree("docs") {
+            include("**/*.md")
+        },
+    )
+        .withPropertyName("repositoryContractFiles")
+        .withPathSensitivity(org.gradle.api.tasks.PathSensitivity.RELATIVE)
+}
