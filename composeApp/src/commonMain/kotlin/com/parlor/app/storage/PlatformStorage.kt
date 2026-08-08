@@ -4,8 +4,9 @@ import org.koin.core.module.Module
 
 /**
  * Platform boundary for storage. Each platform's `actual` returns a Koin
- * module that binds the protected `SnapshotFileSystem` and persistent,
- * non-sensitive `SettingsStore` backing.
+ * module that binds the protected `SnapshotFileSystem`, persistent,
+ * non-sensitive `SettingsStore`, and the platform device-bound
+ * `SecureStorage` backing used for resumable-session credentials.
  *
  * Chosen over an `expect class SnapshotFileSystem` because:
  *  - Per ARCHITECTURE.md, we favor "interface in commonMain + DI binding per
