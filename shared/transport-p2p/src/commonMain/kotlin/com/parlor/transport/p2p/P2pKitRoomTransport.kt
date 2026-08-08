@@ -273,6 +273,10 @@ class P2pKitRoomTransport private constructor(
         supportsDiscovery = false,
         latencyHintMs = 25,
         maxPayloadBytes = MAX_ROOM_FRAME_BYTES,
+        // Room-code entry still discovers a generic LAN advertisement. Parlor
+        // does not configure P2pKit's platform provisioning sidecars or expose
+        // a host:port + authenticated-fingerprint input contract.
+        supportsManualEndpointConnection = false,
     )
 
     override suspend fun host(config: HostConfig): Result<LocalRoom, NetError> {

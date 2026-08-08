@@ -622,6 +622,22 @@ class P2pKitRoomTransportLifecycleTest {
     }
 
     @Test
+    fun room_code_entry_is_not_claimed_as_manual_endpoint_connection() {
+        val transport = P2pKitRoomTransport(
+            appId = AppId("com.parlor.test"),
+            deviceName = "peer-device",
+            scope = testScope,
+            kitFactory = object : P2pKitFactory {
+                override suspend fun createKit(appId: AppId, deviceName: String): P2pKit =
+                    FakeP2pKit(P2pPeerId("peer-pid"))
+            },
+        )
+
+        assertThat(transport.capability.supportsDiscovery).isFalse()
+        assertThat(transport.capability.supportsManualEndpointConnection).isFalse()
+    }
+
+    @Test
     fun host_reports_operational_access_only_after_real_advertising_succeeds() = runBlocking {
         val kit = FakeP2pKit(P2pPeerId("host-pid"))
         val transport = P2pKitRoomTransport(

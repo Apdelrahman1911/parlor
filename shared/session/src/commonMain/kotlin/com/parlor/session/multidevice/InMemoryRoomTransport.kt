@@ -155,6 +155,7 @@ class InMemoryRoomTransport(
         supportsDiscovery = false,
         latencyHintMs = 0,
         maxPayloadBytes = Int.MAX_VALUE,
+        supportsManualEndpointConnection = false,
     )
 
     override suspend fun host(config: HostConfig): Result<LocalRoom, NetError> {

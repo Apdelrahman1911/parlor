@@ -95,9 +95,16 @@ val LocalNetworkAccess.needsRecoveryGuidance: Boolean
         this == LocalNetworkAccess.FailureUnclassified
 
 data class TransportCapability(
+    /** True only when [RoomTransport.discoverRooms] exposes a browsable room list. */
     val supportsDiscovery: Boolean,
     val latencyHintMs: Int,
     val maxPayloadBytes: Int,
+    /**
+     * True only when callers can supply a host endpoint plus authenticated
+     * identity pin without LAN discovery. Typing a room code does not imply
+     * this capability: [RoomTransport.join] may still discover the endpoint.
+     */
+    val supportsManualEndpointConnection: Boolean = false,
 )
 
 data class HostConfig(
