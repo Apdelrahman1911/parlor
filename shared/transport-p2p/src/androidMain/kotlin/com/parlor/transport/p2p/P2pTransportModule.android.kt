@@ -77,6 +77,12 @@ actual val p2pTransportModule: Module = module {
     single<CoroutineScope>(qualifier = named("p2pTransport")) {
         CoroutineScope(Dispatchers.Default + SupervisorJob())
     }
+    single<P2pDiagnostics> {
+        BoundedP2pDiagnostics(
+            scope = get(qualifier = named("p2pTransport")),
+            writer = platformP2pDiagnosticWriter(),
+        )
+    }
     single<P2pKitFactory> { AndroidP2pKitFactory(androidContext()) }
     single<RoomTransport> {
         P2pKitRoomTransport(
@@ -85,6 +91,7 @@ actual val p2pTransportModule: Module = module {
             scope = get(qualifier = named("p2pTransport")),
             kitFactory = get(),
             secureStorage = get(),
+            diagnostics = get(),
         )
     }
 }

@@ -14,6 +14,7 @@ import com.parlor.core.ids.PlayerId
 import com.parlor.core.ids.SessionId
 import com.parlor.core.result.Result
 import com.parlor.networking.protocol.AdmissionRejection
+import com.parlor.networking.protocol.CommandStatus
 import com.parlor.networking.protocol.HostMessage
 import com.parlor.networking.protocol.PeerMessage
 import com.parlor.networking.protocol.ProtocolVersion
@@ -388,7 +389,8 @@ class P2pKitRoomTransportLifecycleTest {
     @Test
     fun host_overwrites_forged_client_command_actor_with_authenticated_peer() = runBlocking {
         val kit = FakeP2pKit(P2pPeerId("host-pid"))
-        val room = newHostRoom(kit)
+        val diagnostics = RecordingP2pDiagnostics()
+        val room = newHostRoom(kit, diagnostics = diagnostics)
         val alice = FakeP2pSession(peer("alice-pid", "Alice"))
         admit(room, kit, alice)
         val received = testScope.async { room.incoming.first() }
@@ -416,6 +418,25 @@ class P2pKitRoomTransportLifecycleTest {
 
         val stamped = withTimeout(2_000) { received.await() } as PeerMessage.ClientCommand
         assertThat(stamped.actor).isEqualTo(PlayerId("alice-pid"))
+        assertThat(diagnostics.events.map { it.name })
+            .contains(P2pDiagnosticEventName.COMMAND_RECEIVED)
+
+        val outcome = HostMessage.CommandResult(
+            header = forged.header.copy(messageId = "result-message", sequence = 1L),
+            commandId = forged.commandId,
+            status = CommandStatus.StaleRevision,
+            authoritativeRevision = 2L,
+        )
+        assertThat(room.send(SendTarget.Direct(PlayerId("alice-pid")), outcome))
+            .isInstanceOf(Result.Success::class)
+        assertThat(diagnostics.events.last()).isEqualTo(
+            P2pDiagnosticEvent(
+                name = P2pDiagnosticEventName.COMMAND_REJECTED,
+                role = P2pDiagnosticRole.HOST,
+                result = P2pDiagnosticResult.REJECTED,
+                reason = P2pDiagnosticReason.STALE_REVISION,
+            ),
+        )
     }
 
     @Test
@@ -1893,6 +1914,7 @@ class P2pKitRoomTransportLifecycleTest {
     private fun newHostRoom(
         kit: FakeP2pKit,
         maxRemotePlayers: Int = 17,
+        diagnostics: P2pDiagnostics = NoOpP2pDiagnostics,
     ): HostP2pRoom = HostP2pRoom(
         kit = kit,
         roomCode = "ABCDEF",
@@ -1901,6 +1923,7 @@ class P2pKitRoomTransportLifecycleTest {
         maxRemotePlayers = maxRemotePlayers,
         scope = testScope,
         codec = codec,
+        diagnostics = diagnostics,
     )
 
     private suspend fun requestAdmission(
@@ -2050,6 +2073,24 @@ class P2pKitRoomTransportLifecycleTest {
             while (!block()) yield()
         }
     }
+}
+
+internal class RecordingP2pDiagnostics : P2pDiagnostics {
+    val events = mutableListOf<P2pDiagnosticEvent>()
+
+    override fun record(event: P2pDiagnosticEvent) {
+        events += event
+    }
+
+    override fun snapshot(): List<P2pDiagnosticRecord> = events.mapIndexed { index, event ->
+        P2pDiagnosticRecord(
+            sequence = index + 1L,
+            elapsedMillis = 0L,
+            event = event,
+        )
+    }
+
+    override fun export(): String = snapshot().joinToString("\n", transform = P2pDiagnosticRecord::exportLine)
 }
 
 // -----------------------------------------------------------------------------

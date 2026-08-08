@@ -6,6 +6,7 @@ import com.parlor.core.result.DataError
 import com.parlor.core.result.EmptyResult
 import com.parlor.core.result.Result
 import com.parlor.networking.protocol.AdmissionRejection
+import com.parlor.networking.protocol.CommandStatus
 import com.parlor.networking.protocol.HostMessage
 import com.parlor.networking.protocol.MAX_COMMAND_PAYLOAD_BYTES
 import com.parlor.networking.protocol.PeerMessage
@@ -71,15 +72,6 @@ import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.coroutines.withContext
 import kotlin.time.TimeSource
 
-/**
- * Transport diagnostics are disabled by default. Room codes, peer identifiers,
- * player names, payloads, and exception messages are never written to release
- * logs. A future observability adapter may emit only fixed event codes and
- * aggregate timings after consent.
- */
-@Suppress("UNUSED_PARAMETER")
-private fun p2pLog(message: String) = Unit
-
 internal interface AppLifecycleAwareRoom {
     suspend fun appBackgrounded(atEpochMillis: Long)
     suspend fun appForegrounded(atEpochMillis: Long)
@@ -102,18 +94,20 @@ internal interface AppLifecycleAwareRoom {
  * path is used so Parlor can enforce a smaller application-frame ceiling than
  * P2pKit's general transfer API.
  */
-class P2pKitRoomTransport(
+class P2pKitRoomTransport private constructor(
     private val appId: AppId,
     private val deviceName: String,
     private val scope: CoroutineScope,
     private val kitFactory: P2pKitFactory,
-    secureStorage: SecureStorage = UnavailableSecureStorage,
-    private val codec: RoomMessageCodec = RoomMessageCodec(),
+    secureStorage: SecureStorage,
+    private val codec: RoomMessageCodec,
+    private val diagnostics: P2pDiagnostics,
+    @Suppress("UNUSED_PARAMETER") privateMarker: Unit,
     // Upper bound on how long [join] will wait for a matching, *fresh*
     // host advertisement before failing with [NetError.Timeout]. Kept
     // configurable so tests can fail quickly instead of waiting the full
     // production budget (10s). Production wiring uses the default.
-    private val joinTimeoutMs: Long = DEFAULT_JOIN_TIMEOUT_MS,
+    private val joinTimeoutMs: Long,
     // Maximum age of `kit.lastSeen(peerId)` for a peer with a populated
     // timestamp to be considered live. Older = treated as a stale Bonjour
     // leftover (a common iOS quirk after the host disappears without
@@ -123,8 +117,55 @@ class P2pKitRoomTransport(
     // populate per-peer timestamps, and a strict null-rejects gate
     // blocks every Android-side join even when discovery is otherwise
     // working.
-    private val peerFreshnessWindowMs: Long = DEFAULT_PEER_FRESHNESS_WINDOW_MS,
+    private val peerFreshnessWindowMs: Long,
 ) : RoomTransport {
+    /** Public constructor retained without exposing the internal diagnostics contract. */
+    constructor(
+        appId: AppId,
+        deviceName: String,
+        scope: CoroutineScope,
+        kitFactory: P2pKitFactory,
+        secureStorage: SecureStorage = UnavailableSecureStorage,
+        codec: RoomMessageCodec = RoomMessageCodec(),
+        joinTimeoutMs: Long = DEFAULT_JOIN_TIMEOUT_MS,
+        peerFreshnessWindowMs: Long = DEFAULT_PEER_FRESHNESS_WINDOW_MS,
+    ) : this(
+        appId = appId,
+        deviceName = deviceName,
+        scope = scope,
+        kitFactory = kitFactory,
+        secureStorage = secureStorage,
+        codec = codec,
+        diagnostics = NoOpP2pDiagnostics,
+        privateMarker = Unit,
+        joinTimeoutMs = joinTimeoutMs,
+        peerFreshnessWindowMs = peerFreshnessWindowMs,
+    )
+
+    /** Production/test wiring with a privacy-safe recorder. */
+    internal constructor(
+        appId: AppId,
+        deviceName: String,
+        scope: CoroutineScope,
+        kitFactory: P2pKitFactory,
+        diagnostics: P2pDiagnostics,
+        secureStorage: SecureStorage = UnavailableSecureStorage,
+        codec: RoomMessageCodec = RoomMessageCodec(),
+        joinTimeoutMs: Long = DEFAULT_JOIN_TIMEOUT_MS,
+        peerFreshnessWindowMs: Long = DEFAULT_PEER_FRESHNESS_WINDOW_MS,
+    ) : this(
+        appId = appId,
+        deviceName = deviceName,
+        scope = scope,
+        kitFactory = kitFactory,
+        secureStorage = secureStorage,
+        codec = codec,
+        diagnostics = diagnostics,
+        privateMarker = Unit,
+        joinTimeoutMs = joinTimeoutMs,
+        peerFreshnessWindowMs = peerFreshnessWindowMs,
+    )
+
     private val credentialStore = ResumableCredentialStore(secureStorage)
     private val _localNetworkAccess =
         MutableStateFlow<LocalNetworkAccess>(LocalNetworkAccess.Unknown)
@@ -178,7 +219,10 @@ class P2pKitRoomTransport(
                     }
                 } catch (failure: Throwable) {
                     failure.rethrowIfCancellation()
-                    p2pLog("lifecycle: transition failed (${failure::class.simpleName})")
+                    diagnostics.event(
+                        P2pDiagnosticEventName.CLEANUP_FAILED,
+                        reason = P2pDiagnosticReason.LIFECYCLE,
+                    )
                 }
             }
         }
@@ -233,19 +277,17 @@ class P2pKitRoomTransport(
 
     override suspend fun host(config: HostConfig): Result<LocalRoom, NetError> {
         _localNetworkAccess.value = LocalNetworkAccess.Attempting
-        p2pLog("host: entry roomDisplayName='${config.roomDisplayName}' deviceName='$deviceName'")
+        diagnostics.event(P2pDiagnosticEventName.SESSION_CREATE_STARTED, P2pDiagnosticRole.HOST)
         return runCatching {
             val roomCode = generateRoomCode()
             // The low-entropy admission code never leaves the encrypted
             // channel. Discovery advertises only a generic Parlor room.
             val advertisedDeviceName = "$P2P_ROOM_PREFIX$deviceName"
             val lifecycleRegistrationId = SecureIds.id128()
-            p2pLog("host: generated a room code; advertising a generic Parlor service")
             val kit = kitFactory.createKit(
                 appId = appId,
                 deviceName = advertisedDeviceName,
             )
-            p2pLog("host: kit created localPeerId=${kit.localPeerId.value}; calling start()")
             // p2p-005: if start()/startAdvertising() throws, stop the kit before
             // propagating — otherwise the started instance (sockets, JmDNS/NSD
             // registration, kit scope) leaks for the process lifetime. join()
@@ -268,15 +310,15 @@ class P2pKitRoomTransport(
                     gameProtocol = config.gameProtocol,
                     scope = scope,
                     codec = codec,
+                    diagnostics = diagnostics,
                     onClosed = { roomClosed(lifecycleRegistrationId) },
                 )
-                p2pLog("host: start() returned; calling startAdvertising()")
                 kit.startAdvertising()
                 _localNetworkAccess.value = LocalNetworkAccess.Operational
             } catch (t: Throwable) {
                 withContext(NonCancellable) {
                     if (room == null) {
-                        kit.stopAfterFailure()
+                        kit.stopAfterFailure(diagnostics)
                     } else {
                         room.leave()
                     }
@@ -284,16 +326,27 @@ class P2pKitRoomTransport(
                 t.rethrowIfCancellation()
                 throw t
             }
-            p2pLog("host: startAdvertising() returned; ready to accept incoming sessions")
             checkNotNull(room).also {
                 registerLifecycleRoom(lifecycleRegistrationId, it)
             }
         }.fold(
-            onSuccess = { Result.Success(it) },
+            onSuccess = {
+                diagnostics.event(
+                    P2pDiagnosticEventName.SESSION_CREATE_SUCCEEDED,
+                    P2pDiagnosticRole.HOST,
+                    P2pDiagnosticResult.SUCCESS,
+                )
+                Result.Success(it)
+            },
             onFailure = {
                 it.rethrowIfCancellation()
                 recordLocalNetworkFailure(it)
-                p2pLog("host: FAILED message='${it.message}'")
+                diagnostics.event(
+                    P2pDiagnosticEventName.SESSION_CREATE_FAILED,
+                    P2pDiagnosticRole.HOST,
+                    P2pDiagnosticResult.FAILURE,
+                    it.toDiagnosticReason(),
+                )
                 Result.Failure(NetError.TransportFailure(it.message ?: "host failed"))
             },
         )
@@ -308,37 +361,54 @@ class P2pKitRoomTransport(
             return Result.Failure(NetError.Unauthorized)
         }
         _localNetworkAccess.value = LocalNetworkAccess.Attempting
-        p2pLog("join: entry")
+        diagnostics.event(P2pDiagnosticEventName.SESSION_CREATE_STARTED, P2pDiagnosticRole.PEER)
         val kit = try {
             kitFactory.createKit(appId = appId, deviceName = config.displayName)
         } catch (t: Throwable) {
             t.rethrowIfCancellation()
             recordLocalNetworkFailure(t)
+            diagnostics.event(
+                P2pDiagnosticEventName.SESSION_CREATE_FAILED,
+                P2pDiagnosticRole.PEER,
+                P2pDiagnosticResult.FAILURE,
+                t.toDiagnosticReason(),
+            )
             return Result.Failure(NetError.TransportFailure(t.message ?: "kit initialization failed"))
         }
         try {
             kit.also {
-                p2pLog("join: kit created localPeerId=${it.localPeerId.value}; calling start()")
                 it.start()
-                p2pLog("join: start() returned; calling startDiscovery()")
                 it.startDiscovery()
-                p2pLog("join: startDiscovery() returned; awaiting fresh host advertisement")
+                diagnostics.event(P2pDiagnosticEventName.DISCOVERY_STARTED, P2pDiagnosticRole.PEER)
             }
         } catch (t: Throwable) {
-            kit.stopAfterFailure()
+            kit.stopAfterFailure(diagnostics)
             t.rethrowIfCancellation()
             recordLocalNetworkFailure(t)
-            p2pLog("join: kit setup FAILED message='${t.message}'")
+            diagnostics.event(
+                P2pDiagnosticEventName.SESSION_CREATE_FAILED,
+                P2pDiagnosticRole.PEER,
+                P2pDiagnosticResult.FAILURE,
+                t.toDiagnosticReason(),
+            )
             return Result.Failure(NetError.TransportFailure(t.message ?: "join failed"))
         }
         return try {
             val startedAt = TimeSource.Monotonic.markNow()
             val scheduler = DiscoveryCandidateScheduler(totalDeadlineMs = joinTimeoutMs)
             var result: Result<LocalRoom, NetError>? = null
+            var lastVisibleCount: Int? = null
             while (result == null && startedAt.elapsedNow().inWholeMilliseconds < joinTimeoutMs) {
                 val elapsedMs = startedAt.elapsedNow().inWholeMilliseconds
                 val visiblePeers = kit.peers.value.filter { it.isFreshParlorHost(kit) }
-                logPeerSnapshot(visiblePeers, P2P_ROOM_PREFIX, kit)
+                if (lastVisibleCount != visiblePeers.size) {
+                    lastVisibleCount = visiblePeers.size
+                    diagnostics.event(
+                        P2pDiagnosticEventName.DISCOVERY_CANDIDATES,
+                        P2pDiagnosticRole.PEER,
+                        count = diagnosticCount(visiblePeers.size),
+                    )
+                }
                 scheduler.update(
                     visiblePeers.map { peer ->
                         DiscoveryCandidate(peer.id.value, peer.endpointVersion())
@@ -373,6 +443,10 @@ class P2pKitRoomTransport(
                 val remainingDialBudgetMs = joinTimeoutMs -
                     startedAt.elapsedNow().inWholeMilliseconds
                 if (remainingDialBudgetMs <= 0L) break
+                diagnostics.event(
+                    P2pDiagnosticEventName.DISCOVERY_ATTEMPTED,
+                    P2pDiagnosticRole.PEER,
+                )
                 val session = try {
                     withTimeoutOrNull(minOf(DIAL_AND_HANDSHAKE_TIMEOUT_MS, remainingDialBudgetMs)) {
                         kit.connect(hostPeer)
@@ -382,6 +456,12 @@ class P2pKitRoomTransport(
                     null
                 }
                 if (session == null) {
+                    diagnostics.event(
+                        P2pDiagnosticEventName.DISCOVERY_ATTEMPTED,
+                        P2pDiagnosticRole.PEER,
+                        P2pDiagnosticResult.FAILURE,
+                        P2pDiagnosticReason.TRANSPORT,
+                    )
                     scheduler.recordResult(
                         candidate,
                         DiscoveryAttemptResult.TransientFailure,
@@ -392,6 +472,11 @@ class P2pKitRoomTransport(
                 // A completed authenticated P2pKit connection is stronger
                 // evidence than any permission preflight Apple makes public.
                 _localNetworkAccess.value = LocalNetworkAccess.Operational
+                diagnostics.event(
+                    P2pDiagnosticEventName.CONNECTION_SECURE,
+                    P2pDiagnosticRole.PEER,
+                    P2pDiagnosticResult.SUCCESS,
+                )
                 val remainingFirstResponseBudgetMs = joinTimeoutMs -
                     startedAt.elapsedNow().inWholeMilliseconds
                 if (remainingFirstResponseBudgetMs <= 0L) {
@@ -426,6 +511,7 @@ class P2pKitRoomTransport(
                             },
                             scope = scope,
                             codec = codec,
+                            diagnostics = diagnostics,
                             onClosed = { roomClosed(lifecycleRegistrationId) },
                         )
                         if (!peerRoom.finishInitialAdmissionHandoff(admission.credential)) {
@@ -473,17 +559,51 @@ class P2pKitRoomTransport(
             }
             if (result is Result.Failure) {
                 runCatching { kit.stopDiscovery() }
-                kit.stopAfterFailure()
+                kit.stopAfterFailure(diagnostics)
                 if (_localNetworkAccess.value != LocalNetworkAccess.Operational) {
                     _localNetworkAccess.value = LocalNetworkAccess.FailureUnclassified
                 }
             }
-            checkNotNull(result)
+            checkNotNull(result).also { completed ->
+                when (completed) {
+                    is Result.Success -> {
+                        diagnostics.event(
+                            P2pDiagnosticEventName.DISCOVERY_FINISHED,
+                            P2pDiagnosticRole.PEER,
+                            P2pDiagnosticResult.SUCCESS,
+                        )
+                        diagnostics.event(
+                            P2pDiagnosticEventName.SESSION_CREATE_SUCCEEDED,
+                            P2pDiagnosticRole.PEER,
+                            P2pDiagnosticResult.SUCCESS,
+                        )
+                    }
+                    is Result.Failure -> {
+                        diagnostics.event(
+                            P2pDiagnosticEventName.DISCOVERY_FINISHED,
+                            P2pDiagnosticRole.PEER,
+                            completed.error.toDiagnosticResult(),
+                            completed.error.toDiagnosticReason(),
+                        )
+                        diagnostics.event(
+                            P2pDiagnosticEventName.SESSION_CREATE_FAILED,
+                            P2pDiagnosticRole.PEER,
+                            completed.error.toDiagnosticResult(),
+                            completed.error.toDiagnosticReason(),
+                        )
+                    }
+                }
+            }
         } catch (t: Throwable) {
-            kit.stopAfterFailure()
+            kit.stopAfterFailure(diagnostics)
             t.rethrowIfCancellation()
             recordLocalNetworkFailure(t)
-            p2pLog("join: FAILED with exception type=${t::class.simpleName} message='${t.message}'")
+            diagnostics.event(
+                P2pDiagnosticEventName.SESSION_CREATE_FAILED,
+                P2pDiagnosticRole.PEER,
+                P2pDiagnosticResult.FAILURE,
+                t.toDiagnosticReason(),
+            )
             Result.Failure(NetError.TransportFailure(t.message ?: "join failed"))
         }
     }
@@ -520,14 +640,30 @@ class P2pKitRoomTransport(
         }
         if (credential.expiresAtEpochMillis <= nowMillis()) {
             credentialStore.clear()
+            diagnostics.event(
+                P2pDiagnosticEventName.LIFECYCLE_EXPIRED,
+                P2pDiagnosticRole.PEER,
+                P2pDiagnosticResult.REJECTED,
+                P2pDiagnosticReason.LIFECYCLE,
+            )
             return Result.Failure(NetError.RejoinExpired)
         }
+        diagnostics.event(
+            P2pDiagnosticEventName.LIFECYCLE_RESUME_STARTED,
+            P2pDiagnosticRole.PEER,
+        )
         _localNetworkAccess.value = LocalNetworkAccess.Attempting
         val kit = try {
             kitFactory.createKit(appId = appId, deviceName = credential.displayName)
         } catch (failure: Throwable) {
             failure.rethrowIfCancellation()
             recordLocalNetworkFailure(failure)
+            diagnostics.event(
+                P2pDiagnosticEventName.SESSION_CREATE_FAILED,
+                P2pDiagnosticRole.PEER,
+                P2pDiagnosticResult.FAILURE,
+                failure.toDiagnosticReason(),
+            )
             return Result.Failure(
                 NetError.TransportFailure(failure.message ?: "resume initialization failed"),
             )
@@ -535,9 +671,15 @@ class P2pKitRoomTransport(
         try {
             kit.start()
         } catch (failure: Throwable) {
-            kit.stopAfterFailure()
+            kit.stopAfterFailure(diagnostics)
             failure.rethrowIfCancellation()
             recordLocalNetworkFailure(failure)
+            diagnostics.event(
+                P2pDiagnosticEventName.SESSION_CREATE_FAILED,
+                P2pDiagnosticRole.PEER,
+                P2pDiagnosticResult.FAILURE,
+                failure.toDiagnosticReason(),
+            )
             return Result.Failure(
                 NetError.TransportFailure(failure.message ?: "resume initialization failed"),
             )
@@ -545,10 +687,20 @@ class P2pKitRoomTransport(
         return try {
             when (val resumed = resumeConnection(kit, credential)) {
                 is Result.Failure -> {
-                    kit.stopAfterFailure()
+                    kit.stopAfterFailure(diagnostics)
                     if (_localNetworkAccess.value != LocalNetworkAccess.Operational) {
                         _localNetworkAccess.value = LocalNetworkAccess.FailureUnclassified
                     }
+                    diagnostics.event(
+                        if (resumed.error == NetError.RejoinExpired) {
+                            P2pDiagnosticEventName.LIFECYCLE_EXPIRED
+                        } else {
+                            P2pDiagnosticEventName.SESSION_CREATE_FAILED
+                        },
+                        P2pDiagnosticRole.PEER,
+                        resumed.error.toDiagnosticResult(),
+                        resumed.error.toDiagnosticReason(),
+                    )
                     resumed
                 }
                 is Result.Success -> {
@@ -560,6 +712,7 @@ class P2pKitRoomTransport(
                         roomCode = resumed.data.credential.roomCode,
                         scope = scope,
                         codec = codec,
+                        diagnostics = diagnostics,
                         initialCredential = resumed.data.credential,
                         credentialStore = credentialStore,
                         resumeConnector = { next -> resumeConnection(kit, next) },
@@ -570,14 +723,25 @@ class P2pKitRoomTransport(
                         Result.Failure(NetError.TransportFailure("resume handoff failed"))
                     } else {
                         registerLifecycleRoom(lifecycleRegistrationId, room)
+                        diagnostics.event(
+                            P2pDiagnosticEventName.LIFECYCLE_RESUMED,
+                            P2pDiagnosticRole.PEER,
+                            P2pDiagnosticResult.SUCCESS,
+                        )
                         Result.Success(room)
                     }
                 }
             }
         } catch (failure: Throwable) {
-            kit.stopAfterFailure()
+            kit.stopAfterFailure(diagnostics)
             failure.rethrowIfCancellation()
             recordLocalNetworkFailure(failure)
+            diagnostics.event(
+                P2pDiagnosticEventName.SESSION_CREATE_FAILED,
+                P2pDiagnosticRole.PEER,
+                P2pDiagnosticResult.FAILURE,
+                failure.toDiagnosticReason(),
+            )
             Result.Failure(NetError.TransportFailure(failure.message ?: "resume failed"))
         }
     }
@@ -766,6 +930,7 @@ class P2pKitRoomTransport(
         }
         return try {
             kit.startDiscovery()
+            diagnostics.event(P2pDiagnosticEventName.DISCOVERY_STARTED, P2pDiagnosticRole.PEER)
             withTimeout(REJOIN_GRACE_MS) {
                 while (true) {
                     val hostPeer = kit.peers.first { peers ->
@@ -778,6 +943,10 @@ class P2pKitRoomTransport(
                             peer.isFreshParlorHost(kit)
                     }
                     val session = try {
+                        diagnostics.event(
+                            P2pDiagnosticEventName.DISCOVERY_ATTEMPTED,
+                            P2pDiagnosticRole.PEER,
+                        )
                         kit.connect(hostPeer, expectedFingerprint)
                     } catch (failure: Throwable) {
                         failure.rethrowIfCancellation()
@@ -793,6 +962,11 @@ class P2pKitRoomTransport(
                         runCatching { session.close() }
                         return@withTimeout Result.Failure(NetError.Unauthorized)
                     }
+                    diagnostics.event(
+                        P2pDiagnosticEventName.CONNECTION_SECURE,
+                        P2pDiagnosticRole.PEER,
+                        P2pDiagnosticResult.SUCCESS,
+                    )
                     when (val resumed = awaitResume(session, hostPeer, credential)) {
                         is Result.Success -> return@withTimeout resumed
                         is Result.Failure -> {
@@ -982,23 +1156,8 @@ class P2pKitRoomTransport(
         }.getOrNull()
     }
 
-    private fun logPeerSnapshot(peers: List<Peer>, expectedPrefix: String, kit: P2pKit) {
-        if (peers.isEmpty()) {
-            p2pLog("join: kit.peers emitted size=0 (no peers visible yet)")
-            return
-        }
-        p2pLog("join: kit.peers emitted size=${peers.size} expectedPrefix='$expectedPrefix'")
-        peers.forEachIndexed { i, p ->
-            val lastSeen = kit.lastSeen(p.id)
-            val age = if (lastSeen != null) "${nowMillis() - lastSeen}ms ago" else "null (platform doesn't track)"
-            val prefixOk = p.name.startsWith(expectedPrefix)
-            p2pLog("join:   peer[$i] id=${p.id.value} name='${p.name}' lastSeen=$age prefixMatch=$prefixOk")
-        }
-    }
-
     private fun Peer.isFreshParlorHost(kit: P2pKit): Boolean {
         if (!name.startsWith(P2P_ROOM_PREFIX)) {
-            p2pLog("freshness: rejected non-Parlor service")
             return false
         }
         // Absence of a per-peer timestamp is NOT evidence of staleness —
@@ -1006,17 +1165,10 @@ class P2pKitRoomTransport(
         // adapter currently follows this path on every discovered peer.
         val seenAt = kit.lastSeen(id)
         if (seenAt == null) {
-            p2pLog("freshness: ACCEPT peer id=${id.value} name='$name' reason=null-lastSeen (trust emission)")
             return true
         }
         val ageMs = nowMillis() - seenAt
-        val fresh = ageMs <= peerFreshnessWindowMs
-        if (fresh) {
-            p2pLog("freshness: ACCEPT peer id=${id.value} name='$name' ageMs=$ageMs windowMs=$peerFreshnessWindowMs")
-        } else {
-            p2pLog("freshness: REJECT peer id=${id.value} name='$name' reason=stale ageMs=$ageMs windowMs=$peerFreshnessWindowMs")
-        }
-        return fresh
+        return ageMs <= peerFreshnessWindowMs
     }
 
     private fun Peer.endpointVersion(): String = buildString {
@@ -1092,6 +1244,88 @@ private fun Throwable.rethrowIfCancellation() {
     if (this is CancellationException) throw this
 }
 
+private fun P2pDiagnostics.event(
+    name: P2pDiagnosticEventName,
+    role: P2pDiagnosticRole = P2pDiagnosticRole.NONE,
+    result: P2pDiagnosticResult = P2pDiagnosticResult.NONE,
+    reason: P2pDiagnosticReason = P2pDiagnosticReason.NONE,
+    count: P2pDiagnosticCountBucket = P2pDiagnosticCountBucket.NONE,
+) {
+    record(P2pDiagnosticEvent(name, role, result, reason, count))
+}
+
+private fun Throwable.toDiagnosticReason(): P2pDiagnosticReason =
+    if (generateSequence(this as Throwable?) { it.cause }.any { it is P2pError.PermissionMissing }) {
+        P2pDiagnosticReason.PERMISSION
+    } else {
+        P2pDiagnosticReason.TRANSPORT
+    }
+
+private fun NetError.toDiagnosticResult(): P2pDiagnosticResult = when (this) {
+    NetError.Timeout -> P2pDiagnosticResult.TIMEOUT
+    else -> P2pDiagnosticResult.FAILURE
+}
+
+private fun NetError.toDiagnosticReason(): P2pDiagnosticReason = when (this) {
+    NetError.WrongCode -> P2pDiagnosticReason.WRONG_ROOM
+    NetError.RoomFull -> P2pDiagnosticReason.ROOM_FULL
+    NetError.SessionStarted -> P2pDiagnosticReason.SESSION_STARTED
+    NetError.IncompatibleProtocol -> P2pDiagnosticReason.INCOMPATIBLE_PROTOCOL
+    NetError.Unauthorized -> P2pDiagnosticReason.UNAUTHORIZED
+    NetError.RateLimited -> P2pDiagnosticReason.RATE_LIMIT
+    NetError.PayloadTooLarge -> P2pDiagnosticReason.PAYLOAD_LIMIT
+    NetError.NotConnected,
+    NetError.Timeout,
+    NetError.HostDeclined,
+    NetError.RejoinExpired,
+    NetError.AlreadyConnected,
+    NetError.SecureStorageUnavailable,
+    NetError.CommandInFlight,
+    NetError.SessionSuspended,
+    is NetError.TransportFailure -> P2pDiagnosticReason.TRANSPORT
+}
+
+private fun AdmissionRejection.toDiagnosticReason(): P2pDiagnosticReason = when (this) {
+    AdmissionRejection.WrongCode -> P2pDiagnosticReason.WRONG_ROOM
+    AdmissionRejection.RoomFull -> P2pDiagnosticReason.ROOM_FULL
+    AdmissionRejection.SessionStarted -> P2pDiagnosticReason.SESSION_STARTED
+    AdmissionRejection.IncompatibleProtocol -> P2pDiagnosticReason.INCOMPATIBLE_PROTOCOL
+    AdmissionRejection.RateLimited -> P2pDiagnosticReason.RATE_LIMIT
+    AdmissionRejection.HostDeclined,
+    AdmissionRejection.InvalidRequest,
+    AdmissionRejection.InvalidCredential,
+    AdmissionRejection.ExpiredCredential,
+    AdmissionRejection.AlreadyConnected -> P2pDiagnosticReason.UNAUTHORIZED
+}
+
+private fun CommandStatus.toDiagnosticReason(): P2pDiagnosticReason = when (this) {
+    CommandStatus.Applied,
+    CommandStatus.Duplicate -> P2pDiagnosticReason.NONE
+    CommandStatus.InvalidAction -> P2pDiagnosticReason.INVALID_ACTION
+    CommandStatus.Unauthorized -> P2pDiagnosticReason.UNAUTHORIZED
+    CommandStatus.StaleRevision -> P2pDiagnosticReason.STALE_REVISION
+    CommandStatus.SequenceGap -> P2pDiagnosticReason.SEQUENCE_GAP
+    CommandStatus.IncompatibleVersion -> P2pDiagnosticReason.INCOMPATIBLE_PROTOCOL
+    CommandStatus.PayloadTooLarge -> P2pDiagnosticReason.PAYLOAD_LIMIT
+    CommandStatus.SessionEnded -> P2pDiagnosticReason.SESSION_ENDED
+    CommandStatus.UnknownCommand -> P2pDiagnosticReason.UNKNOWN_COMMAND
+    CommandStatus.SessionSuspended -> P2pDiagnosticReason.LIFECYCLE
+}
+
+private fun P2pDiagnostics.recordCommandResult(
+    status: CommandStatus,
+    role: P2pDiagnosticRole,
+) {
+    val (eventName, result) = when (status) {
+        CommandStatus.Applied ->
+            P2pDiagnosticEventName.COMMAND_ACCEPTED to P2pDiagnosticResult.SUCCESS
+        CommandStatus.Duplicate ->
+            P2pDiagnosticEventName.COMMAND_DUPLICATE to P2pDiagnosticResult.DUPLICATE
+        else -> P2pDiagnosticEventName.COMMAND_REJECTED to P2pDiagnosticResult.REJECTED
+    }
+    event(eventName, role, result, status.toDiagnosticReason())
+}
+
 private fun PeerMessage.hasValidPeerPayloadBounds(): Boolean = when (this) {
     is PeerMessage.ClientCommand -> payload.size <= MAX_COMMAND_PAYLOAD_BYTES
     is PeerMessage.ActionSubmit -> payload.size <= MAX_COMMAND_PAYLOAD_BYTES
@@ -1099,12 +1333,21 @@ private fun PeerMessage.hasValidPeerPayloadBounds(): Boolean = when (this) {
 }
 
 /** Ensure a partially-started kit is released even when its owner is cancelled. */
-private suspend fun P2pKit.stopAfterFailure() {
+private suspend fun P2pKit.stopAfterFailure(diagnostics: P2pDiagnostics) {
+    diagnostics.event(P2pDiagnosticEventName.CLEANUP_STARTED)
     withContext(NonCancellable) {
         try {
             stop()
+            diagnostics.event(
+                P2pDiagnosticEventName.CLEANUP_COMPLETED,
+                result = P2pDiagnosticResult.SUCCESS,
+            )
         } catch (failure: Throwable) {
-            p2pLog("cleanup: kit stop failed (${failure::class.simpleName})")
+            diagnostics.event(
+                P2pDiagnosticEventName.CLEANUP_FAILED,
+                result = P2pDiagnosticResult.FAILURE,
+                reason = failure.toDiagnosticReason(),
+            )
         }
     }
 }
@@ -1139,6 +1382,7 @@ internal class HostP2pRoom(
     private val gameProtocol: HostedGameProtocol? = null,
     private val scope: CoroutineScope,
     private val codec: RoomMessageCodec,
+    private val diagnostics: P2pDiagnostics = NoOpP2pDiagnostics,
     private val onClosed: () -> Unit = {},
     private val appResumeGraceMs: Long = P2pKitRoomTransport.APP_RESUME_GRACE_MS,
 ) : LocalRoom, AppLifecycleAwareRoom {
@@ -1303,7 +1547,7 @@ internal class HostP2pRoom(
                     enforceTrafficDecision(
                         trafficGuard.malformedFrame(nowMillis()),
                         session,
-                        "unexpected-frame-type",
+                        P2pDiagnosticReason.MALFORMED,
                     )
                     return@collect
                 }
@@ -1311,7 +1555,7 @@ internal class HostP2pRoom(
                     !enforceTrafficDecision(
                         trafficGuard.inspectFrame(msg.bytes.size, nowMillis()),
                         session,
-                        "frame-budget",
+                        P2pDiagnosticReason.RATE_LIMIT,
                     )
                 ) {
                     return@collect
@@ -1325,7 +1569,7 @@ internal class HostP2pRoom(
                     enforceTrafficDecision(
                         trafficGuard.malformedFrame(nowMillis()),
                         session,
-                        "malformed-frame",
+                        P2pDiagnosticReason.MALFORMED,
                     )
                     return@collect
                 }
@@ -1333,7 +1577,7 @@ internal class HostP2pRoom(
                     enforceTrafficDecision(
                         trafficGuard.malformedFrame(nowMillis()),
                         session,
-                        "invalid-direction-or-payload",
+                        P2pDiagnosticReason.WRONG_DIRECTION,
                     )
                     return@collect
                 }
@@ -1472,9 +1716,14 @@ internal class HostP2pRoom(
                     // by seconds on flaky LANs). LeaveNotice is
                     // transport plumbing; do NOT forward it to game
                     // modules via incomingPeerMessages.
-                    p2pLog("host: received LeaveNotice from peerId=${playerId.raw}")
                     handleExplicitLeave(playerId, displayName, session)
                     return@collect
+                }
+                if (decoded is PeerMessage.ClientCommand) {
+                    diagnostics.event(
+                        P2pDiagnosticEventName.COMMAND_RECEIVED,
+                        P2pDiagnosticRole.HOST,
+                    )
                 }
                 incomingPeerMessages.send(decoded)
             }
@@ -1653,6 +1902,10 @@ internal class HostP2pRoom(
                     return
                 }
                 if (requestEvent.emitEvent) {
+                    diagnostics.event(
+                        P2pDiagnosticEventName.ADMISSION_REQUESTED,
+                        P2pDiagnosticRole.HOST,
+                    )
                     _peerEvents.emit(
                         PeerEvent.AdmissionRequested(
                             playerId = requestEvent.admission.playerId,
@@ -2122,6 +2375,10 @@ internal class HostP2pRoom(
             AdmissionPreparation.InFlight -> return Result.Failure(NetError.CommandInFlight)
             is AdmissionPreparation.Ready -> prepared.transaction
         }
+        diagnostics.event(
+            P2pDiagnosticEventName.ADMISSION_RESERVED,
+            P2pDiagnosticRole.HOST,
+        )
 
         try {
             sendRaw(session, HostMessage.AdmissionOffered(transaction.offer))
@@ -2199,6 +2456,11 @@ internal class HostP2pRoom(
             runCatching { session.close() }
             return Result.Failure(NetError.NotConnected)
         }
+        diagnostics.event(
+            P2pDiagnosticEventName.ADMISSION_COMMITTED,
+            P2pDiagnosticRole.HOST,
+            P2pDiagnosticResult.SUCCESS,
+        )
         commit.previousSession?.let { runCatching { it.close() } }
         commit.previousCredential?.wipe()
         try {
@@ -2262,6 +2524,10 @@ internal class HostP2pRoom(
                 publishPendingAdmissions()
             }
         }
+        diagnostics.event(
+            P2pDiagnosticEventName.ADMISSION_ROLLED_BACK,
+            P2pDiagnosticRole.HOST,
+        )
     }
 
     private sealed interface AdmissionPreparation {
@@ -2306,15 +2572,25 @@ internal class HostP2pRoom(
     private suspend fun enforceTrafficDecision(
         decision: InboundTrafficDecision,
         session: P2pSession,
-        event: String,
+        reason: P2pDiagnosticReason,
     ): Boolean = when (decision) {
         InboundTrafficDecision.Accept -> true
         InboundTrafficDecision.Drop -> {
-            p2pLog("security: inbound frame dropped event=$event")
+            diagnostics.event(
+                P2pDiagnosticEventName.FRAME_DROPPED,
+                P2pDiagnosticRole.HOST,
+                P2pDiagnosticResult.REJECTED,
+                reason,
+            )
             false
         }
         InboundTrafficDecision.Disconnect -> {
-            p2pLog("security: inbound session disconnected event=$event")
+            diagnostics.event(
+                P2pDiagnosticEventName.PEER_RATE_LIMITED,
+                P2pDiagnosticRole.HOST,
+                P2pDiagnosticResult.REJECTED,
+                reason,
+            )
             try {
                 session.close()
             } catch (failure: Throwable) {
@@ -2330,6 +2606,16 @@ internal class HostP2pRoom(
         session: P2pSession,
         reason: AdmissionRejection,
     ) {
+        diagnostics.event(
+            if (reason == AdmissionRejection.IncompatibleProtocol) {
+                P2pDiagnosticEventName.PROTOCOL_REJECTED
+            } else {
+                P2pDiagnosticEventName.ADMISSION_REJECTED
+            },
+            P2pDiagnosticRole.HOST,
+            P2pDiagnosticResult.REJECTED,
+            reason.toDiagnosticReason(),
+        )
         runCatching { sendRaw(session, HostMessage.AdmissionRejected(reason)) }
         delay(P2pKitRoomTransport.ADMISSION_REJECTION_FLUSH_MS)
         runCatching { session.close() }
@@ -2379,6 +2665,10 @@ internal class HostP2pRoom(
             }
         }
         if (expiry == null) return
+        diagnostics.event(
+            P2pDiagnosticEventName.LIFECYCLE_SUSPENDED,
+            P2pDiagnosticRole.HOST,
+        )
         if (expiry.second == 0L) {
             expireLifecycle(expiry.first)
             return
@@ -2391,7 +2681,12 @@ internal class HostP2pRoom(
             kit.stopAdvertising()
         } catch (failure: Throwable) {
             failure.rethrowIfCancellation()
-            p2pLog("lifecycle: host stopAdvertising failed (${failure::class.simpleName})")
+            diagnostics.event(
+                P2pDiagnosticEventName.CLEANUP_FAILED,
+                P2pDiagnosticRole.HOST,
+                P2pDiagnosticResult.FAILURE,
+                P2pDiagnosticReason.LIFECYCLE,
+            )
         }
     }
 
@@ -2412,6 +2707,10 @@ internal class HostP2pRoom(
         stateMutex.withLock {
             _lifecycle.value = RoomLifecycleState.Resuming(deadline)
         }
+        diagnostics.event(
+            P2pDiagnosticEventName.LIFECYCLE_RESUME_STARTED,
+            P2pDiagnosticRole.HOST,
+        )
         scheduleLifecycleExpiry(deadline, deadline - atEpochMillis)
         kit.notifyAppForegrounded()
         kit.startAdvertising()
@@ -2431,6 +2730,13 @@ internal class HostP2pRoom(
             }
         }
         expiryJob?.cancel()
+        if (expiryJob != null) {
+            diagnostics.event(
+                P2pDiagnosticEventName.LIFECYCLE_RESUMED,
+                P2pDiagnosticRole.HOST,
+                P2pDiagnosticResult.SUCCESS,
+            )
+        }
     }
 
     private suspend fun scheduleLifecycleExpiry(deadline: Long, delayMs: Long) {
@@ -2460,7 +2766,15 @@ internal class HostP2pRoom(
                 false
             }
         }
-        if (shouldLeave) leave()
+        if (shouldLeave) {
+            diagnostics.event(
+                P2pDiagnosticEventName.LIFECYCLE_EXPIRED,
+                P2pDiagnosticRole.HOST,
+                P2pDiagnosticResult.TIMEOUT,
+                P2pDiagnosticReason.LIFECYCLE,
+            )
+            leave()
+        }
     }
 
     /**
@@ -2495,10 +2809,13 @@ internal class HostP2pRoom(
             }
         }
         if (!removed) {
-            p2pLog("host: handleExplicitLeave SKIP (superseded session) peerId=${playerId.raw}")
             return
         }
-        p2pLog("host: emitting PeerLeft (explicit LeaveNotice) peerId=${playerId.raw}")
+        diagnostics.event(
+            P2pDiagnosticEventName.CONNECTION_CLOSED,
+            P2pDiagnosticRole.HOST,
+            reason = P2pDiagnosticReason.DISCONNECTED,
+        )
         _peerEvents.tryEmit(PeerEvent.PeerLeft(playerId, displayName))
         // Best-effort cooperative close so the per-session collectors
         // complete. We deliberately don't await it (close is suspending);
@@ -2513,7 +2830,7 @@ internal class HostP2pRoom(
             return Result.Failure(NetError.PayloadTooLarge)
         }
         val payload = P2pMessage.Binary(bytes)
-        return runCatching {
+        val result = runCatching {
             when (target) {
                 SendTarget.Broadcast -> {
                     // p2p-001: snapshot the session list under the lock
@@ -2547,6 +2864,19 @@ internal class HostP2pRoom(
             it.rethrowIfCancellation()
             Result.Failure(NetError.TransportFailure(it.message ?: "send failed"))
         }
+        if (result is Result.Success) {
+            when (message) {
+                is HostMessage.CommandResult ->
+                    diagnostics.recordCommandResult(message.status, P2pDiagnosticRole.HOST)
+                is HostMessage.PlayerSnapshot -> diagnostics.event(
+                    P2pDiagnosticEventName.SNAPSHOT_SENT,
+                    P2pDiagnosticRole.HOST,
+                    P2pDiagnosticResult.SUCCESS,
+                )
+                else -> Unit
+            }
+        }
+        return result
     }
 
     /** A host cannot author a [PeerMessage]; calling this is a contract violation. */
@@ -2561,16 +2891,26 @@ internal class HostP2pRoom(
             }
         }
         if (!shouldLeave) {
-            p2pLog("host: leave() ignored (already left)")
             return
         }
         expiryJob?.cancel()
-        p2pLog("host: leave() entry; closing ${sessionsByPlayer.size} sessions")
+        diagnostics.event(
+            P2pDiagnosticEventName.CLEANUP_STARTED,
+            P2pDiagnosticRole.HOST,
+            count = diagnosticCount(stateMutex.withLock { trackedSessions.size }),
+        )
         // Stop advertising FIRST and give Bonjour a beat to actually push
         // the "service-removed" packet before the kit goes down. Skipping
         // this is the root cause of dead rooms lingering in remote join
         // lobbies for the entire Bonjour eviction window (5–30s on iOS).
-        runCatching { kit.stopAdvertising() }
+        runCatching { kit.stopAdvertising() }.onFailure {
+            diagnostics.event(
+                P2pDiagnosticEventName.CLEANUP_FAILED,
+                P2pDiagnosticRole.HOST,
+                P2pDiagnosticResult.FAILURE,
+                P2pDiagnosticReason.TRANSPORT,
+            )
+        }
         delay(P2pKitRoomTransport.BONJOUR_GOODBYE_FLUSH_MS)
         sessionSupervisor.cancelAndJoin()
         val toClose = stateMutex.withLock {
@@ -2595,13 +2935,24 @@ internal class HostP2pRoom(
         toClose.forEach { runCatching { it.close() } }
         // kit.stop() is terminal; guard it so a late/duplicate teardown can't
         // throw out of a disposal path. See PROBLEMS_PARLOR.md → p2p-016.
-        runCatching { kit.stop() }
+        runCatching { kit.stop() }.onFailure {
+            diagnostics.event(
+                P2pDiagnosticEventName.CLEANUP_FAILED,
+                P2pDiagnosticRole.HOST,
+                P2pDiagnosticResult.FAILURE,
+                P2pDiagnosticReason.TRANSPORT,
+            )
+        }
         if (_lifecycle.value != RoomLifecycleState.Expired) {
             _lifecycle.value = RoomLifecycleState.Closed
         }
         incomingPeerMessages.close()
         onClosed()
-        p2pLog("host: leave() done")
+        diagnostics.event(
+            P2pDiagnosticEventName.CLEANUP_COMPLETED,
+            P2pDiagnosticRole.HOST,
+            P2pDiagnosticResult.SUCCESS,
+        )
     }
 }
 
@@ -2620,6 +2971,7 @@ internal class PeerP2pRoom(
     private val roomCode: String,
     private val scope: CoroutineScope,
     private val codec: RoomMessageCodec,
+    private val diagnostics: P2pDiagnostics = NoOpP2pDiagnostics,
     initialCredential: ResumableSessionCredential? = null,
     private val credentialStore: ResumableCredentialStore? = null,
     private val resumeConnector: (
@@ -2701,6 +3053,10 @@ internal class PeerP2pRoom(
             }
         }
         if (expiry != null) {
+            diagnostics.event(
+                P2pDiagnosticEventName.LIFECYCLE_SUSPENDED,
+                P2pDiagnosticRole.PEER,
+            )
             val interruptedResume = lifecycleMutex.withLock {
                 resumeJob.also { resumeJob = null }
             }
@@ -2733,6 +3089,10 @@ internal class PeerP2pRoom(
         lifecycleMutex.withLock {
             _lifecycle.value = RoomLifecycleState.Resuming(deadline)
         }
+        diagnostics.event(
+            P2pDiagnosticEventName.LIFECYCLE_RESUME_STARTED,
+            P2pDiagnosticRole.PEER,
+        )
         scheduleLifecycleExpiry(deadline, deadline - atEpochMillis)
         kit.notifyAppForegrounded()
         resumeAfterForeground(deadline)
@@ -2903,6 +3263,11 @@ internal class PeerP2pRoom(
             }
         }
         if (restored) {
+            diagnostics.event(
+                P2pDiagnosticEventName.LIFECYCLE_RESUMED,
+                P2pDiagnosticRole.PEER,
+                P2pDiagnosticResult.SUCCESS,
+            )
             markHostConnected(true)
             _info.value = _info.value.copy(status = RoomInfo.Status.Joined)
             if (emitEvent) _peerEvents.emit(PeerEvent.HostRestored)
@@ -2936,7 +3301,15 @@ internal class PeerP2pRoom(
                 false
             }
         }
-        if (shouldLeave) leave(sendNotice = false)
+        if (shouldLeave) {
+            diagnostics.event(
+                P2pDiagnosticEventName.LIFECYCLE_EXPIRED,
+                P2pDiagnosticRole.PEER,
+                P2pDiagnosticResult.TIMEOUT,
+                P2pDiagnosticReason.LIFECYCLE,
+            )
+            leave(sendNotice = false)
+        }
     }
 
     private fun launchIncomingCollector(session: P2pSession): Job = scope.launch {
@@ -2949,7 +3322,7 @@ internal class PeerP2pRoom(
                 enforceTrafficDecision(
                     trafficGuard.malformedFrame(nowMillis()),
                     session,
-                    "unexpected-frame-type",
+                    P2pDiagnosticReason.MALFORMED,
                 )
                 return@collect
             }
@@ -2957,7 +3330,7 @@ internal class PeerP2pRoom(
                 !enforceTrafficDecision(
                     trafficGuard.inspectFrame(msg.bytes.size, nowMillis()),
                     session,
-                    "frame-budget",
+                    P2pDiagnosticReason.RATE_LIMIT,
                 )
             ) {
                 return@collect
@@ -2970,7 +3343,7 @@ internal class PeerP2pRoom(
                 enforceTrafficDecision(
                     trafficGuard.malformedFrame(nowMillis()),
                     session,
-                    "malformed-frame",
+                    P2pDiagnosticReason.MALFORMED,
                 )
                 return@collect
             }
@@ -2978,7 +3351,7 @@ internal class PeerP2pRoom(
                 enforceTrafficDecision(
                     trafficGuard.malformedFrame(nowMillis()),
                     session,
-                    "invalid-direction",
+                    P2pDiagnosticReason.WRONG_DIRECTION,
                 )
                 return@collect
             }
@@ -2990,7 +3363,19 @@ internal class PeerP2pRoom(
                 is HostMessage.ResumeOffered,
                 is HostMessage.ResumeCommitted,
                 is HostMessage.AdmissionRejected -> Unit
-                else -> incomingHostMessages.send(decoded)
+                else -> {
+                    when (decoded) {
+                        is HostMessage.CommandResult ->
+                            diagnostics.recordCommandResult(decoded.status, P2pDiagnosticRole.PEER)
+                        is HostMessage.PlayerSnapshot -> diagnostics.event(
+                            P2pDiagnosticEventName.SNAPSHOT_RECEIVED,
+                            P2pDiagnosticRole.PEER,
+                            P2pDiagnosticResult.SUCCESS,
+                        )
+                        else -> Unit
+                    }
+                    incomingHostMessages.send(decoded)
+                }
             }
         }
     }
@@ -2998,15 +3383,25 @@ internal class PeerP2pRoom(
     private suspend fun enforceTrafficDecision(
         decision: InboundTrafficDecision,
         session: P2pSession,
-        event: String,
+        reason: P2pDiagnosticReason,
     ): Boolean = when (decision) {
         InboundTrafficDecision.Accept -> true
         InboundTrafficDecision.Drop -> {
-            p2pLog("security: host frame dropped event=$event")
+            diagnostics.event(
+                P2pDiagnosticEventName.FRAME_DROPPED,
+                P2pDiagnosticRole.PEER,
+                P2pDiagnosticResult.REJECTED,
+                reason,
+            )
             false
         }
         InboundTrafficDecision.Disconnect -> {
-            p2pLog("security: host session disconnected event=$event")
+            diagnostics.event(
+                P2pDiagnosticEventName.PEER_RATE_LIMITED,
+                P2pDiagnosticRole.PEER,
+                P2pDiagnosticResult.REJECTED,
+                reason,
+            )
             try {
                 session.close()
             } catch (failure: Throwable) {
@@ -3024,7 +3419,6 @@ internal class PeerP2pRoom(
         // entered a lost state.
         var hostLost = false
         session.state.collect { state ->
-            p2pLog("peer: session state -> $state (hostPid=${hostPlayerId.raw})")
             when (state) {
                 ConnectionState.Reconnecting,
                 ConnectionState.Failed -> {
@@ -3032,7 +3426,11 @@ internal class PeerP2pRoom(
                         hostLost = true
                         markHostConnected(false)
                         _info.value = _info.value.copy(status = RoomInfo.Status.Lost)
-                        p2pLog("peer: emitting HostLost (state=$state)")
+                        diagnostics.event(
+                            P2pDiagnosticEventName.CONNECTION_CLOSED,
+                            P2pDiagnosticRole.PEER,
+                            reason = P2pDiagnosticReason.DISCONNECTED,
+                        )
                         _peerEvents.tryEmit(PeerEvent.HostLost)
                     }
                 }
@@ -3040,7 +3438,11 @@ internal class PeerP2pRoom(
                     if (hostLost) {
                         hostLost = false
                         restoreActiveRoom(emitEvent = false)
-                        p2pLog("peer: emitting HostRestored")
+                        diagnostics.event(
+                            P2pDiagnosticEventName.CONNECTION_SECURE,
+                            P2pDiagnosticRole.PEER,
+                            P2pDiagnosticResult.SUCCESS,
+                        )
                         _peerEvents.tryEmit(PeerEvent.HostRestored)
                     }
                 }
@@ -3049,7 +3451,11 @@ internal class PeerP2pRoom(
                         hostLost = true
                         markHostConnected(false)
                         _info.value = _info.value.copy(status = RoomInfo.Status.Lost)
-                        p2pLog("peer: emitting HostLost (state=Closed)")
+                        diagnostics.event(
+                            P2pDiagnosticEventName.CONNECTION_CLOSED,
+                            P2pDiagnosticRole.PEER,
+                            reason = P2pDiagnosticReason.DISCONNECTED,
+                        )
                         _peerEvents.tryEmit(PeerEvent.HostLost)
                     }
                 }
@@ -3081,7 +3487,7 @@ internal class PeerP2pRoom(
         } catch (_: IllegalArgumentException) {
             return Result.Failure(NetError.PayloadTooLarge)
         }
-        return runCatching {
+        val result = runCatching {
             val payload = P2pMessage.Binary(bytes)
             session.send(payload)
         }.fold(
@@ -3091,6 +3497,14 @@ internal class PeerP2pRoom(
                 Result.Failure(NetError.TransportFailure(it.message ?: "send failed"))
             },
         )
+        if (result is Result.Success && message is PeerMessage.ClientCommand) {
+            diagnostics.event(
+                P2pDiagnosticEventName.COMMAND_SENT,
+                P2pDiagnosticRole.PEER,
+                P2pDiagnosticResult.SUCCESS,
+            )
+        }
+        return result
     }
 
     override suspend fun leave() = leave(sendNotice = true)
@@ -3109,7 +3523,6 @@ internal class PeerP2pRoom(
             }
         }
         if (!shouldLeave) {
-            p2pLog("peer: leave() ignored (already left)")
             return
         }
         jobs.forEach { job ->
@@ -3118,7 +3531,11 @@ internal class PeerP2pRoom(
             }
         }
         val session = sessionMutex.withLock { activeSession }
-        p2pLog("peer: leave() entry sessionState=${session.state.value}")
+        diagnostics.event(
+            P2pDiagnosticEventName.CLEANUP_STARTED,
+            P2pDiagnosticRole.PEER,
+            count = P2pDiagnosticCountBucket.ONE,
+        )
         // Best-effort: tell the host we're leaving so the lobby updates
         // immediately, instead of waiting for the TCP teardown to surface
         // (Closed/Failed). Guarded by Connected because send() is unsafe
@@ -3130,7 +3547,6 @@ internal class PeerP2pRoom(
                     codec.encode(PeerMessage.LeaveNotice),
                 )
                 session.send(notice)
-                p2pLog("peer: sent LeaveNotice to host")
                 // Tiny window for the bytes to actually flush across the
                 // wire before close() yanks the socket out from under
                 // them. See P2pKitRoomTransport.LEAVE_NOTICE_FLUSH_MS.
@@ -3143,14 +3559,32 @@ internal class PeerP2pRoom(
             credentialStore?.clear()
             activeCredential.value = null
         }
-        runCatching { session.close() }
+        runCatching { session.close() }.onFailure {
+            diagnostics.event(
+                P2pDiagnosticEventName.CLEANUP_FAILED,
+                P2pDiagnosticRole.PEER,
+                P2pDiagnosticResult.FAILURE,
+                P2pDiagnosticReason.TRANSPORT,
+            )
+        }
         // kit.stop() is terminal — guard against a duplicate/late teardown.
-        runCatching { kit.stop() }
+        runCatching { kit.stop() }.onFailure {
+            diagnostics.event(
+                P2pDiagnosticEventName.CLEANUP_FAILED,
+                P2pDiagnosticRole.PEER,
+                P2pDiagnosticResult.FAILURE,
+                P2pDiagnosticReason.TRANSPORT,
+            )
+        }
         if (_lifecycle.value != RoomLifecycleState.Expired) {
             _lifecycle.value = RoomLifecycleState.Closed
         }
         incomingHostMessages.close()
         onClosed()
-        p2pLog("peer: leave() done")
+        diagnostics.event(
+            P2pDiagnosticEventName.CLEANUP_COMPLETED,
+            P2pDiagnosticRole.PEER,
+            P2pDiagnosticResult.SUCCESS,
+        )
     }
 }
