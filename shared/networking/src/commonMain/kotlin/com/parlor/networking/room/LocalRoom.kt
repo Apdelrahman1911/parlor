@@ -117,6 +117,9 @@ sealed interface NetError {
     data object SessionStarted : NetError
     data object IncompatibleProtocol : NetError
     data object RateLimited : NetError
+    data object RejoinExpired : NetError
+    data object AlreadyConnected : NetError
+    data object SecureStorageUnavailable : NetError
     /** A mutating command is already awaiting an authoritative outcome. */
     data object CommandInFlight : NetError
     data object SessionSuspended : NetError

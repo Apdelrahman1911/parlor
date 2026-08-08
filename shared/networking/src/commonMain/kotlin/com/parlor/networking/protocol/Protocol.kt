@@ -59,7 +59,25 @@ enum class AdmissionRejection {
     IncompatibleProtocol,
     InvalidRequest,
     RateLimited,
+    InvalidCredential,
+    ExpiredCredential,
+    AlreadyConnected,
 }
+
+/** One generation of a device-protected resumable membership capability. */
+@Serializable
+data class ResumableCredentialOffer(
+    val offerId: String,
+    val playerId: PlayerId,
+    val hostPeerId: String,
+    val hostFingerprint: String,
+    val secret: String,
+    val generation: Long,
+    val issuedAtEpochMillis: Long,
+    val expiresAtEpochMillis: Long,
+    val gameId: String? = null,
+    val gameVersion: Int? = null,
+)
 
 @Serializable
 enum class CommandStatus {
@@ -96,9 +114,34 @@ sealed interface HostMessage : RoomMessage {
      * authenticated encrypted channel and must never be logged or advertised.
      */
     @Serializable
+    @Deprecated("Use the transactional AdmissionOffered/AdmissionCommitted handshake.")
     data class AdmissionAccepted(
         val playerId: PlayerId,
         val rejoinToken: String,
+    ) : HostMessage
+
+    /** Initial host approval; the peer must durably stage [offer] before confirming. */
+    @Serializable
+    data class AdmissionOffered(val offer: ResumableCredentialOffer) : HostMessage
+
+    /** Initial admission is authoritative and the staged credential may be promoted. */
+    @Serializable
+    data class AdmissionCommitted(
+        val playerId: PlayerId,
+        val offerId: String,
+        val generation: Long,
+    ) : HostMessage
+
+    /** Rotated credential offered after a valid pinned resume request. */
+    @Serializable
+    data class ResumeOffered(val offer: ResumableCredentialOffer) : HostMessage
+
+    /** Resume membership/session replacement committed on the host. */
+    @Serializable
+    data class ResumeCommitted(
+        val playerId: PlayerId,
+        val offerId: String,
+        val generation: Long,
     ) : HostMessage
 
     @Serializable
@@ -188,6 +231,49 @@ sealed interface PeerMessage : RoomMessage {
         val roomCode: String,
         val displayName: String,
         val rejoinToken: String? = null,
+    ) : PeerMessage
+
+    /** Confirms that the initial credential offer is durably staged. */
+    @Serializable
+    data class AdmissionConfirmed(
+        val actor: PlayerId,
+        val offerId: String,
+        val generation: Long,
+    ) : PeerMessage
+
+    /** Best-effort acknowledgement that the peer promoted the initial credential. */
+    @Serializable
+    data class AdmissionCommitAck(
+        val actor: PlayerId,
+        val offerId: String,
+        val generation: Long,
+    ) : PeerMessage
+
+    /** Requests replacement of a dead physical connection for a logical membership. */
+    @Serializable
+    data class ResumeRequested(
+        val protocol: ProtocolVersion,
+        val actor: PlayerId,
+        val roomCode: String,
+        val displayName: String,
+        val secret: String,
+        val generation: Long,
+    ) : PeerMessage
+
+    /** Confirms durable staging of the rotated resume offer. */
+    @Serializable
+    data class ResumeConfirmed(
+        val actor: PlayerId,
+        val offerId: String,
+        val generation: Long,
+    ) : PeerMessage
+
+    /** Best-effort acknowledgement that the rotated generation is active. */
+    @Serializable
+    data class ResumeCommitAck(
+        val actor: PlayerId,
+        val offerId: String,
+        val generation: Long,
     ) : PeerMessage
 
     /**

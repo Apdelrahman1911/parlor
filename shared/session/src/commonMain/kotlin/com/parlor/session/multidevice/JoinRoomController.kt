@@ -172,6 +172,9 @@ fun mapNetError(error: NetError): JoinError = when (error) {
     NetError.SessionStarted -> JoinError.GameAlreadyStarted
     NetError.IncompatibleProtocol -> JoinError.Generic
     NetError.RateLimited -> JoinError.Generic
+    NetError.RejoinExpired -> JoinError.Generic
+    NetError.AlreadyConnected -> JoinError.Generic
+    NetError.SecureStorageUnavailable -> JoinError.Generic
     NetError.CommandInFlight -> JoinError.Generic
     NetError.SessionSuspended -> JoinError.Generic
     NetError.Unauthorized -> JoinError.Generic

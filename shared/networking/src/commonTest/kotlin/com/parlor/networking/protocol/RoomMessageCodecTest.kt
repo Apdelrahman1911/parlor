@@ -1,6 +1,7 @@
 package com.parlor.networking.protocol
 
 import com.parlor.core.ids.GameId
+import com.parlor.core.ids.PlayerId
 import com.parlor.core.ids.SessionId
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
@@ -34,6 +35,44 @@ class RoomMessageCodecTest {
     fun `rejects oversized encoded input before decode`() {
         assertFailsWith<IllegalArgumentException> {
             codec.decode(ByteArray(MAX_ROOM_FRAME_BYTES + 1))
+        }
+    }
+
+    @Test
+    fun `round trips every transactional admission and resume frame`() {
+        val offer = ResumableCredentialOffer(
+            offerId = "0123456789abcdef0123456789abcdef",
+            playerId = PlayerId("alice-pid"),
+            hostPeerId = "host-pid",
+            hostFingerprint = "p2f1-zlmerarbaugm753v5mvipavkkhwxbvlu3cpx4unzvuvov7zu7dkq",
+            secret = "a".repeat(64),
+            generation = 2,
+            issuedAtEpochMillis = 1_000,
+            expiresAtEpochMillis = 100_000,
+            gameId = "whodunit",
+            gameVersion = 1,
+        )
+        val frames: List<RoomMessage> = listOf(
+            HostMessage.AdmissionOffered(offer),
+            HostMessage.AdmissionCommitted(offer.playerId, offer.offerId, offer.generation),
+            HostMessage.ResumeOffered(offer),
+            HostMessage.ResumeCommitted(offer.playerId, offer.offerId, offer.generation),
+            PeerMessage.AdmissionConfirmed(offer.playerId, offer.offerId, offer.generation),
+            PeerMessage.AdmissionCommitAck(offer.playerId, offer.offerId, offer.generation),
+            PeerMessage.ResumeRequested(
+                protocol = ProtocolVersion(),
+                actor = offer.playerId,
+                roomCode = "ABC234",
+                displayName = "Alice",
+                secret = offer.secret,
+                generation = 1,
+            ),
+            PeerMessage.ResumeConfirmed(offer.playerId, offer.offerId, offer.generation),
+            PeerMessage.ResumeCommitAck(offer.playerId, offer.offerId, offer.generation),
+        )
+
+        frames.forEach { frame ->
+            kotlin.test.assertEquals(frame, codec.decode(codec.encode(frame)))
         }
     }
 

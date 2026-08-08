@@ -118,6 +118,11 @@ fun HostLobbyScreen(
                     }
                 }
                 is PeerMessage.AdmissionRequest -> "AdmissionRequest"
+                is PeerMessage.AdmissionConfirmed -> "AdmissionConfirmed"
+                is PeerMessage.AdmissionCommitAck -> "AdmissionCommitAck"
+                is PeerMessage.ResumeRequested -> "ResumeRequested"
+                is PeerMessage.ResumeConfirmed -> "ResumeConfirmed"
+                is PeerMessage.ResumeCommitAck -> "ResumeCommitAck"
                 is PeerMessage.ClientCommand -> "ClientCommand(${msg.payload.size} bytes)"
                 is PeerMessage.SnapshotRequest -> "SnapshotRequest"
                 is PeerMessage.SessionHeartbeat -> "SessionHeartbeat"

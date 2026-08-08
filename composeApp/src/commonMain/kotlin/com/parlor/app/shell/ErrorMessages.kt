@@ -51,6 +51,9 @@ fun netErrorMessage(error: NetError): String = stringResource(
         is NetError.SessionStarted,
         is NetError.IncompatibleProtocol,
         is NetError.RateLimited,
+        is NetError.RejoinExpired,
+        is NetError.AlreadyConnected,
+        is NetError.SecureStorageUnavailable,
         is NetError.CommandInFlight,
         is NetError.SessionSuspended,
         is NetError.TransportFailure -> Res.string.net_error_transport

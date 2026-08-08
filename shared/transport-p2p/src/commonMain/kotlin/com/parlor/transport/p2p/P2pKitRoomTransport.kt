@@ -509,6 +509,9 @@ private fun AdmissionRejection.toNetError(): NetError = when (this) {
     AdmissionRejection.IncompatibleProtocol -> NetError.IncompatibleProtocol
     AdmissionRejection.InvalidRequest -> NetError.Unauthorized
     AdmissionRejection.RateLimited -> NetError.RateLimited
+    AdmissionRejection.InvalidCredential -> NetError.Unauthorized
+    AdmissionRejection.ExpiredCredential -> NetError.RejoinExpired
+    AdmissionRejection.AlreadyConnected -> NetError.AlreadyConnected
 }
 
 // ============================================================================ Host room ==

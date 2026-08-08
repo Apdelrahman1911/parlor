@@ -127,6 +127,11 @@ class InMemoryPeerRoom(
         val authenticated = when (message) {
             is PeerMessage.ActionSubmit -> message.copy(sender = selfPlayerId)
             is PeerMessage.AdmissionRequest -> message.copy(actor = selfPlayerId)
+            is PeerMessage.AdmissionConfirmed -> message.copy(actor = selfPlayerId)
+            is PeerMessage.AdmissionCommitAck -> message.copy(actor = selfPlayerId)
+            is PeerMessage.ResumeRequested -> message.copy(actor = selfPlayerId)
+            is PeerMessage.ResumeConfirmed -> message.copy(actor = selfPlayerId)
+            is PeerMessage.ResumeCommitAck -> message.copy(actor = selfPlayerId)
             is PeerMessage.ClientCommand -> message.copy(actor = selfPlayerId)
             is PeerMessage.SnapshotRequest -> message.copy(actor = selfPlayerId)
             is PeerMessage.SessionHeartbeat -> message.copy(actor = selfPlayerId)
