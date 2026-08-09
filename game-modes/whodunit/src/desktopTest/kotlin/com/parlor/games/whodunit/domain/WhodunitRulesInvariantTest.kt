@@ -173,8 +173,16 @@ class WhodunitRulesInvariantTest {
                     for (card in 1..4) {
                         state = submitValid(state, WhodunitAction.AdvanceBriefingCard(card))
                     }
+                    val assignmentGeneration = state.public.roleAssignmentGeneration
                     roster.forEach { player ->
-                        state = submitValid(state, WhodunitAction.CompleteCharacterReveal(player.id))
+                        state = submitValid(
+                            state,
+                            WhodunitAction.StartCharacterReveal(player.id, assignmentGeneration),
+                        )
+                        state = submitValid(
+                            state,
+                            WhodunitAction.CompleteCharacterReveal(player.id, assignmentGeneration),
+                        )
                     }
                     state = submitValid(state, WhodunitAction.AdvanceFromCharacterReveal)
 

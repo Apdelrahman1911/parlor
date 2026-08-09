@@ -29,7 +29,7 @@ object WhodunitActionCodec {
 
     /** Encode an action to JSON bytes suitable for `PeerMessage.ActionSubmit.payload`. */
     fun encode(action: WhodunitAction): ByteArray =
-        json.encodeToString(WhodunitAction.serializer(), action)
+        json.encodeToString(WhodunitAction.serializer(), action.requireValidRevealGeneration())
             .encodeToByteArray()
             .also(::requireBounded)
 
@@ -37,11 +37,24 @@ object WhodunitActionCodec {
     fun decode(bytes: ByteArray): WhodunitAction {
         requireBounded(bytes)
         return json.decodeFromString(WhodunitAction.serializer(), bytes.decodeToString())
+            .requireValidRevealGeneration()
     }
 
     private fun requireBounded(bytes: ByteArray) {
         require(bytes.size <= MAX_COMMAND_PAYLOAD_BYTES) {
             "Whodunit action exceeds $MAX_COMMAND_PAYLOAD_BYTES bytes"
         }
+    }
+
+    private fun WhodunitAction.requireValidRevealGeneration(): WhodunitAction = also {
+        val generation = when (this) {
+            is WhodunitAction.StartCharacterReveal -> roleAssignmentGeneration
+            is WhodunitAction.CompleteCharacterReveal -> roleAssignmentGeneration
+            is WhodunitAction.OpenPrivateReview -> roleAssignmentGeneration
+            is WhodunitAction.CloseHide -> roleAssignmentGeneration
+            is WhodunitAction.ConfirmRoleViewed -> roleAssignmentGeneration
+            else -> return@also
+        }
+        require(generation > 0L) { "Reveal action has an invalid assignment generation" }
     }
 }

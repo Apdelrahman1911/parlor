@@ -329,6 +329,8 @@ class TickerAndRerollTest {
         val beforeKillerChar = hostState(session).hostOnly.killerCharacterId
         val beforeMap = hostState(session).hostOnly.seatToCharacter
         val beforeSeed = hostState(session).hostOnly.randomSeed
+        val beforeGeneration = hostState(session).public.roleAssignmentGeneration
+        assertThat(beforeGeneration).isEqualTo(1L)
         val priorPhaseId = stateOf(session).phase.id
 
         // Clear events captured during setup so we only inspect post-reroll events.
@@ -344,6 +346,7 @@ class TickerAndRerollTest {
         // Seed deterministically advances; assignment derived from it changes.
         assertThat(after.hostOnly.randomSeed).isNotEqualTo(beforeSeed)
         assertThat(after.hostOnly.seatToCharacter).isNotEqualTo(beforeMap)
+        assertThat(after.public.roleAssignmentGeneration).isEqualTo(beforeGeneration + 1L)
 
         // Reroll only restarts the reveal — these stay anchored.
         assertThat(after.players).isEqualTo(players)

@@ -219,10 +219,11 @@ class WhodunitMultiDeviceShapeTest {
         // CharacterReveal: host's privatePerPlayer is populated and per-player
         // dossier state changes via StartCharacterReveal. The peer must see
         // none of that — privatePerPlayer stays empty in the peer view.
+        val assignmentGeneration = stateOf(host).public.roleAssignmentGeneration
         for (player in players) {
-            host.submit(WhodunitAction.StartCharacterReveal(player.id))
+            host.submit(WhodunitAction.StartCharacterReveal(player.id, assignmentGeneration))
             assertPeerMirrorsHostAndRedactsHostOnly(host, peers, "reveal start ${player.id}")
-            host.submit(WhodunitAction.CompleteCharacterReveal(player.id))
+            host.submit(WhodunitAction.CompleteCharacterReveal(player.id, assignmentGeneration))
             assertPeerMirrorsHostAndRedactsHostOnly(host, peers, "reveal complete ${player.id}")
         }
         host.submit(WhodunitAction.AdvanceFromCharacterReveal)
@@ -310,9 +311,10 @@ class WhodunitMultiDeviceShapeTest {
         host.ackBriefingForAll(players)
         for (i in 1..4) host.submit(WhodunitAction.AdvanceBriefingCard(i))
         pin("CharacterReveal-entry")
+        val assignmentGeneration = stateOf(host).public.roleAssignmentGeneration
         for (p in players) {
-            host.submit(WhodunitAction.StartCharacterReveal(p.id)); pin("CharReveal-start-${p.id.raw}")
-            host.submit(WhodunitAction.CompleteCharacterReveal(p.id)); pin("CharReveal-end-${p.id.raw}")
+            host.submit(WhodunitAction.StartCharacterReveal(p.id, assignmentGeneration)); pin("CharReveal-start-${p.id.raw}")
+            host.submit(WhodunitAction.CompleteCharacterReveal(p.id, assignmentGeneration)); pin("CharReveal-end-${p.id.raw}")
         }
         host.submit(WhodunitAction.AdvanceFromCharacterReveal); pin("Round-1-entry")
         for (r in 1..3) {
@@ -357,9 +359,10 @@ class WhodunitMultiDeviceShapeTest {
         host.submit(WhodunitAction.AdvanceFromIntro)
         host.ackBriefingForAll(players)
         for (i in 1..4) host.submit(WhodunitAction.AdvanceBriefingCard(i))
+        val assignmentGeneration = stateOf(host).public.roleAssignmentGeneration
         for (player in players) {
-            host.submit(WhodunitAction.StartCharacterReveal(player.id))
-            host.submit(WhodunitAction.CompleteCharacterReveal(player.id))
+            host.submit(WhodunitAction.StartCharacterReveal(player.id, assignmentGeneration))
+            host.submit(WhodunitAction.CompleteCharacterReveal(player.id, assignmentGeneration))
         }
         host.submit(WhodunitAction.AdvanceFromCharacterReveal)
         host.submit(WhodunitAction.Pause)

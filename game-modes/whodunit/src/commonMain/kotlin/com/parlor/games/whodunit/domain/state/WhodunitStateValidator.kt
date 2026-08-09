@@ -105,8 +105,14 @@ internal object WhodunitStateValidator {
     }
 
     private fun validateAssignment(state: WhodunitState, playerIds: Set<com.parlor.core.ids.PlayerId>) {
+        require(state.public.roleAssignmentGeneration >= 0L) {
+            "Role-assignment generation is negative"
+        }
         val noAssignment = state.privatePerPlayer.isEmpty() && state.hostOnly.seatToCharacter.isEmpty()
         if (noAssignment) {
+            require(state.public.roleAssignmentGeneration == 0L) {
+                "Unassigned state carries a role-assignment generation"
+            }
             require(
                 state.phase == WhodunitPhase.Setup ||
                     (state.phase == WhodunitPhase.PostGame && state.public.verdict == null),
@@ -118,6 +124,9 @@ internal object WhodunitStateValidator {
             return
         }
 
+        require(state.public.roleAssignmentGeneration > 0L) {
+            "Assigned state has no role-assignment generation"
+        }
         require(state.phase != WhodunitPhase.Setup) { "Setup already contains roles" }
         require(state.privatePerPlayer.keys == playerIds) { "Private role map is incomplete" }
         require(state.hostOnly.seatToCharacter.keys == playerIds) { "Seat map is incomplete" }

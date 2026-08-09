@@ -396,6 +396,7 @@ class PartyConnectionEventsTest {
         assertThat(start.header?.sessionId == bridge.protocol.sessionId).isTrue()
         assertThat(start.header?.gameId == WhodunitIds.GameId).isTrue()
         assertThat(start.header?.gameVersion == WhodunitHostRoomBridge.GAME_VERSION).isTrue()
+        assertThat(WhodunitHostRoomBridge.GAME_VERSION).isEqualTo(3)
 
         bridge.terminate(SessionEndReason.HostLeft)
         bridge.close()

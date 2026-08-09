@@ -8,6 +8,7 @@ import com.parlor.core.ids.PlayerId
 import com.parlor.games.whodunit.domain.action.StructuredActionPayload
 import com.parlor.games.whodunit.domain.action.WhodunitAction
 import com.parlor.games.whodunit.domain.action.WhodunitActionCodec
+import kotlinx.serialization.SerializationException
 import kotlin.test.Test
 import kotlin.test.assertFailsWith
 
@@ -62,6 +63,51 @@ class WhodunitActionCodecTest {
         )
         val decoded = WhodunitActionCodec.decode(WhodunitActionCodec.encode(original))
         assertThat(decoded).isEqualTo(original)
+    }
+
+    @Test
+    fun every_private_reveal_action_round_trips_its_assignment_generation() {
+        val playerId = PlayerId("p1")
+        val generation = 42L
+        val actions = listOf<WhodunitAction>(
+            WhodunitAction.StartCharacterReveal(playerId, generation),
+            WhodunitAction.CompleteCharacterReveal(playerId, generation),
+            WhodunitAction.OpenPrivateReview(playerId, generation),
+            WhodunitAction.CloseHide(playerId, generation),
+            WhodunitAction.ConfirmRoleViewed(playerId, generation),
+        )
+
+        actions.forEach { action ->
+            val bytes = WhodunitActionCodec.encode(action)
+            assertThat(bytes.decodeToString()).contains(
+                "\"roleAssignmentGeneration\":$generation",
+            )
+            assertThat(WhodunitActionCodec.decode(bytes)).isEqualTo(action)
+        }
+    }
+
+    @Test
+    fun reveal_generation_is_required_and_must_be_positive() {
+        val valid = WhodunitActionCodec.encode(
+            WhodunitAction.StartCharacterReveal(PlayerId("p1"), 42L),
+        ).decodeToString()
+        val missing = valid.replace(",\"roleAssignmentGeneration\":42", "")
+        val negative = valid.replace(
+            "\"roleAssignmentGeneration\":42",
+            "\"roleAssignmentGeneration\":-1",
+        )
+
+        assertFailsWith<SerializationException> {
+            WhodunitActionCodec.decode(missing.encodeToByteArray())
+        }
+        assertFailsWith<IllegalArgumentException> {
+            WhodunitActionCodec.decode(negative.encodeToByteArray())
+        }
+        assertFailsWith<IllegalArgumentException> {
+            WhodunitActionCodec.encode(
+                WhodunitAction.CompleteCharacterReveal(PlayerId("p1"), 0L),
+            )
+        }
     }
 
     @Test

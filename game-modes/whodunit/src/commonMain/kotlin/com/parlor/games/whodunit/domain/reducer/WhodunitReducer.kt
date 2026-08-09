@@ -48,15 +48,35 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
             is WhodunitAction.AssignRoles -> assignRoles(state, action.seed, wctx)
             WhodunitAction.AdvanceFromIntro -> advanceFromIntro(state)
             is WhodunitAction.AdvanceBriefingCard -> advanceBriefingCard(state, action.index)
-            is WhodunitAction.StartCharacterReveal -> startCharacterReveal(state, action.playerId)
-            is WhodunitAction.CompleteCharacterReveal -> completeCharacterReveal(state, action.playerId)
-            is WhodunitAction.OpenPrivateReview -> openPrivateReview(state, action.playerId)
-            is WhodunitAction.CloseHide -> closeHide(state, action.playerId)
+            is WhodunitAction.StartCharacterReveal -> startCharacterReveal(
+                state,
+                action.playerId,
+                action.roleAssignmentGeneration,
+            )
+            is WhodunitAction.CompleteCharacterReveal -> completeCharacterReveal(
+                state,
+                action.playerId,
+                action.roleAssignmentGeneration,
+            )
+            is WhodunitAction.OpenPrivateReview -> openPrivateReview(
+                state,
+                action.playerId,
+                action.roleAssignmentGeneration,
+            )
+            is WhodunitAction.CloseHide -> closeHide(
+                state,
+                action.playerId,
+                action.roleAssignmentGeneration,
+            )
 
             // Party Play readiness (Wave 9H)
             is WhodunitAction.AcknowledgeIntro -> acknowledgeIntro(state, action.playerId)
             is WhodunitAction.AcknowledgeBriefing -> acknowledgeBriefing(state, action.playerId)
-            is WhodunitAction.ConfirmRoleViewed -> confirmRoleViewed(state, action.playerId)
+            is WhodunitAction.ConfirmRoleViewed -> confirmRoleViewed(
+                state,
+                action.playerId,
+                action.roleAssignmentGeneration,
+            )
             WhodunitAction.AdvanceFromCharacterReveal -> advanceFromCharacterReveal(state)
 
             // Party Play connection rules (Wave 9H)
@@ -115,10 +135,11 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
         val assignment = createRoleAssignment(players, ctx.case.characters, seed)
             ?: return Reduction(state)
         val newState = applyRoleAssignment(state, assignment, seed, ctx.case.characters)
-            .copy(phase = WhodunitPhase.PublicIntro)
+            ?: return Reduction(state)
+        val introState = newState.copy(phase = WhodunitPhase.PublicIntro)
         return Reduction(
-            newState,
-            listOf(WhodunitEvent.RolesAssigned, WhodunitEvent.PhaseEntered(newState.phase)),
+            introState,
+            listOf(WhodunitEvent.RolesAssigned, WhodunitEvent.PhaseEntered(introState.phase)),
         )
     }
 
@@ -150,7 +171,9 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
         assignment: RoleAssignment,
         seed: Long,
         characters: List<Character>,
-    ): WhodunitState {
+    ): WhodunitState? {
+        if (state.public.roleAssignmentGeneration == Long.MAX_VALUE) return null
+        val nextGeneration = state.public.roleAssignmentGeneration + 1L
         val killerCharacterId = assignment.seatToCharacter.getValue(assignment.killerId)
         val killerCharacter = characters.first { it.id == killerCharacterId.raw }
         val selectedCharacters = assignment.seatToCharacter.values.toSet()
@@ -166,6 +189,7 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
             )
         }
         return state.copy(
+            public = state.public.copy(roleAssignmentGeneration = nextGeneration),
             privatePerPlayer = privateState,
             hostOnly = WhodunitHostOnly(
                 killerId = assignment.killerId,
@@ -264,11 +288,14 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
     private fun confirmRoleViewed(
         state: WhodunitState,
         playerId: PlayerId,
+        roleAssignmentGeneration: Long,
     ): Reduction<WhodunitState, WhodunitEvent> {
         if (state.phase !is WhodunitPhase.CharacterReveal) return Reduction(state)
+        if (roleAssignmentGeneration != state.public.roleAssignmentGeneration) return Reduction(state)
         if (playerId !in state.players.map { it.id }) return Reduction(state)
         if (playerId in state.public.droppedPlayers) return Reduction(state)
         val privateState = state.privatePerPlayer[playerId] ?: return Reduction(state)
+        if (!privateState.dossierUnlocked) return Reduction(state)
         val updatedRolesViewed = state.public.rolesViewed + playerId
         val closedPrivateState = privateState.copy(
             dossierUnlocked = false,
@@ -416,8 +443,10 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
     private fun startCharacterReveal(
         state: WhodunitState,
         playerId: PlayerId,
+        roleAssignmentGeneration: Long,
     ): Reduction<WhodunitState, WhodunitEvent> {
         if (state.phase !is WhodunitPhase.CharacterReveal) return Reduction(state)
+        if (roleAssignmentGeneration != state.public.roleAssignmentGeneration) return Reduction(state)
         if (playerId in state.public.droppedPlayers) return Reduction(state)
         if (playerId in state.public.rolesViewed) return Reduction(state)
         val priv = state.privatePerPlayer[playerId] ?: return Reduction(state)
@@ -445,12 +474,14 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
     private fun completeCharacterReveal(
         state: WhodunitState,
         playerId: PlayerId,
+        roleAssignmentGeneration: Long,
     ): Reduction<WhodunitState, WhodunitEvent> {
         if (state.phase !is WhodunitPhase.CharacterReveal) return Reduction(state)
+        if (roleAssignmentGeneration != state.public.roleAssignmentGeneration) return Reduction(state)
         if (playerId !in state.players.map { it.id }) return Reduction(state)
         if (playerId in state.public.droppedPlayers) return Reduction(state)
         val priv = state.privatePerPlayer[playerId]
-        if (priv == null) return Reduction(state)
+        if (priv == null || !priv.dossierUnlocked) return Reduction(state)
         val updatedPriv = state.privatePerPlayer + (
             playerId to priv.copy(
                 dossierUnlocked = false,
@@ -492,19 +523,31 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
         return Reduction(newState, listOf(WhodunitEvent.PhaseEntered(newState.phase)))
     }
 
-    private fun openPrivateReview(state: WhodunitState, playerId: PlayerId): Reduction<WhodunitState, WhodunitEvent> {
+    private fun openPrivateReview(
+        state: WhodunitState,
+        playerId: PlayerId,
+        roleAssignmentGeneration: Long,
+    ): Reduction<WhodunitState, WhodunitEvent> {
         if (state.phase !is WhodunitPhase.CharacterReveal) return Reduction(state)
+        if (roleAssignmentGeneration != state.public.roleAssignmentGeneration) return Reduction(state)
         if (playerId in state.public.rolesViewed) return Reduction(state)
         if (playerId in state.public.droppedPlayers || playerId in state.public.eliminatedPlayers) {
             return Reduction(state)
         }
         val priv = state.privatePerPlayer[playerId] ?: return Reduction(state)
+        if (!priv.dossierUnlocked) return Reduction(state)
         if (priv.privateReviewOpen) return Reduction(state)
         val updated = state.privatePerPlayer + (playerId to priv.copy(privateReviewOpen = true))
         return Reduction(state.copy(privatePerPlayer = updated), listOf(WhodunitEvent.PrivateRevealRequested(playerId)))
     }
 
-    private fun closeHide(state: WhodunitState, playerId: PlayerId): Reduction<WhodunitState, WhodunitEvent> {
+    private fun closeHide(
+        state: WhodunitState,
+        playerId: PlayerId,
+        roleAssignmentGeneration: Long,
+    ): Reduction<WhodunitState, WhodunitEvent> {
+        if (state.phase !is WhodunitPhase.CharacterReveal) return Reduction(state)
+        if (roleAssignmentGeneration != state.public.roleAssignmentGeneration) return Reduction(state)
         val priv = state.privatePerPlayer[playerId] ?: return Reduction(state)
         val updated = state.privatePerPlayer + (playerId to priv.copy(privateReviewOpen = false, dossierUnlocked = false))
         return Reduction(state.copy(privatePerPlayer = updated))
@@ -1219,6 +1262,7 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
         val priorPhaseId = state.phase.id
         val target = WhodunitPhase.CharacterReveal(0)
         val assigned = applyRoleAssignment(reset, assignment, newSeed, ctx.case.characters)
+            ?: return Reduction(state)
         return Reduction(
             assigned,
             listOf(

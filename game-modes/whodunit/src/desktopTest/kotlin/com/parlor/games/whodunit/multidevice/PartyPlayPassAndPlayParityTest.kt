@@ -121,7 +121,13 @@ class PartyPlayPassAndPlayParityTest {
         )
         runCurrent()
 
-        playFullGame(driver, killerHint = { partyPlayHost.session.hostState!!.value.state.hostOnly.killerId })
+        playFullGame(
+            driver = driver,
+            killerHint = { partyPlayHost.session.hostState!!.value.state.hostOnly.killerId },
+            generationHint = {
+                partyPlayHost.session.publicState.value.state.public.roleAssignmentGeneration
+            },
+        )
 
         val ppState = passAndPlay.session.publicState.value.state
         val mpState = partyPlayHost.session.publicState.value.state
@@ -140,6 +146,7 @@ class PartyPlayPassAndPlayParityTest {
     private suspend fun playFullGame(
         driver: suspend (WhodunitAction) -> Unit,
         killerHint: () -> PlayerId,
+        generationHint: () -> Long,
     ) {
         // Setup → PublicIntro → RulesBriefing → CharacterReveal → Round(1..3) → FinalVote → Reveal → PostGame
         driver(WhodunitAction.AssignRoles(seed))
@@ -149,9 +156,10 @@ class PartyPlayPassAndPlayParityTest {
         driver(WhodunitAction.AdvanceFromIntro)
         for (player in players) driver(WhodunitAction.AcknowledgeBriefing(player.id))
         for (i in 1..4) driver(WhodunitAction.AdvanceBriefingCard(i))
+        val assignmentGeneration = generationHint()
         for (player in players) {
-            driver(WhodunitAction.StartCharacterReveal(player.id))
-            driver(WhodunitAction.CompleteCharacterReveal(player.id))
+            driver(WhodunitAction.StartCharacterReveal(player.id, assignmentGeneration))
+            driver(WhodunitAction.CompleteCharacterReveal(player.id, assignmentGeneration))
         }
         driver(WhodunitAction.AdvanceFromCharacterReveal)
         for (round in 1..3) {

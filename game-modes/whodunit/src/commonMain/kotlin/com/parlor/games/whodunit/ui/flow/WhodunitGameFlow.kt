@@ -894,12 +894,13 @@ private fun PauseAffordance(
 
 
 /**
- * Engine version stamped on persisted snapshots. Bumped when the engine state
- * shape changes incompatibly; the snapshot store refuses to restore a
- * snapshot whose engineVersion is older than what this app supports.
+ * Engine version stamped on persisted snapshots. Minor versions may be
+ * migrated by the game codec; future versions and another major are rejected.
+ * 1.1 adds the role-assignment generation and migrates assigned 1.0 snapshots
+ * whose JSON does not yet contain that field.
  */
 private val ENGINE_VERSION: com.parlor.core.versioning.SemVer =
-    com.parlor.core.versioning.SemVer(1, 0, 0)
+    com.parlor.core.versioning.SemVer(1, 1, 0)
 
 
 // ====================================================================== Multi-device ==

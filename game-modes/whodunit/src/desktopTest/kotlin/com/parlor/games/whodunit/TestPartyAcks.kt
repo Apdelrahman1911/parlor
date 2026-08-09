@@ -34,9 +34,10 @@ internal suspend fun PassAndPlaySessionController<WhodunitState, WhodunitAction,
 internal suspend fun PassAndPlaySessionController<WhodunitState, WhodunitAction, WhodunitEvent>.revealRolesAndAdvance(
     players: List<Player>,
 ) {
+    val generation = requireNotNull(hostState).value.state.public.roleAssignmentGeneration
     for (player in players) {
-        submit(WhodunitAction.StartCharacterReveal(player.id))
-        submit(WhodunitAction.CompleteCharacterReveal(player.id))
+        submit(WhodunitAction.StartCharacterReveal(player.id, generation))
+        submit(WhodunitAction.CompleteCharacterReveal(player.id, generation))
     }
     submit(WhodunitAction.AdvanceFromCharacterReveal)
 }

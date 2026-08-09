@@ -17,7 +17,9 @@ import com.parlor.session.party.PendingAck
  *    in `state.public.briefingReady` **only when `index` advances past
  *    the final card**; card-by-card flips are ungated.
  *  - `AdvanceFromCharacterReveal` requires every active-roster player
- *    in `state.public.rolesViewed`.
+ *    in `state.public.rolesViewed`, but those acknowledgements are never
+ *    synthesized: each player must authoritatively unlock and close their
+ *    current-generation dossier.
  *
  * Multi-device peers send those acks themselves. Single-device modes
  * never do — there are no peer devices — and this gate is what
@@ -51,11 +53,7 @@ object WhodunitReadinessGate : PartyReadinessGate<WhodunitState, WhodunitAction>
                 buildAck = { id -> WhodunitAction.AcknowledgeBriefing(id) },
             )
 
-        is WhodunitAction.AdvanceFromCharacterReveal -> pendingFor(
-            state = state,
-            readinessSet = state.public.rolesViewed,
-            buildAck = { id -> WhodunitAction.ConfirmRoleViewed(id) },
-        )
+        is WhodunitAction.AdvanceFromCharacterReveal -> emptyList()
 
         else -> emptyList()
     }

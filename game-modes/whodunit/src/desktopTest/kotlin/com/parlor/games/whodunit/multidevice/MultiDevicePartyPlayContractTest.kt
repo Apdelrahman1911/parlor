@@ -181,16 +181,45 @@ class MultiDevicePartyPlayContractTest {
             runCurrent()
             safety++
         }
-        // Now CharacterReveal at index 0 (host) — kick to reveal index 1 (alice).
-        // Host completes their own reveal so the controller moves to alice's.
-        submitHost(hostSession, hostBridge, WhodunitAction.CompleteCharacterReveal(hostId))
+        val assignmentGeneration =
+            hostSession.publicState.value.state.public.roleAssignmentGeneration
+        // The host must receive the canonical unlock before completion.
+        submitHost(
+            hostSession,
+            hostBridge,
+            WhodunitAction.StartCharacterReveal(hostId, assignmentGeneration),
+        )
+        submitHost(
+            hostSession,
+            hostBridge,
+            WhodunitAction.CompleteCharacterReveal(hostId, assignmentGeneration),
+        )
         runCurrent()
 
+        // Alice authoritatively unlocks first. Bob's attempt to complete that
+        // unlocked dossier must still fail solely on actor binding.
+        aliceBridge.controller.submit(
+            WhodunitAction.StartCharacterReveal(alice, assignmentGeneration),
+        )
+        runCurrent()
+        assertThat(
+            hostSession.hostState!!.value.state.privatePerPlayer
+                .getValue(alice)
+                .dossierUnlocked,
+        ).isTrue()
         val phaseBeforeImpersonation = hostSession.publicState.value.state.phase
-        bobBridge.controller.submit(WhodunitAction.CompleteCharacterReveal(alice))
+        bobBridge.controller.submit(
+            WhodunitAction.CompleteCharacterReveal(alice, assignmentGeneration),
+        )
         runCurrent()
         val phaseAfterImpersonation = hostSession.publicState.value.state.phase
         assertThat(phaseBeforeImpersonation == phaseAfterImpersonation).isTrue()
+        assertThat(alice in hostSession.publicState.value.state.public.rolesViewed).isEqualTo(false)
+        assertThat(
+            hostSession.hostState!!.value.state.privatePerPlayer
+                .getValue(alice)
+                .dossierUnlocked,
+        ).isTrue()
 
         // -- Authority case 3: SelfActor with the correct actor is accepted.
         // 9H-3: CompleteCharacterReveal no longer auto-advances the phase;
@@ -198,11 +227,40 @@ class MultiDevicePartyPlayContractTest {
         // here is: the canonical state mutates in response to alice's
         // correctly-attested action.
         val rolesViewedBefore = hostSession.publicState.value.state.public.rolesViewed
-        aliceBridge.controller.submit(WhodunitAction.CompleteCharacterReveal(alice))
+        aliceBridge.controller.submit(
+            WhodunitAction.CompleteCharacterReveal(alice, assignmentGeneration),
+        )
         runCurrent()
         val rolesViewedAfter = hostSession.publicState.value.state.public.rolesViewed
         assertThat(alice in rolesViewedAfter).isTrue()
         assertThat(rolesViewedAfter != rolesViewedBefore).isTrue()
+
+        // A reroll rotates the epoch. An authenticated action from the right
+        // player but the old epoch is rejected before it can expose the new
+        // dossier; the current epoch remains usable afterward.
+        submitHost(hostSession, hostBridge, WhodunitAction.RequestReroll)
+        runCurrent()
+        val replacementGeneration =
+            hostSession.publicState.value.state.public.roleAssignmentGeneration
+        assertThat(replacementGeneration).isEqualTo(assignmentGeneration + 1L)
+        aliceBridge.controller.submit(
+            WhodunitAction.StartCharacterReveal(alice, assignmentGeneration),
+        )
+        runCurrent()
+        assertThat(
+            hostSession.hostState!!.value.state.privatePerPlayer
+                .getValue(alice)
+                .dossierUnlocked,
+        ).isEqualTo(false)
+        aliceBridge.controller.submit(
+            WhodunitAction.StartCharacterReveal(alice, replacementGeneration),
+        )
+        runCurrent()
+        assertThat(
+            hostSession.hostState!!.value.state.privatePerPlayer
+                .getValue(alice)
+                .dossierUnlocked,
+        ).isTrue()
 
         hostBridge.close()
         aliceBridge.close()
@@ -329,22 +387,50 @@ class MultiDevicePartyPlayContractTest {
         assertThat(hostSession.publicState.value.state.phase is WhodunitPhase.CharacterReveal).isTrue()
 
         // --- CharacterReveal: simultaneous — every player confirms ---
+        val assignmentGeneration =
+            hostSession.publicState.value.state.public.roleAssignmentGeneration
         for (player in players) {
             when (player.id) {
-                alice -> aliceBridge.controller.submit(
-                    WhodunitAction.CompleteCharacterReveal(player.id),
-                )
-                bob -> bobBridge.controller.submit(
-                    WhodunitAction.CompleteCharacterReveal(player.id),
-                )
-                carol -> carolBridge.controller.submit(
-                    WhodunitAction.CompleteCharacterReveal(player.id),
-                )
-                else -> submitHost(
-                    hostSession,
-                    hostBridge,
-                    WhodunitAction.CompleteCharacterReveal(player.id),
-                )
+                alice -> {
+                    aliceBridge.controller.submit(
+                        WhodunitAction.StartCharacterReveal(player.id, assignmentGeneration),
+                    )
+                    runCurrent()
+                    aliceBridge.controller.submit(
+                        WhodunitAction.CompleteCharacterReveal(player.id, assignmentGeneration),
+                    )
+                }
+                bob -> {
+                    bobBridge.controller.submit(
+                        WhodunitAction.StartCharacterReveal(player.id, assignmentGeneration),
+                    )
+                    runCurrent()
+                    bobBridge.controller.submit(
+                        WhodunitAction.CompleteCharacterReveal(player.id, assignmentGeneration),
+                    )
+                }
+                carol -> {
+                    carolBridge.controller.submit(
+                        WhodunitAction.StartCharacterReveal(player.id, assignmentGeneration),
+                    )
+                    runCurrent()
+                    carolBridge.controller.submit(
+                        WhodunitAction.CompleteCharacterReveal(player.id, assignmentGeneration),
+                    )
+                }
+                else -> {
+                    submitHost(
+                        hostSession,
+                        hostBridge,
+                        WhodunitAction.StartCharacterReveal(player.id, assignmentGeneration),
+                    )
+                    runCurrent()
+                    submitHost(
+                        hostSession,
+                        hostBridge,
+                        WhodunitAction.CompleteCharacterReveal(player.id, assignmentGeneration),
+                    )
+                }
             }
             runCurrent()
         }

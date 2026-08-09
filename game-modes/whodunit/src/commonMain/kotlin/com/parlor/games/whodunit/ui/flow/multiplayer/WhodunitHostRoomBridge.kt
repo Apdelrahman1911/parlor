@@ -429,8 +429,8 @@ class WhodunitHostRoomBridge(
     }
 
     companion object {
-        /** v2 adds authoritative, roster-filtered killer deflection targets. */
-        const val GAME_VERSION: Int = 2
+        /** v3 binds private-reveal commands to a monotonic assignment generation. */
+        const val GAME_VERSION: Int = 3
         const val REJOIN_GRACE_MS: Long = 120_000L
         const val HEARTBEAT_INTERVAL_MS: Long = 10_000L
         const val START_RETRY_MS: Long = 250L

@@ -55,6 +55,62 @@ class WhodunitSnapshotValidationTest {
     }
 
     @Test
+    fun assignmentGenerationMustMatchWhetherRolesExist() {
+        assertDecodeRejected(
+            assigned.copy(
+                public = assigned.public.copy(roleAssignmentGeneration = -1L),
+            ),
+        )
+        assertDecodeRejected(
+            assigned.copy(
+                public = assigned.public.copy(roleAssignmentGeneration = 0L),
+            ),
+        )
+
+        val unassigned = WhodunitDefinition(json).createInitialState(
+            SessionConfig(
+                sessionId = SessionId("invalid-unassigned-generation"),
+                caseId = CaseId("snapshot-case"),
+                modeId = WhodunitIds.ClassicVoteModeId,
+                players = players,
+                randomSeed = 7L,
+            ),
+        )
+        assertDecodeRejected(
+            unassigned.copy(
+                public = unassigned.public.copy(roleAssignmentGeneration = 1L),
+            ),
+        )
+    }
+
+    @Test
+    fun legacyAssignedSnapshotWithoutGenerationMigratesButExplicitZeroDoesNot() {
+        val root = json.encodeToJsonElement(WhodunitState.serializer(), assigned).jsonObject
+        val legacyPublic = JsonObject(
+            root.getValue("public").jsonObject - "roleAssignmentGeneration",
+        )
+        val legacy = JsonObject(root + ("public" to legacyPublic))
+
+        val restored = codec.decode(legacy.toString().encodeToByteArray())
+
+        assertEquals(1L, restored.public.roleAssignmentGeneration)
+        assertDecodeRejected(
+            assigned.copy(
+                public = assigned.public.copy(roleAssignmentGeneration = 0L),
+            ),
+        )
+    }
+
+    @Test
+    fun currentSnapshotPreservesLaterAssignmentGeneration() {
+        val later = assigned.copy(
+            public = assigned.public.copy(roleAssignmentGeneration = 7L),
+        )
+
+        assertEquals(later, codec.decode(codec.encode(later)))
+    }
+
+    @Test
     fun syntacticallyValidSnapshotWithDivergentRosterIsRejected() {
         val impossible = assigned.copy(
             public = assigned.public.copy(playersAtTable = assigned.players.dropLast(1)),

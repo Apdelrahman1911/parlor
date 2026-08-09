@@ -175,6 +175,7 @@ class WhodunitTerminalAndCluePolicyTest {
                 caseId = CaseId("test"),
                 modeId = WhodunitIds.EliminationModeId,
                 playersAtTable = players,
+                roleAssignmentGeneration = 1L,
                 currentRound = round,
             ),
             privatePerPlayer = players.associate { player ->

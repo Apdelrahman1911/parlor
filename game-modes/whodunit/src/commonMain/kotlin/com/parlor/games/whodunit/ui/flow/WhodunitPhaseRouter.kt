@@ -229,6 +229,7 @@ private fun HostPhaseScreens(
                 roster = state.players,
                 rolesViewed = state.public.rolesViewed,
                 droppedPlayers = state.public.droppedPlayers,
+                roleAssignmentGeneration = state.public.roleAssignmentGeneration,
                 payload = payload,
                 modifier = modifier,
             )
@@ -239,6 +240,7 @@ private fun HostPhaseScreens(
                 roster = state.players,
                 rolesViewed = state.public.rolesViewed,
                 droppedPlayers = state.public.droppedPlayers,
+                roleAssignmentGeneration = state.public.roleAssignmentGeneration,
                 selfPlayerId = playMode.selfPlayerId,
                 isHost = true,
                 payload = payload,
@@ -355,6 +357,7 @@ private fun PeerPhaseScreens(
             roster = state.players,
             rolesViewed = state.public.rolesViewed,
             droppedPlayers = state.public.droppedPlayers,
+            roleAssignmentGeneration = state.public.roleAssignmentGeneration,
             selfPlayerId = playMode.selfPlayerId,
             isHost = false,
             payload = payload,
@@ -504,6 +507,7 @@ private fun LocalCharacterRevealSegment(
     roster: List<Player>,
     rolesViewed: Set<PlayerId>,
     droppedPlayers: Set<PlayerId>,
+    roleAssignmentGeneration: Long,
     payload: WhodunitCase,
     modifier: Modifier = Modifier,
 ) {
@@ -535,8 +539,25 @@ private fun LocalCharacterRevealSegment(
     val characterId = privateData?.characterId?.raw
     val character = characterId?.let { id -> payload.characters.firstOrNull { it.id == id } }
 
-    var stage by remember(currentPlayer.id) { mutableStateOf(RevealStage.Handoff) }
-    var privacyOpen by remember { mutableStateOf(false) }
+    var stage by remember(currentPlayer.id, roleAssignmentGeneration) {
+        mutableStateOf(RevealStage.Handoff)
+    }
+    var privacyOpen by remember(currentPlayer.id, roleAssignmentGeneration) {
+        mutableStateOf(false)
+    }
+    val dossierUnlocked = privateData?.dossierUnlocked == true
+
+    // The reducer, not the tap, authorizes private disclosure. Waiting for the
+    // projected unlock also keeps a rejected/stale network command on the
+    // retryable gate instead of showing cached dossier data optimistically.
+    LaunchedEffect(currentPlayer.id, roleAssignmentGeneration, dossierUnlocked, stage) {
+        when {
+            dossierUnlocked && stage == RevealStage.Gate -> stage = RevealStage.Dossier
+            !dossierUnlocked && (stage == RevealStage.Dossier || stage == RevealStage.Hide) -> {
+                stage = RevealStage.Gate
+            }
+        }
+    }
 
     Box(modifier = modifier.fillMaxSize()) {
         when (stage) {
@@ -548,13 +569,19 @@ private fun LocalCharacterRevealSegment(
             RevealStage.Gate -> CharacterRevealGateScreen(
                 playerName = currentPlayer.displayName,
                 onRevealed = {
-                    scope.launch { session.submit(WhodunitAction.StartCharacterReveal(currentPlayer.id)) }
-                    stage = RevealStage.Dossier
+                    scope.launch {
+                        session.submit(
+                            WhodunitAction.StartCharacterReveal(
+                                currentPlayer.id,
+                                roleAssignmentGeneration,
+                            )
+                        )
+                    }
                 },
                 modifier = Modifier.fillMaxSize(),
             )
             RevealStage.Dossier -> {
-                if (character == null || role == null) {
+                if (!dossierUnlocked || character == null || role == null) {
                     LoadingScreen(Modifier.fillMaxSize())
                 } else {
                     DossierRevealScreen(
@@ -572,7 +599,12 @@ private fun LocalCharacterRevealSegment(
                 onTap = {
                     scope.launch {
                         session.setActiveViewer(ViewerContext.Public)
-                        session.submit(WhodunitAction.CompleteCharacterReveal(currentPlayer.id))
+                        session.submit(
+                            WhodunitAction.CompleteCharacterReveal(
+                                currentPlayer.id,
+                                roleAssignmentGeneration,
+                            )
+                        )
                     }
                     // The keyed remember(currentPlayer.id) resets `stage` to
                     // Handoff when the cursor advances on recomposition.
@@ -624,6 +656,7 @@ private fun SelfCharacterRevealSegment(
     roster: List<Player>,
     rolesViewed: Set<PlayerId>,
     droppedPlayers: Set<PlayerId>,
+    roleAssignmentGeneration: Long,
     selfPlayerId: PlayerId,
     isHost: Boolean,
     payload: WhodunitCase,
@@ -658,9 +691,23 @@ private fun SelfCharacterRevealSegment(
     val characterId = privateData?.characterId?.raw
     val character = characterId?.let { id -> payload.characters.firstOrNull { it.id == id } }
 
-    var stage by remember(selfPlayer.id) { mutableStateOf(RevealStage.Handoff) }
-    var privacyOpen by remember { mutableStateOf(false) }
+    var stage by remember(selfPlayer.id, roleAssignmentGeneration) {
+        mutableStateOf(RevealStage.Handoff)
+    }
+    var privacyOpen by remember(selfPlayer.id, roleAssignmentGeneration) {
+        mutableStateOf(false)
+    }
+    val dossierUnlocked = privateData?.dossierUnlocked == true
     val privacyPolicy = privacyConcernUiPolicy(isHost)
+
+    LaunchedEffect(selfPlayer.id, roleAssignmentGeneration, dossierUnlocked, stage) {
+        when {
+            dossierUnlocked && stage == RevealStage.Gate -> stage = RevealStage.Dossier
+            !dossierUnlocked && (stage == RevealStage.Dossier || stage == RevealStage.Hide) -> {
+                stage = RevealStage.Gate
+            }
+        }
+    }
 
     Box(modifier = modifier.fillMaxSize()) {
         when (stage) {
@@ -672,13 +719,19 @@ private fun SelfCharacterRevealSegment(
             RevealStage.Gate -> CharacterRevealGateScreen(
                 playerName = selfPlayer.displayName,
                 onRevealed = {
-                    scope.launch { session.submit(WhodunitAction.StartCharacterReveal(selfPlayer.id)) }
-                    stage = RevealStage.Dossier
+                    scope.launch {
+                        session.submit(
+                            WhodunitAction.StartCharacterReveal(
+                                selfPlayer.id,
+                                roleAssignmentGeneration,
+                            )
+                        )
+                    }
                 },
                 modifier = Modifier.fillMaxSize(),
             )
             RevealStage.Dossier -> {
-                if (character == null || role == null) {
+                if (!dossierUnlocked || character == null || role == null) {
                     LoadingScreen(Modifier.fillMaxSize())
                 } else {
                     DossierRevealScreen(
@@ -696,7 +749,12 @@ private fun SelfCharacterRevealSegment(
                 onTap = {
                     scope.launch {
                         session.setActiveViewer(ViewerContext.Public)
-                        session.submit(WhodunitAction.CompleteCharacterReveal(selfPlayer.id))
+                        session.submit(
+                            WhodunitAction.CompleteCharacterReveal(
+                                selfPlayer.id,
+                                roleAssignmentGeneration,
+                            )
+                        )
                     }
                 },
                 modifier = Modifier.fillMaxSize(),

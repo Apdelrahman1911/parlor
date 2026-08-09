@@ -5,6 +5,8 @@ import com.parlor.games.whodunit.domain.state.VoteState
 import com.parlor.games.whodunit.domain.state.WhodunitState
 import com.parlor.games.whodunit.domain.state.WhodunitStateValidator
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.decodeFromJsonElement
+import kotlinx.serialization.json.jsonObject
 
 /**
  * kotlinx.serialization-based codec for [WhodunitState]. The codec is module-
@@ -24,10 +26,15 @@ class WhodunitSnapshotCodec(
 
     override fun decode(payload: ByteArray): WhodunitState {
         requireValidPayloadSize(payload)
-        val decoded = json.decodeFromString(WhodunitState.serializer(), payload.decodeToString())
+        val root = json.parseToJsonElement(payload.decodeToString()).jsonObject
+        val generationWasPersisted = root["public"]
+            ?.jsonObject
+            ?.containsKey("roleAssignmentGeneration") == true
+        val decoded = json.decodeFromJsonElement(WhodunitState.serializer(), root)
         val normalized = decoded
             .normalizeLegacyUntimedRevote()
             .normalizeLegacyDeflectionTargets()
+            .normalizeLegacyRoleAssignmentGeneration(generationWasPersisted)
         WhodunitStateValidator.requireValid(normalized)
         return normalized
     }
@@ -73,5 +80,25 @@ class WhodunitSnapshotCodec(
                 )
             ),
         )
+    }
+
+    /**
+     * Snapshots written before reveal commands carried an assignment epoch
+     * have no generation field. A complete assigned snapshot can be migrated
+     * deterministically to the first generation; unassigned setup/cancelled
+     * states remain at the reserved zero value.
+     */
+    private fun WhodunitState.normalizeLegacyRoleAssignmentGeneration(
+        generationWasPersisted: Boolean,
+    ): WhodunitState {
+        if (
+            generationWasPersisted ||
+            public.roleAssignmentGeneration != 0L ||
+            privatePerPlayer.isEmpty() ||
+            hostOnly.seatToCharacter.isEmpty()
+        ) {
+            return this
+        }
+        return copy(public = public.copy(roleAssignmentGeneration = 1L))
     }
 }

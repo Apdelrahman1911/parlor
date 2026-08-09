@@ -64,6 +64,7 @@ class WhodunitPeerProjectionBoundaryTest {
             caseId = CaseId("last-dinner"),
             modeId = WhodunitIds.ClassicVoteModeId,
             playersAtTable = players,
+            roleAssignmentGeneration = 7L,
         ),
         privatePerPlayer = mapOf(
             host to WhodunitPrivate(PlayerRole.Innocent, CharacterId("chef")),
@@ -113,8 +114,10 @@ class WhodunitPeerProjectionBoundaryTest {
         assertThat(public.privatePerPlayer).isEmpty()
         assertThat(public.hostOnly.randomSeed).isEqualTo(0L)
         assertThat(public.hostOnly.seatToCharacter).isEmpty()
+        assertThat(public.public.roleAssignmentGeneration).isEqualTo(7L)
         assertThat(own.privatePerPlayer).isEmpty()
         assertThat(own.hostOnly.randomSeed).isEqualTo(0L)
+        assertThat(own.public.roleAssignmentGeneration).isEqualTo(7L)
         bridge.close()
     }
 

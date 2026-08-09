@@ -12,9 +12,9 @@ import kotlinx.serialization.Serializable
  * `PeerMessage.ActionSubmit(payload: ByteArray)` wire (see
  * [com.parlor.games.whodunit.domain.action.WhodunitActionCodec]).
  * kotlinx-serialization emits a JSON polymorphic discriminator on the sealed
- * interface, so adding a new action variant is forward-compatible — peers
- * running an older app version see the discriminator and can refuse cleanly
- * instead of misinterpreting bytes.
+ * interface. Compatibility is still governed by the negotiated game version:
+ * strict older decoders are not expected to understand new variants or newly
+ * required fields.
  */
 @Serializable
 sealed interface WhodunitAction : GameAction {
@@ -25,10 +25,29 @@ sealed interface WhodunitAction : GameAction {
     @Serializable data class AdvanceBriefingCard(val index: Int) : WhodunitAction
 
     // --- Reveal ---
-    @Serializable data class StartCharacterReveal(val playerId: PlayerId) : WhodunitAction
-    @Serializable data class CompleteCharacterReveal(val playerId: PlayerId) : WhodunitAction
-    @Serializable data class OpenPrivateReview(val playerId: PlayerId) : WhodunitAction
-    @Serializable data class CloseHide(val playerId: PlayerId) : WhodunitAction
+    @Serializable
+    data class StartCharacterReveal(
+        val playerId: PlayerId,
+        val roleAssignmentGeneration: Long,
+    ) : WhodunitAction
+
+    @Serializable
+    data class CompleteCharacterReveal(
+        val playerId: PlayerId,
+        val roleAssignmentGeneration: Long,
+    ) : WhodunitAction
+
+    @Serializable
+    data class OpenPrivateReview(
+        val playerId: PlayerId,
+        val roleAssignmentGeneration: Long,
+    ) : WhodunitAction
+
+    @Serializable
+    data class CloseHide(
+        val playerId: PlayerId,
+        val roleAssignmentGeneration: Long,
+    ) : WhodunitAction
 
     // --- Party Play readiness (Wave 9H) ---
     /** Peer signals they've read the case intro. SelfActor. */
@@ -36,7 +55,11 @@ sealed interface WhodunitAction : GameAction {
     /** Peer signals they're ready to start after the briefing. SelfActor. */
     @Serializable data class AcknowledgeBriefing(val playerId: PlayerId) : WhodunitAction
     /** Peer signals they've viewed their assigned role. SelfActor. */
-    @Serializable data class ConfirmRoleViewed(val playerId: PlayerId) : WhodunitAction
+    @Serializable
+    data class ConfirmRoleViewed(
+        val playerId: PlayerId,
+        val roleAssignmentGeneration: Long,
+    ) : WhodunitAction
     /**
      * Host advances from CharacterReveal (simultaneous-reveal model) to
      * Round(1). Gated by `PartyReadiness.isComplete(rolesViewed, active)`.

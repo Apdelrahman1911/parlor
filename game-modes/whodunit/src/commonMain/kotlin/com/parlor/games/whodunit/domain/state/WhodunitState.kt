@@ -31,6 +31,15 @@ data class WhodunitPublic(
     val caseId: CaseId,
     val modeId: ModeId,
     val playersAtTable: List<Player>,
+    /**
+     * Monotonic epoch for the current role/character assignment.
+     *
+     * Reveal commands carry this value so a delayed command from before a
+     * reroll or rematch cannot unlock, close, or acknowledge the replacement
+     * dossier. Zero is reserved for states that have never had roles assigned;
+     * the first assignment is generation one.
+     */
+    val roleAssignmentGeneration: Long = 0L,
     val eliminatedPlayers: List<PlayerId> = emptyList(),
     val currentRound: Int = 0,
     val revealedClues: List<RevealedClue> = emptyList(),
