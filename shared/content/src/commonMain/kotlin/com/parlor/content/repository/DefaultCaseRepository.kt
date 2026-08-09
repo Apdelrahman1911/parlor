@@ -101,24 +101,8 @@ class DefaultCaseRepository(
                 }
                 // Pull each case into cache to warm it.
                 var invalidEnvelope = false
-                summaries.forEach { summary ->
-                    val caseId = CaseId(summary.caseId)
-                    val fetch = remote.fetchCase(caseId).mapError { it.asDataError() }
-                    if (fetch is Result.Success) {
-                        val raw = json.encodeToString(CaseEnvelope.serializer(), fetch.data)
-                        when (val shape = validator.validate(raw, shapeOnlyPayloadValidator(gameId))) {
-                            is Result.Success -> {
-                                val envelope = shape.data.envelope
-                                if (envelope.toSummary() == summary.copy(coverArtUrl = null)) {
-                                    cache.put(envelope)
-                                    cacheUpdates.tryEmit(CaseUpdate.CaseRevised(summary))
-                                } else {
-                                    invalidEnvelope = true
-                                }
-                            }
-                            is Result.Failure -> invalidEnvelope = true
-                        }
-                    }
+                for (summary in summaries) {
+                    if (!warmCase(gameId, summary)) invalidEnvelope = true
                 }
                 if (invalidEnvelope) Result.Failure(DataError.CorruptedData)
                 else Result.Success(Unit)
@@ -139,6 +123,21 @@ class DefaultCaseRepository(
 
             override fun validate(envelope: CaseEnvelope): Result<JsonElement, com.parlor.core.result.ValidationError> =
                 Result.Success(envelope.payload)
+        }
+
+    private suspend fun warmCase(gameId: GameId, summary: CaseSummary): Boolean {
+        val fetch = remote.fetchCase(CaseId(summary.caseId)).mapError { it.asDataError() }
+        if (fetch !is Result.Success) return true
+        val raw = json.encodeToString(CaseEnvelope.serializer(), fetch.data)
+        return when (val shape = validator.validate(raw, shapeOnlyPayloadValidator(gameId))) {
+            is Result.Failure -> false
+            is Result.Success -> {
+                val envelope = shape.data.envelope
+                if (envelope.toSummary() != summary.copy(coverArtUrl = null)) return false
+                cache.put(envelope)
+                cacheUpdates.tryEmit(CaseUpdate.CaseRevised(summary))
+                true
+            }
         }
 
     private fun <TPayload> validate(
