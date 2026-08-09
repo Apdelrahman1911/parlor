@@ -155,9 +155,7 @@ private fun MafiaShellContent(
             onHost = { screen = MafiaShellScreen.HostPermission },
             onJoin = { screen = MafiaShellScreen.JoinPermission },
             onBack = onExit,
-            multiplayerEnabled = capabilities.supports(GameEntryMode.Host) &&
-                capabilities.supports(GameEntryMode.Join),
-            soloEnabled = capabilities.supports(GameEntryMode.Solo),
+            capabilities = capabilities,
             modifier = modifier,
         )
 

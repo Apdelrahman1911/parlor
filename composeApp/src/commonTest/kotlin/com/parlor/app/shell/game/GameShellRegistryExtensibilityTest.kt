@@ -1,8 +1,15 @@
 package com.parlor.app.shell.game
 
+import androidx.compose.runtime.AbstractApplier
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Composition
+import androidx.compose.runtime.MonotonicFrameClock
+import androidx.compose.runtime.Recomposer
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
 import com.parlor.app.resolveLocalResumeDestination
+import com.parlor.app.shell.playmode.PlayModePickerAvailability
+import com.parlor.app.shell.playmode.toPlayModePickerAvailability
 import com.parlor.core.ids.CaseId
 import com.parlor.core.ids.GameId
 import com.parlor.core.ids.ModeId
@@ -18,6 +25,9 @@ import com.parlor.engine.testing.fakes.RoundRobinAnnounceGame
 import com.parlor.engine.testing.fakes.RrState
 import com.parlor.session.multidevice.MultiplayerSessionRoute
 import com.parlor.storage.snapshot.InMemorySnapshotStore
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -168,6 +178,61 @@ class GameShellRegistryExtensibilityTest {
     }
 
     @Test
+    fun picker_preserves_independent_host_join_and_local_capabilities() {
+        assertEquals(
+            PlayModePickerAvailability(
+                solo = false,
+                passAndPlay = false,
+                host = true,
+                join = false,
+            ),
+            GameShellCapabilities(setOf(GameEntryMode.Host)).toPlayModePickerAvailability(),
+        )
+        assertEquals(
+            PlayModePickerAvailability(
+                solo = false,
+                passAndPlay = true,
+                host = false,
+                join = true,
+            ),
+            GameShellCapabilities(
+                setOf(GameEntryMode.PassAndPlay, GameEntryMode.Join),
+            ).toPlayModePickerAvailability(),
+        )
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun third_game_content_is_rendered_through_the_registered_shell_binding() = runTest {
+        var renderedLaunch: GameShellLaunch? = null
+        val binding = FixtureBinding(
+            definition = fixtureDefinition,
+            onRendered = { renderedLaunch = it },
+        )
+        val fixtureRouter = GameShellRouter(DefaultGameShellRegistry(listOf(binding)))
+        val launch = assertNotNull(fixtureRouter.newGame(fixtureDefinition.id))
+        val compositionContext = coroutineContext + ImmediateFrameClock
+        val recomposer = Recomposer(compositionContext)
+        val composition = Composition(UnitApplier(), recomposer)
+        val recomposerJob = launch(ImmediateFrameClock) { recomposer.runRecomposeAndApplyChanges() }
+
+        try {
+            composition.setContent {
+                assertNotNull(fixtureRouter.bindingFor(launch)).Content(
+                    launch = launch,
+                    onExit = {},
+                )
+            }
+            runCurrent()
+            assertEquals(launch, renderedLaunch)
+        } finally {
+            composition.dispose()
+            recomposer.close()
+            recomposerJob.join()
+        }
+    }
+
+    @Test
     fun registry_rejects_a_multiplayer_contract_that_does_not_match_definition() {
         val mismatched = object : GameShellBinding {
             override val definition: GameDefinition<*, *, *> = fixtureDefinition
@@ -217,6 +282,7 @@ private class FixtureBinding(
         GameEntryMode.Host,
         GameEntryMode.Join,
     ),
+    private val onRendered: ((GameShellLaunch) -> Unit)? = null,
 ) : GameShellBinding {
     override val capabilities = GameShellCapabilities(modes)
     override val multiplayerContract = if (
@@ -241,7 +307,21 @@ private class FixtureBinding(
     )
 
     @Composable
-    override fun Content(launch: GameShellLaunch, onExit: () -> Unit, modifier: Modifier) = Unit
+    override fun Content(launch: GameShellLaunch, onExit: () -> Unit, modifier: Modifier) {
+        SideEffect { onRendered?.invoke(launch) }
+    }
+}
+
+private class UnitApplier : AbstractApplier<Unit>(Unit) {
+    override fun insertTopDown(index: Int, instance: Unit) = Unit
+    override fun insertBottomUp(index: Int, instance: Unit) = Unit
+    override fun remove(index: Int, count: Int) = Unit
+    override fun move(from: Int, to: Int, count: Int) = Unit
+    override fun onClear() = Unit
+}
+
+private object ImmediateFrameClock : MonotonicFrameClock {
+    override suspend fun <R> withFrameNanos(onFrame: (Long) -> R): R = onFrame(0L)
 }
 
 private class ExistingDefinition(

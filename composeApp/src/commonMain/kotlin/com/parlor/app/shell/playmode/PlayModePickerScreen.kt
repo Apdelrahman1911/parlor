@@ -10,6 +10,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.parlor.app.shell.game.GameEntryMode
+import com.parlor.app.shell.game.GameShellCapabilities
 import com.parlor.app.resources.Res
 import com.parlor.app.resources.playmode_passandplay_body
 import com.parlor.app.resources.playmode_passandplay_choose
@@ -45,6 +47,20 @@ import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.session.PlayMode
 import org.jetbrains.compose.resources.stringResource
 
+internal data class PlayModePickerAvailability(
+    val solo: Boolean,
+    val passAndPlay: Boolean,
+    val host: Boolean,
+    val join: Boolean,
+)
+
+internal fun GameShellCapabilities.toPlayModePickerAvailability() = PlayModePickerAvailability(
+    solo = supports(GameEntryMode.Solo),
+    passAndPlay = supports(GameEntryMode.PassAndPlay),
+    host = supports(GameEntryMode.Host),
+    join = supports(GameEntryMode.Join),
+)
+
 /**
  * Game setup — the single decision point after Home. Renders four cards so
  * a new user can see every option at once and pick a single tap:
@@ -57,24 +73,26 @@ import org.jetbrains.compose.resources.stringResource
  * Solo/Pass-and-Play emit a [PlayMode] via [onModeSelected] and the registered
  * game binding chooses its next setup step. Host/Join are routed via
  * [onHost]/[onJoin] because each binding owns its multiplayer setup flow.
- * When [multiplayerEnabled] is `false` the Host
- * and Join cards stay visible but disabled, with a short explanation, so
- * the user understands what they're missing in this build.
+ * Every card is enabled from the registered game's independent shell
+ * capability. Keeping Host and Join separate is important for transports and
+ * fixtures that intentionally support only one side of the topology.
+ * Unsupported cards stay visible but disabled so players understand what is
+ * unavailable in this build.
  *
  * The screen replaces the old per-device-mode picker that lived between
  * the case picker and the game; the case picker now comes *after* this
  * decision in the single-device branches.
  */
 @Composable
-fun PlayModePickerScreen(
+internal fun PlayModePickerScreen(
     onModeSelected: (PlayMode) -> Unit,
     onHost: () -> Unit,
     onJoin: () -> Unit,
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
-    multiplayerEnabled: Boolean = true,
-    soloEnabled: Boolean = true,
+    capabilities: GameShellCapabilities,
 ) {
+    val availability = capabilities.toPlayModePickerAvailability()
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
@@ -99,7 +117,7 @@ fun PlayModePickerScreen(
                 buttonDescription = stringResource(Res.string.playmode_solo_choose_description),
                 onClick = { onModeSelected(PlayMode.Solo) },
                 modifier = Modifier.fillMaxWidth(),
-                enabled = soloEnabled,
+                enabled = availability.solo,
             )
 
             SetupCard(
@@ -110,6 +128,7 @@ fun PlayModePickerScreen(
                 buttonDescription = stringResource(Res.string.playmode_passandplay_choose_description),
                 onClick = { onModeSelected(PlayMode.PassAndPlay) },
                 modifier = Modifier.fillMaxWidth(),
+                enabled = availability.passAndPlay,
             )
 
             SetupCard(
@@ -120,8 +139,12 @@ fun PlayModePickerScreen(
                 buttonDescription = stringResource(Res.string.setup_host_choose_description),
                 onClick = onHost,
                 modifier = Modifier.fillMaxWidth(),
-                enabled = multiplayerEnabled,
-                disabledHint = if (multiplayerEnabled) null else stringResource(Res.string.setup_multiplayer_disabled),
+                enabled = availability.host,
+                disabledHint = if (availability.host) {
+                    null
+                } else {
+                    stringResource(Res.string.setup_multiplayer_disabled)
+                },
             )
 
             SetupCard(
@@ -132,7 +155,7 @@ fun PlayModePickerScreen(
                 buttonDescription = stringResource(Res.string.setup_join_choose_description),
                 onClick = onJoin,
                 modifier = Modifier.fillMaxWidth(),
-                enabled = multiplayerEnabled,
+                enabled = availability.join,
                 // Host card already explains; keep the Join card terse.
                 disabledHint = null,
                 buttonVariant = ParlorButtonVariant.Secondary,

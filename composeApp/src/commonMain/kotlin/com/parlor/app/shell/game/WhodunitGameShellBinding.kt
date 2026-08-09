@@ -187,9 +187,7 @@ private fun WhodunitShellContent(
             onHost = { screen = WhodunitShellScreen.HostPermission },
             onJoin = { screen = WhodunitShellScreen.JoinPermission },
             onBack = onExit,
-            multiplayerEnabled = capabilities.supports(GameEntryMode.Host) &&
-                capabilities.supports(GameEntryMode.Join),
-            soloEnabled = capabilities.supports(GameEntryMode.Solo),
+            capabilities = capabilities,
             modifier = modifier,
         )
 
