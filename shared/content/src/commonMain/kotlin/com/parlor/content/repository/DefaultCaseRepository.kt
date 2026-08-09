@@ -43,12 +43,24 @@ class DefaultCaseRepository(
         // Prefer remote so the library reflects the latest catalog; fall back to
         // cache, then to bundled.
         val remoteResult = remote.listCases(gameId).mapError { it.asDataError() }
-        if (remoteResult is Result.Success) return remoteResult
+        if (remoteResult is Result.Success) {
+            when (val validated = validator.validateSummaries(gameId, remoteResult.data)) {
+                is Result.Success -> return validated
+                is Result.Failure -> Unit // Treat a corrupt manifest as a source failure.
+            }
+        }
 
         val cached = cache.listSummaries(gameId)
-        if (cached.isNotEmpty()) return Result.Success(cached)
+        if (cached.isNotEmpty()) {
+            when (val validated = validator.validateSummaries(gameId, cached)) {
+                is Result.Success -> return validated
+                is Result.Failure -> Unit
+            }
+        }
 
-        return Result.Success(bundled.availableCases().filter { it.gameId == gameId.raw })
+        val bundledSummaries = bundled.availableCases().filter { it.gameId == gameId.raw }
+        return validator.validateSummaries(gameId, bundledSummaries)
+            .mapError { DataError.CorruptedData }
     }
 
     override suspend fun <TPayload> loadCase(
@@ -75,8 +87,12 @@ class DefaultCaseRepository(
         val r = remote.listCases(gameId).mapError { it.asDataError() }
         return when (r) {
             is Result.Success -> {
+                val summaries = when (val validated = validator.validateSummaries(gameId, r.data)) {
+                    is Result.Success -> validated.data
+                    is Result.Failure -> return Result.Failure(DataError.CorruptedData)
+                }
                 // Pull each case into cache to warm it.
-                r.data.forEach { summary ->
+                summaries.forEach { summary ->
                     val caseId = CaseId(summary.caseId)
                     val fetch = remote.fetchCase(caseId).mapError { it.asDataError() }
                     if (fetch is Result.Success) {

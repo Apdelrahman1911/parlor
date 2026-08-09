@@ -1,6 +1,8 @@
 package com.parlor.content.validation
 
 import com.parlor.content.schema.CaseEnvelope
+import com.parlor.content.schema.CaseSummary
+import com.parlor.core.ids.GameId
 import com.parlor.core.result.Result
 import com.parlor.core.result.ValidationError
 
@@ -16,6 +18,13 @@ interface CaseValidator {
         rawJson: String,
         payloadValidator: PayloadValidator<TPayload>,
     ): Result<ValidatedCase<TPayload>, ValidationError>
+
+    /** Validate the reduced list payload before it becomes a UI/cache model. */
+    fun validateSummaries(
+        requestedGameId: GameId,
+        summaries: List<CaseSummary>,
+    ): Result<List<CaseSummary>, ValidationError> =
+        CaseSummaryValidator.validateShape(requestedGameId, summaries)
 }
 
 /**

@@ -106,4 +106,22 @@ class OfflineRemoteCaseDataSourceTest {
             client.close()
         }
     }
+
+    @Test
+    fun ktor_source_rejects_path_unsafe_ids_before_request() = runTest {
+        val client = HttpClient(MockEngine { error("request must not be made") })
+        val source = KtorRemoteCaseDataSource(client, "https://content.test")
+        try {
+            assertEquals(
+                Result.Failure(NetworkError.Serialization("invalid case id")),
+                source.fetchCase(CaseId("../secrets")),
+            )
+            assertEquals(
+                Result.Failure(NetworkError.Serialization("invalid game id")),
+                source.listCases(GameId("../whodunit")),
+            )
+        } finally {
+            client.close()
+        }
+    }
 }

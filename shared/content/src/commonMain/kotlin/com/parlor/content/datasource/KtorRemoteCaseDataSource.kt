@@ -43,6 +43,9 @@ class KtorRemoteCaseDataSource(
 ) : RemoteCaseDataSource {
 
     override suspend fun listCases(gameId: GameId): Result<List<CaseSummary>, NetworkError> = try {
+        if (!SAFE_CONTENT_ID.matches(gameId.raw)) {
+            return Result.Failure(NetworkError.Serialization("invalid game id"))
+        }
         val response = client.get("$baseUrl/games/${gameId.raw}/cases")
         // Explicit status check: the injected client does NOT set expectSuccess,
         // so Ktor never throws ClientRequestException/ServerResponseException —
@@ -63,6 +66,9 @@ class KtorRemoteCaseDataSource(
     }
 
     override suspend fun fetchCase(id: CaseId): Result<CaseEnvelope, NetworkError> = try {
+        if (!SAFE_CONTENT_ID.matches(id.raw)) {
+            return Result.Failure(NetworkError.Serialization("invalid case id"))
+        }
         val response = client.get("$baseUrl/cases/${id.raw}")
         if (!response.status.isSuccess()) return Result.Failure(statusToError(response.status))
         val bytes = when (val body = response.readBounded(MAX_CASE_RESPONSE_BYTES)) {
@@ -120,6 +126,7 @@ class KtorRemoteCaseDataSource(
     }
 
     private companion object {
+        val SAFE_CONTENT_ID = Regex("[a-z0-9]+(?:-[a-z0-9]+)*")
         val DEFAULT_JSON = Json {
             ignoreUnknownKeys = false
             isLenient = false

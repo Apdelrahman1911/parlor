@@ -7,9 +7,17 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
 import com.parlor.content.datasource.InMemoryCachedCaseDataSource
 import com.parlor.content.datasource.KtorRemoteCaseDataSource
+import com.parlor.content.datasource.RemoteCaseDataSource
+import com.parlor.content.schema.CaseEnvelope
+import com.parlor.content.schema.CaseSummary
 import com.parlor.content.repository.DefaultCaseRepository
 import com.parlor.content.validation.DefaultCaseValidator
+import com.parlor.content.validation.CaseSummaryValidator
+import com.parlor.content.schema.IntRangePair
 import com.parlor.core.result.Result
+import com.parlor.core.ids.CaseId
+import com.parlor.core.ids.GameId
+import com.parlor.core.result.NetworkError
 import com.parlor.core.versioning.SemVer
 import com.parlor.engine.registry.DefaultGameRegistry
 import com.parlor.games.whodunit.WhodunitDefinition
@@ -60,7 +68,7 @@ class CasePickerDiscoveryTest {
         "saidi-inheritance",
     )
 
-    private fun buildRepository(): DefaultCaseRepository {
+    private fun buildRepository(remote: RemoteCaseDataSource? = null): DefaultCaseRepository {
         val bundled = BundledWhodunitCases(
             knownCaseIds = productionKnownCaseIds,
             loadJson = { caseId ->
@@ -76,7 +84,7 @@ class CasePickerDiscoveryTest {
             install(ContentNegotiation) { json(json) }
         }
         return DefaultCaseRepository(
-            remote = KtorRemoteCaseDataSource(emptyRemote, baseUrl = "https://test.local"),
+            remote = remote ?: KtorRemoteCaseDataSource(emptyRemote, baseUrl = "https://test.local"),
             cache = InMemoryCachedCaseDataSource(),
             bundled = bundled,
             validator = DefaultCaseValidator(
@@ -111,5 +119,68 @@ class CasePickerDiscoveryTest {
         for (summary in summaries) {
             assertThat(summary.gameId).isEqualTo(WhodunitIds.GameId.raw)
         }
+    }
+
+    @Test
+    fun registry_aware_summary_validation_rejects_impossible_mode_and_player_range() {
+        val validator = CaseSummaryValidator(
+            gameRegistry = DefaultGameRegistry(listOf(WhodunitDefinition(json))),
+            installedAppVersion = SemVer(1, 0, 0),
+        )
+        val valid = com.parlor.content.schema.CaseSummary(
+            caseId = "valid",
+            title = "Valid",
+            version = SemVer(1, 0, 0),
+            gameId = WhodunitIds.GameId.raw,
+            supportedPlayerCounts = IntRangePair(4, 6),
+            supportedModes = listOf("classic-vote"),
+            language = "en",
+            theme = "test",
+            estimatedDuration = IntRangePair(10, 20),
+            minimumAppVersion = SemVer(1, 0, 0),
+        )
+
+        assertThat(
+            validator.validate(
+                WhodunitIds.GameId,
+                listOf(valid.copy(supportedPlayerCounts = IntRangePair(3, 9))),
+            ),
+        ).isInstanceOf(Result.Failure::class)
+        assertThat(
+            validator.validate(
+                WhodunitIds.GameId,
+                listOf(valid.copy(supportedModes = listOf("not-a-mode"))),
+            ),
+        ).isInstanceOf(Result.Failure::class)
+    }
+
+    @Test
+    fun repository_discards_a_corrupt_remote_manifest_and_uses_bundled_cases() = runTest {
+        val maliciousRemote = object : RemoteCaseDataSource {
+            override suspend fun listCases(gameId: GameId): Result<List<CaseSummary>, NetworkError> =
+                Result.Success(
+                    listOf(
+                        CaseSummary(
+                            caseId = "../escape",
+                            title = "Injected",
+                            version = SemVer(1, 0, 0),
+                            gameId = gameId.raw,
+                            supportedPlayerCounts = IntRangePair(4, 6),
+                            supportedModes = listOf("classic-vote"),
+                            language = "en",
+                            theme = "test",
+                            estimatedDuration = IntRangePair(1, 2),
+                            minimumAppVersion = SemVer(1, 0, 0),
+                        ),
+                    ),
+                )
+
+            override suspend fun fetchCase(id: CaseId): Result<CaseEnvelope, NetworkError> =
+                Result.Failure(NetworkError.Unreachable)
+        }
+
+        val result = buildRepository(maliciousRemote).listCases(WhodunitIds.GameId)
+        val summaries = (result as Result.Success).data
+        assertThat(summaries.map { it.caseId }.toSet()).isEqualTo(productionKnownCaseIds.toSet())
     }
 }

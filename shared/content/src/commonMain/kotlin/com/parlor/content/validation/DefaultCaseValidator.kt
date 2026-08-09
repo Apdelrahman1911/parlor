@@ -1,6 +1,7 @@
 package com.parlor.content.validation
 
 import com.parlor.content.schema.CaseEnvelope
+import com.parlor.content.schema.CaseSummary
 import com.parlor.core.ids.GameId
 import com.parlor.core.result.Result
 import com.parlor.core.result.ValidationError
@@ -19,6 +20,14 @@ class DefaultCaseValidator(
     private val installedAppVersion: SemVer,
     private val gameRegistry: GameRegistry,
 ) : CaseValidator {
+
+    private val summaryValidator = CaseSummaryValidator(gameRegistry, installedAppVersion)
+
+    override fun validateSummaries(
+        requestedGameId: GameId,
+        summaries: List<CaseSummary>,
+    ): Result<List<CaseSummary>, ValidationError> =
+        summaryValidator.validate(requestedGameId, summaries)
 
     override fun <TPayload> validate(
         rawJson: String,
