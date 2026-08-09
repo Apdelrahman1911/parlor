@@ -96,7 +96,7 @@ class WhodunitPeerRoomBridge(
     private suspend fun installSnapshot(
         payload: PlayerSnapshotPayload,
         @Suppress("UNUSED_PARAMETER") revision: Long,
-    ) {
+    ): Boolean {
         val decoded = runCatching {
             val publicState = json.decodeFromString(
                 publicSerializer,
@@ -114,8 +114,7 @@ class WhodunitPeerRoomBridge(
                 privatePerPlayer = ownPrivate?.let { mapOf(selfPlayerId to it) } ?: emptyMap(),
             )
         }.getOrElse {
-            _hostDisconnected.emit(Unit)
-            return
+            return false
         }
         val (publicState, playerState) = decoded
         // Keep the public bucket structurally public. The UI may combine its
@@ -123,6 +122,7 @@ class WhodunitPeerRoomBridge(
         // public where a future logger or rebroadcast path could consume it.
         controller.updatePrivate(PrivateProjection(playerState, selfPlayerId))
         controller.updatePublic(PublicProjection(publicState))
+        return true
     }
 
     private suspend fun sendActionToHost(

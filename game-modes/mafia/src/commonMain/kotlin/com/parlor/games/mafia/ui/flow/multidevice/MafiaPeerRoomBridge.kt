@@ -89,7 +89,7 @@ class MafiaPeerRoomBridge(
     private suspend fun installSnapshot(
         payload: PlayerSnapshotPayload,
         @Suppress("UNUSED_PARAMETER") revision: Long,
-    ) {
+    ): Boolean {
         val decoded = runCatching {
             val publicState = json.decodeFromString(
                 publicSerializer,
@@ -107,12 +107,12 @@ class MafiaPeerRoomBridge(
                 privatePerPlayer = ownPrivate?.let { mapOf(selfPlayerId to it) } ?: emptyMap(),
             )
         }.getOrElse {
-            _hostDisconnected.emit(Unit)
-            return
+            return false
         }
         val (publicState, playerState) = decoded
         controller.updatePrivate(PrivateProjection(playerState, selfPlayerId))
         controller.updatePublic(PublicProjection(publicState))
+        return true
     }
 
     private suspend fun sendActionToHost(

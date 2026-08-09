@@ -24,6 +24,8 @@ sealed interface ProtocolValidation {
     data object InvalidRevision : ProtocolValidation
     data object CommandPayloadTooLarge : ProtocolValidation
     data object SnapshotPayloadTooLarge : ProtocolValidation
+    /** Envelope is valid, but the game-specific snapshot payload cannot be installed. */
+    data object SnapshotPayloadInvalid : ProtocolValidation
 }
 
 fun SessionEnvelopeHeader.validateFor(expected: SessionProtocol): ProtocolValidation = when {

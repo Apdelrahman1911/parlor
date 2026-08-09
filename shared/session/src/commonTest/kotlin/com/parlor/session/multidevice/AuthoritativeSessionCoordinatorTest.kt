@@ -378,6 +378,7 @@ class AuthoritativeSessionCoordinatorTest {
             onSnapshot = { payload, _ ->
                 accepted += payload.publicPayload.single().toInt() to
                     payload.privatePayload.single().toInt()
+                true
             },
             onSessionEnded = { ended += it.reason },
             onProtocolViolation = { violations += it },
@@ -404,6 +405,46 @@ class AuthoritativeSessionCoordinatorTest {
         assertEquals(2, coordinator.revision.value)
         assertEquals(listOf<ProtocolValidation>(ProtocolValidation.WrongGame), violations)
         assertEquals(listOf(SessionEndReason.HostLeft), ended)
+        coordinator.close()
+    }
+
+    @Test
+    fun `failed snapshot installation does not consume its revision`() = runTest {
+        val room = RecordingRoom(isHost = false, selfPlayerId = peerId)
+        val installed = mutableListOf<Int>()
+        val violations = mutableListOf<ProtocolValidation>()
+        var rejectNext = true
+        val coordinator = PeerAuthoritativeSessionCoordinator(
+            room = room,
+            protocol = protocol,
+            selfPlayerId = peerId,
+            scope = this,
+            onSnapshot = { payload, _ ->
+                if (rejectNext) {
+                    rejectNext = false
+                    false
+                } else {
+                    installed += payload.publicPayload.single().toInt()
+                    true
+                }
+            },
+            onProtocolViolation = { violations += it },
+            idGenerator = { COMMAND_ONE },
+        )
+
+        room.receive(snapshot(sequence = 1, revision = 4, public = 1, private = 2))
+        runCurrent()
+        assertEquals(0L, coordinator.revision.value)
+        assertEquals(
+            listOf<ProtocolValidation>(ProtocolValidation.SnapshotPayloadInvalid),
+            violations,
+        )
+
+        room.receive(snapshot(sequence = 2, revision = 4, public = 7, private = 8))
+        runCurrent()
+
+        assertEquals(listOf(7), installed)
+        assertEquals(4L, coordinator.revision.value)
         coordinator.close()
     }
 
@@ -439,7 +480,7 @@ class AuthoritativeSessionCoordinatorTest {
             protocol = protocol,
             selfPlayerId = peerId,
             scope = this,
-            onSnapshot = { _, _ -> },
+            onSnapshot = { _, _ -> true },
             idGenerator = { COMMAND_ONE },
         )
         coordinator.submit(byteArrayOf(1))
@@ -468,7 +509,7 @@ class AuthoritativeSessionCoordinatorTest {
             protocol = protocol,
             selfPlayerId = peerId,
             scope = this,
-            onSnapshot = { _, _ -> },
+            onSnapshot = { _, _ -> true },
             idGenerator = { COMMAND_ONE },
         )
         runCurrent()
@@ -504,7 +545,7 @@ class AuthoritativeSessionCoordinatorTest {
             protocol = protocol,
             selfPlayerId = peerId,
             scope = this,
-            onSnapshot = { _, _ -> },
+            onSnapshot = { _, _ -> true },
             idGenerator = { "peer-command-${(++id).toString().padStart(16, '0')}" },
         )
         assertTrue(coordinator.submit(byteArrayOf(1)) is Result.Success)
@@ -524,7 +565,7 @@ class AuthoritativeSessionCoordinatorTest {
             protocol = protocol,
             selfPlayerId = peerId,
             scope = this,
-            onSnapshot = { _, _ -> },
+            onSnapshot = { _, _ -> true },
             idGenerator = { COMMAND_ONE },
         )
 
@@ -549,7 +590,7 @@ class AuthoritativeSessionCoordinatorTest {
             protocol = protocol,
             selfPlayerId = peerId,
             scope = this,
-            onSnapshot = { _, _ -> },
+            onSnapshot = { _, _ -> true },
             idGenerator = { "peer-command-${(++id).toString().padStart(16, '0')}" },
         )
 
@@ -622,7 +663,7 @@ class AuthoritativeSessionCoordinatorTest {
             protocol = protocol,
             selfPlayerId = peerId,
             scope = this,
-            onSnapshot = { _, _ -> },
+            onSnapshot = { _, _ -> true },
             idGenerator = { COMMAND_ONE },
         )
         room.lifecycleState.value = RoomLifecycleState.Suspended(120_000L)

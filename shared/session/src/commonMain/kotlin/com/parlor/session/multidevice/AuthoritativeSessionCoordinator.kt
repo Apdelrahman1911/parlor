@@ -457,7 +457,8 @@ class PeerAuthoritativeSessionCoordinator(
     val protocol: SessionProtocol,
     private val selfPlayerId: PlayerId,
     private val scope: CoroutineScope,
-    private val onSnapshot: suspend (PlayerSnapshotPayload, revision: Long) -> Unit,
+    /** Returns true only after both public and private projections are installed. */
+    private val onSnapshot: suspend (PlayerSnapshotPayload, revision: Long) -> Boolean,
     /**
      * Called from this coordinator's single room-inbox collector after a
      * valid terminal envelope is received. Keeping terminal delivery
@@ -558,27 +559,40 @@ class PeerAuthoritativeSessionCoordinator(
             onProtocolViolation(validation)
             return
         }
-        val accepted = stateMutex.withLock {
+        val eligible = stateMutex.withLock {
             if (
                 terminalAccepted ||
-                !rememberHostMessage(snapshot.header.messageId) ||
+                snapshot.header.messageId in seenHostMessageIds ||
                 snapshot.revision <= lastInstalledSnapshotRevision
             ) {
                 false
-            } else {
-                lastInstalledSnapshotRevision = snapshot.revision
-                _revision.value = snapshot.revision
-                true
-            }
+            } else true
         }
-        if (!accepted) return
-        onSnapshot(
-            PlayerSnapshotPayload(
-                publicPayload = snapshot.publicPayload.copyOf(),
-                privatePayload = snapshot.privatePayload.copyOf(),
-            ),
-            snapshot.revision,
-        )
+        if (!eligible) return
+        val installed = try {
+            onSnapshot(
+                PlayerSnapshotPayload(
+                    publicPayload = snapshot.publicPayload.copyOf(),
+                    privatePayload = snapshot.privatePayload.copyOf(),
+                ),
+                snapshot.revision,
+            )
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (_: Throwable) {
+            false
+        }
+        if (!installed) {
+            // Do not consume the message id or revision. A corrected snapshot
+            // for this same authoritative revision must remain installable.
+            onProtocolViolation(ProtocolValidation.SnapshotPayloadInvalid)
+            return
+        }
+        stateMutex.withLock {
+            rememberHostMessage(snapshot.header.messageId)
+            lastInstalledSnapshotRevision = snapshot.revision
+            _revision.value = snapshot.revision
+        }
     }
 
     private suspend fun acceptResult(result: HostMessage.CommandResult) {
