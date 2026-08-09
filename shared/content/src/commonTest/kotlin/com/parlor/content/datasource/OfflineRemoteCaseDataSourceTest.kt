@@ -8,9 +8,11 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
 import io.ktor.http.HttpStatusCode
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 
 class OfflineRemoteCaseDataSourceTest {
 
@@ -48,5 +50,26 @@ class OfflineRemoteCaseDataSourceTest {
             Result.Failure(NetworkError.Server(503)),
             fetch(HttpStatusCode.ServiceUnavailable),
         )
+    }
+
+    @Test
+    fun ktor_source_propagates_structured_cancellation() = runTest {
+        val client = HttpClient(
+            MockEngine {
+                throw CancellationException("request cancelled")
+            },
+        )
+        val source = KtorRemoteCaseDataSource(client, "https://content.test")
+
+        try {
+            assertFailsWith<CancellationException> {
+                source.fetchCase(CaseId("cancelled"))
+            }
+            assertFailsWith<CancellationException> {
+                source.listCases(GameId("whodunit"))
+            }
+        } finally {
+            client.close()
+        }
     }
 }

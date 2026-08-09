@@ -14,6 +14,7 @@ import io.ktor.client.plugins.ServerResponseException
 import io.ktor.client.request.get
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.isSuccess
+import kotlinx.coroutines.CancellationException
 import kotlinx.serialization.SerializationException
 
 /**
@@ -36,13 +37,19 @@ class KtorRemoteCaseDataSource(
         // deserialization error. See PROBLEMS_PARLOR.md → content-01.
         if (!resp.status.isSuccess()) return Result.Failure(statusToError(resp.status))
         Result.Success(resp.body<List<CaseSummary>>()) as Result<List<CaseSummary>, NetworkError>
-    }.getOrElse { it.toNetworkErrorResult() }
+    }.getOrElse { failure ->
+        failure.rethrowIfCancellation()
+        failure.toNetworkErrorResult()
+    }
 
     override suspend fun fetchCase(id: CaseId): Result<CaseEnvelope, NetworkError> = runCatching {
         val resp = client.get("$baseUrl/cases/${id.raw}")
         if (!resp.status.isSuccess()) return Result.Failure(statusToError(resp.status))
         Result.Success(resp.body<CaseEnvelope>()) as Result<CaseEnvelope, NetworkError>
-    }.getOrElse { it.toNetworkErrorResult() }
+    }.getOrElse { failure ->
+        failure.rethrowIfCancellation()
+        failure.toNetworkErrorResult()
+    }
 
     private fun statusToError(status: HttpStatusCode): NetworkError =
         if (status.value == HttpStatusCode.Unauthorized.value) NetworkError.Unauthorized
@@ -61,5 +68,9 @@ class KtorRemoteCaseDataSource(
         is ServerResponseException -> Result.Failure(NetworkError.Server(response.status.value))
         is SerializationException -> Result.Failure(NetworkError.Serialization(message ?: "decode"))
         else -> Result.Failure(NetworkError.Unknown(message))
+    }
+
+    private fun Throwable.rethrowIfCancellation() {
+        if (this is CancellationException) throw this
     }
 }
