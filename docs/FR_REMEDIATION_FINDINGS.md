@@ -14,21 +14,26 @@ verification, exact fix commit, and final exact-HEAD gate are recorded.
 
 | ID | Severity | Root cause | Fix commit | Dedicated evidence | Status after exact final gate |
 |---|---|---|---|---|---|
-| FR-01 | High | The shell catalog was registry-shaped, but app/local/multiplayer/resume dispatch still contained game-specific branches. | `e2109cd`, `325b302` | `GameShellRegistryExtensibilityTest`, `verifyGameShellDispatch`, `:composeApp:desktopTest` | CLOSED |
+| FR-01 | High | The shell catalog was registry-shaped, but app/local/multiplayer/resume dispatch still contained game-specific branches. | `e2109cd`, `325b302`, `6a9656b` | `GameShellRegistryExtensibilityTest`, `verifyGameShellDispatch`, `:composeApp:desktopTest` | CLOSED |
 | FR-02 | Medium | Recovery checks did not encode the full phase/roster/terminal invariants for Mafia and Whodunit. | `cbd1663` | `MafiaSnapshotRecoveryTest`, `WhodunitSnapshotValidationTest`, reducer-trace fixtures | CLOSED |
 | FR-03 | Medium | Peer installation checked privacy redaction but not complete game-specific reachability and phase shape. | `cbd1663` | `MafiaPeerPrivateTargetGateTest`, `WhodunitPeerProjectionBoundaryTest`, full shape tests | CLOSED |
-| FR-04 | Medium | Detekt was versioned but not applied to every production subproject or enforced by the release umbrella. | `5efca1a`, `83b6a79` | `staticAnalysis`, XML reports, CI contract test | CLOSED |
+| FR-04 | Medium | Detekt was versioned but not applied to every production subproject or enforced by the release umbrella. | `5efca1a`, `83b6a79`, `681f594` | `staticAnalysis`, XML reports, CI contract test, catch-site review enforcement | CLOSED |
 | FR-05 | Medium | CI did not enforce the same Android, Apple, static, artifact, provenance, and contract matrix as local release verification. | `f76c285` | `ProductionVerificationWorkflowContractTest`, workflow jobs, root task graph | CLOSED |
 | FR-06 | Medium | Operational docs and the contract test still described protocol 3.1 while runtime headers were 4.0. | `d8c453b` | `MultiplayerDocumentationContractTest`, protocol/start-handshake tests | CLOSED |
 | FR-07 | Medium | Whodunit `SubmitStructuredAction` was serialized and authorized but its reducer branch silently returned unchanged state. | `fd46a6e` | action codec rejection, authority negative tests, no-production-reference scan | CLOSED |
-| FR-08 | Low | Release lint was not triaged as a gate and concrete icon/resource warnings were left unresolved. | `ba1ff74` | `AndroidReleaseLintContractTest`, forced `verifyReleaseLintWarnings` | CLOSED |
+| FR-08 | Low | Release lint was not triaged as a gate and concrete icon/resource warnings were left unresolved. | `ba1ff74`, `9384006` | `AndroidReleaseLintContractTest`, forced exact-inventory `verifyReleaseLintWarnings` | CLOSED |
 | FR-09 | Low | Unreachable spectator resources and obsolete Phase 0/version-catalog commentary remained in the active shell/resources. | `ba1ff74` | resource reachability/locale parity contract and diff audit | CLOSED |
 | FR-10 | Low | Optional case payloads contained placeholder author metadata without verified attribution. | `30bdf7b` | content payload hardening test and case validation | CLOSED |
 | FR-11 | High | Neutral shell/session helper files imported Whodunit types and embedded Whodunit route/start semantics, so a second game could not own the contract. | `325b302` | fixture registration, shell dispatch scan, route/version assertions | CLOSED |
 | FR-12 | Medium | Case-list summaries and content IDs were treated as trusted after decoding; malformed manifests could reach picker/cache and unsafe IDs were interpolated into URLs. | `bf71c10`, `83b6a79` | `CaseSummaryValidatorTest`, `OfflineRemoteCaseDataSourceTest`, `CasePickerDiscoveryTest`, strict Detekt | CLOSED |
-| FR-13 | Medium | `BoundedPeerOutbox` cleared its terminal transaction as soon as the worker dequeued it, allowing concurrent shutdown callers to enqueue duplicate terminal frames; queued terminal completion could also remain unresolved on close. | `d281140` | `BoundedPeerOutboxTest.concurrent terminal requests share one in flight delivery`, bounded queue/close tests | CLOSED |
+| FR-13 | Medium | `BoundedPeerOutbox` cleared its terminal transaction as soon as the worker dequeued it, allowing concurrent shutdown callers to enqueue duplicate terminal frames; later review also found a close-versus-terminal-publication race. | `d281140`, `90a3014` | terminal idempotency tests, deterministic close-before-publication race, bounded queue/close tests | CLOSED |
 | FR-14 | Medium | Mafia's snapshot codec accepted permissive JSON and structurally impossible public states, unlike the Whodunit codec. | `31783c1` | `MafiaSnapshotCodecTest` valid round trips and encode/decode rejection fixtures | CLOSED |
-| FR-15 | High | `DefaultCaseRepository` cached a remote envelope before typed validation and returned a corrupt legacy cache entry without trying authoritative fallbacks. | `57c9475`, `ac9da45`, `0c1ac6e` | `DefaultCaseRepositoryTest` cache trust, refresh shape, invalid-cache fallback tests | CLOSED |
+| FR-15 | High | `DefaultCaseRepository` cached a remote envelope before typed validation, returned corrupt legacy cache entries without fallback, and later still trusted fetched envelope identity plus shape-only refresh validation. | `57c9475`, `ac9da45`, `0c1ac6e`, `336f69a` | cache trust/fallback tests, exact requested-identity tests, typed refresh validation, direct-envelope boundary tests | CLOSED |
+| FR-16 | High | The registry UI collapsed host and join into one capability and its fixture exercised factory construction without proving registered content could actually compose. | `6a9656b` | independent play-mode availability tests and fixture binding composition test | CLOSED |
+| FR-17 | High | A remote/cache source could return a valid envelope for a different requested case, and refresh used common shape checks rather than the game-owned payload validator. | `336f69a` | substitution, corrupt-remote fallback, typed-refresh, manifest/fetch identity, and unsafe-envelope tests | CLOSED |
+| FR-18 | Medium | `BoundedPeerOutbox.close()` could win between terminal dequeue and terminal-state publication, leaving a late terminal caller attached to work after closure. | `90a3014` | deterministic close-before-terminal-publication regression plus full session tests | CLOSED |
+| FR-19 | Medium | Repository-wide Detekt executed, but `TooGenericExceptionCaught` was globally disabled, so new broad exception boundaries could bypass the required explicit review. | `681f594` | forced `staticAnalysis` across every production module and zero unreviewed generic catches | CLOSED |
+| FR-20 | Medium | The Android lint gate allowed any warning carrying one of four IDs, so a new coordinate, source, current version, or duplicate warning could be silently accepted; its documented count had already drifted. | `9384006` | exact 42-entry multiset gate, configuration-cache run, and `AndroidReleaseLintContractTest` | CLOSED |
 
 ## Finding details and acceptance matrix
 
@@ -224,6 +229,86 @@ corrupt cached record invalidates it and tries remote, then bundled content.
 Acceptance: invalid remote payloads produce no cache write, invalid refresh
 envelopes produce no warmed record, valid remote content is cached once, and a
 corrupt cache record is invalidated before a successful remote fallback.
+
+### FR-16 — independent registry entry capabilities
+
+Root cause: the shell binding exposed independent host and join capabilities,
+but `PlayModePickerScreen` reduced them to one `multiplayerEnabled` boolean.
+The non-shipping fixture test also stopped at creating a content lambda, so it
+could pass even if registered fixture content failed during composition.
+
+Target behavior: Solo, Pass & Play, Host, and Join are resolved independently
+from the selected game binding. The fixture binding is actually composed under
+a deterministic test composition, not merely returned as a function object.
+
+Acceptance: every capability combination produces the corresponding enabled
+entries; a third fixture game renders its registered content; neither central
+shell dispatch nor networking gains a fixture/game-specific branch.
+
+### FR-17 — fetched case identity and typed refresh validation
+
+Root cause: repository fallbacks validated envelope shape and typed payload but
+did not bind a fetched/cached envelope to the exact `CaseId` requested by the
+caller. Refresh accepted the common envelope shape without invoking the
+game-owned typed payload validator and could warm a substituted record.
+
+Target behavior: every source result must match the requested registry, game,
+case, and version identity before it can be returned or cached. Both `getCase`
+and `refresh` use the same game-owned payload validator. A rejected remote
+record falls through to the next authoritative source and cannot poison cache.
+
+Acceptance: cross-case substitution, manifest/fetch mismatch, malformed typed
+payloads, unsafe direct envelopes, and advertised-but-unavailable records fail
+closed; valid cache, remote, and bundled flows continue to work.
+
+### FR-18 — atomic outbox closure
+
+Root cause: terminal lifecycle ownership was published separately from queue
+dequeue. `close()` could observe no terminal state after the worker had taken
+the item but before it published the in-flight transaction, allowing callers to
+attach to work owned by an already closed outbox.
+
+Target behavior: one atomic lifecycle state owns Open, Ending, and Closed.
+Closure atomically prevents new enqueues and cancels the exact queued/in-flight
+terminal completion. Every caller completes with one bounded outcome.
+
+Acceptance: a deterministic hook pauses immediately before terminal-state
+publication; closing at that point makes the terminal caller return
+`NotConnected`, sends no terminal frame, and leaves no suspended completion.
+All prior idempotency, timeout, byte-bound, and peer-isolation tests remain green.
+
+### FR-19 — broad-catch static-analysis enforcement
+
+Root cause: Detekt was applied and executed, but the rule governing generic
+`Exception`/`Error` catches was disabled globally. A new broad catch therefore
+received no review signal even though cancellation and boundary translation are
+security/lifecycle relevant.
+
+Target behavior: `TooGenericExceptionCaught` is active, including for unnamed
+catch parameters. Each intentional translation/cleanup boundary is approved at
+the catch parameter, and suspending boundaries retain explicit cancellation
+propagation. There is no module-, file-, or global baseline waiver.
+
+Acceptance: forced `staticAnalysis` executes every production module and passes;
+repository search finds no generic production catch without its exact-site
+review; introducing a new unreviewed generic catch fails Detekt.
+
+### FR-20 — exact Android lint inventory
+
+Root cause: the release task compared only warning IDs. Once an ID was allowed,
+new instances for another dependency, source, current version, or duplicate
+count were accepted automatically. The documented 39-warning total had already
+diverged from the generated 42-warning report.
+
+Target behavior: the executable inventory records a multiset of warning ID,
+repository-relative location, stable message prefix, and count. Only the
+volatile latest-available-version suffix is ignored. XML external entities are
+disabled and configuration-cache compatibility remains enforced.
+
+Acceptance: a forced lint run produces exactly the 42 reviewed advisories and
+passes with configuration cache enabled; any added, removed, relocated, or
+current-version-changed warning fails; the repository contract test validates
+the inventory categories and count.
 
 ## Verification and closure rules
 
