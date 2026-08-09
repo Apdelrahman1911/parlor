@@ -32,6 +32,7 @@ import com.parlor.games.whodunit.domain.event.Verdict
 import com.parlor.games.whodunit.domain.event.WhodunitEvent
 import com.parlor.games.whodunit.domain.phase.WhodunitPhase
 import com.parlor.games.whodunit.domain.reducer.WhodunitReducerContext
+import com.parlor.games.whodunit.testing.validatedWhodunitCaseForTest
 import com.parlor.games.whodunit.domain.state.VoteState
 import com.parlor.games.whodunit.domain.state.WhodunitState
 import com.parlor.games.whodunit.resources.Res
@@ -137,7 +138,7 @@ class FullGameDriveTest {
             reducerContext = WhodunitReducerContext(
                 clock = FakeClock(Instant.fromEpochSeconds(1_700_000_000)),
                 random = RandomSource.seeded(seed),
-                case = payload,
+                case = validatedWhodunitCaseForTest(payload, caseId = "last-dinner"),
             ),
             scope = sessionScope,
         )

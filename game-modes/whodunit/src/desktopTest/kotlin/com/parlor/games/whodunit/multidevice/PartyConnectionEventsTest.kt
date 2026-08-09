@@ -21,6 +21,7 @@ import com.parlor.games.whodunit.domain.action.WhodunitAction
 import com.parlor.games.whodunit.domain.event.WhodunitEvent
 import com.parlor.games.whodunit.domain.phase.WhodunitPhase
 import com.parlor.games.whodunit.domain.reducer.WhodunitReducerContext
+import com.parlor.games.whodunit.testing.validatedWhodunitCaseForTest
 import com.parlor.games.whodunit.domain.state.WhodunitState
 import com.parlor.games.whodunit.resources.Res
 import com.parlor.games.whodunit.ackBriefingForAll
@@ -571,7 +572,7 @@ class PartyConnectionEventsTest {
             reducerContext = WhodunitReducerContext(
                 clock = FakeClock(Instant.fromEpochSeconds(0)),
                 random = RandomSource.seeded(42L),
-                case = payload,
+                case = validatedWhodunitCaseForTest(payload, caseId = "last-dinner"),
             ),
             scope = sessionScope,
         )

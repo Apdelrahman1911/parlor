@@ -1,8 +1,11 @@
 package com.parlor.games.whodunit.domain.rules
 
+import com.parlor.content.validation.ValidatedCase
+import com.parlor.core.ids.CaseId
 import com.parlor.core.ids.ModeId
 import com.parlor.engine.state.Player
 import com.parlor.games.whodunit.WhodunitIds
+import com.parlor.games.whodunit.content.WhodunitCase
 import com.parlor.games.whodunit.domain.modes.ClassicVoteMode
 import com.parlor.games.whodunit.domain.modes.EliminationMode
 
@@ -44,6 +47,25 @@ object WhodunitRules {
         val first = maxOf(modeCounts.first, casePlayerCounts.first)
         val last = minOf(modeCounts.last, casePlayerCounts.last, availableCharacters)
         return if (first <= last) first..last else null
+    }
+
+    /** Complete envelope + payload admission rule for one authoritative session. */
+    fun isSupportedByCase(
+        case: ValidatedCase<WhodunitCase>,
+        caseId: CaseId,
+        modeId: ModeId,
+        playerCount: Int,
+    ): Boolean {
+        val envelope = case.envelope
+        if (envelope.gameId != WhodunitIds.GameId.raw) return false
+        if (caseId.raw != envelope.caseId) return false
+        if (modeId.raw !in envelope.supportedModes) return false
+        val effectiveCounts = supportedPlayerCountsForCase(
+            modeId = modeId,
+            casePlayerCounts = envelope.supportedPlayerCounts.toIntRange(),
+            availableCharacters = case.payload.characters.size,
+        ) ?: return false
+        return playerCount in effectiveCounts
     }
 
     /**

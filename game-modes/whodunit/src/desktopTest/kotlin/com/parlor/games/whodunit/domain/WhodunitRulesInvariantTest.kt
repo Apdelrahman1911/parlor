@@ -20,6 +20,7 @@ import com.parlor.games.whodunit.domain.action.WhodunitAction
 import com.parlor.games.whodunit.domain.phase.WhodunitPhase
 import com.parlor.games.whodunit.domain.reducer.WhodunitReducer
 import com.parlor.games.whodunit.domain.reducer.WhodunitReducerContext
+import com.parlor.games.whodunit.testing.validatedWhodunitCaseForTest
 import com.parlor.games.whodunit.domain.rules.WhodunitRules
 import com.parlor.games.whodunit.domain.state.PlayerRole
 import com.parlor.games.whodunit.domain.state.VoteState
@@ -231,7 +232,7 @@ class WhodunitRulesInvariantTest {
             WhodunitReducerContext(
                 clock = FakeClock(Instant.fromEpochMilliseconds(0)),
                 random = RandomSource.seeded(1L),
-                case = case,
+                case = validatedWhodunitCaseForTest(case, caseId = "rules-case"),
             ),
         )
 

@@ -124,7 +124,7 @@ class MultiDevicePartyPlayContractTest {
             reducerContext = WhodunitReducerContext(
                 clock = FakeClock(Instant.fromEpochSeconds(0)),
                 random = RandomSource.seeded(42L),
-                case = case.payload,
+                case = case,
             ),
             scope = scope,
         )
@@ -306,7 +306,7 @@ class MultiDevicePartyPlayContractTest {
             reducerContext = WhodunitReducerContext(
                 clock = FakeClock(Instant.fromEpochSeconds(0)),
                 random = RandomSource.seeded(99L),
-                case = case.payload,
+                case = case,
             ),
             scope = scope,
         )
@@ -474,7 +474,7 @@ class MultiDevicePartyPlayContractTest {
             reducerContext = WhodunitReducerContext(
                 clock = FakeClock(Instant.fromEpochSeconds(0)),
                 random = RandomSource.seeded(77L),
-                case = case.payload,
+                case = case,
             ),
             scope = scope,
         )

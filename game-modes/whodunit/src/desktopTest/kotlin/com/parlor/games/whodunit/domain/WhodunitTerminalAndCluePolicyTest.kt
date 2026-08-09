@@ -24,6 +24,7 @@ import com.parlor.games.whodunit.domain.event.Verdict
 import com.parlor.games.whodunit.domain.phase.WhodunitPhase
 import com.parlor.games.whodunit.domain.reducer.WhodunitReducer
 import com.parlor.games.whodunit.domain.reducer.WhodunitReducerContext
+import com.parlor.games.whodunit.testing.validatedWhodunitCaseForTest
 import com.parlor.games.whodunit.domain.state.PlayerRole
 import com.parlor.games.whodunit.domain.state.VoteState
 import com.parlor.games.whodunit.domain.state.WhodunitHostOnly
@@ -206,7 +207,7 @@ class WhodunitTerminalAndCluePolicyTest {
         WhodunitReducerContext(
             clock = FakeClock(Instant.fromEpochMilliseconds(0)),
             random = RandomSource.seeded(1L),
-            case = currentCase,
+            case = validatedWhodunitCaseForTest(currentCase, caseId = "test"),
         ),
     )
 

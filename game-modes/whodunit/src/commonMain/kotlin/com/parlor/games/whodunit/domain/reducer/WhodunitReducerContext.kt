@@ -1,5 +1,6 @@
 package com.parlor.games.whodunit.domain.reducer
 
+import com.parlor.content.validation.ValidatedCase
 import com.parlor.core.random.RandomSource
 import com.parlor.core.time.Clock
 import com.parlor.engine.reducer.ReducerContext
@@ -15,5 +16,7 @@ import com.parlor.games.whodunit.content.WhodunitCase
 data class WhodunitReducerContext(
     override val clock: Clock,
     override val random: RandomSource,
-    val case: WhodunitCase,
-) : ReducerContext
+    val case: ValidatedCase<WhodunitCase>,
+) : ReducerContext {
+    val payload: WhodunitCase get() = case.payload
+}

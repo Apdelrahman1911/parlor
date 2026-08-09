@@ -28,6 +28,7 @@ import com.parlor.games.whodunit.domain.event.WhodunitEvent
 import com.parlor.games.whodunit.domain.phase.WhodunitPhase
 import com.parlor.games.whodunit.domain.reducer.WhodunitReducer
 import com.parlor.games.whodunit.domain.reducer.WhodunitReducerContext
+import com.parlor.games.whodunit.testing.validatedWhodunitCaseForTest
 import com.parlor.games.whodunit.domain.state.PublicTimerState
 import com.parlor.games.whodunit.domain.state.RevealedClue
 import com.parlor.games.whodunit.domain.state.VoteState
@@ -47,7 +48,7 @@ class WhodunitReducerProductionGuardsTest {
     private val ctx = WhodunitReducerContext(
         clock = FakeClock(Instant.fromEpochMilliseconds(0)),
         random = RandomSource.seeded(7L),
-        case = case(),
+        case = validatedWhodunitCaseForTest(case(), caseId = "test"),
     )
 
     @Test

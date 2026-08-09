@@ -725,7 +725,7 @@ private fun SessionDrivenFlow(
         val ctx = WhodunitReducerContext(
             clock = clock,
             random = RandomSource.seeded(seed),
-            case = case.payload,
+            case = case,
         )
         val raw = PassAndPlaySessionController(
             definition = definition,
@@ -956,7 +956,7 @@ fun WhodunitMultiplayerHostFlow(
             reducerContext = WhodunitReducerContext(
                 clock = clock,
                 random = RandomSource.seeded(seed),
-                case = case.payload,
+                case = case,
             ),
             scope = scope,
         )

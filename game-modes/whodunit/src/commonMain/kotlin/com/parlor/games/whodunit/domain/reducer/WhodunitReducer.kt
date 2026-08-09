@@ -125,15 +125,25 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
         // mode, duplicate identity/seat, out-of-range count, or a case that
         // cannot supply one distinct character per player.
         if (!WhodunitRules.isValidRoster(state.public.modeId, players)) return Reduction(state)
+        if (
+            !WhodunitRules.isSupportedByCase(
+                case = ctx.case,
+                caseId = state.public.caseId,
+                modeId = state.public.modeId,
+                playerCount = players.size,
+            )
+        ) {
+            return Reduction(state)
+        }
         if (state.public.playersAtTable != players ||
             state.privatePerPlayer.isNotEmpty() ||
             state.hostOnly.seatToCharacter.isNotEmpty()
         ) {
             return Reduction(state)
         }
-        val assignment = createRoleAssignment(players, ctx.case.characters, seed)
+        val assignment = createRoleAssignment(players, ctx.payload.characters, seed)
             ?: return Reduction(state)
-        val newState = applyRoleAssignment(state, assignment, seed, ctx.case.characters)
+        val newState = applyRoleAssignment(state, assignment, seed, ctx.payload.characters)
             ?: return Reduction(state)
         val introState = newState.copy(phase = WhodunitPhase.PublicIntro)
         return Reduction(
@@ -566,7 +576,7 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
             return Reduction(state)
         }
         val clue = WhodunitCluePolicy.select(
-            case = ctx.case,
+            case = ctx.payload,
             killerCharacterId = state.hostOnly.killerCharacterId,
             modeId = state.public.modeId,
             playerCount = state.players.size,
@@ -1171,7 +1181,7 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
         ctx: WhodunitReducerContext,
     ): Reduction<WhodunitState, WhodunitEvent> {
         if (state.phase !is WhodunitPhase.CharacterReveal) return Reduction(state)
-        val reroll = createPrivateSafeReroll(state, ctx.case.characters) ?: return Reduction(state)
+        val reroll = createPrivateSafeReroll(state, ctx.payload.characters) ?: return Reduction(state)
         val (newSeed, assignment) = reroll
         val reset = state.copy(
             privatePerPlayer = emptyMap(),
@@ -1196,7 +1206,7 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
         )
         val priorPhaseId = state.phase.id
         val target = WhodunitPhase.CharacterReveal(0)
-        val assigned = applyRoleAssignment(reset, assignment, newSeed, ctx.case.characters)
+        val assigned = applyRoleAssignment(reset, assignment, newSeed, ctx.payload.characters)
             ?: return Reduction(state)
         return Reduction(
             assigned,
