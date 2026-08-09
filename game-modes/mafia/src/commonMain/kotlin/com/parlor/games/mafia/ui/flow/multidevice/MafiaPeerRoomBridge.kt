@@ -124,8 +124,10 @@ class MafiaPeerRoomBridge(
         // canonical/host projection instead of installing host-only secrets
         // and relying on UI code not to read them.
         if (MafiaProjectionPolicy.toPublic(publicState).state != publicState) return false
-        controller.updatePrivate(PrivateProjection(playerState, selfPlayerId))
-        controller.updatePublic(PublicProjection(publicState))
+        controller.installPlayerSnapshot(
+            publicProjection = PublicProjection(publicState),
+            playerProjection = PrivateProjection(playerState, selfPlayerId),
+        )
         return true
     }
 

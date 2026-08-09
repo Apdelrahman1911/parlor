@@ -134,8 +134,10 @@ class WhodunitPeerRoomBridge(
         // Keep the public bucket structurally public. The UI may combine its
         // own private projection locally, but no private slice is relabelled as
         // public where a future logger or rebroadcast path could consume it.
-        controller.updatePrivate(PrivateProjection(playerState, selfPlayerId))
-        controller.updatePublic(PublicProjection(publicState))
+        controller.installPlayerSnapshot(
+            publicProjection = PublicProjection(publicState),
+            playerProjection = PrivateProjection(playerState, selfPlayerId),
+        )
         return true
     }
 

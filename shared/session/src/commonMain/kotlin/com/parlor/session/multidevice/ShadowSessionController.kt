@@ -20,13 +20,16 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 /**
- * Phase 7 stub multi-device "shadow" controller. Sits on a peer device and
- * forwards local action submissions to a host-side controller via a supplied
- * sender callback. State arrives via [updatePublic] / [updatePrivate].
+ * Peer-side session controller. Local actions are forwarded to the
+ * authoritative host and viewer-filtered snapshots are installed by the game
+ * transport adapter.
  *
- * This is NOT a production controller. Phase 7 only uses it to prove the
- * `SessionController` contract is sound across topologies — i.e., that a peer
- * can drive the same reducer without code changes.
+ * [publicState] and [privateStateFor] remain separate `StateFlow`s because
+ * they serve different consumers; Kotlin flows cannot provide a transaction
+ * across two collectors. A player UI that needs public and own-private data
+ * from one authoritative revision must therefore render exclusively from the
+ * complete player projection returned by [privateStateFor]. The public flow is
+ * for consumers that need public data only.
  */
 class ShadowSessionController<S : GameState, A : GameAction, E : GameEvent>(
     private val selfPlayerId: PlayerId,
@@ -60,7 +63,10 @@ class ShadowSessionController<S : GameState, A : GameAction, E : GameEvent>(
         // Peers' viewer is fixed to the owning player. Accept Public for cover screens.
         when (viewer) {
             is ViewerContext.Player -> require(viewer.id == selfPlayerId)
-            ViewerContext.Public, ViewerContext.Host -> Unit
+            ViewerContext.Public -> Unit
+            ViewerContext.Host -> throw IllegalArgumentException(
+                "A peer controller cannot assume the host viewer context.",
+            )
         }
         _activeViewer.value = viewer
     }
@@ -69,8 +75,25 @@ class ShadowSessionController<S : GameState, A : GameAction, E : GameEvent>(
     override suspend fun resume() {}
     override suspend fun close() {}
 
-    // -- Driven by the multi-device session driver (Phase 7 shape test) --
-    suspend fun updatePublic(p: PublicProjection<S>) { _public.value = p }
-    suspend fun updatePrivate(p: PrivateProjection<S>) { _private.value = p }
+    /**
+     * Installs both projections decoded from one authenticated host snapshot.
+     * Ownership is checked before either flow changes, so an adapter cannot
+     * partially install a snapshot addressed to another player.
+     *
+     * This method deliberately does not promise cross-flow atomic observation;
+     * player renderers must consume [privateStateFor] as their single complete
+     * projection for a revision.
+     */
+    fun installPlayerSnapshot(
+        publicProjection: PublicProjection<S>,
+        playerProjection: PrivateProjection<S>,
+    ) {
+        require(playerProjection.playerId == selfPlayerId) {
+            "Shadow controller cannot install another player's private projection."
+        }
+        _private.value = playerProjection
+        _public.value = publicProjection
+    }
+
     suspend fun emitEvent(e: E) { _events.emit(e) }
 }
