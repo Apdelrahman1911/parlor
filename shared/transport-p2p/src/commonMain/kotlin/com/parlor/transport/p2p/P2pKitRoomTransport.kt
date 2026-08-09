@@ -807,6 +807,20 @@ class P2pKitRoomTransport private constructor(
                         displayName = displayName,
                     ),
                     timeoutMs = firstResponseTimeoutMs,
+                    accepts = { response ->
+                        when (response) {
+                            is HostMessage.AdmissionPending ->
+                                response.playerId == selfPlayerId
+                            is HostMessage.AdmissionOffered ->
+                                response.offer.playerId == selfPlayerId
+                            is HostMessage.AdmissionAccepted ->
+                                response.playerId == selfPlayerId
+                            // Rejections are terminal for this physical session:
+                            // the host flushes the frame and immediately closes it.
+                            is HostMessage.AdmissionRejected -> true
+                            else -> false
+                        }
+                    },
                 )
             } catch (_: TimeoutCancellationException) {
                 return@coroutineScope AdmissionOutcome.TransientFailure(NetError.Timeout)
@@ -819,19 +833,19 @@ class P2pKitRoomTransport private constructor(
                 }
                 try {
                     withTimeout<HostMessage>(HOST_APPROVAL_TIMEOUT_MS) {
-                        var next: HostMessage? = null
-                        while (next == null) {
-                            val received = responses.receive()
-                            next = if (
-                                received is HostMessage.AdmissionPending &&
-                                received.playerId == selfPlayerId
-                            ) {
-                                null
-                            } else {
-                                received
+                        responses.receiveMatching { response ->
+                            when (response) {
+                                is HostMessage.AdmissionOffered ->
+                                    response.offer.playerId == selfPlayerId
+                                is HostMessage.AdmissionAccepted ->
+                                    response.playerId == selfPlayerId
+                                is HostMessage.AdmissionRejected -> true
+                                // AdmissionPending is a duplicate of the current
+                                // phase; AdmissionCommitted belongs to a later
+                                // offer/generation and must not poison this wait.
+                                else -> false
                             }
                         }
-                        next
                     }
                 } catch (_: TimeoutCancellationException) {
                     return@coroutineScope AdmissionOutcome.Failed(NetError.Timeout)
@@ -869,6 +883,19 @@ class P2pKitRoomTransport private constructor(
                             generation = credential.generation,
                         ),
                         timeoutMs = DIAL_AND_HANDSHAKE_TIMEOUT_MS,
+                        accepts = { response ->
+                            when (response) {
+                                is HostMessage.AdmissionCommitted ->
+                                    response.playerId == selfPlayerId &&
+                                        response.offerId == credential.offerId &&
+                                        response.generation == credential.generation
+                                // The rejection has no correlation fields in the
+                                // current wire schema, but is terminal and is
+                                // followed by closure of this physical session.
+                                is HostMessage.AdmissionRejected -> true
+                                else -> false
+                            }
+                        },
                     )
                     when (committed) {
                         is HostMessage.AdmissionRejected -> {
@@ -910,13 +937,25 @@ class P2pKitRoomTransport private constructor(
         responses: Channel<HostMessage>,
         message: PeerMessage,
         timeoutMs: Long,
+        accepts: (HostMessage) -> Boolean,
     ): HostMessage = withTimeout<HostMessage>(timeoutMs) {
         var response: HostMessage? = null
         while (response == null) {
             sendRoomMessage(session, message)
-            response = withTimeoutOrNull(ADMISSION_RETRY_MS) { responses.receive() }
+            response = withTimeoutOrNull(ADMISSION_RETRY_MS) {
+                responses.receiveMatching(accepts)
+            }
         }
         response
+    }
+
+    private suspend inline fun Channel<HostMessage>.receiveMatching(
+        crossinline accepts: (HostMessage) -> Boolean,
+    ): HostMessage {
+        while (true) {
+            val response = receive()
+            if (accepts(response)) return response
+        }
     }
 
     private suspend fun sendRoomMessage(session: P2pSession, message: PeerMessage) {
@@ -1045,6 +1084,14 @@ class P2pKitRoomTransport private constructor(
                     generation = credential.generation,
                 ),
                 timeoutMs = FIRST_ADMISSION_RESPONSE_TIMEOUT_MS,
+                accepts = { response ->
+                    when (response) {
+                        is HostMessage.ResumeOffered ->
+                            response.offer.playerId.raw == credential.playerId
+                        is HostMessage.AdmissionRejected -> true
+                        else -> false
+                    }
+                },
             )
             if (first is HostMessage.AdmissionRejected) {
                 return@coroutineScope Result.Failure(first.reason.toNetError())
@@ -1067,6 +1114,16 @@ class P2pKitRoomTransport private constructor(
                         generation = rotated.generation,
                     ),
                     timeoutMs = ADMISSION_CONFIRM_TIMEOUT_MS,
+                    accepts = { response ->
+                        when (response) {
+                            is HostMessage.ResumeCommitted ->
+                                response.playerId.raw == rotated.playerId &&
+                                    response.offerId == rotated.offerId &&
+                                    response.generation == rotated.generation
+                            is HostMessage.AdmissionRejected -> true
+                            else -> false
+                        }
+                    },
                 )
             ) {
                 is HostMessage.AdmissionRejected -> {
@@ -1209,6 +1266,8 @@ class P2pKitRoomTransport private constructor(
         internal const val DEFAULT_JOIN_TIMEOUT_MS: Long = 30_000L
         internal const val DIAL_AND_HANDSHAKE_TIMEOUT_MS: Long = 5_000L
         internal const val FIRST_ADMISSION_RESPONSE_TIMEOUT_MS: Long = 5_000L
+        /** Authenticated sessions must begin admission before consuming a host slot indefinitely. */
+        internal const val FIRST_APPLICATION_MESSAGE_TIMEOUT_MS: Long = 5_000L
         /** Starts only after a valid request receives AdmissionPending. */
         internal const val HOST_APPROVAL_TIMEOUT_MS: Long = 60_000L
         internal const val DISCOVERY_REFRESH_POLL_MS: Long = 1_000L
@@ -1400,7 +1459,15 @@ internal class HostP2pRoom(
     private val diagnostics: P2pDiagnostics = NoOpP2pDiagnostics,
     private val onClosed: () -> Unit = {},
     private val appResumeGraceMs: Long = P2pKitRoomTransport.APP_RESUME_GRACE_MS,
+    private val firstApplicationMessageTimeoutMs: Long =
+        P2pKitRoomTransport.FIRST_APPLICATION_MESSAGE_TIMEOUT_MS,
 ) : LocalRoom, AppLifecycleAwareRoom {
+
+    init {
+        require(firstApplicationMessageTimeoutMs > 0L) {
+            "firstApplicationMessageTimeoutMs must be positive"
+        }
+    }
 
     override val selfPlayerId: PlayerId = hostPlayerId
 
@@ -1555,6 +1622,33 @@ internal class HostP2pRoom(
             maxFrameBytes = P2pTrafficLimits.MAX_PEER_TO_HOST_FRAME_BYTES,
             nowMillis = nowMillis(),
         )
+        val admissionHandshakeStarted = CompletableDeferred<Unit>()
+        val firstApplicationMessageDeadlineJob = sessionScope.launch {
+            val started = withTimeoutOrNull(firstApplicationMessageTimeoutMs) {
+                admissionHandshakeStarted.await()
+                true
+            } ?: false
+            if (started) return@launch
+
+            val stillWaiting = stateMutex.withLock {
+                session in trackedSessions &&
+                    sessionsByPlayer[playerId] !== session &&
+                    pendingByPlayer[playerId]?.session !== session
+            }
+            if (!stillWaiting) return@launch
+
+            diagnostics.event(
+                P2pDiagnosticEventName.ADMISSION_REJECTED,
+                P2pDiagnosticRole.HOST,
+                P2pDiagnosticResult.TIMEOUT,
+                P2pDiagnosticReason.RATE_LIMIT,
+            )
+            try {
+                session.close()
+            } catch (failure: Throwable) {
+                failure.rethrowIfCancellation()
+            }
+        }
 
         val incomingJob = sessionScope.launch {
             session.incoming.collect { msg ->
@@ -1683,13 +1777,16 @@ internal class HostP2pRoom(
                 }
                 if (!admitted) {
                     when (decoded) {
-                        is PeerMessage.AdmissionRequest -> handleAdmissionRequest(
-                            playerId,
-                            displayName,
-                            peerFingerprint,
-                            session,
-                            decoded,
-                        )
+                        is PeerMessage.AdmissionRequest -> {
+                            admissionHandshakeStarted.complete(Unit)
+                            handleAdmissionRequest(
+                                playerId,
+                                displayName,
+                                peerFingerprint,
+                                session,
+                                decoded,
+                            )
+                        }
                         is PeerMessage.AdmissionConfirmed -> handleCredentialConfirmation(
                             playerId,
                             session,
@@ -1697,13 +1794,16 @@ internal class HostP2pRoom(
                             decoded.generation,
                             CredentialTransactionKind.Admission,
                         )
-                        is PeerMessage.ResumeRequested -> handleResumeRequest(
-                            playerId,
-                            displayName,
-                            peerFingerprint,
-                            session,
-                            decoded,
-                        )
+                        is PeerMessage.ResumeRequested -> {
+                            admissionHandshakeStarted.complete(Unit)
+                            handleResumeRequest(
+                                playerId,
+                                displayName,
+                                peerFingerprint,
+                                session,
+                                decoded,
+                            )
+                        }
                         is PeerMessage.ResumeConfirmed -> handleCredentialConfirmation(
                             playerId,
                             session,
@@ -1718,7 +1818,7 @@ internal class HostP2pRoom(
                         is PeerMessage.ResumeCommitAck,
                         is PeerMessage.AdmissionCommitAck ->
                             rejectSession(session, AdmissionRejection.InvalidCredential)
-                        else -> Unit
+                        else -> rejectSession(session, AdmissionRejection.InvalidRequest)
                     }
                     // No gameplay or lifecycle frame is accepted before the
                     // encrypted room-code + host-approval handshake.
@@ -1786,6 +1886,8 @@ internal class HostP2pRoom(
                     }
                     ConnectionState.Closed, ConnectionState.Failed -> {
                         incomingJob.cancel()
+                        admissionHandshakeStarted.complete(Unit)
+                        firstApplicationMessageDeadlineJob.cancel()
                         // Only act if this is still the registered session
                         // for this playerId — a newer session may have
                         // superseded it via handleIncomingSession.

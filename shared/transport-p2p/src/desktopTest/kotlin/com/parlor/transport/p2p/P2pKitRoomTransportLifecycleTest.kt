@@ -53,6 +53,7 @@ import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
@@ -1824,6 +1825,270 @@ class P2pKitRoomTransportLifecycleTest {
         assertThat(withTimeout(2_000) { joining.await() }).isInstanceOf(Result.Success::class)
     }
 
+    @Test
+    fun admission_waits_ignore_reordered_and_duplicate_frames_from_other_phases() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("self-pid"))
+        val hostPeer = peer(
+            "live-host",
+            "${P2pKitRoomTransport.P2P_ROOM_PREFIX}Live Host",
+        )
+        val session = FakeP2pSession(hostPeer)
+        val playerId = PlayerId("self-pid")
+        val offer = testCredentialOffer(playerId, hostPeer.id.value)
+        var admissionRequests = 0
+        var confirmations = 0
+        session.sendHandler = { message ->
+            when ((message as? P2pMessage.Binary)?.let { codec.decode(it.bytes) }) {
+                is PeerMessage.AdmissionRequest -> {
+                    admissionRequests += 1
+                    // Frames from a previous/later phase and another actor must
+                    // be consumed but never selected as this phase's response.
+                    session.incomingFlow.emit(
+                        P2pMessage.Binary(
+                            codec.encode(
+                                HostMessage.AdmissionCommitted(
+                                    playerId,
+                                    "stale-offer",
+                                    offer.generation - 1L,
+                                ),
+                            ),
+                        ),
+                    )
+                    session.incomingFlow.emit(
+                        P2pMessage.Binary(
+                            codec.encode(HostMessage.AdmissionPending(PlayerId("other-player"))),
+                        ),
+                    )
+                    session.incomingFlow.emit(
+                        P2pMessage.Binary(codec.encode(HostMessage.AdmissionPending(playerId))),
+                    )
+                    session.incomingFlow.emit(
+                        P2pMessage.Binary(
+                            codec.encode(
+                                HostMessage.AdmissionOffered(
+                                    offer.copy(playerId = PlayerId("other-player")),
+                                ),
+                            ),
+                        ),
+                    )
+                    session.incomingFlow.emit(
+                        P2pMessage.Binary(codec.encode(HostMessage.AdmissionOffered(offer))),
+                    )
+                }
+                is PeerMessage.AdmissionConfirmed -> {
+                    confirmations += 1
+                    // Repeated pending/offered frames and mismatched commit
+                    // generations are delayed duplicates, not a rejection.
+                    session.incomingFlow.emit(
+                        P2pMessage.Binary(codec.encode(HostMessage.AdmissionPending(playerId))),
+                    )
+                    session.incomingFlow.emit(
+                        P2pMessage.Binary(codec.encode(HostMessage.AdmissionOffered(offer))),
+                    )
+                    session.incomingFlow.emit(
+                        P2pMessage.Binary(
+                            codec.encode(
+                                HostMessage.AdmissionCommitted(
+                                    playerId,
+                                    "stale-offer",
+                                    offer.generation,
+                                ),
+                            ),
+                        ),
+                    )
+                    session.incomingFlow.emit(
+                        P2pMessage.Binary(
+                            codec.encode(
+                                HostMessage.AdmissionCommitted(
+                                    PlayerId("other-player"),
+                                    offer.offerId,
+                                    offer.generation,
+                                ),
+                            ),
+                        ),
+                    )
+                    session.incomingFlow.emit(
+                        P2pMessage.Binary(
+                            codec.encode(
+                                HostMessage.AdmissionCommitted(
+                                    playerId,
+                                    offer.offerId,
+                                    offer.generation,
+                                ),
+                            ),
+                        ),
+                    )
+                }
+                else -> Unit
+            }
+        }
+        kit.connectHandler = { session }
+        kit.peersFlow.value = listOf(hostPeer)
+        val transport = P2pKitRoomTransport(
+            appId = AppId("com.parlor.test"),
+            deviceName = "self-device",
+            scope = testScope,
+            kitFactory = object : P2pKitFactory {
+                override suspend fun createKit(appId: AppId, deviceName: String): P2pKit = kit
+            },
+            secureStorage = testSecureStorage(),
+            joinTimeoutMs = 2_000L,
+        )
+
+        val result = transport.join("ABCDEF", "Alice")
+
+        assertThat(result).isInstanceOf(Result.Success::class)
+        assertThat(admissionRequests).isEqualTo(1)
+        assertThat(confirmations).isEqualTo(1)
+        (result as Result.Success).data.leave()
+        assertThat(kit.stopCalls).isEqualTo(1)
+    }
+
+    @Test
+    fun cancellation_while_only_mismatched_admission_frames_arrive_propagates_and_cleans_up() =
+        runBlocking {
+            val kit = FakeP2pKit(P2pPeerId("self-pid"))
+            val hostPeer = peer(
+                "live-host",
+                "${P2pKitRoomTransport.P2P_ROOM_PREFIX}Live Host",
+            )
+            val session = FakeP2pSession(hostPeer)
+            val mismatchDelivered = CompletableDeferred<Unit>()
+            session.sendHandler = { message ->
+                if (
+                    (message as? P2pMessage.Binary)?.let { codec.decode(it.bytes) }
+                        is PeerMessage.AdmissionRequest
+                ) {
+                    session.incomingFlow.emit(
+                        P2pMessage.Binary(
+                            codec.encode(
+                                HostMessage.AdmissionCommitted(
+                                    PlayerId("self-pid"),
+                                    "stale-offer",
+                                    0L,
+                                ),
+                            ),
+                        ),
+                    )
+                    session.incomingFlow.emit(
+                        P2pMessage.Binary(
+                            codec.encode(HostMessage.AdmissionPending(PlayerId("other-player"))),
+                        ),
+                    )
+                    mismatchDelivered.complete(Unit)
+                }
+            }
+            kit.connectHandler = { session }
+            kit.peersFlow.value = listOf(hostPeer)
+            val transport = P2pKitRoomTransport(
+                appId = AppId("com.parlor.test"),
+                deviceName = "self-device",
+                scope = testScope,
+                kitFactory = object : P2pKitFactory {
+                    override suspend fun createKit(appId: AppId, deviceName: String): P2pKit = kit
+                },
+                secureStorage = testSecureStorage(),
+                joinTimeoutMs = 10_000L,
+            )
+
+            val joining = async { transport.join("ABCDEF", "Alice") }
+            mismatchDelivered.await()
+            joining.cancel(CancellationException("cancel filtered admission wait"))
+
+            assertFailsWith<CancellationException> { joining.await() }
+            awaitCondition { kit.stopCalls == 1 }
+        }
+
+    @Test
+    @OptIn(ExperimentalCoroutinesApi::class)
+    fun idle_pre_admission_sessions_expire_on_virtual_deadline_and_release_tracking_slots() =
+        runTest {
+            val kit = FakeP2pKit(P2pPeerId("host-pid"))
+            val diagnostics = RecordingP2pDiagnostics()
+            val timeoutMs = 1_000L
+            val room = HostP2pRoom(
+                kit = kit,
+                roomCode = "ABCDEF",
+                roomDisplayName = "Parlor Room",
+                hostPlayerId = PlayerId(kit.localPeerId.value),
+                maxRemotePlayers = 1,
+                scope = this,
+                codec = codec,
+                diagnostics = diagnostics,
+                firstApplicationMessageTimeoutMs = timeoutMs,
+            )
+            runCurrent()
+            val trackedLimit = 1 + P2pTrafficLimits.SESSION_ADMISSION_HEADROOM
+            val idleSessions = List(trackedLimit) { index ->
+                FakeP2pSession(peer("idle-$index", "Idle $index"))
+            }
+            idleSessions.forEach { kit.incomingSessionsFlow.emit(it) }
+            runCurrent()
+
+            val overflow = FakeP2pSession(peer("idle-overflow", "Idle overflow"))
+            kit.incomingSessionsFlow.emit(overflow)
+            runCurrent()
+            advanceTimeBy(P2pKitRoomTransport.ADMISSION_REJECTION_FLUSH_MS)
+            runCurrent()
+            assertThat(overflow.state.value).isEqualTo(ConnectionState.Closed)
+            assertThat(overflow.admissionRejections())
+                .containsExactly(AdmissionRejection.RateLimited)
+
+            advanceTimeBy(timeoutMs - P2pKitRoomTransport.ADMISSION_REJECTION_FLUSH_MS - 1L)
+            runCurrent()
+            idleSessions.forEach { session ->
+                assertThat(session.state.value).isEqualTo(ConnectionState.Connected)
+            }
+
+            advanceTimeBy(1L)
+            runCurrent()
+            idleSessions.forEach { session ->
+                assertThat(session.state.value).isEqualTo(ConnectionState.Closed)
+                assertThat(session.closeCalls).isEqualTo(1)
+            }
+            assertThat(
+                diagnostics.events.any { event ->
+                    event.name == P2pDiagnosticEventName.ADMISSION_REJECTED &&
+                        event.result == P2pDiagnosticResult.TIMEOUT &&
+                        event.reason == P2pDiagnosticReason.RATE_LIMIT
+                },
+            ).isTrue()
+            assertThat(room.pendingAdmissions.value).isEmpty()
+
+            // Terminal state cleanup must remove each expired session from the
+            // tracked set so a legitimate replacement can immediately enter.
+            val replacement = FakeP2pSession(peer("replacement", "Replacement"))
+            kit.incomingSessionsFlow.emit(replacement)
+            runCurrent()
+            replacement.incomingFlow.emit(
+                P2pMessage.Binary(
+                    codec.encode(
+                        PeerMessage.AdmissionRequest(
+                            protocol = ProtocolVersion(),
+                            actor = PlayerId("forged"),
+                            roomCode = "ABCDEF",
+                            displayName = replacement.peer.name,
+                        ),
+                    ),
+                ),
+            )
+            runCurrent()
+            assertThat(room.pendingAdmissions.value.map { it.playerId })
+                .containsExactly(PlayerId("replacement"))
+            advanceTimeBy(timeoutMs)
+            runCurrent()
+            assertThat(replacement.state.value).isEqualTo(ConnectionState.Connected)
+            assertThat(room.pendingAdmissions.value.map { it.playerId })
+                .containsExactly(PlayerId("replacement"))
+
+            room.leave()
+            assertThat(kit.stopCalls).isEqualTo(1)
+            assertThat(replacement.closeCalls).isEqualTo(1)
+            advanceTimeBy(timeoutMs)
+            runCurrent()
+            assertThat(replacement.closeCalls).isEqualTo(1)
+        }
+
     // ------------------------------------------------------- App lifecycle ----
 
     @Test
@@ -2478,6 +2743,8 @@ internal class FakeP2pSession(
     var sendHandler: (suspend (P2pMessage) -> Unit)? = null
     var autoAdmissionReady: Boolean = true
     var autoResumeReady: Boolean = true
+    var closeCalls: Int = 0
+        private set
 
     override val state: StateFlow<ConnectionState> = stateFlow.asStateFlow()
     override val incoming: SharedFlow<P2pMessage> = incomingFlow.asSharedFlow()
@@ -2570,6 +2837,7 @@ internal class FakeP2pSession(
     ): P2pFileTransfer = error("sendFile not exercised by these tests")
 
     override suspend fun close() {
+        closeCalls += 1
         stateFlow.value = ConnectionState.Closed
     }
 }
