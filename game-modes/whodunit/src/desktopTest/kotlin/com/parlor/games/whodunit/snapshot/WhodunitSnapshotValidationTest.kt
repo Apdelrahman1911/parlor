@@ -19,6 +19,7 @@ import com.parlor.games.whodunit.content.InnocentBrief
 import com.parlor.games.whodunit.content.TimelineEntry
 import com.parlor.games.whodunit.content.WhodunitCase
 import com.parlor.games.whodunit.domain.action.WhodunitAction
+import com.parlor.games.whodunit.domain.event.Verdict
 import com.parlor.games.whodunit.domain.phase.WhodunitPhase
 import com.parlor.games.whodunit.domain.reducer.WhodunitReducer
 import com.parlor.games.whodunit.domain.reducer.WhodunitReducerContext
@@ -172,6 +173,142 @@ class WhodunitSnapshotValidationTest {
     }
 
     @Test
+    fun privateReviewRequiresTheSameDossierToBeUnlocked() {
+        val playerId = players.first().id
+        val privateState = assigned.privatePerPlayer.getValue(playerId)
+        val impossible = assigned.copy(
+            phase = WhodunitPhase.CharacterReveal(0),
+            privatePerPlayer = assigned.privatePerPlayer + (
+                playerId to privateState.copy(
+                    dossierUnlocked = false,
+                    privateReviewOpen = true,
+                )
+            ),
+        )
+        assertDecodeRejected(impossible)
+    }
+
+    @Test
+    fun phaseSpecificReadinessAndBriefingCursorCannotLeakIntoAnotherPhase() {
+        assertDecodeRejected(
+            assigned.copy(
+                public = assigned.public.copy(briefingReady = setOf(players.first().id)),
+            ),
+        )
+        assertDecodeRejected(
+            assigned.copy(
+                public = assigned.public.copy(rolesViewed = setOf(players.first().id)),
+            ),
+        )
+        assertDecodeRejected(
+            assigned.copy(
+                phase = WhodunitPhase.RulesBriefing,
+                public = assigned.public.copy(briefingCardIndex = 99),
+            ),
+        )
+    }
+
+    @Test
+    fun aLaterRoundCannotResumeWithoutItsContiguousPriorClues() {
+        assertDecodeRejected(
+            assigned.copy(
+                phase = WhodunitPhase.Round(3),
+                public = assigned.public.copy(currentRound = 3),
+            ),
+        )
+    }
+
+    @Test
+    fun classicFinalBallotMustUseTheExactCanonicalRosterAndCandidates() {
+        val valid = classicFinalVoteState()
+        assertEquals(valid, codec.decode(codec.encode(valid)))
+        val collecting = valid.public.voteState as VoteState.Collecting
+
+        listOf(
+            collecting.copy(ballotPlayerIds = collecting.ballotPlayerIds.dropLast(1)),
+            collecting.copy(ballotPlayerIds = collecting.ballotPlayerIds.reversed()),
+            collecting.copy(candidatePlayerIds = collecting.candidatePlayerIds.dropLast(1)),
+            collecting.copy(isSecondRound = true),
+        ).forEach { invalidVote ->
+            assertDecodeRejected(
+                valid.copy(public = valid.public.copy(voteState = invalidVote)),
+            )
+        }
+    }
+
+    @Test
+    fun revoteCandidatesNeedAtLeastTwoAndCanonicalTableOrder() {
+        val valid = classicFinalVoteState()
+        val ballot = (valid.public.voteState as VoteState.Collecting).ballotPlayerIds
+        assertDecodeRejected(
+            valid.copy(
+                phase = WhodunitPhase.TiedRevote,
+                public = valid.public.copy(
+                    voteState = VoteState.Collecting(
+                        isElimination = false,
+                        ballotPlayerIds = ballot,
+                        candidatePlayerIds = listOf(ballot.first()),
+                        isSecondRound = true,
+                    ),
+                ),
+            ),
+        )
+        assertDecodeRejected(
+            valid.copy(
+                phase = WhodunitPhase.TiedRevote,
+                public = valid.public.copy(
+                    voteState = VoteState.Tied(
+                        tiedPlayerIds = listOf(ballot[1], ballot[0]),
+                    ),
+                ),
+            ),
+        )
+    }
+
+    @Test
+    fun voteAndVerdictCannotBeAttachedToAnUnreachablePhaseOrKiller() {
+        val killerId = assigned.hostOnly.killerId
+        assertDecodeRejected(
+            assigned.copy(
+                public = assigned.public.copy(
+                    voteState = VoteState.Resolved(killerId, wasKiller = true),
+                ),
+            ),
+        )
+
+        val terminal = classicFinalVoteState().copy(
+            phase = WhodunitPhase.Reveal,
+            public = classicFinalVoteState().public.copy(
+                voteState = VoteState.Resolved(killerId, wasKiller = true),
+                verdict = Verdict.PlayersWin("another-character"),
+            ),
+        )
+        assertDecodeRejected(terminal)
+    }
+
+    @Test
+    fun earlyTerminationClearsPhaseLocalStateBeforeItCanBePersisted() {
+        val acknowledged = WhodunitReducer.reduce(
+            assigned,
+            WhodunitAction.AcknowledgeIntro(players.first().id),
+            reducerContext(),
+        ).newState
+
+        val ended = WhodunitReducer.reduce(
+            acknowledged,
+            WhodunitAction.EndGameEarly(withReveal = false),
+            reducerContext(),
+        ).newState
+
+        assertEquals(WhodunitPhase.PostGame, ended.phase)
+        assertEquals(emptySet(), ended.public.introAcknowledged)
+        assertEquals(emptySet(), ended.public.briefingReady)
+        assertEquals(emptySet(), ended.public.rolesViewed)
+        assertEquals(0, ended.public.briefingCardIndex)
+        WhodunitStateValidator.requireValid(ended)
+    }
+
+    @Test
     fun viewedRoleCannotRetainPrivateRevealFlags() {
         val playerId = players.first().id
         val privateState = assigned.privatePerPlayer.getValue(playerId)
@@ -253,14 +390,21 @@ class WhodunitSnapshotValidationTest {
 
     @Test
     fun legacyTieCountdownIsNormalizedToExplicitlyUntimedState() {
+        val completedClues = (1..3).map { round ->
+            RevealedClue(ClueId("legacy-round-$round"), "Clue $round", round)
+        }
         val legacy = assigned.copy(
             phase = WhodunitPhase.TiedRevote,
             public = assigned.public.copy(
                 currentRound = 3,
+                revealedClues = completedClues,
                 voteState = VoteState.Tied(
                     tiedPlayerIds = listOf(players[0].id, players[1].id),
                     debateSecondsRemaining = 60,
                 ),
+            ),
+            hostOnly = assigned.hostOnly.copy(
+                drawnClueIds = completedClues.map { it.id }.toSet(),
             ),
         )
         val bytes = json.encodeToString(WhodunitState.serializer(), legacy).encodeToByteArray()
@@ -398,6 +542,31 @@ class WhodunitSnapshotValidationTest {
         hostOnly = assigned.hostOnly.copy(drawnClueIds = setOf(id)),
     )
 
+    private fun classicFinalVoteState(): WhodunitState {
+        val clues = (1..3).map { round ->
+            RevealedClue(ClueId("structural-round-$round"), "Clue $round", round)
+        }
+        val ballot = players.map { it.id }
+        return assigned.copy(
+            phase = WhodunitPhase.FinalVote,
+            public = assigned.public.copy(
+                currentRound = 3,
+                revealedClues = clues,
+                voteState = VoteState.Collecting(
+                    isElimination = false,
+                    ballotPlayerIds = ballot,
+                ),
+            ),
+            hostOnly = assigned.hostOnly.copy(drawnClueIds = clues.map { it.id }.toSet()),
+        )
+    }
+
+    private fun reducerContext() = WhodunitReducerContext(
+        clock = FakeClock(Instant.fromEpochMilliseconds(0)),
+        random = RandomSource.seeded(7L),
+        case = case(),
+    )
+
     private fun assignedState(): WhodunitState {
         val definition = WhodunitDefinition(json)
         val initial = definition.createInitialState(
@@ -412,11 +581,7 @@ class WhodunitSnapshotValidationTest {
         return WhodunitReducer.reduce(
             initial,
             WhodunitAction.AssignRoles(7L),
-            WhodunitReducerContext(
-                clock = FakeClock(Instant.fromEpochMilliseconds(0)),
-                random = RandomSource.seeded(7L),
-                case = case(),
-            ),
+            reducerContext(),
         ).newState
     }
 

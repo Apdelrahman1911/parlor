@@ -4,6 +4,8 @@ import com.parlor.core.ids.CaseId
 import com.parlor.games.whodunit.WhodunitIds
 import com.parlor.games.whodunit.content.Clue
 import com.parlor.games.whodunit.content.WhodunitCase
+import com.parlor.games.whodunit.domain.event.KillerWinCause
+import com.parlor.games.whodunit.domain.event.Verdict
 import com.parlor.games.whodunit.domain.phase.WhodunitPhase
 import com.parlor.games.whodunit.domain.rules.WhodunitRules
 
@@ -44,18 +46,15 @@ internal object WhodunitStateValidator {
             require(playerIdSet.containsAll(ids)) { "Player state references an unknown player" }
         }
 
+        val maximumRounds = requireNotNull(
+            WhodunitRules.maximumRoundCount(state.public.modeId, state.players.size),
+        ) { "Unknown round policy" }
         validateAssignment(state, playerIdSet)
         validatePrivateRevealState(state)
-        validateRoundsAndTimer(state)
+        validateRoundsAndTimer(state, maximumRounds)
         validateVote(state, playerIdSet)
-
-        val terminal = state.phase == WhodunitPhase.Reveal || state.phase == WhodunitPhase.PostGame
-        require(terminal || state.public.verdict == null) {
-            "A non-terminal phase carries a verdict"
-        }
-        if (state.phase == WhodunitPhase.Reveal) {
-            require(state.public.verdict != null) { "Reveal phase has no verdict" }
-        }
+        validatePhaseShape(state, maximumRounds)
+        validateTerminalOutcome(state)
     }
 
     /**
@@ -176,6 +175,11 @@ internal object WhodunitStateValidator {
                 privateState.dossierUnlocked || privateState.privateReviewOpen
             }) { "Private dossier state is open outside character reveal" }
         }
+        state.privatePerPlayer.values.forEach { privateState ->
+            require(!privateState.privateReviewOpen || privateState.dossierUnlocked) {
+                "Private review is open while its dossier is locked"
+            }
+        }
         state.public.rolesViewed.forEach { playerId ->
             val privateState = state.privatePerPlayer[playerId]
                 ?: throw IllegalArgumentException("Viewed role has no private state")
@@ -185,10 +189,7 @@ internal object WhodunitStateValidator {
         }
     }
 
-    private fun validateRoundsAndTimer(state: WhodunitState) {
-        val maximumRounds = requireNotNull(
-            WhodunitRules.maximumRoundCount(state.public.modeId, state.players.size),
-        ) { "Unknown round policy" }
+    private fun validateRoundsAndTimer(state: WhodunitState, maximumRounds: Int) {
         require(state.public.currentRound in 0..maximumRounds) { "Current round is out of bounds" }
         when (val phase = state.phase) {
             WhodunitPhase.Setup,
@@ -252,6 +253,9 @@ internal object WhodunitStateValidator {
     }
 
     private fun validateVote(state: WhodunitState, playerIds: Set<com.parlor.core.ids.PlayerId>) {
+        val tableIds = state.public.playersAtTable.map { it.id }
+        val activeIds = tableIds.filterNot(state.public.droppedPlayers::contains)
+        val survivorIds = activeIds.filterNot(state.public.eliminatedPlayers::contains)
         when (val vote = state.public.voteState) {
             VoteState.Idle -> Unit
             is VoteState.Collecting -> {
@@ -263,12 +267,28 @@ internal object WhodunitStateValidator {
                 require(vote.isElimination == (state.public.modeId == WhodunitIds.EliminationModeId)) {
                     "Vote mode differs from session mode"
                 }
-                require(vote.ballotPlayerIds.isNotEmpty() &&
-                    vote.ballotPlayerIds.size == vote.ballotPlayerIds.toSet().size
-                ) { "Invalid ballot roster" }
-                require(vote.candidatePlayerIds.isNotEmpty() &&
-                    vote.candidatePlayerIds.size == vote.candidatePlayerIds.toSet().size
-                ) { "Invalid candidate roster" }
+                val expectedBallot = if (vote.isElimination) survivorIds else activeIds
+                require(vote.ballotPlayerIds == expectedBallot) {
+                    "Vote ballot differs from the canonical active roster"
+                }
+                val expectedCandidateOrder = vote.ballotPlayerIds.filter(
+                    vote.candidatePlayerIds.toSet()::contains,
+                )
+                require(vote.candidatePlayerIds == expectedCandidateOrder) {
+                    "Vote candidates are duplicated, unknown, or out of canonical order"
+                }
+                if (vote.isSecondRound) {
+                    require(vote.candidatePlayerIds.size >= 2) {
+                        "A revote requires at least two tied candidates"
+                    }
+                } else {
+                    require(vote.candidatePlayerIds == vote.ballotPlayerIds) {
+                        "A first ballot must allow every active voter as a candidate"
+                    }
+                }
+                require(
+                    vote.isSecondRound == (state.phase == WhodunitPhase.TiedRevote),
+                ) { "Vote round marker disagrees with the phase" }
                 require(playerIds.containsAll(vote.ballotPlayerIds)) { "Unknown voter" }
                 require(vote.ballotPlayerIds.containsAll(vote.candidatePlayerIds)) {
                     "Candidate cannot vote in this ballot"
@@ -310,6 +330,16 @@ internal object WhodunitStateValidator {
                 require(vote.tiedPlayerIds.none {
                     it in state.public.eliminatedPlayers || it in state.public.droppedPlayers
                 }) { "Ineligible player is tied" }
+                val expectedBallot = if (
+                    state.public.modeId == WhodunitIds.EliminationModeId
+                ) {
+                    survivorIds
+                } else {
+                    activeIds
+                }
+                require(
+                    vote.tiedPlayerIds == expectedBallot.filter(vote.tiedPlayerIds.toSet()::contains),
+                ) { "Tied candidates are outside canonical table order" }
                 require(vote.debateSecondsRemaining == 0) { "Tied revote must be untimed" }
             }
             is VoteState.Resolved -> {
@@ -329,8 +359,205 @@ internal object WhodunitStateValidator {
         }
     }
 
+    /**
+     * Cross-field state machine boundary. Field-level validation is not enough:
+     * a collection of individually valid values can still describe a phase no
+     * reducer transition can produce, which would strand the restored UI.
+     */
+    private fun validatePhaseShape(state: WhodunitState, maximumRounds: Int) {
+        val public = state.public
+        val clueCount = public.revealedClues.size
+
+        require(public.disconnectedPlayers.intersect(public.droppedPlayers).isEmpty()) {
+            "A player is both disconnected and permanently dropped"
+        }
+        require(
+            state.public.modeId == WhodunitIds.EliminationModeId ||
+                public.eliminatedPlayers.isEmpty(),
+        ) { "Classic mode contains eliminated players" }
+        require(state.phase == WhodunitPhase.PublicIntro || public.introAcknowledged.isEmpty()) {
+            "Intro readiness survived outside the intro phase"
+        }
+        require(state.phase == WhodunitPhase.RulesBriefing || public.briefingReady.isEmpty()) {
+            "Briefing readiness survived outside the briefing phase"
+        }
+        require(state.phase is WhodunitPhase.CharacterReveal || public.rolesViewed.isEmpty()) {
+            "Role-view readiness survived outside character reveal"
+        }
+        require(
+            if (state.phase == WhodunitPhase.RulesBriefing) {
+                public.briefingCardIndex in 0 until BRIEFING_CARD_COUNT
+            } else {
+                public.briefingCardIndex == 0
+            },
+        ) { "Briefing card index disagrees with the phase" }
+
+        val phaseCanPause = when (state.phase) {
+            WhodunitPhase.Setup,
+            WhodunitPhase.Reveal,
+            WhodunitPhase.PostGame -> false
+            else -> true
+        }
+        require(phaseCanPause || !public.paused) { "Terminal or setup state is paused" }
+        if (public.disconnectedPlayers.isNotEmpty() && phaseCanPause) {
+            require(public.paused) { "Active disconnected state is not paused" }
+        }
+        if (state.phase == WhodunitPhase.PostGame) {
+            require(public.disconnectedPlayers.isEmpty()) {
+                "Post-game state still tracks disconnected players"
+            }
+        }
+
+        fun requirePreRoundShape() {
+            require(
+                public.currentRound == 0 &&
+                    clueCount == 0 &&
+                    public.eliminatedPlayers.isEmpty() &&
+                    public.timer == null &&
+                    public.voteState == VoteState.Idle,
+            ) { "Pre-round phase contains gameplay progress" }
+        }
+
+        when (val phase = state.phase) {
+            WhodunitPhase.Setup,
+            WhodunitPhase.PublicIntro,
+            WhodunitPhase.RulesBriefing,
+            is WhodunitPhase.CharacterReveal -> requirePreRoundShape()
+
+            is WhodunitPhase.Round -> {
+                require(clueCount == phase.index - 1 || clueCount == phase.index) {
+                    "Round clue history is not reachable"
+                }
+                if (public.timer != null) {
+                    require(clueCount == phase.index && public.voteState == VoteState.Idle) {
+                        "Discussion timer exists outside the discussion substate"
+                    }
+                }
+                when (state.public.modeId) {
+                    WhodunitIds.ClassicVoteModeId -> require(public.voteState == VoteState.Idle) {
+                        "Classic vote is collecting inside an investigation round"
+                    }
+                    WhodunitIds.EliminationModeId -> when (val vote = public.voteState) {
+                        VoteState.Idle -> Unit
+                        is VoteState.Collecting -> require(
+                            clueCount == phase.index && public.timer == null && !vote.isSecondRound,
+                        ) { "Elimination ballot is outside its round voting substate" }
+                        is VoteState.Resolved -> require(
+                            clueCount == phase.index &&
+                                public.timer == null &&
+                                !vote.wasKiller &&
+                                vote.accusedPlayerId in public.eliminatedPlayers,
+                        ) { "Elimination result cannot be acknowledged from this round state" }
+                        is VoteState.Tied,
+                        is VoteState.NoResolution -> throw IllegalArgumentException(
+                            "Invalid elimination round vote state",
+                        )
+                    }
+                }
+            }
+
+            WhodunitPhase.FinalVote -> {
+                val vote = public.voteState as? VoteState.Collecting
+                    ?: throw IllegalArgumentException("Final vote is not collecting ballots")
+                require(
+                    state.public.modeId == WhodunitIds.ClassicVoteModeId &&
+                        public.currentRound == maximumRounds &&
+                        clueCount == maximumRounds &&
+                        public.timer == null &&
+                        !vote.isSecondRound,
+                ) { "Final-vote state is not reachable"
+                }
+            }
+
+            WhodunitPhase.TiedRevote -> {
+                require(public.timer == null && clueCount == public.currentRound) {
+                    "Tied revote does not follow a completed round"
+                }
+                require(
+                    public.voteState is VoteState.Tied ||
+                        public.voteState is VoteState.Collecting,
+                ) { "Tied-revote phase has no tie or second ballot" }
+                if (state.public.modeId == WhodunitIds.ClassicVoteModeId) {
+                    require(public.currentRound == maximumRounds) {
+                        "Classic revote occurs before the final round"
+                    }
+                }
+            }
+
+            WhodunitPhase.Reveal,
+            WhodunitPhase.PostGame -> {
+                require(public.timer == null) { "Terminal state retains a timer" }
+                require(
+                    clueCount == public.currentRound ||
+                        (public.currentRound > 0 && clueCount == public.currentRound - 1),
+                ) { "Terminal clue history is not reachable" }
+            }
+        }
+    }
+
+    private fun validateTerminalOutcome(state: WhodunitState) {
+        val public = state.public
+        val terminal = state.phase == WhodunitPhase.Reveal || state.phase == WhodunitPhase.PostGame
+        require(terminal || public.verdict == null) { "A non-terminal phase carries a verdict" }
+        if (state.phase == WhodunitPhase.Reveal) {
+            require(public.verdict != null) { "Reveal phase has no verdict" }
+        }
+        if (!terminal) return
+
+        val hasAssignment = state.privatePerPlayer.isNotEmpty()
+        if (!hasAssignment) {
+            require(
+                state.phase == WhodunitPhase.PostGame &&
+                    public.verdict == null &&
+                    public.voteState == VoteState.Idle,
+            ) { "Unassigned terminal state carries a game result" }
+            return
+        }
+
+        val verdict = public.verdict
+        if (verdict == null) {
+            require(
+                state.phase == WhodunitPhase.PostGame &&
+                    public.voteState == VoteState.NoResolution(EARLY_END_REASON),
+            ) { "Result-less post-game state was not an explicit early end" }
+            return
+        }
+        val verdictKillerCharacterId = when (verdict) {
+            is Verdict.PlayersWin -> verdict.killerCharacterId
+            is Verdict.KillerWins -> verdict.killerCharacterId
+        }
+        require(verdictKillerCharacterId == state.hostOnly.killerCharacterId.raw) {
+            "Verdict names a different killer character"
+        }
+        when (verdict) {
+            is Verdict.PlayersWin -> {
+                val resolved = public.voteState as? VoteState.Resolved
+                    ?: throw IllegalArgumentException("Players-win verdict has no resolved vote")
+                require(
+                    resolved.wasKiller && resolved.accusedPlayerId == state.hostOnly.killerId,
+                ) { "Players-win verdict did not identify the killer" }
+            }
+            is Verdict.KillerWins -> when (verdict.cause) {
+                KillerWinCause.InnocentAccused -> {
+                    val resolved = public.voteState as? VoteState.Resolved
+                        ?: throw IllegalArgumentException("Innocent-accused verdict has no vote")
+                    require(!resolved.wasKiller) { "Innocent-accused verdict resolved the killer" }
+                }
+                KillerWinCause.TieUnresolved,
+                KillerWinCause.SurvivedToFinalTwo -> require(
+                    public.voteState == VoteState.Resolved(state.hostOnly.killerId, true),
+                ) { "Killer survival verdict has an inconsistent result" }
+                KillerWinCause.GameEndedEarly -> require(
+                    public.voteState == VoteState.NoResolution(EARLY_END_REASON),
+                ) { "Early-end verdict has an inconsistent result" }
+            }
+        }
+    }
+
     private const val UNASSIGNED_ID = "unassigned"
     private const val MAX_REASON_LENGTH = 128
+    private const val BRIEFING_CARD_COUNT = 4
+    private const val EARLY_END_REASON = "game-ended-early"
 }
 
 private fun WhodunitCase.allClues(): List<Clue> = buildList {

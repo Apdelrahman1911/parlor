@@ -1201,6 +1201,10 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
                     public = state.public.copy(
                         verdict = verdict,
                         voteState = VoteState.NoResolution(EARLY_END_REASON),
+                        briefingCardIndex = 0,
+                        introAcknowledged = emptySet(),
+                        briefingReady = emptySet(),
+                        rolesViewed = emptySet(),
                         paused = false,
                         timer = null,
                         disconnectedPlayers = emptySet(),
@@ -1219,6 +1223,10 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
                 state.copy(
                     public = state.public.copy(
                         voteState = VoteState.NoResolution(EARLY_END_REASON),
+                        briefingCardIndex = 0,
+                        introAcknowledged = emptySet(),
+                        briefingReady = emptySet(),
+                        rolesViewed = emptySet(),
                         paused = false,
                         timer = null,
                         disconnectedPlayers = emptySet(),
