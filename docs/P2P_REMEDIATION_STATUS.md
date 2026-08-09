@@ -36,10 +36,11 @@ baseline.
   dated receipts exist for the exact release SHA.
 - Raw-IP/manual endpoint connection is intentionally unsupported for the first
   release under accepted ADR-0002. `MAN-00` is **N/A**, not PASS.
-- The code-review verdict remains **NOT READY FOR PHYSICAL-DEVICE
-  VALIDATION** until the final exact-HEAD matrix, clean-worktree check, and
-  closure register are recorded. The production-readiness verdict remains
-  **NOT READY FOR RELEASE**.
+- The code-review verdict is a closure candidate for **READY FOR
+  PHYSICAL-DEVICE VALIDATION**; it becomes final only if the exact-HEAD matrix
+  and clean-worktree check after this commit pass. The production-readiness
+  verdict remains **NOT READY FOR RELEASE** until physical, signed-artifact,
+  accessibility, privacy, legal, and store gates pass.
 
 The finding-by-finding root-cause register is
 [`FR_REMEDIATION_FINDINGS.md`](FR_REMEDIATION_FINDINGS.md). “Implemented” in
