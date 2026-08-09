@@ -88,6 +88,19 @@ class DefaultCaseRepositoryTest {
         assertEquals(envelope, cache.value)
     }
 
+    @Test
+    fun corrupt_cached_case_is_invalidated_before_remote_fallback() = runTest {
+        val cache = RecordingCache(initial = envelope.copy(title = ""))
+        val repository = repository(cache, AcceptingValidator())
+
+        val result = repository.loadCase(caseId, UnitPayloadValidator)
+
+        assertIs<Result.Success<ValidatedCase<Unit>>>(result)
+        assertEquals(1, cache.invalidateCount)
+        assertEquals(1, cache.putCount)
+        assertEquals(envelope, cache.value)
+    }
+
     private fun repository(cache: RecordingCache, validator: CaseValidator) = DefaultCaseRepository(
         remote = StubRemote(),
         cache = cache,
@@ -110,9 +123,10 @@ class DefaultCaseRepositoryTest {
         override suspend fun loadBundled(id: CaseId): CaseEnvelope? = null
     }
 
-    private class RecordingCache : CachedCaseDataSource {
+    private class RecordingCache(initial: CaseEnvelope? = null) : CachedCaseDataSource {
         var putCount: Int = 0
-        var value: CaseEnvelope? = null
+        var invalidateCount: Int = 0
+        var value: CaseEnvelope? = initial
 
         override suspend fun get(id: CaseId): CaseEnvelope? = value
 
@@ -121,7 +135,10 @@ class DefaultCaseRepositoryTest {
             value = envelope
         }
 
-        override suspend fun invalidate(id: CaseId) = Unit
+        override suspend fun invalidate(id: CaseId) {
+            invalidateCount += 1
+            value = null
+        }
 
         override suspend fun listSummaries(gameId: GameId): List<CaseSummary> = emptyList()
     }
@@ -144,6 +161,9 @@ class DefaultCaseRepositoryTest {
             payloadValidator: PayloadValidator<TPayload>,
         ): Result<ValidatedCase<TPayload>, ValidationError> {
             val decoded = json.decodeFromString(CaseEnvelope.serializer(), rawJson)
+            if (decoded.title.isBlank()) {
+                return Result.Failure(ValidationError.MalformedField("title", "blank"))
+            }
             return when (val payload = payloadValidator.validate(decoded)) {
                 is Result.Success -> Result.Success(ValidatedCase(decoded, payload.data))
                 is Result.Failure -> payload

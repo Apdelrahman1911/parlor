@@ -68,8 +68,15 @@ class DefaultCaseRepository(
         id: CaseId,
         payloadValidator: PayloadValidator<TPayload>,
     ): Result<ValidatedCase<TPayload>, DataError> {
-        // Cache → Remote → Bundled.
-        cache.get(id)?.let { return validate(it, payloadValidator) }
+        // Cache → Remote → Bundled. A corrupt legacy cache entry is not a
+        // terminal result: remove it and continue to the authoritative
+        // sources so one bad record cannot permanently hide valid content.
+        cache.get(id)?.let { cached ->
+            when (val validated = validate(cached, payloadValidator)) {
+                is Result.Success -> return validated
+                is Result.Failure -> cache.invalidate(id)
+            }
+        }
 
         val remoteResult = remote.fetchCase(id).mapError { it.asDataError() }
         if (remoteResult is Result.Success) {
@@ -139,6 +146,7 @@ class DefaultCaseRepository(
                 true
             }
         }
+    }
 
     private fun <TPayload> validate(
         envelope: CaseEnvelope,
