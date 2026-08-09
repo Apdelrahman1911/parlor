@@ -26,22 +26,33 @@ class AndroidReleaseLintContractTest {
         val catalog = read("gradle/libs.versions.toml")
         val workflow = read(".github/workflows/production-verification.yml")
         val triage = read("docs/ANDROID_LINT_TRIAGE.md")
+        val inventory = read("config/android-lint-accepted-warnings.txt")
 
         assertContains(rootBuild, ":composeApp:verifyReleaseLintWarnings")
         assertContains(appBuild, "dependsOn(\"lintRelease\")")
         assertContains(appBuild, "reports/lint-results-release.xml")
-        setOf(
-            "OldTargetApi",
-            "AndroidGradlePluginVersion",
-            "GradleDependency",
-            "NewerVersionAvailable",
-        ).forEach { reviewedId -> assertContains(appBuild, "\"$reviewedId\"") }
+        assertContains(appBuild, "config/android-lint-accepted-warnings.txt")
+        assertContains(appBuild, "actual == expected")
+        val accepted = inventory.lineSequence()
+            .map(String::trim)
+            .filter { line -> line.isNotEmpty() && !line.startsWith('#') }
+            .toList()
+        assertEquals(42, accepted.size)
+        assertEquals(
+            mapOf(
+                "AndroidGradlePluginVersion" to 4,
+                "GradleDependency" to 2,
+                "NewerVersionAvailable" to 35,
+                "OldTargetApi" to 1,
+            ),
+            accepted.groupingBy { line -> line.substringBefore('|') }.eachCount(),
+        )
         assertContains(workflow, "productionCheck")
         assertContains(workflow, "lint-results-*")
         assertContains(catalog, "androidx-activity-compose")
         assertContains(appBuild, "implementation(libs.androidx.activity.compose)")
         assertContains(triage, "reported 59 warnings")
-        assertContains(triage, "reports 39 warnings")
+        assertContains(triage, "reports 42 warnings")
     }
 
     @Test

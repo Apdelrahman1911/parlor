@@ -1,3 +1,5 @@
+import java.io.File
+
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.application)
@@ -198,30 +200,69 @@ val verifyReleaseLintWarnings by tasks.registering {
     group = "verification"
     description = "Fails if release lint reports an untriaged warning."
     dependsOn("lintRelease")
-    inputs.file(layout.buildDirectory.file("reports/lint-results-release.xml"))
+    val lintReport = layout.buildDirectory.file("reports/lint-results-release.xml")
+    inputs.file(lintReport)
+    val acceptedInventory = rootProject.layout.projectDirectory.file(
+        "config/android-lint-accepted-warnings.txt",
+    )
+    inputs.file(acceptedInventory)
     doLast {
-        val report = inputs.files.singleFile
+        val inputFiles = inputs.files.files.associateBy(File::getName)
+        val report = checkNotNull(inputFiles["lint-results-release.xml"]) {
+            "Release lint report was not registered as a task input"
+        }
+        val inventory = checkNotNull(inputFiles["android-lint-accepted-warnings.txt"]) {
+            "Accepted lint inventory was not registered as a task input"
+        }
         check(report.isFile) { "Missing release lint report: ${report.absolutePath}" }
+        check(inventory.isFile) { "Missing accepted lint inventory: ${inventory.absolutePath}" }
 
-        val document = javax.xml.parsers.DocumentBuilderFactory.newInstance()
-            .newDocumentBuilder()
-            .parse(report)
-        val allowedAdvisories = setOf(
-            "OldTargetApi",
-            "AndroidGradlePluginVersion",
-            "GradleDependency",
-            "NewerVersionAvailable",
-        )
+        val factory = javax.xml.parsers.DocumentBuilderFactory.newInstance().apply {
+            setFeature("http://apache.org/xml/features/disallow-doctype-decl", true)
+            setFeature("http://xml.org/sax/features/external-general-entities", false)
+            setFeature("http://xml.org/sax/features/external-parameter-entities", false)
+        }
+        val document = factory.newDocumentBuilder().parse(report)
+        val repositoryRoot = checkNotNull(inventory.parentFile?.parentFile) {
+            "Accepted lint inventory must live under <repository>/config"
+        }.canonicalFile.toPath()
         val issues = document.getElementsByTagName("issue")
-        val untriaged = buildList {
+        val actual = buildList {
             for (index in 0 until issues.length) {
                 val issue = issues.item(index)
                 val id = issue.attributes.getNamedItem("id")?.nodeValue.orEmpty()
-                if (id !in allowedAdvisories) add(id)
+                val message = issue.attributes.getNamedItem("message")?.nodeValue.orEmpty()
+                    .substringBefore(" is available:")
+                val location = issue.childNodes.let { children ->
+                    (0 until children.length)
+                        .map(children::item)
+                        .firstOrNull { child -> child.nodeName == "location" }
+                }
+                check(location != null) { "Lint issue '$id' has no source location" }
+                val source = File(
+                    location.attributes.getNamedItem("file")?.nodeValue.orEmpty(),
+                ).canonicalFile.toPath()
+                check(source.startsWith(repositoryRoot)) {
+                    "Lint issue '$id' points outside the repository: $source"
+                }
+                val relativeSource = repositoryRoot.relativize(source)
+                    .toString()
+                    .replace(File.separatorChar, '/')
+                add("$id|$relativeSource|$message")
             }
-        }
-        check(untriaged.isEmpty()) {
-            "Release lint contains untriaged issue IDs: ${untriaged.distinct().sorted()}"
+        }.sorted()
+        val expected = inventory.readLines()
+            .map(String::trim)
+            .filter { line -> line.isNotEmpty() && !line.startsWith('#') }
+            .sorted()
+        check(actual == expected) {
+            val unexpected = actual.toMutableList().also { remaining ->
+                expected.forEach(remaining::remove)
+            }
+            val missing = expected.toMutableList().also { remaining ->
+                actual.forEach(remaining::remove)
+            }
+            "Release lint inventory changed. Unexpected: $unexpected; missing: $missing"
         }
     }
 }

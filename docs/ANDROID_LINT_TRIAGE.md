@@ -1,10 +1,11 @@
 # Android release lint triage
 
-The executable source of truth is `:composeApp:verifyReleaseLintWarnings`.
-That task runs `lintRelease`, parses the generated XML report, and fails the
-production Android gate for every warning ID that is not in the reviewed
-update-advisory allowlist. This document records why the current advisory
-classes remain; it does not override the build.
+The executable source of truth is `:composeApp:verifyReleaseLintWarnings` plus
+`config/android-lint-accepted-warnings.txt`. The task runs `lintRelease`, parses
+the generated XML report, and requires an exact multiset match on lint ID,
+repository-relative location, dependency/current-version message, and count.
+Only the volatile latest-available-version suffix is ignored. This document
+records why the current advisories remain; it does not override the build.
 
 ## 2026-08-09 baseline and result
 
@@ -25,7 +26,7 @@ reported 59 warnings:
 | `UseTomlInstead` | 1 |
 
 The remediation removes all 20 correctness, packaging, resource, and catalog
-warnings. A forced post-change run reports 39 warnings, all in the four
+warnings. The current forced post-change run reports 42 warnings, all in the four
 explicitly reviewed advisory classes below:
 
 | Lint ID | Count | Disposition |
@@ -33,12 +34,14 @@ explicitly reviewed advisory classes below:
 | `OldTargetApi` | 1 | Target/compile SDK 36 is deliberately pinned for the current compatibility baseline. Store target-level compliance must be rechecked at release and can require a reviewed SDK migration. |
 | `AndroidGradlePluginVersion` | 4 | Gradle 8.13 and AGP 8.13.2 are a verified pair. Moving to Gradle 8.14.5 or AGP 9.3.1 is a separate compatibility migration, not a lint-only edit. |
 | `GradleDependency` | 2 | Kotlin/Compose compiler 2.3.21 and Activity Compose 1.9.3 are pinned. Their upgrades require source, binary, Android lifecycle, and release regression verification. |
-| `NewerVersionAvailable` | 32 | These are update notifications for pinned Kotlin, serialization, datetime, Compose, Koin, Ktor, SQLDelight, Detekt, JUnit, and Turbine coordinates. They do not report a demonstrated correctness defect. |
+| `NewerVersionAvailable` | 35 | These are update notifications for pinned Kotlin, serialization, datetime, Compose, Koin, Ktor, SQLDelight, P2pKit, Konsist, Detekt, JUnit, and Turbine coordinates. They do not report a demonstrated correctness defect. |
 
 The remaining advisories are not permanent waivers. Dependency/security review
 and store policy can make a specific upgrade mandatory. Such an upgrade must
-update strict dependency-verification metadata and pass the complete release
-matrix; advisory counts may also change as repositories publish new versions.
+update the reviewed inventory, strict dependency-verification metadata, and
+pass the complete release matrix. A new coordinate, current version, source
+location, ID, or warning count fails the gate; a repository publishing a newer
+latest version does not cause nondeterministic failure by itself.
 
 ## Fixed warning classes
 
