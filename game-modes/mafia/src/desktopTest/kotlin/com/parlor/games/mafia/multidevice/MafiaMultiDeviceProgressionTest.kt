@@ -205,6 +205,24 @@ class MafiaMultiDeviceProgressionTest {
     }
 
     @Test
+    fun ready_advance_is_suspended_during_disconnect_and_reoffered_after_reconnect() {
+        val seed = 2468L
+        val c = ctx(seed)
+        var state = step(initialState(5, seed), MafiaAction.StartGame, c)
+        for (player in state.players) {
+            state = step(state, MafiaAction.AcknowledgeRoleViewed(player.id), c)
+        }
+        assertThat(nextHostAdvance(state)).isEqualTo(MafiaAction.AdvanceFromRoleAssignment)
+
+        val missing = state.players.last().id
+        state = step(state, MafiaAction.MarkPlayerDisconnected(missing), c)
+        assertThat(nextHostAdvance(state)).isNull()
+
+        state = step(state, MafiaAction.MarkPlayerReconnected(missing), c)
+        assertThat(nextHostAdvance(state)).isEqualTo(MafiaAction.AdvanceFromRoleAssignment)
+    }
+
+    @Test
     fun an_eliminated_host_can_still_resolve_the_night() {
         // Regression for the dead-host deadlock: the manual Resolve button lives
         // only in the alive-host branch, so night resolution must come from the

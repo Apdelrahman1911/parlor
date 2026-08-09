@@ -246,6 +246,12 @@ private fun HostPhaseProgressionDriver(
  * *when the host offers* the advance.
  */
 internal fun nextHostAdvance(state: MafiaState): MafiaAction? {
+    // The bridge deliberately rejects every gameplay mutation while a seat is
+    // transiently disconnected. Returning null here is equally important: it
+    // changes the LaunchedEffect key to null and lets the same ready advance be
+    // offered again when the seat reconnects. Without this state transition an
+    // advance rejected during the outage was never retried after recovery.
+    if (state.public.disconnectedPlayers.isNotEmpty()) return null
     val active = state.players.map { it.id }.filterNot { it in state.public.droppedPlayers }
     val aliveActive = active.filter { id ->
         state.public.roster.firstOrNull { it.playerId == id }?.alive == true

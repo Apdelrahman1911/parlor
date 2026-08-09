@@ -45,9 +45,9 @@ object VoteResolution {
         // Tied.
         val canRevote = inputs.revoteRound < settings.maxRevotes
         return when {
-            !canRevote -> Outcome.Skipped(VoteOutcome.MaxRevotesReached, tally)
             settings.voteTieBehavior == TieBehavior.SKIP_ELIMINATION ->
                 Outcome.Skipped(VoteOutcome.SkippedDueToTie, tally)
+            !canRevote -> Outcome.Skipped(VoteOutcome.MaxRevotesReached, tally)
             else -> {
                 val nextCandidates = when (settings.voteTieBehavior) {
                     TieBehavior.REVOTE_TIED_ONLY -> top

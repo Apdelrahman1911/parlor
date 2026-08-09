@@ -111,6 +111,23 @@ class VoteResolutionTest {
     }
 
     @Test
+    fun skip_elimination_policy_remains_the_reason_when_revoting_is_disabled() {
+        val out = VoteResolution.resolve(
+            VoteResolution.Inputs(
+                casts = mapOf(a to b, c to a),
+                abstained = emptySet(),
+                ballot = listOf(a, b, c, d),
+                candidates = listOf(a, b, c, d),
+                revoteRound = 0,
+            ),
+            settings = settings(tie = TieBehavior.SKIP_ELIMINATION, maxRevotes = 0),
+        )
+
+        val skipped = out as VoteResolution.Outcome.Skipped
+        assertThat(skipped.reason).isEqualTo(VoteOutcome.SkippedDueToTie)
+    }
+
+    @Test
     fun tied_at_max_revotes_returns_max_revotes_reached() {
         // revoteRound == maxRevotes → no further revote possible
         val out = VoteResolution.resolve(
