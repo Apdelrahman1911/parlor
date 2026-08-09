@@ -19,13 +19,13 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonElement
 
 /**
- * Orchestrates remote + cache + bundled per ARCHITECTURE.md §8.3:
- *  - First open of a case: try Remote → put in Cache → return.
- *  - Failure: fall back to Cache; failure again: fall back to Bundled.
- *  - Subsequent opens: serve from Cache; refresh in background.
+ * Orchestrates cache + remote + bundled per ARCHITECTURE.md §8.3:
+ *  - Serve a previously validated cache entry when available.
+ *  - Otherwise try Remote → put in Cache → return.
+ *  - Treat corrupt or unavailable sources independently and fall back to the
+ *    validated bundled copy.
  *
  * Every path runs the result through the validator before exposing it. There
  * is no untrusted data path.
@@ -72,33 +72,40 @@ class DefaultCaseRepository(
         // terminal result: remove it and continue to the authoritative
         // sources so one bad record cannot permanently hide valid content.
         cache.get(id)?.let { cached ->
-            when (val validated = validate(cached, payloadValidator)) {
+            when (val validated = validate(id, cached, payloadValidator)) {
                 is Result.Success -> return validated
                 is Result.Failure -> cache.invalidate(id)
             }
         }
 
         val remoteResult = remote.fetchCase(id).mapError { it.asDataError() }
+        var remoteValidationFailure: DataError? = null
         if (remoteResult is Result.Success) {
-            return when (val validated = validate(remoteResult.data, payloadValidator)) {
+            when (val validated = validate(id, remoteResult.data, payloadValidator)) {
                 is Result.Success -> {
                     // A remote envelope is not cacheable until its game-owned
                     // payload has passed the same validator used by callers.
                     cache.put(validated.data.envelope)
                     cacheUpdates.tryEmit(CaseUpdate.CaseAdded(validated.data.envelope.toSummary()))
-                    validated
+                    return validated
                 }
-                is Result.Failure -> validated
+                is Result.Failure -> remoteValidationFailure = validated.error
             }
         }
 
-        bundled.loadBundled(id)?.let { return validate(it, payloadValidator) }
-        return Result.Failure(DataError.NotFound)
+        bundled.loadBundled(id)?.let { return validate(id, it, payloadValidator) }
+        return Result.Failure(remoteValidationFailure ?: DataError.NotFound)
     }
 
     override fun observeCacheUpdates(): Flow<CaseUpdate> = cacheUpdates.asSharedFlow()
 
-    override suspend fun refresh(gameId: GameId): Result<Unit, DataError> {
+    override suspend fun <TPayload> refresh(
+        gameId: GameId,
+        payloadValidator: PayloadValidator<TPayload>,
+    ): Result<Unit, DataError> {
+        require(payloadValidator.gameId == gameId.raw) {
+            "Payload validator '${payloadValidator.gameId}' cannot refresh '${gameId.raw}'"
+        }
         val r = remote.listCases(gameId).mapError { it.asDataError() }
         return when (r) {
             is Result.Success -> {
@@ -106,52 +113,64 @@ class DefaultCaseRepository(
                     is Result.Success -> validated.data
                     is Result.Failure -> return Result.Failure(DataError.CorruptedData)
                 }
-                // Pull each case into cache to warm it.
-                var invalidEnvelope = false
+                // Pull each case through its game-owned validator before
+                // caching. A partial refresh may retain earlier valid cases,
+                // but its result remains a failure if any advertised case was
+                // unavailable or invalid.
+                var failure: DataError? = null
                 for (summary in summaries) {
-                    if (!warmCase(gameId, summary)) invalidEnvelope = true
+                    when (val warmed = warmCase(summary, payloadValidator)) {
+                        is Result.Success -> Unit
+                        is Result.Failure -> {
+                            if (failure == null || warmed.error == DataError.CorruptedData) {
+                                failure = warmed.error
+                            }
+                        }
+                    }
                 }
-                if (invalidEnvelope) Result.Failure(DataError.CorruptedData)
-                else Result.Success(Unit)
+                failure?.let { Result.Failure(it) } ?: Result.Success(Unit)
             }
-            is Result.Failure -> r.mapError { it } as Result<Unit, DataError>
+            is Result.Failure -> Result.Failure(r.error)
         }
     }
 
-    /**
-     * Refresh has no game payload type at the repository boundary. It still
-     * validates the complete common envelope and exact list identity before a
-     * response is allowed into the cache; the typed payload validator remains
-     * mandatory when a caller opens the case.
-     */
-    private fun shapeOnlyPayloadValidator(gameId: GameId): PayloadValidator<JsonElement> =
-        object : PayloadValidator<JsonElement> {
-            override val gameId: String = gameId.raw
-
-            override fun validate(envelope: CaseEnvelope): Result<JsonElement, com.parlor.core.result.ValidationError> =
-                Result.Success(envelope.payload)
-        }
-
-    private suspend fun warmCase(gameId: GameId, summary: CaseSummary): Boolean {
+    private suspend fun <TPayload> warmCase(
+        summary: CaseSummary,
+        payloadValidator: PayloadValidator<TPayload>,
+    ): Result<Unit, DataError> {
         val fetch = remote.fetchCase(CaseId(summary.caseId)).mapError { it.asDataError() }
-        if (fetch !is Result.Success) return true
-        val raw = json.encodeToString(CaseEnvelope.serializer(), fetch.data)
-        return when (val shape = validator.validate(raw, shapeOnlyPayloadValidator(gameId))) {
-            is Result.Failure -> false
+        val envelope = when (fetch) {
+            is Result.Success -> fetch.data
+            is Result.Failure -> return fetch
+        }
+        return when (
+            val validated = validate(
+                expectedId = CaseId(summary.caseId),
+                envelope = envelope,
+                payloadValidator = payloadValidator,
+            )
+        ) {
+            is Result.Failure -> validated
             is Result.Success -> {
-                val envelope = shape.data.envelope
-                if (envelope.toSummary() != summary.copy(coverArtUrl = null)) return false
+                val envelope = validated.data.envelope
+                if (envelope.toSummary() != summary.copy(coverArtUrl = null)) {
+                    return Result.Failure(DataError.CorruptedData)
+                }
                 cache.put(envelope)
                 cacheUpdates.tryEmit(CaseUpdate.CaseRevised(summary))
-                true
+                Result.Success(Unit)
             }
         }
     }
 
     private fun <TPayload> validate(
+        expectedId: CaseId,
         envelope: CaseEnvelope,
         payloadValidator: PayloadValidator<TPayload>,
     ): Result<ValidatedCase<TPayload>, DataError> {
+        if (envelope.caseId != expectedId.raw) {
+            return Result.Failure(DataError.CorruptedData)
+        }
         val raw = json.encodeToString(CaseEnvelope.serializer(), envelope)
         return validator.validate(raw, payloadValidator).flatMap { Result.Success(it) }
             .mapError { DataError.CorruptedData }

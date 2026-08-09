@@ -70,7 +70,7 @@ class DefaultCaseRepositoryTest {
         val cache = RecordingCache()
         val repository = repository(cache, RejectingValidator)
 
-        val result = repository.refresh(gameId)
+        val result = repository.refresh(gameId, UnitPayloadValidator)
 
         assertEquals(Result.Failure(DataError.CorruptedData), result)
         assertEquals(0, cache.putCount)
@@ -101,26 +101,115 @@ class DefaultCaseRepositoryTest {
         assertEquals(envelope, cache.value)
     }
 
-    private fun repository(cache: RecordingCache, validator: CaseValidator) = DefaultCaseRepository(
-        remote = StubRemote(),
+    @Test
+    fun remote_case_identity_must_match_the_requested_case_before_caching() = runTest {
+        val cache = RecordingCache()
+        val wrongEnvelope = envelope.copy(caseId = "different-case")
+        val repository = repository(
+            cache = cache,
+            remote = StubRemote(fetchResult = Result.Success(wrongEnvelope)),
+        )
+
+        val result = repository.loadCase(caseId, UnitPayloadValidator)
+
+        assertEquals(Result.Failure(DataError.CorruptedData), result)
+        assertEquals(0, cache.putCount)
+    }
+
+    @Test
+    fun corrupt_remote_case_falls_back_to_a_valid_bundled_copy() = runTest {
+        val cache = RecordingCache()
+        val remoteEnvelope = envelope.copy(version = SemVer(2, 0, 0))
+        val repository = repository(
+            cache = cache,
+            remote = StubRemote(fetchResult = Result.Success(remoteEnvelope)),
+            bundled = FixedBundled(envelope),
+        )
+
+        val result = repository.loadCase(caseId, VersionOnePayloadValidator)
+
+        val loaded = assertIs<Result.Success<ValidatedCase<Unit>>>(result)
+        assertEquals(envelope, loaded.data.envelope)
+        assertEquals(0, cache.putCount)
+    }
+
+    @Test
+    fun refresh_rejects_game_invalid_payload_before_cache_warming() = runTest {
+        val cache = RecordingCache()
+        val repository = repository(cache = cache)
+
+        val result = repository.refresh(gameId, RejectingPayloadValidator)
+
+        assertEquals(Result.Failure(DataError.CorruptedData), result)
+        assertEquals(0, cache.putCount)
+    }
+
+    @Test
+    fun refresh_rejects_a_fetched_case_that_does_not_match_its_manifest_identity() = runTest {
+        val cache = RecordingCache()
+        val repository = repository(
+            cache = cache,
+            remote = StubRemote(
+                fetchResult = Result.Success(envelope.copy(caseId = "different-case")),
+            ),
+        )
+
+        val result = repository.refresh(gameId, UnitPayloadValidator)
+
+        assertEquals(Result.Failure(DataError.CorruptedData), result)
+        assertEquals(0, cache.putCount)
+    }
+
+    @Test
+    fun refresh_reports_an_advertised_case_that_cannot_be_fetched() = runTest {
+        val cache = RecordingCache()
+        val repository = repository(
+            cache = cache,
+            remote = StubRemote(fetchResult = Result.Failure(NetworkError.Unreachable)),
+        )
+
+        val result = repository.refresh(gameId, UnitPayloadValidator)
+
+        assertEquals(Result.Failure(DataError.IoError("network")), result)
+        assertEquals(0, cache.putCount)
+    }
+
+    private fun repository(
+        cache: RecordingCache,
+        validator: CaseValidator = AcceptingValidator(),
+        remote: RemoteCaseDataSource = StubRemote(),
+        bundled: BundledFallbackCaseDataSource = EmptyBundled,
+    ) = DefaultCaseRepository(
+        remote = remote,
         cache = cache,
-        bundled = EmptyBundled,
+        bundled = bundled,
         validator = validator,
         json = json,
     )
 
-    private inner class StubRemote : RemoteCaseDataSource {
+    private inner class StubRemote(
+        private val listResult: Result<List<CaseSummary>, NetworkError> = Result.Success(listOf(summary)),
+        private val fetchResult: Result<CaseEnvelope, NetworkError> = Result.Success(envelope),
+    ) : RemoteCaseDataSource {
         override suspend fun listCases(gameId: GameId): Result<List<CaseSummary>, NetworkError> =
-            Result.Success(listOf(summary))
+            listResult
 
         override suspend fun fetchCase(id: CaseId): Result<CaseEnvelope, NetworkError> =
-            Result.Success(envelope)
+            fetchResult
     }
 
     private object EmptyBundled : BundledFallbackCaseDataSource {
         override suspend fun availableCases(): List<CaseSummary> = emptyList()
 
         override suspend fun loadBundled(id: CaseId): CaseEnvelope? = null
+    }
+
+    private class FixedBundled(
+        private val envelope: CaseEnvelope,
+    ) : BundledFallbackCaseDataSource {
+        override suspend fun availableCases(): List<CaseSummary> = emptyList()
+
+        override suspend fun loadBundled(id: CaseId): CaseEnvelope = envelope
     }
 
     private class RecordingCache(initial: CaseEnvelope? = null) : CachedCaseDataSource {
@@ -148,6 +237,24 @@ class DefaultCaseRepositoryTest {
 
         override fun validate(envelope: CaseEnvelope): Result<Unit, ValidationError> =
             Result.Success(Unit)
+    }
+
+    private object VersionOnePayloadValidator : PayloadValidator<Unit> {
+        override val gameId: String = "whodunit"
+
+        override fun validate(envelope: CaseEnvelope): Result<Unit, ValidationError> =
+            if (envelope.version == SemVer(1, 0, 0)) {
+                Result.Success(Unit)
+            } else {
+                Result.Failure(ValidationError.PayloadInvalid("unsupported fixture version"))
+            }
+    }
+
+    private object RejectingPayloadValidator : PayloadValidator<Unit> {
+        override val gameId: String = "whodunit"
+
+        override fun validate(envelope: CaseEnvelope): Result<Unit, ValidationError> =
+            Result.Failure(ValidationError.PayloadInvalid("rejected test payload"))
     }
 
     private inner class AcceptingValidator : CaseValidator {

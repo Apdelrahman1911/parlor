@@ -65,63 +65,40 @@ class DefaultCaseValidator(
         } catch (_: IllegalArgumentException) {
             return Result.Failure(ValidationError.MalformedField("gameId", "blank"))
         }
-        val definition = gameRegistry.byId(gameId)
-        if (definition == null) {
+        if (gameRegistry.byId(gameId) == null) {
             return Result.Failure(ValidationError.UnknownGame(envelope.gameId))
         }
         if (envelope.gameId != payloadValidator.gameId) {
             return Result.Failure(ValidationError.UnknownGame(envelope.gameId))
         }
 
-        // 5. Required-field sanity (most are enforced by kotlinx.serialization).
-        if (envelope.caseId.isBlank()) {
-            return Result.Failure(ValidationError.MalformedField("caseId", "blank"))
-        }
-        if (envelope.title.isBlank()) {
-            return Result.Failure(ValidationError.MalformedField("title", "blank"))
-        }
-        if (envelope.supportedModes.isEmpty()) {
-            return Result.Failure(ValidationError.MalformedField("supportedModes", "empty"))
+        // 5. The full common envelope projection must satisfy exactly the same
+        // shape, bounds, installed-game, and compatibility rules as an item
+        // received from the list endpoint. This prevents direct fetches from
+        // bypassing safe identifier and display-field limits.
+        when (val summary = summaryValidator.validate(gameId, listOf(envelope.toSummary()))) {
+            is Result.Success -> Unit
+            is Result.Failure -> return Result.Failure(summary.error)
         }
 
-        // 6. Player counts within engine absolute range.
-        val playerCounts = envelope.supportedPlayerCounts.toIntRange()
-        val engineRange = ENGINE_PLAYER_COUNT_RANGE
-        if (playerCounts.first < engineRange.first || playerCounts.last > engineRange.last) {
-            return Result.Failure(
-                ValidationError.PlayerCountOutOfRange(supplied = playerCounts, allowed = engineRange),
-            )
-        }
-
-        // 7. Player counts within the resolved game definition's range.
-        if (playerCounts.first < definition.supportedPlayerCounts.first ||
-            playerCounts.last > definition.supportedPlayerCounts.last
-        ) {
-            return Result.Failure(
-                ValidationError.PlayerCountOutOfRange(
-                    supplied = playerCounts,
-                    allowed = definition.supportedPlayerCounts,
-                ),
-            )
-        }
-
-        // 8. Modes recognized.
-        val declaredModeIds = definition.supportedModes.map { it.id.raw }.toSet()
-        envelope.supportedModes.forEach { mode ->
-            if (mode !in declaredModeIds) {
-                return Result.Failure(ValidationError.UnknownMode(mode))
-            }
-        }
-
-        // 9. Payload validation.
+        // 6. Payload validation.
         return when (val payload = payloadValidator.validate(envelope)) {
             is Result.Success -> Result.Success(ValidatedCase(envelope, payload.data))
             is Result.Failure -> Result.Failure(payload.error)
         }
     }
-
-    companion object {
-        /** Engine's absolute player-count range — generous, modules narrow further. */
-        val ENGINE_PLAYER_COUNT_RANGE: IntRange = 3..16
-    }
 }
+
+private fun CaseEnvelope.toSummary() = CaseSummary(
+    caseId = caseId,
+    title = title,
+    subtitle = subtitle,
+    version = version,
+    gameId = gameId,
+    supportedPlayerCounts = supportedPlayerCounts,
+    supportedModes = supportedModes,
+    language = language,
+    theme = theme,
+    estimatedDuration = estimatedDuration,
+    minimumAppVersion = minimumAppVersion,
+)

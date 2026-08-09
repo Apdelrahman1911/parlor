@@ -20,7 +20,15 @@ interface CaseRepository {
         payloadValidator: PayloadValidator<TPayload>,
     ): Result<ValidatedCase<TPayload>, DataError>
     fun observeCacheUpdates(): Flow<CaseUpdate>
-    suspend fun refresh(gameId: GameId): Result<Unit, DataError>
+    /**
+     * Refreshes and warms content for [gameId]. The game-owned validator is
+     * mandatory: a generic repository cannot safely cache an opaque payload
+     * based only on its common envelope shape.
+     */
+    suspend fun <TPayload> refresh(
+        gameId: GameId,
+        payloadValidator: PayloadValidator<TPayload>,
+    ): Result<Unit, DataError>
 }
 
 sealed interface CaseUpdate {
