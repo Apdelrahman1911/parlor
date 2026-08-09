@@ -33,7 +33,6 @@ include(":shared:session")
 include(":shared:content")
 include(":shared:networking")
 include(":shared:storage")
-include(":shared:navigation")
 
 // Multiplayer is a production feature, so the adapter is always part of the
 // graph. Missing or incompatible P2pKit artifacts fail fast instead of

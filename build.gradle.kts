@@ -46,7 +46,7 @@ tasks.register("productionAppleCheck") {
 tasks.register("productionCheck") {
     group = "verification"
     description = "Runs host-independent release gates; run productionAppleCheck on macOS separately."
-    dependsOn(productionDesktopCheck, productionAndroidCheck)
+    dependsOn(productionDesktopCheck, productionAndroidCheck, ":composeApp:verifyGameShellDispatch")
 }
 
 subprojects {

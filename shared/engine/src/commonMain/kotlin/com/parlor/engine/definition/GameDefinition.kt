@@ -12,9 +12,10 @@ import com.parlor.engine.state.GameState
 /**
  * A registered game in the Parlor catalog (e.g., Whodunit).
  *
- * Every module implements one `GameDefinition` and contributes it to the
- * `GameRegistry` via its Koin module. The shell uses the registry to render the
- * `All Games` grid and to route into the right module.
+ * Every module implements one `GameDefinition`. The application composition
+ * root pairs it with a UI shell binding and derives the engine `GameRegistry`
+ * from those installed bindings, keeping catalog and domain registration in
+ * sync.
  *
  * Generic over the module's State/Action/Event triple so the engine is fully
  * decoupled from any single game's vocabulary.

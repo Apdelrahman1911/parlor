@@ -3,14 +3,9 @@ package com.parlor.app
 import com.parlor.core.ids.SessionId
 import com.parlor.core.result.DataError
 import com.parlor.core.result.Result
-import com.parlor.games.mafia.MafiaIds
-import com.parlor.games.whodunit.WhodunitIds
+import com.parlor.app.shell.game.GameShellLaunch
+import com.parlor.app.shell.game.GameShellRouter
 import com.parlor.storage.snapshot.SnapshotStore
-
-internal enum class LocalResumeDestination {
-    Whodunit,
-    Mafia,
-}
 
 /**
  * Monotonic ownership gate for asynchronous Home-screen resume requests.
@@ -33,19 +28,18 @@ internal class LocalResumeRequestGate {
 /** Resolves an authenticated snapshot envelope without decoding game bytes. */
 internal suspend fun resolveLocalResumeDestination(
     store: SnapshotStore,
+    router: GameShellRouter,
     sessionId: SessionId,
-): Result<LocalResumeDestination, DataError> = when (val loaded = store.load(sessionId)) {
+): Result<GameShellLaunch.ResumeLocal, DataError> = when (val loaded = store.load(sessionId)) {
     is Result.Failure -> loaded
     is Result.Success -> {
         val snapshot = loaded.data
         if (snapshot.sessionId != sessionId) {
             Result.Failure(DataError.CorruptedData)
         } else {
-            when (snapshot.gameId) {
-                WhodunitIds.GameId -> Result.Success(LocalResumeDestination.Whodunit)
-                MafiaIds.GameId -> Result.Success(LocalResumeDestination.Mafia)
-                else -> Result.Failure(DataError.CorruptedData)
-            }
+            router.resumeLocal(snapshot.gameId, sessionId)
+                ?.let { destination -> Result.Success(destination) }
+                ?: Result.Failure(DataError.CorruptedData)
         }
     }
 }

@@ -12,7 +12,6 @@ kotlin {
             implementation(project(":shared:session"))
             implementation(project(":shared:content"))
             implementation(project(":shared:storage"))
-            implementation(project(":shared:navigation"))
             implementation(project(":shared:networking"))
             implementation(compose.runtime)
             implementation(compose.foundation)

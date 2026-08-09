@@ -54,10 +54,10 @@ import org.jetbrains.compose.resources.stringResource
  *  - **Host a Room** — multi-device; this device opens the room.
  *  - **Join a Room** — multi-device; this device joins a room code.
  *
- * Solo/Pass-and-Play emit a [PlayMode] via [onModeSelected] and the caller
- * routes to the case picker. Host/Join are routed via [onHost]/[onJoin]
- * since they go through their own permission + name + case + mode flow
- * before the game starts. When [multiplayerEnabled] is `false` the Host
+ * Solo/Pass-and-Play emit a [PlayMode] via [onModeSelected] and the registered
+ * game binding chooses its next setup step. Host/Join are routed via
+ * [onHost]/[onJoin] because each binding owns its multiplayer setup flow.
+ * When [multiplayerEnabled] is `false` the Host
  * and Join cards stay visible but disabled, with a short explanation, so
  * the user understands what they're missing in this build.
  *

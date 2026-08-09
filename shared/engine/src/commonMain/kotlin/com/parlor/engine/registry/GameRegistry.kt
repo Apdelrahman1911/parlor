@@ -4,9 +4,9 @@ import com.parlor.core.ids.GameId
 import com.parlor.engine.definition.GameDefinition
 
 /**
- * Registry of installed game modules. Each module contributes its
- * `GameDefinition` via its Koin module at startup. The shell reads from this
- * registry to render the All Games grid.
+ * Transport- and UI-independent registry of installed game definitions.
+ * The application composition root derives it from the installed shell
+ * bindings so content validation and the visible catalog cannot drift.
  */
 interface GameRegistry {
     val all: List<GameDefinition<*, *, *>>

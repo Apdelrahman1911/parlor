@@ -25,11 +25,6 @@ import com.parlor.app.resources.home_continue_label
 import com.parlor.app.resources.home_eyebrow
 import com.parlor.app.resources.home_future_game_title
 import com.parlor.app.resources.home_games_label
-import com.parlor.app.resources.home_mafia_open
-import com.parlor.app.resources.home_mafia_open_description
-import com.parlor.app.resources.home_mafia_subtitle
-import com.parlor.app.resources.home_mafia_tagline
-import com.parlor.app.resources.home_mafia_title
 import com.parlor.app.resources.home_resume_tile_description
 import com.parlor.app.resources.home_resume_tile_subtitle
 import com.parlor.app.resources.home_resume_tile_title
@@ -38,12 +33,10 @@ import com.parlor.app.resources.home_resume_multiplayer_subtitle
 import com.parlor.app.resources.home_resume_multiplayer_title
 import com.parlor.app.resources.home_settings_description
 import com.parlor.app.resources.home_subtitle
-import com.parlor.app.resources.home_whodunit_open
-import com.parlor.app.resources.home_whodunit_open_description
-import com.parlor.app.resources.home_whodunit_subtitle
-import com.parlor.app.resources.home_whodunit_tagline
-import com.parlor.app.resources.home_whodunit_title
 import com.parlor.app.resources.settings_title
+import com.parlor.app.shell.game.GameCatalogPresentation
+import com.parlor.app.shell.game.GameShellBinding
+import com.parlor.core.ids.GameId
 import com.parlor.core.ids.SessionId
 import com.parlor.designsystem.backdrop.HeroBackdrop
 import com.parlor.designsystem.components.EyebrowLabel
@@ -60,7 +53,7 @@ import org.jetbrains.compose.resources.stringResource
  *     SETTINGS text-link on the trailing edge.
  *  2. **Continue** (only when [unfinishedSessions] is non-empty). Tappable
  *     tiles that drop the user back into an in-progress investigation.
- *  3. **Games.** Hero cards for the installed Whodunit and Mafia titles,
+ *  3. **Games.** Hero cards supplied by every installed game binding,
  *     followed by dimmed "Coming soon" placeholders. Tapping a game card
  *     invokes [onGameSelected]; the parent routes to the game setup screen
  *     (Solo / Pass-and-Play / Host / Join).
@@ -71,8 +64,9 @@ import org.jetbrains.compose.resources.stringResource
  * screen own the "how" decision.
  */
 @Composable
-fun HomeScreen(
-    onGameSelected: (String) -> Unit,
+internal fun HomeScreen(
+    games: List<GameShellBinding>,
+    onGameSelected: (GameId) -> Unit,
     onSettings: () -> Unit,
     modifier: Modifier = Modifier,
     unfinishedSessions: List<SessionId> = emptyList(),
@@ -105,15 +99,12 @@ fun HomeScreen(
             }
 
             GamesSection(
-                onWhodunit = { onGameSelected(WHODUNIT_GAME_ID) },
-                onMafia = { onGameSelected(MAFIA_GAME_ID) },
+                games = games,
+                onGameSelected = onGameSelected,
             )
         }
     }
 }
-
-const val WHODUNIT_GAME_ID: String = "whodunit"
-const val MAFIA_GAME_ID: String = "mafia"
 
 // ============================================================================ Top bar ==
 
@@ -212,21 +203,25 @@ private fun ResumeTile(
 
 @Composable
 private fun GamesSection(
-    onWhodunit: () -> Unit,
-    onMafia: () -> Unit,
+    games: List<GameShellBinding>,
+    onGameSelected: (GameId) -> Unit,
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m)) {
         EyebrowLabel(text = stringResource(Res.string.home_games_label), accent = false)
-        WhodunitHeroCard(onOpen = onWhodunit)
-        MafiaHeroCard(onOpen = onMafia)
+        for (game in games) {
+            GameHeroCard(
+                presentation = game.catalogPresentation(),
+                onOpen = { onGameSelected(game.definition.id) },
+            )
+        }
         Row(horizontalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m)) {
             ComingSoonTile(
-                title = "${stringResource(Res.string.home_future_game_title)} 3",
+                title = "${stringResource(Res.string.home_future_game_title)} ${games.size + 1}",
                 state = stringResource(Res.string.home_coming_soon_state),
                 modifier = Modifier.weight(1f),
             )
             ComingSoonTile(
-                title = "${stringResource(Res.string.home_future_game_title)} 4",
+                title = "${stringResource(Res.string.home_future_game_title)} ${games.size + 2}",
                 state = stringResource(Res.string.home_coming_soon_state),
                 modifier = Modifier.weight(1f),
             )
@@ -235,7 +230,10 @@ private fun GamesSection(
 }
 
 @Composable
-private fun MafiaHeroCard(onOpen: () -> Unit) {
+private fun GameHeroCard(
+    presentation: GameCatalogPresentation,
+    onOpen: () -> Unit,
+) {
     ParlorCard(
         modifier = Modifier.fillMaxWidth(),
         cornerRadius = ParlorTheme.radii.elevated,
@@ -244,59 +242,24 @@ private fun MafiaHeroCard(onOpen: () -> Unit) {
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m)) {
             Text(
-                text = stringResource(Res.string.home_mafia_title),
+                text = presentation.title,
                 style = ParlorTheme.typography.displayHero,
                 color = ParlorTheme.colors.textPrimary,
             )
             Text(
-                text = stringResource(Res.string.home_mafia_subtitle),
+                text = presentation.subtitle,
                 style = ParlorTheme.typography.displayMedium,
                 color = ParlorTheme.colors.accentEmber,
             )
             Text(
-                text = stringResource(Res.string.home_mafia_tagline),
+                text = presentation.tagline,
                 style = ParlorTheme.typography.bodyLarge,
                 color = ParlorTheme.colors.textSecondary,
             )
             Spacer(modifier = Modifier.height(ParlorTheme.spacing.s))
             ParlorButton(
-                label = stringResource(Res.string.home_mafia_open),
-                contentDescription = stringResource(Res.string.home_mafia_open_description),
-                onClick = onOpen,
-                modifier = Modifier.fillMaxWidth(),
-            )
-        }
-    }
-}
-
-@Composable
-private fun WhodunitHeroCard(onOpen: () -> Unit) {
-    ParlorCard(
-        modifier = Modifier.fillMaxWidth(),
-        cornerRadius = ParlorTheme.radii.elevated,
-        contentPadding = ParlorTheme.spacing.xl,
-        hero = true,
-    ) {
-        Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m)) {
-            Text(
-                text = stringResource(Res.string.home_whodunit_title),
-                style = ParlorTheme.typography.displayHero,
-                color = ParlorTheme.colors.textPrimary,
-            )
-            Text(
-                text = stringResource(Res.string.home_whodunit_subtitle),
-                style = ParlorTheme.typography.displayMedium,
-                color = ParlorTheme.colors.accentEmber,
-            )
-            Text(
-                text = stringResource(Res.string.home_whodunit_tagline),
-                style = ParlorTheme.typography.bodyLarge,
-                color = ParlorTheme.colors.textSecondary,
-            )
-            Spacer(modifier = Modifier.height(ParlorTheme.spacing.s))
-            ParlorButton(
-                label = stringResource(Res.string.home_whodunit_open),
-                contentDescription = stringResource(Res.string.home_whodunit_open_description),
+                label = presentation.openLabel,
+                contentDescription = presentation.openContentDescription,
                 onClick = onOpen,
                 modifier = Modifier.fillMaxWidth(),
             )

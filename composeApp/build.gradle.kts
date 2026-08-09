@@ -65,7 +65,6 @@ kotlin {
                 implementation(project(":shared:content"))
                 implementation(project(":shared:networking"))
                 implementation(project(":shared:storage"))
-                implementation(project(":shared:navigation"))
                 implementation(project(":shared:transport-p2p"))
 
                 // Game modules
@@ -97,6 +96,7 @@ kotlin {
         commonTest.dependencies {
             implementation(kotlin("test"))
             implementation(libs.kotlinx.coroutines.test)
+            implementation(project(":shared:engine-testing"))
         }
         val desktopMain by getting {
             dependencies {
@@ -227,6 +227,34 @@ val verifyStoreRelease by tasks.registering {
         "The dependent signing gate uses external release-runner inputs",
     )
     dependsOn(verifyReleaseSigning, "bundleRelease")
+}
+
+/**
+ * Architectural guard for FR-01: global shell dispatch must remain game-id
+ * neutral. Concrete game names belong only in binding implementations and the
+ * composition root where those bindings are registered.
+ */
+val verifyGameShellDispatch by tasks.registering {
+    group = "verification"
+    description = "Rejects game-specific branches in central shell dispatch files."
+    val neutralShellPaths = listOf(
+        "src/commonMain/kotlin/com/parlor/app/App.kt",
+        "src/commonMain/kotlin/com/parlor/app/AppBackPolicy.kt",
+        "src/commonMain/kotlin/com/parlor/app/LocalResumeRouter.kt",
+        "src/commonMain/kotlin/com/parlor/app/shell/home/HomeScreen.kt",
+    )
+    inputs.files(neutralShellPaths)
+    doLast {
+        val forbidden = listOf("whodunit", "mafia", "com.parlor.games.")
+        inputs.files.files.forEach { source ->
+            val text = source.readText().lowercase()
+            val found = forbidden.filter { token -> token in text }
+            check(found.isEmpty()) {
+                "Central shell file ${source.name} contains game-specific " +
+                    "dispatch tokens: ${found.joinToString()}"
+            }
+        }
+    }
 }
 
 // Compose Multiplatform resources for shell strings (Home, settings, etc.).

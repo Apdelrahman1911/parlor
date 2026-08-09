@@ -9,11 +9,13 @@ import com.parlor.content.repository.CaseRepository
 import com.parlor.content.repository.DefaultCaseRepository
 import com.parlor.content.validation.CaseValidator
 import com.parlor.content.validation.DefaultCaseValidator
+import com.parlor.app.shell.game.DefaultGameShellRegistry
+import com.parlor.app.shell.game.GameShellRegistry
+import com.parlor.app.shell.game.MafiaGameShellBinding
+import com.parlor.app.shell.game.WhodunitGameShellBinding
 import com.parlor.core.versioning.SemVer
 import com.parlor.engine.registry.DefaultGameRegistry
 import com.parlor.engine.registry.GameRegistry
-import com.parlor.games.mafia.MafiaDefinition
-import com.parlor.games.whodunit.WhodunitDefinition
 import org.koin.core.module.Module
 import org.koin.dsl.module
 
@@ -35,12 +37,21 @@ import org.koin.dsl.module
  */
 val contentModule: Module = module {
 
+    single { WhodunitGameShellBinding(get()) }
+    single { MafiaGameShellBinding(get()) }
+
+    single<GameShellRegistry> {
+        DefaultGameShellRegistry(
+            listOf(
+                get<WhodunitGameShellBinding>(),
+                get<MafiaGameShellBinding>(),
+            ),
+        )
+    }
+
     single<GameRegistry> {
         DefaultGameRegistry(
-            listOf(
-                get<WhodunitDefinition>(),
-                get<MafiaDefinition>(),
-            ),
+            get<GameShellRegistry>().all.map { binding -> binding.definition },
         )
     }
 
