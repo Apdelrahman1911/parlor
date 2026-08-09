@@ -1,7 +1,6 @@
 package com.parlor.games.whodunit.domain.authority
 
 import com.parlor.core.ids.PlayerId
-import com.parlor.games.whodunit.domain.action.StructuredActionPayload
 import com.parlor.games.whodunit.domain.action.WhodunitAction
 
 /**
@@ -64,13 +63,6 @@ object WhodunitActionAuthority {
         is WhodunitAction.CastVote -> AuthorityScope.SelfActor(action.voter)
         is WhodunitAction.AbstainVote -> AuthorityScope.SelfActor(action.voter)
         is WhodunitAction.RefuseToVote -> AuthorityScope.SelfActor(action.voter)
-        is WhodunitAction.SubmitStructuredAction -> when (val p = action.payload) {
-            is StructuredActionPayload.Alibi -> AuthorityScope.SelfActor(p.by)
-            is StructuredActionPayload.Question -> AuthorityScope.SelfActor(p.from)
-            is StructuredActionPayload.Accusation -> AuthorityScope.SelfActor(p.by)
-            is StructuredActionPayload.Monologue -> AuthorityScope.SelfActor(p.by)
-            StructuredActionPayload.NoAction -> AuthorityScope.HostOnly
-        }
     }
 
     /**

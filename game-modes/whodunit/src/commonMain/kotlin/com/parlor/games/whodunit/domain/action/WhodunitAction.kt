@@ -88,7 +88,6 @@ sealed interface WhodunitAction : GameAction {
 
     // --- Rounds (Phase 5) ---
     @Serializable data object RevealNextClue : WhodunitAction
-    @Serializable data class SubmitStructuredAction(val payload: StructuredActionPayload) : WhodunitAction
     @Serializable data class StartDiscussionTimer(val seconds: Int) : WhodunitAction
     @Serializable data object PauseDiscussionTimer : WhodunitAction
     @Serializable data object ResumeDiscussionTimer : WhodunitAction
@@ -119,14 +118,4 @@ sealed interface WhodunitAction : GameAction {
     @Serializable data object Resume : WhodunitAction
     @Serializable data class EndGameEarly(val withReveal: Boolean) : WhodunitAction
     @Serializable data object RequestReroll : WhodunitAction
-}
-
-/** Payload for the round's structured-action prompt (alibi / question / accusation / monologue). */
-@Serializable
-sealed interface StructuredActionPayload {
-    @Serializable data class Alibi(val by: PlayerId, val text: String) : StructuredActionPayload
-    @Serializable data class Question(val from: PlayerId, val to: PlayerId, val text: String) : StructuredActionPayload
-    @Serializable data class Accusation(val by: PlayerId, val target: PlayerId) : StructuredActionPayload
-    @Serializable data class Monologue(val by: PlayerId, val text: String) : StructuredActionPayload
-    @Serializable data object NoAction : StructuredActionPayload
 }

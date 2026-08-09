@@ -30,6 +30,7 @@ import com.parlor.games.whodunit.ackBriefingForAll
 import com.parlor.games.whodunit.ackIntroForAll
 import com.parlor.games.whodunit.revealRolesAndAdvance
 import com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostRoomBridge
+import com.parlor.networking.protocol.CommandStatus
 import com.parlor.networking.protocol.HostMessage
 import com.parlor.networking.protocol.PeerMessage
 import com.parlor.networking.protocol.RoomMessage
@@ -457,7 +458,7 @@ class PartyConnectionEventsTest {
         assertThat(start.header?.sessionId == bridge.protocol.sessionId).isTrue()
         assertThat(start.header?.gameId == WhodunitIds.GameId).isTrue()
         assertThat(start.header?.gameVersion == WhodunitHostRoomBridge.GAME_VERSION).isTrue()
-        assertThat(WhodunitHostRoomBridge.GAME_VERSION).isEqualTo(3)
+        assertThat(WhodunitHostRoomBridge.GAME_VERSION).isEqualTo(4)
 
         bridge.terminate(SessionEndReason.HostLeft)
         bridge.close()
@@ -466,6 +467,56 @@ class PartyConnectionEventsTest {
 
         endCollector.cancel()
         peerBridge.close()
+    }
+
+    @Test
+    fun retired_structured_action_command_is_rejected_without_mutating_host_state() = runTest {
+        val scope = TestScope(UnconfinedTestDispatcher(testScheduler))
+        val bus = InMemoryRoomBus()
+        bus.registerPeer(alice)
+        val session = buildHostSession(loadCase())
+        val hostRoom = PartyEventsHostRoom(bus, hostId)
+        val bridge = WhodunitHostRoomBridge(
+            session,
+            hostRoom,
+            players,
+            scope,
+            json,
+            heartbeatIntervalMs = 0L,
+            requireStartHandshake = false,
+        )
+        val before = session.hostState.value.state
+        val commandId = "retired-action-000000000001"
+        val legacyPayload = """
+            {
+              "type":"com.parlor.games.whodunit.domain.action.WhodunitAction.SubmitStructuredAction",
+              "payload":{
+                "type":"com.parlor.games.whodunit.domain.action.StructuredActionPayload.Alibi",
+                "by":"alice",
+                "text":"legacy"
+              }
+            }
+        """.trimIndent()
+
+        bus.fromPeer(
+            PeerMessage.ClientCommand(
+                header = peerHeader(bridge, commandId),
+                actor = alice,
+                commandId = commandId,
+                clientSequence = 1L,
+                expectedRevision = 0L,
+                payload = legacyPayload.encodeToByteArray(),
+            ),
+        )
+        runCurrent()
+
+        val result = hostRoom.sent
+            .mapNotNull { it.second as? HostMessage.CommandResult }
+            .single { it.commandId == commandId }
+        assertThat(result.status).isEqualTo(CommandStatus.InvalidAction)
+        assertThat(result.authoritativeRevision).isEqualTo(0L)
+        assertThat(session.hostState.value.state).isEqualTo(before)
+        bridge.close()
     }
 
     @Test

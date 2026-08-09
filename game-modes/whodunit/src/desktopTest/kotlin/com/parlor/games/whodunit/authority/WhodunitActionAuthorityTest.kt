@@ -1,7 +1,6 @@
 package com.parlor.games.whodunit.authority
 
 import com.parlor.core.ids.PlayerId
-import com.parlor.games.whodunit.domain.action.StructuredActionPayload
 import com.parlor.games.whodunit.domain.action.WhodunitAction
 import com.parlor.games.whodunit.domain.authority.AuthorityScope
 import com.parlor.games.whodunit.domain.authority.WhodunitActionAuthority
@@ -15,7 +14,7 @@ import kotlin.test.assertTrue
  *
  *  - Host-only actions (shared game progression) are rejected from any peer.
  *  - Self-actor actions (Cast/Abstain/Refuse vote, Complete reveal,
- *    Open/Close private review, structured-action payloads) are rejected
+ *    Open/Close private review) are rejected
  *    when submitted by anyone other than the named actor.
  *  - Host can always submit anything (host-trusted path bypasses policy in
  *    practice, but this test pins the behaviour: `isAllowed` returns true
@@ -121,22 +120,6 @@ class WhodunitActionAuthorityTest {
         }
     }
 
-    @Test
-    fun self_actor_structured_payloads() {
-        val cases: List<Pair<WhodunitAction, PlayerId>> = listOf(
-            WhodunitAction.SubmitStructuredAction(StructuredActionPayload.Alibi(alice, "I was reading")) to alice,
-            WhodunitAction.SubmitStructuredAction(StructuredActionPayload.Question(from = alice, to = bob, text = "where?")) to alice,
-            WhodunitAction.SubmitStructuredAction(StructuredActionPayload.Accusation(by = alice, target = bob)) to alice,
-            WhodunitAction.SubmitStructuredAction(StructuredActionPayload.Monologue(by = alice, text = "...")) to alice,
-        )
-        for ((action, actor) in cases) {
-            assertEquals(AuthorityScope.SelfActor(actor), WhodunitActionAuthority.classify(action))
-            assertTrue(WhodunitActionAuthority.isAllowed(action, actor, host))
-            assertFalse(WhodunitActionAuthority.isAllowed(action, bob, host),
-                "bob cannot submit $action on alice's behalf")
-        }
-    }
-
     // ============================================================ Dropped spectators ==
 
     @Test
@@ -193,11 +176,4 @@ class WhodunitActionAuthorityTest {
         )
     }
 
-    @Test
-    fun structured_no_action_is_host_only() {
-        val a = WhodunitAction.SubmitStructuredAction(StructuredActionPayload.NoAction)
-        assertEquals(AuthorityScope.HostOnly, WhodunitActionAuthority.classify(a))
-        assertTrue(WhodunitActionAuthority.isAllowed(a, host, host))
-        assertFalse(WhodunitActionAuthority.isAllowed(a, alice, host))
-    }
 }

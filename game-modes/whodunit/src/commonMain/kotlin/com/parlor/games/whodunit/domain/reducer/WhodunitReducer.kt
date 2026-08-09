@@ -87,7 +87,6 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
 
             // Rounds (Phase 5)
             WhodunitAction.RevealNextClue -> revealNextClue(state, wctx)
-            is WhodunitAction.SubmitStructuredAction -> Reduction(state)
             is WhodunitAction.StartDiscussionTimer -> startDiscussionTimer(
                 state,
                 action.seconds,

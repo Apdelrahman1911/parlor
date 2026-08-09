@@ -2,6 +2,9 @@ package com.parlor.games.whodunit.domain.action
 
 import com.parlor.networking.protocol.MAX_COMMAND_PAYLOAD_BYTES
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.contentOrNull
+import kotlinx.serialization.json.jsonPrimitive
 
 /**
  * Codec for sending [WhodunitAction] payloads over the wire as `ByteArray`.
@@ -36,8 +39,25 @@ object WhodunitActionCodec {
     /** Decode a `PeerMessage.ActionSubmit.payload` back to a typed action. */
     fun decode(bytes: ByteArray): WhodunitAction {
         requireBounded(bytes)
-        return json.decodeFromString(WhodunitAction.serializer(), bytes.decodeToString())
+        val encoded = bytes.decodeToString()
+        rejectRetiredAction(encoded)
+        return json.decodeFromString(WhodunitAction.serializer(), encoded)
             .requireValidRevealGeneration()
+    }
+
+    /**
+     * Game-protocol v3 advertised structured actions even though its reducer
+     * silently ignored them. They are deliberately absent from the v4 action
+     * model. Recognising the retired discriminator here turns an old payload
+     * into an explicit, auditable InvalidAction result instead of relying on
+     * an incidental unknown-subclass serialization error.
+     */
+    private fun rejectRetiredAction(encoded: String) {
+        val root = json.parseToJsonElement(encoded) as? JsonObject ?: return
+        val actionType = root[TYPE_DISCRIMINATOR]?.jsonPrimitive?.contentOrNull
+        if (actionType == RETIRED_STRUCTURED_ACTION_TYPE) {
+            throw UnsupportedLegacyWhodunitActionException()
+        }
     }
 
     private fun requireBounded(bytes: ByteArray) {
@@ -57,4 +77,12 @@ object WhodunitActionCodec {
         }
         require(generation > 0L) { "Reveal action has an invalid assignment generation" }
     }
+
+    private const val TYPE_DISCRIMINATOR = "type"
+    private const val RETIRED_STRUCTURED_ACTION_TYPE =
+        "com.parlor.games.whodunit.domain.action.WhodunitAction.SubmitStructuredAction"
 }
+
+internal class UnsupportedLegacyWhodunitActionException : IllegalArgumentException(
+    "Structured actions are not supported by the shipping Whodunit rules",
+)

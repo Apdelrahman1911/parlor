@@ -3,9 +3,8 @@ package com.parlor.games.whodunit.action
 import assertk.assertThat
 import assertk.assertions.contains
 import assertk.assertions.isEqualTo
-import assertk.assertions.isInstanceOf
 import com.parlor.core.ids.PlayerId
-import com.parlor.games.whodunit.domain.action.StructuredActionPayload
+import com.parlor.games.whodunit.domain.action.UnsupportedLegacyWhodunitActionException
 import com.parlor.games.whodunit.domain.action.WhodunitAction
 import com.parlor.games.whodunit.domain.action.WhodunitActionCodec
 import kotlinx.serialization.SerializationException
@@ -18,23 +17,16 @@ import kotlin.test.assertFailsWith
  * it because every variant is `@Serializable` and round-trips cleanly
  * through [WhodunitActionCodec].
  *
- * The test covers each shape category — singleton (`data object`), simple
- * value (`AssignRoles`, `AdvanceBriefingCard`), id-carrying (`CastVote`),
- * and nested polymorphic (`SubmitStructuredAction(StructuredActionPayload)`)
- * — because kotlinx-serialization's polymorphic discriminator output
- * differs across these and a regression would show up only on one shape.
+ * The test covers each shipping shape category — singleton (`data object`),
+ * simple value (`AssignRoles`, `AdvanceBriefingCard`), and id-carrying
+ * (`CastVote`) — because kotlinx-serialization's polymorphic discriminator
+ * output differs across these and a regression would show up only on one
+ * shape.
  */
 class WhodunitActionCodecTest {
 
     @Test
-    fun oversizedActionIsRejectedOnEncodeAndDecode() {
-        val oversized = WhodunitAction.SubmitStructuredAction(
-            StructuredActionPayload.Alibi(PlayerId("alice"), "x".repeat(33 * 1024)),
-        )
-
-        assertFailsWith<IllegalArgumentException> {
-            WhodunitActionCodec.encode(oversized)
-        }
+    fun oversizedActionIsRejectedBeforeDecode() {
         assertFailsWith<IllegalArgumentException> {
             WhodunitActionCodec.decode(ByteArray(32 * 1024 + 1))
         }
@@ -118,25 +110,31 @@ class WhodunitActionCodecTest {
     }
 
     @Test
-    fun nested_polymorphic_payload_round_trips() {
-        val original = WhodunitAction.SubmitStructuredAction(
-            payload = StructuredActionPayload.Question(
-                from = PlayerId("p1"),
-                to = PlayerId("p2"),
-                text = "Where were you at 9:00?",
+    fun retired_structured_action_wire_payload_is_rejected_explicitly() {
+        val legacyPayloads = listOf(
+            legacyPayload(
+                """{"type":"$LEGACY_PAYLOAD_PREFIX.Alibi","by":"p1","text":"I was reading"}""",
             ),
+            legacyPayload(
+                """{"type":"$LEGACY_PAYLOAD_PREFIX.Question","from":"p1","to":"p2","text":"Where?"}""",
+            ),
+            legacyPayload(
+                """{"type":"$LEGACY_PAYLOAD_PREFIX.Accusation","by":"p1","target":"p2"}""",
+            ),
+            legacyPayload(
+                """{"type":"$LEGACY_PAYLOAD_PREFIX.Monologue","by":"p1","text":"Listen"}""",
+            ),
+            legacyPayload("""{"type":"$LEGACY_PAYLOAD_PREFIX.NoAction"}"""),
         )
-        val decoded = WhodunitActionCodec.decode(WhodunitActionCodec.encode(original))
-        assertThat(decoded).isEqualTo(original)
-        val payload = (decoded as WhodunitAction.SubmitStructuredAction).payload
-        assertThat(payload).isInstanceOf(StructuredActionPayload.Question::class)
-    }
 
-    @Test
-    fun structured_action_no_action_object_round_trips() {
-        val original = WhodunitAction.SubmitStructuredAction(StructuredActionPayload.NoAction)
-        val decoded = WhodunitActionCodec.decode(WhodunitActionCodec.encode(original))
-        assertThat(decoded).isEqualTo(original)
+        legacyPayloads.forEach { legacy ->
+            val failure = assertFailsWith<UnsupportedLegacyWhodunitActionException> {
+                WhodunitActionCodec.decode(legacy.encodeToByteArray())
+            }
+            assertThat(failure.message).isEqualTo(
+                "Structured actions are not supported by the shipping Whodunit rules",
+            )
+        }
     }
 
     @Test
@@ -148,5 +146,15 @@ class WhodunitActionCodecTest {
         val bytes = WhodunitActionCodec.encode(WhodunitAction.OpenVote)
         val text = bytes.decodeToString()
         assertThat(text).contains("\"type\":")
+    }
+
+    private fun legacyPayload(payload: String): String =
+        """{"type":"$LEGACY_ACTION_TYPE","payload":$payload}"""
+
+    private companion object {
+        const val LEGACY_ACTION_TYPE =
+            "com.parlor.games.whodunit.domain.action.WhodunitAction.SubmitStructuredAction"
+        const val LEGACY_PAYLOAD_PREFIX =
+            "com.parlor.games.whodunit.domain.action.StructuredActionPayload"
     }
 }
