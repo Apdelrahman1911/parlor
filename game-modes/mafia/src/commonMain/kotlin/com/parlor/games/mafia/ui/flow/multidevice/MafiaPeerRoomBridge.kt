@@ -79,6 +79,12 @@ class MafiaPeerRoomBridge(
         room.peerEvents.collect(::handleConnectionEvent)
     }
 
+    val commandProgress = coordinator.commandProgress
+
+    suspend fun acknowledgeCommandOutcome(commandId: String) {
+        coordinator.acknowledgeCommandOutcome(commandId)
+    }
+
     fun close() {
         hostLossJob?.cancel()
         hostLossJob = null

@@ -594,6 +594,78 @@ class AuthoritativeSessionCoordinatorTest {
     }
 
     @Test
+    fun `peer retains every authoritative command outcome until UI acknowledgement`() = runTest {
+        val room = RecordingRoom(isHost = false, selfPlayerId = peerId)
+        var id = 0
+        val coordinator = PeerAuthoritativeSessionCoordinator(
+            room = room,
+            protocol = protocol,
+            selfPlayerId = peerId,
+            scope = this,
+            onSnapshot = { _, _ -> true },
+            idGenerator = { "peer-command-${(++id).toString().padStart(16, '0')}" },
+        )
+        val statuses = listOf(
+            CommandStatus.Applied,
+            CommandStatus.InvalidAction,
+            CommandStatus.Unauthorized,
+            CommandStatus.StaleRevision,
+            CommandStatus.Duplicate,
+        )
+
+        statuses.forEachIndexed { index, status ->
+            val submitted = coordinator.submit(byteArrayOf(index.toByte())) as Result.Success
+            val receipt = submitted.data
+            room.receive(
+                HostMessage.CommandResult(
+                    header = header(sequence = index.toLong() + 1L),
+                    commandId = receipt.commandId,
+                    status = status,
+                    authoritativeRevision = 0L,
+                    nextExpectedClientSequence = index.toLong() + 2L,
+                ),
+            )
+            runCurrent()
+
+            val resolved = coordinator.commandProgress.value as PeerCommandProgress.Resolved
+            assertEquals(receipt.commandId, resolved.outcome.commandId)
+            assertEquals(status, resolved.outcome.status)
+            // Results are replayed, so attaching after host delivery still
+            // observes the outcome instead of losing it to tryEmit.
+            assertEquals(status, coordinator.results.first().status)
+            coordinator.acknowledgeCommandOutcome(receipt.commandId)
+            assertEquals(PeerCommandProgress.Idle, coordinator.commandProgress.value)
+        }
+        coordinator.close()
+    }
+
+    @Test
+    fun `peer marks failed send ambiguous without replaying or releasing command`() = runTest {
+        val room = RecordingRoom(isHost = false, selfPlayerId = peerId)
+        room.sendToHostError = NetError.Timeout
+        val coordinator = PeerAuthoritativeSessionCoordinator(
+            room = room,
+            protocol = protocol,
+            selfPlayerId = peerId,
+            scope = this,
+            onSnapshot = { _, _ -> true },
+            idGenerator = { COMMAND_ONE },
+        )
+
+        assertTrue(coordinator.submit(byteArrayOf(1)) is Result.Failure)
+
+        val awaiting = coordinator.commandProgress.value as PeerCommandProgress.Awaiting
+        assertEquals(COMMAND_ONE, awaiting.receipt.commandId)
+        assertEquals(PeerCommandDelivery.Ambiguous, awaiting.delivery)
+        assertEquals(
+            NetError.CommandInFlight,
+            (coordinator.submit(byteArrayOf(2)) as Result.Failure).error,
+        )
+        assertEquals(1, room.sentToHost.filterIsInstance<PeerMessage.ClientCommand>().size)
+        coordinator.close()
+    }
+
+    @Test
     fun `peer queries ambiguous send outcome on restore without replaying command`() = runTest {
         val room = RecordingRoom(isHost = false, selfPlayerId = peerId)
         room.sendToHostError = NetError.Timeout

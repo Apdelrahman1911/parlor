@@ -459,6 +459,30 @@ data class PeerCommandReceipt(
     val clientSequence: Long,
 )
 
+enum class PeerCommandDelivery {
+    Sending,
+    Sent,
+    /** The send returned an error, so reconciliation must query instead of replaying. */
+    Ambiguous,
+}
+
+data class PeerCommandOutcome(
+    val commandId: String,
+    val status: CommandStatus,
+    val authoritativeRevision: Long,
+    val nextExpectedClientSequence: Long,
+)
+
+sealed interface PeerCommandProgress {
+    data object Idle : PeerCommandProgress
+    data class Awaiting(
+        val receipt: PeerCommandReceipt,
+        val expectedRevision: Long,
+        val delivery: PeerCommandDelivery,
+    ) : PeerCommandProgress
+    data class Resolved(val outcome: PeerCommandOutcome) : PeerCommandProgress
+}
+
 /**
  * Peer-side ordering, retry, and snapshot validation. It never reduces game
  * state; [onSnapshot] installs the host's atomic player projection.
@@ -486,8 +510,13 @@ class PeerAuthoritativeSessionCoordinator(
     private val _revision = MutableStateFlow(0L)
     val revision: StateFlow<Long> = _revision.asStateFlow()
 
-    private val _results = MutableSharedFlow<HostMessage.CommandResult>(extraBufferCapacity = 16)
+    // At most one command may be in flight, so replaying the latest outcome is
+    // bounded and prevents a temporarily absent UI collector from losing it.
+    private val _results = MutableSharedFlow<HostMessage.CommandResult>(replay = 1)
     val results: SharedFlow<HostMessage.CommandResult> = _results.asSharedFlow()
+
+    private val _commandProgress = MutableStateFlow<PeerCommandProgress>(PeerCommandProgress.Idle)
+    val commandProgress: StateFlow<PeerCommandProgress> = _commandProgress.asStateFlow()
 
     private val pending = linkedMapOf<String, PeerMessage.ClientCommand>()
     private var nextClientSequence = 1L
@@ -538,13 +567,45 @@ class PeerAuthoritativeSessionCoordinator(
                 clientSequence = clientSequence,
                 expectedRevision = _revision.value,
                 payload = payload.copyOf(),
-            ).also { pending[commandId] = it }
+            ).also {
+                pending[commandId] = it
+                _commandProgress.value = PeerCommandProgress.Awaiting(
+                    receipt = PeerCommandReceipt(commandId, clientSequence),
+                    expectedRevision = it.expectedRevision,
+                    delivery = PeerCommandDelivery.Sending,
+                )
+            }
         }
         return when (val sent = room.sendToHost(command)) {
-            is Result.Success -> Result.Success(
-                PeerCommandReceipt(command.commandId, command.clientSequence),
-            )
-            is Result.Failure -> Result.Failure(sent.error)
+            is Result.Success -> {
+                updateDelivery(command.commandId, PeerCommandDelivery.Sent)
+                Result.Success(PeerCommandReceipt(command.commandId, command.clientSequence))
+            }
+            is Result.Failure -> {
+                // A transport error does not prove that the host did not apply
+                // the action. Keep it pending and reconcile by command id after
+                // recovery; never replay a non-idempotent game action.
+                updateDelivery(command.commandId, PeerCommandDelivery.Ambiguous)
+                Result.Failure(sent.error)
+            }
+        }
+    }
+
+    suspend fun acknowledgeCommandOutcome(commandId: String) {
+        stateMutex.withLock {
+            val resolved = _commandProgress.value as? PeerCommandProgress.Resolved
+            if (resolved?.outcome?.commandId == commandId) {
+                _commandProgress.value = PeerCommandProgress.Idle
+            }
+        }
+    }
+
+    private suspend fun updateDelivery(commandId: String, delivery: PeerCommandDelivery) {
+        stateMutex.withLock {
+            val awaiting = _commandProgress.value as? PeerCommandProgress.Awaiting
+            if (awaiting?.receipt?.commandId == commandId && commandId in pending) {
+                _commandProgress.value = awaiting.copy(delivery = delivery)
+            }
         }
     }
 
@@ -622,11 +683,19 @@ class PeerAuthoritativeSessionCoordinator(
             } else {
                 nextClientSequence = result.nextExpectedClientSequence
                 pending.remove(result.commandId)
+                _commandProgress.value = PeerCommandProgress.Resolved(
+                    PeerCommandOutcome(
+                        commandId = result.commandId,
+                        status = result.status,
+                        authoritativeRevision = result.authoritativeRevision,
+                        nextExpectedClientSequence = result.nextExpectedClientSequence,
+                    ),
+                )
                 true
             }
         }
         if (!accepted) return
-        _results.tryEmit(result)
+        _results.emit(result)
         if (
             result.status == CommandStatus.SequenceGap ||
             result.status == CommandStatus.StaleRevision
@@ -670,6 +739,16 @@ class PeerAuthoritativeSessionCoordinator(
             } else {
                 terminalAccepted = true
                 _revision.value = ended.finalRevision
+                pending.keys.singleOrNull()?.let { commandId ->
+                    _commandProgress.value = PeerCommandProgress.Resolved(
+                        PeerCommandOutcome(
+                            commandId = commandId,
+                            status = CommandStatus.SessionEnded,
+                            authoritativeRevision = ended.finalRevision,
+                            nextExpectedClientSequence = nextClientSequence,
+                        ),
+                    )
+                }
                 pending.clear()
                 true
             }
