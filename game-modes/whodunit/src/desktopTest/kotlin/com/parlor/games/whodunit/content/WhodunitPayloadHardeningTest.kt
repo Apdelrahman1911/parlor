@@ -11,7 +11,9 @@ import kotlin.test.assertIs
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.encodeToJsonElement
+import kotlinx.serialization.json.jsonObject
 import org.jetbrains.compose.resources.ExperimentalResourceApi
+import kotlin.test.assertFalse
 
 @OptIn(ExperimentalResourceApi::class)
 class WhodunitPayloadHardeningTest {
@@ -160,6 +162,15 @@ class WhodunitPayloadHardeningTest {
             val envelope = json.decodeFromString(CaseEnvelope.serializer(), raw)
             val validated = assertIs<Result.Success<WhodunitCase>>(validator.validate(envelope))
 
+            val metadata = envelope.metadata?.jsonObject
+            assertFalse("authors" in (metadata?.keys ?: emptySet()), caseId)
+            assertFalse(
+                metadata?.values?.any { value ->
+                    value.toString().contains("draft", ignoreCase = true) ||
+                        value.toString().contains("مسودة")
+                } == true,
+                caseId,
+            )
             assertEquals(IntRangePair(6, 6), envelope.supportedPlayerCounts, caseId)
             assertEquals(6, validated.data.characters.size, caseId)
             assertEquals(setOf("6"), validated.data.roundConfigByPlayerCount.keys, caseId)
