@@ -1,6 +1,7 @@
 package com.parlor.games.mafia.multidevice
 
 import assertk.assertThat
+import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNull
 import assertk.assertions.isTrue
@@ -159,7 +160,8 @@ class MafiaPeerPrivateTargetGateTest {
         )
         scope.runCurrent()
 
-        val installed = bridge.controller.publicState.value.state.privatePerPlayer[alice]
+        assertThat(bridge.controller.publicState.value.state.privatePerPlayer).isEmpty()
+        val installed = bridge.controller.privateStateFor(alice).value.state.privatePerPlayer[alice]
         assertThat(installed?.lastSuspicion).isEqualTo(frank)
         assertThat(installed?.role).isEqualTo(Role.Civilian)
         bridge.close()

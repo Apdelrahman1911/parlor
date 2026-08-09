@@ -15,6 +15,7 @@ import com.parlor.engine.session.SessionConfig
 import com.parlor.engine.session.SubmitError
 import com.parlor.engine.state.GameState
 import com.parlor.session.SessionController
+import com.parlor.session.SubmissionReceipt
 import com.parlor.session.ViewerContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -90,9 +91,8 @@ class PassAndPlaySessionController<S : GameState, A : GameAction, E : GameEvent>
     }
 
     override fun privateStateFor(playerId: PlayerId): StateFlow<PrivateProjection<S>> =
-        privateFlows.getOrPut(playerId) {
-            state.map { policy.toPlayer(it, playerId) }
-                .stateIn(scope, SharingStarted.Eagerly, policy.toPlayer(state.value, playerId))
+        requireNotNull(privateFlows[playerId]) {
+            "Private projection requested for a player outside this session"
         }
 
     /**
@@ -110,21 +110,22 @@ class PassAndPlaySessionController<S : GameState, A : GameAction, E : GameEvent>
     @Volatile private var paused: Boolean = false
     private var resumeBlocker: Job? = null
 
-    override suspend fun submit(action: A): Result<Unit, SubmitError> {
+    override suspend fun submit(action: A): Result<SubmissionReceipt, SubmitError> {
         // Serialize ONLY the state mutation under the lock. Emitting events
         // (a SUSPEND-overflow SharedFlow) while holding the mutex let a slow or
         // momentarily-absent collector back-pressure and stall every other
         // submit (UI, host bridge, PartyAwareSession ack bursts).
         // See PROBLEMS_PARLOR.md → session-01.
-        val reduction = mutex.withLock {
+        val (reduction, stateChanged) = mutex.withLock {
             if (closed) return Result.Failure(SubmitError.SessionClosed)
             val current = state.value
             val reduction = reducer.reduce(current, action, reducerContext)
-            state.value = reduction.newState
-            reduction
+            val changed = reduction.newState != current
+            if (changed) state.value = reduction.newState
+            reduction to changed
         }
         reduction.events.forEach { _events.emit(it) }
-        return Result.Success(Unit)
+        return Result.Success(SubmissionReceipt(stateChanged))
     }
 
     override suspend fun setActiveViewer(viewer: ViewerContext) {

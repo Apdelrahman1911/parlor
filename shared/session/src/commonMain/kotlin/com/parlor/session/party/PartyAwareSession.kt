@@ -10,6 +10,7 @@ import com.parlor.engine.session.SubmitError
 import com.parlor.engine.state.GameState
 import com.parlor.session.PlayMode
 import com.parlor.session.SessionController
+import com.parlor.session.SubmissionReceipt
 import com.parlor.session.ViewerContext
 import com.parlor.session.isLocal
 import kotlinx.coroutines.flow.SharedFlow
@@ -48,15 +49,33 @@ class PartyAwareSession<S : GameState, A : GameAction, E : GameEvent>(
     override fun privateStateFor(playerId: com.parlor.core.ids.PlayerId): StateFlow<PrivateProjection<S>> =
         delegate.privateStateFor(playerId)
 
-    override suspend fun submit(action: A): Result<Unit, SubmitError> {
+    override suspend fun submit(action: A): Result<SubmissionReceipt, SubmitError> {
+        var stateChanged = false
+        var awaitingAuthority = false
         if (playMode.isLocal) {
             val currentState = delegate.publicState.value.state
             val pending = gate.pendingAcks(currentState, action)
             // Auto-issue every still-missing per-player ack so the gated
             // action that follows passes the reducer's readiness check.
-            pending.forEach { delegate.submit(it.ackAction) }
+            for (pendingAck in pending) {
+                when (val result = delegate.submit(pendingAck.ackAction)) {
+                    is Result.Failure -> return result
+                    is Result.Success -> {
+                        stateChanged = stateChanged || result.data.stateChanged
+                        awaitingAuthority = awaitingAuthority || result.data.awaitingAuthority
+                    }
+                }
+            }
         }
-        return delegate.submit(action)
+        return when (val result = delegate.submit(action)) {
+            is Result.Failure -> result
+            is Result.Success -> Result.Success(
+                SubmissionReceipt(
+                    stateChanged = stateChanged || result.data.stateChanged,
+                    awaitingAuthority = awaitingAuthority || result.data.awaitingAuthority,
+                ),
+            )
+        }
     }
 
     override suspend fun setActiveViewer(viewer: ViewerContext) = delegate.setActiveViewer(viewer)

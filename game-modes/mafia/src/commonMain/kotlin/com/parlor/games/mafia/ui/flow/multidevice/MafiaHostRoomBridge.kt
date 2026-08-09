@@ -23,8 +23,11 @@ import com.parlor.networking.room.SendTarget
 import com.parlor.networking.security.SecureIds
 import com.parlor.session.multidevice.CommandApplication
 import com.parlor.session.multidevice.HostAuthoritativeSessionCoordinator
+import com.parlor.session.multidevice.HostMutationResult
 import com.parlor.session.multidevice.PlayerSnapshotPayload
 import com.parlor.session.passandplay.PassAndPlaySessionController
+import com.parlor.session.SubmissionReceipt
+import com.parlor.engine.session.SubmitError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -99,8 +102,25 @@ class MafiaHostRoomBridge(
         coordinator.publishState(incrementRevision = false)
     }
 
-    suspend fun publishHostMutation() {
-        coordinator.publishState()
+    /** Serializes host UI actions with remote commands and protocol revisions. */
+    suspend fun submitHostAction(
+        action: MafiaAction,
+    ): Result<SubmissionReceipt, SubmitError> {
+        var submission: Result<SubmissionReceipt, SubmitError>? = null
+        val mutation = coordinator.applyHostMutation {
+            if (controller.currentState().public.disconnectedPlayers.isNotEmpty()) {
+                submission = Result.Failure(SubmitError.IllegalForPhase)
+                false
+            } else {
+                controller.submit(action).also { submission = it }
+                    .let { it is Result.Success && it.data.stateChanged }
+            }
+        }
+        return when (mutation) {
+            HostMutationResult.Closed -> Result.Failure(SubmitError.SessionClosed)
+            HostMutationResult.Applied,
+            HostMutationResult.Unchanged -> checkNotNull(submission)
+        }
     }
 
     suspend fun terminate(reason: SessionEndReason = SessionEndReason.HostLeft) {
@@ -150,14 +170,12 @@ class MafiaHostRoomBridge(
         ) {
             return CommandApplication.Unauthorized
         }
-        return when (controller.submit(action)) {
+        return when (val result = controller.submit(action)) {
             is Result.Failure -> CommandApplication.InvalidAction
-            is Result.Success -> {
-                if (controller.currentState() == before) {
-                    CommandApplication.InvalidAction
-                } else {
-                    CommandApplication.Applied
-                }
+            is Result.Success -> if (result.data.stateChanged) {
+                CommandApplication.Applied
+            } else {
+                CommandApplication.InvalidAction
             }
         }
     }
@@ -213,11 +231,12 @@ class MafiaHostRoomBridge(
     }
 
     private suspend fun applyLifecycleAction(action: MafiaAction): Boolean {
-        val before = controller.currentState()
-        val result = controller.submit(action)
-        val changed = result is Result.Success && controller.currentState() != before
-        if (changed) coordinator.publishState()
-        return changed
+        var submission: Result<SubmissionReceipt, SubmitError>? = null
+        val mutation = coordinator.applyHostMutation {
+            controller.submit(action).also { submission = it }
+                .let { it is Result.Success && it.data.stateChanged }
+        }
+        return mutation == HostMutationResult.Applied && submission is Result.Success
     }
 
     companion object {

@@ -135,6 +135,7 @@ import com.parlor.networking.room.LocalRoom
 import com.parlor.games.whodunit.domain.party.WhodunitReadinessGate
 import com.parlor.session.PlayMode
 import com.parlor.session.SessionController
+import com.parlor.session.SubmissionReceipt
 import com.parlor.session.ViewerContext
 import com.parlor.session.party.PartyAwareSession
 import com.parlor.session.passandplay.PassAndPlaySessionController
@@ -977,18 +978,9 @@ private class PublishingWhodunitSessionController(
     private val delegate: SessionController<WhodunitState, WhodunitAction, WhodunitEvent>,
     private val bridge: WhodunitHostRoomBridge,
 ) : SessionController<WhodunitState, WhodunitAction, WhodunitEvent> by delegate {
-    override suspend fun submit(action: WhodunitAction): Result<Unit, SubmitError> {
-        val before = delegate.hostState?.value?.state
-        val result = delegate.submit(action)
-        if (
-            result is Result.Success &&
-            before != null &&
-            delegate.hostState?.value?.state != before
-        ) {
-            bridge.publishHostMutation()
-        }
-        return result
-    }
+    override suspend fun submit(
+        action: WhodunitAction,
+    ): Result<SubmissionReceipt, SubmitError> = bridge.submitHostAction(action)
 }
 
 /**

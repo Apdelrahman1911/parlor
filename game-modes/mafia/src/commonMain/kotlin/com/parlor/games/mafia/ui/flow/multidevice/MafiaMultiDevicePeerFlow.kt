@@ -121,8 +121,10 @@ fun MafiaMultiDevicePeerFlow(
             // readiness gate that actually issues auto-acks.
             PartyAwareSession(bridge.controller, peerPlayMode, MafiaReadinessGate)
         }
-    val publicProjection by session.publicState.collectAsState()
-    val state = publicProjection.state
+    // Render from the peer's own projection. The controller's public bucket
+    // remains strictly public and can therefore be logged/rebroadcast safely.
+    val playerProjection by session.privateStateFor(selfPlayerId).collectAsState()
+    val state = playerProjection.state
 
     Box(modifier = modifier.fillMaxSize()) {
         MafiaMultiDevicePhaseRouter(

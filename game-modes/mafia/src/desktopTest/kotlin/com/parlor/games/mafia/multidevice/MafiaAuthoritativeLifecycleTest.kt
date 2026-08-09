@@ -201,9 +201,7 @@ class MafiaAuthoritativeLifecycleTest {
             rejoinGraceMs = 200L,
             heartbeatIntervalMs = 0L,
         )
-        val before = session.hostState.value.state
-        session.submit(MafiaAction.StartGame)
-        if (session.hostState.value.state != before) bridge.publishHostMutation()
+        bridge.submitHostAction(MafiaAction.StartGame)
         scope.runCurrent()
         val peerBridge = MafiaPeerRoomBridge(
             room = InMemoryPeerRoom(bus, alice, "Alice", host),

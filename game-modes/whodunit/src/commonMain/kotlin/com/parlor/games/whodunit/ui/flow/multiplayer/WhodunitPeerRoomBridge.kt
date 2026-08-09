@@ -17,6 +17,7 @@ import com.parlor.networking.room.PeerEvent
 import com.parlor.session.multidevice.PeerAuthoritativeSessionCoordinator
 import com.parlor.session.multidevice.PlayerSnapshotPayload
 import com.parlor.session.multidevice.ShadowSessionController
+import com.parlor.session.SubmissionReceipt
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -96,7 +97,7 @@ class WhodunitPeerRoomBridge(
         payload: PlayerSnapshotPayload,
         @Suppress("UNUSED_PARAMETER") revision: Long,
     ) {
-        val merged = runCatching {
+        val decoded = runCatching {
             val publicState = json.decodeFromString(
                 publicSerializer,
                 payload.publicPayload.decodeToString(),
@@ -109,24 +110,33 @@ class WhodunitPeerRoomBridge(
                     payload.privatePayload.decodeToString(),
                 )
             }
-            publicState.copy(
+            publicState to publicState.copy(
                 privatePerPlayer = ownPrivate?.let { mapOf(selfPlayerId to it) } ?: emptyMap(),
             )
         }.getOrElse {
             _hostDisconnected.emit(Unit)
             return
         }
-        // Both projections derive from the same decoded envelope. Public state
-        // is installed last because it is the UI's render-driving StateFlow.
-        controller.updatePrivate(PrivateProjection(merged, selfPlayerId))
-        controller.updatePublic(PublicProjection(merged))
+        val (publicState, playerState) = decoded
+        // Keep the public bucket structurally public. The UI may combine its
+        // own private projection locally, but no private slice is relabelled as
+        // public where a future logger or rebroadcast path could consume it.
+        controller.updatePrivate(PrivateProjection(playerState, selfPlayerId))
+        controller.updatePublic(PublicProjection(publicState))
     }
 
-    private suspend fun sendActionToHost(action: WhodunitAction): Result<Unit, SubmitError> {
+    private suspend fun sendActionToHost(
+        action: WhodunitAction,
+    ): Result<SubmissionReceipt, SubmitError> {
         return when (val sent = coordinator.submit(WhodunitActionCodec.encode(action))) {
             is Result.Success -> {
                 markSelfOnline()
-                Result.Success(Unit)
+                Result.Success(
+                    SubmissionReceipt(
+                        stateChanged = false,
+                        awaitingAuthority = true,
+                    ),
+                )
             }
             is Result.Failure -> {
                 if (sent.error == NetError.NotConnected) markSelfOffline()

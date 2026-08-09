@@ -24,6 +24,7 @@ import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.Instant
 import kotlin.test.Test
+import kotlin.test.assertFailsWith
 
 /**
  * Phase 6.2 contract: `PassAndPlaySessionController` accepts an optional
@@ -113,13 +114,49 @@ class RestoredStateTest {
             controllerScope,
         )
 
-        controller.submit(RrAction.Announce(PlayerId("p1")))
+        val applied = controller.submit(RrAction.Announce(PlayerId("p1")))
 
+        assertThat((applied as com.parlor.core.result.Result.Success).data.stateChanged).isEqualTo(true)
         assertThat(controller.currentState().announcedBy).isEqualTo(listOf(PlayerId("p1")))
         assertThat(controller.hostState.value.state.announcedBy).isEqualTo(emptyList())
 
         runCurrent()
         assertThat(controller.hostState.value.state.announcedBy).isEqualTo(listOf(PlayerId("p1")))
+        controller.close()
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun submit_receipt_distinguishes_committed_mutation_from_reducer_no_op() = runTest {
+        val controllerScope = CoroutineScope(UnconfinedTestDispatcher(testScheduler))
+        val controller = PassAndPlaySessionController(
+            RoundRobinAnnounceGame(),
+            fakeConfig(),
+            reducerCtx(),
+            controllerScope,
+        )
+
+        val first = controller.submit(RrAction.Announce(PlayerId("p1")))
+        val duplicate = controller.submit(RrAction.Announce(PlayerId("p1")))
+
+        assertThat((first as com.parlor.core.result.Result.Success).data.stateChanged).isEqualTo(true)
+        assertThat((duplicate as com.parlor.core.result.Result.Success).data.stateChanged).isEqualTo(false)
+        controller.close()
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun unknown_player_cannot_create_an_unbounded_private_projection() = runTest {
+        val controller = PassAndPlaySessionController(
+            RoundRobinAnnounceGame(),
+            fakeConfig(),
+            reducerCtx(),
+            CoroutineScope(UnconfinedTestDispatcher(testScheduler)),
+        )
+
+        assertFailsWith<IllegalArgumentException> {
+            controller.privateStateFor(PlayerId("not-in-session"))
+        }
         controller.close()
     }
 }

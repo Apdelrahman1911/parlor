@@ -17,8 +17,10 @@ import com.parlor.networking.room.SendTarget
 import com.parlor.networking.security.SecureIds
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.ClosedSendChannelException
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -42,6 +44,13 @@ sealed interface CommandApplication {
     data object Unauthorized : CommandApplication
 }
 
+/** Result of serializing a host-originated domain mutation with peer commands. */
+enum class HostMutationResult {
+    Applied,
+    Unchanged,
+    Closed,
+}
+
 /**
  * Transport-independent single-writer coordinator for a host-authoritative
  * game. All remote commands, host-originated state publications, resyncs, and
@@ -60,6 +69,10 @@ class HostAuthoritativeSessionCoordinator(
     private sealed interface Work {
         data class Incoming(val message: PeerMessage) : Work
         data class Publish(val incrementRevision: Boolean) : Work
+        data class HostMutation(
+            val apply: suspend () -> Boolean,
+            val completion: CompletableDeferred<HostMutationResult>,
+        ) : Work
         data class End(
             val reason: SessionEndReason,
             val completion: CompletableDeferred<Unit>,
@@ -90,6 +103,7 @@ class HostAuthoritativeSessionCoordinator(
                 when (work) {
                     is Work.Incoming -> processIncoming(work.message)
                     is Work.Publish -> publishSnapshots(work.incrementRevision)
+                    is Work.HostMutation -> processHostMutation(work)
                     is Work.End -> {
                         sendEnd(work.reason)
                         work.completion.complete(Unit)
@@ -114,6 +128,21 @@ class HostAuthoritativeSessionCoordinator(
      */
     suspend fun publishState(incrementRevision: Boolean = true) {
         mailbox.send(Work.Publish(incrementRevision))
+    }
+
+    /**
+     * Runs a host UI/lifecycle mutation on the same single-writer queue as
+     * remote commands. This keeps the domain state and authoritative protocol
+     * revision in one order even when host and peer actions arrive together.
+     */
+    suspend fun applyHostMutation(apply: suspend () -> Boolean): HostMutationResult {
+        val completion = CompletableDeferred<HostMutationResult>()
+        try {
+            mailbox.send(Work.HostMutation(apply, completion))
+        } catch (_: ClosedSendChannelException) {
+            return HostMutationResult.Closed
+        }
+        return completion.await()
     }
 
     suspend fun end(reason: SessionEndReason) {
@@ -150,6 +179,24 @@ class HostAuthoritativeSessionCoordinator(
             }
             is PeerMessage.CommandOutcomeRequest -> processOutcomeRequest(message)
             else -> Unit
+        }
+    }
+
+    private suspend fun processHostMutation(work: Work.HostMutation) {
+        try {
+            val changed = work.apply()
+            if (changed) {
+                _revision.value += 1L
+                publishSnapshots(incrementRevision = false)
+            }
+            work.completion.complete(
+                if (changed) HostMutationResult.Applied else HostMutationResult.Unchanged,
+            )
+        } catch (cancelled: CancellationException) {
+            work.completion.cancel(cancelled)
+            throw cancelled
+        } catch (failure: Throwable) {
+            work.completion.completeExceptionally(failure)
         }
     }
 

@@ -21,6 +21,7 @@ import com.parlor.networking.room.RoomLifecycleState
 import com.parlor.networking.room.RoomMember
 import com.parlor.networking.room.SendTarget
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -91,6 +92,69 @@ class AuthoritativeSessionCoordinatorTest {
         assertEquals(2, statuses.count { it == CommandStatus.Applied })
         assertTrue(CommandStatus.SequenceGap in statuses)
         assertTrue(CommandStatus.StaleRevision in statuses)
+        coordinator.close()
+    }
+
+    @Test
+    fun `host mutation and peer command share one authoritative order`() = runTest {
+        val room = RecordingRoom(isHost = true, selfPlayerId = PlayerId("host"))
+        var domainValue = 0
+        val hostStarted = CompletableDeferred<Unit>()
+        val releaseHost = CompletableDeferred<Unit>()
+        val coordinator = HostAuthoritativeSessionCoordinator(
+            room = room,
+            protocol = protocol,
+            remotePlayers = setOf(peerId),
+            scope = this,
+            applyCommand = { _, _ ->
+                domainValue += 100
+                CommandApplication.Applied
+            },
+            snapshotFor = {
+                PlayerSnapshotPayload(byteArrayOf(domainValue.toByte()), byteArrayOf())
+            },
+            heartbeatIntervalMs = 0,
+        )
+
+        val hostMutation = async {
+            coordinator.applyHostMutation {
+                hostStarted.complete(Unit)
+                releaseHost.await()
+                domainValue += 1
+                true
+            }
+        }
+        hostStarted.await()
+        room.receive(command(id = COMMAND_ONE, clientSequence = 1, expectedRevision = 0))
+        releaseHost.complete(Unit)
+        advanceUntilIdle()
+
+        assertEquals(HostMutationResult.Applied, hostMutation.await())
+        assertEquals(1, domainValue)
+        assertEquals(1L, coordinator.revision.value)
+        assertTrue(
+            room.sent.mapNotNull { it.message as? HostMessage.CommandResult }
+                .any { it.status == CommandStatus.StaleRevision },
+        )
+        coordinator.close()
+    }
+
+    @Test
+    fun `unchanged host mutation does not advance revision or publish snapshot`() = runTest {
+        val room = RecordingRoom(isHost = true, selfPlayerId = PlayerId("host"))
+        val coordinator = HostAuthoritativeSessionCoordinator(
+            room = room,
+            protocol = protocol,
+            remotePlayers = setOf(peerId),
+            scope = this,
+            applyCommand = { _, _ -> CommandApplication.InvalidAction },
+            snapshotFor = { PlayerSnapshotPayload(byteArrayOf(), byteArrayOf()) },
+            heartbeatIntervalMs = 0,
+        )
+
+        assertEquals(HostMutationResult.Unchanged, coordinator.applyHostMutation { false })
+        assertEquals(0L, coordinator.revision.value)
+        assertTrue(room.sent.none { it.message is HostMessage.PlayerSnapshot })
         coordinator.close()
     }
 

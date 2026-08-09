@@ -45,6 +45,7 @@ import com.parlor.networking.protocol.SessionEndReason
 import com.parlor.networking.room.LocalRoom
 import com.parlor.session.PlayMode
 import com.parlor.session.SessionController
+import com.parlor.session.SubmissionReceipt
 import com.parlor.session.party.PartyAwareSession
 import com.parlor.session.passandplay.PassAndPlaySessionController
 import kotlinx.coroutines.NonCancellable
@@ -260,19 +261,7 @@ private class PublishingMafiaSessionController(
     private val delegate: SessionController<MafiaState, MafiaAction, MafiaEvent>,
     private val bridge: MafiaHostRoomBridge,
 ) : SessionController<MafiaState, MafiaAction, MafiaEvent> by delegate {
-    override suspend fun submit(action: MafiaAction): Result<Unit, SubmitError> {
-        val before = delegate.hostState?.value?.state
-        if (before?.public?.disconnectedPlayers?.isNotEmpty() == true) {
-            return Result.Failure(SubmitError.IllegalForPhase)
-        }
-        val result = delegate.submit(action)
-        if (
-            result is Result.Success &&
-            before != null &&
-            delegate.hostState?.value?.state != before
-        ) {
-            bridge.publishHostMutation()
-        }
-        return result
-    }
+    override suspend fun submit(
+        action: MafiaAction,
+    ): Result<SubmissionReceipt, SubmitError> = bridge.submitHostAction(action)
 }

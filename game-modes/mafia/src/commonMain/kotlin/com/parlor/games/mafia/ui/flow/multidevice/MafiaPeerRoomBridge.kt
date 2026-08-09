@@ -17,6 +17,7 @@ import com.parlor.networking.room.PeerEvent
 import com.parlor.session.multidevice.PeerAuthoritativeSessionCoordinator
 import com.parlor.session.multidevice.PlayerSnapshotPayload
 import com.parlor.session.multidevice.ShadowSessionController
+import com.parlor.session.SubmissionReceipt
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -89,7 +90,7 @@ class MafiaPeerRoomBridge(
         payload: PlayerSnapshotPayload,
         @Suppress("UNUSED_PARAMETER") revision: Long,
     ) {
-        val merged = runCatching {
+        val decoded = runCatching {
             val publicState = json.decodeFromString(
                 publicSerializer,
                 payload.publicPayload.decodeToString(),
@@ -102,22 +103,30 @@ class MafiaPeerRoomBridge(
                     payload.privatePayload.decodeToString(),
                 )
             }
-            publicState.copy(
+            publicState to publicState.copy(
                 privatePerPlayer = ownPrivate?.let { mapOf(selfPlayerId to it) } ?: emptyMap(),
             )
         }.getOrElse {
             _hostDisconnected.emit(Unit)
             return
         }
-        controller.updatePrivate(PrivateProjection(merged, selfPlayerId))
-        controller.updatePublic(PublicProjection(merged))
+        val (publicState, playerState) = decoded
+        controller.updatePrivate(PrivateProjection(playerState, selfPlayerId))
+        controller.updatePublic(PublicProjection(publicState))
     }
 
-    private suspend fun sendActionToHost(action: MafiaAction): Result<Unit, SubmitError> {
+    private suspend fun sendActionToHost(
+        action: MafiaAction,
+    ): Result<SubmissionReceipt, SubmitError> {
         return when (val sent = coordinator.submit(MafiaActionCodec.encode(action))) {
             is Result.Success -> {
                 markSelfOnline()
-                Result.Success(Unit)
+                Result.Success(
+                    SubmissionReceipt(
+                        stateChanged = false,
+                        awaitingAuthority = true,
+                    ),
+                )
             }
             is Result.Failure -> {
                 if (sent.error == NetError.NotConnected) markSelfOffline()

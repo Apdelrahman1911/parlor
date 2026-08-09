@@ -411,15 +411,12 @@ class MultiDevicePartyPlayContractTest {
     }
 
     private suspend fun submitHost(
+        @Suppress("UNUSED_PARAMETER")
         session: PassAndPlaySessionController<WhodunitState, WhodunitAction, WhodunitEvent>,
         bridge: WhodunitHostRoomBridge,
         action: WhodunitAction,
     ) {
-        val before = session.hostState.value.state
-        val result = session.submit(action)
-        if (result is Result.Success && session.hostState.value.state != before) {
-            bridge.publishHostMutation()
-        }
+        bridge.submitHostAction(action)
     }
 
     private suspend fun loadCase(): ValidatedCase<WhodunitCase> {

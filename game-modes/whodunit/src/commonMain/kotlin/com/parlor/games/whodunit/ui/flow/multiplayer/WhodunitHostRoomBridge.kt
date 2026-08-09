@@ -24,8 +24,11 @@ import com.parlor.networking.room.SendTarget
 import com.parlor.networking.security.SecureIds
 import com.parlor.session.multidevice.CommandApplication
 import com.parlor.session.multidevice.HostAuthoritativeSessionCoordinator
+import com.parlor.session.multidevice.HostMutationResult
 import com.parlor.session.multidevice.PlayerSnapshotPayload
 import com.parlor.session.passandplay.PassAndPlaySessionController
+import com.parlor.session.SubmissionReceipt
+import com.parlor.engine.session.SubmitError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -133,9 +136,23 @@ class WhodunitHostRoomBridge(
         coordinator.publishState(incrementRevision = false)
     }
 
-    /** Called after a successful host-originated reducer mutation. */
-    suspend fun publishHostMutation() {
-        coordinator.publishState()
+    /**
+     * Serializes a host-originated action with remote commands and publishes
+     * exactly one revision when the reducer commits a change.
+     */
+    suspend fun submitHostAction(
+        action: WhodunitAction,
+    ): Result<SubmissionReceipt, SubmitError> {
+        var submission: Result<SubmissionReceipt, SubmitError>? = null
+        val mutation = coordinator.applyHostMutation {
+            controller.submit(action).also { submission = it }
+                .let { it is Result.Success && it.data.stateChanged }
+        }
+        return when (mutation) {
+            HostMutationResult.Closed -> Result.Failure(SubmitError.SessionClosed)
+            HostMutationResult.Applied,
+            HostMutationResult.Unchanged -> checkNotNull(submission)
+        }
     }
 
     /** Delivers a terminal envelope before the caller navigates away. */
@@ -184,14 +201,12 @@ class WhodunitHostRoomBridge(
         ) {
             return CommandApplication.Unauthorized
         }
-        return when (controller.submit(action)) {
+        return when (val result = controller.submit(action)) {
             is Result.Failure -> CommandApplication.InvalidAction
-            is Result.Success -> {
-                if (controller.currentState() == before) {
-                    CommandApplication.InvalidAction
-                } else {
-                    CommandApplication.Applied
-                }
+            is Result.Success -> if (result.data.stateChanged) {
+                CommandApplication.Applied
+            } else {
+                CommandApplication.InvalidAction
             }
         }
     }
@@ -252,11 +267,12 @@ class WhodunitHostRoomBridge(
     }
 
     private suspend fun applyLifecycleAction(action: WhodunitAction): Boolean {
-        val before = controller.currentState()
-        val result = controller.submit(action)
-        val changed = result is Result.Success && controller.currentState() != before
-        if (changed) coordinator.publishState()
-        return changed
+        var submission: Result<SubmissionReceipt, SubmitError>? = null
+        val mutation = coordinator.applyHostMutation {
+            controller.submit(action).also { submission = it }
+                .let { it is Result.Success && it.data.stateChanged }
+        }
+        return mutation == HostMutationResult.Applied && submission is Result.Success
     }
 
     companion object {

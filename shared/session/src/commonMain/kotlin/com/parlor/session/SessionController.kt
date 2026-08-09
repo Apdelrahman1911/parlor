@@ -28,9 +28,23 @@ interface SessionController<S : GameState, A : GameAction, E : GameEvent> {
 
     fun privateStateFor(playerId: PlayerId): StateFlow<PrivateProjection<S>>
 
-    suspend fun submit(action: A): Result<Unit, SubmitError>
+    /**
+     * Applies [action] and reports whether the canonical state actually changed.
+     *
+     * Callers that replicate or persist state must use this receipt instead of
+     * sampling one of the projection flows: those flows are asynchronous views
+     * and are not a commit acknowledgement.
+     */
+    suspend fun submit(action: A): Result<SubmissionReceipt, SubmitError>
     suspend fun setActiveViewer(viewer: ViewerContext)
     suspend fun pause()
     suspend fun resume()
     suspend fun close()
 }
+
+/** Commit receipt returned by [SessionController.submit]. */
+data class SubmissionReceipt(
+    val stateChanged: Boolean,
+    /** True on a peer after transport accepted the command but before host acknowledgement. */
+    val awaitingAuthority: Boolean = false,
+)

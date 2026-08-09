@@ -10,6 +10,7 @@ import com.parlor.engine.projection.PublicProjection
 import com.parlor.engine.session.SubmitError
 import com.parlor.engine.state.GameState
 import com.parlor.session.SessionController
+import com.parlor.session.SubmissionReceipt
 import com.parlor.session.ViewerContext
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,7 +30,7 @@ import kotlinx.coroutines.flow.asStateFlow
  */
 class ShadowSessionController<S : GameState, A : GameAction, E : GameEvent>(
     private val selfPlayerId: PlayerId,
-    private val sendActionToHost: suspend (A) -> Result<Unit, SubmitError>,
+    private val sendActionToHost: suspend (A) -> Result<SubmissionReceipt, SubmitError>,
     initialPublic: PublicProjection<S>,
     initialPrivate: PrivateProjection<S>,
 ) : SessionController<S, A, E> {
@@ -51,7 +52,8 @@ class ShadowSessionController<S : GameState, A : GameAction, E : GameEvent>(
         return _private.asStateFlow()
     }
 
-    override suspend fun submit(action: A): Result<Unit, SubmitError> = sendActionToHost(action)
+    override suspend fun submit(action: A): Result<SubmissionReceipt, SubmitError> =
+        sendActionToHost(action)
 
     override suspend fun setActiveViewer(viewer: ViewerContext) {
         // Peers' viewer is fixed to the owning player. Accept Public for cover screens.

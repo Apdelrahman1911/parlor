@@ -812,10 +812,21 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
     }
 
     private fun markReconnected(state: MafiaState, id: PlayerId): Reduction<MafiaState, MafiaEvent> {
-        if (id !in state.public.disconnectedPlayers) return Reduction(state)
+        if (id !in state.players.map { it.id }) return Reduction(state)
+        val wasDisconnected = id in state.public.disconnectedPlayers
+        val canReadmit = state.phase == MafiaPhase.Setup && id in state.public.droppedPlayers
+        if (!wasDisconnected && !canReadmit) return Reduction(state)
         return Reduction(
             state.copy(public = state.public.copy(
                 disconnectedPlayers = state.public.disconnectedPlayers - id,
+                // Reconnection during Setup is one atomic admission recovery:
+                // the same authenticated seat becomes active again and cannot
+                // remain a connected ghost that blocks StartGame forever.
+                droppedPlayers = if (canReadmit) {
+                    state.public.droppedPlayers - id
+                } else {
+                    state.public.droppedPlayers
+                },
             )),
         )
     }

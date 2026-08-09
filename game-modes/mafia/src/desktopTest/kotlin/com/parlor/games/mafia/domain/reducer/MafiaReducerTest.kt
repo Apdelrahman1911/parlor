@@ -319,6 +319,33 @@ class MafiaReducerTest {
     }
 
     @Test
+    fun authenticated_setup_reconnect_atomically_readmits_dropped_seat() {
+        val state = initialState(7)
+        val player = state.players.first().id
+        val disconnected = MafiaReducer.reduce(
+            state,
+            MafiaAction.MarkPlayerDisconnected(player),
+            ctx(),
+        ).newState
+        val dropped = MafiaReducer.reduce(
+            disconnected,
+            MafiaAction.ContinueWithoutPlayer(player),
+            ctx(),
+        ).newState
+
+        val reconnected = MafiaReducer.reduce(
+            dropped,
+            MafiaAction.MarkPlayerReconnected(player),
+            ctx(),
+        ).newState
+
+        assertThat(player in reconnected.public.disconnectedPlayers).isFalse()
+        assertThat(player in reconnected.public.droppedPlayers).isFalse()
+        val started = MafiaReducer.reduce(reconnected, MafiaAction.StartGame, ctx()).newState
+        assertThat(started.phase).isEqualTo(MafiaPhase.RoleAssignment)
+    }
+
+    @Test
     fun continue_without_player_drops_them() {
         val state = initialState(7)
         val p = state.players.first().id
