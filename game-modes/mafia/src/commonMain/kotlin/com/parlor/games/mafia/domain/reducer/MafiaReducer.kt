@@ -55,7 +55,7 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
     ): Reduction<MafiaState, MafiaEvent> = when (action) {
         // Setup
         is MafiaAction.ApplySettings -> applySettings(state, action)
-        MafiaAction.StartGame -> startGame(state, ctx)
+        MafiaAction.StartGame -> startGame(state)
         MafiaAction.AdvanceFromRoleAssignment -> advanceFromRoleAssignment(state)
 
         // Acks and self-actor submissions
@@ -103,10 +103,7 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
         )
     }
 
-    private fun startGame(
-        state: MafiaState,
-        ctx: ReducerContext,
-    ): Reduction<MafiaState, MafiaEvent> {
+    private fun startGame(state: MafiaState): Reduction<MafiaState, MafiaEvent> {
         if (state.phase != MafiaPhase.Setup) return Reduction(state)
         if (state.public.droppedPlayers.isNotEmpty()) return Reduction(state)
         val playerCount = state.players.size
@@ -386,7 +383,7 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
             // snapshot could diverge. See PROBLEMS_PARLOR.md → mafia-001.
             random = RandomSource.seeded(
                 state.hostOnly.randomSeed xor
-                    (night.day.toLong() shl 16) xor
+                    (night.day.toLong() shl DAY_SEED_SHIFT_BITS) xor
                     night.mafiaCoordinationRound.toLong(),
             ),
         )
@@ -485,6 +482,8 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
         }
         return Reduction(newState, events)
     }
+
+    private const val DAY_SEED_SHIFT_BITS = 16
 
     /**
      * Open the Mafia-only coordination revote. The previous round's tally is

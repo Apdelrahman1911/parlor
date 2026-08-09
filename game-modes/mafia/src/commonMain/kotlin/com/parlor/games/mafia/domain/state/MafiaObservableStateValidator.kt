@@ -171,6 +171,7 @@ internal object MafiaObservableStateValidator {
         }
     }
 
+    @Suppress("CyclomaticComplexMethod") // Exhaustive phase-to-shape state-machine validation.
     private fun validatePhase(state: MafiaState) {
         val public = state.public
 

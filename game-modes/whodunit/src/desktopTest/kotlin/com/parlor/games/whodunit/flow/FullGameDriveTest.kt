@@ -188,7 +188,7 @@ class FullGameDriveTest {
         assertThat(phaseOf(session)).isInstanceOf(WhodunitPhase.Round::class)
 
         // Three rounds for a 4-player Classic game → FinalVote
-        for (roundIndex in 1..3) {
+        repeat(3) {
             session.submit(WhodunitAction.RevealNextClue)
             session.submit(WhodunitAction.StartDiscussionTimer(180))
             session.submit(WhodunitAction.AdvanceFromDiscussion)
@@ -235,7 +235,7 @@ class FullGameDriveTest {
         session.ackBriefingForAll(players)
         for (i in 1..4) session.submit(WhodunitAction.AdvanceBriefingCard(i))
         session.revealRolesAndAdvance(players)
-        for (roundIndex in 1..3) {
+        repeat(3) {
             session.submit(WhodunitAction.RevealNextClue)
             session.submit(WhodunitAction.StartDiscussionTimer(180))
             session.submit(WhodunitAction.AdvanceFromDiscussion)
@@ -370,7 +370,7 @@ class FullGameDriveTest {
         session.ackBriefingForAll(players)
         for (i in 1..4) session.submit(WhodunitAction.AdvanceBriefingCard(i))
         session.revealRolesAndAdvance(players)
-        for (roundIndex in 1..3) {
+        repeat(3) {
             session.submit(WhodunitAction.RevealNextClue)
             session.submit(WhodunitAction.StartDiscussionTimer(180))
             session.submit(WhodunitAction.AdvanceFromDiscussion)

@@ -85,6 +85,7 @@ import org.koin.compose.koinInject
  * once the host's acknowledged start transaction commits, it dispatches to
  * [MafiaMultiDevicePeerFlow] instead of the Whodunit peer flow.
  */
+@Suppress("CyclomaticComplexMethod") // Exhaustive retained owner/handshake state rendering.
 @Composable
 fun MafiaPeerLobbyFlow(
     transport: RoomTransport,

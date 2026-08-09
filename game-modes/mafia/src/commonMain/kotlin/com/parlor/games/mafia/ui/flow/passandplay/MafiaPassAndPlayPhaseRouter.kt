@@ -47,7 +47,6 @@ import com.parlor.games.mafia.ui.screens.reveal.roleDisplayName
 import com.parlor.games.mafia.ui.screens.setup.MafiaSetupScreen
 import com.parlor.games.mafia.ui.screens.vote.VoteAnnouncementScreen
 import com.parlor.games.mafia.ui.screens.vote.VoteCastScreen
-import com.parlor.session.PlayMode
 import com.parlor.session.SessionController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -68,7 +67,6 @@ import org.jetbrains.compose.resources.stringResource
  */
 @Composable
 internal fun MafiaPassAndPlayPhaseRouter(
-    playMode: PlayMode,
     state: MafiaState,
     session: SessionController<MafiaState, MafiaAction, MafiaEvent>,
     scope: CoroutineScope,

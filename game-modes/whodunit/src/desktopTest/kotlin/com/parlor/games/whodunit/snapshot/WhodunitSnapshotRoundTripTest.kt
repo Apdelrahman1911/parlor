@@ -213,7 +213,7 @@ class WhodunitSnapshotRoundTripTest {
         session.ackBriefingForAll(players)
         for (i in 1..4) session.submit(WhodunitAction.AdvanceBriefingCard(i))
         session.revealRolesAndAdvance(players)
-        for (roundIndex in 1..3) {
+        repeat(3) {
             session.submit(WhodunitAction.RevealNextClue)
             session.submit(WhodunitAction.StartDiscussionTimer(180))
             session.submit(WhodunitAction.AdvanceFromDiscussion)

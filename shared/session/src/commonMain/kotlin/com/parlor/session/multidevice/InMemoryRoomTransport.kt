@@ -157,7 +157,6 @@ class InMemoryPeerRoom(
 /** Stub transport — only useful for in-process tests. */
 class InMemoryRoomTransport(
     private val bus: InMemoryRoomBus,
-    private val hostPlayerId: PlayerId,
 ) : RoomTransport {
 
     override val capability = TransportCapability(

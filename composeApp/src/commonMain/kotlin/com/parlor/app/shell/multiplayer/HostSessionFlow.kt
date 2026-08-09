@@ -95,12 +95,15 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.core.qualifier.named
 
+private const val LOADING_FLAME_SIZE_DP: Float = 72f
+
 /**
  * End-to-end host flow: open a room, show the lobby, and once the host taps
  * **Start**, hand off to [WhodunitMultiplayerHostFlow] which announces the
  * session and renders the game. The process-scoped owner retains and closes
  * the [LocalRoom]; this composable is only a reattachable UI client.
  */
+@Suppress("LongMethod") // Exhaustive typed owner/content-state rendering.
 @Composable
 fun HostSessionFlow(
     transport: RoomTransport,
@@ -293,6 +296,7 @@ fun HostSessionFlow(
     }
 }
 
+@Suppress("LongMethod") // Declarative lobby layout covers every admission state and action.
 @Composable
 private fun HostLobbyContent(
     room: LocalRoom,
@@ -489,7 +493,7 @@ private fun HostLoadingState(
             ),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            CandleFlame(size = androidx.compose.ui.unit.Dp(72f))
+            CandleFlame(size = androidx.compose.ui.unit.Dp(LOADING_FLAME_SIZE_DP))
             Text(
                 text = stringResource(Res.string.host_starting),
                 style = ParlorTheme.typography.displayMedium,

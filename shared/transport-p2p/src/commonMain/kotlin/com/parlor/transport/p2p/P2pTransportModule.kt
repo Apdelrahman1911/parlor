@@ -17,4 +17,9 @@ expect val p2pTransportModule: Module
 const val P2P_APP_ID: String = "com.parlor.app"
 
 internal fun randomDeviceTag(): String =
-    (1..6).map { kotlin.random.Random.nextInt(36).toString(36) }.joinToString("")
+    List(DEVICE_TAG_LENGTH) {
+        kotlin.random.Random.nextInt(DEVICE_TAG_RADIX).toString(DEVICE_TAG_RADIX)
+    }.joinToString("")
+
+private const val DEVICE_TAG_LENGTH: Int = 6
+private const val DEVICE_TAG_RADIX: Int = 36

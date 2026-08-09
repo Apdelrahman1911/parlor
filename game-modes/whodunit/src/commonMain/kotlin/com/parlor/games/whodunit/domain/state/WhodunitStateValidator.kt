@@ -4,7 +4,6 @@ import com.parlor.content.validation.ValidatedCase
 import com.parlor.core.ids.CharacterId
 import com.parlor.core.ids.ClueId
 import com.parlor.games.whodunit.WhodunitIds
-import com.parlor.games.whodunit.content.Clue
 import com.parlor.games.whodunit.content.WhodunitCase
 import com.parlor.games.whodunit.domain.event.KillerWinCause
 import com.parlor.games.whodunit.domain.event.Verdict
@@ -503,6 +502,7 @@ internal object WhodunitStateValidator {
      * a collection of individually valid values can still describe a phase no
      * reducer transition can produce, which would strand the restored UI.
      */
+    @Suppress("CyclomaticComplexMethod") // Exhaustive phase-to-shape state-machine validation.
     private fun validatePhaseShape(state: WhodunitState, maximumRounds: Int) {
         val public = state.public
         val clueCount = public.revealedClues.size
@@ -882,12 +882,4 @@ internal object WhodunitStateValidator {
     private const val MAX_REASON_LENGTH = 128
     private const val BRIEFING_CARD_COUNT = 4
     private const val EARLY_END_REASON = "game-ended-early"
-}
-
-private fun WhodunitCase.allClues(): List<Clue> = buildList {
-    addAll(cluePools.publicUniversal)
-    cluePools.killerPointing.values.forEach(::addAll)
-    cluePools.redHerring.values.forEach(::addAll)
-    cluePools.contradiction.values.forEach(::addAll)
-    cluePools.finalStrong.values.forEach(::addAll)
 }

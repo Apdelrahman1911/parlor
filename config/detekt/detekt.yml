@@ -1,0 +1,149 @@
+build:
+  maxIssues: 0
+  excludeCorrectable: false
+
+config:
+  validation: true
+  warningsAsErrors: true
+  checkExhaustiveness: false
+
+# These thresholds keep correctness-oriented findings actionable without
+# treating declarative Compose trees, table-like rule data, or descriptive test
+# names as defects. No baseline is used: every finding produced by this policy
+# must be fixed or narrowly justified in source.
+complexity:
+  ComplexCondition:
+    threshold: 6
+  CyclomaticComplexMethod:
+    threshold: 25
+    ignoreSimpleWhenEntries: true
+    ignoreNestingFunctions: true
+  LargeClass:
+    threshold: 1200
+    excludes:
+      - '**/commonTest/**'
+      - '**/desktopTest/**'
+      - '**/androidUnitTest/**'
+      - '**/iosTest/**'
+  LongMethod:
+    threshold: 120
+    excludes:
+      - '**/commonTest/**'
+      - '**/desktopTest/**'
+      - '**/androidUnitTest/**'
+      - '**/iosTest/**'
+      - '**/ui/**'
+  LongParameterList:
+    functionThreshold: 10
+    constructorThreshold: 10
+    ignoreDefaultParameters: true
+    ignoreDataClasses: true
+    excludes:
+      - '**/commonTest/**'
+      - '**/desktopTest/**'
+      - '**/androidUnitTest/**'
+      - '**/iosTest/**'
+      - '**/ui/**'
+  NestedBlockDepth:
+    threshold: 5
+    excludes:
+      - '**/commonTest/**'
+      - '**/desktopTest/**'
+      - '**/androidUnitTest/**'
+      - '**/iosTest/**'
+  TooManyFunctions:
+    thresholdInFiles: 30
+    thresholdInClasses: 60
+    thresholdInInterfaces: 30
+    thresholdInObjects: 60
+    ignorePrivate: true
+    ignoreOverridden: true
+    excludes:
+      - '**/commonTest/**'
+      - '**/desktopTest/**'
+      - '**/androidUnitTest/**'
+      - '**/iosTest/**'
+
+empty-blocks:
+  EmptyFunctionBlock:
+    ignoreOverridden: true
+
+exceptions:
+  # Common KMP boundaries must translate arbitrary platform, codec, storage,
+  # and transport exceptions into typed domain failures. Specific cancellation
+  # catches and propagation tests enforce the structured-concurrency contract;
+  # exception-class enumeration is neither portable nor safer here.
+  TooGenericExceptionCaught:
+    active: false
+naming:
+  FunctionNaming:
+    # Compose functions are intentionally PascalCase. Lowercase production
+    # functions remain conventional; underscores remain confined to tests.
+    functionPattern: '[a-zA-Z][a-zA-Z0-9]*'
+    excludes:
+      - '**/commonTest/**'
+      - '**/desktopTest/**'
+      - '**/androidUnitTest/**'
+      - '**/iosTest/**'
+  MatchingDeclarationName:
+    # KMP actual files and cohesive UI component files legitimately combine a
+    # primary composable with supporting declarations.
+    active: false
+
+performance:
+  ForEachOnRange:
+    excludes:
+      - '**/commonTest/**'
+      - '**/desktopTest/**'
+      - '**/androidUnitTest/**'
+      - '**/iosTest/**'
+  SpreadOperator:
+    excludes:
+      - '**/commonTest/**'
+      - '**/desktopTest/**'
+      - '**/androidUnitTest/**'
+      - '**/iosTest/**'
+
+style:
+  LoopWithTooManyJumpStatements:
+    maxJumpCount: 2
+    excludes:
+      - '**/commonTest/**'
+      - '**/desktopTest/**'
+      - '**/androidUnitTest/**'
+      - '**/iosTest/**'
+  MagicNumber:
+    excludes:
+      - '**/commonTest/**'
+      - '**/desktopTest/**'
+      - '**/androidUnitTest/**'
+      - '**/iosTest/**'
+      - '**/ui/**'
+      - '**/designsystem/**'
+    ignorePropertyDeclaration: true
+    ignoreLocalVariableDeclaration: false
+    ignoreAnnotation: true
+    ignoreEnums: true
+    ignoreRanges: true
+  MaxLineLength:
+    maxLineLength: 140
+    excludeCommentStatements: true
+    excludes:
+      - '**/commonTest/**'
+      - '**/desktopTest/**'
+      - '**/androidUnitTest/**'
+      - '**/iosTest/**'
+  ReturnCount:
+    # Fail-fast validators and protocol parsers are clearer with explicit early
+    # returns; correctness is enforced by their state-machine/negative tests.
+    active: false
+  ThrowsCount:
+    # Security/storage functions deliberately fail at each independently
+    # checked invariant. Limiting explicit throws would merge failure paths
+    # without improving their semantics.
+    active: false
+  UseCheckOrError:
+    # Explicit IllegalStateException construction preserves domain-specific
+    # causes/messages at platform storage boundaries and in fault-injection
+    # fixtures. This shorthand preference is not a correctness gate.
+    active: false

@@ -425,7 +425,12 @@ private fun NightSegment(
         return
     }
 
-    val targets = buildTargets(state, selfPlayerId = self.id, role = priv.role, settings = state.public.settings, coordinationRound = phase.mafiaCoordinationRound)
+    val targets = buildTargets(
+        state = state,
+        selfPlayerId = self.id,
+        role = priv.role,
+        settings = state.public.settings,
+    )
     when (priv.role) {
         Role.Mafia -> MafiaKillVoteScreen(
             voterName = self.displayName,
@@ -658,7 +663,6 @@ private fun buildTargets(
     selfPlayerId: PlayerId,
     role: Role,
     settings: com.parlor.games.mafia.domain.settings.MafiaSettings,
-    coordinationRound: Int,
 ): List<PickableTarget> {
     val alive = state.public.roster.filter {
         it.alive && it.playerId !in state.public.droppedPlayers

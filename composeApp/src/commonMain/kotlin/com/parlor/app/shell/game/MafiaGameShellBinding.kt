@@ -79,6 +79,7 @@ private enum class MafiaShellScreen {
     ResumePeer,
 }
 
+@Suppress("LongMethod") // Exhaustive declarative rendering of the shell's typed screen state.
 @Composable
 private fun MafiaShellContent(
     launch: GameShellLaunch,

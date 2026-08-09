@@ -89,10 +89,12 @@ class MafiaHostRoomBridge(
         requireStartHandshake = requireStartHandshake,
     )
 
-    private val peerEventsJob = if (reconcileRoomTopology) {
-        bridgeScope.launch { room.members.collect(::reconcileMembers) }
-    } else {
-        bridgeScope.launch { room.peerEvents.collect(::handlePeerEvent) }
+    init {
+        if (reconcileRoomTopology) {
+            bridgeScope.launch { room.members.collect(::reconcileMembers) }
+        } else {
+            bridgeScope.launch { room.peerEvents.collect(::handlePeerEvent) }
+        }
     }
 
     suspend fun announceStart(caseId: String, modeId: String): Result<Unit, com.parlor.networking.room.NetError> =

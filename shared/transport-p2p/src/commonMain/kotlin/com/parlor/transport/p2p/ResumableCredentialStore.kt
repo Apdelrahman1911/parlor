@@ -324,8 +324,9 @@ internal class ResumableCredentialStore(
                     .requireValid()
                 Result.Success(decoded)
             }
-        } catch (failure: Exception) {
-            if (failure is CancellationException) throw failure
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (_: Exception) {
             Result.Failure(CredentialStoreError.Corrupted)
         } finally {
             bytes.fill(0)
@@ -337,8 +338,9 @@ internal class ResumableCredentialStore(
     ): Result<Unit, CredentialStoreError> {
         val encoded = try {
             json.encodeToString(record.requireValid()).encodeToByteArray()
-        } catch (failure: Exception) {
-            if (failure is CancellationException) throw failure
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (_: Exception) {
             return Result.Failure(CredentialStoreError.Corrupted)
         }
         return try {

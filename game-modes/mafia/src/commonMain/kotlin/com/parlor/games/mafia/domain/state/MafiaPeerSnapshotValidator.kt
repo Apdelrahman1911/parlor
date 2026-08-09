@@ -16,6 +16,7 @@ internal object MafiaPeerSnapshotValidator {
         false
     }
 
+    @Suppress("LongMethod", "CyclomaticComplexMethod") // Security boundary: every independent projection invariant fails closed here.
     private fun requireValid(
         publicState: MafiaState,
         ownPrivate: MafiaPrivate?,
@@ -158,7 +159,7 @@ internal object MafiaPeerSnapshotValidator {
             publicState.public.roster.single { it.playerId == selfPlayerId }.alive &&
             (publicState.phase == MafiaPhase.RoleAssignment || publicState.phase is MafiaPhase.Night)
         ) {
-            throw IllegalArgumentException("Living Mafia peer is missing coordination state")
+            require(false) { "Living Mafia peer is missing coordination state" }
         }
 
         if (publicState.phase == MafiaPhase.PostGame) {

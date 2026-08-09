@@ -8,12 +8,11 @@ import com.parlor.core.logging.SafeForLogs
  * values to prevent dossier or host-only data from leaking into payloads.
  *
  * Discipline: every call site is responsible for wrapping any string in
- * [SafeForLogs]. The wrapper carries no validation — it is a marker. The
- * authoritative no-leak guarantee is enforced by:
- *  1. A custom detekt rule that flags `Telemetry.event(...)` calls that pass a
- *     raw `String` argument for fields known to carry private types.
- *  2. The architecture test in `:shared:engine` ensuring private types stay
- *     out of any package that imports `Telemetry`.
+ * [SafeForLogs]. The wrapper is a deliberate-review marker, not a validator.
+ * Concrete telemetry remains disabled through [NoOpTelemetry]; introducing a
+ * provider requires a separate privacy review of every event and attribute at
+ * its call site. Do not treat construction of [SafeForLogs] as proof that a
+ * value is anonymous or suitable for collection.
  */
 interface Telemetry {
     fun event(name: String, attributes: Map<String, SafeForLogs> = emptyMap())

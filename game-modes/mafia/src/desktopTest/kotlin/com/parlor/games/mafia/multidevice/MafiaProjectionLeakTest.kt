@@ -55,8 +55,6 @@ class MafiaProjectionLeakTest {
     private val assignment = RoleAssignment.assign(players, counts, RandomSource.seeded(11L))
     private val mafiaIds: Set<PlayerId> = assignment.roles.filterValues { it == Role.Mafia }.keys
     private val townIds: Set<PlayerId> = assignment.roles.filterValues { it.team == Team.Town }.keys
-    private val detectiveId: PlayerId = assignment.roles.entries.first { it.value == Role.Detective }.key
-
     private val coordSnapshot = MafiaCoordinationSnapshot(
         round = 1,
         submissions = mafiaIds.associateWith { players[6].id },

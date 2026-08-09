@@ -22,7 +22,6 @@ import com.parlor.games.mafia.MafiaIds
 import com.parlor.games.mafia.domain.action.MafiaAction
 import com.parlor.games.mafia.domain.phase.MafiaPhase
 import com.parlor.games.mafia.domain.projection.MafiaProjectionPolicy
-import com.parlor.games.mafia.domain.settings.MafiaKillTie
 import com.parlor.games.mafia.domain.settings.MafiaRoleCounts
 import com.parlor.games.mafia.domain.settings.MafiaSettings
 import com.parlor.games.mafia.domain.settings.MafiaSettingsPresets
@@ -314,23 +313,12 @@ class MafiaReducerTest {
     }
 
     @Test
-    fun mafia_revote_falls_back_to_no_kill_when_round_two_still_tied() {
+    fun mafia_revote_uses_a_deterministic_tied_target_when_round_two_is_still_tied() {
         var state = MafiaReducer.reduce(initialState(7), MafiaAction.StartGame, ctx()).newState
         for (p in state.players) {
             state = MafiaReducer.reduce(state, MafiaAction.AcknowledgeRoleViewed(p.id), ctx()).newState
         }
-        // Override settings to use NO_KILL for round 2 tie. Settings must still
-        // pass validation, so we mutate just the tie behavior.
-        val withNoKill = state.public.settings.copy(mafiaKillTieBehavior = MafiaKillTie.REVOTE)
-        // First, we have to drive forward — `state.public.settings` was already
-        // set by createInitialState. We can re-apply to validate the path:
         state = MafiaReducer.reduce(state, MafiaAction.AdvanceFromRoleAssignment, ctx()).newState
-        // We can't ApplySettings outside Setup; use the REVOTE default. The
-        // REVOTE → round-2-tied → RANDOM_TIED behavior is what the helper exercises.
-        // This test thus just confirms: tied round 1 → round 2 opens, tied round 2 →
-        // a kill is chosen randomly OR no-kill per setting; the preset uses REVOTE
-        // which on second tie picks randomly. Validate we don't crash and produce
-        // a deterministic next state.
         val mafiaIds = state.privatePerPlayer.filterValues { it.role == Role.Mafia }.keys.toList()
         if (mafiaIds.size < 2) return
 
@@ -343,13 +331,15 @@ class MafiaReducerTest {
         // Round 2 still tied:
         state = MafiaReducer.reduce(state, MafiaAction.SubmitMafiaKillVote(mafiaIds[0], town[0]), ctx()).newState
         state = MafiaReducer.reduce(state, MafiaAction.SubmitMafiaKillVote(mafiaIds[1], town[1]), ctx()).newState
-        state = MafiaReducer.reduce(state, MafiaAction.ResolveNight, ctx()).newState
+        val beforeResolution = state
+        val firstResolution = MafiaReducer.reduce(beforeResolution, MafiaAction.ResolveNight, ctx()).newState
+        val repeatedResolution = MafiaReducer.reduce(beforeResolution, MafiaAction.ResolveNight, ctx()).newState
 
-        // After round-2 resolve we leave Night for NightAnnouncement (or PostGame).
-        val nextPhase = state.phase
-        val nightAnn = nextPhase is MafiaPhase.NightAnnouncement
-        val postGame = nextPhase == MafiaPhase.PostGame
-        assertThat(nightAnn || postGame).isTrue()
+        assertThat(firstResolution.phase).isInstanceOf<MafiaPhase.NightAnnouncement>()
+        assertThat(repeatedResolution.phase).isEqualTo(firstResolution.phase)
+        val selectedTarget = firstResolution.public.lastNight?.killedPlayerId
+        assertThat(selectedTarget == town[0] || selectedTarget == town[1]).isTrue()
+        assertThat(repeatedResolution.public.lastNight).isEqualTo(firstResolution.public.lastNight)
     }
 
     @Test

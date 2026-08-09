@@ -175,8 +175,9 @@ class AndroidSnapshotFileSystem(private val context: Context) : SnapshotFileSyst
             }
         } catch (cancelled: CancellationException) {
             throw cancelled
+        } catch (failure: SnapshotProtectionException) {
+            throw failure
         } catch (failure: Exception) {
-            if (failure is SnapshotProtectionException) throw failure
             throw SnapshotProtectionException(cause = failure)
         }
     }
@@ -185,7 +186,7 @@ class AndroidSnapshotFileSystem(private val context: Context) : SnapshotFileSyst
         try {
             var offset = MAGIC.size
             val version = protectedBytes[offset++]
-            val ivSize = protectedBytes[offset++].toInt() and 0xff
+            val ivSize = protectedBytes[offset++].toInt() and UNSIGNED_BYTE_MASK
             if (
                 version != FORMAT_VERSION ||
                 ivSize != GCM_IV_BYTES ||
@@ -204,8 +205,9 @@ class AndroidSnapshotFileSystem(private val context: Context) : SnapshotFileSyst
             throw SnapshotProtectionException(cause = failure)
         } catch (cancelled: CancellationException) {
             throw cancelled
+        } catch (failure: SnapshotProtectionException) {
+            throw failure
         } catch (failure: Exception) {
-            if (failure is SnapshotProtectionException) throw failure
             throw SnapshotProtectionException(cause = failure)
         }
     }
@@ -222,7 +224,7 @@ class AndroidSnapshotFileSystem(private val context: Context) : SnapshotFileSyst
             )
                 .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
                 .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
-                .setKeySize(256)
+                .setKeySize(AES_KEY_BITS)
                 .setRandomizedEncryptionRequired(true)
                 .build(),
         )
@@ -265,6 +267,8 @@ class AndroidSnapshotFileSystem(private val context: Context) : SnapshotFileSyst
         const val ANDROID_KEY_STORE = "AndroidKeyStore"
         const val KEY_ALIAS = "com.parlor.app.snapshot.aes-gcm.v1"
         const val TRANSFORMATION = "AES/GCM/NoPadding"
+        const val AES_KEY_BITS = 256
+        const val UNSIGNED_BYTE_MASK = 0xff
         const val GCM_IV_BYTES = 12
         const val GCM_TAG_BYTES = 16
         const val GCM_TAG_BITS = GCM_TAG_BYTES * 8

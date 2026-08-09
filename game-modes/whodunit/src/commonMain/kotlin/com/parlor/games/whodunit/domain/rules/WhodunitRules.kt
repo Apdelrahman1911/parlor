@@ -75,8 +75,15 @@ object WhodunitRules {
      * ending when the killer reaches the final two.
      */
     fun maximumRoundCount(modeId: ModeId, initialPlayerCount: Int): Int? = when (modeId) {
-        WhodunitIds.ClassicVoteModeId -> if (initialPlayerCount <= 4) 3 else 4
-        WhodunitIds.EliminationModeId -> (initialPlayerCount - 2).takeIf { it > 0 }
+        WhodunitIds.ClassicVoteModeId ->
+            if (initialPlayerCount <= SHORT_CLASSIC_MAX_PLAYERS) SHORT_CLASSIC_ROUNDS else LONG_CLASSIC_ROUNDS
+        WhodunitIds.EliminationModeId ->
+            (initialPlayerCount - FINAL_TWO_PLAYERS).takeIf { it > 0 }
         else -> null
     }
+
+    private const val SHORT_CLASSIC_MAX_PLAYERS = 4
+    private const val SHORT_CLASSIC_ROUNDS = 3
+    private const val LONG_CLASSIC_ROUNDS = 4
+    private const val FINAL_TWO_PLAYERS = 2
 }

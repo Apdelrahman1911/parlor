@@ -88,6 +88,7 @@ private enum class WhodunitShellScreen {
     ResumePeer,
 }
 
+@Suppress("LongMethod") // Exhaustive declarative rendering of the shell's typed screen state.
 @Composable
 private fun WhodunitShellContent(
     launch: GameShellLaunch,

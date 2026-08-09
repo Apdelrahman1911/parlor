@@ -27,7 +27,7 @@ class DefaultCaseValidator(
         // 1. Parseable JSON.
         val envelope: CaseEnvelope = try {
             json.decodeFromString(CaseEnvelope.serializer(), rawJson)
-        } catch (e: SerializationException) {
+        } catch (_: SerializationException) {
             return Result.Failure(ValidationError.MalformedJson)
         } catch (e: IllegalArgumentException) {
             return Result.Failure(ValidationError.MalformedField("envelope", e.message ?: "invalid"))

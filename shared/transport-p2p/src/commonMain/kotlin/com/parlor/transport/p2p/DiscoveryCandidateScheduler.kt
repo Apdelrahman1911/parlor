@@ -179,9 +179,9 @@ internal class DiscoveryCandidateScheduler(
     }
 
     private fun backoffAfterTransientFailure(attempt: Int): Long = when (attempt) {
-        1 -> 500L
-        2 -> 1_000L
-        3 -> 2_000L
+        FIRST_TRANSIENT_ATTEMPT -> FIRST_TRANSIENT_BACKOFF_MS
+        SECOND_TRANSIENT_ATTEMPT -> SECOND_TRANSIENT_BACKOFF_MS
+        THIRD_TRANSIENT_ATTEMPT -> THIRD_TRANSIENT_BACKOFF_MS
         else -> RECOVERY_PROBE_COOLDOWN_MS
     }
 
@@ -193,6 +193,12 @@ internal class DiscoveryCandidateScheduler(
         private const val RECOVERY_PROBE_COOLDOWN_MS: Long = 5_000L
         private const val WRONG_ROOM_REPROBE_COOLDOWN_MS: Long = 5_000L
         private const val INCOMPATIBLE_REPROBE_COOLDOWN_MS: Long = 10_000L
+        private const val FIRST_TRANSIENT_ATTEMPT: Int = 1
+        private const val SECOND_TRANSIENT_ATTEMPT: Int = 2
+        private const val THIRD_TRANSIENT_ATTEMPT: Int = 3
+        private const val FIRST_TRANSIENT_BACKOFF_MS: Long = 500L
+        private const val SECOND_TRANSIENT_BACKOFF_MS: Long = 1_000L
+        private const val THIRD_TRANSIENT_BACKOFF_MS: Long = 2_000L
     }
 }
 

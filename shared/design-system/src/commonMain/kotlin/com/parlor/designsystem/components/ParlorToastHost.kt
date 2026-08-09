@@ -84,7 +84,7 @@ class ParlorToastState(
     }
 
     /** Read so the host can compute the dismiss delay. */
-    internal fun durationFor(toast: ParlorToast): Long = defaultDurationMs
+    internal fun duration(): Long = defaultDurationMs
 
     private companion object {
         /** A flood cannot retain an unbounded amount of localized UI text. */
@@ -134,7 +134,7 @@ fun ParlorToastHost(
             // stranded forever (see PROBLEMS_PARLOR.md → ds-01).
             key(toast.id) {
                 LaunchedEffect(toast.id) {
-                    delay(state.durationFor(toast))
+                    delay(state.duration())
                     state.dismiss(toast.id)
                 }
                 AnimatedVisibility(

@@ -163,7 +163,7 @@ class PartyPlayPassAndPlayParityTest {
             driver(WhodunitAction.CompleteCharacterReveal(player.id, assignmentGeneration))
         }
         driver(WhodunitAction.AdvanceFromCharacterReveal)
-        for (round in 1..3) {
+        repeat(3) {
             driver(WhodunitAction.RevealNextClue)
             driver(WhodunitAction.StartDiscussionTimer(180))
             driver(WhodunitAction.AdvanceFromDiscussion)

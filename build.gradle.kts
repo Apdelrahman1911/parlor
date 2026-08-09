@@ -2,6 +2,7 @@
 // shared conventions are extracted into precompiled plugins under :build-logic:convention.
 
 plugins {
+    id("parlor.detekt") apply false
     // Declare here only — apply false. Modules opt in via convention plugins or directly.
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.android.library) apply false
@@ -33,6 +34,11 @@ val productionAndroidSigningCheck = tasks.register("productionAndroidSigningChec
     dependsOn(":composeApp:verifyStoreRelease")
 }
 
+val staticAnalysis = tasks.register("staticAnalysis") {
+    group = "verification"
+    description = "Runs Detekt over every Kotlin source set in every production subproject."
+}
+
 tasks.register("productionAppleCheck") {
     group = "verification"
     description = "Links release frameworks for physical, Apple-silicon simulator, and Intel simulator iOS targets."
@@ -46,10 +52,23 @@ tasks.register("productionAppleCheck") {
 tasks.register("productionCheck") {
     group = "verification"
     description = "Runs host-independent release gates; run productionAppleCheck on macOS separately."
-    dependsOn(productionDesktopCheck, productionAndroidCheck, ":composeApp:verifyGameShellDispatch")
+    dependsOn(
+        productionDesktopCheck,
+        productionAndroidCheck,
+        staticAnalysis,
+        ":composeApp:verifyGameShellDispatch",
+    )
 }
 
 subprojects {
+    // Every included application/library module is production-relevant. Apply
+    // static analysis here instead of relying on each module to opt in; a new
+    // module therefore receives the gate automatically.
+    pluginManager.apply("parlor.detekt")
+    rootProject.tasks.named("staticAnalysis").configure {
+        dependsOn(tasks.named("detekt"))
+    }
+
     pluginManager.withPlugin("org.jetbrains.kotlin.multiplatform") {
         rootProject.tasks.named("productionDesktopCheck").configure {
             dependsOn(tasks.named("desktopTest"))

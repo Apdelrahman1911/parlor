@@ -185,9 +185,6 @@ class WhodunitPeerRoomBridge(
 
     private suspend fun handleConnectionEvent(event: PeerEvent) = connectionTracker.handle(event)
 
-    /** Compatibility test hook: command retry now lives in the coordinator. */
-    internal fun queuedActionForTest(): WhodunitAction? = null
-
     companion object {
         const val HOST_REJOIN_GRACE_MS: Long = 120_000L
     }

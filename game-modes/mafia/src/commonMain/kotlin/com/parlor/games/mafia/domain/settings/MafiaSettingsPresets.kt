@@ -9,10 +9,10 @@ object MafiaSettingsPresets {
 
     fun forPlayerCount(playerCount: Int): MafiaSettings {
         val counts = when {
-            playerCount <= 5 -> MafiaRoleCounts(mafia = 1, detective = 1, doctor = 0)
-            playerCount == 6 -> MafiaRoleCounts(mafia = 1, detective = 1, doctor = 1)
+            playerCount <= SMALL_GAME_MAX_PLAYERS -> MafiaRoleCounts(mafia = 1, detective = 1, doctor = 0)
+            playerCount == DOCTOR_ENTRY_PLAYER_COUNT -> MafiaRoleCounts(mafia = 1, detective = 1, doctor = 1)
             playerCount in 7..8 -> MafiaRoleCounts(mafia = 2, detective = 1, doctor = 1)
-            playerCount == 9 -> MafiaRoleCounts(mafia = 2, detective = 1, doctor = 1)
+            playerCount == NINE_PLAYER_GAME -> MafiaRoleCounts(mafia = 2, detective = 1, doctor = 1)
             playerCount in 10..12 -> MafiaRoleCounts(mafia = 3, detective = 1, doctor = 1)
             else -> MafiaRoleCounts(mafia = (playerCount / 4).coerceAtLeast(1), detective = 1, doctor = 1)
         }
@@ -32,4 +32,8 @@ object MafiaSettingsPresets {
             voteDurationSeconds = null,
         )
     }
+
+    private const val SMALL_GAME_MAX_PLAYERS = 5
+    private const val DOCTOR_ENTRY_PLAYER_COUNT = 6
+    private const val NINE_PLAYER_GAME = 9
 }

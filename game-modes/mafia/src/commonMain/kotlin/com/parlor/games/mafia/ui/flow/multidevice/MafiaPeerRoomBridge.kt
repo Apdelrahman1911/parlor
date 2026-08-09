@@ -165,8 +165,6 @@ class MafiaPeerRoomBridge(
 
     private suspend fun handleConnectionEvent(event: PeerEvent) = connectionTracker.handle(event)
 
-    internal fun queuedActionForTest(): MafiaAction? = null
-
     companion object {
         const val HOST_REJOIN_GRACE_MS: Long = 120_000L
     }

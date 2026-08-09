@@ -92,43 +92,38 @@ class WhodunitHostRoomBridge(
         requireStartHandshake = requireStartHandshake,
     )
 
-    private val peerEventsJob = if (reconcileRoomTopology) {
-        // Production room membership is a replaying StateFlow. Using it as the
-        // topology authority closes the freeze-roster -> bridge-subscription
-        // race: the first collection always reconciles the current connection
-        // state, even if PeerLeft happened before this bridge existed.
-        bridgeScope.launch { room.members.collect(::reconcileMembers) }
-    } else {
-        // Deterministic bridge fixtures expose only synthetic PeerEvents.
-        bridgeScope.launch { room.peerEvents.collect(::handlePeerEvent) }
-    }
+    init {
+        if (reconcileRoomTopology) {
+            // Production room membership is a replaying StateFlow. Its first
+            // emission closes the freeze-roster -> subscription race.
+            bridgeScope.launch { room.members.collect(::reconcileMembers) }
+        } else {
+            // Deterministic bridge fixtures expose only synthetic PeerEvents.
+            bridgeScope.launch { room.peerEvents.collect(::handlePeerEvent) }
+        }
 
-    /**
-     * Freezes the canonical game clock for the whole transport interruption.
-     * A lifecycle-owned pause is resumed only after every retained peer has
-     * restored admission and the room is Active again. A pause chosen by a
-     * player before backgrounding remains a player-owned pause and is never
-     * lifted automatically.
-     */
-    private val roomLifecycleJob = bridgeScope.launch {
-        room.lifecycle.collect { lifecycle ->
-            when (lifecycle) {
-                RoomLifecycleState.Active -> {
-                    resumeLifecyclePauseIfPossible()
-                }
-                is RoomLifecycleState.Suspended,
-                is RoomLifecycleState.Resuming -> {
-                    if (!controller.currentState().public.paused) {
-                        val paused = applyLifecycleAction(WhodunitAction.Pause)
-                        if (paused) {
-                            lifecycleMutex.withLock {
-                                if (!terminated) pausedByAppLifecycle = true
+        // Freeze the canonical game clock for the entire transport
+        // interruption. Only a lifecycle-owned pause may resume automatically.
+        bridgeScope.launch {
+            room.lifecycle.collect { lifecycle ->
+                when (lifecycle) {
+                    RoomLifecycleState.Active -> {
+                        resumeLifecyclePauseIfPossible()
+                    }
+                    is RoomLifecycleState.Suspended,
+                    is RoomLifecycleState.Resuming -> {
+                        if (!controller.currentState().public.paused) {
+                            val paused = applyLifecycleAction(WhodunitAction.Pause)
+                            if (paused) {
+                                lifecycleMutex.withLock {
+                                    if (!terminated) pausedByAppLifecycle = true
+                                }
                             }
                         }
                     }
+                    RoomLifecycleState.Expired,
+                    RoomLifecycleState.Closed -> Unit
                 }
-                RoomLifecycleState.Expired,
-                RoomLifecycleState.Closed -> Unit
             }
         }
     }

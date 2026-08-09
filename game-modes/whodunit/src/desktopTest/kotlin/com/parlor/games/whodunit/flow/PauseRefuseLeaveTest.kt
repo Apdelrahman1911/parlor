@@ -188,7 +188,7 @@ class PauseRefuseLeaveTest {
         // 5–6-player games end at round 4. Drive every non-final round through
         // its discussion so we land in FinalVote with the ballot opened.
         val lastRound = if (players.size <= 4) 3 else 4
-        for (roundIndex in 1..lastRound) {
+        repeat(lastRound) {
             session.submit(WhodunitAction.RevealNextClue)
             session.submit(WhodunitAction.StartDiscussionTimer(180))
             session.submit(WhodunitAction.AdvanceFromDiscussion)

@@ -26,7 +26,7 @@ internal object WhodunitCluePolicy {
     ): Clue? {
         val pools = case.cluePools
         val killerId = killerCharacterId.raw
-        val random = RandomSource.seeded(randomSeed xor roundIndex.toLong().shl(8))
+        val random = RandomSource.seeded(randomSeed xor roundIndex.toLong().shl(ROUND_SEED_SHIFT_BITS))
         val lastRound = WhodunitRules.maximumRoundCount(modeId, playerCount)
             ?.let { roundIndex >= it }
             ?: return null
@@ -98,4 +98,6 @@ internal object WhodunitCluePolicy {
                 publicUniversal.filterNot { ClueId(it.id) in drawnClueIds }
         return fallback.takeIf { it.isNotEmpty() }?.let(random::pick)
     }
+
+    private const val ROUND_SEED_SHIFT_BITS = 8
 }

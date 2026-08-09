@@ -91,12 +91,15 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.core.qualifier.named
 
+private const val LOADING_FLAME_SIZE_DP: Float = 72f
+
 /**
  * End-to-end peer flow: join the room, prepare and acknowledge the host's
  * start offer, wait for its authoritative commit, then hand off to
  * [WhodunitMultiplayerPeerFlow]. The process-scoped session owner retains the
  * [LocalRoom] and the one-shot start transaction across UI recreation.
  */
+@Suppress("LongMethod", "CyclomaticComplexMethod") // Exhaustive retained owner/handshake state rendering.
 @Composable
 fun PeerSessionFlow(
     transport: RoomTransport,
@@ -378,7 +381,7 @@ private fun PeerConnectingState(
             ),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            CandleFlame(size = androidx.compose.ui.unit.Dp(72f))
+            CandleFlame(size = androidx.compose.ui.unit.Dp(LOADING_FLAME_SIZE_DP))
             Text(
                 text = if (resuming) {
                     stringResource(Res.string.party_reconnecting_overlay_title)

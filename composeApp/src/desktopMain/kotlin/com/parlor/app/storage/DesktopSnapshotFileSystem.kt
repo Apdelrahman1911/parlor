@@ -115,8 +115,9 @@ class DesktopSnapshotFileSystem(
             }
         } catch (cancelled: CancellationException) {
             throw cancelled
+        } catch (failure: SnapshotProtectionException) {
+            throw failure
         } catch (failure: Exception) {
-            if (failure is SnapshotProtectionException) throw failure
             throw SnapshotProtectionException(cause = failure)
         }
     }
@@ -125,7 +126,7 @@ class DesktopSnapshotFileSystem(
         try {
             var offset = MAGIC.size
             val version = protectedBytes[offset++]
-            val ivSize = protectedBytes[offset++].toInt() and 0xff
+            val ivSize = protectedBytes[offset++].toInt() and UNSIGNED_BYTE_MASK
             if (
                 version != FORMAT_VERSION ||
                 ivSize != GCM_IV_BYTES ||
@@ -144,8 +145,9 @@ class DesktopSnapshotFileSystem(
             throw SnapshotProtectionException(cause = failure)
         } catch (cancelled: CancellationException) {
             throw cancelled
+        } catch (failure: SnapshotProtectionException) {
+            throw failure
         } catch (failure: Exception) {
-            if (failure is SnapshotProtectionException) throw failure
             throw SnapshotProtectionException(cause = failure)
         }
     }
@@ -242,6 +244,7 @@ class DesktopSnapshotFileSystem(
     private companion object {
         const val KEY_FILE_NAME = "snapshot-key-v1.bin"
         const val TRANSFORMATION = "AES/GCM/NoPadding"
+        const val UNSIGNED_BYTE_MASK = 0xff
         const val KEY_BYTES = 32
         const val GCM_IV_BYTES = 12
         const val GCM_TAG_BYTES = 16

@@ -74,11 +74,11 @@ private fun JsonElement.canonicalized(): JsonElement = when (this) {
     else -> this
 }
 
-private fun ByteArray.toLowerHex(): String = buildString(size * 2) {
+private fun ByteArray.toLowerHex(): String = buildString(size * HEX_CHARACTERS_PER_BYTE) {
     for (byte in this@toLowerHex) {
-        val value = byte.toInt() and 0xff
-        append(HEX[value ushr 4])
-        append(HEX[value and 0x0f])
+        val value = byte.toInt() and UNSIGNED_BYTE_MASK
+        append(HEX[value ushr HALF_BYTE_BITS])
+        append(HEX[value and HALF_BYTE_MASK])
     }
 }
 
@@ -88,3 +88,7 @@ private val IDENTITY_JSON = Json {
 }
 private const val HEX = "0123456789abcdef"
 private const val SHA_256_HEX_LENGTH = 64
+private const val HEX_CHARACTERS_PER_BYTE = 2
+private const val UNSIGNED_BYTE_MASK = 0xff
+private const val HALF_BYTE_BITS = 4
+private const val HALF_BYTE_MASK = 0x0f

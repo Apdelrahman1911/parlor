@@ -243,8 +243,9 @@ internal class IosSnapshotFileSystem(
             header + iv + ciphertext + tag
         } catch (cancelled: CancellationException) {
             throw cancelled
+        } catch (failure: SnapshotProtectionException) {
+            throw failure
         } catch (failure: Exception) {
-            if (failure is SnapshotProtectionException) throw failure
             throw SnapshotProtectionException(cause = failure)
         } finally {
             encryptionKey.fill(0)
@@ -257,7 +258,7 @@ internal class IosSnapshotFileSystem(
         try {
             var offset = MAGIC.size
             val version = protectedBytes[offset++]
-            val ivSize = protectedBytes[offset++].toInt() and 0xff
+            val ivSize = protectedBytes[offset++].toInt() and UNSIGNED_BYTE_MASK
             if (
                 version != FORMAT_VERSION ||
                 ivSize != IV_BYTES ||
@@ -297,8 +298,9 @@ internal class IosSnapshotFileSystem(
             }
         } catch (cancelled: CancellationException) {
             throw cancelled
+        } catch (failure: SnapshotProtectionException) {
+            throw failure
         } catch (failure: Exception) {
-            if (failure is SnapshotProtectionException) throw failure
             throw SnapshotProtectionException(cause = failure)
         }
     }
@@ -407,6 +409,7 @@ internal class IosSnapshotFileSystem(
         firstOrNull { !it.toInt().toChar().isWhitespace() } == '{'.code.toByte()
 
     private companion object {
+        const val UNSIGNED_BYTE_MASK = 0xff
         const val AES_KEY_BYTES = 32
         const val AES_BLOCK_BYTES = 16
         const val IV_BYTES = 16

@@ -26,7 +26,6 @@ import com.parlor.designsystem.theme.ParlorTheme
  */
 @Composable
 fun PartyRosterChip(
-    connectedCount: Int,
     awayCount: Int,
     label: String,
     onClick: () -> Unit,

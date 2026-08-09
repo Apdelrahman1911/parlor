@@ -102,7 +102,7 @@ internal class AndroidSecureKeyValueBacking(
             require(MAGIC.indices.all { protectedBytes[it] == MAGIC[it] })
             var offset = MAGIC.size
             require(protectedBytes[offset++] == FORMAT_VERSION)
-            val nonceSize = protectedBytes[offset++].toInt() and 0xff
+            val nonceSize = protectedBytes[offset++].toInt() and UNSIGNED_BYTE_MASK
             require(nonceSize == GCM_NONCE_BYTES)
             require(protectedBytes.size > offset + nonceSize + GCM_TAG_BYTES)
             val nonce = protectedBytes.copyOfRange(offset, offset + nonceSize)
@@ -122,8 +122,9 @@ internal class AndroidSecureKeyValueBacking(
             throw IllegalStateException("Secure credential authentication failed", failure)
         } catch (cancelled: CancellationException) {
             throw cancelled
+        } catch (failure: IllegalStateException) {
+            throw failure
         } catch (failure: Exception) {
-            if (failure is IllegalStateException) throw failure
             throw IllegalStateException("Secure credential record is invalid", failure)
         }
     }
@@ -140,7 +141,7 @@ internal class AndroidSecureKeyValueBacking(
             )
                 .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
                 .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
-                .setKeySize(256)
+                .setKeySize(AES_KEY_BITS)
                 .setRandomizedEncryptionRequired(true)
                 .build(),
         )
@@ -190,6 +191,8 @@ internal class AndroidSecureKeyValueBacking(
         const val ANDROID_KEY_STORE = "AndroidKeyStore"
         const val KEY_ALIAS = "com.parlor.app.secure-credentials.aes-gcm.v1"
         const val TRANSFORMATION = "AES/GCM/NoPadding"
+        const val AES_KEY_BITS = 256
+        const val UNSIGNED_BYTE_MASK = 0xff
         const val GCM_NONCE_BYTES = 12
         const val GCM_TAG_BYTES = 16
         const val GCM_TAG_BITS = GCM_TAG_BYTES * 8

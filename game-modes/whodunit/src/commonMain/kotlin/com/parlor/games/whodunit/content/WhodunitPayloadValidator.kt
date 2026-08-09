@@ -29,6 +29,7 @@ class WhodunitPayloadValidator(
 
     override val gameId: String = WhodunitIds.GameId.raw
 
+    @Suppress("LongMethod", "CyclomaticComplexMethod") // Ordered schema contract; each independent validation returns a typed failure.
     override fun validate(envelope: CaseEnvelope): Result<WhodunitCase, ValidationError> {
         val case: WhodunitCase = try {
             json.decodeFromJsonElement(WhodunitCase.serializer(), envelope.payload)
@@ -252,6 +253,7 @@ class WhodunitPayloadValidator(
         return Result.Success(case)
     }
 
+    @Suppress("LongMethod", "CyclomaticComplexMethod") // Ordered cross-pool/content-playability contract.
     private fun validateCluePools(
         case: WhodunitCase,
         characterIds: Set<String>,
@@ -273,13 +275,13 @@ class WhodunitPayloadValidator(
             }
         }
 
-        if (pools.publicUniversal.isEmpty() || pools.publicUniversal.size > 4) {
+        if (pools.publicUniversal.isEmpty() || pools.publicUniversal.size > MAX_PUBLIC_UNIVERSAL_CLUES) {
             return ValidationError.PayloadInvalid("publicUniversal must have 1..4 entries")
         }
 
         // Every character must have non-empty entries in killerPointing / contradiction / finalStrong.
         characterIds.forEach { id ->
-            if ((pools.killerPointing[id]?.size ?: 0) < 3) {
+            if ((pools.killerPointing[id]?.size ?: 0) < MIN_KILLER_POINTING_CLUES) {
                 return ValidationError.PayloadInvalid(
                     "killerPointing['$id'] must have >= 3 clues",
                 )
@@ -440,5 +442,7 @@ class WhodunitPayloadValidator(
         const val MAX_ROUND_CONFIGS = 8
         const val MAX_ROUNDS = 8
         const val MAX_METADATA_LENGTH = 32 * 1024
+        const val MAX_PUBLIC_UNIVERSAL_CLUES = 4
+        const val MIN_KILLER_POINTING_CLUES = 3
     }
 }

@@ -76,6 +76,8 @@ internal interface AppLifecycleAwareRoom {
     suspend fun appForegrounded(atEpochMillis: Long)
 }
 
+private const val REJOIN_SECRET_HEX_LENGTH: Int = 64
+
 /**
  * Adapts P2pKit (`dev.p2pkit.core.P2pKit`) to Parlor's [RoomTransport].
  *
@@ -93,7 +95,8 @@ internal interface AppLifecycleAwareRoom {
  * path is used so Parlor can enforce a smaller application-frame ceiling than
  * P2pKit's general transfer API.
  */
-class P2pKitRoomTransport private constructor(
+@Suppress("LargeClass") // Cohesive single-owner transport lifecycle; protocol branches are isolated and race-tested.
+class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
     private val appId: AppId,
     private val deviceName: String,
     private val scope: CoroutineScope,
@@ -362,6 +365,7 @@ class P2pKitRoomTransport private constructor(
         return join(JoinConfig(code = code, displayName = displayName))
     }
 
+    @Suppress("LongMethod", "CyclomaticComplexMethod", "LoopWithTooManyJumpStatements")
     override suspend fun join(config: JoinConfig): Result<LocalRoom, NetError> {
         if (config.rejoinToken != null) {
             return Result.Failure(NetError.Unauthorized)
@@ -674,6 +678,7 @@ class P2pKitRoomTransport private constructor(
             }
         }
 
+    @Suppress("LongMethod") // One transactional resume path owns kit cleanup on every exit.
     override suspend fun resumeLastSession(): Result<LocalRoom, NetError> {
         val credential = when (val loaded = credentialStore.loadResumeCandidate()) {
             is Result.Failure -> return Result.Failure(NetError.SecureStorageUnavailable)
@@ -862,6 +867,7 @@ class P2pKitRoomTransport private constructor(
         data class Failed(val error: NetError) : AdmissionOutcome
     }
 
+    @Suppress("LongMethod") // Ordered credential offer/confirm/commit handshake with fail-closed cleanup.
     private suspend fun awaitAdmission(
         session: P2pSession,
         hostPeer: Peer,
@@ -1169,6 +1175,7 @@ class P2pKitRoomTransport private constructor(
         }
     }
 
+    @Suppress("LongMethod") // Ordered credential rotation handshake with rollback at each boundary.
     private suspend fun awaitResume(
         session: P2pSession,
         hostPeer: Peer,
@@ -1305,14 +1312,12 @@ class P2pKitRoomTransport private constructor(
     ): ResumableSessionCredential? {
         val authenticatedFingerprint = session.peerIdentity.fingerprint?.value ?: return null
         val gameFieldsMatch = (gameId == null) == (gameVersion == null)
-        if (
-            playerId != selfPlayerId ||
-            hostPeer.id != session.peer.id ||
-            hostPeer.id.value != hostPeerId ||
-            authenticatedFingerprint != hostFingerprint ||
-            generation != INITIAL_CREDENTIAL_GENERATION ||
-            !gameFieldsMatch
-        ) {
+        val playerMatches = playerId == selfPlayerId
+        val authenticatedHostMatches = hostPeer.id == session.peer.id &&
+            hostPeer.id.value == hostPeerId &&
+            authenticatedFingerprint == hostFingerprint
+        val offerShapeMatches = generation == INITIAL_CREDENTIAL_GENERATION && gameFieldsMatch
+        if (!playerMatches || !authenticatedHostMatches || !offerShapeMatches) {
             return null
         }
         return try {
@@ -1341,17 +1346,16 @@ class P2pKitRoomTransport private constructor(
         current: ResumableSessionCredential,
     ): ResumableSessionCredential? {
         val authenticatedFingerprint = session.peerIdentity.fingerprint?.value ?: return null
-        if (
-            playerId.raw != current.playerId ||
-            hostPeer.id != session.peer.id ||
-            hostPeer.id.value != current.hostPeerId ||
-            hostPeerId != current.hostPeerId ||
-            authenticatedFingerprint != current.hostFingerprint ||
-            hostFingerprint != current.hostFingerprint ||
-            generation <= current.generation ||
-            gameId != current.gameId ||
-            gameVersion != current.gameVersion
-        ) {
+        val playerMatches = playerId.raw == current.playerId
+        val authenticatedHostMatches = hostPeer.id == session.peer.id &&
+            hostPeer.id.value == current.hostPeerId &&
+            authenticatedFingerprint == current.hostFingerprint
+        val offeredHostMatches = hostPeerId == current.hostPeerId &&
+            hostFingerprint == current.hostFingerprint
+        val rotationMatches = generation > current.generation &&
+            gameId == current.gameId &&
+            gameVersion == current.gameVersion
+        if (!playerMatches || !authenticatedHostMatches || !offeredHostMatches || !rotationMatches) {
             return null
         }
         return try {
@@ -1614,6 +1618,7 @@ private fun DiscoveryFinalError.toNetError(): NetError = when (this) {
 
 // ============================================================================ Host room ==
 
+@Suppress("LargeClass") // Single mutex owner for host membership/admission/resume transaction state.
 internal class HostP2pRoom(
     private val kit: P2pKit,
     private val roomCode: String,
@@ -1757,12 +1762,15 @@ internal class HostP2pRoom(
     // is serialized by stateMutex, so no cross-platform @Volatile is needed.
     private var left = false
 
-    private val acceptJob: Job = sessionScope.launch {
-        kit.incomingSessions.collect { session ->
-            handleIncomingSession(session)
+    init {
+        sessionScope.launch {
+            kit.incomingSessions.collect { session ->
+                handleIncomingSession(session)
+            }
         }
     }
 
+    @Suppress("LongMethod", "CyclomaticComplexMethod") // Security handshake validates and dispatches every allowed first frame.
     private suspend fun handleIncomingSession(session: P2pSession) {
         val playerId = PlayerId(session.peer.id.value)
         val displayName = session.peer.name
@@ -2235,6 +2243,7 @@ internal class HostP2pRoom(
         }
     }
 
+    @Suppress("LongMethod", "CyclomaticComplexMethod") // Authenticated resume preparation is one fail-closed transaction.
     private suspend fun handleResumeRequest(
         playerId: PlayerId,
         transportDisplayName: String,
@@ -2258,14 +2267,13 @@ internal class HostP2pRoom(
             return
         }
         val displayName = transportDisplayName.trim()
-        if (
-            !request.protocol.isCompatibleWith(ProtocolVersion()) ||
-            request.roomCode != roomCode ||
-            !RoomInputPolicy.isValidDisplayName(displayName) ||
-            request.displayName.trim() != displayName ||
-            request.secret.length != 64 ||
-            request.secret.any { it !in '0'..'9' && it !in 'a'..'f' }
-        ) {
+        val protocolMatches = request.protocol.isCompatibleWith(ProtocolVersion())
+        val roomMatches = request.roomCode == roomCode
+        val displayNameMatches = RoomInputPolicy.isValidDisplayName(displayName) &&
+            request.displayName.trim() == displayName
+        val secretShapeMatches = request.secret.length == REJOIN_SECRET_HEX_LENGTH &&
+            request.secret.none { it !in '0'..'9' && it !in 'a'..'f' }
+        if (!protocolMatches || !roomMatches || !displayNameMatches || !secretShapeMatches) {
             rejectSession(session, AdmissionRejection.InvalidCredential)
             return
         }
@@ -2370,6 +2378,7 @@ internal class HostP2pRoom(
         }
     }
 
+    @Suppress("LongMethod") // Resume commit and rollback must remain one transaction owner.
     private suspend fun completeResume(
         playerId: PlayerId,
         session: P2pSession,
@@ -2744,6 +2753,7 @@ internal class HostP2pRoom(
         return Result.Success(Unit)
     }
 
+    @Suppress("LongMethod", "CyclomaticComplexMethod") // Admission reservation, commit, and ready barrier are one transaction.
     private suspend fun admit(
         playerId: PlayerId,
         session: P2pSession,
@@ -3286,36 +3296,7 @@ internal class HostP2pRoom(
         val payload = P2pMessage.Binary(bytes)
         val result = try {
             when (target) {
-                SendTarget.Broadcast -> {
-                    // p2p-001: snapshot the session list under the lock
-                    // (avoids ConcurrentModificationException racing
-                    // handleIncomingSession / removals), then send off-lock.
-                    val targets = stateMutex.withLock { sessionsByPlayer.values.toList() }
-                    var delivered = 0
-                    var firstFailure: Exception? = null
-                    targets.forEach { session ->
-                        if (session.state.value == ConnectionState.Connected) {
-                            try {
-                                session.send(payload)
-                                delivered++
-                            } catch (failure: Exception) {
-                                failure.rethrowIfCancellation()
-                                if (firstFailure == null) firstFailure = failure
-                            }
-                        }
-                    }
-                    // p2p-014: a broadcast that reached zero Connected peers is a
-                    // delivery failure, not a silent success — otherwise a caller
-                    // treats a snapshot that reached nobody as delivered and never
-                    // resyncs. (A solo host with no peers legitimately gets this.)
-                    when {
-                        firstFailure != null -> Result.Failure(
-                            NetError.TransportFailure(firstFailure.message ?: "send failed"),
-                        )
-                        delivered == 0 -> Result.Failure(NetError.NotConnected)
-                        else -> Result.Success(Unit)
-                    }
-                }
+                SendTarget.Broadcast -> broadcast(payload)
                 is SendTarget.Direct -> {
                     val session = stateMutex.withLock { sessionsByPlayer[target.playerId] }
                         ?: return Result.Failure(NetError.NotConnected)
@@ -3343,6 +3324,34 @@ internal class HostP2pRoom(
             }
         }
         return result
+    }
+
+    private suspend fun broadcast(payload: P2pMessage.Binary): Result<Unit, NetError> {
+        // Snapshot under the lock to avoid racing admission/removal, then send
+        // off-lock so one slow peer cannot block membership state transitions.
+        val targets = stateMutex.withLock { sessionsByPlayer.values.toList() }
+        var delivered = 0
+        var firstFailure: Exception? = null
+        targets.forEach { session ->
+            if (session.state.value == ConnectionState.Connected) {
+                try {
+                    session.send(payload)
+                    delivered++
+                } catch (failure: Exception) {
+                    failure.rethrowIfCancellation()
+                    if (firstFailure == null) firstFailure = failure
+                }
+            }
+        }
+        // A broadcast that reached zero connected peers is a delivery failure;
+        // callers must not treat an undelivered snapshot as synchronized.
+        return when {
+            firstFailure != null -> Result.Failure(
+                NetError.TransportFailure(firstFailure.message ?: "send failed"),
+            )
+            delivered == 0 -> Result.Failure(NetError.NotConnected)
+            else -> Result.Success(Unit)
+        }
     }
 
     /** A host cannot author a [PeerMessage]; calling this is a contract violation. */
@@ -3758,17 +3767,16 @@ internal class PeerP2pRoom(
                     ),
                 ),
             )
-        } catch (failure: Exception) {
-            if (failure is CancellationException) {
-                withContext(NonCancellable) {
-                    attemptCleanup(
-                        diagnostics,
-                        P2pDiagnosticRole.PEER,
-                        preserveCancellation = false,
-                    ) { session.close() }
-                }
-                throw failure
+        } catch (cancelled: CancellationException) {
+            withContext(NonCancellable) {
+                attemptCleanup(
+                    diagnostics,
+                    P2pDiagnosticRole.PEER,
+                    preserveCancellation = false,
+                ) { session.close() }
             }
+            throw cancelled
+        } catch (_: Exception) {
             closeSessionSafely(session)
             return false
         }
@@ -3803,24 +3811,23 @@ internal class PeerP2pRoom(
                 generation = credential.generation,
             )
             resumed.session.send(P2pMessage.Binary(codec.encode(ready)))
-        } catch (failure: Exception) {
-            if (failure is CancellationException) {
-                withContext(NonCancellable) {
-                    try {
-                        resumed.session.close()
-                    } catch (_: Exception) {
-                        // The original handoff cancellation is rethrown below;
-                        // this records that its non-cancellable close also failed.
-                        diagnostics.event(
-                            P2pDiagnosticEventName.CLEANUP_FAILED,
-                            P2pDiagnosticRole.PEER,
-                            P2pDiagnosticResult.FAILURE,
-                            P2pDiagnosticReason.TRANSPORT,
-                        )
-                    }
+        } catch (cancelled: CancellationException) {
+            withContext(NonCancellable) {
+                try {
+                    resumed.session.close()
+                } catch (_: Exception) {
+                    // The original handoff cancellation is rethrown below;
+                    // this records that its non-cancellable close also failed.
+                    diagnostics.event(
+                        P2pDiagnosticEventName.CLEANUP_FAILED,
+                        P2pDiagnosticRole.PEER,
+                        P2pDiagnosticResult.FAILURE,
+                        P2pDiagnosticReason.TRANSPORT,
+                    )
                 }
-                throw failure
             }
+            throw cancelled
+        } catch (_: Exception) {
             closeSessionSafely(resumed.session)
             return false
         }

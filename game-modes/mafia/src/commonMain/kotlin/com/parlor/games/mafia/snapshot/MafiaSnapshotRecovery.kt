@@ -59,6 +59,7 @@ internal suspend fun loadMafiaResumedSession(
 }
 
 /** Rejects structurally impossible or cross-player-contaminated local snapshots. */
+@Suppress("CyclomaticComplexMethod", "ComplexCondition") // Independent fail-closed state invariants; mutation tests cover each clause.
 internal fun MafiaState.isValidRecoveryState(): Boolean {
     val playerIds = players.map { it.id }
     val playerIdSet = playerIds.toSet()
@@ -167,6 +168,7 @@ private fun MafiaState.hasValidPrivatePhaseFlags(): Boolean =
             (phase is MafiaPhase.Night || (!private.nightChoiceSubmitted && private.pendingNightChoice == null))
     }
 
+@Suppress("CyclomaticComplexMethod") // Role-specific action invariants are intentionally evaluated independently.
 private fun MafiaState.hasValidPrivateActionState(): Boolean {
     val activeAlive = public.roster
         .filter { it.alive && it.playerId !in public.droppedPlayers }
@@ -232,6 +234,7 @@ private fun MafiaState.hasValidPrivateActionState(): Boolean {
     }
 }
 
+@Suppress("ComplexCondition") // One atomic consistency check over the shared coordination projection.
 private fun MafiaState.hasValidMafiaCoordination(
     mafiaIds: Set<com.parlor.core.ids.PlayerId>,
 ): Boolean {

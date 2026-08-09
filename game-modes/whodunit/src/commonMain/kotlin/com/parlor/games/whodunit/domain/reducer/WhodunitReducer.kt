@@ -657,7 +657,7 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
         if (clamped >= t.remainingSeconds) return Reduction(state)
         val newT = t.copy(remainingSeconds = clamped)
         val events = mutableListOf<WhodunitEvent>()
-        if (clamped in 1..10 && t.remainingSeconds > 10) {
+        if (clamped in 1..TIMER_WARNING_SECONDS && t.remainingSeconds > TIMER_WARNING_SECONDS) {
             events += WhodunitEvent.TimerWarning(clamped)
         }
         return Reduction(state.copy(public = state.public.copy(timer = newT)), events)
@@ -1072,7 +1072,7 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
         ) {
             return Reduction(state)
         }
-        val newSeed = state.hostOnly.randomSeed * 31 + 17
+        val newSeed = state.hostOnly.randomSeed * REMATCH_SEED_MULTIPLIER + REMATCH_SEED_INCREMENT
         val fresh = state.copy(
             public = state.public.copy(
                 eliminatedPlayers = emptyList(),
@@ -1273,10 +1273,15 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
         return candidateSeed to RoleAssignment(nextKiller, rotatedSeats)
     }
 
-    private fun nextRerollSeed(seed: Long): Long = seed * 1103515245 + 12345
+    private fun nextRerollSeed(seed: Long): Long = seed * REROLL_SEED_MULTIPLIER + REROLL_SEED_INCREMENT
 
     private const val BRIEFING_CARD_COUNT = 4
     private const val MAX_REROLL_ATTEMPTS = 64
+    private const val TIMER_WARNING_SECONDS = 10
+    private const val REMATCH_SEED_MULTIPLIER = 31L
+    private const val REMATCH_SEED_INCREMENT = 17L
+    private const val REROLL_SEED_MULTIPLIER = 1_103_515_245L
+    private const val REROLL_SEED_INCREMENT = 12_345L
     private const val EARLY_END_REASON = "game-ended-early"
     private const val UNASSIGNED_ID = "unassigned"
 

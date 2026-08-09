@@ -303,7 +303,6 @@ private fun SessionDrivenFlow(
 
     Box(modifier = modifier.fillMaxSize()) {
         MafiaPassAndPlayPhaseRouter(
-            playMode = playMode,
             state = state,
             session = session,
             scope = scope,
