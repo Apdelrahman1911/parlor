@@ -184,7 +184,7 @@ class MafiaHostRoomBridge(
     ): CommandApplication {
         val action = try {
             MafiaActionCodec.decode(payload)
-        } catch (_: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
             return CommandApplication.InvalidAction
         }
         val before = controller.currentState()

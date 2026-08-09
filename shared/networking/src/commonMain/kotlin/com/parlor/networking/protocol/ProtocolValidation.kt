@@ -204,7 +204,7 @@ private fun String.isValidCaseVersion(): Boolean {
     return try {
         SemVer.parse(this)
         true
-    } catch (_: Exception) {
+    } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
         false
     }
 }

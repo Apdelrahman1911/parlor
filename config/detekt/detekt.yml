@@ -69,12 +69,14 @@ empty-blocks:
     ignoreOverridden: true
 
 exceptions:
-  # Common KMP boundaries must translate arbitrary platform, codec, storage,
-  # and transport exceptions into typed domain failures. Specific cancellation
-  # catches and propagation tests enforce the structured-concurrency contract;
-  # exception-class enumeration is neither portable nor safer here.
+  # Every generic production catch is reviewed at its exact catch parameter.
+  # The default Detekt exemption for `_` is intentionally removed so unnamed
+  # catches cannot bypass that review. Approved translation boundaries use a
+  # catch-site suppression and must preserve coroutine cancellation explicitly
+  # whenever their protected operation can suspend.
   TooGenericExceptionCaught:
-    active: false
+    active: true
+    allowedExceptionNameRegex: '^$'
 naming:
   FunctionNaming:
     # Compose functions are intentionally PascalCase. Lowercase production

@@ -117,7 +117,7 @@ class DesktopSnapshotFileSystem(
             throw cancelled
         } catch (failure: SnapshotProtectionException) {
             throw failure
-        } catch (failure: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
             throw SnapshotProtectionException(cause = failure)
         }
     }
@@ -147,7 +147,7 @@ class DesktopSnapshotFileSystem(
             throw cancelled
         } catch (failure: SnapshotProtectionException) {
             throw failure
-        } catch (failure: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
             throw SnapshotProtectionException(cause = failure)
         }
     }

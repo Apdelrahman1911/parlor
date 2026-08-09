@@ -109,7 +109,7 @@ interface LocalRoom {
             Result.Success(Unit)
         } catch (cancelled: CancellationException) {
             throw cancelled
-        } catch (_: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
             Result.Failure(NetError.TransportFailure("room close failed"))
         }
     }
@@ -130,7 +130,7 @@ interface LocalRoom {
             Result.Success(Unit)
         } catch (cancelled: CancellationException) {
             throw cancelled
-        } catch (_: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
             Result.Failure(NetError.TransportFailure("membership discard failed"))
         }
     }
@@ -154,7 +154,7 @@ interface LocalRoom {
             Result.Success(Unit)
         } catch (cancelled: CancellationException) {
             throw cancelled
-        } catch (_: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
             Result.Failure(NetError.TransportFailure("final leave failed"))
         }
     }

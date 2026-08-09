@@ -233,7 +233,7 @@ internal class BoundedPeerOutbox(
                 room.send(SendTarget.Direct(playerId), message)
             } catch (cancelled: CancellationException) {
                 throw cancelled
-            } catch (failure: Exception) {
+            } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
                 Result.Failure(
                     NetError.TransportFailure(failure.message ?: "outbound send failed"),
                 )

@@ -124,7 +124,7 @@ internal class AndroidSecureKeyValueBacking(
             throw cancelled
         } catch (failure: IllegalStateException) {
             throw failure
-        } catch (failure: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
             throw IllegalStateException("Secure credential record is invalid", failure)
         }
     }

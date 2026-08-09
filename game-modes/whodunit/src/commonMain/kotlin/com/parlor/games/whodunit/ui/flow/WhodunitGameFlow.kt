@@ -425,7 +425,7 @@ internal suspend fun loadResumedSession(
         Result.Success(ResumedSession(sessionId, state, contentIdentity, playMode))
     } catch (cancelled: CancellationException) {
         throw cancelled
-    } catch (_: Exception) {
+    } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
         Result.Failure(DataError.CorruptedData)
     }
 }
@@ -450,7 +450,7 @@ internal fun validateResumedSessionForCase(
         )
         Result.Success(Unit)
     }
-} catch (_: Exception) {
+} catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
     Result.Failure(DataError.CorruptedData)
 }
 

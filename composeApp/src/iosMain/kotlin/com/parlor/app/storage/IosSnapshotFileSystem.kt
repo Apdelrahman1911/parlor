@@ -245,7 +245,7 @@ internal class IosSnapshotFileSystem(
             throw cancelled
         } catch (failure: SnapshotProtectionException) {
             throw failure
-        } catch (failure: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
             throw SnapshotProtectionException(cause = failure)
         } finally {
             encryptionKey.fill(0)
@@ -300,7 +300,7 @@ internal class IosSnapshotFileSystem(
             throw cancelled
         } catch (failure: SnapshotProtectionException) {
             throw failure
-        } catch (failure: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
             throw SnapshotProtectionException(cause = failure)
         }
     }

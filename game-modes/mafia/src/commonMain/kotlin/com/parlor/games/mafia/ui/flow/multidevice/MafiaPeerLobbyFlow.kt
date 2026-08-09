@@ -206,7 +206,7 @@ fun MafiaPeerLobbyFlow(
                 } catch (cancelled: CancellationException) {
                     finalLeaveInFlight = false
                     throw cancelled
-                } catch (_: Exception) {
+                } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
                     Result.Failure(NetError.TransportFailure("final leave failed"))
                 }
                 when (discarded) {

@@ -184,7 +184,7 @@ private suspend fun runStartTransaction(
             Result.Success<Boolean>(prepareOffer(offer, expected))
         } catch (cancelled: CancellationException) {
             throw cancelled
-        } catch (failure: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
             Result.Failure(
                 SessionStartFailure.PreparationFailed(failure),
             )
@@ -328,7 +328,7 @@ private suspend fun sendStartAcknowledgement(
         withTimeoutOrNull(sendTimeoutMs) { room.sendToHost(message()) }
     } catch (cancelled: CancellationException) {
         throw cancelled
-    } catch (_: Exception) {
+    } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
         // LocalRoom's contract returns NetError. A defensive adapter throw is
         // treated like a dropped acknowledgement and recovered by host retry.
     }

@@ -74,7 +74,7 @@ class SerializedSnapshotWriter<S : GameState>(
                     }
                 } catch (cancelled: CancellationException) {
                     throw cancelled
-                } catch (_: Exception) {
+                } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
                     // Snapshot construction/validation is an in-process codec
                     // boundary. Ordinary failures here indicate state that
                     // cannot be represented safely, not a filesystem fault.
@@ -84,9 +84,9 @@ class SerializedSnapshotWriter<S : GameState>(
         } catch (cancelled: CancellationException) {
             _status.value = previousStatus
             throw cancelled
-        } catch (_: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
             Result.Failure(DataError.CorruptedData)
-        } catch (fatal: Error) {
+        } catch (@Suppress("TooGenericExceptionCaught") fatal: Error) {
             _status.value = previousStatus
             throw fatal
         }
@@ -121,9 +121,9 @@ class SerializedSnapshotWriter<S : GameState>(
         } catch (cancelled: CancellationException) {
             _status.value = previousStatus
             throw cancelled
-        } catch (_: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
             Result.Failure(DataError.IoError("snapshot_io"))
-        } catch (fatal: Error) {
+        } catch (@Suppress("TooGenericExceptionCaught") fatal: Error) {
             _status.value = previousStatus
             throw fatal
         }
@@ -151,7 +151,7 @@ class SerializedSnapshotWriter<S : GameState>(
         operation()
     } catch (cancelled: CancellationException) {
         throw cancelled
-    } catch (_: Exception) {
+    } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
         Result.Failure(DataError.IoError("snapshot_io"))
     }
 }

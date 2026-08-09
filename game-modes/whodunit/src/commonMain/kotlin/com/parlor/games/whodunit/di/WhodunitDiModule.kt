@@ -47,7 +47,7 @@ val whodunitModule = module {
                     Res.readBytes("files/cases/$caseId.json").decodeToString()
                 } catch (cancelled: CancellationException) {
                     throw cancelled
-                } catch (_: Exception) {
+                } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
                     null
                 }
             },

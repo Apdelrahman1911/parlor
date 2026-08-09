@@ -64,7 +64,7 @@ class FileBackedSnapshotStore private constructor(
             EmptyOk
         } catch (cancelled: CancellationException) {
             throw cancelled
-        } catch (failure: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
             Result.Failure(mapToDataError(failure))
         }
     }
@@ -80,7 +80,7 @@ class FileBackedSnapshotStore private constructor(
             )
         } catch (cancelled: CancellationException) {
             throw cancelled
-        } catch (failure: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
             Result.Failure(mapToDataError(failure))
         }
     }
@@ -91,7 +91,7 @@ class FileBackedSnapshotStore private constructor(
             EmptyOk
         } catch (cancelled: CancellationException) {
             throw cancelled
-        } catch (failure: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
             Result.Failure(mapToDataError(failure))
         }
     }
@@ -115,7 +115,7 @@ class FileBackedSnapshotStore private constructor(
             )
         } catch (cancelled: CancellationException) {
             throw cancelled
-        } catch (failure: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
             Result.Failure(mapToDataError(failure))
         }
     }

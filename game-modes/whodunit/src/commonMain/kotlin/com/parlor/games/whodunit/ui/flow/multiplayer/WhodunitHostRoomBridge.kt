@@ -228,7 +228,7 @@ class WhodunitHostRoomBridge(
     ): CommandApplication {
         val action = try {
             WhodunitActionCodec.decode(payload)
-        } catch (_: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
             return CommandApplication.InvalidAction
         }
         val before = controller.currentState()

@@ -53,7 +53,7 @@ internal suspend fun loadMafiaResumedSession(
         }
     } catch (cancelled: CancellationException) {
         throw cancelled
-    } catch (_: Exception) {
+    } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
         Result.Failure(DataError.CorruptedData)
     }
 }

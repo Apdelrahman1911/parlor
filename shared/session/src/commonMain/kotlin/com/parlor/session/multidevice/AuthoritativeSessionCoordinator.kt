@@ -235,7 +235,7 @@ class HostAuthoritativeSessionCoordinator(
                 } catch (cancelled: CancellationException) {
                     cancelCompletion(work, cancelled)
                     throw cancelled
-                } catch (failure: Exception) {
+                } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
                     // A malformed/failed operation must not kill the sole
                     // mailbox worker and strand every later command. Work with
                     // a caller-visible completion receives the exact failure;
@@ -527,7 +527,7 @@ class HostAuthoritativeSessionCoordinator(
         } catch (cancelled: CancellationException) {
             work.completion.cancel(cancelled)
             throw cancelled
-        } catch (failure: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
             work.completion.completeExceptionally(failure)
         }
     }
@@ -545,7 +545,7 @@ class HostAuthoritativeSessionCoordinator(
         } catch (cancelled: CancellationException) {
             work.completion.cancel(cancelled)
             throw cancelled
-        } catch (failure: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
             work.completion.completeExceptionally(failure)
         }
     }
@@ -739,7 +739,7 @@ class HostAuthoritativeSessionCoordinator(
             withTimeoutOrNull(startSendTimeoutMs) { sendEnd(SessionEndReason.Cancelled) }
         } catch (cancelled: CancellationException) {
             throw cancelled
-        } catch (_: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
             // The bounded local result remains Timeout even when the terminal
             // best-effort frame cannot be written to the failed transport.
         }
@@ -764,7 +764,7 @@ class HostAuthoritativeSessionCoordinator(
             withTimeoutOrNull(startSendTimeoutMs) { sendEnd(SessionEndReason.Cancelled) }
         } catch (cancelled: CancellationException) {
             throw cancelled
-        } catch (_: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
             Unit
         }
     }
@@ -1021,7 +1021,7 @@ class HostAuthoritativeSessionCoordinator(
             room.send(SendTarget.Direct(playerId), message)
         } catch (cancelled: CancellationException) {
             throw cancelled
-        } catch (failure: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
             Result.Failure(
                 NetError.TransportFailure(failure.message ?: "start frame send failed"),
             )
@@ -1548,7 +1548,7 @@ class PeerAuthoritativeSessionCoordinator(
             )
         } catch (cancelled: CancellationException) {
             throw cancelled
-        } catch (_: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
             false
         }
         if (!installed) {
@@ -1683,7 +1683,7 @@ class PeerAuthoritativeSessionCoordinator(
             )
         } catch (cancelled: CancellationException) {
             throw cancelled
-        } catch (_: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
             // Best effort: the host will retry the stable commit frame.
         }
     }
@@ -1793,7 +1793,7 @@ class PeerAuthoritativeSessionCoordinator(
                 room.sendToHost(message)
             } catch (cancelled: CancellationException) {
                 throw cancelled
-            } catch (failure: Exception) {
+            } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
                 Result.Failure(
                     NetError.TransportFailure(failure.message ?: "peer frame send failed"),
                 )

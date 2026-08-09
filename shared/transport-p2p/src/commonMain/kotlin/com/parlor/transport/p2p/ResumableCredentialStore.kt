@@ -326,7 +326,7 @@ internal class ResumableCredentialStore(
             }
         } catch (cancelled: CancellationException) {
             throw cancelled
-        } catch (_: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
             Result.Failure(CredentialStoreError.Corrupted)
         } finally {
             bytes.fill(0)
@@ -340,7 +340,7 @@ internal class ResumableCredentialStore(
             json.encodeToString(record.requireValid()).encodeToByteArray()
         } catch (cancelled: CancellationException) {
             throw cancelled
-        } catch (_: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
             return Result.Failure(CredentialStoreError.Corrupted)
         }
         return try {
@@ -367,7 +367,7 @@ internal class ResumableCredentialStore(
 private fun ResumableSessionCredential.validOrNull(): ResumableSessionCredential? =
     try {
         requireValid()
-    } catch (_: Exception) {
+    } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
         null
     }
 

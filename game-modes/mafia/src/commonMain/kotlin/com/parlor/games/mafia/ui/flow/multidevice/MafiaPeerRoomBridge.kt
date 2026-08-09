@@ -122,7 +122,7 @@ class MafiaPeerRoomBridge(
                     privatePerPlayer = ownPrivate?.let { mapOf(selfPlayerId to it) } ?: emptyMap(),
                 ),
             )
-        } catch (_: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
             return false
         }
         val (publicState, ownPrivate, playerState) = decoded

@@ -177,7 +177,7 @@ class AndroidSnapshotFileSystem(private val context: Context) : SnapshotFileSyst
             throw cancelled
         } catch (failure: SnapshotProtectionException) {
             throw failure
-        } catch (failure: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
             throw SnapshotProtectionException(cause = failure)
         }
     }
@@ -207,7 +207,7 @@ class AndroidSnapshotFileSystem(private val context: Context) : SnapshotFileSyst
             throw cancelled
         } catch (failure: SnapshotProtectionException) {
             throw failure
-        } catch (failure: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
             throw SnapshotProtectionException(cause = failure)
         }
     }

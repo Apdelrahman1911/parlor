@@ -61,7 +61,7 @@ class KtorRemoteCaseDataSource(
         Result.Success(summaries)
     } catch (cancelled: CancellationException) {
         throw cancelled
-    } catch (failure: Exception) {
+    } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
         failure.toNetworkErrorResult()
     }
 
@@ -81,7 +81,7 @@ class KtorRemoteCaseDataSource(
         Result.Success(envelope)
     } catch (cancelled: CancellationException) {
         throw cancelled
-    } catch (failure: Exception) {
+    } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
         failure.toNetworkErrorResult()
     }
 

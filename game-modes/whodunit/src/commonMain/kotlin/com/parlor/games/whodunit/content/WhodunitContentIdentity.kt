@@ -27,7 +27,7 @@ data class WhodunitContentIdentity(
 private fun String.isValidSemVer(): Boolean = try {
     SemVer.parse(this)
     true
-} catch (_: Exception) {
+} catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
     false
 }
 

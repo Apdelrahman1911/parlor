@@ -224,7 +224,7 @@ class ProcessMultiplayerSession internal constructor(
                         room.closeAdmissions()
                     } catch (cancelled: CancellationException) {
                         throw cancelled
-                    } catch (_: Exception) {
+                    } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
                         Result.Failure(NetError.TransportFailure("admission close failed"))
                     }
                     startMutex.withLock {
@@ -259,7 +259,7 @@ class ProcessMultiplayerSession internal constructor(
                 create()
             } catch (cancelled: CancellationException) {
                 throw cancelled
-            } catch (_: Exception) {
+            } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
                 return@withLock RetainedValueResult.CreationFailed(
                     NetError.TransportFailure("checkpoint creation failed"),
                 )
@@ -289,7 +289,7 @@ class ProcessMultiplayerSession internal constructor(
                 create(scope)
             } catch (cancelled: CancellationException) {
                 throw cancelled
-            } catch (_: Exception) {
+            } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
                 return@withLock RetainedValueResult.CreationFailed(
                     NetError.TransportFailure("runtime creation failed"),
                 )
@@ -300,7 +300,7 @@ class ProcessMultiplayerSession internal constructor(
                     null
                 } catch (cancelled: CancellationException) {
                     throw cancelled
-                } catch (_: Exception) {
+                } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
                     NetError.TransportFailure("runtime close failed")
                 }
                 return@withLock cleanup?.let { RetainedValueResult.CreationFailed(it) }
@@ -325,7 +325,7 @@ class ProcessMultiplayerSession internal constructor(
             installed?.close()
         } catch (cancelled: CancellationException) {
             throw cancelled
-        } catch (_: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
             failure = NetError.TransportFailure("runtime close failed")
         } finally {
             sessionJob.cancel()
@@ -427,7 +427,7 @@ class ProcessMultiplayerSessionOwner(
                 } catch (cancelled: CancellationException) {
                     cancellation = cancelled
                     Result.Failure(NetError.SessionSuspended)
-                } catch (_: Exception) {
+                } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
                     Result.Failure(NetError.TransportFailure("room close failed"))
                 }
                 val released = if (closed is Result.Success) {
@@ -523,7 +523,7 @@ class ProcessMultiplayerSessionOwner(
                 } catch (cancelled: CancellationException) {
                     cancellation = cancelled
                     Result.Failure(NetError.SessionSuspended)
-                } catch (_: Exception) {
+                } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
                     Result.Failure(NetError.TransportFailure("membership discard failed"))
                 }
                 withContext(NonCancellable) {
@@ -743,7 +743,7 @@ class ProcessMultiplayerSessionOwner(
                 session.room.finalLeave()
             } catch (cancelled: CancellationException) {
                 throw cancelled
-            } catch (_: Exception) {
+            } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
                 Result.Failure(NetError.TransportFailure("final leave failed"))
             }
         } else {
@@ -753,14 +753,14 @@ class ProcessMultiplayerSessionOwner(
                 session.runtime.value?.terminate(reason)
             } catch (cancelled: CancellationException) {
                 cancellation = cancelled
-            } catch (_: Exception) {
+            } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
                 failure = NetError.TransportFailure("session termination failed")
             }
             try {
                 session.room.leave()
             } catch (cancelled: CancellationException) {
                 if (cancellation == null) cancellation = cancelled
-            } catch (_: Exception) {
+            } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
                 if (failure == null) failure = NetError.TransportFailure("room close failed")
             }
             cancellation?.let { throw it }
@@ -794,7 +794,7 @@ class ProcessMultiplayerSessionOwner(
                     openRoom(mode)
                 } catch (cancelled: CancellationException) {
                     throw cancelled
-                } catch (_: Exception) {
+                } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
                     Result.Failure(NetError.TransportFailure("room creation failed"))
                 }
 
@@ -844,7 +844,7 @@ class ProcessMultiplayerSessionOwner(
                     completion.cancel(cancelled)
                 }
                 throw cancelled
-            } catch (_: Exception) {
+            } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
                 val failure = Result.Failure(NetError.TransportFailure("room creation failed"))
                 withContext(NonCancellable) {
                     mutex.withLock {
@@ -880,7 +880,7 @@ class ProcessMultiplayerSessionOwner(
                 Result.Success(Unit)
             } catch (_: CancellationException) {
                 Result.Failure(NetError.SessionSuspended)
-            } catch (_: Exception) {
+            } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
                 Result.Failure(NetError.TransportFailure("orphan room close failed"))
             }
         }

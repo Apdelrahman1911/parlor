@@ -45,7 +45,7 @@ class RetainedSessionOperation<T>(initialState: T) {
                 operation()
             } catch (cancelled: CancellationException) {
                 throw cancelled
-            } catch (failure: Exception) {
+            } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
                 onUnexpectedFailure(failure)
             }
         }

@@ -219,7 +219,7 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
                             }
                         }
                     }
-                } catch (failure: Exception) {
+                } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
                     failure.rethrowIfCancellation()
                     diagnostics.event(
                         P2pDiagnosticEventName.CLEANUP_FAILED,
@@ -348,7 +348,7 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
                 P2pDiagnosticResult.SUCCESS,
             )
             Result.Success(hostedRoom)
-        } catch (failure: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
             failure.rethrowIfCancellation()
             recordLocalNetworkFailure(failure)
             diagnostics.event(
@@ -386,7 +386,7 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
         diagnostics.event(P2pDiagnosticEventName.SESSION_CREATE_STARTED, P2pDiagnosticRole.PEER)
         val kit = try {
             kitFactory.createKit(appId = appId, deviceName = effectiveConfig.displayName)
-        } catch (t: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") t: Exception) {
             t.rethrowIfCancellation()
             recordLocalNetworkFailure(t)
             diagnostics.event(
@@ -407,7 +407,7 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
             } finally {
                 if (!initializationComplete) kit.stopAfterFailure(diagnostics)
             }
-        } catch (t: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") t: Exception) {
             t.rethrowIfCancellation()
             recordLocalNetworkFailure(t)
             diagnostics.event(
@@ -488,7 +488,7 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
                     withTimeoutOrNull(remainingDialBudgetMs) {
                         kit.connect(hostPeer)
                     }
-                } catch (failure: Exception) {
+                } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
                     failure.rethrowIfCancellation()
                     null
                 }
@@ -631,7 +631,7 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
                     }
                 }
             }
-        } catch (t: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") t: Exception) {
             t.rethrowIfCancellation()
             recordLocalNetworkFailure(t)
             diagnostics.event(
@@ -708,7 +708,7 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
         _localNetworkAccess.value = LocalNetworkAccess.Attempting
         val kit = try {
             kitFactory.createKit(appId = appId, deviceName = credential.displayName)
-        } catch (failure: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
             failure.rethrowIfCancellation()
             recordLocalNetworkFailure(failure)
             diagnostics.event(
@@ -729,7 +729,7 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
             } finally {
                 if (!initializationComplete) kit.stopAfterFailure(diagnostics)
             }
-        } catch (failure: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
             failure.rethrowIfCancellation()
             recordLocalNetworkFailure(failure)
             diagnostics.event(
@@ -802,7 +802,7 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
                     }
                 }
             }
-        } catch (failure: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
             failure.rethrowIfCancellation()
             recordLocalNetworkFailure(failure)
             diagnostics.event(
@@ -824,7 +824,7 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
     ): Result<CredentialInvalidationResult, NetError> {
         val invalidated = try {
             credentialStore.invalidateOwned(credential)
-        } catch (failure: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
             failure.rethrowIfCancellation()
             diagnostics.event(
                 P2pDiagnosticEventName.CREDENTIAL_INVALIDATION_FAILED,
@@ -884,7 +884,7 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
                     if (frame.bytes.size > MAX_ROOM_FRAME_BYTES) return@collect
                     val decoded = try {
                         codec.decode(frame.bytes)
-                    } catch (failure: Exception) {
+                    } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
                         failure.rethrowIfCancellation()
                         return@collect
                     } as? HostMessage ?: return@collect
@@ -1085,7 +1085,7 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
         }
         val expectedFingerprint = try {
             PeerFingerprint(credential.hostFingerprint)
-        } catch (_: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
             return Result.Failure(
                 ResumeConnectionFailure(NetError.Unauthorized, invalidatesCredential = true),
             )
@@ -1110,7 +1110,7 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
                             P2pDiagnosticRole.PEER,
                         )
                         kit.connect(hostPeer, expectedFingerprint)
-                    } catch (failure: Exception) {
+                    } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
                         failure.rethrowIfCancellation()
                         delay(ADMISSION_RETRY_MS)
                         continue
@@ -1157,7 +1157,7 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
                 @Suppress("UNREACHABLE_CODE")
                 Result.Failure(ResumeConnectionFailure(NetError.Timeout))
             } ?: Result.Failure(ResumeConnectionFailure(NetError.Timeout))
-        } catch (failure: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
             failure.rethrowIfCancellation()
             Result.Failure(
                 ResumeConnectionFailure(
@@ -1187,7 +1187,7 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
                 if (frame.bytes.size > MAX_ROOM_FRAME_BYTES) return@collect
                 val decoded = try {
                     codec.decode(frame.bytes)
-                } catch (failure: Exception) {
+                } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
                     failure.rethrowIfCancellation()
                     return@collect
                 } as? HostMessage ?: return@collect
@@ -1335,7 +1335,7 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
                 gameId = gameId,
                 gameVersion = gameVersion,
             ).requireValid()
-        } catch (_: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
             null
         }
     }
@@ -1366,7 +1366,7 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
                 issuedAtEpochMillis = issuedAtEpochMillis,
                 expiresAtEpochMillis = expiresAtEpochMillis,
             ).requireValid()
-        } catch (_: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
             null
         }
     }
@@ -1559,7 +1559,7 @@ private suspend fun P2pKit.stopAfterFailure(diagnostics: P2pDiagnostics) {
                 P2pDiagnosticEventName.CLEANUP_COMPLETED,
                 result = P2pDiagnosticResult.SUCCESS,
             )
-        } catch (failure: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
             diagnostics.event(
                 P2pDiagnosticEventName.CLEANUP_FAILED,
                 result = P2pDiagnosticResult.FAILURE,
@@ -1586,7 +1586,7 @@ private suspend inline fun attemptCleanup(
 ) {
     try {
         block()
-    } catch (failure: Exception) {
+    } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
         if (preserveCancellation) failure.rethrowIfCancellation()
         diagnostics.event(
             P2pDiagnosticEventName.CLEANUP_FAILED,
@@ -1823,7 +1823,7 @@ internal class HostP2pRoom(
             )
             try {
                 session.close()
-            } catch (failure: Exception) {
+            } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
                 failure.rethrowIfCancellation()
             }
         }
@@ -1852,7 +1852,7 @@ internal class HostP2pRoom(
                 // permanently kill THIS session's inbound stream. Skip + log.
                 val rawDecoded = try {
                     codec.decode(msg.bytes)
-                } catch (failure: Exception) {
+                } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
                     failure.rethrowIfCancellation()
                     enforceTrafficDecision(
                         trafficGuard.malformedFrame(nowMillis()),
@@ -2193,7 +2193,7 @@ internal class HostP2pRoom(
                         session,
                         HostMessage.AdmissionPending(requestEvent.admission.playerId),
                     )
-                } catch (failure: Exception) {
+                } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
                     failure.rethrowIfCancellation()
                     attemptCleanup(diagnostics, P2pDiagnosticRole.HOST) { session.close() }
                     return
@@ -2398,7 +2398,7 @@ internal class HostP2pRoom(
                 attemptCleanup(diagnostics, P2pDiagnosticRole.HOST) { session.close() }
                 return
             }
-        } catch (failure: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
             withContext(NonCancellable) {
                 rollbackAdmission(playerId, session)
                 attemptCleanup(
@@ -2469,7 +2469,7 @@ internal class HostP2pRoom(
                     generation = transaction.offer.generation,
                 ),
             )
-        } catch (failure: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
             withContext(NonCancellable) {
                 attemptCleanup(
                     diagnostics,
@@ -2828,7 +2828,7 @@ internal class HostP2pRoom(
 
         try {
             sendRaw(session, HostMessage.AdmissionOffered(transaction.offer))
-        } catch (failure: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
             withContext(NonCancellable) {
                 rollbackAdmission(playerId, session)
                 attemptCleanup(
@@ -2846,7 +2846,7 @@ internal class HostP2pRoom(
                 transaction.confirmation.await()
                 true
             } ?: false
-        } catch (failure: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
             withContext(NonCancellable) {
                 rollbackAdmission(playerId, session)
                 attemptCleanup(
@@ -2928,7 +2928,7 @@ internal class HostP2pRoom(
                     generation = transaction.offer.generation,
                 ),
             )
-        } catch (failure: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
             withContext(NonCancellable) {
                 attemptCleanup(
                     diagnostics,
@@ -3055,7 +3055,7 @@ internal class HostP2pRoom(
             )
             try {
                 session.close()
-            } catch (failure: Exception) {
+            } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
                 failure.rethrowIfCancellation()
             }
             false
@@ -3143,7 +3143,7 @@ internal class HostP2pRoom(
             // P2pKit's notification starts cleanup asynchronously. Await the
             // host feature here so a rapid foreground cannot race an old stop.
             kit.stopAdvertising()
-        } catch (failure: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
             failure.rethrowIfCancellation()
             diagnostics.event(
                 P2pDiagnosticEventName.CLEANUP_FAILED,
@@ -3307,7 +3307,7 @@ internal class HostP2pRoom(
                     Result.Success(Unit)
                 }
             }
-        } catch (failure: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
             failure.rethrowIfCancellation()
             Result.Failure(NetError.TransportFailure(failure.message ?: "send failed"))
         }
@@ -3337,7 +3337,7 @@ internal class HostP2pRoom(
                 try {
                     session.send(payload)
                     delivered++
-                } catch (failure: Exception) {
+                } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
                     failure.rethrowIfCancellation()
                     if (firstFailure == null) firstFailure = failure
                 }
@@ -3736,7 +3736,7 @@ internal class PeerP2pRoom(
     private suspend fun closeSessionSafely(session: P2pSession) {
         try {
             session.close()
-        } catch (failure: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
             failure.rethrowIfCancellation()
             diagnostics.event(
                 P2pDiagnosticEventName.CLEANUP_FAILED,
@@ -3776,7 +3776,7 @@ internal class PeerP2pRoom(
                 ) { session.close() }
             }
             throw cancelled
-        } catch (_: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
             closeSessionSafely(session)
             return false
         }
@@ -3792,7 +3792,7 @@ internal class PeerP2pRoom(
                     ),
                 ),
             )
-        } catch (failure: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
             failure.rethrowIfCancellation()
         }
         return true
@@ -3815,7 +3815,7 @@ internal class PeerP2pRoom(
             withContext(NonCancellable) {
                 try {
                     resumed.session.close()
-                } catch (_: Exception) {
+                } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
                     // The original handoff cancellation is rethrown below;
                     // this records that its non-cancellable close also failed.
                     diagnostics.event(
@@ -3827,7 +3827,7 @@ internal class PeerP2pRoom(
                 }
             }
             throw cancelled
-        } catch (_: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
             closeSessionSafely(resumed.session)
             return false
         }
@@ -3838,7 +3838,7 @@ internal class PeerP2pRoom(
                 generation = credential.generation,
             )
             resumed.session.send(P2pMessage.Binary(codec.encode(acknowledgement)))
-        } catch (failure: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
             failure.rethrowIfCancellation()
             // Ready is the ordering barrier. A lost cleanup acknowledgement
             // leaves one prior generation valid until the next successful
@@ -3941,7 +3941,7 @@ internal class PeerP2pRoom(
             // (which would permanently sever the peer's inbound stream).
             val decoded = try {
                 codec.decode(msg.bytes)
-            } catch (failure: Exception) {
+            } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
                 failure.rethrowIfCancellation()
                 enforceTrafficDecision(
                     trafficGuard.malformedFrame(nowMillis()),
@@ -4057,7 +4057,7 @@ internal class PeerP2pRoom(
                 CredentialInvalidationScope.LogicalMembership ->
                     store.invalidateMembershipOwned(credentialBinding)
             }
-        } catch (failure: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
             failure.rethrowIfCancellation()
             diagnostics.event(
                 P2pDiagnosticEventName.CREDENTIAL_INVALIDATION_FAILED,
@@ -4120,7 +4120,7 @@ internal class PeerP2pRoom(
             )
             try {
                 session.close()
-            } catch (failure: Exception) {
+            } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
                 failure.rethrowIfCancellation()
             }
             false
@@ -4237,7 +4237,7 @@ internal class PeerP2pRoom(
             val payload = P2pMessage.Binary(bytes)
             session.send(payload)
             Result.Success(Unit)
-        } catch (failure: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
             failure.rethrowIfCancellation()
             Result.Failure(NetError.TransportFailure(failure.message ?: "send failed"))
         }

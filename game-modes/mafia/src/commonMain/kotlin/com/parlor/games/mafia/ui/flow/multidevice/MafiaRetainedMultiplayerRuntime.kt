@@ -91,7 +91,7 @@ internal class MafiaHostRuntime(
                 ).toHostStartGateState()
             } catch (cancelled: CancellationException) {
                 throw cancelled
-            } catch (_: Exception) {
+            } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
                 HostStartGateState.Failed(NetError.TransportFailure("session start failed"))
             }
             if (_startGate.value != HostStartGateState.Exiting) {
