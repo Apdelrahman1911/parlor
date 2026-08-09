@@ -146,10 +146,10 @@ class MafiaPeerRoomBridge(
             }
             is Result.Failure -> {
                 if (sent.error == NetError.NotConnected) connectionTracker.markSelfOffline()
-                if (sent.error == NetError.CommandInFlight) {
-                    Result.Failure(SubmitError.CommandPending)
-                } else {
-                    Result.Failure(SubmitError.SessionClosed)
+                when (sent.error) {
+                    NetError.CommandInFlight -> Result.Failure(SubmitError.CommandPending)
+                    NetError.SessionSuspended -> Result.Failure(SubmitError.SessionSuspended)
+                    else -> Result.Failure(SubmitError.SessionClosed)
                 }
             }
         }

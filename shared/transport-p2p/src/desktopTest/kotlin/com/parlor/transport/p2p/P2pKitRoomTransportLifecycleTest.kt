@@ -953,6 +953,99 @@ class P2pKitRoomTransportLifecycleTest {
     }
 
     @Test
+    fun retiring_a_frozen_disconnected_seat_revokes_rejoin_and_is_idempotent() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("host-pid"))
+        val room = newHostRoom(kit)
+        val firstAlice = FakeP2pSession(peer("alice-pid", "Alice"))
+        val rejoinToken = admit(room, kit, firstAlice)
+        assertThat(room.closeAdmissions()).isInstanceOf(Result.Success::class)
+
+        firstAlice.stateFlow.value = ConnectionState.Closed
+        awaitCondition { room.members.value.singleOrNull()?.connected == false }
+
+        assertThat(room.retireDisconnectedMember(PlayerId("alice-pid")))
+            .isInstanceOf(Result.Success::class)
+        assertThat(room.retireDisconnectedMember(PlayerId("alice-pid")))
+            .isInstanceOf(Result.Success::class)
+        assertThat(room.members.value).isEmpty()
+
+        val replay = FakeP2pSession(peer("alice-pid", "Alice"))
+        kit.incomingSessionsFlow.emit(replay)
+        yield()
+        replay.incomingFlow.emit(
+            P2pMessage.Binary(
+                codec.encode(
+                    PeerMessage.ResumeRequested(
+                        protocol = ProtocolVersion(),
+                        actor = PlayerId("forged-body-id"),
+                        roomCode = "ABCDEF",
+                        displayName = "Alice",
+                        secret = rejoinToken,
+                        generation = 1L,
+                    ),
+                ),
+            ),
+        )
+        awaitCondition {
+            AdmissionRejection.InvalidCredential in replay.admissionRejections()
+        }
+        assertThat(room.members.value).isEmpty()
+    }
+
+    @Test
+    fun retirement_rolls_back_a_resume_offer_that_is_mid_delivery() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("host-pid"))
+        val room = newHostRoom(kit)
+        val firstAlice = FakeP2pSession(peer("alice-pid", "Alice"))
+        val rejoinToken = admit(room, kit, firstAlice)
+        assertThat(room.closeAdmissions()).isInstanceOf(Result.Success::class)
+        firstAlice.stateFlow.value = ConnectionState.Closed
+        awaitCondition { room.members.value.singleOrNull()?.connected == false }
+
+        val offerEntered = CompletableDeferred<Unit>()
+        val releaseOffer = CompletableDeferred<Unit>()
+        val returning = FakeP2pSession(peer("alice-pid", "Alice")).apply {
+            sendHandler = { message ->
+                val decoded = (message as? P2pMessage.Binary)?.let { codec.decode(it.bytes) }
+                if (decoded is HostMessage.ResumeOffered) {
+                    offerEntered.complete(Unit)
+                    releaseOffer.await()
+                }
+            }
+        }
+        kit.incomingSessionsFlow.emit(returning)
+        yield()
+        returning.incomingFlow.emit(
+            P2pMessage.Binary(
+                codec.encode(
+                    PeerMessage.ResumeRequested(
+                        protocol = ProtocolVersion(),
+                        actor = PlayerId("forged-body-id"),
+                        roomCode = "ABCDEF",
+                        displayName = "Alice",
+                        secret = rejoinToken,
+                        generation = 1L,
+                    ),
+                ),
+            ),
+        )
+        offerEntered.await()
+
+        assertThat(room.retireDisconnectedMember(PlayerId("alice-pid")))
+            .isInstanceOf(Result.Success::class)
+        releaseOffer.complete(Unit)
+        awaitCondition { returning.closeCalls > 0 }
+
+        assertThat(room.members.value).isEmpty()
+        assertThat(
+            returning.sent
+                .filterIsInstance<P2pMessage.Binary>()
+                .map { codec.decode(it.bytes) }
+                .filterIsInstance<HostMessage.ResumeCommitted>(),
+        ).isEmpty()
+    }
+
+    @Test
     fun host_send_direct_returns_not_connected_after_session_closes() = runBlocking {
         val kit = FakeP2pKit(P2pPeerId("host-pid"))
         val room = newHostRoom(kit)

@@ -178,6 +178,7 @@ class WhodunitHostRoomBridge(
         return when (mutation) {
             HostMutationResult.Closed -> Result.Failure(SubmitError.SessionClosed)
             HostMutationResult.NotStarted -> Result.Failure(SubmitError.SessionClosed)
+            HostMutationResult.Suspended -> Result.Failure(SubmitError.SessionSuspended)
             HostMutationResult.Applied,
             HostMutationResult.Unchanged -> checkNotNull(submission)
         }
@@ -216,7 +217,7 @@ class WhodunitHostRoomBridge(
             )
         } ?: return false
         jobsToCancel.forEach(Job::cancel)
-        val changed = applyLifecycleAction(WhodunitAction.ContinueWithoutPlayer(playerId))
+        val changed = retireAndContinue(playerId)
         if (changed) resumeLifecyclePauseIfPossible()
         return changed
     }
@@ -290,8 +291,9 @@ class WhodunitHostRoomBridge(
             .map(RoomMember::playerId)
             .toSet()
         remotePlayers.forEach { playerId ->
-            val markedDisconnected =
-                playerId in controller.currentState().public.disconnectedPlayers
+            val public = controller.currentState().public
+            if (playerId in public.droppedPlayers) return@forEach
+            val markedDisconnected = playerId in public.disconnectedPlayers
             when {
                 playerId !in connected && !markedDisconnected -> handlePeerLeft(playerId)
                 playerId in connected && markedDisconnected -> handlePeerReconnected(playerId)
@@ -351,7 +353,7 @@ class WhodunitHostRoomBridge(
         if (!ownsDeadline) return
         rejoinToCancel?.cancel()
         if (playerId in controller.currentState().public.disconnectedPlayers) {
-            val changed = applyLifecycleAction(WhodunitAction.ContinueWithoutPlayer(playerId))
+            val changed = retireAndContinue(playerId)
             if (changed) resumeLifecyclePauseIfPossible()
         }
     }
@@ -421,11 +423,54 @@ class WhodunitHostRoomBridge(
     private suspend fun applyLifecycleAction(action: WhodunitAction): Boolean {
         if (!coordinator.awaitSessionStarted()) return false
         var submission: Result<SubmissionReceipt, SubmitError>? = null
-        val mutation = coordinator.applyHostMutation {
+        val mutation = coordinator.applyLifecycleMutation {
             controller.submit(action).also { submission = it }
                 .let { it is Result.Success && it.data.stateChanged }
         }
         return mutation == HostMutationResult.Applied && submission is Result.Success
+    }
+
+    /**
+     * Orders a host drop decision against a concurrent rejoin on the same
+     * authoritative mailbox. If rejoin wins first the seat stays active and no
+     * credential is revoked. If the drop wins, transport revocation commits
+     * before the reducer makes the seat permanently inactive.
+     */
+    private suspend fun retireAndContinue(playerId: PlayerId): Boolean {
+        if (!coordinator.awaitSessionStarted()) return false
+        var retired = false
+        var reducerInvariantFailed = false
+        val mutation = coordinator.applyLifecycleMutation {
+            if (playerId !in controller.currentState().public.disconnectedPlayers) {
+                return@applyLifecycleMutation false
+            }
+            when (room.retireDisconnectedMember(playerId)) {
+                is Result.Failure -> false
+                is Result.Success -> {
+                    retired = true
+                    when (
+                        val submission = controller.submit(
+                            WhodunitAction.ContinueWithoutPlayer(playerId),
+                        )
+                    ) {
+                        is Result.Success -> submission.data.stateChanged.also { changed ->
+                            if (!changed) reducerInvariantFailed = true
+                        }
+                        is Result.Failure -> {
+                            reducerInvariantFailed = true
+                            false
+                        }
+                    }
+                }
+            }
+        }
+        if (retired && (reducerInvariantFailed || mutation != HostMutationResult.Applied)) {
+            // Revocation cannot be rolled back securely. End the session rather
+            // than continue with transport membership and game roster split.
+            terminate(SessionEndReason.Cancelled)
+            return false
+        }
+        return mutation == HostMutationResult.Applied
     }
 
     companion object {

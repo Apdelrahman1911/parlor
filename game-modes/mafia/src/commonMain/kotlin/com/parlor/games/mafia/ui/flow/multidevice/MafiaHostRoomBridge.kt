@@ -131,6 +131,7 @@ class MafiaHostRoomBridge(
         return when (mutation) {
             HostMutationResult.Closed -> Result.Failure(SubmitError.SessionClosed)
             HostMutationResult.NotStarted -> Result.Failure(SubmitError.SessionClosed)
+            HostMutationResult.Suspended -> Result.Failure(SubmitError.SessionSuspended)
             HostMutationResult.Applied,
             HostMutationResult.Unchanged -> checkNotNull(submission)
         }
@@ -167,7 +168,7 @@ class MafiaHostRoomBridge(
             )
         } ?: return false
         jobsToCancel.forEach(Job::cancel)
-        return applyLifecycleAction(MafiaAction.ContinueWithoutPlayer(playerId))
+        return retireAndContinue(playerId)
     }
 
     fun close() {
@@ -241,8 +242,9 @@ class MafiaHostRoomBridge(
             .map(RoomMember::playerId)
             .toSet()
         remotePlayers.forEach { playerId ->
-            val markedDisconnected =
-                playerId in controller.currentState().public.disconnectedPlayers
+            val public = controller.currentState().public
+            if (playerId in public.droppedPlayers) return@forEach
+            val markedDisconnected = playerId in public.disconnectedPlayers
             when {
                 playerId !in connected && !markedDisconnected -> handlePeerLeft(playerId)
                 playerId in connected && markedDisconnected -> handlePeerReconnected(playerId)
@@ -302,7 +304,7 @@ class MafiaHostRoomBridge(
         if (!ownsDeadline) return
         rejoinToCancel?.cancel()
         if (playerId in controller.currentState().public.disconnectedPlayers) {
-            applyLifecycleAction(MafiaAction.ContinueWithoutPlayer(playerId))
+            retireAndContinue(playerId)
         }
     }
 
@@ -354,11 +356,47 @@ class MafiaHostRoomBridge(
     private suspend fun applyLifecycleAction(action: MafiaAction): Boolean {
         if (!coordinator.awaitSessionStarted()) return false
         var submission: Result<SubmissionReceipt, SubmitError>? = null
-        val mutation = coordinator.applyHostMutation {
+        val mutation = coordinator.applyLifecycleMutation {
             controller.submit(action).also { submission = it }
                 .let { it is Result.Success && it.data.stateChanged }
         }
         return mutation == HostMutationResult.Applied && submission is Result.Success
+    }
+
+    /** Atomically orders permanent seat revocation against reconnect recovery. */
+    private suspend fun retireAndContinue(playerId: PlayerId): Boolean {
+        if (!coordinator.awaitSessionStarted()) return false
+        var retired = false
+        var reducerInvariantFailed = false
+        val mutation = coordinator.applyLifecycleMutation {
+            if (playerId !in controller.currentState().public.disconnectedPlayers) {
+                return@applyLifecycleMutation false
+            }
+            when (room.retireDisconnectedMember(playerId)) {
+                is Result.Failure -> false
+                is Result.Success -> {
+                    retired = true
+                    when (
+                        val submission = controller.submit(
+                            MafiaAction.ContinueWithoutPlayer(playerId),
+                        )
+                    ) {
+                        is Result.Success -> submission.data.stateChanged.also { changed ->
+                            if (!changed) reducerInvariantFailed = true
+                        }
+                        is Result.Failure -> {
+                            reducerInvariantFailed = true
+                            false
+                        }
+                    }
+                }
+            }
+        }
+        if (retired && (reducerInvariantFailed || mutation != HostMutationResult.Applied)) {
+            terminate(SessionEndReason.Cancelled)
+            return false
+        }
+        return mutation == HostMutationResult.Applied
     }
 
     companion object {

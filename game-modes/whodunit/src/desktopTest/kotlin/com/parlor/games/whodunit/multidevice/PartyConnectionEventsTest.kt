@@ -5,6 +5,7 @@ import assertk.assertions.contains
 import assertk.assertions.doesNotContain
 import assertk.assertions.isEqualTo
 import assertk.assertions.isFalse
+import assertk.assertions.isInstanceOf
 import assertk.assertions.isTrue
 import com.parlor.core.ids.CaseId
 import com.parlor.core.ids.ModeId
@@ -13,6 +14,7 @@ import com.parlor.core.ids.SessionId
 import com.parlor.core.random.RandomSource
 import com.parlor.core.time.FakeClock
 import com.parlor.engine.session.SessionConfig
+import com.parlor.engine.session.SubmitError
 import com.parlor.engine.state.Player
 import com.parlor.games.whodunit.WhodunitDefinition
 import com.parlor.games.whodunit.WhodunitIds
@@ -306,9 +308,10 @@ class PartyConnectionEventsTest {
         bus.registerPeer(hostId)
         bus.registerPeer(alice)
         val session = buildHostSession(loadCase())
+        val room = PartyEventsHostRoom(bus, hostId)
         val bridge = WhodunitHostRoomBridge(
             session,
-            PartyEventsHostRoom(bus, hostId),
+            room,
             players,
             scope,
             json,
@@ -325,11 +328,68 @@ class PartyConnectionEventsTest {
         val afterDecision = session.hostState.value.state
         assertThat(afterDecision.public.disconnectedPlayers.isEmpty()).isTrue()
         assertThat(afterDecision.phase is WhodunitPhase.Reveal).isTrue()
+        assertThat(room.retiredMembers).isEqualTo(listOf(alice))
 
         advanceTimeBy(201L)
         runCurrent()
         assertThat(session.hostState.value.state).isEqualTo(afterDecision)
         assertThat(bridge.continueWithout(alice)).isFalse()
+        bridge.close()
+    }
+
+    @Test
+    fun failed_transport_retirement_keeps_the_player_disconnected_and_retryable() = runTest {
+        val scope = TestScope(UnconfinedTestDispatcher(testScheduler))
+        val bus = InMemoryRoomBus()
+        bus.registerPeer(alice)
+        val session = buildHostSession(loadCase())
+        val room = PartyEventsHostRoom(bus, hostId).apply {
+            retirementError = NetError.TransportFailure("injected retirement failure")
+        }
+        val bridge = WhodunitHostRoomBridge(
+            session,
+            room,
+            players,
+            scope,
+            json,
+            rejoinGraceMs = 200L,
+            heartbeatIntervalMs = 0L,
+            requireStartHandshake = false,
+        )
+
+        bus.emitPeerLeft(alice, "Alice")
+        runCurrent()
+        assertThat(bridge.continueWithout(alice)).isFalse()
+
+        val state = session.hostState.value.state
+        assertThat(state.public.disconnectedPlayers).contains(alice)
+        assertThat(state.public.droppedPlayers).doesNotContain(alice)
+        assertThat(room.retiredMembers).isEqualTo(emptyList())
+        bridge.close()
+    }
+
+    @Test
+    fun suspended_room_rejects_host_gameplay_without_mutating_state() = runTest {
+        val scope = TestScope(UnconfinedTestDispatcher(testScheduler))
+        val room = PartyEventsHostRoom(InMemoryRoomBus(), hostId)
+        val session = buildHostSession(loadCase())
+        val bridge = WhodunitHostRoomBridge(
+            session,
+            room,
+            players,
+            scope,
+            json,
+            heartbeatIntervalMs = 0L,
+            requireStartHandshake = false,
+        )
+        room.lifecycleState.value = RoomLifecycleState.Suspended(120_000L)
+        runCurrent()
+        val before = session.hostState.value.state
+
+        val result = bridge.submitHostAction(WhodunitAction.AcknowledgeIntro(hostId))
+
+        assertThat(result).isEqualTo(PResult.Failure(SubmitError.SessionSuspended))
+        assertThat(session.hostState.value.state).isEqualTo(before)
         bridge.close()
     }
 
@@ -654,6 +714,8 @@ private class PartyEventsHostRoom(
     private val hostId: PlayerId,
 ) : LocalRoom {
     val sent = mutableListOf<Pair<SendTarget, HostMessage>>()
+    val retiredMembers = mutableListOf<PlayerId>()
+    var retirementError: NetError? = null
     var terminalSendGate: CompletableDeferred<Unit>? = null
     private val _info = MutableStateFlow(
         RoomInfo(
@@ -687,6 +749,15 @@ private class PartyEventsHostRoom(
 
     override suspend fun sendToHost(message: PeerMessage): com.parlor.core.result.Result<Unit, NetError> =
         com.parlor.core.result.Result.Failure(NetError.Unauthorized)
+
+    override suspend fun retireDisconnectedMember(
+        playerId: PlayerId,
+    ): com.parlor.core.result.Result<Unit, NetError> {
+        retirementError?.let { return com.parlor.core.result.Result.Failure(it) }
+        if (playerId !in retiredMembers) retiredMembers += playerId
+        _members.value = _members.value.filterNot { it.playerId == playerId }
+        return com.parlor.core.result.Result.Success(Unit)
+    }
 
     override suspend fun leave() {}
 }

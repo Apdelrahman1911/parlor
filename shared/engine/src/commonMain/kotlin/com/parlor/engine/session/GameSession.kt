@@ -38,5 +38,7 @@ sealed interface SubmitError {
     data class RejectedByReducer(val reason: String) : SubmitError
     /** Another host-authoritative mutation is awaiting an explicit outcome. */
     data object CommandPending : SubmitError
+    /** The room is temporarily unable to accept gameplay mutations. */
+    data object SessionSuspended : SubmitError
     data object SessionClosed : SubmitError
 }

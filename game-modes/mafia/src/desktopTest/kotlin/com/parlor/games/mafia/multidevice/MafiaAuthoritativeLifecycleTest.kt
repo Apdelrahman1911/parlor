@@ -13,6 +13,7 @@ import com.parlor.core.result.Result
 import com.parlor.core.time.FakeClock
 import com.parlor.engine.reducer.DefaultReducerContext
 import com.parlor.engine.session.SessionConfig
+import com.parlor.engine.session.SubmitError
 import com.parlor.engine.state.Player
 import com.parlor.games.mafia.MafiaDefinition
 import com.parlor.games.mafia.MafiaIds
@@ -31,6 +32,7 @@ import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.NetError
 import com.parlor.networking.room.PeerEvent
 import com.parlor.networking.room.RoomInfo
+import com.parlor.networking.room.RoomLifecycleState
 import com.parlor.networking.room.RoomMember
 import com.parlor.networking.room.SendTarget
 import com.parlor.session.multidevice.InMemoryPeerRoom
@@ -240,11 +242,42 @@ class MafiaAuthoritativeLifecycleTest {
         val afterDecision = fixture.session.hostState.value.state
         assertThat(alice in afterDecision.public.disconnectedPlayers).isFalse()
         assertThat(alice in afterDecision.public.droppedPlayers).isTrue()
+        assertThat(fixture.hostRoom.retiredMembers).isEqualTo(listOf(alice))
 
         advanceTimeBy(201)
         runCurrent()
         assertThat(fixture.session.hostState.value.state).isEqualTo(afterDecision)
         assertThat(fixture.bridge.continueWithout(alice)).isFalse()
+        fixture.close()
+    }
+
+    @Test
+    fun failed_transport_retirement_keeps_the_player_disconnected_and_retryable() = runTest {
+        val fixture = fixture(TestScope(UnconfinedTestDispatcher(testScheduler)))
+        fixture.hostRoom.retirementError =
+            NetError.TransportFailure("injected retirement failure")
+        fixture.bus.emitPeerLeft(alice, "Alice")
+        runCurrent()
+
+        assertThat(fixture.bridge.continueWithout(alice)).isFalse()
+
+        val state = fixture.session.hostState.value.state
+        assertThat(alice in state.public.disconnectedPlayers).isTrue()
+        assertThat(alice in state.public.droppedPlayers).isFalse()
+        assertThat(fixture.hostRoom.retiredMembers).isEqualTo(emptyList())
+        fixture.close()
+    }
+
+    @Test
+    fun suspended_room_rejects_host_gameplay_without_mutating_state() = runTest {
+        val fixture = fixture(TestScope(UnconfinedTestDispatcher(testScheduler)))
+        val before = fixture.session.hostState.value.state
+        fixture.hostRoom.lifecycleState.value = RoomLifecycleState.Suspended(120_000L)
+
+        val result = fixture.bridge.submitHostAction(MafiaAction.AcknowledgeRoleViewed(host))
+
+        assertThat(result).isEqualTo(Result.Failure(SubmitError.SessionSuspended))
+        assertThat(fixture.session.hostState.value.state).isEqualTo(before)
         fixture.close()
     }
 
@@ -515,7 +548,11 @@ private class LifecycleHostRoom(
     override val selfPlayerId = hostId
     override val incoming: Flow<RoomMessage> = bus.hostMessagesIn
     override val peerEvents: SharedFlow<PeerEvent> = bus.peerEvents
+    val lifecycleState = MutableStateFlow<RoomLifecycleState>(RoomLifecycleState.Active)
+    override val lifecycle = lifecycleState.asStateFlow()
     val sent = mutableListOf<Pair<SendTarget, HostMessage>>()
+    val retiredMembers = mutableListOf<PlayerId>()
+    var retirementError: NetError? = null
     var terminalSendGate: CompletableDeferred<Unit>? = null
 
     fun setMembers(members: List<RoomMember>) {
@@ -534,6 +571,13 @@ private class LifecycleHostRoom(
 
     override suspend fun sendToHost(message: PeerMessage): Result<Unit, NetError> =
         Result.Failure(NetError.Unauthorized)
+
+    override suspend fun retireDisconnectedMember(playerId: PlayerId): Result<Unit, NetError> {
+        retirementError?.let { return Result.Failure(it) }
+        if (playerId !in retiredMembers) retiredMembers += playerId
+        memberState.value = memberState.value.filterNot { it.playerId == playerId }
+        return Result.Success(Unit)
+    }
 
     override suspend fun leave() = Unit
 }

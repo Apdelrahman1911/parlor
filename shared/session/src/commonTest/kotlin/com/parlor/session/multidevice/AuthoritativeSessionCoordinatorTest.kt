@@ -258,6 +258,49 @@ class AuthoritativeSessionCoordinatorTest {
     }
 
     @Test
+    fun `caller cancellation removes a queued host mutation before it can execute`() = runTest {
+        val room = RecordingRoom(isHost = true, selfPlayerId = PlayerId("host"))
+        val entered = CompletableDeferred<Unit>()
+        val release = CompletableDeferred<Unit>()
+        var domainValue = 0
+        val coordinator = HostAuthoritativeSessionCoordinator(
+            room = room,
+            protocol = protocol,
+            remotePlayers = setOf(peerId),
+            scope = this,
+            applyCommand = { _, _ -> CommandApplication.InvalidAction },
+            snapshotFor = { PlayerSnapshotPayload(byteArrayOf(), byteArrayOf()) },
+            heartbeatIntervalMs = 0,
+            requireStartHandshake = false,
+        )
+        val executing = async {
+            coordinator.applyHostMutation {
+                entered.complete(Unit)
+                release.await()
+                domainValue += 1
+                true
+            }
+        }
+        entered.await()
+        val cancelled = async {
+            coordinator.applyHostMutation {
+                domainValue += 100
+                true
+            }
+        }
+        runCurrent()
+
+        cancelled.cancel(CancellationException("host screen action abandoned"))
+        release.complete(Unit)
+        assertEquals(HostMutationResult.Applied, executing.await())
+        runCurrent()
+
+        assertTrue(cancelled.isCancelled)
+        assertEquals(1, domainValue)
+        coordinator.close()
+    }
+
+    @Test
     fun `failed publication does not kill mailbox or strand later host mutation`() = runTest {
         val room = RecordingRoom(isHost = true, selfPlayerId = PlayerId("host"))
         var snapshotAttempt = 0
@@ -1029,6 +1072,48 @@ class AuthoritativeSessionCoordinatorTest {
             listOf(CommandStatus.SessionSuspended, CommandStatus.Applied),
             room.sent.mapNotNull { (it.message as? HostMessage.CommandResult)?.status },
         )
+        coordinator.close()
+    }
+
+    @Test
+    fun `host gameplay mutation is suspended while lifecycle mutation remains ordered`() = runTest {
+        val room = RecordingRoom(isHost = true, selfPlayerId = PlayerId("host"))
+        var domainValue = 0
+        val coordinator = HostAuthoritativeSessionCoordinator(
+            room = room,
+            protocol = protocol,
+            remotePlayers = setOf(peerId),
+            scope = this,
+            applyCommand = { _, _ -> CommandApplication.InvalidAction },
+            snapshotFor = { PlayerSnapshotPayload(byteArrayOf(domainValue.toByte()), byteArrayOf()) },
+            heartbeatIntervalMs = 0,
+            requireStartHandshake = false,
+        )
+        room.lifecycleState.value = RoomLifecycleState.Suspended(120_000L)
+
+        val gameplay = coordinator.applyHostMutation {
+            domainValue += 100
+            true
+        }
+        val lifecycle = coordinator.applyLifecycleMutation {
+            domainValue += 1
+            true
+        }
+
+        assertEquals(HostMutationResult.Suspended, gameplay)
+        assertEquals(HostMutationResult.Applied, lifecycle)
+        assertEquals(1, domainValue)
+        assertEquals(1L, coordinator.revision.value)
+
+        room.lifecycleState.value = RoomLifecycleState.Expired
+        assertEquals(
+            HostMutationResult.NotStarted,
+            coordinator.applyLifecycleMutation {
+                domainValue += 10
+                true
+            },
+        )
+        assertEquals(1, domainValue)
         coordinator.close()
     }
 

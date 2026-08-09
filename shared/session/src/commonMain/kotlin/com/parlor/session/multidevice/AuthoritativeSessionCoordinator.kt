@@ -58,6 +58,7 @@ sealed interface CommandApplication {
 enum class HostMutationResult {
     Applied,
     Unchanged,
+    Suspended,
     NotStarted,
     Closed,
 }
@@ -92,6 +93,7 @@ class HostAuthoritativeSessionCoordinator(
         data class Publish(val incrementRevision: Boolean) : Work
         data class HostMutation(
             val apply: suspend () -> Boolean,
+            val requiresActiveRoom: Boolean,
             val completion: CompletableDeferred<HostMutationResult>,
         ) : Work
         data class End(
@@ -391,14 +393,33 @@ class HostAuthoritativeSessionCoordinator(
      * remote commands. This keeps the domain state and authoritative protocol
      * revision in one order even when host and peer actions arrive together.
      */
-    suspend fun applyHostMutation(apply: suspend () -> Boolean): HostMutationResult {
+    suspend fun applyHostMutation(apply: suspend () -> Boolean): HostMutationResult =
+        applyHostMutation(requiresActiveRoom = true, apply = apply)
+
+    /**
+     * Serializes transport/lifecycle recovery with ordinary game commands.
+     * Lifecycle mutations may run while the room is suspended, but still
+     * require a started, non-terminal authoritative session.
+     */
+    suspend fun applyLifecycleMutation(apply: suspend () -> Boolean): HostMutationResult =
+        applyHostMutation(requiresActiveRoom = false, apply = apply)
+
+    private suspend fun applyHostMutation(
+        requiresActiveRoom: Boolean,
+        apply: suspend () -> Boolean,
+    ): HostMutationResult {
         val completion = CompletableDeferred<HostMutationResult>()
         try {
-            mailbox.send(Work.HostMutation(apply, completion))
+            mailbox.send(Work.HostMutation(apply, requiresActiveRoom, completion))
+            return completion.await()
+        } catch (cancelled: CancellationException) {
+            // A mutation cancelled before the worker starts must never execute
+            // later merely because it was already queued in the mailbox.
+            completion.cancel(cancelled)
+            throw cancelled
         } catch (_: ClosedSendChannelException) {
             return HostMutationResult.Closed
         }
-        return completion.await()
     }
 
     suspend fun end(reason: SessionEndReason) {
@@ -474,7 +495,24 @@ class HostAuthoritativeSessionCoordinator(
 
     private suspend fun processHostMutation(work: Work.HostMutation) {
         try {
+            if (work.completion.isCancelled) return
             if (!canProcessGameTraffic()) {
+                work.completion.complete(HostMutationResult.NotStarted)
+                return
+            }
+            if (
+                work.requiresActiveRoom &&
+                room.lifecycle.value != RoomLifecycleState.Active
+            ) {
+                work.completion.complete(HostMutationResult.Suspended)
+                return
+            }
+            if (
+                !work.requiresActiveRoom &&
+                room.lifecycle.value.let {
+                    it == RoomLifecycleState.Expired || it == RoomLifecycleState.Closed
+                }
+            ) {
                 work.completion.complete(HostMutationResult.NotStarted)
                 return
             }

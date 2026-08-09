@@ -73,6 +73,24 @@ interface LocalRoom {
     suspend fun closeAdmissions(): Result<List<RoomMember>, NetError> =
         Result.Success(members.value.filter(RoomMember::connected))
 
+    /**
+     * Permanently retires an admitted remote game seat and revokes every
+     * transport capability that could reconnect it.
+     *
+     * This is deliberately separate from a transient socket disconnect. The
+     * host calls it only after the frozen game roster has marked [playerId]
+     * disconnected and the authoritative game has chosen to continue without
+     * that player. Implementations must make membership removal, credential
+     * revocation, and cancellation of any in-flight resume transaction one
+     * atomic state transition. A repeated call for the same previously
+     * admitted seat is idempotent.
+     *
+     * The default is fail-closed so a transport cannot silently claim that a
+     * resumable credential was revoked when it has no such implementation.
+     */
+    suspend fun retireDisconnectedMember(playerId: PlayerId): Result<Unit, NetError> =
+        Result.Failure(NetError.Unauthorized)
+
     suspend fun send(target: SendTarget, message: HostMessage): Result<Unit, NetError>
     suspend fun sendToHost(message: PeerMessage): Result<Unit, NetError>
 

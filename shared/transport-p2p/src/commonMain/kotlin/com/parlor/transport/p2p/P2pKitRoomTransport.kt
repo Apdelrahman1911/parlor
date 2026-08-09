@@ -1712,6 +1712,10 @@ internal class HostP2pRoom(
             previousDigest?.fill(0)
         }
     }
+    private data class RetiredMemberResources(
+        val sessions: Set<P2pSession>,
+        val credential: HostCredential?,
+    )
     private val pendingByPlayer: MutableMap<PlayerId, PendingConnection> = mutableMapOf()
     /** Seats approved by the host but not yet committed after acceptance delivery. */
     private val admissionReservations: MutableSet<PlayerId> = mutableSetOf()
@@ -2660,6 +2664,84 @@ internal class HostP2pRoom(
             attemptCleanup(diagnostics, P2pDiagnosticRole.HOST) { session.close() }
         }
         return Result.Success(frozen.members)
+    }
+
+    /**
+     * Revokes a frozen game seat as one host-owned transaction. Removing every
+     * map entry under [stateMutex] makes a concurrent resume/admission commit
+     * fail its identity checks; socket cleanup happens only after that
+     * authoritative revocation is visible.
+     */
+    override suspend fun retireDisconnectedMember(
+        playerId: PlayerId,
+    ): Result<Unit, NetError> {
+        if (playerId == hostPlayerId) return Result.Failure(NetError.Unauthorized)
+
+        var failure: NetError? = null
+        val retired = stateMutex.withLock {
+            when {
+                left -> {
+                    failure = NetError.NotConnected
+                    null
+                }
+                !admissionsClosed -> {
+                    // Seat retirement is a gameplay operation. Lobby removal
+                    // continues to use rejectAdmission/explicit peer Leave.
+                    failure = NetError.InvalidInput
+                    null
+                }
+                playerId !in previouslySeenPlayerIds -> {
+                    failure = NetError.NotConnected
+                    null
+                }
+                else -> {
+                    val sessions = linkedSetOf<P2pSession>()
+                    sessionsByPlayer.remove(playerId)?.let(sessions::add)
+                    pendingByPlayer.remove(playerId)?.let { pending ->
+                        sessions += pending.session
+                        pending.transaction?.confirmation?.complete(Unit)
+                    }
+                    admissionReadyByPlayer.remove(playerId)?.let { barrier ->
+                        sessions += barrier.session
+                        barrier.signal.complete(Unit)
+                    }
+                    resumeReadyByPlayer.remove(playerId)?.let { barrier ->
+                        sessions += barrier.session
+                        barrier.signal.complete(Unit)
+                    }
+                    // Include a just-accepted physical session that has not yet
+                    // reached one of the indexed transaction maps.
+                    trackedSessions
+                        .filterTo(sessions) { session ->
+                            PlayerId(session.peer.id.value) == playerId
+                        }
+                    trackedSessions.removeAll(sessions)
+                    admissionReservations.remove(playerId)
+                    membersByPlayer.remove(playerId)
+                    rejoinDeadlineByPlayer.remove(playerId)
+                    val credential = credentialsByPlayer.remove(playerId)
+                    publishMembers()
+                    publishPendingAdmissions()
+                    RetiredMemberResources(sessions, credential)
+                }
+            }
+        }
+        failure?.let { return Result.Failure(it) }
+
+        // Once the mutex transition has committed, cancellation must not leave
+        // a revoked credential resident in memory or an adopted socket alive.
+        val resources = checkNotNull(retired)
+        resources.credential?.wipe()
+        withContext(NonCancellable) {
+            resources.sessions.forEach { session ->
+                attemptCleanup(
+                    diagnostics,
+                    P2pDiagnosticRole.HOST,
+                    preserveCancellation = false,
+                ) { session.close() }
+            }
+        }
+        return Result.Success(Unit)
     }
 
     private suspend fun admit(

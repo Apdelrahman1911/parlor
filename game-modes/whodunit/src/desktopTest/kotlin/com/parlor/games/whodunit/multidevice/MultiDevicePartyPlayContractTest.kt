@@ -599,5 +599,10 @@ private class TestHostRoom(
     override suspend fun sendToHost(message: PeerMessage): Result<Unit, NetError> =
         Result.Failure(NetError.Unauthorized)
 
+    override suspend fun retireDisconnectedMember(playerId: PlayerId): Result<Unit, NetError> {
+        _members.value = _members.value.filterNot { it.playerId == playerId }
+        return Result.Success(Unit)
+    }
+
     override suspend fun leave() {}
 }
