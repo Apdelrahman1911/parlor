@@ -25,6 +25,7 @@ import com.parlor.games.mafia.domain.state.VoteRoundRecord
 import com.parlor.games.mafia.domain.state.team
 import kotlinx.serialization.json.Json
 import kotlin.test.Test
+import kotlin.test.assertFailsWith
 
 /**
  * Snapshot codec is the persistence/transport boundary for full MafiaState.
@@ -69,7 +70,6 @@ class MafiaSnapshotCodecTest {
                 settings = MafiaSettingsPresets.forPlayerCount(ps.size),
                 day = 1,
                 roster = ps.map { PublicPlayerSlot(it.id, it.displayName, it.seat) },
-                lastNight = NightAnnouncement(day = 1, killedPlayerId = null, wasSaved = false),
             ),
             privatePerPlayer = privatePerPlayer,
             hostOnly = MafiaHostOnly(
@@ -106,11 +106,39 @@ class MafiaSnapshotCodecTest {
 
     @Test
     fun post_game_state_round_trips_with_winner() {
-        val state = fixture().copy(
+        val base = fixture()
+        val state = base.copy(
             phase = MafiaPhase.PostGame,
-            public = fixture().public.copy(winner = Team.Town),
+            public = base.public.copy(
+                roster = base.public.roster.map { slot ->
+                    slot.copy(
+                        alive = base.hostOnly.fullRoleMap[slot.playerId]?.team == Team.Town,
+                        revealedRole = base.hostOnly.fullRoleMap.getValue(slot.playerId),
+                    )
+                },
+                winner = Team.Town,
+            ),
         )
         assertThat(codec.decode(codec.encode(state))).isEqualTo(state)
+    }
+
+    @Test
+    fun impossible_public_state_is_rejected_on_encode() {
+        val invalid = fixture().copy(
+            public = fixture().public.copy(day = 0),
+        )
+
+        assertFailsWith<IllegalArgumentException> { codec.encode(invalid) }
+    }
+
+    @Test
+    fun impossible_public_state_is_rejected_on_decode() {
+        val invalid = fixture().copy(
+            public = fixture().public.copy(day = 0),
+        )
+        val payload = json.encodeToString(MafiaState.serializer(), invalid).encodeToByteArray()
+
+        assertFailsWith<IllegalArgumentException> { codec.decode(payload) }
     }
 
     @Test
@@ -119,6 +147,7 @@ class MafiaSnapshotCodecTest {
         val voting = base.copy(
             phase = MafiaPhase.Voting(day = 1, revoteRound = 0),
             public = base.public.copy(
+                lastNight = NightAnnouncement(day = 1, killedPlayerId = null, wasSaved = false),
                 activeVote = com.parlor.games.mafia.domain.state.ActiveVote(
                     day = 1,
                     revoteRound = 0,

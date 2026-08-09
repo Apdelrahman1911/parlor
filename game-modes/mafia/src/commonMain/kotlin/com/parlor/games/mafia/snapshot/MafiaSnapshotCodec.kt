@@ -1,6 +1,7 @@
 package com.parlor.games.mafia.snapshot
 
 import com.parlor.engine.snapshot.SnapshotCodec
+import com.parlor.games.mafia.domain.state.MafiaObservableStateValidator
 import com.parlor.games.mafia.domain.state.MafiaState
 import com.parlor.games.mafia.domain.state.withBoundedHostLogs
 import kotlinx.serialization.json.Json
@@ -13,9 +14,30 @@ class MafiaSnapshotCodec(
     private val json: Json,
 ) : SnapshotCodec<MafiaState> {
 
-    override fun encode(state: MafiaState): ByteArray =
-        json.encodeToString(MafiaState.serializer(), state.withBoundedHostLogs()).encodeToByteArray()
+    /**
+     * Snapshot payloads are persisted input. A caller's permissive Json
+     * configuration must not allow unknown fields or malformed current state
+     * to cross the storage boundary unnoticed.
+     */
+    private val strictJson = Json(json) {
+        ignoreUnknownKeys = false
+        isLenient = false
+        encodeDefaults = true
+    }
 
-    override fun decode(payload: ByteArray): MafiaState =
-        json.decodeFromString(MafiaState.serializer(), payload.decodeToString()).withBoundedHostLogs()
+    override fun encode(state: MafiaState): ByteArray {
+        val bounded = state.withBoundedHostLogs()
+        MafiaObservableStateValidator.requireValid(bounded)
+        return strictJson
+            .encodeToString(MafiaState.serializer(), bounded)
+            .encodeToByteArray()
+    }
+
+    override fun decode(payload: ByteArray): MafiaState {
+        val decoded = strictJson
+            .decodeFromString(MafiaState.serializer(), payload.decodeToString(throwOnInvalidSequence = true))
+            .withBoundedHostLogs()
+        MafiaObservableStateValidator.requireValid(decoded)
+        return decoded
+    }
 }
