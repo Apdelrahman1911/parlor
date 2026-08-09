@@ -30,7 +30,6 @@ import com.parlor.app.resources.host_cancel
 import com.parlor.app.resources.host_error_title
 import com.parlor.app.resources.host_start_description
 import com.parlor.app.resources.host_start_blocked
-import com.parlor.app.resources.host_start_solo
 import com.parlor.app.resources.host_start_with_players_format
 import com.parlor.app.resources.host_cancel_description
 import com.parlor.app.resources.host_approve

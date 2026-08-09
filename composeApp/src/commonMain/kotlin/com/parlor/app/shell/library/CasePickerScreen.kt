@@ -33,10 +33,8 @@ import com.parlor.app.resources.library_load_error_format
 import com.parlor.app.resources.case_picker_back_description
 import com.parlor.app.resources.case_picker_eyebrow
 import com.parlor.app.resources.case_picker_empty
-import com.parlor.app.resources.case_picker_loading
 import com.parlor.app.resources.case_picker_modes_format
 import com.parlor.app.resources.case_picker_players_format
-import com.parlor.app.resources.case_picker_select_description
 import com.parlor.app.resources.case_picker_subtitle
 import com.parlor.app.resources.case_picker_title
 import com.parlor.app.shell.dataErrorMessage
@@ -203,4 +201,3 @@ private fun CaseRow(summary: CaseSummary, onClick: () -> Unit) {
         }
     }
 }
-

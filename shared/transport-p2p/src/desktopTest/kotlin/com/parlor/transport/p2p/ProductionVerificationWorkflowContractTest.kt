@@ -43,6 +43,7 @@ class ProductionVerificationWorkflowContractTest {
             ":composeApp:testReleaseUnitTest",
             ":composeApp:compileReleaseKotlinAndroid",
             ":composeApp:lintRelease",
+            ":composeApp:verifyReleaseLintWarnings",
             ":composeApp:minifyReleaseWithR8",
             ":composeApp:bundleRelease",
         ).forEach { task ->

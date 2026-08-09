@@ -91,7 +91,7 @@ kotlin {
         }
         androidMain.dependencies {
             implementation(libs.koin.android)
-            implementation("androidx.activity:activity-compose:1.9.3")
+            implementation(libs.androidx.activity.compose)
         }
         commonTest.dependencies {
             implementation(kotlin("test"))
@@ -188,6 +188,42 @@ android {
 
     // Case JSON lives inside the Whodunit module's Compose Multiplatform
     // resources, not in app-level Android assets. See game-modes/whodunit/.
+}
+
+// The release target and pinned toolchain are deliberate compatibility
+// choices. Lint's update advisories are reviewed in
+// docs/ANDROID_LINT_TRIAGE.md; a new correctness/packaging warning must fail
+// the release gate instead of being silently accepted.
+val verifyReleaseLintWarnings by tasks.registering {
+    group = "verification"
+    description = "Fails if release lint reports an untriaged warning."
+    dependsOn("lintRelease")
+    inputs.file(layout.buildDirectory.file("reports/lint-results-release.xml"))
+    doLast {
+        val report = inputs.files.singleFile
+        check(report.isFile) { "Missing release lint report: ${report.absolutePath}" }
+
+        val document = javax.xml.parsers.DocumentBuilderFactory.newInstance()
+            .newDocumentBuilder()
+            .parse(report)
+        val allowedAdvisories = setOf(
+            "OldTargetApi",
+            "AndroidGradlePluginVersion",
+            "GradleDependency",
+            "NewerVersionAvailable",
+        )
+        val issues = document.getElementsByTagName("issue")
+        val untriaged = buildList {
+            for (index in 0 until issues.length) {
+                val issue = issues.item(index)
+                val id = issue.attributes.getNamedItem("id")?.nodeValue.orEmpty()
+                if (id !in allowedAdvisories) add(id)
+            }
+        }
+        check(untriaged.isEmpty()) {
+            "Release lint contains untriaged issue IDs: ${untriaged.distinct().sorted()}"
+        }
+    }
 }
 
 val verifyReleaseSigning by tasks.registering {

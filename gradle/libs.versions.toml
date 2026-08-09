@@ -1,5 +1,6 @@
 # Parlor — version catalog
-# Phase 0 draft. Bump to latest stable before Phase 1 build, but the structure is final.
+# Pinned release catalog. Versions change only through a reviewed compatibility
+# and dependency-verification update; the catalog is not a draft.
 
 [versions]
 
@@ -38,6 +39,9 @@ turbine = "1.2.0"
 assertk = "0.28.1"
 
 [libraries]
+
+# AndroidX
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version = "1.9.3" }
 
 # Kotlinx
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }

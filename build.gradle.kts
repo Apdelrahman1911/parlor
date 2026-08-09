@@ -41,6 +41,7 @@ val productionAndroidCheck = tasks.register("productionAndroidCheck") {
         ":composeApp:minifyReleaseWithR8",
         ":composeApp:bundleRelease",
         ":composeApp:lintRelease",
+        ":composeApp:verifyReleaseLintWarnings",
     )
 }
 
