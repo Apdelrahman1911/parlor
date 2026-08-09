@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonElement
 
 /**
  * Orchestrates remote + cache + bundled per ARCHITECTURE.md §8.3:
@@ -72,9 +73,16 @@ class DefaultCaseRepository(
 
         val remoteResult = remote.fetchCase(id).mapError { it.asDataError() }
         if (remoteResult is Result.Success) {
-            cache.put(remoteResult.data)
-            cacheUpdates.tryEmit(CaseUpdate.CaseAdded(remoteResult.data.toSummary()))
-            return validate(remoteResult.data, payloadValidator)
+            return when (val validated = validate(remoteResult.data, payloadValidator)) {
+                is Result.Success -> {
+                    // A remote envelope is not cacheable until its game-owned
+                    // payload has passed the same validator used by callers.
+                    cache.put(validated.data.envelope)
+                    cacheUpdates.tryEmit(CaseUpdate.CaseAdded(validated.data.envelope.toSummary()))
+                    validated
+                }
+                is Result.Failure -> validated
+            }
         }
 
         bundled.loadBundled(id)?.let { return validate(it, payloadValidator) }
@@ -92,19 +100,46 @@ class DefaultCaseRepository(
                     is Result.Failure -> return Result.Failure(DataError.CorruptedData)
                 }
                 // Pull each case into cache to warm it.
+                var invalidEnvelope = false
                 summaries.forEach { summary ->
                     val caseId = CaseId(summary.caseId)
                     val fetch = remote.fetchCase(caseId).mapError { it.asDataError() }
                     if (fetch is Result.Success) {
-                        cache.put(fetch.data)
-                        cacheUpdates.tryEmit(CaseUpdate.CaseRevised(summary))
+                        val raw = json.encodeToString(CaseEnvelope.serializer(), fetch.data)
+                        when (val shape = validator.validate(raw, shapeOnlyPayloadValidator(gameId))) {
+                            is Result.Success -> {
+                                val envelope = shape.data.envelope
+                                if (envelope.toSummary() == summary.copy(coverArtUrl = null)) {
+                                    cache.put(envelope)
+                                    cacheUpdates.tryEmit(CaseUpdate.CaseRevised(summary))
+                                } else {
+                                    invalidEnvelope = true
+                                }
+                            }
+                            is Result.Failure -> invalidEnvelope = true
+                        }
                     }
                 }
-                Result.Success(Unit)
+                if (invalidEnvelope) Result.Failure(DataError.CorruptedData)
+                else Result.Success(Unit)
             }
             is Result.Failure -> r.mapError { it } as Result<Unit, DataError>
         }
     }
+
+    /**
+     * Refresh has no game payload type at the repository boundary. It still
+     * validates the complete common envelope and exact list identity before a
+     * response is allowed into the cache; the typed payload validator remains
+     * mandatory when a caller opens the case.
+     */
+    private fun shapeOnlyPayloadValidator(gameId: GameId): PayloadValidator<JsonElement> =
+        object : PayloadValidator<JsonElement> {
+            override val gameId: String = gameId.raw
+
+            override fun validate(envelope: CaseEnvelope): Result<JsonElement, com.parlor.core.result.ValidationError> =
+                Result.Success(envelope.payload)
+        }
 
     private fun <TPayload> validate(
         envelope: CaseEnvelope,
