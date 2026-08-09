@@ -17,13 +17,12 @@ import com.parlor.content.validation.ValidatedCase
 import com.parlor.core.ids.PlayerId
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.engine.state.Player
-import com.parlor.games.whodunit.content.Round
-import com.parlor.games.whodunit.content.RoundConfig
 import com.parlor.games.whodunit.content.WhodunitCase
 import com.parlor.games.whodunit.domain.action.WhodunitAction
 import com.parlor.games.whodunit.domain.event.Verdict
 import com.parlor.games.whodunit.domain.event.WhodunitEvent
 import com.parlor.games.whodunit.domain.phase.WhodunitPhase
+import com.parlor.games.whodunit.domain.rules.WhodunitRoundPolicy
 import com.parlor.games.whodunit.domain.state.PartyReadiness
 import com.parlor.games.whodunit.domain.state.VoteState
 import com.parlor.games.whodunit.domain.state.WhodunitState
@@ -914,40 +913,17 @@ private fun resolveRoundDisplayConfig(
     roundIndex: Int,
     playerCount: Int,
 ): RoundDisplayConfig {
-    val round = pickRoundFromConfig(payload.roundConfigByPlayerCount, roundIndex, playerCount)
+    val round = WhodunitRoundPolicy.authoredRound(payload, roundIndex, playerCount)
     val (defaultTitle, defaultTagline) = defaultRoundTitleAndTagline(roundIndex, playerCount)
     return RoundDisplayConfig(
         title = round?.titleCardText?.takeIf { it.isNotBlank() } ?: defaultTitle,
         tagline = round?.taglineText?.takeIf { it.isNotBlank() } ?: defaultTagline,
-        discussionSeconds = round?.discussionSeconds?.takeIf { it > 0 } ?: DEFAULT_DISCUSSION_SECONDS,
+        discussionSeconds = WhodunitRoundPolicy.discussionSeconds(
+            payload,
+            roundIndex,
+            playerCount,
+        ),
     )
-}
-
-private fun pickRoundFromConfig(
-    config: Map<String, RoundConfig>,
-    roundIndex: Int,
-    playerCount: Int,
-): Round? {
-    if (config.isEmpty()) return null
-    val buckets = config.entries
-        .mapNotNull { (key, cfg) -> key.toIntOrNull()?.let { it to cfg } }
-        .sortedBy { it.first }
-    if (buckets.isEmpty()) return null
-
-    // Exact match first.
-    buckets.firstOrNull { it.first == playerCount }
-        ?.second
-        ?.rounds
-        ?.getOrNull(roundIndex - 1)
-        ?.let { return it }
-
-    // Nearest by absolute distance; tie → lower bucket (sorted ascending, so
-    // sortedBy is stable and the lower one wins).
-    val ordered = buckets.sortedBy { kotlin.math.abs(it.first - playerCount) }
-    for ((_, cfg) in ordered) {
-        cfg.rounds.getOrNull(roundIndex - 1)?.let { return it }
-    }
-    return null
 }
 
 private fun defaultRoundTitleAndTagline(roundIndex: Int, playerCount: Int): Pair<String, String> {
@@ -965,7 +941,6 @@ private fun defaultRoundTitleAndTagline(roundIndex: Int, playerCount: Int): Pair
     }
 }
 
-private const val DEFAULT_DISCUSSION_SECONDS = 180
 private const val LAST_BRIEFING_CARD_INDEX = 3
 private const val BRIEFING_COMPLETION_INDEX = 4
 

@@ -10,13 +10,12 @@ import com.parlor.engine.reducer.ReducerContext
 import com.parlor.engine.state.Player
 import com.parlor.games.whodunit.WhodunitIds
 import com.parlor.games.whodunit.content.Character
-import com.parlor.games.whodunit.content.Clue
-import com.parlor.games.whodunit.content.CluePools
 import com.parlor.games.whodunit.domain.action.WhodunitAction
 import com.parlor.games.whodunit.domain.event.KillerWinCause
 import com.parlor.games.whodunit.domain.event.Verdict
 import com.parlor.games.whodunit.domain.event.WhodunitEvent
 import com.parlor.games.whodunit.domain.phase.WhodunitPhase
+import com.parlor.games.whodunit.domain.rules.WhodunitCluePolicy
 import com.parlor.games.whodunit.domain.rules.WhodunitRules
 import com.parlor.games.whodunit.domain.state.PartyReadiness
 import com.parlor.games.whodunit.domain.state.PlayerRole
@@ -566,7 +565,15 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
         if (state.public.revealedClues.any { it.roundIndex == round.index }) {
             return Reduction(state)
         }
-        val clue = pickNextClue(state, ctx, round.index) ?: return Reduction(state)
+        val clue = WhodunitCluePolicy.select(
+            case = ctx.case,
+            killerCharacterId = state.hostOnly.killerCharacterId,
+            modeId = state.public.modeId,
+            playerCount = state.players.size,
+            randomSeed = state.hostOnly.randomSeed,
+            roundIndex = round.index,
+            drawnClueIds = state.hostOnly.drawnClueIds,
+        ) ?: return Reduction(state)
         val revealed = RevealedClue(id = ClueId(clue.id), text = clue.text, roundIndex = round.index)
         val newPublic = state.public.copy(revealedClues = state.public.revealedClues + revealed)
         val newHostOnly = state.hostOnly.copy(drawnClueIds = state.hostOnly.drawnClueIds + ClueId(clue.id))
@@ -574,86 +581,6 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
             state.copy(public = newPublic, hostOnly = newHostOnly),
             listOf(WhodunitEvent.ClueRevealed(ClueId(clue.id), clue.text, round.index)),
         )
-    }
-
-    private fun pickNextClue(
-        state: WhodunitState,
-        ctx: WhodunitReducerContext,
-        roundIndex: Int,
-    ): Clue? {
-        val pools = ctx.case.cluePools
-        val killerCharId = state.hostOnly.killerCharacterId.raw
-        val drawn = state.hostOnly.drawnClueIds
-        val random = RandomSource.seeded(state.hostOnly.randomSeed xor roundIndex.toLong().shl(8))
-        val modeId = state.public.modeId
-        val lastRound = isLastRound(modeId, state.players.size, roundIndex)
-        fun List<Clue>.forCurrentMode(): List<Clue> = filter { clue ->
-            clue.appliesToModes?.let { modes -> modeId.raw in modes } != false
-        }
-
-        return when {
-            lastRound -> pickLateGameClue(pools, killerCharId, modeId.raw, drawn, random)
-            roundIndex == 1 -> pickFromPool(
-                (pools.publicUniversal + pools.killerPointing[killerCharId].orEmpty())
-                    .forCurrentMode(),
-                drawn,
-                random,
-            )
-            else -> pickFromPool(
-                (pools.killerPointing[killerCharId].orEmpty() +
-                    pools.contradiction[killerCharId].orEmpty() +
-                    pools.redHerring[killerCharId].orEmpty())
-                    .forCurrentMode(),
-                drawn,
-                random,
-            )
-        }
-    }
-
-    private fun pickFromPool(
-        pool: List<Clue>,
-        drawn: Set<ClueId>,
-        random: RandomSource,
-    ): Clue? {
-        val available = pool.filterNot { ClueId(it.id) in drawn }
-        return available.takeIf { it.isNotEmpty() }?.let { random.pick(it) }
-    }
-
-    /**
-     * The design contract is explicit: the last round always carries the
-     * strongest clue. Prefer an undrawn `finalStrong` clue deterministically.
-     * The broader pools are only a defensive fallback for legacy/invalid
-     * content; validated shipping cases are required to provide final clues.
-     */
-    private fun pickLateGameClue(
-        pools: CluePools,
-        killerCharId: String,
-        modeId: String,
-        drawn: Set<ClueId>,
-        random: RandomSource,
-    ): Clue? {
-        fun List<Clue>.forCurrentMode(): List<Clue> = filter { clue ->
-            clue.appliesToModes?.let { modes -> modeId in modes } != false
-        }
-        val finalStrong = pools.finalStrong[killerCharId].orEmpty().forCurrentMode()
-        val killerPointing = pools.killerPointing[killerCharId].orEmpty().forCurrentMode()
-        val contradiction = pools.contradiction[killerCharId].orEmpty().forCurrentMode()
-        val redHerring = pools.redHerring[killerCharId].orEmpty().forCurrentMode()
-        val publicUniversal = pools.publicUniversal.forCurrentMode()
-
-        val undrawnFinalStrong = finalStrong.filterNot { ClueId(it.id) in drawn }
-        val undrawnKillerPointing = killerPointing.filterNot { ClueId(it.id) in drawn }
-        val undrawnContradiction = contradiction.filterNot { ClueId(it.id) in drawn }
-        val undrawnRedHerring = redHerring.filterNot { ClueId(it.id) in drawn }
-        val undrawnPublicUniversal = publicUniversal.filterNot { ClueId(it.id) in drawn }
-
-        if (undrawnFinalStrong.isNotEmpty()) return random.pick(undrawnFinalStrong)
-
-        val fallback = undrawnKillerPointing +
-            undrawnContradiction +
-            undrawnRedHerring +
-            undrawnPublicUniversal
-        return fallback.takeIf { it.isNotEmpty() }?.let { random.pick(it) }
     }
 
     private fun isLastRound(modeId: com.parlor.core.ids.ModeId, playerCount: Int, roundIndex: Int): Boolean =
