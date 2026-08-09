@@ -8,8 +8,13 @@ import com.parlor.core.time.Clock
 import com.parlor.core.time.SystemClock
 import com.parlor.games.mafia.di.mafiaModule
 import com.parlor.games.whodunit.di.whodunitModule
+import com.parlor.session.multidevice.ProcessMultiplayerSessionOwner
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.serialization.json.Json
 import org.koin.core.module.Module
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 /**
@@ -27,6 +32,14 @@ val coreModule: Module = module {
     single<Clock> { SystemClock }
     single<RandomSource> { RandomSource.system() }
     single { AppLifecycleCoordinator(get()) }
+    single<CoroutineScope>(qualifier = named("multiplayerSession")) {
+        CoroutineScope(Dispatchers.Default + SupervisorJob())
+    }
+    single {
+        ProcessMultiplayerSessionOwner(
+            processScope = get(qualifier = named("multiplayerSession")),
+        )
+    }
     // Strict JSON for content validation: unknown fields in case payloads must
     // fail validation rather than be silently dropped (ARCHITECTURE.md §8.4).
     single<Json> {
