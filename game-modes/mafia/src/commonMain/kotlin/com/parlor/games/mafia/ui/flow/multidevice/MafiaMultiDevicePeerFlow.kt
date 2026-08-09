@@ -32,6 +32,14 @@ import com.parlor.session.PlayMode
 import com.parlor.session.SessionController
 import com.parlor.session.party.PartyAwareSession
 import com.parlor.designsystem.components.ReconnectingOverlay
+import com.parlor.designsystem.components.LocalParlorToastState
+import com.parlor.designsystem.components.ParlorToastSeverity
+import com.parlor.games.mafia.resources.peer_command_duplicate
+import com.parlor.games.mafia.resources.peer_command_invalid
+import com.parlor.games.mafia.resources.peer_command_session_error
+import com.parlor.games.mafia.resources.peer_command_stale
+import com.parlor.networking.protocol.CommandStatus
+import com.parlor.session.multidevice.PeerCommandProgress
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -94,6 +102,39 @@ fun MafiaMultiDevicePeerFlow(
         )
     }
     DisposableEffect(bridge) { onDispose { bridge.close() } }
+
+    val toastState = LocalParlorToastState.current
+    val staleCommandCopy = stringResource(Res.string.peer_command_stale)
+    val invalidCommandCopy = stringResource(Res.string.peer_command_invalid)
+    val sessionCommandCopy = stringResource(Res.string.peer_command_session_error)
+    val duplicateCommandCopy = stringResource(Res.string.peer_command_duplicate)
+    LaunchedEffect(
+        bridge,
+        staleCommandCopy,
+        invalidCommandCopy,
+        sessionCommandCopy,
+        duplicateCommandCopy,
+    ) {
+        bridge.commandProgress.collect { progress ->
+            val resolved = progress as? PeerCommandProgress.Resolved ?: return@collect
+            val presentation = when (resolved.outcome.status) {
+                CommandStatus.Applied -> null
+                CommandStatus.Duplicate -> duplicateCommandCopy to ParlorToastSeverity.Info
+                CommandStatus.StaleRevision,
+                CommandStatus.SequenceGap -> staleCommandCopy to ParlorToastSeverity.Warning
+                CommandStatus.InvalidAction,
+                CommandStatus.Unauthorized,
+                CommandStatus.PayloadTooLarge,
+                CommandStatus.UnknownCommand -> invalidCommandCopy to ParlorToastSeverity.Danger
+                CommandStatus.IncompatibleVersion,
+                CommandStatus.SessionEnded,
+                CommandStatus.SessionSuspended ->
+                    sessionCommandCopy to ParlorToastSeverity.Danger
+            }
+            presentation?.let { (text, severity) -> toastState.show(text, severity) }
+            bridge.acknowledgeCommandOutcome(resolved.outcome.commandId)
+        }
+    }
 
     LaunchedEffect(bridge) {
         bridge.hostDisconnected.collect { onBackToHome() }

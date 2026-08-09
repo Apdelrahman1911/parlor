@@ -46,6 +46,8 @@ import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.HostDisconnectedOverlay
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorButtonVariant
+import com.parlor.designsystem.components.LocalParlorToastState
+import com.parlor.designsystem.components.ParlorToastSeverity
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.engine.session.SessionConfig
 import com.parlor.engine.session.SubmitError
@@ -117,6 +119,10 @@ import com.parlor.games.whodunit.resources.whodunit_loading_eyebrow
 import com.parlor.games.whodunit.resources.whodunit_vote_counting
 import com.parlor.games.whodunit.resources.peer_paused_body
 import com.parlor.games.whodunit.resources.peer_paused_eyebrow
+import com.parlor.games.whodunit.resources.peer_command_duplicate
+import com.parlor.games.whodunit.resources.peer_command_invalid
+import com.parlor.games.whodunit.resources.peer_command_session_error
+import com.parlor.games.whodunit.resources.peer_command_stale
 import org.jetbrains.compose.resources.stringResource
 import com.parlor.games.whodunit.ui.screens.setup.ModeSelectionScreen
 import com.parlor.games.whodunit.ui.screens.setup.PlayerCountDisplayStrategy
@@ -131,6 +137,7 @@ import com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostRoomBridge
 import com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitPeerRoomBridge
 import com.parlor.networking.protocol.SessionEndReason
 import com.parlor.networking.protocol.SessionProtocol
+import com.parlor.networking.protocol.CommandStatus
 import com.parlor.networking.room.LocalRoom
 import com.parlor.games.whodunit.domain.party.WhodunitReadinessGate
 import com.parlor.session.PlayMode
@@ -139,6 +146,7 @@ import com.parlor.session.SubmissionReceipt
 import com.parlor.session.ViewerContext
 import com.parlor.session.party.PartyAwareSession
 import com.parlor.session.passandplay.PassAndPlaySessionController
+import com.parlor.session.multidevice.PeerCommandProgress
 import com.parlor.storage.snapshot.SnapshotStore
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.awaitCancellation
@@ -917,6 +925,39 @@ fun WhodunitMultiplayerPeerFlow(
         )
     }
     DisposableEffect(bridge) { onDispose { bridge.close() } }
+
+    val toastState = LocalParlorToastState.current
+    val staleCommandCopy = stringResource(Res.string.peer_command_stale)
+    val invalidCommandCopy = stringResource(Res.string.peer_command_invalid)
+    val sessionCommandCopy = stringResource(Res.string.peer_command_session_error)
+    val duplicateCommandCopy = stringResource(Res.string.peer_command_duplicate)
+    LaunchedEffect(
+        bridge,
+        staleCommandCopy,
+        invalidCommandCopy,
+        sessionCommandCopy,
+        duplicateCommandCopy,
+    ) {
+        bridge.commandProgress.collect { progress ->
+            val resolved = progress as? PeerCommandProgress.Resolved ?: return@collect
+            val presentation = when (resolved.outcome.status) {
+                CommandStatus.Applied -> null
+                CommandStatus.Duplicate -> duplicateCommandCopy to ParlorToastSeverity.Info
+                CommandStatus.StaleRevision,
+                CommandStatus.SequenceGap -> staleCommandCopy to ParlorToastSeverity.Warning
+                CommandStatus.InvalidAction,
+                CommandStatus.Unauthorized,
+                CommandStatus.PayloadTooLarge,
+                CommandStatus.UnknownCommand -> invalidCommandCopy to ParlorToastSeverity.Danger
+                CommandStatus.IncompatibleVersion,
+                CommandStatus.SessionEnded,
+                CommandStatus.SessionSuspended ->
+                    sessionCommandCopy to ParlorToastSeverity.Danger
+            }
+            presentation?.let { (text, severity) -> toastState.show(text, severity) }
+            bridge.acknowledgeCommandOutcome(resolved.outcome.commandId)
+        }
+    }
 
     LaunchedEffect(bridge) {
         bridge.hostDisconnected.collect { onBackToLibrary() }

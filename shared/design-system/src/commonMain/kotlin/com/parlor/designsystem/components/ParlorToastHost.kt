@@ -25,6 +25,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import com.parlor.designsystem.theme.ParlorTheme
 import kotlinx.coroutines.delay
@@ -64,14 +67,15 @@ class ParlorToastState(
 ) {
     private val _toasts: MutableStateFlow<List<ParlorToast>> = MutableStateFlow(emptyList())
     val toasts: StateFlow<List<ParlorToast>> = _toasts
-    private var nextId: Long = 1L
-
     fun show(text: String, severity: ParlorToastSeverity = ParlorToastSeverity.Info) {
-        val current = _toasts.value
-        // Coalesce: if the most recent toast carries the same text we leave it alone.
-        if (current.lastOrNull()?.text == text) return
-        val toast = ParlorToast(id = nextId++, text = text, severity = severity)
-        _toasts.update { it + toast }
+        _toasts.update { current ->
+            // Keep this update pure and atomic: MutableStateFlow may re-run it
+            // under contention, so deriving the id from the active queue avoids
+            // a separate racy counter. IDs need only be unique among live items.
+            if (current.lastOrNull()?.text == text) return@update current
+            val nextId = (current.maxOfOrNull(ParlorToast::id) ?: 0L) + 1L
+            (current + ParlorToast(nextId, text, severity)).takeLast(MAX_QUEUED_TOASTS)
+        }
     }
 
     /** Internal — the host invokes this when its dismissal timer fires. */
@@ -81,6 +85,11 @@ class ParlorToastState(
 
     /** Read so the host can compute the dismiss delay. */
     internal fun durationFor(toast: ParlorToast): Long = defaultDurationMs
+
+    private companion object {
+        /** A flood cannot retain an unbounded amount of localized UI text. */
+        const val MAX_QUEUED_TOASTS: Int = 4
+    }
 }
 
 /**
@@ -152,6 +161,7 @@ private fun ToastChip(toast: ParlorToast) {
         modifier = Modifier
             .clip(RoundedCornerShape(ParlorTheme.radii.pill))
             .background(ParlorTheme.colors.surfaceElevated)
+            .semantics { liveRegion = LiveRegionMode.Polite }
             .padding(
                 horizontal = ParlorTheme.spacing.l,
                 vertical = ParlorTheme.spacing.s,
