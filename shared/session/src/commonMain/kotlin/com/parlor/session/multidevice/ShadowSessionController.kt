@@ -42,6 +42,7 @@ class ShadowSessionController<S : GameState, A : GameAction, E : GameEvent>(
 
     override val publicState: StateFlow<PublicProjection<S>> = _public.asStateFlow()
     override val hostState: StateFlow<HostProjection<S>>? = null   // peer side — host bucket never arrives
+    override val canonicalState: StateFlow<S>? = null
     override val events: SharedFlow<E> = _events.asSharedFlow()
     override val activeViewer: StateFlow<ViewerContext> = _activeViewer.asStateFlow()
 

@@ -43,6 +43,7 @@ class PartyAwareSession<S : GameState, A : GameAction, E : GameEvent>(
 
     override val publicState: StateFlow<PublicProjection<S>> get() = delegate.publicState
     override val hostState: StateFlow<HostProjection<S>>? get() = delegate.hostState
+    override val canonicalState: StateFlow<S>? get() = delegate.canonicalState
     override val events: SharedFlow<E> get() = delegate.events
     override val activeViewer: StateFlow<ViewerContext> get() = delegate.activeViewer
 
@@ -53,7 +54,9 @@ class PartyAwareSession<S : GameState, A : GameAction, E : GameEvent>(
         var stateChanged = false
         var awaitingAuthority = false
         if (playMode.isLocal) {
-            val currentState = delegate.publicState.value.state
+            val currentState = requireNotNull(delegate.canonicalState) {
+                "A local party session requires an authoritative controller"
+            }.value
             val pending = gate.pendingAcks(currentState, action)
             // Auto-issue every still-missing per-player ack so the gated
             // action that follows passes the reducer's readiness check.

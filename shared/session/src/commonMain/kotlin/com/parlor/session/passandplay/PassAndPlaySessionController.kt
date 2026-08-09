@@ -58,6 +58,7 @@ class PassAndPlaySessionController<S : GameState, A : GameAction, E : GameEvent>
     private val mutex = Mutex()
     private val state: MutableStateFlow<S> =
         MutableStateFlow(restoredState ?: definition.createInitialState(config))
+    override val canonicalState: StateFlow<S> = state.asStateFlow()
     private val reducer = definition.reducer()
     private val policy: ProjectionPolicy<S> = definition.projectionPolicy()
 
