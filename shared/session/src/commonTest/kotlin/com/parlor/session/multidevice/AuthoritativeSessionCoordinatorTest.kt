@@ -22,6 +22,9 @@ import com.parlor.networking.room.RoomMember
 import com.parlor.networking.room.SendTarget
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -211,6 +214,40 @@ class AuthoritativeSessionCoordinatorTest {
 
         assertTrue(executing.isCancelled)
         assertTrue(queued.isCancelled || queued.await() == HostMutationResult.Closed)
+    }
+
+    @Test
+    fun `parent scope cancellation completes executing and queued mutation callers`() = runTest {
+        val room = RecordingRoom(isHost = true, selfPlayerId = PlayerId("host"))
+        val parent = SupervisorJob()
+        val ownedScope = CoroutineScope(coroutineContext + parent)
+        val entered = CompletableDeferred<Unit>()
+        val neverReleased = CompletableDeferred<Unit>()
+        val coordinator = HostAuthoritativeSessionCoordinator(
+            room = room,
+            protocol = protocol,
+            remotePlayers = setOf(peerId),
+            scope = ownedScope,
+            applyCommand = { _, _ -> CommandApplication.InvalidAction },
+            snapshotFor = { PlayerSnapshotPayload(byteArrayOf(), byteArrayOf()) },
+            heartbeatIntervalMs = 0,
+        )
+        val executing = async {
+            coordinator.applyHostMutation {
+                entered.complete(Unit)
+                neverReleased.await()
+                true
+            }
+        }
+        entered.await()
+        val queued = async { coordinator.applyHostMutation { true } }
+        runCurrent()
+
+        parent.cancel(CancellationException("screen owner disposed"))
+        runCurrent()
+
+        assertFailsWith<CancellationException> { withTimeout(1_000L) { executing.await() } }
+        assertFailsWith<CancellationException> { withTimeout(1_000L) { queued.await() } }
     }
 
     @Test

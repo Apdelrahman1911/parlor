@@ -18,6 +18,7 @@ import com.parlor.networking.security.SecureIds
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ClosedSendChannelException
@@ -90,15 +91,21 @@ class HostAuthoritativeSessionCoordinator(
     private val _revision = MutableStateFlow(0L)
     val revision: StateFlow<Long> = _revision.asStateFlow()
 
+    private val coordinatorJob = SupervisorJob(scope.coroutineContext[Job])
+    private val coordinatorScope = CoroutineScope(scope.coroutineContext + coordinatorJob)
     private val jobs = mutableListOf<Job>()
 
     init {
-        jobs += scope.launch {
+        coordinatorJob.invokeOnCompletion {
+            mailbox.close()
+            drainPendingWork(CancellationException("Host coordinator parent scope closed"))
+        }
+        jobs += coordinatorScope.launch {
             room.incoming.collect { message ->
                 if (message is PeerMessage) mailbox.send(Work.Incoming(message))
             }
         }
-        jobs += scope.launch {
+        jobs += coordinatorScope.launch {
             for (work in mailbox) {
                 try {
                     when (work) {
@@ -122,7 +129,7 @@ class HostAuthoritativeSessionCoordinator(
             }
         }
         if (heartbeatIntervalMs > 0L) {
-            jobs += scope.launch {
+            jobs += coordinatorScope.launch {
                 while (true) {
                     delay(heartbeatIntervalMs)
                     mailbox.send(Work.Heartbeat)
@@ -170,11 +177,15 @@ class HostAuthoritativeSessionCoordinator(
         // before closing/draining left queued HostMutation/End callers waiting
         // forever.
         mailbox.close()
-        jobs.forEach(Job::cancel)
+        coordinatorJob.cancel(CancellationException("Host coordinator closed"))
         jobs.clear()
+        drainPendingWork(CancellationException("Host coordinator closed"))
+    }
+
+    private fun drainPendingWork(cancelled: CancellationException) {
         while (true) {
             val work = mailbox.tryReceive().getOrNull() ?: break
-            cancelCompletion(work, CancellationException("Host coordinator closed"))
+            cancelCompletion(work, cancelled)
         }
     }
 
