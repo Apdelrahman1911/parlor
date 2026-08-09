@@ -15,6 +15,15 @@ plugins {
     alias(libs.plugins.detekt) apply false
 }
 
+// Explicit repository-wide test aggregate. Gradle's task-name abbreviation
+// previously made `allTests` depend on whichever module tasks happened to be
+// selected by the caller. Keeping a real root task makes the CI contract
+// deterministic and automatically includes every KMP module added later.
+val allTests = tasks.register("allTests") {
+    group = "verification"
+    description = "Runs every configured KMP allTests task."
+}
+
 // Stable, documented verification entry points. New KMP modules join the
 // desktop suite automatically when they apply the multiplatform plugin.
 val productionDesktopCheck = tasks.register("productionDesktopCheck") {
@@ -24,8 +33,15 @@ val productionDesktopCheck = tasks.register("productionDesktopCheck") {
 
 val productionAndroidCheck = tasks.register("productionAndroidCheck") {
     group = "verification"
-    description = "Builds and lints the unsigned Android release bundle."
-    dependsOn(":composeApp:bundleRelease", ":composeApp:lintRelease")
+    description = "Runs Android debug/release unit tests and builds, shrinks, and lints the unsigned release bundle."
+    dependsOn(
+        ":composeApp:testDebugUnitTest",
+        ":composeApp:testReleaseUnitTest",
+        ":composeApp:compileReleaseKotlinAndroid",
+        ":composeApp:minifyReleaseWithR8",
+        ":composeApp:bundleRelease",
+        ":composeApp:lintRelease",
+    )
 }
 
 val productionAndroidSigningCheck = tasks.register("productionAndroidSigningCheck") {
@@ -70,6 +86,15 @@ subprojects {
     }
 
     pluginManager.withPlugin("org.jetbrains.kotlin.multiplatform") {
+        // Some KMP application modules expose only desktopTest. Join the
+        // aggregate when an allTests task is actually registered rather than
+        // making configuration fail for those valid modules.
+        tasks.matching { it.name == "allTests" }.configureEach {
+            val moduleAllTests = this
+            rootProject.tasks.named("allTests").configure {
+                dependsOn(moduleAllTests)
+            }
+        }
         rootProject.tasks.named("productionDesktopCheck").configure {
             dependsOn(tasks.named("desktopTest"))
         }

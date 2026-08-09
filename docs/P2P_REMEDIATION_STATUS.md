@@ -3,7 +3,7 @@
 Document status: current implementation ledger as of 2026-08-09.
 
 This file records what is implemented on
-`codex/parlor-production-code-review`, what automated evidence exists, and what
+`codex/parlor-fr-remediation`, what automated evidence exists, and what
 still requires release or physical-device evidence. It is deliberately
 stricter than a feature checklist: **implemented does not mean production
 verified**.
@@ -13,9 +13,12 @@ Runtime protocol: `4.0`.
 The recoverable pre-remediation baseline is commit
 `8186f7d70786057b791bd5c1aa80ca868835ec37`. Every remediation commit is on
 top of that checkpoint; no baseline change was reset, cleaned, or rewritten.
-The approved full-code-review baseline is
-`dff3fcb317fdb89e310db70eb2c44643672c8c6b`; the production-code review and
-its regression fixes are separate commits above that baseline.
+The protected remediation baseline for the current FR review is
+`37a249676fd8d6de109800cd136352bdd55e32ee`; the earlier checkpoints
+`8186f7d70786057b791bd5c1aa80ca868835ec37` and
+`dff3fcb317fdb89e310db70eb2c44643672c8c6b` remain reachable and unchanged.
+The current FR remediation commits are separate recoverable commits above that
+baseline.
 
 ## Executive status
 
@@ -35,10 +38,11 @@ its regression fixes are separate commits above that baseline.
   dated receipts exist for the exact release SHA.
 - Raw-IP/manual endpoint connection is intentionally unsupported for the first
   release under accepted ADR-0002. `MAN-00` is **N/A**, not PASS.
-- The automated/code verdict is **READY FOR PHYSICAL-DEVICE VALIDATION**.
-  The production-readiness verdict remains **NOT READY FOR RELEASE**. The
-  signed artifacts, physical matrix, accessibility, privacy/store, complete
-  SBOM/license review, publisher-key trust, and legal gates must still close.
+- The automated/code verdict is currently **NOT READY FOR PHYSICAL-DEVICE
+  VALIDATION**. FR-05 is being remediated in the current branch, and FR-08,
+  FR-09, FR-10, plus newly discovered release-integration findings still need
+  root-cause fixes and exact-HEAD evidence. The production-readiness verdict
+  remains **NOT READY FOR RELEASE**.
 
 ## Recoverable implementation chain
 

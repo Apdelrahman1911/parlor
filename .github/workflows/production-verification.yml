@@ -19,7 +19,7 @@ jobs:
   desktop-android:
     name: Common, desktop, and Android release
     runs-on: ubuntu-24.04
-    timeout-minutes: 60
+    timeout-minutes: 90
 
     steps:
       - name: Check out source
@@ -38,14 +38,40 @@ jobs:
       - name: Install pinned Android SDK packages
         shell: bash
         run: |
+          set -euo pipefail
           "${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager" \
             "platforms;android-36" \
             "build-tools;36.0.0"
 
-      - name: Run host-independent production gates
-        run: ./gradlew productionCheck --no-daemon --stacktrace --console=plain
+      - name: Record exact source and require a clean checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/ci-evidence
+          git rev-parse HEAD | tee build/ci-evidence/commit.txt
+          test -z "$(git status --porcelain)"
 
-      - name: Upload verification reports and unsigned AAB
+      - name: Run common, desktop, Android, static-analysis, and release gates
+        run: ./gradlew productionCheck allTests --dependency-verification=strict --no-daemon --stacktrace --console=plain
+
+      - name: Inspect unsigned Android release artifact and merged manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t aabs < <(find composeApp/build/outputs/bundle/release -maxdepth 1 -type f -name '*.aab' -print)
+          test "${#aabs[@]}" -eq 1
+          aab="${aabs[0]}"
+          unzip -t "$aab"
+          unzip -l "$aab" | grep -Fq 'base/manifest/AndroidManifest.xml'
+          unzip -l "$aab" | grep -Fq 'base/dex/classes.dex'
+          manifest="$(find composeApp/build/intermediates -type f -path '*merged_manifest*/*/AndroidManifest.xml' -print -quit)"
+          test -s "$manifest"
+          grep -Fq '<manifest' "$manifest"
+          grep -Fq 'android.permission.INTERNET' "$manifest"
+          sha256sum "$aab" | tee build/ci-evidence/android-aab.sha256
+          cp "$manifest" build/ci-evidence/merged-release-manifest.xml
+
+      - name: Upload verification reports, mappings, and unsigned AAB
         if: always()
         uses: actions/upload-artifact@v7.0.1
         with:
@@ -53,14 +79,17 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
           path: |
+            build/ci-evidence/
+            **/build/reports/detekt/
             **/build/reports/tests/
-            **/build/reports/lint-results-*.html
+            **/build/reports/lint-results-*
+            composeApp/build/outputs/mapping/release/
             composeApp/build/outputs/bundle/release/*.aab
 
   ios:
-    name: iOS release frameworks
+    name: iOS tests, release frameworks, and Swift wrapper
     runs-on: macos-15
-    timeout-minutes: 60
+    timeout-minutes: 120
 
     steps:
       - name: Check out source
@@ -76,13 +105,52 @@ jobs:
           java-version: "21"
           check-latest: false
 
-      - name: Record Xcode toolchain
-        run: xcodebuild -version
+      - name: Record Xcode toolchain and exact source
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/ci-evidence
+          xcodebuild -version | tee build/ci-evidence/xcode-version.txt
+          git rev-parse HEAD | tee build/ci-evidence/commit.txt
+          test -z "$(git status --porcelain)"
 
-      - name: Link iOS release frameworks
-        run: ./gradlew productionAppleCheck --no-daemon --stacktrace --console=plain
+      - name: Run iOS simulator runtime tests and release linkage-only gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "allTests includes executable simulator runtime tests; productionAppleCheck is linkage-only for iosArm64, iosSimulatorArm64, and iosX64."
+          ./gradlew allTests productionAppleCheck --dependency-verification=strict --no-daemon --stacktrace --console=plain
 
-      - name: Upload Kotlin/Native diagnostics
+      - name: Validate iOS plist and privacy manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          plutil -lint iosApp/iosApp/Info.plist
+          plutil -lint iosApp/iosApp/PrivacyInfo.xcprivacy
+
+      - name: Build unsigned Swift Release wrapper
+        shell: bash
+        run: |
+          set -euo pipefail
+          xcodebuild \
+            -project iosApp/iosApp.xcodeproj \
+            -scheme iosApp \
+            -configuration Release \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath build/xcode-derived-data \
+            ARCHS=arm64 \
+            ONLY_ACTIVE_ARCH=YES \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            build | tee build/ci-evidence/xcode-release-build.log
+          app="build/xcode-derived-data/Build/Products/Release-iphonesimulator/Parlor.app"
+          test -x "$app/Parlor"
+          plutil -lint "$app/Info.plist"
+          file "$app/Parlor" | tee build/ci-evidence/xcode-binary.txt
+          shasum -a 256 "$app/Parlor" | tee build/ci-evidence/xcode-binary.sha256
+
+      - name: Upload Apple verification evidence
         if: always()
         uses: actions/upload-artifact@v7.0.1
         with:
@@ -90,4 +158,7 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
           path: |
-            **/build/reports/
+            build/ci-evidence/
+            build/xcode-derived-data/Build/Products/Release-iphonesimulator/Parlor.app.dSYM/
+            **/build/reports/detekt/
+            **/build/reports/tests/
