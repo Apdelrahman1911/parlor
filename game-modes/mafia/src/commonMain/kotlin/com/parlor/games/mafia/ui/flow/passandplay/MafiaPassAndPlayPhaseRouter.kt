@@ -260,20 +260,12 @@ private fun NightSegment(
         return
     }
 
-    // `tracker` resets when the round bumps (or the day rolls over) — the keyed
-    // remember handles that. Round 1 uses it for every role (no shared
-    // server-side marker for non-Mafia roles); round 2 uses it for Mafia.
-    var tracker by remember(phase.day, phase.mafiaCoordinationRound) {
-        mutableStateOf<Set<PlayerId>>(emptySet())
-    }
-
-    val pending: List<Player> = if (phase.mafiaCoordinationRound >= 2) {
-        aliveActive.filter { p ->
-            state.privatePerPlayer[p.id]?.role == Role.Mafia && p.id !in tracker
-        }
-    } else {
-        aliveActive.filter { it.id !in tracker }
-    }
+    // Completion must come from the reducer-owned flag. Advancing a local UI
+    // tracker before submit() was authoritatively accepted could skip a player
+    // after a rejected/cancelled submission and leave ResolveNight permanently
+    // blocked. The reducer clears Mafia flags when it opens round two, so the
+    // same canonical predicate covers both the initial pass and the revote.
+    val pending = pendingNightPlayers(state, phase)
 
     val current = pending.firstOrNull()
     if (current == null) {
@@ -330,7 +322,6 @@ private fun NightSegment(
                 scope.launch {
                     session.submit(actionFor(choice.role, voterId, choice.target))
                 }
-                tracker = tracker + voterId
             },
             modifier = modifier,
         )
@@ -730,6 +721,25 @@ private fun aliveActivePlayers(state: MafiaState): List<Player> {
     return state.players
         .filter { it.id in aliveSet }
         .sortedBy { it.seat }
+}
+
+/**
+ * Canonical pass-and-play night queue.
+ *
+ * A player disappears from this list only after the reducer commits their
+ * action. UI-local click state is deliberately excluded so cancellation,
+ * validation failure, or a closed session cannot silently advance the handoff.
+ */
+internal fun pendingNightPlayers(
+    state: MafiaState,
+    phase: MafiaPhase.Night,
+): List<Player> {
+    val eligible = aliveActivePlayers(state)
+    return eligible.filter { player ->
+        val private = state.privatePerPlayer[player.id] ?: return@filter true
+        val participates = phase.mafiaCoordinationRound < 2 || private.role == Role.Mafia
+        participates && !private.nightChoiceSubmitted
+    }
 }
 
 private fun aliveActiveIds(state: MafiaState): List<PlayerId> =

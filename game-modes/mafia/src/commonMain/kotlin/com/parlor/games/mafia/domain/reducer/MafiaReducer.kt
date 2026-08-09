@@ -975,6 +975,24 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
     private fun finishGame(state: MafiaState, winner: Team?): MafiaState =
         state.copy(
             phase = MafiaPhase.PostGame,
+            // Terminal snapshots retain role identity for the results screen,
+            // but no in-flight private action remains meaningful. Clearing
+            // these fields prevents a forced/early end from persisting night
+            // targets, coordination ballots, or stale acknowledgement state.
+            privatePerPlayer = state.privatePerPlayer.mapValues { (_, private) ->
+                private.copy(
+                    mafiaCoordination = null,
+                    pendingDetectiveResult = null,
+                    lastSuspicion = null,
+                    previousDoctorProtect = null,
+                    pendingNightChoice = null,
+                    roleAcknowledged = false,
+                    nightAcknowledged = false,
+                    voteAcknowledged = false,
+                    detectiveResultAcknowledged = false,
+                    nightChoiceSubmitted = false,
+                )
+            },
             public = state.public.copy(
                 winner = winner,
                 activeVote = null,
