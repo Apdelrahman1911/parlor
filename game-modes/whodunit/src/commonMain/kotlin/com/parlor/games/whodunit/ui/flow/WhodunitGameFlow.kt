@@ -68,6 +68,7 @@ import com.parlor.games.whodunit.domain.reducer.WhodunitReducerContext
 import com.parlor.games.whodunit.domain.state.VoteState
 import com.parlor.games.whodunit.domain.state.WhodunitState
 import com.parlor.games.whodunit.domain.state.WhodunitStateValidator
+import com.parlor.games.whodunit.snapshot.WHODUNIT_SNAPSHOT_ENGINE_VERSION
 import com.parlor.games.whodunit.ui.components.HideScreen
 import com.parlor.games.whodunit.ui.screens.peer.PeerWaitingForHostScreen
 import com.parlor.games.whodunit.ui.screens.postgame.PostGameScreen
@@ -394,8 +395,8 @@ internal suspend fun loadResumedSession(
         // happens to deserialize today.
         if (snapshot.sessionId != sessionId ||
             snapshot.gameId != WhodunitIds.GameId ||
-            snapshot.engineVersion.major != ENGINE_VERSION.major ||
-            snapshot.engineVersion > ENGINE_VERSION
+            snapshot.engineVersion.major != WHODUNIT_SNAPSHOT_ENGINE_VERSION.major ||
+            snapshot.engineVersion > WHODUNIT_SNAPSHOT_ENGINE_VERSION
         ) {
             return Result.Failure(DataError.CorruptedData)
         }
@@ -768,7 +769,7 @@ private fun SessionDrivenFlow(
                 com.parlor.engine.snapshot.GameSnapshot(
                     sessionId = sessionConfig.sessionId,
                     gameId = WhodunitIds.GameId,
-                    engineVersion = ENGINE_VERSION,
+                    engineVersion = WHODUNIT_SNAPSHOT_ENGINE_VERSION,
                     createdAt = clock.now(),
                     phaseId = state.phase.id,
                     payload = codec.encode(state),
@@ -890,16 +891,6 @@ private fun PauseAffordance(
         )
     }
 }
-
-
-/**
- * Engine version stamped on persisted snapshots. Minor versions may be
- * migrated by the game codec; future versions and another major are rejected.
- * 1.1 adds the role-assignment generation and migrates assigned 1.0 snapshots
- * whose JSON does not yet contain that field.
- */
-private val ENGINE_VERSION: com.parlor.core.versioning.SemVer =
-    com.parlor.core.versioning.SemVer(1, 1, 0)
 
 
 // ====================================================================== Multi-device ==

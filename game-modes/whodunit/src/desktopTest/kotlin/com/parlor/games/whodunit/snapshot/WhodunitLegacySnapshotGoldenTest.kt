@@ -3,6 +3,8 @@ package com.parlor.games.whodunit.snapshot
 import com.parlor.games.whodunit.domain.phase.WhodunitPhase
 import com.parlor.games.whodunit.domain.state.VoteState
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import java.security.MessageDigest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -48,6 +50,17 @@ class WhodunitLegacySnapshotGoldenTest {
             tied.hostOnly.redHerringTargets,
             tied.privatePerPlayer.getValue(tied.hostOnly.killerId).deflectionTargets,
         )
+
+        listOf(setup, assigned, tied).forEach { migrated ->
+            val rewritten = codec.encode(migrated)
+            val envelope = Json.parseToJsonElement(rewritten.decodeToString()).jsonObject
+            assertEquals(WHODUNIT_SNAPSHOT_KIND, envelope.getValue("kind").jsonPrimitive.content)
+            assertEquals(
+                WHODUNIT_SNAPSHOT_SCHEMA_VERSION.toString(),
+                envelope.getValue("schemaVersion").jsonPrimitive.content,
+            )
+            assertEquals(migrated, codec.decode(rewritten))
+        }
     }
 
     private fun legacyBytes(name: String): ByteArray {

@@ -5,35 +5,110 @@ import com.parlor.games.whodunit.domain.state.VoteState
 import com.parlor.games.whodunit.domain.state.WhodunitState
 import com.parlor.games.whodunit.domain.state.WhodunitStateValidator
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.decodeFromJsonElement
+import kotlinx.serialization.json.encodeToJsonElement
 import kotlinx.serialization.json.jsonObject
 
 /**
- * kotlinx.serialization-based codec for [WhodunitState]. The codec is module-
- * local so adding fields to the state only versions the Whodunit snapshot
- * format, not the engine's.
+ * kotlinx.serialization-based codec for [WhodunitState]. The payload format is
+ * game-owned, so adding fields to this state does not silently redefine the
+ * engine's generic snapshot envelope.
  */
 class WhodunitSnapshotCodec(
-    private val json: Json,
+    json: Json,
 ) : SnapshotCodec<WhodunitState> {
+
+    /**
+     * Snapshot decoding is a persistence trust boundary. A caller's
+     * permissive application Json configuration must not weaken it.
+     */
+    private val strictJson = Json(json) {
+        ignoreUnknownKeys = false
+        isLenient = false
+        encodeDefaults = true
+    }
 
     override fun encode(state: WhodunitState): ByteArray {
         WhodunitStateValidator.requireValid(state)
-        return json.encodeToString(WhodunitState.serializer(), state)
+        val stateObject = strictJson
+            .encodeToJsonElement(WhodunitState.serializer(), state)
+            .jsonObject
+        val payload = WhodunitSnapshotPayload(
+            kind = WHODUNIT_SNAPSHOT_KIND,
+            schemaVersion = WHODUNIT_SNAPSHOT_SCHEMA_VERSION,
+            state = stateObject,
+        )
+        return strictJson.encodeToString(WhodunitSnapshotPayload.serializer(), payload)
             .encodeToByteArray()
             .also(::requireValidPayloadSize)
     }
 
     override fun decode(payload: ByteArray): WhodunitState {
         requireValidPayloadSize(payload)
-        val root = json.parseToJsonElement(payload.decodeToString()).jsonObject
+        val root = strictJson
+            .parseToJsonElement(payload.decodeToString(throwOnInvalidSequence = true))
+            .jsonObject
+        return if (root.keys.any(RESERVED_WRAPPER_KEYS::contains)) {
+            decodeVersioned(root)
+        } else {
+            decodeLegacyBare(root)
+        }
+    }
+
+    private fun decodeVersioned(root: JsonObject): WhodunitState {
+        val envelope = strictJson.decodeFromJsonElement(
+            WhodunitSnapshotPayload.serializer(),
+            root,
+        )
+        require(envelope.kind == WHODUNIT_SNAPSHOT_KIND) {
+            "Unsupported Whodunit snapshot kind"
+        }
+        require(envelope.schemaVersion > 0) {
+            "Whodunit snapshot schema version must be positive"
+        }
+
+        return when (envelope.schemaVersion) {
+            1 -> decodeCurrentState(envelope.state)
+            else -> throw IllegalArgumentException(
+                "Unsupported Whodunit snapshot schema version",
+            )
+        }
+    }
+
+    /**
+     * Current schemas are canonical and receive no compatibility repair. This
+     * prevents a malformed current payload from being silently reinterpreted
+     * as an older shape merely because a field has a Kotlin default.
+     */
+    private fun decodeCurrentState(root: JsonObject): WhodunitState {
+        val decoded = strictJson.decodeFromJsonElement(WhodunitState.serializer(), root)
+        val canonical = strictJson
+            .encodeToJsonElement(WhodunitState.serializer(), decoded)
+            .jsonObject
+        require(root == canonical) { "Whodunit snapshot state is not canonical" }
+        WhodunitStateValidator.requireValid(decoded)
+        return decoded
+    }
+
+    /**
+     * Compatibility for snapshots emitted before the module-owned envelope.
+     * Field presence is inspected before deserialization so only absent legacy
+     * fields are reconstructed; explicit invalid values remain invalid.
+     */
+    private fun decodeLegacyBare(root: JsonObject): WhodunitState {
         val generationWasPersisted = root["public"]
             ?.jsonObject
             ?.containsKey("roleAssignmentGeneration") == true
-        val decoded = json.decodeFromJsonElement(WhodunitState.serializer(), root)
+        val decoded = strictJson.decodeFromJsonElement(WhodunitState.serializer(), root)
+        val killerDeflectionTargetsWerePersisted = root["privatePerPlayer"]
+            ?.jsonObject
+            ?.get(decoded.hostOnly.killerId.raw)
+            ?.jsonObject
+            ?.containsKey("deflectionTargets") == true
         val normalized = decoded
             .normalizeLegacyUntimedRevote()
-            .normalizeLegacyDeflectionTargets()
+            .normalizeLegacyDeflectionTargets(killerDeflectionTargetsWerePersisted)
             .normalizeLegacyRoleAssignmentGeneration(generationWasPersisted)
         WhodunitStateValidator.requireValid(normalized)
         return normalized
@@ -48,6 +123,7 @@ class WhodunitSnapshotCodec(
     private companion object {
         const val MAX_SNAPSHOT_PAYLOAD_BYTES = 256 * 1024
         const val LEGACY_MAX_TIE_DEBATE_SECONDS = 60
+        val RESERVED_WRAPPER_KEYS = setOf("kind", "schemaVersion", "state")
     }
 
     private fun WhodunitState.normalizeLegacyUntimedRevote(): WhodunitState {
@@ -64,11 +140,13 @@ class WhodunitSnapshotCodec(
      * list is already authoritative and validated as assigned, so reconstruct
      * the killer's private slice before applying current invariants.
      */
-    private fun WhodunitState.normalizeLegacyDeflectionTargets(): WhodunitState {
+    private fun WhodunitState.normalizeLegacyDeflectionTargets(
+        killerTargetsWerePersisted: Boolean,
+    ): WhodunitState {
         val killerId = hostOnly.killerId
         val killerPrivate = privatePerPlayer[killerId] ?: return this
         if (
-            killerPrivate.deflectionTargets.isNotEmpty() ||
+            killerTargetsWerePersisted ||
             hostOnly.redHerringTargets.isEmpty()
         ) {
             return this

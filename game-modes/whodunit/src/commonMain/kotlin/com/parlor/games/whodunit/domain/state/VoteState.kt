@@ -49,8 +49,9 @@ sealed interface VoteState {
          * Wire/snapshot compatibility with the former countdown UI.
          *
          * Revotes are now explicitly host-paced and untimed. New state always
-         * writes zero; the snapshot codec normalizes legacy 0..60 values to
-         * zero before structural validation.
+         * writes zero; the snapshot codec normalizes bare legacy 0..60 values
+         * to zero before structural validation. Versioned current payloads
+         * must already contain the canonical zero value.
          */
         val debateSecondsRemaining: Int = 0,
     ) : VoteState

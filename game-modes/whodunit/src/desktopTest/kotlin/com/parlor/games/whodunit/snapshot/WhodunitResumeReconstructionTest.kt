@@ -268,23 +268,66 @@ class WhodunitResumeReconstructionTest {
 
     @Test
     fun resume_rejects_a_future_engine_version_before_decoding_its_payload() = runTest {
-        val sessionId = SessionId("future-engine")
-        val store: SnapshotStore = FileBackedSnapshotStore(InMemorySnapshotFileSystem(), json)
-        store.save(
-            GameSnapshot(
-                sessionId = sessionId,
-                gameId = WhodunitIds.GameId,
-                engineVersion = SemVer(2, 0, 0),
-                createdAt = Instant.fromEpochSeconds(1_700_000_021),
-                phaseId = "not-whodunit",
-                payload = "not a Whodunit payload".encodeToByteArray(),
+        listOf(SemVer(1, 3, 0), SemVer(2, 0, 0)).forEach { futureVersion ->
+            val sessionId = SessionId("future-engine-$futureVersion")
+            val store: SnapshotStore = FileBackedSnapshotStore(InMemorySnapshotFileSystem(), json)
+            store.save(
+                GameSnapshot(
+                    sessionId = sessionId,
+                    gameId = WhodunitIds.GameId,
+                    engineVersion = futureVersion,
+                    createdAt = Instant.fromEpochSeconds(1_700_000_021),
+                    phaseId = "not-whodunit",
+                    payload = "not a Whodunit payload".encodeToByteArray(),
+                ),
+            )
+
+            val result = loadResumedSession(store, WhodunitDefinition(json), sessionId)
+
+            assertThat(result).isInstanceOf(Result.Failure::class)
+            assertThat((result as Result.Failure).error).isEqualTo(DataError.CorruptedData)
+        }
+    }
+
+    @Test
+    fun resume_accepts_supportedBareVersionsAndCurrentVersionedPayload() = runTest {
+        val definition = WhodunitDefinition(json)
+        val state = definition.createInitialState(
+            SessionConfig(
+                sessionId = SessionId("placeholder"),
+                caseId = CaseId("last-dinner"),
+                modeId = WhodunitIds.ClassicVoteModeId,
+                players = fourPlayers(),
+                randomSeed = 19L,
             ),
         )
+        val legacyPayload = json.encodeToString(WhodunitState.serializer(), state)
+            .encodeToByteArray()
+        val currentPayload = definition.snapshotCodec().encode(state)
 
-        val result = loadResumedSession(store, WhodunitDefinition(json), sessionId)
+        listOf(
+            SemVer(1, 0, 0) to legacyPayload,
+            SemVer(1, 1, 0) to legacyPayload,
+            WHODUNIT_SNAPSHOT_ENGINE_VERSION to currentPayload,
+        ).forEach { (version, payload) ->
+            val sessionId = SessionId("supported-engine-$version")
+            val store: SnapshotStore = FileBackedSnapshotStore(InMemorySnapshotFileSystem(), json)
+            store.save(
+                GameSnapshot(
+                    sessionId = sessionId,
+                    gameId = WhodunitIds.GameId,
+                    engineVersion = version,
+                    createdAt = Instant.fromEpochSeconds(1_700_000_021),
+                    phaseId = state.phase.id,
+                    payload = payload,
+                ),
+            )
 
-        assertThat(result).isInstanceOf(Result.Failure::class)
-        assertThat((result as Result.Failure).error).isEqualTo(DataError.CorruptedData)
+            val result = loadResumedSession(store, definition, sessionId)
+
+            assertThat(result).isInstanceOf(Result.Success::class)
+            assertThat((result as Result.Success).data.state).isEqualTo(state)
+        }
     }
 
     @Test

@@ -32,11 +32,14 @@ import com.parlor.games.whodunit.domain.state.WhodunitState
 import com.parlor.games.whodunit.domain.state.WhodunitStateValidator
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFails
 import kotlin.test.assertFailsWith
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.encodeToJsonElement
 import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import kotlin.time.Instant
 
 class WhodunitSnapshotValidationTest {
@@ -54,6 +57,78 @@ class WhodunitSnapshotValidationTest {
     @Test
     fun validAuthoritativeStateStillRoundTripsExactly() {
         assertEquals(assigned, codec.decode(codec.encode(assigned)))
+    }
+
+    @Test
+    fun currentWritesUseTheExplicitCanonicalSnapshotEnvelope() {
+        val root = currentEnvelope()
+
+        assertEquals(setOf("kind", "schemaVersion", "state"), root.keys)
+        assertEquals(WHODUNIT_SNAPSHOT_KIND, root.getValue("kind").jsonPrimitive.content)
+        assertEquals(
+            WHODUNIT_SNAPSHOT_SCHEMA_VERSION.toString(),
+            root.getValue("schemaVersion").jsonPrimitive.content,
+        )
+        assertEquals(
+            json.encodeToJsonElement(WhodunitState.serializer(), assigned).jsonObject,
+            root.getValue("state").jsonObject,
+        )
+    }
+
+    @Test
+    fun currentEnvelopeNeverReceivesLegacyMissingFieldRepair() {
+        val envelope = currentEnvelope()
+        val state = envelope.getValue("state").jsonObject
+        val public = JsonObject(
+            state.getValue("public").jsonObject - "roleAssignmentGeneration",
+        )
+        val missingCurrentField = JsonObject(
+            envelope + ("state" to JsonObject(state + ("public" to public))),
+        )
+
+        assertFails { codec.decode(missingCurrentField.toString().encodeToByteArray()) }
+    }
+
+    @Test
+    fun reservedEnvelopeKeysCannotFallBackToLegacyDecoding() {
+        val bare = json.encodeToJsonElement(WhodunitState.serializer(), assigned).jsonObject
+        val partialEnvelope = JsonObject(bare + ("schemaVersion" to JsonPrimitive(1)))
+
+        assertFails { codec.decode(partialEnvelope.toString().encodeToByteArray()) }
+    }
+
+    @Test
+    fun currentEnvelopeRejectsWrongKindUnknownSchemaAndUnknownFields() {
+        val envelope = currentEnvelope()
+        listOf(
+            JsonObject(envelope + ("kind" to JsonPrimitive("another.game.snapshot"))),
+            JsonObject(envelope + ("schemaVersion" to JsonPrimitive(2))),
+            JsonObject(envelope + ("unexpected" to JsonPrimitive(true))),
+        ).forEach { invalid ->
+            assertFails { codec.decode(invalid.toString().encodeToByteArray()) }
+        }
+    }
+
+    @Test
+    fun callerJsonSettingsCannotMakeSnapshotDecodingPermissive() {
+        val permissiveCodec = WhodunitSnapshotCodec(
+            Json {
+                ignoreUnknownKeys = true
+                isLenient = true
+                encodeDefaults = false
+            },
+        )
+        val envelope = currentEnvelope()
+        val state = envelope.getValue("state").jsonObject
+        val stateWithUnknownField = JsonObject(state + ("unexpected" to JsonPrimitive("value")))
+        val invalid = JsonObject(envelope + ("state" to stateWithUnknownField))
+
+        assertFails { permissiveCodec.decode(invalid.toString().encodeToByteArray()) }
+    }
+
+    @Test
+    fun malformedUtf8IsRejectedBeforeJsonInterpretation() {
+        assertFails { codec.decode(byteArrayOf(0xC3.toByte(), 0x28)) }
     }
 
     @Test
@@ -431,6 +506,15 @@ class WhodunitSnapshotValidationTest {
             restored.hostOnly.redHerringTargets,
             restored.privatePerPlayer.getValue(restored.hostOnly.killerId).deflectionTargets,
         )
+
+        val explicitEmptyKillerDossier = assigned.copy(
+            privatePerPlayer = assigned.privatePerPlayer + (
+                assigned.hostOnly.killerId to assigned.privatePerPlayer
+                    .getValue(assigned.hostOnly.killerId)
+                    .copy(deflectionTargets = emptyList())
+            ),
+        )
+        assertDecodeRejected(explicitEmptyKillerDossier)
     }
 
     @Test
@@ -536,6 +620,10 @@ class WhodunitSnapshotValidationTest {
         val bytes = json.encodeToString(WhodunitState.serializer(), state).encodeToByteArray()
         assertFailsWith<IllegalArgumentException> { codec.decode(bytes) }
     }
+
+    private fun currentEnvelope(): JsonObject = json
+        .parseToJsonElement(codec.encode(assigned).decodeToString())
+        .jsonObject
 
     private fun stateWithFirstClue(): WhodunitState = WhodunitReducer.reduce(
         assigned.copy(
