@@ -39,10 +39,14 @@ class CaseSummaryValidator(
     companion object {
         const val MAX_SUMMARIES: Int = 128
         private const val MAX_CASE_ID_LENGTH: Int = 128
+        private const val MAX_TITLE_LENGTH: Int = 80
+        private const val MAX_SUBTITLE_LENGTH: Int = 120
         private const val MAX_LANGUAGE_LENGTH: Int = 35
         private const val MAX_THEME_LENGTH: Int = 64
         private const val MAX_COVER_ART_URL_LENGTH: Int = 2_048
         private const val MAX_DURATION_MINUTES: Int = 24 * 60
+        private const val MIN_PLAYER_COUNT: Int = 3
+        private const val MAX_PLAYER_COUNT: Int = 16
         private val SAFE_CASE_ID = Regex("[a-z0-9]+(?:-[a-z0-9]+)*")
         private val BCP_47 = Regex("[A-Za-z]{2,8}(?:-[A-Za-z0-9]{1,8})*")
 
@@ -88,11 +92,17 @@ class CaseSummaryValidator(
             if (!seenIds.add(summary.caseId)) {
                 return ValidationError.MalformedField("caseId", "duplicate identifier")
             }
-            if (summary.title.isBlank() || summary.title.length > 80) {
-                return ValidationError.MalformedField("title", "must be 1..80 characters")
+            if (summary.title.isBlank() || summary.title.length > MAX_TITLE_LENGTH) {
+                return ValidationError.MalformedField(
+                    "title",
+                    "must be 1..$MAX_TITLE_LENGTH characters",
+                )
             }
-            if (summary.subtitle?.length ?: 0 > 120) {
-                return ValidationError.MalformedField("subtitle", "must be <= 120 characters")
+            if (summary.subtitle?.length ?: 0 > MAX_SUBTITLE_LENGTH) {
+                return ValidationError.MalformedField(
+                    "subtitle",
+                    "must be <= $MAX_SUBTITLE_LENGTH characters",
+                )
             }
             if (
                 summary.language.length > MAX_LANGUAGE_LENGTH ||
@@ -104,12 +114,12 @@ class CaseSummaryValidator(
                 return ValidationError.MalformedField("theme", "must be 1..64 characters")
             }
             if (
-                summary.supportedPlayerCounts.min < 3 ||
-                summary.supportedPlayerCounts.max > 16
+                summary.supportedPlayerCounts.min < MIN_PLAYER_COUNT ||
+                summary.supportedPlayerCounts.max > MAX_PLAYER_COUNT
             ) {
                 return ValidationError.PlayerCountOutOfRange(
                     summary.supportedPlayerCounts.toIntRange(),
-                    3..16,
+                    MIN_PLAYER_COUNT..MAX_PLAYER_COUNT,
                 )
             }
             if (
