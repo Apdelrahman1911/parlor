@@ -19,7 +19,9 @@ import com.parlor.networking.room.NetError
 import com.parlor.networking.room.RoomInfo
 import com.parlor.networking.room.RoomMember
 import com.parlor.networking.room.SendTarget
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.flow.Flow
@@ -30,7 +32,9 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.withContext
 import kotlin.test.Test
+import kotlin.test.assertFailsWith
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ProcessMultiplayerSessionOwnerTest {
@@ -101,6 +105,84 @@ class ProcessMultiplayerSessionOwnerTest {
     }
 
     @Test
+    fun explicitLeaveDuringOpenWaitsForCancellationAndClosesAnOrphanRoom() = runTest {
+        val owner = ProcessMultiplayerSessionOwner(backgroundScope)
+        val route = peerRoute()
+        val openStarted = CompletableDeferred<Unit>()
+        val allowOpenToReturn = CompletableDeferred<Unit>()
+        val room = FakeRoom(isHost = false)
+
+        val waiter = async {
+            owner.acquire(route) {
+                openStarted.complete(Unit)
+                withContext(NonCancellable) { allowOpenToReturn.await() }
+                Result.Success(room)
+            }
+        }
+        openStarted.await()
+        val leave = async { owner.leaveRoute(route, SessionEndReason.Cancelled) }
+        runCurrent()
+        assertThat(owner.state.value).isInstanceOf<ProcessMultiplayerState.Closing>()
+        val competingOpen = owner.acquire(
+            MultiplayerSessionRoute.host(GameId("mafia"), "Host"),
+            hostSeed = 2L,
+        ) { Result.Success(FakeRoom(true)) }
+        assertThat(competingOpen).isEqualTo(Result.Failure(NetError.CommandInFlight))
+        allowOpenToReturn.complete(Unit)
+        advanceUntilIdle()
+
+        assertThat(leave.await()).isEqualTo(Result.Success(Unit))
+        assertThat(waiter.isCancelled).isTrue()
+        assertThat(room.leaveCalls).isEqualTo(1)
+        assertThat(owner.state.value).isEqualTo(ProcessMultiplayerState.Idle)
+    }
+
+    @Test
+    fun cancelledOpenRestoresIdleAndDoesNotPoisonTheNextAcquire() = runTest {
+        val owner = ProcessMultiplayerSessionOwner(backgroundScope)
+        val route = peerRoute()
+
+        assertFailsWith<CancellationException> {
+            owner.acquire(route) { throw CancellationException("adapter cancelled") }
+        }
+        assertThat(owner.state.value).isEqualTo(ProcessMultiplayerState.Idle)
+
+        val replacement = FakeRoom(isHost = false)
+        val reopened = owner.acquire(route) { Result.Success(replacement) }
+        assertThat((reopened as Result.Success).data.room).isSameInstanceAs(replacement)
+    }
+
+    @Test
+    fun explicitLeaveReportsOrphanCleanupFailureWithoutStrandingOwnership() = runTest {
+        val owner = ProcessMultiplayerSessionOwner(backgroundScope)
+        val route = peerRoute()
+        val openStarted = CompletableDeferred<Unit>()
+        val allowOpenToReturn = CompletableDeferred<Unit>()
+        val room = FakeRoom(isHost = false).apply {
+            leaveFailure = IllegalStateException("adapter cleanup failed")
+        }
+        val waiter = async {
+            owner.acquire(route) {
+                openStarted.complete(Unit)
+                withContext(NonCancellable) { allowOpenToReturn.await() }
+                Result.Success(room)
+            }
+        }
+        openStarted.await()
+
+        val leave = async { owner.leaveRoute(route, SessionEndReason.Cancelled) }
+        allowOpenToReturn.complete(Unit)
+        advanceUntilIdle()
+
+        assertThat(leave.await()).isEqualTo(
+            Result.Failure(NetError.TransportFailure("orphan room close failed")),
+        )
+        assertThat(waiter.isCancelled).isTrue()
+        assertThat(room.leaveCalls).isEqualTo(1)
+        assertThat(owner.state.value).isEqualTo(ProcessMultiplayerState.Idle)
+    }
+
+    @Test
     fun admissionFreezeIsExactlyOnceAcrossConcurrentUiRequests() = runTest {
         val owner = ProcessMultiplayerSessionOwner(backgroundScope)
         val member = RoomMember(PlayerId("peer"), "Peer", connected = true)
@@ -122,6 +204,51 @@ class ProcessMultiplayerSessionOwnerTest {
 
         assertThat(first.await()).isEqualTo(Result.Success(listOf(member)))
         assertThat(second.await()).isEqualTo(Result.Success(listOf(member)))
+        assertThat(session.frozenRoster.value).isEqualTo(listOf(member))
+    }
+
+    @Test
+    fun thrownAdmissionCloseBecomesRetryableWithoutPoisoningTheGate() = runTest {
+        val owner = ProcessMultiplayerSessionOwner(backgroundScope)
+        val member = RoomMember(PlayerId("peer"), "Peer", connected = true)
+        var attempts = 0
+        val room = FakeRoom(isHost = true).apply {
+            closeAdmissionsBlock = {
+                attempts++
+                if (attempts == 1) throw IllegalStateException("adapter failure")
+                Result.Success(listOf(member))
+            }
+        }
+        val session = (owner.acquire(hostRoute(), 7L) { Result.Success(room) } as Result.Success).data
+
+        assertThat(session.freezeAdmissions()).isEqualTo(
+            Result.Failure(NetError.TransportFailure("admission close failed")),
+        )
+        assertThat(session.frozenRoster.value).isEqualTo(null)
+
+        assertThat(session.freezeAdmissions()).isEqualTo(Result.Success(listOf(member)))
+        assertThat(room.closeAdmissionsCalls).isEqualTo(2)
+        assertThat(session.frozenRoster.value).isEqualTo(listOf(member))
+    }
+
+    @Test
+    fun cancelledAdmissionCloseDoesNotPoisonTheGate() = runTest {
+        val owner = ProcessMultiplayerSessionOwner(backgroundScope)
+        val member = RoomMember(PlayerId("peer"), "Peer", connected = true)
+        var attempts = 0
+        val room = FakeRoom(isHost = true).apply {
+            closeAdmissionsBlock = {
+                attempts++
+                if (attempts == 1) throw CancellationException("adapter cancelled")
+                Result.Success(listOf(member))
+            }
+        }
+        val session = (owner.acquire(hostRoute(), 7L) { Result.Success(room) } as Result.Success).data
+
+        assertFailsWith<CancellationException> { session.freezeAdmissions() }
+
+        assertThat(session.freezeAdmissions()).isEqualTo(Result.Success(listOf(member)))
+        assertThat(room.closeAdmissionsCalls).isEqualTo(2)
         assertThat(session.frozenRoster.value).isEqualTo(listOf(member))
     }
 
@@ -152,6 +279,93 @@ class ProcessMultiplayerSessionOwnerTest {
     }
 
     @Test
+    fun retainedFactoryFailureIsExplicitAndDoesNotPoisonAReplacement() = runTest {
+        val owner = ProcessMultiplayerSessionOwner(backgroundScope)
+        val session = (
+            owner.acquire(hostRoute(), 5L) { Result.Success(FakeRoom(true)) } as Result.Success
+        ).data
+
+        val checkpointFailure = session.getOrCreateCheckpoint("checkpoint") {
+            throw IllegalStateException("checkpoint constructor failed")
+        }
+        val runtimeFailure = session.getOrCreateRuntime("runtime") {
+            throw IllegalStateException("runtime constructor failed")
+        }
+
+        assertThat(checkpointFailure).isEqualTo(
+            RetainedValueResult.CreationFailed(
+                NetError.TransportFailure("checkpoint creation failed"),
+            ),
+        )
+        assertThat(runtimeFailure).isEqualTo(
+            RetainedValueResult.CreationFailed(
+                NetError.TransportFailure("runtime creation failed"),
+            ),
+        )
+
+        val checkpoint = FakeCheckpoint("checkpoint")
+        val runtime = FakeRuntime("runtime")
+        assertThat(
+            (session.getOrCreateCheckpoint("checkpoint") { checkpoint } as
+                RetainedValueResult.Ready).value,
+        ).isSameInstanceAs(checkpoint)
+        assertThat(
+            (session.getOrCreateRuntime("runtime") { runtime } as
+                RetainedValueResult.Ready).value,
+        ).isSameInstanceAs(runtime)
+    }
+
+    @Test
+    fun runtimeFactoryKindMismatchClosesTheUninstalledCandidate() = runTest {
+        val owner = ProcessMultiplayerSessionOwner(backgroundScope)
+        val session = (
+            owner.acquire(hostRoute(), 5L) { Result.Success(FakeRoom(true)) } as Result.Success
+        ).data
+        val wrong = FakeRuntime("wrong-runtime")
+
+        val mismatch = session.getOrCreateRuntime("expected-runtime") { wrong }
+
+        assertThat(mismatch).isEqualTo(
+            RetainedValueResult.KindConflict("expected-runtime", "wrong-runtime"),
+        )
+        assertThat(wrong.closed).isTrue()
+        val replacement = FakeRuntime("expected-runtime")
+        val installed = session.getOrCreateRuntime("expected-runtime") { replacement }
+        assertThat((installed as RetainedValueResult.Ready).value).isSameInstanceAs(replacement)
+    }
+
+    @Test
+    fun retainedValuesCannotBeCreatedAfterTheSessionIsReleased() = runTest {
+        val owner = ProcessMultiplayerSessionOwner(backgroundScope)
+        val session = (
+            owner.acquire(hostRoute(), 5L) { Result.Success(FakeRoom(true)) } as Result.Success
+        ).data
+        assertThat(owner.finalLeave(session, SessionEndReason.Cancelled)).isEqualTo(
+            Result.Success(Unit),
+        )
+        var checkpointFactories = 0
+        var runtimeFactories = 0
+
+        val checkpoint = session.getOrCreateCheckpoint("late-checkpoint") {
+            checkpointFactories++
+            FakeCheckpoint("late-checkpoint")
+        }
+        val runtime = session.getOrCreateRuntime("late-runtime") {
+            runtimeFactories++
+            FakeRuntime("late-runtime")
+        }
+
+        assertThat(checkpoint).isEqualTo(
+            RetainedValueResult.CreationFailed(NetError.NotConnected),
+        )
+        assertThat(runtime).isEqualTo(
+            RetainedValueResult.CreationFailed(NetError.NotConnected),
+        )
+        assertThat(checkpointFactories).isEqualTo(0)
+        assertThat(runtimeFactories).isEqualTo(0)
+    }
+
+    @Test
     fun peerRetryRetainsMembershipAndForcesResumeOnTheNextRoom() = runTest {
         val owner = ProcessMultiplayerSessionOwner(backgroundScope)
         val route = peerRoute()
@@ -174,6 +388,147 @@ class ProcessMultiplayerSessionOwnerTest {
         assertThat((resumed as Result.Success).data.room).isSameInstanceAs(resumedRoom)
         assertThat(resumed.data).isNotSameInstanceAs(first)
         assertThat(firstRoom.discardRejoinCalls).isEqualTo(0)
+    }
+
+    @Test
+    fun leaveRacingPeerRetryWaitsThenDiscardsTheRetainedCredential() = runTest {
+        val owner = ProcessMultiplayerSessionOwner(backgroundScope)
+        val route = peerRoute()
+        val retryCloseStarted = CompletableDeferred<Unit>()
+        val allowRetryClose = CompletableDeferred<Unit>()
+        val room = FakeRoom(isHost = false).apply {
+            closeForRetryBlock = {
+                retryCloseStarted.complete(Unit)
+                allowRetryClose.await()
+                Result.Success(Unit)
+            }
+        }
+        val session = (owner.acquire(route) { Result.Success(room) } as Result.Success).data
+
+        val retry = async { owner.preparePeerRetry(session, NetError.Timeout) }
+        retryCloseStarted.await()
+        val leave = async { owner.leaveRoute(route, SessionEndReason.Cancelled) }
+        allowRetryClose.complete(Unit)
+        advanceUntilIdle()
+
+        assertThat(retry.await()).isEqualTo(Result.Success(Unit))
+        assertThat(leave.await()).isEqualTo(Result.Success(Unit))
+        assertThat(room.discardRejoinCalls).isEqualTo(1)
+        assertThat(owner.state.value).isEqualTo(ProcessMultiplayerState.Idle)
+    }
+
+    @Test
+    fun failedPeerRetryKeepsTheLiveSessionAndCanBeRetried() = runTest {
+        val owner = ProcessMultiplayerSessionOwner(backgroundScope)
+        val route = peerRoute()
+        val room = FakeRoom(isHost = false).apply {
+            closeForRetryResults += Result.Failure(NetError.TransportFailure("close failed"))
+            closeForRetryResults += Result.Success(Unit)
+        }
+        val session = (owner.acquire(route) { Result.Success(room) } as Result.Success).data
+        val runtime = FakeRuntime("peer-runtime")
+        session.getOrCreateRuntime(runtime.runtimeKind) { runtime }
+
+        val failed = owner.preparePeerRetry(session, NetError.Timeout)
+
+        assertThat(failed).isEqualTo(Result.Failure(NetError.TransportFailure("close failed")))
+        assertThat((owner.state.value as ProcessMultiplayerState.Active).session)
+            .isSameInstanceAs(session)
+        assertThat(runtime.closed).isFalse()
+
+        val retried = owner.preparePeerRetry(session, NetError.Timeout)
+
+        assertThat(retried).isEqualTo(Result.Success(Unit))
+        assertThat(room.closeForRetryCalls).isEqualTo(2)
+        assertThat(runtime.closed).isTrue()
+        assertThat(owner.state.value).isInstanceOf<ProcessMultiplayerState.Retryable>()
+    }
+
+    @Test
+    fun peerRetryRuntimeCloseFailureCannotStrandTheOwnerInClosing() = runTest {
+        val owner = ProcessMultiplayerSessionOwner(backgroundScope)
+        val route = peerRoute()
+        val room = FakeRoom(isHost = false)
+        val session = (owner.acquire(route) { Result.Success(room) } as Result.Success).data
+        val runtime = FakeRuntime(
+            runtimeKind = "peer-runtime",
+            closeFailure = IllegalStateException("runtime close failed"),
+        )
+        session.getOrCreateRuntime(runtime.runtimeKind) { runtime }
+
+        val prepared = owner.preparePeerRetry(session, NetError.Timeout)
+
+        assertThat(prepared).isEqualTo(
+            Result.Failure(NetError.TransportFailure("runtime close failed")),
+        )
+        assertThat(runtime.closeCalls).isEqualTo(1)
+        assertThat(owner.state.value).isInstanceOf<ProcessMultiplayerState.Retryable>()
+
+        val replacement = FakeRoom(isHost = false)
+        val resumed = owner.acquire(route) { mode ->
+            assertThat(mode).isEqualTo(MultiplayerOpenMode.Resume)
+            Result.Success(replacement)
+        }
+        assertThat((resumed as Result.Success).data.room).isSameInstanceAs(replacement)
+    }
+
+    @Test
+    fun cancelledPeerRetryCloseRestoresActiveStateAndPropagatesCancellation() = runTest {
+        val owner = ProcessMultiplayerSessionOwner(backgroundScope)
+        val route = peerRoute()
+        val room = FakeRoom(isHost = false).apply {
+            closeForRetryBlock = { throw CancellationException("adapter cancelled") }
+        }
+        val session = (owner.acquire(route) { Result.Success(room) } as Result.Success).data
+        val runtime = FakeRuntime("peer-runtime")
+        session.getOrCreateRuntime(runtime.runtimeKind) { runtime }
+
+        assertFailsWith<CancellationException> {
+            owner.preparePeerRetry(session, NetError.Timeout)
+        }
+
+        assertThat((owner.state.value as ProcessMultiplayerState.Active).session)
+            .isSameInstanceAs(session)
+        assertThat(runtime.closed).isFalse()
+    }
+
+    @Test
+    fun cancelledCredentialDiscardRemainsRetryableAndPropagatesCancellation() = runTest {
+        val owner = ProcessMultiplayerSessionOwner(backgroundScope)
+        val route = peerRoute()
+        val room = FakeRoom(isHost = false)
+        val session = (owner.acquire(route) { Result.Success(room) } as Result.Success).data
+        assertThat(owner.preparePeerRetry(session, NetError.Timeout)).isEqualTo(Result.Success(Unit))
+        room.discardRejoinBlock = { throw CancellationException("secure store cancelled") }
+
+        assertFailsWith<CancellationException> {
+            owner.discardRetainedRoute(route)
+        }
+
+        val failed = owner.state.value as ProcessMultiplayerState.Failed
+        assertThat(failed.error).isEqualTo(NetError.SessionSuspended)
+        room.discardRejoinBlock = { Result.Success(Unit) }
+        assertThat(owner.discardRetainedRoute(route)).isEqualTo(Result.Success(Unit))
+        assertThat(room.discardRejoinCalls).isEqualTo(2)
+        assertThat(owner.state.value).isEqualTo(ProcessMultiplayerState.Idle)
+    }
+
+    @Test
+    fun leavingAFailedOpenClearsTheRouteForANewSession() = runTest {
+        val owner = ProcessMultiplayerSessionOwner(backgroundScope)
+        val route = peerRoute()
+
+        val failed = owner.acquire(route) { Result.Failure(NetError.Timeout) }
+        assertThat(failed).isEqualTo(Result.Failure(NetError.Timeout))
+        assertThat(owner.state.value).isInstanceOf<ProcessMultiplayerState.Failed>()
+
+        assertThat(owner.leaveRoute(route, SessionEndReason.Cancelled))
+            .isEqualTo(Result.Success(Unit))
+        assertThat(owner.state.value).isEqualTo(ProcessMultiplayerState.Idle)
+
+        val replacement = FakeRoom(isHost = false)
+        val reopened = owner.acquire(route) { Result.Success(replacement) }
+        assertThat((reopened as Result.Success).data.room).isSameInstanceAs(replacement)
     }
 
     @Test
@@ -231,6 +586,30 @@ class ProcessMultiplayerSessionOwnerTest {
     }
 
     @Test
+    fun hostFinalLeaveRuntimeCloseFailureStillReleasesOwnership() = runTest {
+        val owner = ProcessMultiplayerSessionOwner(backgroundScope)
+        val room = FakeRoom(isHost = true)
+        val session = (
+            owner.acquire(hostRoute(), 71L) { Result.Success(room) } as Result.Success
+        ).data
+        val runtime = FakeRuntime(
+            runtimeKind = "host-runtime",
+            closeFailure = IllegalStateException("runtime close failed"),
+        )
+        session.getOrCreateRuntime(runtime.runtimeKind) { runtime }
+
+        val closed = owner.finalLeave(session, SessionEndReason.Cancelled)
+
+        assertThat(closed).isEqualTo(
+            Result.Failure(NetError.TransportFailure("runtime close failed")),
+        )
+        assertThat(runtime.terminatedWith).isEqualTo(listOf(SessionEndReason.Cancelled))
+        assertThat(runtime.closeCalls).isEqualTo(1)
+        assertThat(room.leaveCalls).isEqualTo(1)
+        assertThat(owner.state.value).isEqualTo(ProcessMultiplayerState.Idle)
+    }
+
+    @Test
     fun aNewOwnerModelsProcessDeathAsNoInMemoryHostSession() = runTest {
         val oldOwner = ProcessMultiplayerSessionOwner(backgroundScope)
         oldOwner.acquire(hostRoute(), 1L) { Result.Success(FakeRoom(true)) }
@@ -260,15 +639,19 @@ private class FakeCheckpoint(
 
 private class FakeRuntime(
     override val runtimeKind: String,
+    private val closeFailure: Exception? = null,
 ) : RetainedMultiplayerRuntime {
     val terminatedWith = mutableListOf<SessionEndReason>()
     var closed = false
+    var closeCalls = 0
 
     override suspend fun terminate(reason: SessionEndReason) {
         terminatedWith += reason
     }
 
     override fun close() {
+        closeCalls++
+        closeFailure?.let { throw it }
         closed = true
     }
 }
@@ -294,9 +677,13 @@ private class FakeRoom(
         Result.Success(members.value)
     }
     var closeForRetryCalls = 0
+    var closeForRetryBlock: suspend () -> Result<Unit, NetError> = { Result.Success(Unit) }
+    val closeForRetryResults = ArrayDeque<Result<Unit, NetError>>()
     var discardRejoinCalls = 0
+    var discardRejoinBlock: suspend () -> Result<Unit, NetError> = { Result.Success(Unit) }
     var finalLeaveCalls = 0
     var leaveCalls = 0
+    var leaveFailure: Exception? = null
     val finalLeaveResults = ArrayDeque<Result<Unit, NetError>>()
 
     override suspend fun closeAdmissions(): Result<List<RoomMember>, NetError> {
@@ -314,12 +701,12 @@ private class FakeRoom(
 
     override suspend fun closeForRetry(): Result<Unit, NetError> {
         closeForRetryCalls++
-        return Result.Success(Unit)
+        return closeForRetryResults.removeFirstOrNull() ?: closeForRetryBlock()
     }
 
     override suspend fun discardRejoinCapability(): Result<Unit, NetError> {
         discardRejoinCalls++
-        return Result.Success(Unit)
+        return discardRejoinBlock()
     }
 
     override suspend fun finalLeave(): Result<Unit, NetError> {
@@ -329,5 +716,6 @@ private class FakeRoom(
 
     override suspend fun leave() {
         leaveCalls++
+        leaveFailure?.let { throw it }
     }
 }

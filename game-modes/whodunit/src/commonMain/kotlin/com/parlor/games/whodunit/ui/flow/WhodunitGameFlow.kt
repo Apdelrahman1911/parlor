@@ -17,7 +17,6 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -51,7 +50,6 @@ import com.parlor.designsystem.components.LocalParlorToastState
 import com.parlor.designsystem.components.ParlorToastSeverity
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.engine.session.SessionConfig
-import com.parlor.engine.session.SubmitError
 import com.parlor.engine.state.Player
 import com.parlor.games.whodunit.WhodunitDefinition
 import com.parlor.games.whodunit.WhodunitIds
@@ -160,30 +158,29 @@ import com.parlor.games.whodunit.ui.screens.setup.RulesBriefingScreen
 import com.parlor.games.whodunit.ui.screens.vote.TiedRevoteScreen
 import com.parlor.games.whodunit.ui.screens.vote.VoteBallotScreen
 import com.parlor.games.whodunit.ui.screens.vote.VoteHandoffScreen
-import com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostRoomBridge
-import com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitPeerRoomBridge
+import com.parlor.games.whodunit.ui.flow.multiplayer.WHODUNIT_HOST_RUNTIME_KIND
+import com.parlor.games.whodunit.ui.flow.multiplayer.WHODUNIT_PEER_RUNTIME_KIND
+import com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostRuntime
+import com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitPeerRuntime
 import com.parlor.networking.protocol.SessionEndReason
 import com.parlor.networking.protocol.SessionProtocol
 import com.parlor.networking.protocol.CommandStatus
-import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.NetError
 import com.parlor.games.whodunit.domain.party.WhodunitReadinessGate
 import com.parlor.session.PlayMode
 import com.parlor.session.SessionController
-import com.parlor.session.SubmissionReceipt
 import com.parlor.session.ViewerContext
 import com.parlor.session.party.PartyAwareSession
 import com.parlor.session.passandplay.PassAndPlaySessionController
 import com.parlor.session.multidevice.PeerCommandProgress
 import com.parlor.session.multidevice.PeerCommandDelivery
 import com.parlor.session.multidevice.HostStartGateState
-import com.parlor.session.multidevice.beginExit
-import com.parlor.session.multidevice.toHostStartGateState
+import com.parlor.session.multidevice.ProcessMultiplayerSession
+import com.parlor.session.multidevice.ProcessMultiplayerSessionOwner
+import com.parlor.session.multidevice.RetainedValueResult
 import com.parlor.storage.snapshot.SnapshotStore
 import com.parlor.storage.snapshot.SerializedSnapshotWriter
 import com.parlor.storage.snapshot.SnapshotWriteStatus
-import kotlinx.coroutines.NonCancellable
-import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.compose.koinInject
@@ -896,122 +893,81 @@ private fun PauseAffordance(
 // ====================================================================== Multi-device ==
 
 /**
- * Multi-device host entry. Builds a [PassAndPlaySessionController] as in
- * pass-and-play, wraps it in a [WhodunitHostRoomBridge] that broadcasts the
- * public projection on every state change and routes per-player private
- * slices, and renders the standard [PhaseRouter] so the host plays from the
- * same UI as solo play. `Start Game` on the lobby called
- * `bridge.announceStart(...)` before transitioning here; this composable
- * just runs the game.
+ * Multi-device host UI attached to the process-retained authoritative runtime.
+ * The runtime owns the reducer, start transaction, room bridge, and immutable
+ * authored case; this composable can disappear and reattach without recreating
+ * or advancing any of them.
  */
 @Composable
 fun WhodunitMultiplayerHostFlow(
     case: ValidatedCase<WhodunitCase>,
     modeId: ModeId,
     players: List<Player>,
-    seed: Long,
-    room: LocalRoom,
+    ownedSession: ProcessMultiplayerSession,
+    sessionOwner: ProcessMultiplayerSessionOwner,
     onBackToLibrary: () -> Unit,
     onRetryStart: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val clock: Clock = koinInject()
     val definition: WhodunitDefinition = koinInject()
-    val scope = rememberCoroutineScope()
-
-    // Freeze the roster at game start. `players` is recomputed by the caller
-    // from the live room membership on every change, so keying the canonical
-    // session on it meant a peer dropping or returning mid-game rebuilt the
-    // controller and wiped roles/phase/votes. Membership churn after start is
-    // handled through the bridge (MarkPlayerDisconnected/Reconnected), never by
-    // reconstructing the session. See PROBLEMS_PARLOR.md → CC-01.
-    val rosterAtStart = remember { players }
-
-    val sessionConfig = remember(case.envelope.caseId, modeId, rosterAtStart, seed) {
-        SessionConfig(
-            sessionId = SessionId("mp-host-${seed.toString(16)}"),
-            caseId = CaseId(case.envelope.caseId),
-            modeId = modeId,
-            players = rosterAtStart,
-            randomSeed = seed,
-        )
+    val uiScope = rememberCoroutineScope()
+    val seed = requireNotNull(ownedSession.hostSeed) {
+        "Whodunit host session is missing its private reducer seed"
     }
-    val hostPlayMode = remember(room) {
-        PlayMode.MultiDevice(selfPlayerId = room.selfPlayerId, isHost = true)
-    }
-    val rawSession = remember(sessionConfig) {
-        PassAndPlaySessionController(
-            definition = definition,
-            config = sessionConfig,
-            reducerContext = WhodunitReducerContext(
+    val runtimeLookup by produceState<RetainedValueResult<*>?>(
+        initialValue = null,
+        key1 = ownedSession,
+    ) {
+        value = ownedSession.getOrCreateRuntime(WHODUNIT_HOST_RUNTIME_KIND) { runtimeScope ->
+            WhodunitHostRuntime(
+                definition = definition,
                 clock = clock,
-                random = RandomSource.seeded(seed),
                 case = case,
+                modeId = modeId,
+                players = players,
+                seed = seed,
+                room = ownedSession.room,
+                scope = runtimeScope,
+            )
+        }
+    }
+    val runtime = (runtimeLookup as? RetainedValueResult.Ready<*>)?.value as? WhodunitHostRuntime
+    if (runtime == null) {
+        ReconnectingOverlay(
+            title = stringResource(
+                if (runtimeLookup == null) {
+                    Res.string.host_starting
+                } else {
+                    Res.string.host_start_failed_title
+                },
             ),
-            scope = scope,
-        )
-    }
-    // The bridge talks to the raw controller for broadcasting host state.
-    // The UI submits through the PartyAwareSession wrapper. In MultiDevice
-    // mode the wrapper is a transparent pass-through — peers ack themselves
-    // — but using the wrapper everywhere keeps the surrounding code uniform
-    // with the local entries.
-    val partySession: SessionController<WhodunitState, WhodunitAction, WhodunitEvent> =
-        remember(rawSession, hostPlayMode) {
-            PartyAwareSession(rawSession, hostPlayMode, WhodunitReadinessGate)
-        }
-    val bridge = remember(rawSession, room, rosterAtStart) {
-        WhodunitHostRoomBridge(
-            rawSession,
-            room,
-            rosterAtStart,
-            scope,
-            reconcileRoomTopology = true,
-            requireStartHandshake = true,
-        )
-    }
-    val session: SessionController<WhodunitState, WhodunitAction, WhodunitEvent> =
-        remember(partySession, bridge) {
-            PublishingWhodunitSessionController(partySession, bridge)
-        }
-    var startGate by remember(bridge) {
-        mutableStateOf<HostStartGateState>(HostStartGateState.Starting)
-    }
-    LaunchedEffect(bridge) {
-        val contentIdentity = case.envelope.contentIdentity()
-        val result = bridge.announceStart(
-            caseId = case.envelope.caseId,
-            modeId = modeId.raw,
-            caseVersion = contentIdentity.version,
-            caseDigest = contentIdentity.digest,
-        ).toHostStartGateState()
-        if (startGate != HostStartGateState.Exiting) startGate = result
-    }
-    LaunchedEffect(bridge) {
-        try {
-            awaitCancellation()
-        } finally {
-            withContext(NonCancellable) {
-                try {
-                    bridge.terminate(SessionEndReason.HostLeft)
-                } finally {
-                    try {
-                        room.leave()
-                    } finally {
-                        bridge.close()
-                    }
+            leaveLabel = stringResource(Res.string.host_start_cancel),
+            leaveContentDescription = stringResource(Res.string.host_start_cancel_description),
+            onLeave = {
+                uiScope.launch {
+                    sessionOwner.finalLeave(ownedSession, SessionEndReason.Cancelled)
+                    onBackToLibrary()
                 }
-            }
-        }
+            },
+            modifier = modifier.fillMaxSize(),
+        )
+        return
     }
 
-    var terminalExitInFlight by remember(bridge) { mutableStateOf(false) }
+    val scope = runtime.scope
+    val session = runtime.session
+    val bridge = runtime.bridge
+    val hostPlayMode = runtime.playMode
+    val startGate by runtime.startGate.collectAsState()
+
+    var terminalExitInFlight by remember(runtime) { mutableStateOf(false) }
     val exitToLibrary: (SessionEndReason) -> Unit = { reason ->
         if (!terminalExitInFlight) {
             terminalExitInFlight = true
-            scope.launch {
-                bridge.terminate(reason)
-                room.leave()
+            runtime.beginExit()
+            uiScope.launch {
+                sessionOwner.finalLeave(ownedSession, reason)
                 onBackToLibrary()
             }
         }
@@ -1019,9 +975,9 @@ fun WhodunitMultiplayerHostFlow(
     val retryStartAfterTerminal: () -> Unit = {
         if (!terminalExitInFlight) {
             terminalExitInFlight = true
-            scope.launch {
-                bridge.terminate(SessionEndReason.Cancelled)
-                room.leave()
+            runtime.beginExit()
+            uiScope.launch {
+                sessionOwner.prepareHostRetry(ownedSession)
                 onRetryStart()
             }
         }
@@ -1029,7 +985,8 @@ fun WhodunitMultiplayerHostFlow(
 
     val publicProjection by session.publicState.collectAsState()
     val state = publicProjection.state
-    val payload = case.payload
+    val retainedCase = runtime.case
+    val payload = retainedCase.payload
     var confirmContinueFor by remember { mutableStateOf<Player?>(null) }
     val disconnectedPlayer = state.public.disconnectedPlayers
         .asSequence()
@@ -1044,19 +1001,13 @@ fun WhodunitMultiplayerHostFlow(
         }
     }
 
-    LaunchedEffect(state.phase) {
-        if (state.phase is WhodunitPhase.Setup) {
-            session.submit(WhodunitAction.AssignRoles(seed))
-        }
-    }
-
     Box(modifier = modifier.fillMaxSize()) {
         if (startGate == HostStartGateState.Started) {
             HostPhaseRouter(
                 playMode = hostPlayMode,
                 phase = state.phase,
                 state = state,
-                case = case,
+                case = retainedCase,
                 payload = payload,
                 session = session,
                 scope = scope,
@@ -1154,7 +1105,7 @@ fun WhodunitMultiplayerHostFlow(
                 ),
                 onLeave = {
                     if (startGate != HostStartGateState.Exiting) {
-                        startGate = startGate.beginExit()
+                        runtime.beginExit()
                         exitToLibrary(SessionEndReason.Cancelled)
                     }
                 },
@@ -1179,13 +1130,13 @@ fun WhodunitMultiplayerHostFlow(
                 ),
                 onContinue = {
                     if (startGate !is HostStartGateState.Exiting) {
-                        startGate = startGate.beginExit()
+                        runtime.beginExit()
                         retryStartAfterTerminal()
                     }
                 },
                 onLeave = {
                     if (startGate !is HostStartGateState.Exiting) {
-                        startGate = startGate.beginExit()
+                        runtime.beginExit()
                         exitToLibrary(SessionEndReason.Cancelled)
                     }
                 },
@@ -1196,11 +1147,10 @@ fun WhodunitMultiplayerHostFlow(
 }
 
 /**
- * Multi-device peer entry. Spins up a [WhodunitPeerRoomBridge] that holds
- * a `ShadowSessionController` updated by inbound host snapshots, and renders
- * the same [PhaseRouter] the host uses. The peer never reduces game state
- * locally — every action it submits is sent to the host, and every state
- * change is reflected when the host's snapshot arrives.
+ * Multi-device peer UI attached to a process-retained passive mirror. The peer
+ * never reduces game state locally: actions go to the host and only validated
+ * authoritative snapshots mutate the mirror. UI recreation does not recreate
+ * the bridge or consume the start transaction again.
  */
 @Composable
 fun WhodunitMultiplayerPeerFlow(
@@ -1209,8 +1159,8 @@ fun WhodunitMultiplayerPeerFlow(
     players: List<Player>,
     selfPlayerId: PlayerId,
     seed: Long,
-    room: LocalRoom,
     protocol: SessionProtocol,
+    ownedSession: ProcessMultiplayerSession,
     onBackToLibrary: () -> Unit,
     modifier: Modifier = Modifier,
     /**
@@ -1225,33 +1175,42 @@ fun WhodunitMultiplayerPeerFlow(
     onSelfOfflineChanged: (Boolean) -> Unit = {},
 ) {
     val definition: WhodunitDefinition = koinInject()
-    val scope = rememberCoroutineScope()
-
-    val initialState = remember(case.envelope.caseId, players, modeId, seed) {
-        definition.createInitialState(
-            SessionConfig(
-                sessionId = SessionId("mp-peer-${seed.toString(16)}"),
-                caseId = CaseId(case.envelope.caseId),
+    val runtimeLookup by produceState<RetainedValueResult<*>?>(
+        initialValue = null,
+        key1 = ownedSession,
+    ) {
+        value = ownedSession.getOrCreateRuntime(WHODUNIT_PEER_RUNTIME_KIND) { runtimeScope ->
+            WhodunitPeerRuntime(
+                definition = definition,
+                case = case,
                 modeId = modeId,
                 players = players,
-                // `seed` is the public SessionStarting nonce on this peer,
-                // never the host's hidden reducer seed. The peer does not
-                // reduce and starts from a structurally redacted placeholder.
-                randomSeed = 0L,
+                selfPlayerId = selfPlayerId,
+                seed = seed,
+                room = ownedSession.room,
+                protocol = protocol,
+                scope = runtimeScope,
+            )
+        }
+    }
+    val runtime = (runtimeLookup as? RetainedValueResult.Ready<*>)?.value as? WhodunitPeerRuntime
+    if (runtime == null) {
+        ReconnectingOverlay(
+            title = stringResource(
+                if (runtimeLookup == null) {
+                    Res.string.peer_initial_snapshot_loading
+                } else {
+                    Res.string.peer_initial_snapshot_failed
+                },
             ),
+            leaveLabel = stringResource(Res.string.peer_leave_room),
+            leaveContentDescription = stringResource(Res.string.peer_leave_room_description),
+            onLeave = onBackToLibrary,
+            modifier = modifier.fillMaxSize(),
         )
+        return
     }
-
-    val bridge = remember(room, selfPlayerId, protocol) {
-        WhodunitPeerRoomBridge(
-            room = room,
-            selfPlayerId = selfPlayerId,
-            initialPublic = initialState,
-            scope = scope,
-            protocol = protocol,
-        )
-    }
-    DisposableEffect(bridge) { onDispose { bridge.close() } }
+    val bridge = runtime.bridge
 
     val toastState = LocalParlorToastState.current
     val staleCommandCopy = stringResource(Res.string.peer_command_stale)
@@ -1307,23 +1266,15 @@ fun WhodunitMultiplayerPeerFlow(
         onSelfOfflineChanged(connectionState.selfOffline)
     }
 
-    val peerPlayMode = remember(selfPlayerId) {
-        PlayMode.MultiDevice(selfPlayerId = selfPlayerId, isHost = false)
-    }
-    val session: SessionController<WhodunitState, WhodunitAction, WhodunitEvent> =
-        remember(bridge.controller, peerPlayMode) {
-            // Multi-device peer: wrapper is a transparent pass-through.
-            // Wired in for shape uniformity with the local entry — local
-            // mode is the only one that actually issues auto-acks.
-            PartyAwareSession(bridge.controller, peerPlayMode, WhodunitReadinessGate)
-        }
+    val peerPlayMode = runtime.playMode
+    val session = runtime.session
     // A peer's own projection contains both the public and private slices from
     // one authenticated host revision. Rendering from this single StateFlow is
     // required: collecting publicState separately can pair a new dossier with
     // the previous role-assignment generation during recomposition.
     val playerProjection by session.privateStateFor(selfPlayerId).collectAsState()
     val state = playerProjection.state
-    val payload = case.payload
+    val payload = runtime.case.payload
     val hasAuthoritativeSnapshot by bridge.hasAuthoritativeSnapshot.collectAsState()
     val initialSnapshotError by bridge.initialSnapshotError.collectAsState()
 
@@ -1357,20 +1308,6 @@ fun WhodunitMultiplayerPeerFlow(
             )
         }
     }
-}
-
-/**
- * Publishes host-originated mutations through the same ordered coordinator
- * used by peer commands. No state-flow observer is involved, so one reducer
- * mutation always advances exactly one authoritative revision.
- */
-private class PublishingWhodunitSessionController(
-    private val delegate: SessionController<WhodunitState, WhodunitAction, WhodunitEvent>,
-    private val bridge: WhodunitHostRoomBridge,
-) : SessionController<WhodunitState, WhodunitAction, WhodunitEvent> by delegate {
-    override suspend fun submit(
-        action: WhodunitAction,
-    ): Result<SubmissionReceipt, SubmitError> = bridge.submitHostAction(action)
 }
 
 /**

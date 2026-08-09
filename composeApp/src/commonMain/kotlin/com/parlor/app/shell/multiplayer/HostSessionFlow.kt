@@ -84,10 +84,13 @@ import com.parlor.networking.transport.HostConfig
 import com.parlor.networking.transport.HostedGameProtocol
 import com.parlor.networking.transport.RoomTransport
 import com.parlor.networking.transport.needsRecoveryGuidance
+import com.parlor.networking.protocol.SessionEndReason
+import com.parlor.session.multidevice.MultiplayerOpenMode
+import com.parlor.session.multidevice.MultiplayerSessionRoute
+import com.parlor.session.multidevice.ProcessMultiplayerSession
+import com.parlor.session.multidevice.ProcessMultiplayerSessionOwner
+import com.parlor.session.multidevice.ProcessMultiplayerState
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.NonCancellable
-import kotlinx.coroutines.awaitCancellation
-import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.core.qualifier.named
@@ -95,8 +98,8 @@ import org.koin.core.qualifier.named
 /**
  * End-to-end host flow: open a room, show the lobby, and once the host taps
  * **Start**, hand off to [WhodunitMultiplayerHostFlow] which announces the
- * session and renders the game. Owns the [LocalRoom] for the lifetime of
- * the session and tears it down on [onBackToLibrary].
+ * session and renders the game. The process-scoped owner retains and closes
+ * the [LocalRoom]; this composable is only a reattachable UI client.
  */
 @Composable
 fun HostSessionFlow(
@@ -110,22 +113,43 @@ fun HostSessionFlow(
 ) {
     val repository: CaseRepository = koinInject()
     val payloadValidator: PayloadValidator<WhodunitCase> = koinInject(qualifier = named("whodunit"))
+    val sessionOwner: ProcessMultiplayerSessionOwner = koinInject()
     val scope = rememberCoroutineScope()
 
-    var room by remember { mutableStateOf<LocalRoom?>(null) }
-    // Keep the typed error so the rendering site can localise it.
-    var hostError by remember { mutableStateOf<NetError?>(null) }
+    val route = remember(caseId, modeId, hostName) {
+        MultiplayerSessionRoute.host(
+            gameId = WhodunitIds.GameId,
+            displayName = hostName,
+            contentId = caseId,
+            modeId = modeId.raw,
+        )
+    }
+    val ownerState by sessionOwner.state.collectAsState()
+    val ownedSession = (ownerState as? ProcessMultiplayerState.Active)
+        ?.session
+        ?.takeIf { it.route == route }
+    val ownerError = (ownerState as? ProcessMultiplayerState.Failed)
+        ?.takeIf { it.route == route }
+        ?.error
+    var acquireError by remember(route) { mutableStateOf<NetError?>(null) }
     var hostAttempt by remember { mutableStateOf(0) }
-    var frozenRoster by remember { mutableStateOf<List<RoomMember>?>(null) }
-    // Ownership transfers atomically when admissions close. The child game
-    // then guarantees SessionEnded-before-leave; this parent must not race it
-    // with an eager room close during composition teardown.
-    var gameOwnedRoom by remember { mutableStateOf<LocalRoom?>(null) }
     var startBlocked by remember { mutableStateOf(false) }
-    // Hidden-role outcomes must not be seeded from peer-observable room data
-    // or a general-purpose PRNG. The value stays in authoritative host state;
-    // SessionStarting carries a separate public nonce.
-    val seed = remember(caseId) { SecureIds.randomLong() }
+    var leaveInFlight by remember(route) { mutableStateOf(false) }
+
+    val leaveToLibrary: () -> Unit = {
+        if (!leaveInFlight) {
+            leaveInFlight = true
+            scope.launch {
+                when (val left = sessionOwner.leaveRoute(route, SessionEndReason.Cancelled)) {
+                    is Result.Success -> onBackToLibrary()
+                    is Result.Failure -> {
+                        acquireError = left.error
+                        leaveInFlight = false
+                    }
+                }
+            }
+        }
+    }
 
     val caseResult by produceState<Result<ValidatedCase<WhodunitCase>, DataError>?>(
         initialValue = null,
@@ -144,46 +168,47 @@ fun HostSessionFlow(
         )
     }
 
-    LaunchedEffect(transport, hostAttempt, supportedPlayerCounts) {
+    LaunchedEffect(transport, route, hostAttempt, supportedPlayerCounts) {
         val capacity = supportedPlayerCounts ?: return@LaunchedEffect
-        hostError = null
+        acquireError = null
         when (
-            val result = transport.host(
-                HostConfig(
-                    roomDisplayName = hostName,
-                    maxRemotePlayers = capacity.last - 1,
-                    gameProtocol = HostedGameProtocol(
-                        gameId = WhodunitIds.GameId,
-                        gameVersion = WhodunitHostRoomBridge.GAME_VERSION,
+            val result = sessionOwner.acquire(
+                route = route,
+                hostSeed = SecureIds.randomLong(),
+            ) { mode ->
+                check(mode == MultiplayerOpenMode.Host)
+                transport.host(
+                    HostConfig(
+                        roomDisplayName = hostName,
+                        maxRemotePlayers = capacity.last - 1,
+                        gameProtocol = HostedGameProtocol(
+                            gameId = WhodunitIds.GameId,
+                            gameVersion = WhodunitHostRoomBridge.GAME_VERSION,
+                        ),
                     ),
-                ),
-            )
-        ) {
-            is Result.Success -> {
-                room = result.data
-                gameOwnedRoom = null
-                frozenRoster = null
-                startBlocked = false
+                )
             }
-            is Result.Failure -> hostError = result.error
+        ) {
+            is Result.Success -> startBlocked = false
+            is Result.Failure -> acquireError = result.error
         }
     }
 
-    val current = room
-    LaunchedEffect(current) {
-        if (current != null) {
-            try {
-                awaitCancellation()
-            } finally {
-                withContext(NonCancellable) {
-                    if (gameOwnedRoom !== current) current.leave()
-                }
-            }
+    val frozenRoster by produceState<List<RoomMember>?>(
+        initialValue = ownedSession?.frozenRoster?.value,
+        key1 = ownedSession,
+    ) {
+        val session = ownedSession
+        if (session == null) {
+            value = null
+        } else {
+            session.frozenRoster.collect { value = it }
         }
     }
 
     val localNetworkAccess by transport.localNetworkAccess.collectAsState()
-    val renderedHostError = hostError
+    val renderedHostError = ownerError ?: acquireError
+    val current = ownedSession?.room
     when {
         renderedHostError != null -> HostErrorState(
             error = netErrorMessage(renderedHostError),
@@ -192,20 +217,31 @@ fun HostSessionFlow(
                 localNetworkAccess.needsRecoveryGuidance
             },
             showNetworkRecovery = localNetworkAccess.needsRecoveryGuidance,
-            onBack = onBackToLibrary,
+            onBack = leaveToLibrary,
+            actionsEnabled = !leaveInFlight,
+            backInFlight = leaveInFlight,
             modifier = modifier,
         )
         caseError != null -> HostErrorState(
             dataErrorMessage(caseError),
-            onBack = onBackToLibrary,
+            onBack = leaveToLibrary,
+            actionsEnabled = !leaveInFlight,
+            backInFlight = leaveInFlight,
             modifier = modifier,
         )
         case != null && supportedPlayerCounts == null -> HostErrorState(
             dataErrorMessage(DataError.CorruptedData),
-            onBack = onBackToLibrary,
+            onBack = leaveToLibrary,
+            actionsEnabled = !leaveInFlight,
+            backInFlight = leaveInFlight,
             modifier = modifier,
         )
-        current == null || case == null -> HostLoadingState(modifier = modifier)
+        current == null || case == null -> HostLoadingState(
+            onLeave = leaveToLibrary,
+            leaveEnabled = !leaveInFlight,
+            leaveInFlight = leaveInFlight,
+            modifier = modifier,
+        )
         frozenRoster == null -> HostLobbyContent(
             room = current,
             hostName = hostName,
@@ -214,10 +250,9 @@ fun HostSessionFlow(
             startBlocked = startBlocked,
             onStart = {
                 scope.launch {
-                    when (val frozen = current.closeAdmissions()) {
+                    val session = ownedSession
+                    when (val frozen = session.freezeAdmissions()) {
                         is Result.Success -> {
-                            gameOwnedRoom = current
-                            frozenRoster = frozen.data
                             startBlocked = false
                         }
                         is Result.Failure -> {
@@ -226,12 +261,7 @@ fun HostSessionFlow(
                     }
                 }
             },
-            onLeave = {
-                scope.launch {
-                    current.leave()
-                    onBackToLibrary()
-                }
-            },
+            onLeave = leaveToLibrary,
         )
         else -> {
             val roster = checkNotNull(frozenRoster)
@@ -250,18 +280,12 @@ fun HostSessionFlow(
                 case = case,
                 modeId = modeId,
                 players = players,
-                seed = seed,
-                room = current,
+                ownedSession = checkNotNull(ownedSession),
+                sessionOwner = sessionOwner,
                 onBackToLibrary = onBackToLibrary,
                 onRetryStart = {
-                    if (room === current) {
-                        // WhodunitMultiplayerHostFlow has already completed
-                        // terminal delivery and closed this physical room.
-                        room = null
-                        frozenRoster = null
-                        startBlocked = false
-                        hostAttempt++
-                    }
+                    startBlocked = false
+                    hostAttempt++
                 },
                 modifier = modifier,
             )
@@ -450,7 +474,12 @@ private fun HostLobbyContent(
 }
 
 @Composable
-private fun HostLoadingState(modifier: Modifier = Modifier) {
+private fun HostLoadingState(
+    onLeave: () -> Unit,
+    leaveEnabled: Boolean,
+    leaveInFlight: Boolean,
+    modifier: Modifier = Modifier,
+) {
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
         Column(
             modifier = Modifier.fillMaxSize().padding(ParlorTheme.spacing.xl),
@@ -467,6 +496,15 @@ private fun HostLoadingState(modifier: Modifier = Modifier) {
                 color = ParlorTheme.colors.textPrimary,
                 textAlign = TextAlign.Center,
             )
+            ParlorButton(
+                label = stringResource(Res.string.host_cancel),
+                contentDescription = stringResource(Res.string.host_cancel_description),
+                onClick = onLeave,
+                enabled = leaveEnabled,
+                loading = leaveInFlight,
+                modifier = Modifier.fillMaxWidth(),
+                variant = ParlorButtonVariant.Secondary,
+            )
         }
     }
 }
@@ -479,6 +517,8 @@ private fun HostErrorState(
     onRetry: (() -> Unit)? = null,
     onOpenNetworkSettings: (() -> Unit)? = null,
     showNetworkRecovery: Boolean = false,
+    actionsEnabled: Boolean = true,
+    backInFlight: Boolean = false,
 ) {
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
         Column(
@@ -514,6 +554,7 @@ private fun HostErrorState(
                     label = stringResource(Res.string.network_retry),
                     contentDescription = stringResource(Res.string.network_retry_description),
                     onClick = onRetry,
+                    enabled = actionsEnabled,
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
@@ -522,6 +563,7 @@ private fun HostErrorState(
                     label = stringResource(Res.string.network_open_settings),
                     contentDescription = stringResource(Res.string.network_open_settings_description),
                     onClick = onOpenNetworkSettings,
+                    enabled = actionsEnabled,
                     modifier = Modifier.fillMaxWidth(),
                     variant = ParlorButtonVariant.Secondary,
                 )
@@ -530,6 +572,8 @@ private fun HostErrorState(
                 label = stringResource(Res.string.error_back),
                 contentDescription = stringResource(Res.string.error_back_description),
                 onClick = onBack,
+                enabled = actionsEnabled,
+                loading = backInFlight,
                 modifier = Modifier.fillMaxWidth(),
                 variant = ParlorButtonVariant.Ghost,
             )

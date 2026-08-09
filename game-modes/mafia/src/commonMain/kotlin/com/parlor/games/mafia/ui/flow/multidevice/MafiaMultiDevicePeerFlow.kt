@@ -3,24 +3,14 @@ package com.parlor.games.mafia.ui.flow.multidevice
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.produceState
 import androidx.compose.ui.Modifier
-import com.parlor.core.ids.CaseId
 import com.parlor.core.ids.PlayerId
-import com.parlor.core.ids.SessionId
-import com.parlor.engine.session.SessionConfig
 import com.parlor.engine.state.Player
 import com.parlor.games.mafia.MafiaDefinition
-import com.parlor.games.mafia.MafiaIds
-import com.parlor.games.mafia.domain.action.MafiaAction
-import com.parlor.games.mafia.domain.event.MafiaEvent
-import com.parlor.games.mafia.domain.party.MafiaReadinessGate
-import com.parlor.games.mafia.domain.state.MafiaState
 import com.parlor.games.mafia.resources.Res
 import com.parlor.games.mafia.resources.md_peer_reconnecting
 import com.parlor.games.mafia.resources.md_peer_reconnecting_leave
@@ -28,10 +18,6 @@ import com.parlor.games.mafia.resources.md_peer_reconnecting_leave_description
 import com.parlor.games.mafia.resources.md_peer_initial_snapshot_failed
 import com.parlor.games.mafia.resources.md_peer_initial_snapshot_loading
 import com.parlor.networking.protocol.SessionProtocol
-import com.parlor.networking.room.LocalRoom
-import com.parlor.session.PlayMode
-import com.parlor.session.SessionController
-import com.parlor.session.party.PartyAwareSession
 import com.parlor.designsystem.components.ReconnectingOverlay
 import com.parlor.designsystem.components.LocalParlorToastState
 import com.parlor.designsystem.components.ParlorToastSeverity
@@ -42,6 +28,8 @@ import com.parlor.games.mafia.resources.peer_command_stale
 import com.parlor.networking.protocol.CommandStatus
 import com.parlor.session.multidevice.PeerCommandProgress
 import com.parlor.session.multidevice.PeerCommandDelivery
+import com.parlor.session.multidevice.ProcessMultiplayerSession
+import com.parlor.session.multidevice.RetainedValueResult
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -63,50 +51,60 @@ import org.koin.compose.koinInject
  * isn't on this device.
  *
  * Connection chrome ([onHostLostChanged] / [onSelfOfflineChanged]) is
- * fed by the bridge's `connectionEvents` SharedFlow — the same shape used
- * by Whodunit so `PeerSessionFlow` can drive `ReconnectingOverlay` and
- * `OfflineBanner` at the shell root.
+ * derived from the bridge's durable `connectionState` StateFlow, so a newly
+ * recreated UI immediately renders the current state instead of waiting for
+ * another one-shot connection event.
  */
 @Composable
 fun MafiaMultiDevicePeerFlow(
     players: List<Player>,
     selfPlayerId: PlayerId,
     seed: Long,
-    room: LocalRoom,
     protocol: SessionProtocol,
+    ownedSession: ProcessMultiplayerSession,
     onBackToHome: () -> Unit,
     modifier: Modifier = Modifier,
     onHostLostChanged: (Boolean) -> Unit = {},
     onSelfOfflineChanged: (Boolean) -> Unit = {},
 ) {
     val definition: MafiaDefinition = koinInject()
-    val scope = rememberCoroutineScope()
-
-    val initialState = remember(players, seed) {
-        definition.createInitialState(
-            SessionConfig(
-                sessionId = SessionId("mafia-mp-peer-${seed.toString(16)}"),
-                caseId = CaseId("default"),
-                modeId = MafiaIds.ClassicModeId,
+    val runtimeLookup by produceState<RetainedValueResult<*>?>(
+        initialValue = null,
+        key1 = ownedSession,
+    ) {
+        value = ownedSession.getOrCreateRuntime(MAFIA_PEER_RUNTIME_KIND) { runtimeScope ->
+            MafiaPeerRuntime(
+                definition = definition,
                 players = players,
-                // The start nonce is public debug/session-label material, not
-                // gameplay randomness. Peers never reduce and begin from the
-                // same redacted host-only sentinel used by projections.
-                randomSeed = 0L,
+                selfPlayerId = selfPlayerId,
+                seed = seed,
+                room = ownedSession.room,
+                protocol = protocol,
+                scope = runtimeScope,
+            )
+        }
+    }
+    val runtime = (runtimeLookup as? RetainedValueResult.Ready<*>)?.value as? MafiaPeerRuntime
+    if (runtime == null) {
+        ReconnectingOverlay(
+            title = stringResource(
+                if (runtimeLookup == null) {
+                    Res.string.md_peer_initial_snapshot_loading
+                } else {
+                    Res.string.md_peer_initial_snapshot_failed
+                },
             ),
+            leaveLabel = stringResource(Res.string.md_peer_reconnecting_leave),
+            leaveContentDescription = stringResource(
+                Res.string.md_peer_reconnecting_leave_description,
+            ),
+            onLeave = onBackToHome,
+            modifier = modifier.fillMaxSize(),
         )
+        return
     }
-
-    val bridge = remember(room, selfPlayerId, protocol) {
-        MafiaPeerRoomBridge(
-            room = room,
-            selfPlayerId = selfPlayerId,
-            initialPublic = initialState,
-            scope = scope,
-            protocol = protocol,
-        )
-    }
-    DisposableEffect(bridge) { onDispose { bridge.close() } }
+    val bridge = runtime.bridge
+    val scope = runtime.scope
 
     val toastState = LocalParlorToastState.current
     val staleCommandCopy = stringResource(Res.string.peer_command_stale)
@@ -160,16 +158,7 @@ fun MafiaMultiDevicePeerFlow(
         onSelfOfflineChanged(connectionState.selfOffline)
     }
 
-    val peerPlayMode = remember(selfPlayerId) {
-        PlayMode.MultiDevice(selfPlayerId = selfPlayerId, isHost = false)
-    }
-    val session: SessionController<MafiaState, MafiaAction, MafiaEvent> =
-        remember(bridge.controller, peerPlayMode) {
-            // Wrapper is a transparent pass-through on peers — wired in for
-            // shape uniformity with the local entry. The host runs the
-            // readiness gate that actually issues auto-acks.
-            PartyAwareSession(bridge.controller, peerPlayMode, MafiaReadinessGate)
-        }
+    val session = runtime.session
     // Render from the peer's own projection. The controller's public bucket
     // remains strictly public and can therefore be logged/rebroadcast safely.
     val playerProjection by session.privateStateFor(selfPlayerId).collectAsState()

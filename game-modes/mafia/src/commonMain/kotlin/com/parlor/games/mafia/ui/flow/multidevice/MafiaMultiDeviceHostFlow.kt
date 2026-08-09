@@ -7,29 +7,19 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import com.parlor.core.ids.CaseId
-import com.parlor.core.ids.SessionId
-import com.parlor.core.random.RandomSource
-import com.parlor.core.result.Result
 import com.parlor.core.time.Clock
 import com.parlor.designsystem.components.ContinueWithoutDialog
 import com.parlor.designsystem.components.HostDisconnectedOverlay
 import com.parlor.designsystem.components.ReconnectingOverlay
-import com.parlor.engine.reducer.DefaultReducerContext
-import com.parlor.engine.session.SessionConfig
-import com.parlor.engine.session.SubmitError
 import com.parlor.engine.state.Player
 import com.parlor.games.mafia.MafiaDefinition
-import com.parlor.games.mafia.MafiaIds
-import com.parlor.games.mafia.domain.action.MafiaAction
-import com.parlor.games.mafia.domain.event.MafiaEvent
 import com.parlor.games.mafia.domain.party.MafiaReadinessGate
 import com.parlor.games.mafia.domain.phase.MafiaPhase
-import com.parlor.games.mafia.domain.state.MafiaState
 import com.parlor.games.mafia.resources.Res
 import com.parlor.games.mafia.resources.md_host_continue_without_description_format
 import com.parlor.games.mafia.resources.md_host_continue_without_dialog_body_format
@@ -51,20 +41,14 @@ import com.parlor.games.mafia.resources.md_host_start_retry
 import com.parlor.games.mafia.resources.md_host_start_retry_description
 import com.parlor.games.mafia.resources.md_host_starting
 import com.parlor.networking.protocol.SessionEndReason
-import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.NetError
-import com.parlor.session.PlayMode
-import com.parlor.session.SessionController
-import com.parlor.session.SubmissionReceipt
 import com.parlor.session.party.PartyAwareSession
 import com.parlor.session.passandplay.PassAndPlaySessionController
 import com.parlor.session.multidevice.HostStartGateState
-import com.parlor.session.multidevice.beginExit
-import com.parlor.session.multidevice.toHostStartGateState
-import kotlinx.coroutines.NonCancellable
-import kotlinx.coroutines.awaitCancellation
+import com.parlor.session.multidevice.ProcessMultiplayerSession
+import com.parlor.session.multidevice.ProcessMultiplayerSessionOwner
+import com.parlor.session.multidevice.RetainedValueResult
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -97,105 +81,69 @@ import org.koin.compose.koinInject
 @Composable
 fun MafiaMultiDeviceHostFlow(
     players: List<Player>,
-    seed: Long,
-    room: LocalRoom,
+    ownedSession: ProcessMultiplayerSession,
+    sessionOwner: ProcessMultiplayerSessionOwner,
     onBackToHome: () -> Unit,
     onRetryStart: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val clock: Clock = koinInject()
     val definition: MafiaDefinition = koinInject()
-    val scope = rememberCoroutineScope()
-
-    // Freeze the roster at game start. The caller recomputes `players` from the
-    // live room membership on every change, so keying the canonical session on
-    // it rebuilt the controller — wiping roles/phase/votes — whenever a peer
-    // dropped or returned mid-game. Membership churn is handled through the
-    // bridge (MarkPlayerDisconnected/Reconnected). See PROBLEMS_PARLOR.md → CC-01.
-    val rosterAtStart = remember { players }
-
-    val sessionConfig = remember(rosterAtStart, seed) {
-        SessionConfig(
-            sessionId = SessionId("mafia-mp-host-${seed.toString(16)}"),
-            caseId = CaseId("default"),
-            modeId = MafiaIds.ClassicModeId,
-            players = rosterAtStart,
-            randomSeed = seed,
-        )
+    val uiScope = rememberCoroutineScope()
+    val seed = requireNotNull(ownedSession.hostSeed) {
+        "Mafia host session is missing its private reducer seed"
     }
-    val hostPlayMode = remember(room) {
-        PlayMode.MultiDevice(selfPlayerId = room.selfPlayerId, isHost = true)
-    }
-    val rawSession = remember(sessionConfig) {
-        PassAndPlaySessionController(
-            definition = definition,
-            config = sessionConfig,
-            reducerContext = DefaultReducerContext(
+    val runtimeLookup by produceState<RetainedValueResult<*>?>(
+        initialValue = null,
+        key1 = ownedSession,
+    ) {
+        value = ownedSession.getOrCreateRuntime(MAFIA_HOST_RUNTIME_KIND) { runtimeScope ->
+            MafiaHostRuntime(
+                definition = definition,
                 clock = clock,
-                random = RandomSource.seeded(seed),
+                players = players,
+                seed = seed,
+                room = ownedSession.room,
+                scope = runtimeScope,
+            )
+        }
+    }
+    val runtime = (runtimeLookup as? RetainedValueResult.Ready<*>)?.value as? MafiaHostRuntime
+    if (runtime == null) {
+        ReconnectingOverlay(
+            title = stringResource(
+                if (runtimeLookup == null) {
+                    Res.string.md_host_starting
+                } else {
+                    Res.string.md_host_start_failed_title
+                },
             ),
-            scope = scope,
-        )
-    }
-    // Bridge talks to the raw controller (it needs hostState to project
-    // private slices). The UI submits through the PartyAwareSession wrapper
-    // so phase-advance ticks behave identically to pass-and-play; in
-    // MultiDevice mode the wrapper is a transparent pass-through for peer
-    // actions (peers ack themselves) but still applies host-side gates.
-    val partySession: SessionController<MafiaState, MafiaAction, MafiaEvent> =
-        remember(rawSession, hostPlayMode) {
-            PartyAwareSession(rawSession, hostPlayMode, MafiaReadinessGate)
-        }
-    val bridge = remember(rawSession, room, rosterAtStart) {
-        MafiaHostRoomBridge(
-            rawSession,
-            room,
-            rosterAtStart,
-            scope,
-            reconcileRoomTopology = true,
-            requireStartHandshake = true,
-        )
-    }
-    val session: SessionController<MafiaState, MafiaAction, MafiaEvent> =
-        remember(partySession, bridge) {
-            PublishingMafiaSessionController(partySession, bridge)
-        }
-    var startGate by remember(bridge) {
-        mutableStateOf<HostStartGateState>(HostStartGateState.Starting)
-    }
-    LaunchedEffect(bridge) {
-        val result = bridge.announceStart(
-            caseId = "default",
-            modeId = MafiaIds.ClassicModeId.raw,
-        ).toHostStartGateState()
-        if (startGate != HostStartGateState.Exiting) startGate = result
-    }
-    LaunchedEffect(bridge) {
-        try {
-            awaitCancellation()
-        } finally {
-            withContext(NonCancellable) {
-                try {
-                    bridge.terminate(SessionEndReason.HostLeft)
-                } finally {
-                    try {
-                        room.leave()
-                    } finally {
-                        bridge.close()
-                    }
+            leaveLabel = stringResource(Res.string.md_host_start_cancel),
+            leaveContentDescription = stringResource(Res.string.md_host_start_cancel_description),
+            onLeave = {
+                uiScope.launch {
+                    sessionOwner.finalLeave(ownedSession, SessionEndReason.Cancelled)
+                    onBackToHome()
                 }
-            }
-        }
+            },
+            modifier = modifier.fillMaxSize(),
+        )
+        return
     }
 
-    var terminalExitInFlight by remember(bridge) { mutableStateOf(false) }
+    val scope = runtime.scope
+    val room = runtime.room
+    val session = runtime.session
+    val bridge = runtime.bridge
+    val startGate by runtime.startGate.collectAsState()
+
+    var terminalExitInFlight by remember(runtime) { mutableStateOf(false) }
     val exitToHome: (SessionEndReason) -> Unit = { reason ->
         if (!terminalExitInFlight) {
             terminalExitInFlight = true
-            startGate = startGate.beginExit()
-            scope.launch {
-                bridge.terminate(reason)
-                room.leave()
+            runtime.beginExit()
+            uiScope.launch {
+                sessionOwner.finalLeave(ownedSession, reason)
                 onBackToHome()
             }
         }
@@ -203,10 +151,9 @@ fun MafiaMultiDeviceHostFlow(
     val retryStartAfterTerminal: () -> Unit = {
         if (!terminalExitInFlight) {
             terminalExitInFlight = true
-            startGate = startGate.beginExit()
-            scope.launch {
-                bridge.terminate(SessionEndReason.Cancelled)
-                room.leave()
+            runtime.beginExit()
+            uiScope.launch {
+                sessionOwner.prepareHostRetry(ownedSession)
                 onRetryStart()
             }
         }
@@ -352,13 +299,4 @@ fun MafiaMultiDeviceHostFlow(
             )
         }
     }
-}
-
-private class PublishingMafiaSessionController(
-    private val delegate: SessionController<MafiaState, MafiaAction, MafiaEvent>,
-    private val bridge: MafiaHostRoomBridge,
-) : SessionController<MafiaState, MafiaAction, MafiaEvent> by delegate {
-    override suspend fun submit(
-        action: MafiaAction,
-    ): Result<SubmissionReceipt, SubmitError> = bridge.submitHostAction(action)
 }

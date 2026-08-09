@@ -16,6 +16,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -59,18 +60,24 @@ import com.parlor.games.mafia.resources.setup_back_description
 import com.parlor.networking.protocol.SessionProtocol
 import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.NetError
-import com.parlor.networking.room.PeerSessionAttempt
-import com.parlor.networking.room.PeerSessionRetryPolicy
 import com.parlor.networking.transport.RoomTransport
 import com.parlor.networking.transport.needsRecoveryGuidance
 import com.parlor.session.multidevice.awaitAuthoritativeSessionStart
 import com.parlor.session.multidevice.asNetError
+import com.parlor.session.multidevice.MultiplayerOpenMode
+import com.parlor.session.multidevice.MultiplayerSessionRoute
+import com.parlor.session.multidevice.ProcessMultiplayerSession
+import com.parlor.session.multidevice.ProcessMultiplayerSessionOwner
+import com.parlor.session.multidevice.ProcessMultiplayerState
+import com.parlor.session.multidevice.RetainedMultiplayerCheckpoint
+import com.parlor.session.multidevice.RetainedSessionOperation
+import com.parlor.session.multidevice.RetainedValueResult
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.NonCancellable
-import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 
 /**
  * Mafia-side peer lobby. Mirrors composeApp's shell `PeerSessionFlow` but
@@ -88,106 +95,113 @@ fun MafiaPeerLobbyFlow(
     onOpenNetworkSettings: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
 ) {
-    var room by remember { mutableStateOf<LocalRoom?>(null) }
+    val sessionOwner: ProcessMultiplayerSessionOwner = koinInject()
+    val route = remember(code, peerName, resumeExistingSession) {
+        MultiplayerSessionRoute.peer(
+            gameId = MafiaIds.GameId,
+            displayName = peerName,
+            roomCode = code,
+            resumeExistingSession = resumeExistingSession,
+        )
+    }
+    val ownerState by sessionOwner.state.collectAsState()
+    val ownedSession = (ownerState as? ProcessMultiplayerState.Active)
+        ?.session
+        ?.takeIf { it.route == route }
+    val ownerError = when (val state = ownerState) {
+        is ProcessMultiplayerState.Failed -> state.takeIf { it.route == route }?.error
+        is ProcessMultiplayerState.Retryable -> state.takeIf { it.route == route }?.lastError
+        else -> null
+    }
+    var acquireError by remember(route) { mutableStateOf<NetError?>(null) }
     var joinError by remember { mutableStateOf<NetError?>(null) }
-    var sessionStart by remember { mutableStateOf<SessionStartingFromHost?>(null) }
     var joinAttempt by remember { mutableStateOf(0) }
-    var retryPolicy by remember(transport, code, peerName, resumeExistingSession) {
-        mutableStateOf(PeerSessionRetryPolicy.initial(resumeExistingSession))
-    }
-    var retainedRetryRoom by remember(transport, code, peerName) {
-        mutableStateOf<LocalRoom?>(null)
-    }
     var finalLeaveInFlight by remember { mutableStateOf(false) }
+    var retryInFlight by remember { mutableStateOf(false) }
     val flowScope = rememberCoroutineScope()
 
     var hostLost by remember { mutableStateOf(false) }
     var selfOffline by remember { mutableStateOf(false) }
 
-    LaunchedEffect(transport, code, resumeExistingSession, joinAttempt) {
+    val checkpoint by produceState<RetainedMultiplayerCheckpoint?>(
+        initialValue = ownedSession?.checkpoint?.value,
+        key1 = ownedSession,
+    ) {
+        val session = ownedSession
+        if (session == null) {
+            value = null
+        } else {
+            session.checkpoint.collect { value = it }
+        }
+    }
+    val startCheckpoint = checkpoint as? MafiaStartCheckpoint
+    val startCheckpointState by produceState<MafiaStartCheckpointState>(
+        initialValue = startCheckpoint?.state?.value ?: MafiaStartCheckpointState.Waiting,
+        key1 = startCheckpoint,
+    ) {
+        val retained = startCheckpoint
+        if (retained == null) {
+            value = MafiaStartCheckpointState.Waiting
+        } else {
+            retained.state.collect { value = it }
+        }
+    }
+    val sessionStart = (startCheckpointState as? MafiaStartCheckpointState.Started)?.start
+
+    LaunchedEffect(transport, route, joinAttempt) {
+        acquireError = null
         joinError = null
-        sessionStart = null
-        val result = when (retryPolicy.nextAttempt) {
-            PeerSessionAttempt.Resume -> transport.resumeLastSession()
-            PeerSessionAttempt.Join -> transport.join(code, peerName)
+        val result = sessionOwner.acquire(route) { mode ->
+            when (mode) {
+                MultiplayerOpenMode.Resume -> transport.resumeLastSession()
+                MultiplayerOpenMode.Join -> transport.join(code, peerName)
+                MultiplayerOpenMode.Host -> error("Peer route requested host acquisition")
+            }
         }
         when (result) {
-            is Result.Success -> {
-                retainedRetryRoom = null
-                retryPolicy = retryPolicy.afterRoomAcquired()
-                room = result.data
-            }
-            is Result.Failure -> joinError = result.error
+            is Result.Success -> Unit
+            is Result.Failure -> acquireError = result.error
         }
     }
 
-    LaunchedEffect(room) {
-        val active = room ?: return@LaunchedEffect
+    LaunchedEffect(ownedSession) {
+        val session = ownedSession ?: return@LaunchedEffect
         when (
-            val start = awaitAuthoritativeSessionStart(
-                room = active,
-                expectedGameId = MafiaIds.GameId,
-                expectedGameVersion = MafiaHostRoomBridge.GAME_VERSION,
-            ) { msg, _ ->
-                val ids = msg.players.map(Player::id)
-                msg.caseId == "default" &&
-                    msg.modeId == MafiaIds.ClassicModeId.raw &&
-                    MafiaSessionRules.isValidRoster(msg.players) &&
-                    active.selfPlayerId in ids &&
-                    active.info.value.hostPlayerId in ids
+            val installed = session.getOrCreateCheckpoint(MAFIA_START_CHECKPOINT_KIND) {
+                MafiaStartCheckpoint()
             }
         ) {
-            is Result.Success -> {
-                val offer = start.data.offer
-                sessionStart = SessionStartingFromHost(
-                    caseId = offer.caseId,
-                    modeId = offer.modeId,
-                    players = offer.players,
-                    seed = offer.sessionNonce,
-                    protocol = start.data.protocol,
-                )
-            }
-            is Result.Failure -> {
-                joinError = start.error.asNetError()
-                when (val closed = active.closeForRetry()) {
-                    is Result.Success -> Unit
-                    is Result.Failure -> joinError = closed.error
-                }
-                retainedRetryRoom = active
-                retryPolicy = retryPolicy.afterPostAdmissionStartFailure()
-                if (room === active) room = null
-            }
-        }
-    }
-
-    val current = room
-    LaunchedEffect(current) {
-        if (current != null) {
-            try {
-                awaitCancellation()
-            } finally {
-                withContext(NonCancellable) {
-                    current.leave()
+            is RetainedValueResult.KindConflict -> joinError = NetError.IncompatibleProtocol
+            is RetainedValueResult.CreationFailed -> joinError = installed.error
+            is RetainedValueResult.Ready -> {
+                val retained = installed.value as MafiaStartCheckpoint
+                retained.start(
+                    scope = session.scope,
+                    onUnexpectedFailure = {
+                        MafiaStartCheckpointState.Failed(
+                            NetError.TransportFailure("session start failed"),
+                        )
+                    },
+                ) {
+                    val outcome = runMafiaStartHandshake(session)
+                    if (outcome is MafiaStartCheckpointState.Failed) {
+                        sessionOwner.preparePeerRetry(session, outcome.error)
+                    }
+                    outcome
                 }
             }
         }
     }
 
     val finalBackToHome: () -> Unit = {
-        val active = room
-        val retained = retainedRetryRoom
-        val leaveTarget = retained ?: active
-        if (leaveTarget == null) {
-            onBackToHome()
-        } else if (!finalLeaveInFlight) {
+        if (!finalLeaveInFlight) {
             finalLeaveInFlight = true
             flowScope.launch {
                 val discarded = try {
-                    if (retained != null) {
-                        retained.discardRejoinCapability()
-                    } else {
-                        leaveTarget.finalLeave()
-                    }
+                    sessionOwner.leaveRoute(
+                        route,
+                        com.parlor.networking.protocol.SessionEndReason.Cancelled,
+                    )
                 } catch (cancelled: CancellationException) {
                     finalLeaveInFlight = false
                     throw cancelled
@@ -196,8 +210,6 @@ fun MafiaPeerLobbyFlow(
                 }
                 when (discarded) {
                     is Result.Success -> {
-                        if (retainedRetryRoom === retained) retainedRetryRoom = null
-                        if (room === active) room = null
                         onBackToHome()
                     }
                     is Result.Failure -> {
@@ -209,8 +221,27 @@ fun MafiaPeerLobbyFlow(
         }
     }
 
+    val current = ownedSession?.room
     val start = sessionStart
     val localNetworkAccess by transport.localNetworkAccess.collectAsState()
+    val checkpointFailure = startCheckpointState as? MafiaStartCheckpointState.Failed
+    val retryConnection: () -> Unit = retry@{
+        if (finalLeaveInFlight || retryInFlight) return@retry
+        val failedCheckpoint = checkpointFailure
+        val session = ownedSession
+        if (failedCheckpoint == null || session == null) {
+            joinAttempt++
+            return@retry
+        }
+        retryInFlight = true
+        flowScope.launch {
+            when (val prepared = sessionOwner.preparePeerRetry(session, failedCheckpoint.error)) {
+                is Result.Success -> joinAttempt++
+                is Result.Failure -> acquireError = prepared.error
+            }
+            retryInFlight = false
+        }
+    }
 
     Box(modifier = modifier.fillMaxSize()) {
         Column(modifier = Modifier.fillMaxSize()) {
@@ -219,20 +250,31 @@ fun MafiaPeerLobbyFlow(
             }
             Box(modifier = Modifier.fillMaxSize()) {
                 when {
-                    joinError != null -> MafiaPeerErrorState(
+                    joinError != null ||
+                        checkpointFailure != null ||
+                        ownerError != null ||
+                        acquireError != null -> MafiaPeerErrorState(
                         title = stringResource(Res.string.md_peer_error_title),
                         detail = stringResource(Res.string.md_peer_error_detail),
                         showNetworkRecovery = localNetworkAccess.needsRecoveryGuidance,
-                        onRetry = { if (!finalLeaveInFlight) joinAttempt++ },
+                        onRetry = retryConnection.takeIf { joinError == null },
                         onOpenNetworkSettings = onOpenNetworkSettings.takeIf {
                             localNetworkAccess.needsRecoveryGuidance
                         },
                         onBack = finalBackToHome,
-                        actionsEnabled = !finalLeaveInFlight,
+                        actionsEnabled = !finalLeaveInFlight && !retryInFlight,
                         backInFlight = finalLeaveInFlight,
+                        retryInFlight = retryInFlight,
                         modifier = Modifier.fillMaxSize(),
                     )
-                    current == null -> MafiaPeerConnectingState(code = code, modifier = Modifier.fillMaxSize())
+                    current == null -> MafiaPeerConnectingState(
+                        code = code,
+                        resuming = resumeExistingSession,
+                        onLeave = finalBackToHome,
+                        leaveEnabled = !finalLeaveInFlight,
+                        leaveInFlight = finalLeaveInFlight,
+                        modifier = Modifier.fillMaxSize(),
+                    )
                     start == null -> MafiaPeerWaitingForStart(
                         room = current,
                         peerName = peerName,
@@ -243,8 +285,8 @@ fun MafiaPeerLobbyFlow(
                         players = start.players,
                         selfPlayerId = current.selfPlayerId,
                         seed = start.seed,
-                        room = current,
                         protocol = start.protocol,
+                        ownedSession = checkNotNull(ownedSession),
                         onBackToHome = finalBackToHome,
                         modifier = Modifier.fillMaxSize(),
                         onHostLostChanged = { hostLost = it },
@@ -266,7 +308,14 @@ fun MafiaPeerLobbyFlow(
 }
 
 @Composable
-private fun MafiaPeerConnectingState(code: String, modifier: Modifier = Modifier) {
+private fun MafiaPeerConnectingState(
+    code: String,
+    resuming: Boolean,
+    onLeave: () -> Unit,
+    leaveEnabled: Boolean,
+    leaveInFlight: Boolean,
+    modifier: Modifier = Modifier,
+) {
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
         Column(
             modifier = Modifier.fillMaxSize().padding(ParlorTheme.spacing.xl),
@@ -278,10 +327,23 @@ private fun MafiaPeerConnectingState(code: String, modifier: Modifier = Modifier
         ) {
             CandleFlame(size = androidx.compose.ui.unit.Dp(72f))
             Text(
-                text = stringResource(Res.string.md_peer_connecting_format, code),
+                text = if (resuming) {
+                    stringResource(Res.string.md_peer_reconnecting)
+                } else {
+                    stringResource(Res.string.md_peer_connecting_format, code)
+                },
                 style = ParlorTheme.typography.displayMedium,
                 color = ParlorTheme.colors.textPrimary,
                 textAlign = TextAlign.Center,
+            )
+            ParlorButton(
+                label = stringResource(Res.string.md_peer_leave),
+                contentDescription = stringResource(Res.string.md_peer_leave_description),
+                onClick = onLeave,
+                enabled = leaveEnabled,
+                loading = leaveInFlight,
+                modifier = Modifier.fillMaxWidth(),
+                variant = ParlorButtonVariant.Secondary,
             )
         }
     }
@@ -352,6 +414,7 @@ private fun MafiaPeerErrorState(
     onOpenNetworkSettings: (() -> Unit)? = null,
     actionsEnabled: Boolean = true,
     backInFlight: Boolean = false,
+    retryInFlight: Boolean = false,
 ) {
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
         Column(
@@ -388,6 +451,7 @@ private fun MafiaPeerErrorState(
                     contentDescription = stringResource(Res.string.md_network_retry_description),
                     onClick = onRetry,
                     enabled = actionsEnabled,
+                    loading = retryInFlight,
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
@@ -414,6 +478,59 @@ private fun MafiaPeerErrorState(
             )
         }
     }
+}
+
+private const val MAFIA_START_CHECKPOINT_KIND = "mafia/start/v1"
+
+private class MafiaStartCheckpoint : RetainedMultiplayerCheckpoint {
+    override val checkpointKind: String = MAFIA_START_CHECKPOINT_KIND
+    private val operation = RetainedSessionOperation<MafiaStartCheckpointState>(
+        MafiaStartCheckpointState.Waiting,
+    )
+    val state: StateFlow<MafiaStartCheckpointState> = operation.state
+
+    suspend fun start(
+        scope: CoroutineScope,
+        onUnexpectedFailure: (Exception) -> MafiaStartCheckpointState,
+        operation: suspend () -> MafiaStartCheckpointState,
+    ) = this.operation.start(scope, onUnexpectedFailure, operation)
+}
+
+private sealed interface MafiaStartCheckpointState {
+    data object Waiting : MafiaStartCheckpointState
+    data class Started(val start: SessionStartingFromHost) : MafiaStartCheckpointState
+    data class Failed(val error: NetError) : MafiaStartCheckpointState
+}
+
+private suspend fun runMafiaStartHandshake(
+    session: ProcessMultiplayerSession,
+): MafiaStartCheckpointState = when (
+    val started = awaitAuthoritativeSessionStart(
+        room = session.room,
+        expectedGameId = MafiaIds.GameId,
+        expectedGameVersion = MafiaHostRoomBridge.GAME_VERSION,
+    ) { message, _ ->
+        val ids = message.players.map(Player::id)
+        message.caseId == "default" &&
+            message.modeId == MafiaIds.ClassicModeId.raw &&
+            MafiaSessionRules.isValidRoster(message.players) &&
+            session.room.selfPlayerId in ids &&
+            session.room.info.value.hostPlayerId in ids
+    }
+) {
+    is Result.Success -> {
+        val offer = started.data.offer
+        MafiaStartCheckpointState.Started(
+            SessionStartingFromHost(
+                caseId = offer.caseId,
+                modeId = offer.modeId,
+                players = offer.players,
+                seed = offer.sessionNonce,
+                protocol = started.data.protocol,
+            ),
+        )
+    }
+    is Result.Failure -> MafiaStartCheckpointState.Failed(started.error.asNetError())
 }
 
 private data class SessionStartingFromHost(

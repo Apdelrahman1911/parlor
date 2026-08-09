@@ -56,6 +56,10 @@ import com.parlor.app.shell.home.MAFIA_GAME_ID
 import com.parlor.app.shell.home.WHODUNIT_GAME_ID
 import com.parlor.networking.transport.RoomTransport
 import com.parlor.session.PlayMode
+import com.parlor.session.multidevice.MultiplayerSessionRole
+import com.parlor.session.multidevice.MultiplayerSessionRoute
+import com.parlor.session.multidevice.ProcessMultiplayerSessionOwner
+import com.parlor.session.multidevice.routeOrNull
 import com.parlor.storage.settings.SettingsStore
 import com.parlor.storage.snapshot.SnapshotStore
 import kotlinx.coroutines.CoroutineStart
@@ -93,6 +97,9 @@ fun App() {
     val snapshotStore: SnapshotStore = koinInject()
     val caseRepository: CaseRepository = koinInject()
     val roomTransport: RoomTransport = koinInject()
+    val multiplayerSessionOwner: ProcessMultiplayerSessionOwner = koinInject()
+    val multiplayerOwnerState by multiplayerSessionOwner.state.collectAsState()
+    val ownedMultiplayerRoute = multiplayerOwnerState.routeOrNull
     val p2pPermissionGate = rememberP2pPermissionGate(roomTransport.localNetworkAccess)
     val openNetworkSettings = if (p2pPermissionGate.canOpenNetworkSettings) {
         p2pPermissionGate::openAppSettings
@@ -110,7 +117,9 @@ fun App() {
         ) {
             CompositionLocalProvider(LocalParlorToastState provides toastState) {
             val resumeOpenFailedText = stringResource(Res.string.home_resume_open_failed)
-            var screen: AppScreen by remember { mutableStateOf(AppScreen.Home) }
+            var screen: AppScreen by remember {
+                mutableStateOf(ownedMultiplayerRoute?.toOwnedAppScreen() ?: AppScreen.Home)
+            }
             var resumeSessionId: SessionId? by remember { mutableStateOf(null) }
             var localResumeJob: Job? by remember { mutableStateOf(null) }
             val localResumeGate = remember { LocalResumeRequestGate() }
@@ -124,19 +133,42 @@ fun App() {
             var localPlayMode: PlayMode by remember { mutableStateOf(PlayMode.PassAndPlay) }
 
             // Host flow selections (carried across screens).
-            var hostName: String by remember { mutableStateOf("") }
-            var hostCaseId: String by remember { mutableStateOf("") }
-            var hostModeId: ModeId by remember { mutableStateOf(WhodunitIds.ClassicVoteModeId) }
+            var hostName: String by remember {
+                mutableStateOf(ownedMultiplayerRoute.whodunitHostValue { displayName }.orEmpty())
+            }
+            var hostCaseId: String by remember {
+                mutableStateOf(ownedMultiplayerRoute.whodunitHostValue { contentId }.orEmpty())
+            }
+            var hostModeId: ModeId by remember {
+                mutableStateOf(
+                    ownedMultiplayerRoute.whodunitHostValue { modeId }
+                        ?.let(::ModeId)
+                        ?: WhodunitIds.ClassicVoteModeId,
+                )
+            }
 
             // Peer flow selections.
-            var peerName: String by remember { mutableStateOf("") }
-            var pendingJoinCode: String by remember { mutableStateOf("") }
+            var peerName: String by remember {
+                mutableStateOf(ownedMultiplayerRoute.whodunitPeerValue { displayName }.orEmpty())
+            }
+            var pendingJoinCode: String by remember {
+                mutableStateOf(ownedMultiplayerRoute.whodunitPeerValue { roomCode }.orEmpty())
+            }
 
             // Mafia multi-device selections — parallel to host/peer above so
             // a single back navigation can clear all of them.
-            var mafiaHostName: String by remember { mutableStateOf("") }
-            var mafiaPeerName: String by remember { mutableStateOf("") }
-            var mafiaPendingJoinCode: String by remember { mutableStateOf("") }
+            var mafiaHostName: String by remember {
+                mutableStateOf(ownedMultiplayerRoute.mafiaHostValue { displayName }.orEmpty())
+            }
+            var mafiaPeerName: String by remember {
+                mutableStateOf(ownedMultiplayerRoute.mafiaPeerValue { displayName }.orEmpty())
+            }
+            var mafiaPendingJoinCode: String by remember {
+                mutableStateOf(ownedMultiplayerRoute.mafiaPeerValue { roomCode }.orEmpty())
+            }
+            var hadOwnedMultiplayerRoute by remember {
+                mutableStateOf(ownedMultiplayerRoute != null)
+            }
 
             val unfinishedSessions by produceState(
                 initialValue = emptyList<SessionId>(),
@@ -182,6 +214,40 @@ fun App() {
                 mafiaPendingJoinCode = ""
                 unfinishedRefreshKey++
                 screen = AppScreen.Home
+            }
+
+            LaunchedEffect(ownedMultiplayerRoute) {
+                val route = ownedMultiplayerRoute
+                if (route == null) {
+                    if (hadOwnedMultiplayerRoute && screen.isOwnedMultiplayerScreen()) {
+                        hadOwnedMultiplayerRoute = false
+                        backToHome()
+                    }
+                } else {
+                    hadOwnedMultiplayerRoute = true
+                    when (route.gameId.raw) {
+                        WHODUNIT_GAME_ID -> when (route.role) {
+                            MultiplayerSessionRole.Host -> {
+                                hostName = route.displayName
+                                hostCaseId = route.contentId.orEmpty()
+                                hostModeId = route.modeId?.let(::ModeId)
+                                    ?: WhodunitIds.ClassicVoteModeId
+                            }
+                            MultiplayerSessionRole.Peer -> {
+                                peerName = route.displayName
+                                pendingJoinCode = route.roomCode.orEmpty()
+                            }
+                        }
+                        MAFIA_GAME_ID -> when (route.role) {
+                            MultiplayerSessionRole.Host -> mafiaHostName = route.displayName
+                            MultiplayerSessionRole.Peer -> {
+                                mafiaPeerName = route.displayName
+                                mafiaPendingJoinCode = route.roomCode.orEmpty()
+                            }
+                        }
+                    }
+                    screen = route.toOwnedAppScreen()
+                }
             }
 
             val backAction = appBackAction(screen)
@@ -523,7 +589,8 @@ fun App() {
                 AppScreen.ResumeWhodunitPeer -> PeerSessionFlow(
                     transport = roomTransport,
                     code = "",
-                    peerName = "",
+                    peerName = ownedMultiplayerRoute.ownedPeerDisplayName(WHODUNIT_GAME_ID)
+                        ?: resumableMultiplayer?.displayName.orEmpty(),
                     resumeExistingSession = true,
                     onBackToLibrary = backToHome,
                     onOpenNetworkSettings = openNetworkSettings,
@@ -532,7 +599,8 @@ fun App() {
                 AppScreen.ResumeMafiaPeer -> MafiaPeerLobbyFlow(
                     transport = roomTransport,
                     code = "",
-                    peerName = "",
+                    peerName = ownedMultiplayerRoute.ownedPeerDisplayName(MAFIA_GAME_ID)
+                        ?: resumableMultiplayer?.displayName.orEmpty(),
                     resumeExistingSession = true,
                     onBackToHome = backToHome,
                     onOpenNetworkSettings = openNetworkSettings,
@@ -586,6 +654,66 @@ private fun InvalidRouteFallback(onBackToHome: () -> Unit) {
     LaunchedEffect(Unit) { onBackToHome() }
     Box(modifier = Modifier.fillMaxSize())
 }
+
+internal fun MultiplayerSessionRoute.toOwnedAppScreen(): AppScreen = when (gameId.raw) {
+    WHODUNIT_GAME_ID -> when (role) {
+        MultiplayerSessionRole.Host -> AppScreen.HostLobby
+        MultiplayerSessionRole.Peer -> if (resumeExistingSession) {
+            AppScreen.ResumeWhodunitPeer
+        } else {
+            AppScreen.PeerLobby
+        }
+    }
+    MAFIA_GAME_ID -> when (role) {
+        MultiplayerSessionRole.Host -> AppScreen.MafiaHostLobby
+        MultiplayerSessionRole.Peer -> if (resumeExistingSession) {
+            AppScreen.ResumeMafiaPeer
+        } else {
+            AppScreen.MafiaPeerLobby
+        }
+    }
+    else -> AppScreen.Home
+}
+
+internal fun MultiplayerSessionRoute?.ownedPeerDisplayName(gameId: String): String? =
+    this?.takeIf {
+        it.gameId.raw == gameId && it.role == MultiplayerSessionRole.Peer
+    }?.displayName
+
+private fun AppScreen.isOwnedMultiplayerScreen(): Boolean = when (this) {
+    AppScreen.HostLobby,
+    AppScreen.PeerLobby,
+    AppScreen.MafiaHostLobby,
+    AppScreen.MafiaPeerLobby,
+    AppScreen.ResumeWhodunitPeer,
+    AppScreen.ResumeMafiaPeer,
+    -> true
+    else -> false
+}
+
+private inline fun <T> MultiplayerSessionRoute?.whodunitHostValue(
+    value: MultiplayerSessionRoute.() -> T?,
+): T? = this
+    ?.takeIf { it.gameId.raw == WHODUNIT_GAME_ID && it.role == MultiplayerSessionRole.Host }
+    ?.value()
+
+private inline fun <T> MultiplayerSessionRoute?.whodunitPeerValue(
+    value: MultiplayerSessionRoute.() -> T?,
+): T? = this
+    ?.takeIf { it.gameId.raw == WHODUNIT_GAME_ID && it.role == MultiplayerSessionRole.Peer }
+    ?.value()
+
+private inline fun <T> MultiplayerSessionRoute?.mafiaHostValue(
+    value: MultiplayerSessionRoute.() -> T?,
+): T? = this
+    ?.takeIf { it.gameId.raw == MAFIA_GAME_ID && it.role == MultiplayerSessionRole.Host }
+    ?.value()
+
+private inline fun <T> MultiplayerSessionRoute?.mafiaPeerValue(
+    value: MultiplayerSessionRoute.() -> T?,
+): T? = this
+    ?.takeIf { it.gameId.raw == MAFIA_GAME_ID && it.role == MultiplayerSessionRole.Peer }
+    ?.value()
 
 /** Tiny shim used by Compose previews to keep the API surface stable. */
 @Composable

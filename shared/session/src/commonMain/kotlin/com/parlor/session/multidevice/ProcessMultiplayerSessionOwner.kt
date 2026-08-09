@@ -9,11 +9,13 @@ import com.parlor.networking.room.RoomMember
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -149,6 +151,7 @@ sealed interface RetainedValueResult<out T> {
         val expectedKind: String,
         val installedKind: String,
     ) : RetainedValueResult<Nothing>
+    data class CreationFailed(val error: NetError) : RetainedValueResult<Nothing>
 }
 
 /** Public lifecycle of the one multiplayer route owned by this process. */
@@ -209,19 +212,36 @@ class ProcessMultiplayerSession internal constructor(
     val checkpoint: StateFlow<RetainedMultiplayerCheckpoint?> = _checkpoint.asStateFlow()
     private val _runtime = MutableStateFlow<RetainedMultiplayerRuntime?>(null)
     val runtime: StateFlow<RetainedMultiplayerRuntime?> = _runtime.asStateFlow()
+    private var released = false
 
     /** Admission closure is process-owned and exactly-once, even across UI cancellation. */
     suspend fun freezeAdmissions(): Result<List<RoomMember>, NetError> {
         val attempt = startMutex.withLock {
             _frozenRoster.value?.let { return Result.Success(it) }
-            freezeAttempt ?: scope.async {
-                val result = room.closeAdmissions()
-                startMutex.withLock {
-                    if (result is Result.Success) _frozenRoster.value = result.data
-                    freezeAttempt = null
+            freezeAttempt ?: scope.async(start = CoroutineStart.LAZY) {
+                try {
+                    val result = try {
+                        room.closeAdmissions()
+                    } catch (cancelled: CancellationException) {
+                        throw cancelled
+                    } catch (_: Exception) {
+                        Result.Failure(NetError.TransportFailure("admission close failed"))
+                    }
+                    startMutex.withLock {
+                        if (result is Result.Success) _frozenRoster.value = result.data
+                        freezeAttempt = null
+                    }
+                    result
+                } catch (cancelled: CancellationException) {
+                    withContext(NonCancellable) {
+                        startMutex.withLock { freezeAttempt = null }
+                    }
+                    throw cancelled
                 }
-                result
-            }.also { freezeAttempt = it }
+            }.also {
+                freezeAttempt = it
+                it.start()
+            }
         }
         return attempt.await()
     }
@@ -230,11 +250,22 @@ class ProcessMultiplayerSession internal constructor(
         kind: String,
         create: () -> RetainedMultiplayerCheckpoint,
     ): RetainedValueResult<RetainedMultiplayerCheckpoint> = retainedMutex.withLock {
+        if (released) {
+            return@withLock RetainedValueResult.CreationFailed(NetError.NotConnected)
+        }
         val installed = _checkpoint.value
         if (installed == null) {
-            val candidate = create()
-            require(candidate.checkpointKind == kind) {
-                "Checkpoint factory returned kind ${candidate.checkpointKind}; expected $kind"
+            val candidate = try {
+                create()
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (_: Exception) {
+                return@withLock RetainedValueResult.CreationFailed(
+                    NetError.TransportFailure("checkpoint creation failed"),
+                )
+            }
+            if (candidate.checkpointKind != kind) {
+                return@withLock RetainedValueResult.KindConflict(kind, candidate.checkpointKind)
             }
             _checkpoint.value = candidate
             RetainedValueResult.Ready(candidate)
@@ -249,11 +280,31 @@ class ProcessMultiplayerSession internal constructor(
         kind: String,
         create: (CoroutineScope) -> RetainedMultiplayerRuntime,
     ): RetainedValueResult<RetainedMultiplayerRuntime> = retainedMutex.withLock {
+        if (released) {
+            return@withLock RetainedValueResult.CreationFailed(NetError.NotConnected)
+        }
         val installed = _runtime.value
         if (installed == null) {
-            val candidate = create(scope)
-            require(candidate.runtimeKind == kind) {
-                "Runtime factory returned kind ${candidate.runtimeKind}; expected $kind"
+            val candidate = try {
+                create(scope)
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (_: Exception) {
+                return@withLock RetainedValueResult.CreationFailed(
+                    NetError.TransportFailure("runtime creation failed"),
+                )
+            }
+            if (candidate.runtimeKind != kind) {
+                val cleanup = try {
+                    candidate.close()
+                    null
+                } catch (cancelled: CancellationException) {
+                    throw cancelled
+                } catch (_: Exception) {
+                    NetError.TransportFailure("runtime close failed")
+                }
+                return@withLock cleanup?.let { RetainedValueResult.CreationFailed(it) }
+                    ?: RetainedValueResult.KindConflict(kind, candidate.runtimeKind)
             }
             _runtime.value = candidate
             RetainedValueResult.Ready(candidate)
@@ -264,12 +315,22 @@ class ProcessMultiplayerSession internal constructor(
         }
     }
 
-    internal fun closeRuntimeAndScope() {
+    internal suspend fun closeRuntimeAndScope(): Result<Unit, NetError> {
+        val installed = retainedMutex.withLock {
+            released = true
+            _runtime.value
+        }
+        var failure: NetError? = null
         try {
-            _runtime.value?.close()
+            installed?.close()
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (_: Exception) {
+            failure = NetError.TransportFailure("runtime close failed")
         } finally {
             sessionJob.cancel()
         }
+        return failure?.let { Result.Failure(it) } ?: Result.Success(Unit)
     }
 }
 
@@ -351,30 +412,54 @@ class ProcessMultiplayerSessionOwner(
             if (active !== session) return Result.Failure(NetError.NotConnected)
 
             val result = CompletableDeferred<Result<Unit, NetError>>()
-            val attempt = ClosingAttempt(session.route, session, result)
+            val attempt = ClosingAttempt(
+                route = session.route,
+                session = session,
+                finalExit = false,
+                completion = result,
+            )
             closing = attempt
             _state.value = ProcessMultiplayerState.Closing(session.route)
             processScope.launch {
+                var cancellation: CancellationException? = null
                 val closed = try {
                     session.room.closeForRetry()
                 } catch (cancelled: CancellationException) {
-                    throw cancelled
+                    cancellation = cancelled
+                    Result.Failure(NetError.SessionSuspended)
                 } catch (_: Exception) {
                     Result.Failure(NetError.TransportFailure("room close failed"))
                 }
-                mutex.withLock {
-                    if (closing === attempt) {
-                        closing = null
-                        if (closed is Result.Success) {
-                            session.closeRuntimeAndScope()
-                            retainedRetryRoom = RetainedRetryRoom(session.route, session.room)
-                            _state.value = ProcessMultiplayerState.Retryable(session.route, error)
-                        } else {
-                            _state.value = ProcessMultiplayerState.Active(session)
+                val released = if (closed is Result.Success) {
+                    try {
+                        session.closeRuntimeAndScope()
+                    } catch (cancelled: CancellationException) {
+                        cancellation = cancellation ?: cancelled
+                        Result.Failure(NetError.SessionSuspended)
+                    }
+                } else {
+                    Result.Success(Unit)
+                }
+                val outcome = if (closed is Result.Failure) closed else released
+                withContext(NonCancellable) {
+                    mutex.withLock {
+                        if (closing === attempt) {
+                            closing = null
+                            if (closed is Result.Success) {
+                                retainedRetryRoom = RetainedRetryRoom(session.route, session.room)
+                                _state.value = ProcessMultiplayerState.Retryable(session.route, error)
+                            } else {
+                                _state.value = ProcessMultiplayerState.Active(session)
+                            }
                         }
                     }
+                    if (cancellation == null) {
+                        result.complete(outcome)
+                    } else {
+                        result.cancel(cancellation)
+                    }
                 }
-                result.complete(closed)
+                cancellation?.let { throw it }
             }
             result
         }
@@ -423,37 +508,135 @@ class ProcessMultiplayerSessionOwner(
                 }
             }
             val result = CompletableDeferred<Result<Unit, NetError>>()
-            val attempt = ClosingAttempt(route, null, result)
+            val attempt = ClosingAttempt(
+                route = route,
+                session = null,
+                finalExit = true,
+                completion = result,
+            )
             closing = attempt
             _state.value = ProcessMultiplayerState.Closing(route)
             processScope.launch {
+                var cancellation: CancellationException? = null
                 val discarded = try {
                     retained.room.discardRejoinCapability()
                 } catch (cancelled: CancellationException) {
-                    throw cancelled
+                    cancellation = cancelled
+                    Result.Failure(NetError.SessionSuspended)
                 } catch (_: Exception) {
                     Result.Failure(NetError.TransportFailure("membership discard failed"))
                 }
-                mutex.withLock {
-                    if (closing === attempt) {
-                        closing = null
-                        if (discarded is Result.Success) {
-                            retainedRetryRoom = null
-                            _state.value = ProcessMultiplayerState.Idle
-                        } else {
-                            _state.value = ProcessMultiplayerState.Failed(
-                                route = route,
-                                error = (discarded as Result.Failure).error,
-                                retryMode = MultiplayerOpenMode.Resume,
-                            )
+                withContext(NonCancellable) {
+                    mutex.withLock {
+                        if (closing === attempt) {
+                            closing = null
+                            if (discarded is Result.Success) {
+                                retainedRetryRoom = null
+                                _state.value = ProcessMultiplayerState.Idle
+                            } else {
+                                _state.value = ProcessMultiplayerState.Failed(
+                                    route = route,
+                                    error = (discarded as Result.Failure).error,
+                                    retryMode = MultiplayerOpenMode.Resume,
+                                )
+                            }
                         }
                     }
+                    if (cancellation == null) {
+                        result.complete(discarded)
+                    } else {
+                        result.cancel(cancellation)
+                    }
                 }
-                result.complete(discarded)
+                cancellation?.let { throw it }
             }
             result
         }
         return completion.await()
+    }
+
+    /**
+     * Shell-level final exit for a route in any ownership state. In-flight room
+     * creation is cancelled and joined; active rooms use the role-appropriate
+     * final transaction; retained credentials are explicitly discarded.
+     */
+    suspend fun leaveRoute(
+        route: MultiplayerSessionRoute,
+        reason: SessionEndReason,
+    ): Result<Unit, NetError> {
+        val snapshot = mutex.withLock {
+            when (val current = _state.value) {
+                ProcessMultiplayerState.Idle -> LeaveSnapshot.Idle
+                is ProcessMultiplayerState.Active -> if (current.session.route == route) {
+                    LeaveSnapshot.Active(current.session)
+                } else {
+                    LeaveSnapshot.Conflict
+                }
+                is ProcessMultiplayerState.Opening -> if (current.route == route) {
+                    val attempt = opening
+                    opening = null
+                    val result = CompletableDeferred<Result<Unit, NetError>>()
+                    val closeAttempt = ClosingAttempt(
+                        route = route,
+                        session = null,
+                        finalExit = true,
+                        completion = result,
+                    )
+                    closing = closeAttempt
+                    _state.value = ProcessMultiplayerState.Closing(route)
+                    processScope.launch {
+                        attempt?.completion?.cancel()
+                        val cleanup = withContext(NonCancellable) {
+                            attempt?.job?.cancelAndJoin()
+                            attempt?.cleanupCompletion?.await() ?: Result.Success(Unit)
+                        }
+                        mutex.withLock {
+                            if (closing === closeAttempt) {
+                                closing = null
+                                _state.value = ProcessMultiplayerState.Idle
+                            }
+                        }
+                        result.complete(cleanup)
+                    }
+                    LeaveSnapshot.Closing(result, finalExit = true)
+                } else {
+                    LeaveSnapshot.Conflict
+                }
+                is ProcessMultiplayerState.Closing -> if (current.route == route) {
+                    LeaveSnapshot.Closing(
+                        completion = closing?.completion,
+                        finalExit = closing?.finalExit == true,
+                    )
+                } else {
+                    LeaveSnapshot.Conflict
+                }
+                is ProcessMultiplayerState.Retryable -> if (current.route == route) {
+                    LeaveSnapshot.Retained
+                } else {
+                    LeaveSnapshot.Conflict
+                }
+                is ProcessMultiplayerState.Failed -> if (current.route == route) {
+                    LeaveSnapshot.Retained
+                } else {
+                    LeaveSnapshot.Conflict
+                }
+            }
+        }
+        return when (snapshot) {
+            LeaveSnapshot.Idle -> Result.Success(Unit)
+            LeaveSnapshot.Conflict -> Result.Failure(NetError.AlreadyConnected)
+            is LeaveSnapshot.Active -> finalLeave(snapshot.session, reason)
+            LeaveSnapshot.Retained -> discardRetainedRoute(route)
+            is LeaveSnapshot.Closing -> {
+                val result = snapshot.completion?.await()
+                    ?: Result.Failure(NetError.CommandInFlight)
+                if (result is Result.Success && !snapshot.finalExit) {
+                    leaveRoute(route, reason)
+                } else {
+                    result
+                }
+            }
+        }
     }
 
     /** Removes a failed route that never acquired or retained a room. */
@@ -492,20 +675,42 @@ class ProcessMultiplayerSessionOwner(
             if (active !== session) return Result.Failure(NetError.NotConnected)
 
             val result = CompletableDeferred<Result<Unit, NetError>>()
-            val attempt = ClosingAttempt(session.route, session, result)
+            val attempt = ClosingAttempt(
+                route = session.route,
+                session = session,
+                finalExit = !retryAfterClose,
+                completion = result,
+            )
             closing = attempt
             _state.value = ProcessMultiplayerState.Closing(session.route)
             processScope.launch {
+                var cancellation: CancellationException? = null
                 val closed = try {
                     withContext(NonCancellable) {
                         closePhysicalSession(session, reason)
                     }
                 } catch (cancelled: CancellationException) {
+                    cancellation = cancelled
+                    Result.Failure(NetError.SessionSuspended)
+                }
+                val shouldRelease =
+                    closed is Result.Success || session.route.role == MultiplayerSessionRole.Host
+                val released = if (shouldRelease) {
+                    try {
+                        session.closeRuntimeAndScope()
+                    } catch (cancelled: CancellationException) {
+                        cancellation = cancellation ?: cancelled
+                        Result.Failure(NetError.SessionSuspended)
+                    }
+                } else {
+                    Result.Success(Unit)
+                }
+                val outcome = if (closed is Result.Failure) closed else released
+                withContext(NonCancellable) {
                     mutex.withLock {
                         if (closing === attempt) {
                             closing = null
-                            if (session.route.role == MultiplayerSessionRole.Host) {
-                                session.closeRuntimeAndScope()
+                            if (shouldRelease) {
                                 _state.value = if (retryAfterClose) {
                                     ProcessMultiplayerState.Retryable(session.route, null)
                                 } else {
@@ -516,28 +721,13 @@ class ProcessMultiplayerSessionOwner(
                             }
                         }
                     }
-                    result.cancel(cancelled)
-                    throw cancelled
-                }
-                mutex.withLock {
-                    if (closing === attempt) {
-                        closing = null
-                        if (
-                            closed is Result.Success ||
-                            session.route.role == MultiplayerSessionRole.Host
-                        ) {
-                            session.closeRuntimeAndScope()
-                            _state.value = if (retryAfterClose) {
-                                ProcessMultiplayerState.Retryable(session.route, null)
-                            } else {
-                                ProcessMultiplayerState.Idle
-                            }
-                        } else {
-                            _state.value = ProcessMultiplayerState.Active(session)
-                        }
+                    if (cancellation == null) {
+                        result.complete(outcome)
+                    } else {
+                        result.cancel(cancellation)
                     }
                 }
-                result.complete(closed)
+                cancellation?.let { throw it }
             }
             result
         }
@@ -595,58 +785,119 @@ class ProcessMultiplayerSessionOwner(
         val attempt = OpeningAttempt(route, mode, completion)
         opening = attempt
         _state.value = ProcessMultiplayerState.Opening(route, mode)
-        processScope.launch {
-            val opened = try {
-                openRoom(mode)
-            } catch (cancelled: CancellationException) {
-                completion.cancel(cancelled)
-                throw cancelled
-            } catch (_: Exception) {
-                Result.Failure(NetError.TransportFailure("room creation failed"))
-            }
+        attempt.job = processScope.launch {
+            var opened: Result<LocalRoom, NetError>? = null
+            var orphanCleanupAttempted = false
+            var cleanupResult: Result<Unit, NetError> = Result.Success(Unit)
+            try {
+                opened = try {
+                    openRoom(mode)
+                } catch (cancelled: CancellationException) {
+                    throw cancelled
+                } catch (_: Exception) {
+                    Result.Failure(NetError.TransportFailure("room creation failed"))
+                }
 
-            var orphan: LocalRoom? = null
-            mutex.withLock {
-                if (opening !== attempt) {
-                    orphan = (opened as? Result.Success)?.data
-                } else {
-                    opening = null
-                    when (opened) {
-                        is Result.Success -> {
-                            retainedRetryRoom = null
-                            val session = ProcessMultiplayerSession(
-                                route = route,
-                                room = opened.data,
-                                hostSeed = hostSeed,
-                                parentScope = processScope,
-                            )
-                            _state.value = ProcessMultiplayerState.Active(session)
-                            completion.complete(Result.Success(session))
-                        }
+                var orphan: LocalRoom? = null
+                mutex.withLock {
+                    if (opening !== attempt) {
+                        orphan = (opened as? Result.Success)?.data
+                    } else {
+                        opening = null
+                        when (val result = checkNotNull(opened)) {
+                            is Result.Success -> {
+                                retainedRetryRoom = null
+                                val session = ProcessMultiplayerSession(
+                                    route = route,
+                                    room = result.data,
+                                    hostSeed = hostSeed,
+                                    parentScope = processScope,
+                                )
+                                _state.value = ProcessMultiplayerState.Active(session)
+                                completion.complete(Result.Success(session))
+                            }
 
-                        is Result.Failure -> {
-                            _state.value = ProcessMultiplayerState.Failed(route, opened.error, mode)
-                            completion.complete(Result.Failure(opened.error))
+                            is Result.Failure -> {
+                                _state.value = ProcessMultiplayerState.Failed(route, result.error, mode)
+                                completion.complete(Result.Failure(result.error))
+                            }
                         }
                     }
                 }
+                orphan?.let { room ->
+                    orphanCleanupAttempted = true
+                    cleanupResult = closeOrphanRoom(room)
+                }
+            } catch (cancelled: CancellationException) {
+                val orphan = (opened as? Result.Success)?.data
+                if (orphan != null && !orphanCleanupAttempted) {
+                    orphanCleanupAttempted = true
+                    cleanupResult = closeOrphanRoom(orphan)
+                }
+                withContext(NonCancellable) {
+                    mutex.withLock {
+                        if (opening === attempt) {
+                            opening = null
+                            _state.value = ProcessMultiplayerState.Idle
+                        }
+                    }
+                    completion.cancel(cancelled)
+                }
+                throw cancelled
+            } catch (_: Exception) {
+                val failure = Result.Failure(NetError.TransportFailure("room creation failed"))
+                withContext(NonCancellable) {
+                    mutex.withLock {
+                        if (opening === attempt) {
+                            opening = null
+                            _state.value = ProcessMultiplayerState.Failed(
+                                route,
+                                failure.error,
+                                mode,
+                            )
+                        }
+                    }
+                    completion.complete(failure)
+                }
+            } finally {
+                attempt.cleanupCompletion.complete(cleanupResult)
             }
-            orphan?.let { room ->
-                withContext(NonCancellable) { room.leave() }
+        }.also { job ->
+            // A DEFAULT launch may be cancelled before its body starts, in
+            // which case its finally block is never entered. Leave must still
+            // have a terminal cleanup result to await.
+            job.invokeOnCompletion {
+                attempt.cleanupCompletion.complete(Result.Success(Unit))
             }
         }
         return completion
     }
 
-    private data class OpeningAttempt(
+    private suspend fun closeOrphanRoom(room: LocalRoom): Result<Unit, NetError> =
+        withContext(NonCancellable) {
+            try {
+                room.leave()
+                Result.Success(Unit)
+            } catch (_: CancellationException) {
+                Result.Failure(NetError.SessionSuspended)
+            } catch (_: Exception) {
+                Result.Failure(NetError.TransportFailure("orphan room close failed"))
+            }
+        }
+
+    private class OpeningAttempt(
         val route: MultiplayerSessionRoute,
         val mode: MultiplayerOpenMode,
         val completion: CompletableDeferred<Result<ProcessMultiplayerSession, NetError>>,
-    )
+    ) {
+        var job: Job? = null
+        val cleanupCompletion = CompletableDeferred<Result<Unit, NetError>>()
+    }
 
     private data class ClosingAttempt(
         val route: MultiplayerSessionRoute,
         val session: ProcessMultiplayerSession?,
+        val finalExit: Boolean,
         val completion: CompletableDeferred<Result<Unit, NetError>>,
     )
 
@@ -654,6 +905,17 @@ class ProcessMultiplayerSessionOwner(
         val route: MultiplayerSessionRoute,
         val room: LocalRoom,
     )
+
+    private sealed interface LeaveSnapshot {
+        data object Idle : LeaveSnapshot
+        data object Conflict : LeaveSnapshot
+        data class Active(val session: ProcessMultiplayerSession) : LeaveSnapshot
+        data class Closing(
+            val completion: CompletableDeferred<Result<Unit, NetError>>?,
+            val finalExit: Boolean,
+        ) : LeaveSnapshot
+        data object Retained : LeaveSnapshot
+    }
 }
 
 private fun <T> completed(value: T): CompletableDeferred<T> =
