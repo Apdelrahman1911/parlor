@@ -26,7 +26,7 @@ baseline.
   transactional admission/resume, deterministic lifecycle and discovery
   state, truthful Local Network UX, and privacy-safe diagnostics.
 - The current FR remediation has completed root-cause fixes for FR-01 through
-  FR-20 in separate recoverable commits above the protected baseline. An
+  FR-21 in separate recoverable commits above the protected baseline. An
   independent post-closure review reopened incomplete registry, content,
   outbox, static-analysis, and lint assumptions as FR-16 through FR-20 rather
   than treating the previous status text as proof. Focused
@@ -95,6 +95,7 @@ that register is not a physical-device or store claim.
 | `90a3014` | FR-18 atomic outbox close/terminal lifecycle. |
 | `681f594` | FR-19 catch-site broad-exception review enforcement. |
 | `9384006` | FR-20 exact Android release-lint inventory. |
+| `70bac8e` | FR-21 platform-correct registry composition fixture execution. |
 
 Every entry is a separate checkpoint above the approved baseline. Do not
 squash any remediation into `8186f7d` when reviewing or rolling back. A later

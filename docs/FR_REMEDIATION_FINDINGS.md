@@ -29,11 +29,12 @@ verification, exact fix commit, and final exact-HEAD gate are recorded.
 | FR-13 | Medium | `BoundedPeerOutbox` cleared its terminal transaction as soon as the worker dequeued it, allowing concurrent shutdown callers to enqueue duplicate terminal frames; later review also found a close-versus-terminal-publication race. | `d281140`, `90a3014` | terminal idempotency tests, deterministic close-before-publication race, bounded queue/close tests | CLOSED |
 | FR-14 | Medium | Mafia's snapshot codec accepted permissive JSON and structurally impossible public states, unlike the Whodunit codec. | `31783c1` | `MafiaSnapshotCodecTest` valid round trips and encode/decode rejection fixtures | CLOSED |
 | FR-15 | High | `DefaultCaseRepository` cached a remote envelope before typed validation, returned corrupt legacy cache entries without fallback, and later still trusted fetched envelope identity plus shape-only refresh validation. | `57c9475`, `ac9da45`, `0c1ac6e`, `336f69a` | cache trust/fallback tests, exact requested-identity tests, typed refresh validation, direct-envelope boundary tests | CLOSED |
-| FR-16 | High | The registry UI collapsed host and join into one capability and its fixture exercised factory construction without proving registered content could actually compose. | `6a9656b` | independent play-mode availability tests and fixture binding composition test | CLOSED |
+| FR-16 | High | The registry UI collapsed host and join into one capability and its fixture exercised factory construction without proving registered content could actually compose. | `6a9656b`, `70bac8e` | independent play-mode availability tests and Desktop-runtime fixture binding composition test | CLOSED |
 | FR-17 | High | A remote/cache source could return a valid envelope for a different requested case, and refresh used common shape checks rather than the game-owned payload validator. | `336f69a` | substitution, corrupt-remote fallback, typed-refresh, manifest/fetch identity, and unsafe-envelope tests | CLOSED |
 | FR-18 | Medium | `BoundedPeerOutbox.close()` could win between terminal dequeue and terminal-state publication, leaving a late terminal caller attached to work after closure. | `90a3014` | deterministic close-before-terminal-publication regression plus full session tests | CLOSED |
 | FR-19 | Medium | Repository-wide Detekt executed, but `TooGenericExceptionCaught` was globally disabled, so new broad exception boundaries could bypass the required explicit review. | `681f594` | forced `staticAnalysis` across every production module and zero unreviewed generic catches | CLOSED |
 | FR-20 | Medium | The Android lint gate allowed any warning carrying one of four IDs, so a new coordinate, source, current version, or duplicate warning could be silently accepted; its documented count had already drifted. | `9384006` | exact 42-entry multiset gate, configuration-cache run, and `AndroidReleaseLintContractTest` | CLOSED |
+| FR-21 | Medium | The first real Compose fixture was placed in `commonTest`; Android local unit tests use the Android Compose runtime and failed on the unmocked `android.os.Trace` cleanup path even though Desktop passed. | `70bac8e` | `composeApp` Desktop, Android debug, and Android release shell-test variants | CLOSED |
 
 ## Finding details and acceptance matrix
 
@@ -309,6 +310,23 @@ Acceptance: a forced lint run produces exactly the 42 reviewed advisories and
 passes with configuration cache enabled; any added, removed, relocated, or
 current-version-changed warning fails; the repository contract test validates
 the inventory categories and count.
+
+### FR-21 — platform-correct Compose fixture execution
+
+Root cause: a test that executes the Compose runtime was placed in
+`commonTest`. Android local JVM tests then selected the Android runtime, whose
+`android.os.Trace` implementation is not available without an Android runtime;
+the test failed during deterministic composition disposal. Enabling global
+default Android stub values would have hidden other accidental framework calls.
+
+Target behavior: pure registry/capability/route contracts remain in
+`commonTest` and run for all configured targets. The actual runtime composition
+proof lives in `desktopTest`, where a real host runtime is available, and still
+resolves the binding through the production registry/router before rendering.
+
+Acceptance: the shell package tests pass in Desktop, Android debug, and Android
+release variants without Robolectric, mocked Android framework defaults, leaked
+recomposer jobs, or a weaker factory-only assertion.
 
 ## Verification and closure rules
 
