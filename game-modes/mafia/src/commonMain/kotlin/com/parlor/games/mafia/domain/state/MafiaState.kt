@@ -26,6 +26,12 @@ data class MafiaState(
     override val players: List<Player>,
 ) : GameState
 
+/** Applies host-only retention policy at persistence/transport boundaries. */
+internal fun MafiaState.withBoundedHostLogs(): MafiaState {
+    val bounded = hostOnly.withBoundedLogs()
+    return if (bounded === hostOnly) this else copy(hostOnly = bounded)
+}
+
 @Serializable
 data class MafiaPublic(
     val settings: MafiaSettings,
@@ -175,7 +181,48 @@ data class MafiaHostOnly(
     val randomSeed: Long,
     val nightLog: List<NightResolutionRecord> = emptyList(),
     val voteLog: List<VoteRoundRecord> = emptyList(),
-)
+) {
+    companion object {
+        /**
+         * Per-log serialized retention ceiling. A record is kept for the most
+         * recent 128 resolved game days, which is well beyond a normal Mafia
+         * session while placing a fixed upper bound on snapshots. Oldest
+         * records are discarded first; these lists are diagnostics, not the
+         * authoritative source for current game state.
+         */
+        const val MAX_SERIALIZED_LOG_ENTRIES = 128
+    }
+
+    internal fun recordNight(record: NightResolutionRecord): MafiaHostOnly =
+        copy(nightLog = nightLog.appendBounded(record))
+
+    internal fun recordVote(record: VoteRoundRecord): MafiaHostOnly =
+        copy(voteLog = voteLog.appendBounded(record))
+
+    /** Normalizes restored pre-bound snapshots before they are retained or re-encoded. */
+    internal fun withBoundedLogs(): MafiaHostOnly {
+        if (
+            nightLog.size <= MAX_SERIALIZED_LOG_ENTRIES &&
+            voteLog.size <= MAX_SERIALIZED_LOG_ENTRIES
+        ) {
+            return this
+        }
+        val boundedNight = nightLog.takeLast(MAX_SERIALIZED_LOG_ENTRIES)
+        val boundedVote = voteLog.takeLast(MAX_SERIALIZED_LOG_ENTRIES)
+        return copy(nightLog = boundedNight, voteLog = boundedVote)
+    }
+
+    private fun <T> List<T>.appendBounded(value: T): List<T> {
+        val existing = this
+        val retainedCount = minOf(existing.size, MAX_SERIALIZED_LOG_ENTRIES - 1)
+        return buildList(retainedCount + 1) {
+            if (retainedCount > 0) {
+                addAll(existing.subList(existing.size - retainedCount, existing.size))
+            }
+            add(value)
+        }
+    }
+}
 
 @Serializable
 data class NightResolutionRecord(

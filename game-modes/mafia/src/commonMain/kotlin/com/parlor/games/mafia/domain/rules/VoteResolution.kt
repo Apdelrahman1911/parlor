@@ -34,11 +34,18 @@ object VoteResolution {
     }
 
     fun resolve(inputs: Inputs, settings: MafiaSettings): Outcome {
-        val tally = inputs.casts.values.groupingBy { it }.eachCount()
+        // Canonical map order keeps serialized announcements/audit records
+        // stable even when equivalent casts arrive in a different order.
+        val tally = inputs.casts.values
+            .groupingBy { it }
+            .eachCount()
+            .entries
+            .sortedBy { it.key.raw }
+            .associate { it.toPair() }
         if (tally.isEmpty()) return Outcome.Skipped(VoteOutcome.AllAbstained, tally)
 
         val maxCount = tally.values.max()
-        val top = tally.filterValues { it == maxCount }.keys.toList()
+        val top = tally.filterValues { it == maxCount }.keys.sortedBy { it.raw }
 
         if (top.size == 1) return Outcome.Resolved(top.first(), tally)
 

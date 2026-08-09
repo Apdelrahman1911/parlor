@@ -17,9 +17,11 @@ import com.parlor.games.mafia.domain.state.MafiaPrivate
 import com.parlor.games.mafia.domain.state.MafiaPublic
 import com.parlor.games.mafia.domain.state.MafiaState
 import com.parlor.games.mafia.domain.state.NightAnnouncement
+import com.parlor.games.mafia.domain.state.NightResolutionRecord
 import com.parlor.games.mafia.domain.state.PublicPlayerSlot
 import com.parlor.games.mafia.domain.state.Role
 import com.parlor.games.mafia.domain.state.Team
+import com.parlor.games.mafia.domain.state.VoteRoundRecord
 import com.parlor.games.mafia.domain.state.team
 import kotlinx.serialization.json.Json
 import kotlin.test.Test
@@ -128,5 +130,90 @@ class MafiaSnapshotCodecTest {
             ),
         )
         assertThat(codec.decode(codec.encode(voting))).isEqualTo(voting)
+    }
+
+    @Test
+    fun sustained_session_history_keeps_only_the_newest_serialized_records() {
+        val base = fixture()
+        val totalRecords = MafiaHostOnly.MAX_SERIALIZED_LOG_ENTRIES * 8
+        var hostOnly = base.hostOnly
+
+        repeat(totalRecords) { index ->
+            hostOnly = hostOnly
+                .recordNight(
+                    NightResolutionRecord(
+                        day = index,
+                        mafiaTarget = base.players.first().id,
+                        mafiaTargetTied = false,
+                        doctorProtect = null,
+                        detectiveInspect = null,
+                        detectiveResult = null,
+                        killedPlayerId = null,
+                    ),
+                )
+                .recordVote(
+                    VoteRoundRecord(
+                        day = index,
+                        revoteRound = 0,
+                        tally = mapOf(base.players.first().id to 1),
+                        eliminatedPlayerId = null,
+                    ),
+                )
+        }
+
+        assertThat(hostOnly.nightLog.size).isEqualTo(MafiaHostOnly.MAX_SERIALIZED_LOG_ENTRIES)
+        assertThat(hostOnly.voteLog.size).isEqualTo(MafiaHostOnly.MAX_SERIALIZED_LOG_ENTRIES)
+        assertThat(hostOnly.nightLog.first().day)
+            .isEqualTo(totalRecords - MafiaHostOnly.MAX_SERIALIZED_LOG_ENTRIES)
+        assertThat(hostOnly.voteLog.first().day)
+            .isEqualTo(totalRecords - MafiaHostOnly.MAX_SERIALIZED_LOG_ENTRIES)
+        assertThat(hostOnly.nightLog.last().day).isEqualTo(totalRecords - 1)
+        assertThat(hostOnly.voteLog.last().day).isEqualTo(totalRecords - 1)
+
+        val bounded = base.copy(hostOnly = hostOnly)
+        assertThat(codec.decode(codec.encode(bounded))).isEqualTo(bounded)
+    }
+
+    @Test
+    fun serialization_boundaries_trim_legacy_oversized_history() {
+        val base = fixture()
+        val extra = MafiaHostOnly.MAX_SERIALIZED_LOG_ENTRIES + 7
+        val oversized = base.copy(
+            hostOnly = base.hostOnly.copy(
+                nightLog = (0 until extra).map { index ->
+                    NightResolutionRecord(
+                        day = index,
+                        mafiaTarget = null,
+                        mafiaTargetTied = false,
+                        doctorProtect = null,
+                        detectiveInspect = null,
+                        detectiveResult = null,
+                        killedPlayerId = null,
+                    )
+                },
+                voteLog = (0 until extra).map { index ->
+                    VoteRoundRecord(
+                        day = index,
+                        revoteRound = 0,
+                        tally = emptyMap(),
+                        eliminatedPlayerId = null,
+                    )
+                },
+            ),
+        )
+
+        val decoded = codec.decode(codec.encode(oversized))
+        val decodedLegacyPayload = codec.decode(
+            json.encodeToString(MafiaState.serializer(), oversized).encodeToByteArray(),
+        )
+        assertThat(decodedLegacyPayload).isEqualTo(decoded)
+        assertThat(decoded.hostOnly.nightLog.size)
+            .isEqualTo(MafiaHostOnly.MAX_SERIALIZED_LOG_ENTRIES)
+        assertThat(decoded.hostOnly.voteLog.size)
+            .isEqualTo(MafiaHostOnly.MAX_SERIALIZED_LOG_ENTRIES)
+        assertThat(decoded.hostOnly.nightLog.first().day).isEqualTo(7)
+        assertThat(decoded.hostOnly.voteLog.first().day).isEqualTo(7)
+        assertThat(decoded.hostOnly.nightLog.last().day).isEqualTo(extra - 1)
+        assertThat(decoded.hostOnly.voteLog.last().day).isEqualTo(extra - 1)
     }
 }

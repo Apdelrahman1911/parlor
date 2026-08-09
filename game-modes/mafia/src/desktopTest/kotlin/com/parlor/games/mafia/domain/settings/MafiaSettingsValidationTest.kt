@@ -126,6 +126,19 @@ class MafiaSettingsValidationTest {
     }
 
     @Test
+    fun accepts_maximum_supported_revotes() {
+        val settings = base(maxRevotes = MafiaSettings.MAX_REVOTES)
+        assertThat(settings.validate(playerCount = 5)).isEqualTo(MafiaSettingsValidation.Valid)
+    }
+
+    @Test
+    fun rejects_max_revotes_above_authoritative_limit() {
+        val value = MafiaSettings.MAX_REVOTES + 1
+        val validation = base(maxRevotes = value).validate(5) as MafiaSettingsValidation.Invalid
+        assertThat(validation.errors).contains(MafiaSettingsError.MaxRevotesAboveMaximum(value))
+    }
+
+    @Test
     fun rejects_duration_below_minimum() {
         val settings = base(nightSec = 4)
         val v = settings.validate(playerCount = 5) as MafiaSettingsValidation.Invalid

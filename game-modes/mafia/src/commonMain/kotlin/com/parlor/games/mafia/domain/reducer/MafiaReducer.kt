@@ -464,9 +464,7 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
                 lastNight = announcement,
                 winner = winner,
             ),
-            hostOnly = state.hostOnly.copy(
-                nightLog = state.hostOnly.nightLog + nightRecord,
-            ),
+            hostOnly = state.hostOnly.recordNight(nightRecord),
             phase = nextPhase,
         )
         val newState = if (winner != null) {
@@ -664,8 +662,8 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
                 activeVote = null,
                 winner = winner,
             ),
-            hostOnly = state.hostOnly.copy(
-                voteLog = state.hostOnly.voteLog + VoteRoundRecord(
+            hostOnly = state.hostOnly.recordVote(
+                VoteRoundRecord(
                     day = day,
                     revoteRound = revoteRound,
                     tally = outcome.tally,
@@ -735,8 +733,8 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
                     lastVote = announcement,
                     activeVote = null,
                 ),
-                hostOnly = state.hostOnly.copy(
-                    voteLog = state.hostOnly.voteLog + VoteRoundRecord(
+                hostOnly = state.hostOnly.recordVote(
+                    VoteRoundRecord(
                         day = day,
                         revoteRound = revoteRound,
                         tally = outcome.tally,

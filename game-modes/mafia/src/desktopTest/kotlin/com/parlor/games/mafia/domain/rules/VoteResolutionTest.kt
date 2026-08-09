@@ -27,6 +27,14 @@ class VoteResolutionTest {
         maxRevotes = maxRevotes,
     )
 
+    private fun <T> permutations(values: List<T>): List<List<T>> {
+        if (values.isEmpty()) return listOf(emptyList())
+        return values.indices.flatMap { chosenIndex ->
+            val remaining = values.filterIndexed { index, _ -> index != chosenIndex }
+            permutations(remaining).map { suffix -> listOf(values[chosenIndex]) + suffix }
+        }
+    }
+
     @Test
     fun clear_plurality_resolves() {
         val out = VoteResolution.resolve(
@@ -76,6 +84,30 @@ class VoteResolutionTest {
         val tied = out as VoteResolution.Outcome.Tied
         assertThat(tied.tied).containsExactlyInAnyOrder(a, b)
         assertThat(tied.nextRoundCandidates).containsExactlyInAnyOrder(a, b)
+    }
+
+    @Test
+    fun tied_outcome_is_canonical_for_every_cast_map_permutation() {
+        val castEntries = listOf(a to b, b to a, c to d, d to c)
+        val outcomes = permutations(castEntries).map { insertionOrder ->
+            VoteResolution.resolve(
+                VoteResolution.Inputs(
+                    casts = linkedMapOf(*insertionOrder.toTypedArray()),
+                    abstained = emptySet(),
+                    ballot = listOf(d, c, b, a),
+                    candidates = listOf(d, c, b, a),
+                    revoteRound = 0,
+                ),
+                settings = settings(tie = TieBehavior.REVOTE_TIED_ONLY, maxRevotes = 1),
+            )
+        }
+
+        val expected = outcomes.first()
+        outcomes.forEach { assertThat(it).isEqualTo(expected) }
+        val tied = expected as VoteResolution.Outcome.Tied
+        assertThat(tied.tied).isEqualTo(listOf(a, b, c, d))
+        assertThat(tied.nextRoundCandidates).isEqualTo(listOf(a, b, c, d))
+        assertThat(tied.tally.keys.toList()).isEqualTo(listOf(a, b, c, d))
     }
 
     @Test

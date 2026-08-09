@@ -93,7 +93,14 @@ object NightResolution {
     ): MafiaPick {
         if (inputs.mafiaTargetTally.isEmpty()) return MafiaPick(null, tiedFinal = false)
         val maxCount = inputs.mafiaTargetTally.values.max()
-        val top = inputs.mafiaTargetTally.filterValues { it == maxCount }.keys.toList()
+        // Map iteration order is not part of the game state. Canonicalize tied
+        // targets before consuming seeded randomness so equivalent tallies
+        // always resolve to the same player on every platform and after a
+        // snapshot round-trip.
+        val top = inputs.mafiaTargetTally
+            .filterValues { it == maxCount }
+            .keys
+            .sortedBy { it.raw }
         if (top.size == 1) return MafiaPick(top.first(), tiedFinal = false)
 
         // Tied. On round 1 with REVOTE configured, the reducer should route

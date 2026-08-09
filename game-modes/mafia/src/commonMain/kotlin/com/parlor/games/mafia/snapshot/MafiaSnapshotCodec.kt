@@ -2,6 +2,7 @@ package com.parlor.games.mafia.snapshot
 
 import com.parlor.engine.snapshot.SnapshotCodec
 import com.parlor.games.mafia.domain.state.MafiaState
+import com.parlor.games.mafia.domain.state.withBoundedHostLogs
 import kotlinx.serialization.json.Json
 
 /**
@@ -13,8 +14,8 @@ class MafiaSnapshotCodec(
 ) : SnapshotCodec<MafiaState> {
 
     override fun encode(state: MafiaState): ByteArray =
-        json.encodeToString(MafiaState.serializer(), state).encodeToByteArray()
+        json.encodeToString(MafiaState.serializer(), state.withBoundedHostLogs()).encodeToByteArray()
 
     override fun decode(payload: ByteArray): MafiaState =
-        json.decodeFromString(MafiaState.serializer(), payload.decodeToString())
+        json.decodeFromString(MafiaState.serializer(), payload.decodeToString()).withBoundedHostLogs()
 }

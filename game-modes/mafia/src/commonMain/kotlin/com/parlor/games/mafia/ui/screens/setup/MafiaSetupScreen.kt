@@ -44,6 +44,7 @@ import com.parlor.games.mafia.resources.settings_error_doctor_above_max_format
 import com.parlor.games.mafia.resources.settings_error_doctor_negative_format
 import com.parlor.games.mafia.resources.settings_error_mafia_below_one
 import com.parlor.games.mafia.resources.settings_error_mafia_not_minority_format
+import com.parlor.games.mafia.resources.settings_error_max_revotes_above_maximum_format
 import com.parlor.games.mafia.resources.settings_error_negative_max_revotes_format
 import com.parlor.games.mafia.resources.settings_error_not_enough_civilians_format
 import com.parlor.games.mafia.resources.settings_error_player_count_above_maximum_format
@@ -363,6 +364,11 @@ private fun validationErrorText(error: MafiaSettingsError): String = when (error
     )
     is MafiaSettingsError.NegativeMaxRevotes -> stringResource(
         Res.string.settings_error_negative_max_revotes_format,
+        error.value,
+    )
+    is MafiaSettingsError.MaxRevotesAboveMaximum -> stringResource(
+        Res.string.settings_error_max_revotes_above_maximum_format,
+        MafiaSettings.MAX_REVOTES,
         error.value,
     )
     MafiaSettingsError.TimersNotSupported ->

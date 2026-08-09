@@ -230,6 +230,30 @@ class NightResolutionTest {
     }
 
     @Test
+    fun random_tied_pick_is_invariant_to_tally_insertion_order_for_every_sampled_seed() {
+        fun resolve(tally: Map<PlayerId, Int>, seed: Long) = NightResolution.resolve(
+            NightResolution.Inputs(
+                mafiaTargetTally = tally,
+                mafiaCoordinationRound = 2,
+                doctorTarget = null,
+                doctorProtectedPreviousNight = null,
+                detectiveTarget = null,
+                rolesByPlayer = roles,
+                alive = alive,
+            ),
+            settings = settings(killTie = MafiaKillTie.RANDOM_TIED),
+            random = RandomSource.seeded(seed),
+        )
+
+        val forward = linkedMapOf(c1 to 1, c2 to 1, doc to 1)
+        val reverse = linkedMapOf(doc to 1, c2 to 1, c1 to 1)
+
+        for (seed in 0L until 256L) {
+            assertThat(resolve(forward, seed)).isEqualTo(resolve(reverse, seed))
+        }
+    }
+
+    @Test
     fun tied_kill_with_no_kill_kills_no_one() {
         val res = NightResolution.resolve(
             NightResolution.Inputs(

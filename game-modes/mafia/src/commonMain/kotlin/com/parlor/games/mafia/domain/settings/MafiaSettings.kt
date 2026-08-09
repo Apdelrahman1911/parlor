@@ -46,6 +46,9 @@ data class MafiaSettings(
             errors += MafiaSettingsError.MafiaNotMinority(roleCounts.mafia, playerCount)
         }
         if (maxRevotes < 0) errors += MafiaSettingsError.NegativeMaxRevotes(maxRevotes)
+        if (maxRevotes > MAX_REVOTES) {
+            errors += MafiaSettingsError.MaxRevotesAboveMaximum(maxRevotes)
+        }
         if (
             nightDurationSeconds != null ||
             discussionDurationSeconds != null ||
@@ -64,6 +67,13 @@ data class MafiaSettings(
         const val MAX_PLAYERS = 16
         const val MAX_DETECTIVES = 1
         const val MAX_DOCTORS = 1
+        /**
+         * A vote may be repeated at most this many times after the initial
+         * ballot. This keeps an authoritative game from accepting settings
+         * that can prolong one day indefinitely while preserving the shipped
+         * default of one revote.
+         */
+        const val MAX_REVOTES = 3
         const val MIN_DURATION_SECONDS = 5
     }
 }
@@ -118,6 +128,7 @@ sealed interface MafiaSettingsError {
     data class NotEnoughCivilians(val computed: Int) : MafiaSettingsError
     data class MafiaNotMinority(val mafiaCount: Int, val playerCount: Int) : MafiaSettingsError
     data class NegativeMaxRevotes(val value: Int) : MafiaSettingsError
+    data class MaxRevotesAboveMaximum(val value: Int) : MafiaSettingsError
     data object TimersNotSupported : MafiaSettingsError
     data class DurationTooShort(val kind: String, val seconds: Int) : MafiaSettingsError
 }

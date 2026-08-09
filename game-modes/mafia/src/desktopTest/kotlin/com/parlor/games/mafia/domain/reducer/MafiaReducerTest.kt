@@ -112,6 +112,17 @@ class MafiaReducerTest {
     }
 
     @Test
+    fun authoritative_reducer_rejects_excessive_revote_settings() {
+        val state = initialState(7)
+        val invalid = state.public.settings.copy(maxRevotes = MafiaSettings.MAX_REVOTES + 1)
+
+        val result = MafiaReducer.reduce(state, MafiaAction.ApplySettings(invalid), ctx())
+
+        assertThat(result.newState.public.settings).isEqualTo(state.public.settings)
+        assertThat(result.events).isEqualTo(emptyList())
+    }
+
+    @Test
     fun start_game_assigns_roles_and_advances_to_role_assignment() {
         val state = initialState(7)
         val result = MafiaReducer.reduce(state, MafiaAction.StartGame, ctx())
