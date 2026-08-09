@@ -1045,6 +1045,58 @@ class P2pKitRoomTransportLifecycleTest {
     }
 
     @Test
+    fun peer_terminal_disconnect_while_foreground_starts_credential_resume() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("peer-pid"))
+        val hostPeer = peer("host-pid", "Host Device")
+        val firstSession = FakeP2pSession(hostPeer)
+        val replacementSession = FakeP2pSession(hostPeer)
+        val initialCredential = resumableCredential(generation = 1L)
+        val rotatedCredential = resumableCredential(generation = 2L)
+        val resumeRequests = mutableListOf<ResumableSessionCredential>()
+        val room = PeerP2pRoom(
+            kit = kit,
+            session = firstSession,
+            hostPeer = hostPeer,
+            roomCode = "ABCDEF",
+            scope = testScope,
+            codec = codec,
+            initialCredential = initialCredential,
+            resumeConnector = { credential ->
+                resumeRequests += credential
+                Result.Success(
+                    ResumedPeerConnection(
+                        session = replacementSession,
+                        hostPeer = hostPeer,
+                        credential = rotatedCredential,
+                    ),
+                )
+            },
+        )
+        val events = mutableListOf<PeerEvent>()
+        val collector = testScope.async { room.peerEvents.collect { events += it } }
+        yield(); yield()
+
+        firstSession.stateFlow.value = ConnectionState.Closed
+
+        awaitCondition { events.contains(PeerEvent.HostRestored) }
+        assertThat(resumeRequests).containsExactly(initialCredential)
+        assertThat(room.lifecycle.value).isEqualTo(RoomLifecycleState.Active)
+        assertThat(room.info.value.status).isEqualTo(RoomInfo.Status.Joined)
+        assertThat(room.members.value.single().connected).isTrue()
+        assertThat(
+            replacementSession.sent
+                .filterIsInstance<P2pMessage.Binary>()
+                .map { codec.decode(it.bytes) },
+        ).containsExactly(
+            PeerMessage.ResumeReady(PlayerId("peer-pid"), rotatedCredential.offerId, 2L),
+            PeerMessage.ResumeCommitAck(PlayerId("peer-pid"), rotatedCredential.offerId, 2L),
+        )
+
+        collector.cancel()
+        room.leave()
+    }
+
+    @Test
     fun peer_emits_host_lost_on_terminal_session_close() = runBlocking {
         val kit = FakeP2pKit(P2pPeerId("peer-pid"))
         val hostPeer = peer("host-pid", "Host Device")
@@ -1834,6 +1886,23 @@ class P2pKitRoomTransportLifecycleTest {
     }
 
     @Test
+    fun host_leave_finishes_cleanup_after_caller_is_cancelled() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("host-pid"))
+        val room = newHostRoom(kit)
+        admit(room, kit, FakeP2pSession(peer("alice-pid", "Alice")))
+
+        val leaving = async { room.leave() }
+        yield()
+        leaving.cancel()
+        withTimeout(2_000) { leaving.join() }
+
+        assertThat(kit.stopAdvertisingCalls).isEqualTo(1)
+        assertThat(kit.stopCalls).isEqualTo(1)
+        assertThat(room.lifecycle.value).isEqualTo(RoomLifecycleState.Closed)
+        assertThat(room.members.value).isEmpty()
+    }
+
+    @Test
     fun peer_leave_is_idempotent_and_stops_the_kit_once() = runBlocking {
         val kit = FakeP2pKit(P2pPeerId("peer-pid"))
         val hostPeer = peer("host-pid", "Host Device")
@@ -1845,6 +1914,23 @@ class P2pKitRoomTransportLifecycleTest {
         room.leave() // must not throw
 
         assertThat(kit.stopCalls).isEqualTo(1)
+    }
+
+    @Test
+    fun peer_leave_finishes_cleanup_after_caller_is_cancelled() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("peer-pid"))
+        val hostPeer = peer("host-pid", "Host Device")
+        val session = FakeP2pSession(hostPeer)
+        val room = PeerP2pRoom(kit, session, hostPeer, "ABCDEF", testScope, codec)
+
+        val leaving = async { room.leave() }
+        yield()
+        leaving.cancel()
+        withTimeout(2_000) { leaving.join() }
+
+        assertThat(session.state.value).isEqualTo(ConnectionState.Closed)
+        assertThat(kit.stopCalls).isEqualTo(1)
+        assertThat(room.lifecycle.value).isEqualTo(RoomLifecycleState.Closed)
     }
 
     /**

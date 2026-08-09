@@ -34,8 +34,10 @@ import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.withTimeout
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
 @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
@@ -177,6 +179,87 @@ class AuthoritativeSessionCoordinatorTest {
 
         val terminal = room.sent.single().message as HostMessage.SessionEnded
         assertEquals(SessionEndReason.HostLeft, terminal.reason)
+    }
+
+    @Test
+    fun `closing host coordinator completes executing and queued mutation callers`() = runTest {
+        val room = RecordingRoom(isHost = true, selfPlayerId = PlayerId("host"))
+        val entered = CompletableDeferred<Unit>()
+        val neverReleased = CompletableDeferred<Unit>()
+        val coordinator = HostAuthoritativeSessionCoordinator(
+            room = room,
+            protocol = protocol,
+            remotePlayers = setOf(peerId),
+            scope = this,
+            applyCommand = { _, _ -> CommandApplication.InvalidAction },
+            snapshotFor = { PlayerSnapshotPayload(byteArrayOf(), byteArrayOf()) },
+            heartbeatIntervalMs = 0,
+        )
+        val executing = async {
+            coordinator.applyHostMutation {
+                entered.complete(Unit)
+                neverReleased.await()
+                true
+            }
+        }
+        entered.await()
+        val queued = async { coordinator.applyHostMutation { true } }
+        runCurrent()
+
+        coordinator.close()
+        runCurrent()
+
+        assertTrue(executing.isCancelled)
+        assertTrue(queued.isCancelled || queued.await() == HostMutationResult.Closed)
+    }
+
+    @Test
+    fun `failed publication does not kill mailbox or strand later host mutation`() = runTest {
+        val room = RecordingRoom(isHost = true, selfPlayerId = PlayerId("host"))
+        var snapshotAttempt = 0
+        val coordinator = HostAuthoritativeSessionCoordinator(
+            room = room,
+            protocol = protocol,
+            remotePlayers = setOf(peerId),
+            scope = this,
+            applyCommand = { _, _ -> CommandApplication.InvalidAction },
+            snapshotFor = {
+                snapshotAttempt += 1
+                if (snapshotAttempt == 1) error("injected snapshot failure")
+                PlayerSnapshotPayload(byteArrayOf(1), byteArrayOf())
+            },
+            heartbeatIntervalMs = 0,
+        )
+
+        coordinator.publishState(incrementRevision = false)
+        runCurrent()
+
+        val result = withTimeout(1_000L) {
+            coordinator.applyHostMutation { true }
+        }
+        assertEquals(HostMutationResult.Applied, result)
+        assertEquals(1L, coordinator.revision.value)
+        coordinator.close()
+    }
+
+    @Test
+    fun `failed terminal send completes end exceptionally and mailbox remains closable`() = runTest {
+        val room = RecordingRoom(isHost = true, selfPlayerId = PlayerId("host"))
+        val coordinator = HostAuthoritativeSessionCoordinator(
+            room = room,
+            protocol = protocol,
+            remotePlayers = setOf(peerId),
+            scope = this,
+            applyCommand = { _, _ -> CommandApplication.InvalidAction },
+            snapshotFor = { PlayerSnapshotPayload(byteArrayOf(), byteArrayOf()) },
+            heartbeatIntervalMs = 0,
+        )
+        room.sendFailure = IllegalStateException("injected terminal send failure")
+
+        assertFailsWith<IllegalStateException> {
+            withTimeout(1_000L) { coordinator.end(SessionEndReason.HostLeft) }
+        }
+        coordinator.close()
     }
 
     @Test
@@ -615,6 +698,7 @@ private class RecordingRoom(
     val sent = mutableListOf<SentMessage>()
     val sentToHost = mutableListOf<PeerMessage>()
     var sendToHostError: NetError? = null
+    var sendFailure: Throwable? = null
 
     suspend fun receive(message: RoomMessage) {
         inbox.send(message)
@@ -628,6 +712,7 @@ private class RecordingRoom(
         target: SendTarget,
         message: HostMessage,
     ): Result<Unit, NetError> {
+        sendFailure?.let { throw it }
         sent += SentMessage(target, message)
         return Result.Success(Unit)
     }

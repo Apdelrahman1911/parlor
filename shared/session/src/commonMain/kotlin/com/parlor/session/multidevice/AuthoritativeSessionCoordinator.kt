@@ -100,15 +100,24 @@ class HostAuthoritativeSessionCoordinator(
         }
         jobs += scope.launch {
             for (work in mailbox) {
-                when (work) {
-                    is Work.Incoming -> processIncoming(work.message)
-                    is Work.Publish -> publishSnapshots(work.incrementRevision)
-                    is Work.HostMutation -> processHostMutation(work)
-                    is Work.End -> {
-                        sendEnd(work.reason)
-                        work.completion.complete(Unit)
+                try {
+                    when (work) {
+                        is Work.Incoming -> processIncoming(work.message)
+                        is Work.Publish -> publishSnapshots(work.incrementRevision)
+                        is Work.HostMutation -> processHostMutation(work)
+                        is Work.End -> processEnd(work)
+                        Work.Heartbeat -> sendHeartbeat()
                     }
-                    Work.Heartbeat -> sendHeartbeat()
+                } catch (cancelled: CancellationException) {
+                    cancelCompletion(work, cancelled)
+                    throw cancelled
+                } catch (failure: Throwable) {
+                    // A malformed/failed operation must not kill the sole
+                    // mailbox worker and strand every later command. Work with
+                    // a caller-visible completion receives the exact failure;
+                    // fire-and-forget publication/inbound work is isolated and
+                    // the next authoritative item remains processable.
+                    failCompletion(work, failure)
                 }
             }
         }
@@ -147,14 +156,26 @@ class HostAuthoritativeSessionCoordinator(
 
     suspend fun end(reason: SessionEndReason) {
         val completion = CompletableDeferred<Unit>()
-        mailbox.send(Work.End(reason, completion))
+        try {
+            mailbox.send(Work.End(reason, completion))
+        } catch (_: ClosedSendChannelException) {
+            return
+        }
         completion.await()
     }
 
     fun close() {
+        // Close producers first, cancel the item currently executing, then
+        // complete everything that never reached the worker. Cancelling jobs
+        // before closing/draining left queued HostMutation/End callers waiting
+        // forever.
+        mailbox.close()
         jobs.forEach(Job::cancel)
         jobs.clear()
-        mailbox.close()
+        while (true) {
+            val work = mailbox.tryReceive().getOrNull() ?: break
+            cancelCompletion(work, CancellationException("Host coordinator closed"))
+        }
     }
 
     private suspend fun processIncoming(message: PeerMessage) {
@@ -197,6 +218,38 @@ class HostAuthoritativeSessionCoordinator(
             throw cancelled
         } catch (failure: Throwable) {
             work.completion.completeExceptionally(failure)
+        }
+    }
+
+    private suspend fun processEnd(work: Work.End) {
+        try {
+            sendEnd(work.reason)
+            work.completion.complete(Unit)
+        } catch (cancelled: CancellationException) {
+            work.completion.cancel(cancelled)
+            throw cancelled
+        } catch (failure: Throwable) {
+            work.completion.completeExceptionally(failure)
+        }
+    }
+
+    private fun cancelCompletion(work: Work, cancelled: CancellationException) {
+        when (work) {
+            is Work.HostMutation -> work.completion.cancel(cancelled)
+            is Work.End -> work.completion.cancel(cancelled)
+            is Work.Incoming,
+            is Work.Publish,
+            Work.Heartbeat -> Unit
+        }
+    }
+
+    private fun failCompletion(work: Work, failure: Throwable) {
+        when (work) {
+            is Work.HostMutation -> work.completion.completeExceptionally(failure)
+            is Work.End -> work.completion.completeExceptionally(failure)
+            is Work.Incoming,
+            is Work.Publish,
+            Work.Heartbeat -> Unit
         }
     }
 

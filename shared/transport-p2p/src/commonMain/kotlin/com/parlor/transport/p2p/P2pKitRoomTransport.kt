@@ -2950,66 +2950,70 @@ internal class HostP2pRoom(
         if (!shouldLeave) {
             return
         }
-        expiryJob?.cancel()
-        diagnostics.event(
-            P2pDiagnosticEventName.CLEANUP_STARTED,
-            P2pDiagnosticRole.HOST,
-            count = diagnosticCount(stateMutex.withLock { trackedSessions.size }),
-        )
-        // Stop advertising FIRST and give Bonjour a beat to actually push
-        // the "service-removed" packet before the kit goes down. Skipping
-        // this is the root cause of dead rooms lingering in remote join
-        // lobbies for the entire Bonjour eviction window (5–30s on iOS).
-        runCatching { kit.stopAdvertising() }.onFailure {
+        // The first caller has set the terminal `left` guard, so it must finish
+        // cleanup even if the owning UI/lifecycle coroutine is cancelled.
+        withContext(NonCancellable) {
+            expiryJob?.cancel()
             diagnostics.event(
-                P2pDiagnosticEventName.CLEANUP_FAILED,
+                P2pDiagnosticEventName.CLEANUP_STARTED,
                 P2pDiagnosticRole.HOST,
-                P2pDiagnosticResult.FAILURE,
-                P2pDiagnosticReason.TRANSPORT,
+                count = diagnosticCount(stateMutex.withLock { trackedSessions.size }),
+            )
+            // Stop advertising FIRST and give Bonjour a beat to actually push
+            // the "service-removed" packet before the kit goes down. Skipping
+            // this is the root cause of dead rooms lingering in remote join
+            // lobbies for the entire Bonjour eviction window (5–30s on iOS).
+            runCatching { kit.stopAdvertising() }.onFailure {
+                diagnostics.event(
+                    P2pDiagnosticEventName.CLEANUP_FAILED,
+                    P2pDiagnosticRole.HOST,
+                    P2pDiagnosticResult.FAILURE,
+                    P2pDiagnosticReason.TRANSPORT,
+                )
+            }
+            delay(P2pKitRoomTransport.BONJOUR_GOODBYE_FLUSH_MS)
+            sessionSupervisor.cancelAndJoin()
+            val toClose = stateMutex.withLock {
+                val sessions = trackedSessions.toList()
+                sessionsByPlayer.clear()
+                pendingByPlayer.clear()
+                trackedSessions.clear()
+                admissionReservations.clear()
+                membersByPlayer.clear()
+                previouslySeenPlayerIds.clear()
+                credentialsByPlayer.values.forEach(HostCredential::wipe)
+                credentialsByPlayer.clear()
+                rejoinDeadlineByPlayer.clear()
+                admissionReadyByPlayer.values.forEach { it.signal.complete(Unit) }
+                admissionReadyByPlayer.clear()
+                resumeReadyByPlayer.values.forEach { it.signal.complete(Unit) }
+                resumeReadyByPlayer.clear()
+                publishMembers()
+                publishPendingAdmissions()
+                sessions
+            }
+            toClose.forEach { runCatching { it.close() } }
+            // kit.stop() is terminal; guard it so a late/duplicate teardown can't
+            // throw out of a disposal path. See PROBLEMS_PARLOR.md → p2p-016.
+            runCatching { kit.stop() }.onFailure {
+                diagnostics.event(
+                    P2pDiagnosticEventName.CLEANUP_FAILED,
+                    P2pDiagnosticRole.HOST,
+                    P2pDiagnosticResult.FAILURE,
+                    P2pDiagnosticReason.TRANSPORT,
+                )
+            }
+            if (_lifecycle.value != RoomLifecycleState.Expired) {
+                _lifecycle.value = RoomLifecycleState.Closed
+            }
+            incomingPeerMessages.close()
+            onClosed()
+            diagnostics.event(
+                P2pDiagnosticEventName.CLEANUP_COMPLETED,
+                P2pDiagnosticRole.HOST,
+                P2pDiagnosticResult.SUCCESS,
             )
         }
-        delay(P2pKitRoomTransport.BONJOUR_GOODBYE_FLUSH_MS)
-        sessionSupervisor.cancelAndJoin()
-        val toClose = stateMutex.withLock {
-            val sessions = trackedSessions.toList()
-            sessionsByPlayer.clear()
-            pendingByPlayer.clear()
-            trackedSessions.clear()
-            admissionReservations.clear()
-            membersByPlayer.clear()
-            previouslySeenPlayerIds.clear()
-            credentialsByPlayer.values.forEach(HostCredential::wipe)
-            credentialsByPlayer.clear()
-            rejoinDeadlineByPlayer.clear()
-            admissionReadyByPlayer.values.forEach { it.signal.complete(Unit) }
-            admissionReadyByPlayer.clear()
-            resumeReadyByPlayer.values.forEach { it.signal.complete(Unit) }
-            resumeReadyByPlayer.clear()
-            publishMembers()
-            publishPendingAdmissions()
-            sessions
-        }
-        toClose.forEach { runCatching { it.close() } }
-        // kit.stop() is terminal; guard it so a late/duplicate teardown can't
-        // throw out of a disposal path. See PROBLEMS_PARLOR.md → p2p-016.
-        runCatching { kit.stop() }.onFailure {
-            diagnostics.event(
-                P2pDiagnosticEventName.CLEANUP_FAILED,
-                P2pDiagnosticRole.HOST,
-                P2pDiagnosticResult.FAILURE,
-                P2pDiagnosticReason.TRANSPORT,
-            )
-        }
-        if (_lifecycle.value != RoomLifecycleState.Expired) {
-            _lifecycle.value = RoomLifecycleState.Closed
-        }
-        incomingPeerMessages.close()
-        onClosed()
-        diagnostics.event(
-            P2pDiagnosticEventName.CLEANUP_COMPLETED,
-            P2pDiagnosticRole.HOST,
-            P2pDiagnosticResult.SUCCESS,
-        )
     }
 }
 
@@ -3217,13 +3221,15 @@ internal class PeerP2pRoom(
     }
 
     private suspend fun replaceSession(resumed: ResumedPeerConnection): Boolean {
-        val old = sessionMutex.withLock {
+        val old = lifecycleMutex.withLock {
             if (left) return false
-            val previous = Triple(activeSession, collectorJob, stateJob)
-            activeSession = resumed.session
-            collectorJob = launchIncomingCollector(resumed.session)
-            stateJob = launchSessionStateCollector(resumed.session)
-            previous
+            sessionMutex.withLock {
+                val previous = Triple(activeSession, collectorJob, stateJob)
+                activeSession = resumed.session
+                collectorJob = launchIncomingCollector(resumed.session)
+                stateJob = launchSessionStateCollector(resumed.session)
+                previous
+            }
         }
         old.second.cancelAndJoin()
         old.third.cancelAndJoin()
@@ -3477,8 +3483,7 @@ internal class PeerP2pRoom(
         var hostLost = false
         session.state.collect { state ->
             when (state) {
-                ConnectionState.Reconnecting,
-                ConnectionState.Failed -> {
+                ConnectionState.Reconnecting -> {
                     if (!hostLost) {
                         hostLost = true
                         markHostConnected(false)
@@ -3503,6 +3508,7 @@ internal class PeerP2pRoom(
                         _peerEvents.tryEmit(PeerEvent.HostRestored)
                     }
                 }
+                ConnectionState.Failed,
                 ConnectionState.Closed -> {
                     if (!hostLost) {
                         hostLost = true
@@ -3515,6 +3521,7 @@ internal class PeerP2pRoom(
                         )
                         _peerEvents.tryEmit(PeerEvent.HostLost)
                     }
+                    beginForegroundResume()
                 }
                 ConnectionState.Idle,
                 ConnectionState.Connecting,
@@ -3522,6 +3529,29 @@ internal class PeerP2pRoom(
                 ConnectionState.Closing -> Unit
             }
         }
+    }
+
+    /** Starts credential-based logical resume after a terminal foreground drop. */
+    private suspend fun beginForegroundResume() {
+        val now = nowMillis()
+        val deadline = lifecycleMutex.withLock {
+            if (left) return@withLock null
+            when (val current = _lifecycle.value) {
+                RoomLifecycleState.Active -> (now + appResumeGraceMs).also { resumeDeadline ->
+                    _lifecycle.value = RoomLifecycleState.Resuming(resumeDeadline)
+                }
+                is RoomLifecycleState.Resuming -> current.resumeDeadlineEpochMillis
+                is RoomLifecycleState.Suspended,
+                RoomLifecycleState.Expired,
+                RoomLifecycleState.Closed -> null
+            }
+        } ?: return
+        scheduleLifecycleExpiry(deadline, (deadline - now).coerceAtLeast(0L))
+        diagnostics.event(
+            P2pDiagnosticEventName.LIFECYCLE_RESUME_STARTED,
+            P2pDiagnosticRole.PEER,
+        )
+        resumeAfterForeground(deadline)
     }
 
     private fun markHostConnected(connected: Boolean) {
@@ -3582,66 +3612,68 @@ internal class PeerP2pRoom(
         if (!shouldLeave) {
             return
         }
-        jobs.forEach { job ->
-            if (job != kotlinx.coroutines.currentCoroutineContext()[Job]) {
-                job.cancel()
+        withContext(NonCancellable) {
+            jobs.forEach { job ->
+                if (job != kotlinx.coroutines.currentCoroutineContext()[Job]) {
+                    job.cancelAndJoin()
+                }
             }
-        }
-        val session = sessionMutex.withLock { activeSession }
-        diagnostics.event(
-            P2pDiagnosticEventName.CLEANUP_STARTED,
-            P2pDiagnosticRole.PEER,
-            count = P2pDiagnosticCountBucket.ONE,
-        )
-        // Best-effort: tell the host we're leaving so the lobby updates
-        // immediately, instead of waiting for the TCP teardown to surface
-        // (Closed/Failed). Guarded by Connected because send() is unsafe
-        // otherwise; any send failure is non-fatal — the host's
-        // state-watcher will still emit PeerLeft once the socket dies.
-        if (sendNotice && session.state.value == ConnectionState.Connected) {
-            runCatching {
-                val notice = P2pMessage.Binary(
-                    codec.encode(PeerMessage.LeaveNotice),
+            val session = sessionMutex.withLock { activeSession }
+            diagnostics.event(
+                P2pDiagnosticEventName.CLEANUP_STARTED,
+                P2pDiagnosticRole.PEER,
+                count = P2pDiagnosticCountBucket.ONE,
+            )
+            // Best-effort: tell the host we're leaving so the lobby updates
+            // immediately, instead of waiting for the TCP teardown to surface
+            // (Closed/Failed). Guarded by Connected because send() is unsafe
+            // otherwise; any send failure is non-fatal — the host's
+            // state-watcher will still emit PeerLeft once the socket dies.
+            if (sendNotice && session.state.value == ConnectionState.Connected) {
+                runCatching {
+                    val notice = P2pMessage.Binary(
+                        codec.encode(PeerMessage.LeaveNotice),
+                    )
+                    session.send(notice)
+                    // Tiny window for the bytes to actually flush across the
+                    // wire before close() yanks the socket out from under
+                    // them. See P2pKitRoomTransport.LEAVE_NOTICE_FLUSH_MS.
+                    delay(P2pKitRoomTransport.LEAVE_NOTICE_FLUSH_MS)
+                }
+            }
+            collectorJob.cancelAndJoin()
+            stateJob.cancelAndJoin()
+            if (clearCredential) {
+                credentialStore?.clear()
+                activeCredential.value = null
+            }
+            runCatching { session.close() }.onFailure {
+                diagnostics.event(
+                    P2pDiagnosticEventName.CLEANUP_FAILED,
+                    P2pDiagnosticRole.PEER,
+                    P2pDiagnosticResult.FAILURE,
+                    P2pDiagnosticReason.TRANSPORT,
                 )
-                session.send(notice)
-                // Tiny window for the bytes to actually flush across the
-                // wire before close() yanks the socket out from under
-                // them. See P2pKitRoomTransport.LEAVE_NOTICE_FLUSH_MS.
-                delay(P2pKitRoomTransport.LEAVE_NOTICE_FLUSH_MS)
             }
-        }
-        collectorJob.cancelAndJoin()
-        stateJob.cancelAndJoin()
-        if (clearCredential) {
-            credentialStore?.clear()
-            activeCredential.value = null
-        }
-        runCatching { session.close() }.onFailure {
+            // kit.stop() is terminal — guard against a duplicate/late teardown.
+            runCatching { kit.stop() }.onFailure {
+                diagnostics.event(
+                    P2pDiagnosticEventName.CLEANUP_FAILED,
+                    P2pDiagnosticRole.PEER,
+                    P2pDiagnosticResult.FAILURE,
+                    P2pDiagnosticReason.TRANSPORT,
+                )
+            }
+            if (_lifecycle.value != RoomLifecycleState.Expired) {
+                _lifecycle.value = RoomLifecycleState.Closed
+            }
+            incomingHostMessages.close()
+            onClosed()
             diagnostics.event(
-                P2pDiagnosticEventName.CLEANUP_FAILED,
+                P2pDiagnosticEventName.CLEANUP_COMPLETED,
                 P2pDiagnosticRole.PEER,
-                P2pDiagnosticResult.FAILURE,
-                P2pDiagnosticReason.TRANSPORT,
+                P2pDiagnosticResult.SUCCESS,
             )
         }
-        // kit.stop() is terminal — guard against a duplicate/late teardown.
-        runCatching { kit.stop() }.onFailure {
-            diagnostics.event(
-                P2pDiagnosticEventName.CLEANUP_FAILED,
-                P2pDiagnosticRole.PEER,
-                P2pDiagnosticResult.FAILURE,
-                P2pDiagnosticReason.TRANSPORT,
-            )
-        }
-        if (_lifecycle.value != RoomLifecycleState.Expired) {
-            _lifecycle.value = RoomLifecycleState.Closed
-        }
-        incomingHostMessages.close()
-        onClosed()
-        diagnostics.event(
-            P2pDiagnosticEventName.CLEANUP_COMPLETED,
-            P2pDiagnosticRole.PEER,
-            P2pDiagnosticResult.SUCCESS,
-        )
     }
 }
