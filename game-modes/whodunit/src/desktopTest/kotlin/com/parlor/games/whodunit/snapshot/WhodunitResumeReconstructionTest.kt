@@ -92,6 +92,11 @@ class WhodunitResumeReconstructionTest {
         Player(PlayerId("p4"), "Diego", seat = 3),
     )
 
+    private fun sixPlayers() = fourPlayers() + listOf(
+        Player(PlayerId("p5"), "Eve", seat = 4),
+        Player(PlayerId("p6"), "Farah", seat = 5),
+    )
+
     private suspend fun loadValidatedCase(): ValidatedCase<WhodunitCase> {
         val bundled = BundledWhodunitCases(
             knownCaseIds = listOf("last-dinner"),
@@ -402,7 +407,7 @@ class WhodunitResumeReconstructionTest {
                 sessionId = sessionId,
                 caseId = CaseId(case.envelope.caseId),
                 modeId = WhodunitIds.ClassicVoteModeId,
-                players = fourPlayers(),
+                players = sixPlayers(),
                 randomSeed = 91L,
             ),
         )

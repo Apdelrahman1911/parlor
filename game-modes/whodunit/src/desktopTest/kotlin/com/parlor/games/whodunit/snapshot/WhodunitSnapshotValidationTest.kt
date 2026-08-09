@@ -437,8 +437,7 @@ class WhodunitSnapshotValidationTest {
     fun loadedCaseBoundaryAcceptsMatchingAssignedState() {
         WhodunitStateValidator.requireValidForCase(
             assigned,
-            expectedCaseId = CaseId("snapshot-case"),
-            payload = case(),
+            case = validatedCase(),
         )
     }
 
@@ -447,8 +446,7 @@ class WhodunitSnapshotValidationTest {
         assertFailsWith<IllegalArgumentException> {
             WhodunitStateValidator.requireValidForCase(
                 assigned,
-                expectedCaseId = CaseId("replacement-case"),
-                payload = case(),
+                case = validatedCase(caseId = "replacement-case"),
             )
         }
 
@@ -466,8 +464,7 @@ class WhodunitSnapshotValidationTest {
         assertFailsWith<IllegalArgumentException> {
             WhodunitStateValidator.requireValidForCase(
                 staleAssignment,
-                expectedCaseId = CaseId("snapshot-case"),
-                payload = case(),
+                case = validatedCase(),
             )
         }
 
@@ -489,36 +486,42 @@ class WhodunitSnapshotValidationTest {
         assertFailsWith<IllegalArgumentException> {
             WhodunitStateValidator.requireValidForCase(
                 staleKiller,
-                expectedCaseId = CaseId("snapshot-case"),
-                payload = case(),
+                case = validatedCase(),
             )
         }
     }
 
     @Test
     fun loadedCaseBoundaryRejectsUnknownOrChangedClue() {
-        val unknown = stateWithClue(ClueId("removed-clue"), "Removed")
+        val valid = stateWithFirstClue()
+        val unknown = valid.copy(
+            public = valid.public.copy(
+                revealedClues = listOf(RevealedClue(ClueId("removed-clue"), "Removed", 1)),
+            ),
+            hostOnly = valid.hostOnly.copy(drawnClueIds = setOf(ClueId("removed-clue"))),
+        )
         assertFailsWith<IllegalArgumentException> {
             WhodunitStateValidator.requireValidForCase(
                 unknown,
-                expectedCaseId = CaseId("snapshot-case"),
-                payload = case(),
+                case = validatedCase(),
             )
         }
 
-        val changedText = stateWithClue(ClueId("public"), "Changed after save")
+        val changedText = valid.copy(
+            public = valid.public.copy(
+                revealedClues = listOf(valid.public.revealedClues.single().copy(text = "Changed after save")),
+            ),
+        )
         assertFailsWith<IllegalArgumentException> {
             WhodunitStateValidator.requireValidForCase(
                 changedText,
-                expectedCaseId = CaseId("snapshot-case"),
-                payload = case(),
+                case = validatedCase(),
             )
         }
 
         WhodunitStateValidator.requireValidForCase(
-            stateWithClue(ClueId("public"), "Public"),
-            expectedCaseId = CaseId("snapshot-case"),
-            payload = case(),
+            valid,
+            case = validatedCase(),
         )
     }
 
@@ -534,14 +537,14 @@ class WhodunitSnapshotValidationTest {
         assertFailsWith<IllegalArgumentException> { codec.decode(bytes) }
     }
 
-    private fun stateWithClue(id: ClueId, text: String): WhodunitState = assigned.copy(
-        phase = WhodunitPhase.Round(1),
-        public = assigned.public.copy(
-            currentRound = 1,
-            revealedClues = listOf(RevealedClue(id, text, roundIndex = 1)),
+    private fun stateWithFirstClue(): WhodunitState = WhodunitReducer.reduce(
+        assigned.copy(
+            phase = WhodunitPhase.Round(1),
+            public = assigned.public.copy(currentRound = 1),
         ),
-        hostOnly = assigned.hostOnly.copy(drawnClueIds = setOf(id)),
-    )
+        WhodunitAction.RevealNextClue,
+        reducerContext(),
+    ).newState
 
     private fun classicFinalVoteState(): WhodunitState {
         val clues = (1..3).map { round ->
@@ -567,6 +570,9 @@ class WhodunitSnapshotValidationTest {
         random = RandomSource.seeded(7L),
         case = validatedWhodunitCaseForTest(case(), caseId = "snapshot-case"),
     )
+
+    private fun validatedCase(caseId: String = "snapshot-case") =
+        validatedWhodunitCaseForTest(case(), caseId = caseId)
 
     private fun assignedState(): WhodunitState {
         val definition = WhodunitDefinition(json)

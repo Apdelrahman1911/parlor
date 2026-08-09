@@ -155,7 +155,7 @@ class TiedRevoteTest {
         session.revealRolesAndAdvance(players)
         for (roundIndex in 1..3) {
             session.submit(WhodunitAction.RevealNextClue)
-            session.submit(WhodunitAction.StartDiscussionTimer(30))
+            session.submit(WhodunitAction.StartDiscussionTimer(180))
             session.submit(WhodunitAction.AdvanceFromDiscussion)
         }
     }
@@ -235,7 +235,7 @@ class TiedRevoteTest {
 
         // Round 1: reveal clue, discussion advance opens an Elimination vote.
         session.submit(WhodunitAction.RevealNextClue)
-        session.submit(WhodunitAction.StartDiscussionTimer(30))
+        session.submit(WhodunitAction.StartDiscussionTimer(180))
         session.submit(WhodunitAction.AdvanceFromDiscussion)
         val firstCollecting = stateOf(session).public.voteState as VoteState.Collecting
 
@@ -346,7 +346,7 @@ class TiedRevoteTest {
         for (i in 1..4) session.submit(WhodunitAction.AdvanceBriefingCard(i))
         session.revealRolesAndAdvance(players)
         session.submit(WhodunitAction.RevealNextClue)
-        session.submit(WhodunitAction.StartDiscussionTimer(30))
+        session.submit(WhodunitAction.StartDiscussionTimer(180))
         session.submit(WhodunitAction.AdvanceFromDiscussion)
 
         val killer = hostState(session).hostOnly.killerId
@@ -450,7 +450,7 @@ class TiedRevoteTest {
         for (i in 1..4) session.submit(WhodunitAction.AdvanceBriefingCard(i))
         session.revealRolesAndAdvance(players)
         session.submit(WhodunitAction.RevealNextClue)
-        session.submit(WhodunitAction.StartDiscussionTimer(30))
+        session.submit(WhodunitAction.StartDiscussionTimer(180))
         session.submit(WhodunitAction.AdvanceFromDiscussion)
         val ballot = (stateOf(session).public.voteState as VoteState.Collecting).ballotPlayerIds
         val roundBefore = (stateOf(session).phase as WhodunitPhase.Round).index
@@ -489,7 +489,7 @@ class TiedRevoteTest {
         for (i in 1..4) session.submit(WhodunitAction.AdvanceBriefingCard(i))
         session.revealRolesAndAdvance(players)
         session.submit(WhodunitAction.RevealNextClue)
-        session.submit(WhodunitAction.StartDiscussionTimer(30))
+        session.submit(WhodunitAction.StartDiscussionTimer(180))
         session.submit(WhodunitAction.AdvanceFromDiscussion)
 
         val killer = hostState(session).hostOnly.killerId

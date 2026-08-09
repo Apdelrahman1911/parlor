@@ -234,7 +234,7 @@ class WhodunitMultiDeviceShapeTest {
         for (roundIndex in 1..3) {
             host.submit(WhodunitAction.RevealNextClue)
             assertPeerMirrorsHostAndRedactsHostOnly(host, peers, "clue revealed r$roundIndex")
-            host.submit(WhodunitAction.StartDiscussionTimer(30))
+            host.submit(WhodunitAction.StartDiscussionTimer(180))
             assertPeerMirrorsHostAndRedactsHostOnly(host, peers, "timer started r$roundIndex")
             host.submit(WhodunitAction.AdvanceFromDiscussion)
             assertPeerMirrorsHostAndRedactsHostOnly(host, peers, "advance from discussion r$roundIndex")
@@ -320,7 +320,7 @@ class WhodunitMultiDeviceShapeTest {
         host.submit(WhodunitAction.AdvanceFromCharacterReveal); pin("Round-1-entry")
         for (r in 1..3) {
             host.submit(WhodunitAction.RevealNextClue); pin("Round$r-clue")
-            host.submit(WhodunitAction.StartDiscussionTimer(30)); pin("Round$r-timer")
+            host.submit(WhodunitAction.StartDiscussionTimer(180)); pin("Round$r-timer")
             host.submit(WhodunitAction.AdvanceFromDiscussion); pin("Round$r-advance")
         }
         val killer = host.hostState!!.value.state.hostOnly.killerId

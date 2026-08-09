@@ -590,7 +590,7 @@ class PartyConnectionEventsTest {
         for (index in 1..4) session.submit(WhodunitAction.AdvanceBriefingCard(index))
         session.revealRolesAndAdvance(players)
         session.submit(WhodunitAction.RevealNextClue)
-        session.submit(WhodunitAction.StartDiscussionTimer(60))
+        session.submit(WhodunitAction.StartDiscussionTimer(180))
     }
 
     private fun peerHeader(

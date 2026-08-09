@@ -1,12 +1,16 @@
 package com.parlor.games.whodunit.domain.state
 
-import com.parlor.core.ids.CaseId
+import com.parlor.content.validation.ValidatedCase
+import com.parlor.core.ids.CharacterId
+import com.parlor.core.ids.ClueId
 import com.parlor.games.whodunit.WhodunitIds
 import com.parlor.games.whodunit.content.Clue
 import com.parlor.games.whodunit.content.WhodunitCase
 import com.parlor.games.whodunit.domain.event.KillerWinCause
 import com.parlor.games.whodunit.domain.event.Verdict
 import com.parlor.games.whodunit.domain.phase.WhodunitPhase
+import com.parlor.games.whodunit.domain.rules.WhodunitCluePolicy
+import com.parlor.games.whodunit.domain.rules.WhodunitRoundPolicy
 import com.parlor.games.whodunit.domain.rules.WhodunitRules
 
 /**
@@ -64,11 +68,19 @@ internal object WhodunitStateValidator {
      */
     fun requireValidForCase(
         state: WhodunitState,
-        expectedCaseId: CaseId,
-        payload: WhodunitCase,
+        case: ValidatedCase<WhodunitCase>,
     ) {
         requireValid(state)
-        require(state.public.caseId == expectedCaseId) { "State belongs to another case" }
+        require(
+            WhodunitRules.isSupportedByCase(
+                case = case,
+                caseId = state.public.caseId,
+                modeId = state.public.modeId,
+                playerCount = state.players.size,
+            ),
+        ) { "State is unsupported by the loaded case" }
+
+        val payload = case.payload
 
         val characterIds = payload.characters.map { it.id }
         require(characterIds.size == characterIds.toSet().size) {
@@ -86,19 +98,53 @@ internal object WhodunitStateValidator {
             "State references a character absent from the loaded case"
         }
 
-        val clues = payload.allClues()
-        require(clues.map { it.id }.toSet().size == clues.size) {
-            "Case contains duplicate clue ids"
-        }
-        val cluesById = clues.associateBy { it.id }
-        state.public.revealedClues.forEach { revealed ->
-            val authored = cluesById[revealed.id.raw]
-                ?: throw IllegalArgumentException("State references a clue absent from the loaded case")
-            require(authored.text == revealed.text) {
-                "Revealed clue text differs from the loaded case"
+        if (state.hostOnly.seatToCharacter.isNotEmpty()) {
+            val authoredKiller = payload.characters.single {
+                it.id == state.hostOnly.killerCharacterId.raw
             }
-            require(authored.appliesToModes?.let { state.public.modeId.raw in it } != false) {
-                "Revealed clue does not apply to the active mode"
+            val assignedCharacters = state.hostOnly.seatToCharacter.values.toSet()
+            val expectedTargets = authoredKiller.guiltyBrief.deflectionTargets
+                .map(::CharacterId)
+                .filter(assignedCharacters::contains)
+            require(state.hostOnly.redHerringTargets == expectedTargets) {
+                "Deflection targets differ from the loaded case"
+            }
+        }
+
+        var expectedDrawnClues = emptySet<ClueId>()
+        state.public.revealedClues.forEach { revealed ->
+            val expected = WhodunitCluePolicy.select(
+                case = payload,
+                killerCharacterId = state.hostOnly.killerCharacterId,
+                modeId = state.public.modeId,
+                playerCount = state.players.size,
+                randomSeed = state.hostOnly.randomSeed,
+                roundIndex = revealed.roundIndex,
+                drawnClueIds = expectedDrawnClues,
+            ) ?: throw IllegalArgumentException("Loaded case cannot reproduce clue history")
+            require(revealed.id == ClueId(expected.id) && revealed.text == expected.text) {
+                "Revealed clue differs from deterministic case history"
+            }
+            expectedDrawnClues = expectedDrawnClues + revealed.id
+        }
+        require(state.hostOnly.drawnClueIds == expectedDrawnClues) {
+            "Drawn clues differ from deterministic case history"
+        }
+
+        state.public.timer?.let { timer ->
+            val expectedSeconds = WhodunitRoundPolicy.discussionSeconds(
+                case = payload,
+                roundIndex = state.public.currentRound,
+                playerCount = state.players.size,
+            )
+            require(timer.timerId == "discussion-${state.public.currentRound}") {
+                "Timer belongs to another authored round"
+            }
+            require(timer.totalSeconds == expectedSeconds) {
+                "Timer duration differs from the loaded case"
+            }
+            require(timer.remainingSeconds in 0..expectedSeconds) {
+                "Timer remainder is outside the authored duration"
             }
         }
     }

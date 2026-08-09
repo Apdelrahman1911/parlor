@@ -191,7 +191,7 @@ class WhodunitRulesInvariantTest {
                     val roundsToDrive = if (modeId == WhodunitIds.EliminationModeId) 1 else rounds
                     repeat(roundsToDrive) {
                         state = submitValid(state, WhodunitAction.RevealNextClue)
-                        state = submitValid(state, WhodunitAction.StartDiscussionTimer(60))
+                        state = submitValid(state, WhodunitAction.StartDiscussionTimer(180))
                         state = submitValid(state, WhodunitAction.AdvanceFromDiscussion)
                     }
 

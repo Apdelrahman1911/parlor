@@ -448,8 +448,7 @@ internal fun validateResumedSessionForCase(
     } else {
         WhodunitStateValidator.requireValidForCase(
             state = resumed.state,
-            expectedCaseId = CaseId(case.envelope.caseId),
-            payload = case.payload,
+            case = case,
         )
         Result.Success(Unit)
     }

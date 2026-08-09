@@ -170,7 +170,7 @@ class PauseRefuseLeaveTest {
         for (i in 1..4) session.submit(WhodunitAction.AdvanceBriefingCard(i))
         session.revealRolesAndAdvance(players)
         session.submit(WhodunitAction.RevealNextClue)
-        session.submit(WhodunitAction.StartDiscussionTimer(60))
+        session.submit(WhodunitAction.StartDiscussionTimer(180))
     }
 
     private suspend fun driveToFinalVote(
@@ -190,7 +190,7 @@ class PauseRefuseLeaveTest {
         val lastRound = if (players.size <= 4) 3 else 4
         for (roundIndex in 1..lastRound) {
             session.submit(WhodunitAction.RevealNextClue)
-            session.submit(WhodunitAction.StartDiscussionTimer(30))
+            session.submit(WhodunitAction.StartDiscussionTimer(180))
             session.submit(WhodunitAction.AdvanceFromDiscussion)
         }
     }
@@ -469,7 +469,7 @@ class PauseRefuseLeaveTest {
         // In Elimination Mode, voting happens at the end of each round. Drive
         // through round 1's clue + discussion, then vote.
         session.submit(WhodunitAction.RevealNextClue)
-        session.submit(WhodunitAction.StartDiscussionTimer(30))
+        session.submit(WhodunitAction.StartDiscussionTimer(180))
         session.submit(WhodunitAction.AdvanceFromDiscussion)
         val firstVoteOpened = stateOf(session).public.voteState
         assertThat(firstVoteOpened).isInstanceOf(VoteState.Collecting::class)

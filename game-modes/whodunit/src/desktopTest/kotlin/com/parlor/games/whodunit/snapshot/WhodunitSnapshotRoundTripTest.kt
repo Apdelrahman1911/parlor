@@ -215,7 +215,7 @@ class WhodunitSnapshotRoundTripTest {
         session.revealRolesAndAdvance(players)
         for (roundIndex in 1..3) {
             session.submit(WhodunitAction.RevealNextClue)
-            session.submit(WhodunitAction.StartDiscussionTimer(30))
+            session.submit(WhodunitAction.StartDiscussionTimer(180))
             session.submit(WhodunitAction.AdvanceFromDiscussion)
         }
         val killer = session.hostState!!.value.state.hostOnly.killerId

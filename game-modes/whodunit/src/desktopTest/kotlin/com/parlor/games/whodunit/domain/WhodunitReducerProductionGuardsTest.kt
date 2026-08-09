@@ -79,9 +79,9 @@ class WhodunitReducerProductionGuardsTest {
         assertThat(duplicateReveal.newState).isEqualTo(firstReveal.newState)
         assertThat(duplicateReveal.events).isEqualTo(emptyList())
 
-        val firstTimer = reduce(firstReveal.newState, WhodunitAction.StartDiscussionTimer(60))
+        val firstTimer = reduce(firstReveal.newState, WhodunitAction.StartDiscussionTimer(180))
         val ticked = reduce(firstTimer.newState, WhodunitAction.TimerTicked(20)).newState
-        val duplicateStart = reduce(ticked, WhodunitAction.StartDiscussionTimer(60))
+        val duplicateStart = reduce(ticked, WhodunitAction.StartDiscussionTimer(180))
         assertThat(duplicateStart.newState.public.timer?.remainingSeconds).isEqualTo(20)
         assertThat(duplicateStart.events).isEqualTo(emptyList())
     }

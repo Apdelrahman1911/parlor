@@ -27,6 +27,7 @@ import com.parlor.games.whodunit.domain.phase.WhodunitPhase
 import com.parlor.games.whodunit.domain.reducer.WhodunitReducerContext
 import com.parlor.games.whodunit.domain.state.WhodunitState
 import com.parlor.games.whodunit.resources.Res
+import com.parlor.games.whodunit.testing.validatedWhodunitCaseForTest
 import com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostRoomBridge
 import com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitPeerRoomBridge
 import com.parlor.networking.protocol.HostMessage
@@ -559,7 +560,8 @@ class MultiDevicePartyPlayContractTest {
             json = json,
         )
         val res = repo.loadCase(CaseId("last-dinner"), WhodunitPayloadValidator(json))
-        return (res as Result.Success).data
+        val payload = (res as Result.Success).data.payload
+        return validatedWhodunitCaseForTest(payload, caseId = "last-dinner")
     }
 }
 

@@ -123,12 +123,12 @@ class ContinueWithoutPlayerTest {
         for (i in 1..4) session.submit(WhodunitAction.AdvanceBriefingCard(i))
         session.revealRolesAndAdvance(players)
         session.submit(WhodunitAction.RevealNextClue)
-        session.submit(WhodunitAction.StartDiscussionTimer(60))
+        session.submit(WhodunitAction.StartDiscussionTimer(180))
         session.submit(WhodunitAction.MarkPlayerDisconnected(players[3].id))
 
         assertThat(stateOf(session).public.paused).isEqualTo(true)
         assertThat(stateOf(session).public.timer?.paused).isEqualTo(true)
-        assertThat(stateOf(session).public.timer?.remainingSeconds).isEqualTo(60)
+        assertThat(stateOf(session).public.timer?.remainingSeconds).isEqualTo(180)
 
         // In-flight messages from before the disconnect cannot consume time or
         // advance the round.
@@ -136,7 +136,7 @@ class ContinueWithoutPlayerTest {
         session.submit(WhodunitAction.TimerExpired)
         session.submit(WhodunitAction.AdvanceFromDiscussion)
         assertThat((phaseOf(session) as WhodunitPhase.Round).index).isEqualTo(1)
-        assertThat(stateOf(session).public.timer?.remainingSeconds).isEqualTo(60)
+        assertThat(stateOf(session).public.timer?.remainingSeconds).isEqualTo(180)
 
         session.submit(WhodunitAction.MarkPlayerReconnected(players[3].id))
         session.submit(WhodunitAction.Resume)

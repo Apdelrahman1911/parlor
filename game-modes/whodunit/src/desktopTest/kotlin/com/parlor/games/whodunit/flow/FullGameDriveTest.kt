@@ -190,7 +190,7 @@ class FullGameDriveTest {
         // Three rounds for a 4-player Classic game → FinalVote
         for (roundIndex in 1..3) {
             session.submit(WhodunitAction.RevealNextClue)
-            session.submit(WhodunitAction.StartDiscussionTimer(60))
+            session.submit(WhodunitAction.StartDiscussionTimer(180))
             session.submit(WhodunitAction.AdvanceFromDiscussion)
         }
         val atVote = stateOf(session)
@@ -237,7 +237,7 @@ class FullGameDriveTest {
         session.revealRolesAndAdvance(players)
         for (roundIndex in 1..3) {
             session.submit(WhodunitAction.RevealNextClue)
-            session.submit(WhodunitAction.StartDiscussionTimer(60))
+            session.submit(WhodunitAction.StartDiscussionTimer(180))
             session.submit(WhodunitAction.AdvanceFromDiscussion)
         }
 
@@ -275,7 +275,7 @@ class FullGameDriveTest {
 
         // Round 1 in Elimination mode: discussion advance opens a vote.
         session.submit(WhodunitAction.RevealNextClue)
-        session.submit(WhodunitAction.StartDiscussionTimer(30))
+        session.submit(WhodunitAction.StartDiscussionTimer(180))
         session.submit(WhodunitAction.AdvanceFromDiscussion)
         assertThat(stateOf(session).public.voteState).isInstanceOf(VoteState.Collecting::class)
 
@@ -318,7 +318,7 @@ class FullGameDriveTest {
         session.revealRolesAndAdvance(players)
 
         session.submit(WhodunitAction.RevealNextClue)
-        session.submit(WhodunitAction.StartDiscussionTimer(30))
+        session.submit(WhodunitAction.StartDiscussionTimer(180))
         session.submit(WhodunitAction.AdvanceFromDiscussion)
         assertThat(stateOf(session).public.voteState).isInstanceOf(VoteState.Collecting::class)
 
@@ -372,7 +372,7 @@ class FullGameDriveTest {
         session.revealRolesAndAdvance(players)
         for (roundIndex in 1..3) {
             session.submit(WhodunitAction.RevealNextClue)
-            session.submit(WhodunitAction.StartDiscussionTimer(30))
+            session.submit(WhodunitAction.StartDiscussionTimer(180))
             session.submit(WhodunitAction.AdvanceFromDiscussion)
         }
         val killerId = hostState(session).hostOnly.killerId

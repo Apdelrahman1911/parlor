@@ -165,7 +165,7 @@ class PartyPlayPassAndPlayParityTest {
         driver(WhodunitAction.AdvanceFromCharacterReveal)
         for (round in 1..3) {
             driver(WhodunitAction.RevealNextClue)
-            driver(WhodunitAction.StartDiscussionTimer(60))
+            driver(WhodunitAction.StartDiscussionTimer(180))
             driver(WhodunitAction.AdvanceFromDiscussion)
         }
         val killer = killerHint()

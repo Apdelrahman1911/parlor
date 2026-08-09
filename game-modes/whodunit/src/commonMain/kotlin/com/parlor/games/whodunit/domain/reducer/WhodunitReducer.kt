@@ -16,6 +16,7 @@ import com.parlor.games.whodunit.domain.event.Verdict
 import com.parlor.games.whodunit.domain.event.WhodunitEvent
 import com.parlor.games.whodunit.domain.phase.WhodunitPhase
 import com.parlor.games.whodunit.domain.rules.WhodunitCluePolicy
+import com.parlor.games.whodunit.domain.rules.WhodunitRoundPolicy
 import com.parlor.games.whodunit.domain.rules.WhodunitRules
 import com.parlor.games.whodunit.domain.state.PartyReadiness
 import com.parlor.games.whodunit.domain.state.PlayerRole
@@ -87,7 +88,11 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
             // Rounds (Phase 5)
             WhodunitAction.RevealNextClue -> revealNextClue(state, wctx)
             is WhodunitAction.SubmitStructuredAction -> Reduction(state)
-            is WhodunitAction.StartDiscussionTimer -> startDiscussionTimer(state, action.seconds)
+            is WhodunitAction.StartDiscussionTimer -> startDiscussionTimer(
+                state,
+                action.seconds,
+                wctx,
+            )
             WhodunitAction.PauseDiscussionTimer -> pauseDiscussionTimer(state)
             WhodunitAction.ResumeDiscussionTimer -> resumeDiscussionTimer(state)
             is WhodunitAction.TimerTicked -> timerTicked(state, action.remainingSeconds)
@@ -596,7 +601,11 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
     private fun isLastRound(modeId: com.parlor.core.ids.ModeId, playerCount: Int, roundIndex: Int): Boolean =
         WhodunitRules.maximumRoundCount(modeId, playerCount)?.let { roundIndex >= it } ?: false
 
-    private fun startDiscussionTimer(state: WhodunitState, seconds: Int): Reduction<WhodunitState, WhodunitEvent> {
+    private fun startDiscussionTimer(
+        state: WhodunitState,
+        seconds: Int,
+        ctx: WhodunitReducerContext,
+    ): Reduction<WhodunitState, WhodunitEvent> {
         val round = state.phase as? WhodunitPhase.Round ?: return Reduction(state)
         if (state.public.voteState != VoteState.Idle || state.public.timer != null) {
             return Reduction(state)
@@ -604,7 +613,12 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
         if (state.public.revealedClues.none { it.roundIndex == round.index }) {
             return Reduction(state)
         }
-        if (seconds !in WhodunitRules.MIN_DISCUSSION_SECONDS..WhodunitRules.MAX_DISCUSSION_SECONDS) {
+        val authoredSeconds = WhodunitRoundPolicy.discussionSeconds(
+            case = ctx.payload,
+            roundIndex = round.index,
+            playerCount = state.players.size,
+        )
+        if (seconds != authoredSeconds) {
             return Reduction(state)
         }
         val timer = PublicTimerState(
