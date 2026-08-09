@@ -7,6 +7,20 @@ internal data class DiscoveryCandidate(
     val endpointVersion: String,
 )
 
+/**
+ * One scheduler-owned dial lease.
+ *
+ * [observationGeneration] prevents a late result from an older service
+ * incarnation from poisoning a candidate that disappeared/reappeared (or
+ * changed endpoint metadata) while the attempt was in flight.
+ */
+internal data class DiscoveryAttempt(
+    val candidate: DiscoveryCandidate,
+    val observationGeneration: Long,
+    /** Absolute scheduler time; the adapter must cancel the dial at this point. */
+    val deadlineAtMs: Long,
+)
+
 internal enum class DiscoveryAttemptResult {
     TransientFailure,
     WrongRoom,
@@ -19,16 +33,23 @@ internal enum class DiscoveryAttemptResult {
  */
 internal class DiscoveryCandidateScheduler(
     private val totalDeadlineMs: Long,
+    private val perAttemptTimeoutMs: Long = DEFAULT_PER_ATTEMPT_TIMEOUT_MS,
     private val maxAttemptsPerCandidate: Int = MAX_ATTEMPTS_PER_CANDIDATE,
 ) {
     private data class CandidateState(
         var endpointVersion: String,
         var visible: Boolean,
         var generation: Long,
-        var attempts: Int = 0,
+        var totalAttempts: Int = 0,
+        var transientFailuresInBurst: Int = 0,
         var nextEligibleAtMs: Long = 0L,
-        var terminalResult: DiscoveryAttemptResult? = null,
     )
+
+    init {
+        require(totalDeadlineMs >= 0L) { "totalDeadlineMs must be non-negative" }
+        require(perAttemptTimeoutMs > 0L) { "perAttemptTimeoutMs must be positive" }
+        require(maxAttemptsPerCandidate > 0) { "maxAttemptsPerCandidate must be positive" }
+    }
 
     private val states = mutableMapOf<String, CandidateState>()
     private var sawWrongRoom: Boolean = false
@@ -47,64 +68,91 @@ internal class DiscoveryCandidateScheduler(
                     endpointVersion = candidate.endpointVersion,
                     visible = true,
                     generation = 1L,
+                    nextEligibleAtMs = nowMs,
                 )
                 !existing.visible || existing.endpointVersion != candidate.endpointVersion -> {
                     existing.endpointVersion = candidate.endpointVersion
                     existing.visible = true
                     existing.generation += 1L
-                    existing.attempts = 0
+                    existing.totalAttempts = 0
+                    existing.transientFailuresInBurst = 0
                     existing.nextEligibleAtMs = nowMs
-                    existing.terminalResult = null
                 }
                 else -> existing.visible = true
             }
         }
     }
 
-    /** Returns one eligible candidate and atomically consumes one attempt. */
-    fun next(nowMs: Long): DiscoveryCandidate? {
+    /** Returns one eligible, deadline-bounded dial lease and consumes one attempt. */
+    fun next(nowMs: Long): DiscoveryAttempt? {
         if (nowMs >= totalDeadlineMs) return null
         val selected = states.entries
             .asSequence()
             .filter { (_, state) ->
                 state.visible &&
-                    state.terminalResult == null &&
-                    state.attempts < maxAttemptsPerCandidate &&
+                    state.totalAttempts < maxAttemptsPerCandidate &&
                     state.nextEligibleAtMs <= nowMs
             }
             .sortedWith(
-                compareBy<Map.Entry<String, CandidateState>> { it.value.attempts }
+                // Candidates that have consumed less of their retry budget go
+                // first. A late correct room therefore pre-empts an older wrong
+                // or unreachable room without starving either candidate.
+                compareBy<Map.Entry<String, CandidateState>> { it.value.totalAttempts }
                     .thenBy { it.value.nextEligibleAtMs }
                     .thenBy { it.key },
             )
             .firstOrNull()
             ?: return null
-        selected.value.attempts += 1
-        return DiscoveryCandidate(selected.key, selected.value.endpointVersion)
+        selected.value.totalAttempts += 1
+        val remainingMs = totalDeadlineMs - nowMs
+        return DiscoveryAttempt(
+            candidate = DiscoveryCandidate(selected.key, selected.value.endpointVersion),
+            observationGeneration = selected.value.generation,
+            deadlineAtMs = nowMs + minOf(perAttemptTimeoutMs, remainingMs),
+        )
     }
 
     fun recordResult(
-        candidate: DiscoveryCandidate,
+        attempt: DiscoveryAttempt,
         result: DiscoveryAttemptResult,
         nowMs: Long,
     ) {
+        val candidate = attempt.candidate
         val state = states[candidate.key] ?: return
-        if (state.endpointVersion != candidate.endpointVersion) return
+        if (
+            state.generation != attempt.observationGeneration ||
+            state.endpointVersion != candidate.endpointVersion
+        ) {
+            return
+        }
         when (result) {
             DiscoveryAttemptResult.TransientFailure -> {
-                if (state.attempts >= maxAttemptsPerCandidate) {
-                    state.terminalResult = result
+                state.transientFailuresInBurst += 1
+                if (state.transientFailuresInBurst >= TRANSIENT_BURST_ATTEMPTS) {
+                    // Four fast retries cover ordinary discovery/dial races. A
+                    // longer recovery probe then keeps the same advertised host
+                    // eligible if Wi-Fi or its listener recovers without a new
+                    // discovery emission.
+                    state.transientFailuresInBurst = 0
+                    state.nextEligibleAtMs = nowMs + RECOVERY_PROBE_COOLDOWN_MS
                 } else {
-                    state.nextEligibleAtMs = nowMs + backoffAfterAttempt(state.attempts)
+                    state.nextEligibleAtMs = nowMs +
+                        backoffAfterTransientFailure(state.transientFailuresInBurst)
                 }
             }
             DiscoveryAttemptResult.WrongRoom -> {
                 sawWrongRoom = true
-                state.terminalResult = result
+                state.transientFailuresInBurst = 0
+                // P2pKit rc2 does not expose a Bonjour service-incarnation id.
+                // Re-probing after a long cooldown is therefore the only way to
+                // observe a host that recreated a different room under the same
+                // stable PeerId/name without first disappearing from the list.
+                state.nextEligibleAtMs = nowMs + WRONG_ROOM_REPROBE_COOLDOWN_MS
             }
             DiscoveryAttemptResult.IncompatibleProtocol -> {
                 sawIncompatibleProtocol = true
-                state.terminalResult = result
+                state.transientFailuresInBurst = 0
+                state.nextEligibleAtMs = nowMs + INCOMPATIBLE_REPROBE_COOLDOWN_MS
             }
         }
     }
@@ -116,8 +164,7 @@ internal class DiscoveryCandidateScheduler(
             .asSequence()
             .filter {
                 it.visible &&
-                    it.terminalResult == null &&
-                    it.attempts < maxAttemptsPerCandidate
+                    it.totalAttempts < maxAttemptsPerCandidate
             }
             .map(CandidateState::nextEligibleAtMs)
             .minOrNull()
@@ -131,16 +178,21 @@ internal class DiscoveryCandidateScheduler(
         else -> DiscoveryFinalError.Timeout
     }
 
-    private fun backoffAfterAttempt(attempt: Int): Long = when (attempt) {
+    private fun backoffAfterTransientFailure(attempt: Int): Long = when (attempt) {
         1 -> 500L
         2 -> 1_000L
         3 -> 2_000L
-        4 -> 4_000L
-        else -> 5_000L
+        else -> RECOVERY_PROBE_COOLDOWN_MS
     }
 
     companion object {
-        const val MAX_ATTEMPTS_PER_CANDIDATE: Int = 4
+        /** Hard bound even when failures return immediately. */
+        const val MAX_ATTEMPTS_PER_CANDIDATE: Int = 16
+        const val DEFAULT_PER_ATTEMPT_TIMEOUT_MS: Long = 5_000L
+        private const val TRANSIENT_BURST_ATTEMPTS: Int = 4
+        private const val RECOVERY_PROBE_COOLDOWN_MS: Long = 5_000L
+        private const val WRONG_ROOM_REPROBE_COOLDOWN_MS: Long = 5_000L
+        private const val INCOMPATIBLE_REPROBE_COOLDOWN_MS: Long = 10_000L
     }
 }
 

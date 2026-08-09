@@ -22,6 +22,7 @@ import com.parlor.networking.protocol.ProtocolVersion
 import com.parlor.networking.protocol.RoomMessage
 import com.parlor.networking.protocol.RoomMessageCodec
 import com.parlor.networking.protocol.SessionEnvelopeHeader
+import com.parlor.networking.protocol.SessionEndReason
 import com.parlor.networking.room.NetError
 import com.parlor.networking.room.PeerEvent
 import com.parlor.networking.room.RoomInfo
@@ -1097,6 +1098,49 @@ class P2pKitRoomTransportLifecycleTest {
     }
 
     @Test
+    fun authoritative_session_end_disables_credential_resume_after_socket_close() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("peer-pid"))
+        val hostPeer = peer("host-pid", "Host Device")
+        val session = FakeP2pSession(hostPeer)
+        val resumeRequests = mutableListOf<ResumableSessionCredential>()
+        val room = PeerP2pRoom(
+            kit = kit,
+            session = session,
+            hostPeer = hostPeer,
+            roomCode = "ABCDEF",
+            scope = testScope,
+            codec = codec,
+            initialCredential = resumableCredential(generation = 1L),
+            resumeConnector = { credential ->
+                resumeRequests += credential
+                Result.Failure(NetError.Timeout)
+            },
+        )
+        val terminal = HostMessage.SessionEnded(
+            header = SessionEnvelopeHeader(
+                protocol = ProtocolVersion(),
+                sessionId = SessionId("session-terminal"),
+                gameId = GameId("game-terminal"),
+                gameVersion = 1,
+                messageId = "terminal-message-000000000001",
+                sequence = 1L,
+            ),
+            reason = SessionEndReason.HostLeft,
+            finalRevision = 2L,
+        )
+
+        session.incomingFlow.emit(P2pMessage.Binary(codec.encode(terminal)))
+        assertThat(withTimeout(2_000) { room.incoming.first() }).isEqualTo(terminal)
+        session.stateFlow.value = ConnectionState.Closed
+        repeat(10) { yield() }
+
+        assertThat(resumeRequests).isEmpty()
+        assertThat(room.sendToHost(PeerMessage.Heartbeat))
+            .isEqualTo(Result.Failure(NetError.NotConnected))
+        room.leave()
+    }
+
+    @Test
     fun peer_emits_host_lost_on_terminal_session_close() = runBlocking {
         val kit = FakeP2pKit(P2pPeerId("peer-pid"))
         val hostPeer = peer("host-pid", "Host Device")
@@ -1279,6 +1323,44 @@ class P2pKitRoomTransportLifecycleTest {
         joining.cancel(CancellationException("user aborted join"))
 
         assertFailsWith<CancellationException> { joining.await() }
+        awaitCondition { kit.stopCalls == 1 }
+    }
+
+    @Test
+    fun cancelling_an_in_flight_candidate_dial_propagates_and_stops_the_kit() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("self-pid"))
+        val hostPeer = peer(
+            "host-pid",
+            "${P2pKitRoomTransport.P2P_ROOM_PREFIX}Host",
+        )
+        val dialStarted = CompletableDeferred<Unit>()
+        val dialCancelled = CompletableDeferred<Unit>()
+        val neverCompletes = CompletableDeferred<Unit>()
+        kit.connectHandler = {
+            dialStarted.complete(Unit)
+            try {
+                neverCompletes.await()
+                error("unreachable")
+            } finally {
+                dialCancelled.complete(Unit)
+            }
+        }
+        kit.peersFlow.value = listOf(hostPeer)
+        val transport = P2pKitRoomTransport(
+            appId = AppId("com.parlor.test"),
+            deviceName = "self-device",
+            scope = testScope,
+            kitFactory = object : P2pKitFactory {
+                override suspend fun createKit(appId: AppId, deviceName: String): P2pKit = kit
+            },
+        )
+
+        val joining = async { transport.join("ABCDEF", "Alice") }
+        withTimeout(2_000L) { dialStarted.await() }
+        joining.cancel(CancellationException("user aborted candidate dial"))
+
+        assertFailsWith<CancellationException> { joining.await() }
+        withTimeout(2_000L) { dialCancelled.await() }
         awaitCondition { kit.stopCalls == 1 }
     }
 
@@ -1931,6 +2013,26 @@ class P2pKitRoomTransportLifecycleTest {
         assertThat(session.state.value).isEqualTo(ConnectionState.Closed)
         assertThat(kit.stopCalls).isEqualTo(1)
         assertThat(room.lifecycle.value).isEqualTo(RoomLifecycleState.Closed)
+    }
+
+    @Test
+    fun peer_rejects_encoded_frames_above_the_directional_host_limit() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("peer-pid"))
+        val hostPeer = peer("host-pid", "Host Device")
+        val session = FakeP2pSession(hostPeer)
+        val room = PeerP2pRoom(kit, session, hostPeer, "ABCDEF", testScope, codec)
+        session.sent.clear()
+
+        val result = room.sendToHost(
+            PeerMessage.ActionSubmit(
+                sender = PlayerId("forged"),
+                payload = ByteArray(P2pTrafficLimits.MAX_PEER_TO_HOST_FRAME_BYTES),
+            ),
+        )
+
+        assertThat(result).isEqualTo(Result.Failure(NetError.PayloadTooLarge))
+        assertThat(session.sent).isEmpty()
+        room.leave()
     }
 
     /**

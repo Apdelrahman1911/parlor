@@ -399,7 +399,10 @@ class P2pKitRoomTransport private constructor(
         }
         return try {
             val startedAt = TimeSource.Monotonic.markNow()
-            val scheduler = DiscoveryCandidateScheduler(totalDeadlineMs = joinTimeoutMs)
+            val scheduler = DiscoveryCandidateScheduler(
+                totalDeadlineMs = joinTimeoutMs,
+                perAttemptTimeoutMs = DIAL_AND_HANDSHAKE_TIMEOUT_MS,
+            )
             var result: Result<LocalRoom, NetError>? = null
             var lastVisibleCount: Int? = null
             while (result == null && startedAt.elapsedNow().inWholeMilliseconds < joinTimeoutMs) {
@@ -419,8 +422,8 @@ class P2pKitRoomTransport private constructor(
                     },
                     nowMs = elapsedMs,
                 )
-                val candidate = scheduler.next(elapsedMs)
-                if (candidate == null) {
+                val scheduledAttempt = scheduler.next(elapsedMs)
+                if (scheduledAttempt == null) {
                     val remainingMs = joinTimeoutMs - elapsedMs
                     val wakeDelayMs = minOf(
                         scheduler.nextWakeDelayMs(elapsedMs),
@@ -433,26 +436,34 @@ class P2pKitRoomTransport private constructor(
                     }
                     continue
                 }
+                val candidate = scheduledAttempt.candidate
                 val hostPeer = visiblePeers.firstOrNull {
                     it.id.value == candidate.key && it.endpointVersion() == candidate.endpointVersion
                 }
                 if (hostPeer == null) {
                     scheduler.recordResult(
-                        candidate,
+                        scheduledAttempt,
                         DiscoveryAttemptResult.TransientFailure,
                         elapsedMs,
                     )
                     continue
                 }
-                val remainingDialBudgetMs = joinTimeoutMs -
+                val remainingDialBudgetMs = scheduledAttempt.deadlineAtMs -
                     startedAt.elapsedNow().inWholeMilliseconds
-                if (remainingDialBudgetMs <= 0L) break
+                if (remainingDialBudgetMs <= 0L) {
+                    scheduler.recordResult(
+                        scheduledAttempt,
+                        DiscoveryAttemptResult.TransientFailure,
+                        startedAt.elapsedNow().inWholeMilliseconds,
+                    )
+                    continue
+                }
                 diagnostics.event(
                     P2pDiagnosticEventName.DISCOVERY_ATTEMPTED,
                     P2pDiagnosticRole.PEER,
                 )
                 val session = try {
-                    withTimeoutOrNull(minOf(DIAL_AND_HANDSHAKE_TIMEOUT_MS, remainingDialBudgetMs)) {
+                    withTimeoutOrNull(remainingDialBudgetMs) {
                         kit.connect(hostPeer)
                     }
                 } catch (failure: Throwable) {
@@ -467,7 +478,7 @@ class P2pKitRoomTransport private constructor(
                         P2pDiagnosticReason.TRANSPORT,
                     )
                     scheduler.recordResult(
-                        candidate,
+                        scheduledAttempt,
                         DiscoveryAttemptResult.TransientFailure,
                         startedAt.elapsedNow().inWholeMilliseconds,
                     )
@@ -532,12 +543,12 @@ class P2pKitRoomTransport private constructor(
                         runCatching { session.close() }
                         when (admission.reason) {
                             AdmissionRejection.WrongCode -> scheduler.recordResult(
-                                candidate,
+                                scheduledAttempt,
                                 DiscoveryAttemptResult.WrongRoom,
                                 startedAt.elapsedNow().inWholeMilliseconds,
                             )
                             AdmissionRejection.IncompatibleProtocol -> scheduler.recordResult(
-                                candidate,
+                                scheduledAttempt,
                                 DiscoveryAttemptResult.IncompatibleProtocol,
                                 startedAt.elapsedNow().inWholeMilliseconds,
                             )
@@ -547,7 +558,7 @@ class P2pKitRoomTransport private constructor(
                     is AdmissionOutcome.TransientFailure -> {
                         runCatching { session.close() }
                         scheduler.recordResult(
-                            candidate,
+                            scheduledAttempt,
                             DiscoveryAttemptResult.TransientFailure,
                             startedAt.elapsedNow().inWholeMilliseconds,
                         )
@@ -3099,6 +3110,8 @@ internal class PeerP2pRoom(
     private val sessionMutex = Mutex()
     private var lifecycleExpiryJob: Job? = null
     private var resumeJob: Job? = null
+    /** An authenticated host terminal frame permanently disables logical resume. */
+    private var terminalByHost = false
     private var activeSession: P2pSession = session
     private var collectorJob: Job = launchIncomingCollector(session)
     private var stateJob: Job = launchSessionStateCollector(session)
@@ -3430,6 +3443,13 @@ internal class PeerP2pRoom(
                 )
                 return@collect
             }
+            if (decoded is HostMessage.SessionEnded || decoded == HostMessage.EndSession) {
+                lifecycleMutex.withLock {
+                    terminalByHost = true
+                    resumeJob?.cancel()
+                    resumeJob = null
+                }
+            }
             when (decoded) {
                 is HostMessage.AdmissionAccepted,
                 is HostMessage.AdmissionOffered,
@@ -3547,7 +3567,7 @@ internal class PeerP2pRoom(
     private suspend fun beginForegroundResume() {
         val now = nowMillis()
         val deadline = lifecycleMutex.withLock {
-            if (left) return@withLock null
+            if (left || terminalByHost) return@withLock null
             when (val current = _lifecycle.value) {
                 RoomLifecycleState.Active -> (now + appResumeGraceMs).also { resumeDeadline ->
                     _lifecycle.value = RoomLifecycleState.Resuming(resumeDeadline)
@@ -3577,13 +3597,19 @@ internal class PeerP2pRoom(
         Result.Failure(NetError.Unauthorized)
 
     override suspend fun sendToHost(message: PeerMessage): Result<Unit, NetError> {
-        val session = sessionMutex.withLock { activeSession }
+        val session = lifecycleMutex.withLock {
+            if (left || terminalByHost) return Result.Failure(NetError.NotConnected)
+            sessionMutex.withLock { activeSession }
+        }
         if (session.state.value != ConnectionState.Connected) {
             return Result.Failure(NetError.NotConnected)
         }
         val bytes = try {
             codec.encode(message)
         } catch (_: IllegalArgumentException) {
+            return Result.Failure(NetError.PayloadTooLarge)
+        }
+        if (bytes.size > P2pTrafficLimits.MAX_PEER_TO_HOST_FRAME_BYTES) {
             return Result.Failure(NetError.PayloadTooLarge)
         }
         val result = runCatching {
