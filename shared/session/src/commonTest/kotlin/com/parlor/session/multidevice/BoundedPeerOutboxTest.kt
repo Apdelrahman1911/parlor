@@ -191,6 +191,32 @@ class BoundedPeerOutboxTest {
         outbox.close()
     }
 
+    @Test
+    fun `close racing terminal publication cannot strand the terminal caller`() = runTest {
+        val publishEntered = CompletableDeferred<Unit>()
+        val allowPublish = CompletableDeferred<Unit>()
+        val room = TargetBlockingRoom(peer)
+        val outbox = BoundedPeerOutbox(
+            playerId = peer,
+            room = room,
+            scope = this,
+            sendTimeoutMs = 1_000L,
+            beforeTerminalStatePublish = {
+                publishEntered.complete(Unit)
+                allowPublish.await()
+            },
+        )
+
+        val ending = async { outbox.deliverTerminal(ended()) }
+        publishEntered.await()
+        outbox.close()
+        allowPublish.complete(Unit)
+        runCurrent()
+
+        assertEquals(Result.Failure(NetError.NotConnected), ending.await())
+        assertEquals(0, room.attempts.count { it == SendTarget.Direct(peer) })
+    }
+
     private fun result(index: Int) = HostMessage.CommandResult(
         header = header("result-${index.toString().padStart(16, '0')}", index + 1L),
         commandId = "command-${index.toString().padStart(16, '0')}",

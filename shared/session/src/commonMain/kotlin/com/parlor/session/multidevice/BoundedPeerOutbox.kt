@@ -17,6 +17,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withTimeoutOrNull
+import kotlin.concurrent.atomics.AtomicReference
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
 
 /**
  * One bounded, independently scheduled host-to-peer lane.
@@ -31,16 +33,24 @@ import kotlinx.coroutines.withTimeoutOrNull
  * frame currently being sent, one peer retains at most
  * [MAX_OUTBOUND_BYTES_PER_PEER] bytes of protocol payload.
  */
+@OptIn(ExperimentalAtomicApi::class)
 internal class BoundedPeerOutbox(
     private val playerId: PlayerId,
     private val room: LocalRoom,
     scope: CoroutineScope,
     private val sendTimeoutMs: Long,
+    private val beforeTerminalStatePublish: (suspend () -> Unit)? = null,
 ) {
     private data class Terminal(
         val message: HostMessage.SessionEnded,
         val completion: CompletableDeferred<Result<Unit, NetError>>,
     )
+
+    private sealed interface Lifecycle {
+        data object Open : Lifecycle
+        data class Ending(val terminal: Terminal) : Lifecycle
+        data object Closed : Lifecycle
+    }
 
     private sealed interface NextFrame {
         val message: HostMessage
@@ -54,6 +64,7 @@ internal class BoundedPeerOutbox(
     }
 
     private val mutex = Mutex()
+    private val lifecycle = AtomicReference<Lifecycle>(Lifecycle.Open)
     private val wakeUp = Channel<Unit>(Channel.CONFLATED)
     private val commandResults = ArrayDeque<HostMessage.CommandResult>()
     private var latestSnapshot: HostMessage.PlayerSnapshot? = null
@@ -98,7 +109,11 @@ internal class BoundedPeerOutbox(
      * peer exhausted its isolated budget; no other peer's lane is affected.
      */
     suspend fun enqueue(result: HostMessage.CommandResult): Boolean = mutex.withLock {
-        if (!worker.isActive || terminal != null || commandResults.size >= MAX_CONTROL_FRAMES) {
+        if (
+            !worker.isActive ||
+            lifecycle.load() !is Lifecycle.Open ||
+            commandResults.size >= MAX_CONTROL_FRAMES
+        ) {
             return@withLock false
         }
         commandResults.addLast(result)
@@ -108,7 +123,7 @@ internal class BoundedPeerOutbox(
 
     /** Newer authoritative state replaces an unsent older snapshot. */
     suspend fun enqueue(snapshot: HostMessage.PlayerSnapshot): Boolean = mutex.withLock {
-        if (!worker.isActive || terminal != null) return@withLock false
+        if (!worker.isActive || lifecycle.load() !is Lifecycle.Open) return@withLock false
         latestSnapshot = snapshot
         wakeUp.trySend(Unit)
         true
@@ -116,7 +131,7 @@ internal class BoundedPeerOutbox(
 
     /** Heartbeats are hints; retaining more than the latest has no value. */
     suspend fun enqueue(heartbeat: HostMessage.Heartbeat): Boolean = mutex.withLock {
-        if (!worker.isActive || terminal != null) return@withLock false
+        if (!worker.isActive || lifecycle.load() !is Lifecycle.Open) return@withLock false
         latestHeartbeat = heartbeat
         wakeUp.trySend(Unit)
         true
@@ -131,33 +146,54 @@ internal class BoundedPeerOutbox(
         message: HostMessage.SessionEnded,
     ): Result<Unit, NetError> {
         val completion = mutex.withLock {
-            if (!worker.isActive) return Result.Failure(NetError.NotConnected)
-            terminal?.completion ?: CompletableDeferred<Result<Unit, NetError>>().also {
-                terminal = Terminal(message, it)
-                terminalQueued = true
-                // Once the session is terminal, stale results/snapshots cannot
-                // be useful and must not delay or retain private payloads.
-                commandResults.clear()
-                latestSnapshot = null
-                latestHeartbeat = null
-                wakeUp.trySend(Unit)
+            when (val state = lifecycle.load()) {
+                Lifecycle.Closed -> return Result.Failure(NetError.NotConnected)
+                is Lifecycle.Ending -> state.terminal.completion
+                Lifecycle.Open -> {
+                    if (!worker.isActive) return Result.Failure(NetError.NotConnected)
+                    beforeTerminalStatePublish?.invoke()
+                    val created = Terminal(
+                        message = message,
+                        completion = CompletableDeferred(),
+                    )
+                    if (!lifecycle.compareAndSet(state, Lifecycle.Ending(created))) {
+                        return Result.Failure(NetError.NotConnected)
+                    }
+                    terminal = created
+                    terminalQueued = true
+                    // Once the session is terminal, stale results/snapshots cannot
+                    // be useful and must not delay or retain private payloads.
+                    commandResults.clear()
+                    latestSnapshot = null
+                    latestHeartbeat = null
+                    wakeUp.trySend(Unit)
+                    created.completion
+                }
             }
         }
         return completion.await()
     }
 
     fun close() {
-        // The terminal may still be queued and therefore never reach the
-        // worker's finally block. Complete it here so a caller cannot wait
-        // forever when the parent session is cancelled during shutdown.
-        terminal?.completion?.cancel(
-            CancellationException("Outbound terminal delivery was cancelled"),
-        )
+        // Publication and closure share one atomic lifecycle. Therefore close
+        // either wins before publication (the publisher fails closed) or sees
+        // the exact terminal transaction it must cancel; there is no gap in
+        // which a waiter can be installed after close has inspected state.
+        val previous = lifecycle.exchange(Lifecycle.Closed)
+        if (previous is Lifecycle.Ending) {
+            previous.terminal.completion.cancel(
+                CancellationException("Outbound terminal delivery was cancelled"),
+            )
+        }
         wakeUp.close()
         worker.cancel(CancellationException("Peer outbox closed"))
     }
 
     private fun takeNextLocked(): NextFrame? {
+        if (lifecycle.load() is Lifecycle.Closed) {
+            terminalQueued = false
+            return null
+        }
         if (terminalQueued) {
             terminalQueued = false
             return checkNotNull(terminal).let {
