@@ -1,5 +1,6 @@
 package com.parlor.app.di
 
+import com.parlor.app.lifecycle.AppLifecycleCoordinator
 import com.parlor.app.p2p.p2pBootstrapModules
 import com.parlor.app.storage.platformStorageModule
 import com.parlor.core.random.RandomSource
@@ -25,6 +26,7 @@ import org.koin.dsl.module
 val coreModule: Module = module {
     single<Clock> { SystemClock }
     single<RandomSource> { RandomSource.system() }
+    single { AppLifecycleCoordinator(get()) }
     // Strict JSON for content validation: unknown fields in case payloads must
     // fail validation rather than be silently dropped (ARCHITECTURE.md §8.4).
     single<Json> {

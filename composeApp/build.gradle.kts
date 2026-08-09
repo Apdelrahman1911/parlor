@@ -6,6 +6,14 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
+// Unlike the shared/game library modules, the Android application cannot use
+// `parlor.kmp.library`, whose convention selects JUnit 5. Apply the same test
+// runtime policy here so common tests use the repository's verified JUnit 5
+// artifacts on JVM/Android instead of silently resolving JUnit 4.
+tasks.withType<org.gradle.api.tasks.testing.Test>().configureEach {
+    useJUnitPlatform()
+}
+
 // Release signing material is intentionally external to the repository.
 // Environment variables are preferred in CI; equivalent Gradle properties
 // make local store builds possible without changing this file.
@@ -85,6 +93,10 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.koin.android)
             implementation("androidx.activity:activity-compose:1.9.3")
+        }
+        commonTest.dependencies {
+            implementation(kotlin("test"))
+            implementation(libs.kotlinx.coroutines.test)
         }
         val desktopMain by getting {
             dependencies {

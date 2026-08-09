@@ -1,8 +1,8 @@
 package com.parlor.app
 
 import androidx.compose.ui.window.ComposeUIViewController
+import com.parlor.app.lifecycle.AppLifecycleCoordinator
 import com.parlor.app.di.allModules
-import com.parlor.networking.transport.RoomTransport
 import kotlin.concurrent.Volatile
 import org.koin.core.context.startKoin
 import org.koin.mp.KoinPlatform
@@ -36,11 +36,21 @@ private fun startKoinOnce() {
 @Suppress("FunctionName", "Unused")
 fun NotifyAppBackgrounded() {
     startKoinOnce()
-    KoinPlatform.getKoin().get<RoomTransport>().notifyAppBackgrounded()
+    lifecycleCoordinator().notifyBackgrounded()
 }
 
 @Suppress("FunctionName", "Unused")
 fun NotifyAppForegrounded() {
     startKoinOnce()
-    KoinPlatform.getKoin().get<RoomTransport>().notifyAppForegrounded()
+    lifecycleCoordinator().notifyActive()
 }
+
+/** Covers private UI without suspending the still-foreground LAN session. */
+@Suppress("FunctionName", "Unused")
+fun NotifyAppInactive() {
+    startKoinOnce()
+    lifecycleCoordinator().notifyInactive()
+}
+
+private fun lifecycleCoordinator(): AppLifecycleCoordinator =
+    KoinPlatform.getKoin().get()

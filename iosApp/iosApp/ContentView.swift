@@ -12,18 +12,41 @@ struct ContentView: View {
     @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
-        ComposeView()
-            .ignoresSafeArea()
-            .onChange(of: scenePhase) { phase in
-                switch phase {
-                case .active:
-                    MainViewControllerKt.NotifyAppForegrounded()
-                case .inactive, .background:
-                    MainViewControllerKt.NotifyAppBackgrounded()
-                @unknown default:
-                    MainViewControllerKt.NotifyAppBackgrounded()
-                }
+        ZStack {
+            ComposeView()
+                .ignoresSafeArea()
+                .accessibilityHidden(scenePhase != .active)
+
+            // iOS snapshots the scene for the app switcher after it becomes
+            // inactive. Cover roles and private actions before that snapshot,
+            // but do not suspend the LAN session until true background.
+            if scenePhase != .active {
+                Color.black
+                    .ignoresSafeArea()
+                    .accessibilityHidden(true)
             }
+        }
+        .onAppear {
+            reportScenePhase(scenePhase)
+        }
+        .onChange(of: scenePhase) { phase in
+            reportScenePhase(phase)
+        }
+    }
+
+    private func reportScenePhase(_ phase: ScenePhase) {
+        switch phase {
+        case .active:
+            MainViewControllerKt.NotifyAppForegrounded()
+        case .inactive:
+            MainViewControllerKt.NotifyAppInactive()
+        case .background:
+            MainViewControllerKt.NotifyAppBackgrounded()
+        @unknown default:
+            // An unknown state is privacy-covered but is not evidence that the
+            // process entered background, so keep transport state unchanged.
+            MainViewControllerKt.NotifyAppInactive()
+        }
     }
 }
 
