@@ -1,4 +1,4 @@
-package com.parlor.app.shell.library
+package com.parlor.app.shell.game.whodunit
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -70,7 +70,7 @@ import org.jetbrains.compose.resources.stringResource
  * renders cleanly at 360 dp wide or on desktop.
  */
 @Composable
-fun CasePickerScreen(
+fun WhodunitCasePickerScreen(
     repository: CaseRepository,
     onCasePicked: (CaseSummary) -> Unit,
     onBack: () -> Unit,

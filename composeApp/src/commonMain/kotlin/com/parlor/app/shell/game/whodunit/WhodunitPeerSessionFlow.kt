@@ -1,4 +1,4 @@
-package com.parlor.app.shell.multiplayer
+package com.parlor.app.shell.game.whodunit
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -45,6 +45,8 @@ import com.parlor.app.resources.network_open_settings_description
 import com.parlor.app.resources.network_recovery_help
 import com.parlor.app.resources.network_retry
 import com.parlor.app.resources.network_retry_description
+import com.parlor.app.shell.dataErrorMessage
+import com.parlor.app.shell.netErrorMessage
 import com.parlor.content.repository.CaseRepository
 import com.parlor.content.validation.PayloadValidator
 import com.parlor.content.validation.ValidatedCase
@@ -66,8 +68,6 @@ import com.parlor.games.whodunit.content.matches
 import com.parlor.games.whodunit.domain.rules.WhodunitRules
 import com.parlor.games.whodunit.ui.flow.WhodunitMultiplayerPeerFlow
 import com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostRoomBridge
-import com.parlor.app.shell.dataErrorMessage
-import com.parlor.app.shell.netErrorMessage
 import com.parlor.networking.protocol.SessionProtocol
 import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.NetError
@@ -101,7 +101,7 @@ private const val LOADING_FLAME_SIZE_DP: Float = 72f
  */
 @Suppress("LongMethod", "CyclomaticComplexMethod") // Exhaustive retained owner/handshake state rendering.
 @Composable
-fun PeerSessionFlow(
+fun WhodunitPeerSessionFlow(
     transport: RoomTransport,
     code: String,
     peerName: String,

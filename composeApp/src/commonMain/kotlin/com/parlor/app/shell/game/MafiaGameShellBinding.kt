@@ -20,6 +20,7 @@ import com.parlor.app.shell.playmode.PlayModePickerScreen
 import com.parlor.engine.definition.GameDefinition
 import com.parlor.games.mafia.MafiaDefinition
 import com.parlor.games.mafia.ui.flow.multidevice.MafiaHostLobbyFlow
+import com.parlor.games.mafia.ui.flow.multidevice.MafiaHostRoomBridge
 import com.parlor.games.mafia.ui.flow.multidevice.MafiaPeerLobbyFlow
 import com.parlor.games.mafia.ui.flow.passandplay.MafiaGameFlow
 import com.parlor.networking.transport.RoomTransport
@@ -38,6 +39,11 @@ internal class MafiaGameShellBinding(
             GameEntryMode.Host,
             GameEntryMode.Join,
         ),
+    )
+    override val multiplayerContract = GameShellMultiplayerContract(
+        gameId = mafiaDefinition.id,
+        gameVersion = MafiaHostRoomBridge.GAME_VERSION,
+        supportedPlayerCounts = mafiaDefinition.supportedPlayerCounts,
     )
 
     @Composable

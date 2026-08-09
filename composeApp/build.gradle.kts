@@ -279,10 +279,14 @@ val verifyGameShellDispatch by tasks.registering {
         "src/commonMain/kotlin/com/parlor/app/LocalResumeRouter.kt",
         "src/commonMain/kotlin/com/parlor/app/shell/home/HomeScreen.kt",
     )
-    inputs.files(neutralShellPaths)
+    val neutralShellSources = neutralShellPaths.map(::file)
+    val multiplayerShellSources = fileTree(
+        "src/commonMain/kotlin/com/parlor/app/shell/multiplayer",
+    ).matching { include("**/*.kt") }
+    inputs.files(neutralShellSources, multiplayerShellSources)
     doLast {
         val forbidden = listOf("whodunit", "mafia", "com.parlor.games.")
-        inputs.files.files.forEach { source ->
+        inputs.files.files.filter { file -> file.isFile }.forEach { source ->
             val text = source.readText().lowercase()
             val found = forbidden.filter { token -> token in text }
             check(found.isEmpty()) {

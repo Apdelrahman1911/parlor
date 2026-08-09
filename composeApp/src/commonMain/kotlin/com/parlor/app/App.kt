@@ -122,6 +122,7 @@ fun App() {
                             is Result.Success -> result.data?.takeIf { info ->
                                 gameShellRouter.resumeMultiplayer(
                                     gameId = info.gameId,
+                                    gameVersion = info.gameVersion,
                                     displayName = info.displayName,
                                 ) != null
                             }
@@ -242,7 +243,11 @@ fun App() {
                                     localResumeJob = null
                                     val info = resumableMultiplayer
                                     val launch = info?.let {
-                                        gameShellRouter.resumeMultiplayer(it.gameId, it.displayName)
+                                        gameShellRouter.resumeMultiplayer(
+                                            gameId = it.gameId,
+                                            gameVersion = it.gameVersion,
+                                            displayName = it.displayName,
+                                        )
                                     }
                                     if (launch == null) {
                                         toastState.show(

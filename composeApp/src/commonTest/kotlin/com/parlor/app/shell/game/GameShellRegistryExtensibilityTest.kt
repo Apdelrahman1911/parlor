@@ -52,6 +52,12 @@ class GameShellRegistryExtensibilityTest {
             entry.capabilities.entryModes,
         )
         assertEquals(fixtureDefinition.metadata, entry.metadata)
+        assertEquals(fixtureDefinition.id, fixtureBinding.multiplayerContract?.gameId)
+        assertEquals(1, fixtureBinding.multiplayerContract?.gameVersion)
+        assertEquals(
+            fixtureDefinition.supportedPlayerCounts,
+            fixtureBinding.multiplayerContract?.supportedPlayerCounts,
+        )
     }
 
     @Test
@@ -113,6 +119,25 @@ class GameShellRegistryExtensibilityTest {
     }
 
     @Test
+    fun multiplayer_resume_requires_the_registered_game_protocol_version() {
+        assertNotNull(
+            router.resumeMultiplayer(
+                gameId = fixtureDefinition.id,
+                gameVersion = 1,
+                displayName = "Peer",
+            ),
+        )
+        assertEquals(
+            null,
+            router.resumeMultiplayer(
+                gameId = fixtureDefinition.id,
+                gameVersion = 99,
+                displayName = "Peer",
+            ),
+        )
+    }
+
+    @Test
     fun duplicate_shell_registration_fails_before_catalog_or_routing() {
         val error = assertFailsWith<IllegalArgumentException> {
             DefaultGameShellRegistry(listOf(fixtureBinding, FixtureBinding(fixtureDefinition)))
@@ -134,12 +159,41 @@ class GameShellRegistryExtensibilityTest {
         val gameId = hostOnly.definition.id
 
         assertEquals(null, hostOnlyRouter.resumeLocal(gameId, SessionId("local")))
-        assertEquals(null, hostOnlyRouter.resumeMultiplayer(gameId, "Peer"))
+        assertEquals(null, hostOnlyRouter.resumeMultiplayer(gameId, 1, "Peer"))
         assertNotNull(
             hostOnlyRouter.restoreOwned(
                 MultiplayerSessionRoute.host(gameId, "Host"),
             ),
         )
+    }
+
+    @Test
+    fun registry_rejects_a_multiplayer_contract_that_does_not_match_definition() {
+        val mismatched = object : GameShellBinding {
+            override val definition: GameDefinition<*, *, *> = fixtureDefinition
+            override val capabilities = GameShellCapabilities(
+                setOf(GameEntryMode.Host, GameEntryMode.Join),
+            )
+            override val multiplayerContract = GameShellMultiplayerContract(
+                gameId = GameId("other-game"),
+                gameVersion = 1,
+                supportedPlayerCounts = fixtureDefinition.supportedPlayerCounts,
+            )
+
+            @Composable
+            override fun catalogPresentation() = fixtureBinding.catalogPresentation()
+
+            @Composable
+            override fun Content(
+                launch: GameShellLaunch,
+                onExit: () -> Unit,
+                modifier: Modifier,
+            ) = Unit
+        }
+
+        assertFailsWith<IllegalArgumentException> {
+            DefaultGameShellRegistry(listOf(mismatched))
+        }
     }
 
     private fun sessionConfig(
@@ -165,6 +219,17 @@ private class FixtureBinding(
     ),
 ) : GameShellBinding {
     override val capabilities = GameShellCapabilities(modes)
+    override val multiplayerContract = if (
+        GameEntryMode.Host in modes || GameEntryMode.Join in modes
+    ) {
+        GameShellMultiplayerContract(
+            gameId = definition.id,
+            gameVersion = 1,
+            supportedPlayerCounts = definition.supportedPlayerCounts,
+        )
+    } else {
+        null
+    }
 
     @Composable
     override fun catalogPresentation() = GameCatalogPresentation(

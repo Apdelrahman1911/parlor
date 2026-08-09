@@ -14,11 +14,11 @@ import com.parlor.app.resources.home_whodunit_open_description
 import com.parlor.app.resources.home_whodunit_subtitle
 import com.parlor.app.resources.home_whodunit_tagline
 import com.parlor.app.resources.home_whodunit_title
-import com.parlor.app.shell.library.CasePickerScreen
-import com.parlor.app.shell.multiplayer.HostSessionFlow
+import com.parlor.app.shell.game.whodunit.WhodunitCasePickerScreen
+import com.parlor.app.shell.game.whodunit.WhodunitHostSessionFlow
 import com.parlor.app.shell.multiplayer.JoinPromptScreen
 import com.parlor.app.shell.multiplayer.NameInputScreen
-import com.parlor.app.shell.multiplayer.PeerSessionFlow
+import com.parlor.app.shell.game.whodunit.WhodunitPeerSessionFlow
 import com.parlor.app.shell.playmode.PlayModePickerScreen
 import com.parlor.content.repository.CaseRepository
 import com.parlor.core.ids.ModeId
@@ -27,6 +27,7 @@ import com.parlor.games.whodunit.WhodunitDefinition
 import com.parlor.games.whodunit.WhodunitIds
 import com.parlor.games.whodunit.WhodunitPlayModePolicy
 import com.parlor.games.whodunit.ui.flow.WhodunitGameFlow
+import com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostRoomBridge
 import com.parlor.games.whodunit.ui.screens.setup.ModeSelectionScreen
 import com.parlor.networking.transport.RoomTransport
 import com.parlor.session.PlayMode
@@ -44,6 +45,11 @@ internal class WhodunitGameShellBinding(
             GameEntryMode.Host,
             GameEntryMode.Join,
         ),
+    )
+    override val multiplayerContract = GameShellMultiplayerContract(
+        gameId = WhodunitIds.GameId,
+        gameVersion = WhodunitHostRoomBridge.GAME_VERSION,
+        supportedPlayerCounts = whodunitDefinition.supportedPlayerCounts,
     )
 
     @Composable
@@ -187,7 +193,7 @@ private fun WhodunitShellContent(
             modifier = modifier,
         )
 
-        WhodunitShellScreen.LocalCasePicker -> CasePickerScreen(
+        WhodunitShellScreen.LocalCasePicker -> WhodunitCasePickerScreen(
             repository = caseRepository,
             onCasePicked = { summary ->
                 localCaseId = summary.caseId
@@ -222,7 +228,7 @@ private fun WhodunitShellContent(
             modifier = modifier,
         )
 
-        WhodunitShellScreen.HostCasePicker -> CasePickerScreen(
+        WhodunitShellScreen.HostCasePicker -> WhodunitCasePickerScreen(
             repository = caseRepository,
             onCasePicked = { summary ->
                 hostCaseId = summary.caseId
@@ -244,7 +250,7 @@ private fun WhodunitShellContent(
             if (hostCaseId.isBlank() || hostName.isBlank()) {
                 InvalidGameRouteFallback(onExit)
             } else {
-                HostSessionFlow(
+                WhodunitHostSessionFlow(
                     transport = transport,
                     caseId = hostCaseId,
                     modeId = hostModeId,
@@ -286,7 +292,7 @@ private fun WhodunitShellContent(
             if (pendingJoinCode.isBlank() || peerName.isBlank()) {
                 InvalidGameRouteFallback(onExit)
             } else {
-                PeerSessionFlow(
+                WhodunitPeerSessionFlow(
                     transport = transport,
                     code = pendingJoinCode,
                     peerName = peerName,
@@ -303,7 +309,7 @@ private fun WhodunitShellContent(
             onBack = onExit,
         )
 
-        WhodunitShellScreen.ResumePeer -> PeerSessionFlow(
+        WhodunitShellScreen.ResumePeer -> WhodunitPeerSessionFlow(
             transport = transport,
             code = "",
             peerName = peerName,

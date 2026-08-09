@@ -34,21 +34,19 @@ The domain package remains pure Kotlin. It may depend on `:shared:core` and
 2. Give the game a stable kebab-case `GameId`. IDs are protocol and persistence
    identifiers; renaming one is a migration, not copy editing.
 3. Declare metadata, modes, and supported player ranges in the definition.
-   The shared engine/session layers consume these values; the current
-   composition root still owns the user-facing game cards and route adapters,
-   so those shell adapters must be added explicitly until the planned
-   descriptor-driven shell is completed.
+   The shared engine/session layers consume these values; the composition root
+   installs the binding list, while each binding owns its game-specific setup,
+   content, lobby, and resume routes.
 4. Implement a pure reducer, a projection policy for public/private/host-only
    state, and a versioned snapshot codec.
 5. Implement `ModuleNavGraph` with the same `GameId`.
 6. Export one Koin module containing the definition, graph, and game-local
    dependencies.
-7. Add that Koin module and its two registry contributions at the app
-   composition root. Add the small game-specific shell adapter (home card,
-   setup/lobby route, and any game-specific resume entry) in the same change.
-   A composition-root list and localized route adapter are acceptable; adding
-   a game-specific `when` to lobby, transport, protocol routing, or shared
-   session code is not.
+7. Add that Koin module and its binding at the app composition root. The
+   binding supplies the catalog card, setup/lobby route, local snapshot/resume
+   route, and any game-specific multiplayer start flow. The root registry and
+   router remain game-id neutral; adding a game-specific `when` to lobby,
+   transport, protocol routing, or shared session code is not.
 
 `DefaultGameRegistry` and `DefaultNavGraphRegistry` fail fast on duplicate game
 IDs. A duplicate must therefore fail at startup or in tests rather than
@@ -85,23 +83,29 @@ Before registering a shipping game, add tests for:
 
 The non-shipping fixture at
 `shared/engine-testing/.../RoundRobinAnnounceGame.kt` proves the platform seam.
-Its acceptance test registers a second definition, resolves it, and drives it
-to completion without importing or changing the networking core:
+`GameShellRegistryExtensibilityTest` registers a third fixture binding and
+exercises catalog discovery, supported entry modes, local start, snapshot
+round-trip, local resume, and owned host/peer route restoration without a
+central game branch or networking-core change:
 
 ```bash
 ./gradlew :shared:engine-testing:desktopTest
 ```
 
-## Current shell limitation
+## Shell boundary
 
-The networking, session, registry, and game-domain seams are extensible, but
-the shipping shell still has explicit Whodunit and Mafia route adapters in
-`composeApp/.../App.kt`, `HomeScreen.kt`, and the shared Whodunit case/setup
-screens. A new game therefore requires those localized shell edits today.
-This is a known architectural follow-up, not a reason to duplicate lobby or
-transport code. Cold-start resume is currently implemented only for Whodunit;
-Mafia and future games must add a game-aware snapshot/resume adapter before
-they can expose a Continue tile.
+The app root is a registry-driven dispatcher. `App.kt`, `HomeScreen.kt`,
+`LocalResumeRouter.kt`, and the shared multiplayer lobby helpers contain no
+game ids or game-specific branches. Each binding owns its localized setup,
+content picker, host/peer flow, and resume route; Whodunit's case picker and
+start handshake live under `shell/game/whodunit`, while Mafia's equivalent
+flows remain in the Mafia module. `composeApp:verifyGameShellDispatch` is a
+release gate that scans the neutral root and shared multiplayer helpers for
+game-specific tokens.
+
+Cold-start resume is exposed only by a binding whose transport/session adapter
+can validate the saved game id and version. A game without that adapter is
+rejected by the router rather than routed into another game's UI.
 
 ## Definition of done
 

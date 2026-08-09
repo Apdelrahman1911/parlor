@@ -1,4 +1,4 @@
-package com.parlor.app.shell.multiplayer
+package com.parlor.app.shell.game.whodunit
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -104,7 +104,7 @@ private const val LOADING_FLAME_SIZE_DP: Float = 72f
  */
 @Suppress("LongMethod") // Exhaustive typed owner/content-state rendering.
 @Composable
-fun HostSessionFlow(
+fun WhodunitHostSessionFlow(
     transport: RoomTransport,
     caseId: String,
     modeId: ModeId,

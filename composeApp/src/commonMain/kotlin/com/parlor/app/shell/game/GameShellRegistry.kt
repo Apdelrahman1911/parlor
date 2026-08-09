@@ -39,6 +39,29 @@ internal data class GameShellCapabilities(
     }
 }
 
+/**
+ * Transport-independent multiplayer contract contributed by a game binding.
+ * The app shell uses this metadata to validate resumable sessions before it
+ * routes them into game UI. It deliberately contains no P2pKit types or
+ * game-specific state; the binding remains the only owner of the actual host
+ * and peer composables.
+ */
+internal data class GameShellMultiplayerContract(
+    val gameId: GameId,
+    val gameVersion: Int,
+    val supportedPlayerCounts: IntRange,
+) {
+    init {
+        require(gameId.raw.isNotBlank()) { "Multiplayer game id must not be blank" }
+        require(gameVersion > 0) { "Multiplayer game version must be positive" }
+        require(!supportedPlayerCounts.isEmpty()) {
+            "Multiplayer player bounds must not be empty"
+        }
+    }
+
+    fun supportsPlayerCount(count: Int): Boolean = count in supportedPlayerCounts
+}
+
 /** Pure catalog record used by Home and by extensibility contract tests. */
 internal data class GameCatalogEntry(
     val gameId: GameId,
@@ -88,6 +111,7 @@ internal sealed interface GameShellLaunch {
 internal interface GameShellBinding {
     val definition: GameDefinition<*, *, *>
     val capabilities: GameShellCapabilities
+    val multiplayerContract: GameShellMultiplayerContract?
 
     @Composable
     fun catalogPresentation(): GameCatalogPresentation
@@ -124,6 +148,20 @@ internal class DefaultGameShellRegistry(
         all.forEach { binding ->
             require(!binding.definition.supportedPlayerCounts.isEmpty()) {
                 "Game '${binding.definition.id.raw}' has no supported player counts"
+            }
+            val multiplayer = binding.multiplayerContract
+            val exposesMultiplayer = binding.capabilities.supports(GameEntryMode.Host) ||
+                binding.capabilities.supports(GameEntryMode.Join)
+            require(!exposesMultiplayer || multiplayer != null) {
+                "Game '${binding.definition.id.raw}' exposes multiplayer without a contract"
+            }
+            multiplayer?.let { contract ->
+                require(contract.gameId == binding.definition.id) {
+                    "Multiplayer contract id does not match game '${binding.definition.id.raw}'"
+                }
+                require(contract.supportedPlayerCounts == binding.definition.supportedPlayerCounts) {
+                    "Multiplayer bounds do not match game '${binding.definition.id.raw}'"
+                }
             }
         }
     }
@@ -162,9 +200,13 @@ internal class GameShellRouter(
 
     fun resumeMultiplayer(
         gameId: GameId,
+        gameVersion: Int,
         displayName: String,
     ): GameShellLaunch.ResumeMultiplayer? = registry.byId(gameId)
-        ?.takeIf { binding -> binding.capabilities.supports(GameEntryMode.Join) }
+        ?.takeIf { binding ->
+            binding.capabilities.supports(GameEntryMode.Join) &&
+                binding.multiplayerContract?.gameVersion == gameVersion
+        }
         ?.let { GameShellLaunch.ResumeMultiplayer(gameId, displayName) }
 
     fun restoreOwned(route: MultiplayerSessionRoute): GameShellLaunch.RestoreOwnedMultiplayer? {
