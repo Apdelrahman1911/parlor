@@ -75,6 +75,7 @@ class MafiaPeerPrivateTargetGateTest {
     private fun emptyPublic() = MafiaState(
         public = MafiaPublic(
             settings = MafiaSettingsPresets.forPlayerCount(players.size),
+            day = 1,
             roster = players.map { PublicPlayerSlot(it.id, it.displayName, it.seat) },
         ),
         privatePerPlayer = emptyMap(),
@@ -167,6 +168,113 @@ class MafiaPeerPrivateTargetGateTest {
     }
 
     @Test
+    fun peer_rejects_privacy_safe_but_reducer_impossible_public_snapshot() = runTest {
+        val scope = TestScope(UnconfinedTestDispatcher(testScheduler))
+        val bus = InMemoryRoomBus()
+        bus.registerPeer(alice)
+        val initial = emptyPublic().copy(
+            phase = MafiaPhase.Setup,
+            public = emptyPublic().public.copy(day = 0),
+        )
+        val bridge = MafiaPeerRoomBridge(
+            room = InMemoryPeerRoom(bus, alice, "Alice", hostId),
+            selfPlayerId = alice,
+            initialPublic = initial,
+            scope = scope,
+            protocol = protocol,
+            json = json,
+        )
+        val impossible = initial.copy(
+            phase = MafiaPhase.Night(day = 1),
+            // A legal Night(1) snapshot must also expose public.day == 1 and
+            // carry the receiving player's assigned private role.
+            public = initial.public.copy(day = 0),
+        )
+        val validOwnPrivate = MafiaPrivate(Role.Civilian, Team.Town)
+
+        bus.fromHost(
+            SendTarget.Direct(alice),
+            HostMessage.PlayerSnapshot(
+                header = header(1),
+                revision = 1,
+                publicPayload = json.encodeToString(
+                    MafiaState.serializer(),
+                    emptyPublic(),
+                ).encodeToByteArray(),
+                privatePayload = json.encodeToString(
+                    MafiaPrivate.serializer(),
+                    validOwnPrivate,
+                ).encodeToByteArray(),
+            ),
+        )
+        scope.runCurrent()
+        assertThat(bridge.hasAuthoritativeSnapshot.value).isTrue()
+        assertThat(bridge.controller.publicState.value.state.phase).isEqualTo(MafiaPhase.Night(1))
+
+        bus.fromHost(
+            SendTarget.Direct(alice),
+            HostMessage.PlayerSnapshot(
+                header = header(2),
+                revision = 2,
+                publicPayload = json.encodeToString(
+                    MafiaState.serializer(),
+                    impossible,
+                ).encodeToByteArray(),
+                privatePayload = json.encodeToString(
+                    MafiaPrivate.serializer(),
+                    validOwnPrivate,
+                ).encodeToByteArray(),
+            ),
+        )
+        scope.runCurrent()
+
+        assertThat(bridge.hasAuthoritativeSnapshot.value).isTrue()
+        assertThat(bridge.controller.publicState.value.state.phase).isEqualTo(MafiaPhase.Night(1))
+        assertThat(bridge.controller.privateStateFor(alice).value.state.privatePerPlayer[alice])
+            .isEqualTo(validOwnPrivate)
+        bridge.close()
+    }
+
+    @Test
+    fun peer_rejects_a_structurally_valid_roster_substitution_for_the_same_session() = runTest {
+        val scope = TestScope(UnconfinedTestDispatcher(testScheduler))
+        val bus = InMemoryRoomBus()
+        bus.registerPeer(alice)
+        val bridge = MafiaPeerRoomBridge(
+            room = InMemoryPeerRoom(bus, alice, "Alice", hostId),
+            selfPlayerId = alice,
+            initialPublic = emptyPublic(),
+            scope = scope,
+            protocol = protocol,
+            json = json,
+        )
+        val own = MafiaPrivate(Role.Civilian, Team.Town)
+        bus.fromHost(
+            SendTarget.Direct(alice),
+            playerSnapshot(emptyPublic(), own, sequence = 1, revision = 1),
+        )
+        scope.runCurrent()
+
+        val renamedPlayers = players.map { player ->
+            if (player.id == bob) player.copy(displayName = "Mallory") else player
+        }
+        val substituted = emptyPublic().copy(
+            players = renamedPlayers,
+            public = emptyPublic().public.copy(
+                roster = renamedPlayers.map { PublicPlayerSlot(it.id, it.displayName, it.seat) },
+            ),
+        )
+        bus.fromHost(
+            SendTarget.Direct(alice),
+            playerSnapshot(substituted, own, sequence = 2, revision = 2),
+        )
+        scope.runCurrent()
+
+        assertThat(bridge.controller.publicState.value.state.players).isEqualTo(players)
+        bridge.close()
+    }
+
+    @Test
     fun peer_rejects_private_payload_from_wrong_game_envelope() = runTest {
         val scope = TestScope(UnconfinedTestDispatcher(testScheduler))
         val bus = InMemoryRoomBus()
@@ -241,4 +349,16 @@ class MafiaPeerPrivateTargetGateTest {
         assertThat(installed?.role).isEqualTo(Role.Civilian)
         bridge.close()
     }
+
+    private fun playerSnapshot(
+        state: MafiaState,
+        ownPrivate: MafiaPrivate,
+        sequence: Long,
+        revision: Long,
+    ) = HostMessage.PlayerSnapshot(
+        header = header(sequence),
+        revision = revision,
+        publicPayload = json.encodeToString(MafiaState.serializer(), state).encodeToByteArray(),
+        privatePayload = json.encodeToString(MafiaPrivate.serializer(), ownPrivate).encodeToByteArray(),
+    )
 }

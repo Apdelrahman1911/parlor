@@ -10,6 +10,7 @@ import com.parlor.games.mafia.domain.action.MafiaActionCodec
 import com.parlor.games.mafia.domain.event.MafiaEvent
 import com.parlor.games.mafia.domain.projection.MafiaProjectionPolicy
 import com.parlor.games.mafia.domain.state.MafiaPrivate
+import com.parlor.games.mafia.domain.state.MafiaPeerSnapshotValidator
 import com.parlor.games.mafia.domain.state.MafiaState
 import com.parlor.networking.protocol.SessionProtocol
 import com.parlor.networking.room.LocalRoom
@@ -55,6 +56,7 @@ class MafiaPeerRoomBridge(
     private val publicSerializer = MafiaState.serializer()
     private val privateSerializer = MafiaPrivate.serializer()
     private val safeInitialPublic = MafiaProjectionPolicy.toPublic(initialPublic).state
+    private val expectedPlayers = safeInitialPublic.players
 
     val controller: ShadowSessionController<MafiaState, MafiaAction, MafiaEvent> =
         ShadowSessionController(
@@ -113,17 +115,23 @@ class MafiaPeerRoomBridge(
                     payload.privatePayload.decodeToString(),
                 )
             }
-            publicState to publicState.copy(
-                privatePerPlayer = ownPrivate?.let { mapOf(selfPlayerId to it) } ?: emptyMap(),
+            Triple(
+                publicState,
+                ownPrivate,
+                publicState.copy(
+                    privatePerPlayer = ownPrivate?.let { mapOf(selfPlayerId to it) } ?: emptyMap(),
+                ),
             )
         } catch (_: Exception) {
             return false
         }
-        val (publicState, playerState) = decoded
+        val (publicState, ownPrivate, playerState) = decoded
+        if (publicState.players != expectedPlayers) return false
         // The public half of an atomic snapshot is a trust boundary. Reject a
         // canonical/host projection instead of installing host-only secrets
         // and relying on UI code not to read them.
         if (MafiaProjectionPolicy.toPublic(publicState).state != publicState) return false
+        if (!MafiaPeerSnapshotValidator.isValid(publicState, ownPrivate, selfPlayerId)) return false
         controller.installPlayerSnapshot(
             publicProjection = PublicProjection(publicState),
             playerProjection = PrivateProjection(playerState, selfPlayerId),

@@ -62,6 +62,74 @@ internal object WhodunitStateValidator {
     }
 
     /**
+     * Validates the redacted public state and the receiving player's private
+     * slice as one atomic peer snapshot. Host-only facts cannot be recreated
+     * here, so this checks every invariant observable by the peer and leaves
+     * canonical assignment/content validation to [requireValid].
+     */
+    fun isValidPeerProjection(
+        publicState: WhodunitState,
+        ownPrivate: WhodunitPrivate?,
+        selfPlayerId: com.parlor.core.ids.PlayerId,
+    ): Boolean = try {
+        requireValidPeerProjection(publicState, ownPrivate, selfPlayerId)
+        true
+    } catch (_: IllegalArgumentException) {
+        false
+    }
+
+    private fun requireValidPeerProjection(
+        state: WhodunitState,
+        ownPrivate: WhodunitPrivate?,
+        selfPlayerId: com.parlor.core.ids.PlayerId,
+    ) {
+        val players = state.players
+        require(WhodunitRules.isValidRoster(state.public.modeId, players)) {
+            "Invalid projected mode or roster"
+        }
+        require(state.public.playersAtTable == players) {
+            "Projected public and authoritative rosters differ"
+        }
+        require(selfPlayerId in players.map { it.id }) { "Peer is absent from projected roster" }
+        require(state.privatePerPlayer.isEmpty()) { "Public projection contains private state" }
+        require(
+            state.hostOnly.killerId.raw == REDACTED_ID &&
+                state.hostOnly.killerCharacterId.raw == REDACTED_ID &&
+                state.hostOnly.randomSeed == 0L &&
+                state.hostOnly.seatToCharacter.isEmpty() &&
+                state.hostOnly.redHerringTargets.isEmpty() &&
+                state.hostOnly.drawnClueIds.isEmpty(),
+        ) { "Public projection contains host-only state" }
+
+        val playerIds = players.map { it.id }.toSet()
+        require(state.public.eliminatedPlayers.size == state.public.eliminatedPlayers.toSet().size) {
+            "Projected eliminations contain duplicates"
+        }
+        require(playerIds.containsAll(state.public.eliminatedPlayers)) {
+            "Projected elimination references an unknown player"
+        }
+        listOf(
+            state.public.introAcknowledged,
+            state.public.briefingReady,
+            state.public.rolesViewed,
+            state.public.disconnectedPlayers,
+            state.public.droppedPlayers,
+        ).forEach { ids ->
+            require(playerIds.containsAll(ids)) { "Projected state references an unknown player" }
+        }
+
+        val maximumRounds = requireNotNull(
+            WhodunitRules.maximumRoundCount(state.public.modeId, players.size),
+        ) { "Unknown projected round policy" }
+        validateProjectedAssignment(state, ownPrivate, selfPlayerId)
+        validateRoundsAndTimer(state, maximumRounds, requireHostClueSet = false)
+        validateVote(state, playerIds, redactedTargets = true)
+        validatePhaseShape(state, maximumRounds)
+        validateProjectedPrivateConsistency(state, ownPrivate, selfPlayerId)
+        validateProjectedTerminalOutcome(state, ownPrivate)
+    }
+
+    /**
      * Validates state references that cannot be checked from serialized state
      * alone. Call this only after the expected, already-validated case payload
      * has been loaded; it deliberately does not choose or fetch content.
@@ -166,6 +234,13 @@ internal object WhodunitStateValidator {
             require(state.hostOnly.killerCharacterId.raw == UNASSIGNED_ID) {
                 "Unassigned state has a killer character"
             }
+            require(
+                state.hostOnly.redHerringTargets.isEmpty() &&
+                    state.hostOnly.drawnClueIds.isEmpty(),
+            ) { "Unassigned state contains authored gameplay history" }
+            if (state.phase == WhodunitPhase.PostGame) {
+                requireExactUnassignedTerminalShape(state)
+            }
             return
         }
 
@@ -235,7 +310,11 @@ internal object WhodunitStateValidator {
         }
     }
 
-    private fun validateRoundsAndTimer(state: WhodunitState, maximumRounds: Int) {
+    private fun validateRoundsAndTimer(
+        state: WhodunitState,
+        maximumRounds: Int,
+        requireHostClueSet: Boolean = true,
+    ) {
         require(state.public.currentRound in 0..maximumRounds) { "Current round is out of bounds" }
         when (val phase = state.phase) {
             WhodunitPhase.Setup,
@@ -277,8 +356,10 @@ internal object WhodunitStateValidator {
         }) {
             "Invalid revealed clue"
         }
-        require(state.hostOnly.drawnClueIds == revealedIds.toSet()) {
-            "Drawn and revealed clue sets disagree"
+        if (requireHostClueSet) {
+            require(state.hostOnly.drawnClueIds == revealedIds.toSet()) {
+                "Drawn and revealed clue sets disagree"
+            }
         }
 
         state.public.timer?.let { timer ->
@@ -298,7 +379,11 @@ internal object WhodunitStateValidator {
         }
     }
 
-    private fun validateVote(state: WhodunitState, playerIds: Set<com.parlor.core.ids.PlayerId>) {
+    private fun validateVote(
+        state: WhodunitState,
+        playerIds: Set<com.parlor.core.ids.PlayerId>,
+        redactedTargets: Boolean = false,
+    ) {
         val tableIds = state.public.playersAtTable.map { it.id }
         val activeIds = tableIds.filterNot(state.public.droppedPlayers::contains)
         val survivorIds = activeIds.filterNot(state.public.eliminatedPlayers::contains)
@@ -345,12 +430,18 @@ internal object WhodunitStateValidator {
                 require(vote.ballotPlayerIds.containsAll(vote.castSoFar.keys + vote.abstained)) {
                     "Completed ballot references unknown voter"
                 }
-                require(vote.castSoFar.all { (voter, target) ->
-                    voter != target &&
-                        target in vote.candidatePlayerIds &&
-                        target !in state.public.eliminatedPlayers &&
-                        target !in state.public.droppedPlayers
-                }) { "Invalid vote target" }
+                if (redactedTargets) {
+                    require(vote.castSoFar.values.all { it.raw == REDACTED_ID }) {
+                        "Projected collecting vote contains an unredacted target"
+                    }
+                } else {
+                    require(vote.castSoFar.all { (voter, target) ->
+                        voter != target &&
+                            target in vote.candidatePlayerIds &&
+                            target !in state.public.eliminatedPlayers &&
+                            target !in state.public.droppedPlayers
+                    }) { "Invalid vote target" }
+                }
                 require(vote.currentVoterIndex == vote.castSoFar.size + vote.abstained.size) {
                     "Ballot progress is inconsistent"
                 }
@@ -390,8 +481,10 @@ internal object WhodunitStateValidator {
             }
             is VoteState.Resolved -> {
                 require(vote.accusedPlayerId in playerIds) { "Resolved vote references unknown player" }
-                require(vote.wasKiller == (vote.accusedPlayerId == state.hostOnly.killerId)) {
-                    "Resolved vote has an incorrect killer flag"
+                if (!redactedTargets) {
+                    require(vote.wasKiller == (vote.accusedPlayerId == state.hostOnly.killerId)) {
+                        "Resolved vote has an incorrect killer flag"
+                    }
                 }
             }
             is VoteState.NoResolution -> {
@@ -572,6 +665,7 @@ internal object WhodunitStateValidator {
             is Verdict.PlayersWin -> verdict.killerCharacterId
             is Verdict.KillerWins -> verdict.killerCharacterId
         }
+        validateVerdictProgression(state, verdict)
         require(verdictKillerCharacterId == state.hostOnly.killerCharacterId.raw) {
             "Verdict names a different killer character"
         }
@@ -600,7 +694,191 @@ internal object WhodunitStateValidator {
         }
     }
 
+    private fun validateProjectedAssignment(
+        state: WhodunitState,
+        ownPrivate: WhodunitPrivate?,
+        selfPlayerId: com.parlor.core.ids.PlayerId,
+    ) {
+        val generation = state.public.roleAssignmentGeneration
+        require(generation >= 0L) { "Projected role-assignment generation is negative" }
+        if (generation == 0L) {
+            require(
+                state.phase == WhodunitPhase.Setup || state.phase == WhodunitPhase.PostGame,
+            ) { "Active projected state has no role assignment" }
+            require(ownPrivate == null) { "Unassigned projection contains a private dossier" }
+            if (state.phase == WhodunitPhase.PostGame) requireExactUnassignedTerminalShape(state)
+            return
+        }
+
+        require(state.phase != WhodunitPhase.Setup) { "Projected setup already contains roles" }
+        val private = requireNotNull(ownPrivate) { "Assigned projection has no private dossier" }
+        require(
+            private.characterId.raw.isNotBlank() &&
+                private.characterId.raw != REDACTED_ID &&
+                private.characterId.raw != UNASSIGNED_ID,
+        ) { "Projected dossier has an invalid character" }
+        require(
+            private.deflectionTargets.size == private.deflectionTargets.toSet().size &&
+                private.deflectionTargets.size < state.players.size &&
+                private.characterId !in private.deflectionTargets &&
+                private.deflectionTargets.none {
+                    it.raw.isBlank() || it.raw == REDACTED_ID || it.raw == UNASSIGNED_ID
+                },
+        ) { "Projected dossier has invalid deflection targets" }
+        if (private.role == PlayerRole.Innocent) {
+            require(private.deflectionTargets.isEmpty()) {
+                "Projected innocent dossier contains killer-only targets"
+            }
+        }
+        require(!private.privateReviewOpen || private.dossierUnlocked) {
+            "Projected private review is open while locked"
+        }
+        if (state.phase !is WhodunitPhase.CharacterReveal) {
+            require(!private.dossierUnlocked && !private.privateReviewOpen) {
+                "Projected dossier is exposed outside character reveal"
+            }
+        }
+        if (
+            selfPlayerId in state.public.rolesViewed ||
+            selfPlayerId in state.public.eliminatedPlayers ||
+            selfPlayerId in state.public.droppedPlayers
+        ) {
+            require(!private.dossierUnlocked && !private.privateReviewOpen) {
+                "Ineligible projected player retains private dossier exposure"
+            }
+        }
+    }
+
+    private fun validateProjectedPrivateConsistency(
+        state: WhodunitState,
+        ownPrivate: WhodunitPrivate?,
+        selfPlayerId: com.parlor.core.ids.PlayerId,
+    ) {
+        val private = ownPrivate ?: return
+        val resolved = state.public.voteState as? VoteState.Resolved ?: return
+        if (resolved.accusedPlayerId == selfPlayerId) {
+            require(resolved.wasKiller == (private.role == PlayerRole.Killer)) {
+                "Projected vote result contradicts the receiving player's role"
+            }
+        }
+        if (resolved.wasKiller && private.role == PlayerRole.Killer) {
+            require(resolved.accusedPlayerId == selfPlayerId) {
+                "Projected vote identifies a second killer"
+            }
+        }
+    }
+
+    private fun validateProjectedTerminalOutcome(
+        state: WhodunitState,
+        ownPrivate: WhodunitPrivate?,
+    ) {
+        val public = state.public
+        val terminal = state.phase == WhodunitPhase.Reveal || state.phase == WhodunitPhase.PostGame
+        require(terminal || public.verdict == null) { "Projected active phase contains a verdict" }
+        if (state.phase == WhodunitPhase.Reveal) {
+            require(public.verdict != null) { "Projected reveal has no verdict" }
+        }
+        if (!terminal || public.roleAssignmentGeneration == 0L) return
+
+        val verdict = public.verdict
+        if (verdict == null) {
+            require(
+                state.phase == WhodunitPhase.PostGame &&
+                    public.voteState == VoteState.NoResolution(EARLY_END_REASON),
+            ) { "Projected result-less post-game was not an explicit early end" }
+            return
+        }
+        val killerCharacterId = when (verdict) {
+            is Verdict.PlayersWin -> verdict.killerCharacterId
+            is Verdict.KillerWins -> verdict.killerCharacterId
+        }
+        validateVerdictProgression(state, verdict)
+        require(
+            killerCharacterId.isNotBlank() &&
+                killerCharacterId != REDACTED_ID &&
+                killerCharacterId != UNASSIGNED_ID,
+        ) { "Projected verdict has an invalid killer character" }
+        ownPrivate?.let { private ->
+            require(
+                (private.characterId.raw == killerCharacterId) ==
+                    (private.role == PlayerRole.Killer),
+            ) { "Projected verdict contradicts the receiving player's dossier" }
+        }
+        when (verdict) {
+            is Verdict.PlayersWin -> require(
+                (public.voteState as? VoteState.Resolved)?.wasKiller == true,
+            ) { "Projected players-win verdict lacks a killer vote" }
+            is Verdict.KillerWins -> when (verdict.cause) {
+                KillerWinCause.InnocentAccused -> require(
+                    (public.voteState as? VoteState.Resolved)?.wasKiller == false,
+                ) { "Projected innocent-accused verdict lacks an innocent vote" }
+                KillerWinCause.TieUnresolved,
+                KillerWinCause.SurvivedToFinalTwo,
+                -> require((public.voteState as? VoteState.Resolved)?.wasKiller == true) {
+                    "Projected killer-survival verdict has an invalid result"
+                }
+                KillerWinCause.GameEndedEarly -> require(
+                    public.voteState == VoteState.NoResolution(EARLY_END_REASON),
+                ) { "Projected early-end verdict has an invalid result" }
+            }
+        }
+    }
+
+    private fun validateVerdictProgression(
+        state: WhodunitState,
+        verdict: Verdict,
+    ) {
+        val earlyEnd = verdict is Verdict.KillerWins &&
+            verdict.cause == KillerWinCause.GameEndedEarly
+        if (earlyEnd) return
+
+        require(
+            state.public.currentRound > 0 &&
+                state.public.revealedClues.size == state.public.currentRound,
+        ) { "Vote-derived verdict has no completed investigation round" }
+        if (state.public.modeId == WhodunitIds.ClassicVoteModeId) {
+            val maximumRounds = requireNotNull(
+                WhodunitRules.maximumRoundCount(
+                    state.public.modeId,
+                    state.public.playersAtTable.size,
+                ),
+            ) { "Classic verdict has no round policy" }
+            require(state.public.currentRound == maximumRounds) {
+                "Classic verdict was reached before the final round"
+            }
+        }
+        if (
+            verdict is Verdict.KillerWins &&
+            verdict.cause == KillerWinCause.SurvivedToFinalTwo
+        ) {
+            require(state.public.modeId == WhodunitIds.EliminationModeId) {
+                "Final-two verdict exists outside elimination mode"
+            }
+        }
+    }
+
+    private fun requireExactUnassignedTerminalShape(state: WhodunitState) {
+        val public = state.public
+        require(
+            public.roleAssignmentGeneration == 0L &&
+                public.currentRound == 0 &&
+                public.eliminatedPlayers.isEmpty() &&
+                public.revealedClues.isEmpty() &&
+                public.voteState == VoteState.Idle &&
+                public.briefingCardIndex == 0 &&
+                public.timer == null &&
+                !public.paused &&
+                public.introAcknowledged.isEmpty() &&
+                public.briefingReady.isEmpty() &&
+                public.rolesViewed.isEmpty() &&
+                public.disconnectedPlayers.isEmpty() &&
+                public.droppedPlayers.isEmpty() &&
+                public.verdict == null,
+        ) { "Unassigned terminal state contains gameplay progress" }
+    }
+
     private const val UNASSIGNED_ID = "unassigned"
+    private const val REDACTED_ID = "redacted"
     private const val MAX_REASON_LENGTH = 128
     private const val BRIEFING_CARD_COUNT = 4
     private const val EARLY_END_REASON = "game-ended-early"

@@ -21,14 +21,17 @@ import com.parlor.games.mafia.MafiaDefinition
 import com.parlor.games.mafia.MafiaIds
 import com.parlor.games.mafia.domain.action.MafiaAction
 import com.parlor.games.mafia.domain.phase.MafiaPhase
+import com.parlor.games.mafia.domain.projection.MafiaProjectionPolicy
 import com.parlor.games.mafia.domain.settings.MafiaKillTie
 import com.parlor.games.mafia.domain.settings.MafiaRoleCounts
 import com.parlor.games.mafia.domain.settings.MafiaSettings
 import com.parlor.games.mafia.domain.settings.MafiaSettingsPresets
 import com.parlor.games.mafia.domain.settings.TieBehavior
+import com.parlor.games.mafia.domain.state.MafiaPeerSnapshotValidator
 import com.parlor.games.mafia.domain.state.MafiaState
 import com.parlor.games.mafia.domain.state.Role
 import com.parlor.games.mafia.domain.state.Team
+import com.parlor.games.mafia.snapshot.isValidRecoveryState
 import kotlinx.datetime.Instant
 import kotlinx.serialization.json.Json
 import kotlin.test.Test
@@ -278,6 +281,36 @@ class MafiaReducerTest {
         // Round-2 snapshot has previousRoundTally populated for anonymized display.
         val coord = state.privatePerPlayer.getValue(mafiaIds[0]).mafiaCoordination
         assertThat(coord!!.previousRoundTally).isNotNull()
+        assertThat(state.isValidRecoveryState()).isTrue()
+        state.players.forEach { player ->
+            val publicState = MafiaProjectionPolicy.toPublic(state).state
+            val ownPrivate = MafiaProjectionPolicy.toPlayer(state, player.id)
+                .state.privatePerPlayer[player.id]
+            assertThat(
+                MafiaPeerSnapshotValidator.isValid(publicState, ownPrivate, player.id),
+                "reducer-produced round-two projection for ${player.id}",
+            ).isTrue()
+        }
+
+        val missingHistory = state.copy(
+            privatePerPlayer = state.privatePerPlayer.mapValues { (_, private) ->
+                private.copy(
+                    mafiaCoordination = private.mafiaCoordination?.copy(previousRoundTally = null),
+                )
+            },
+        )
+        assertThat(missingHistory.isValidRecoveryState()).isFalse()
+
+        val untiedHistory = state.copy(
+            privatePerPlayer = state.privatePerPlayer.mapValues { (_, private) ->
+                private.copy(
+                    mafiaCoordination = private.mafiaCoordination?.copy(
+                        previousRoundTally = mapOf(town[0] to 2, town[1] to 1),
+                    ),
+                )
+            },
+        )
+        assertThat(untiedHistory.isValidRecoveryState()).isFalse()
     }
 
     @Test

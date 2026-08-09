@@ -18,13 +18,17 @@ import com.parlor.games.mafia.MafiaDefinition
 import com.parlor.games.mafia.MafiaIds
 import com.parlor.games.mafia.domain.action.MafiaAction
 import com.parlor.games.mafia.domain.phase.MafiaPhase
+import com.parlor.games.mafia.domain.projection.MafiaProjectionPolicy
 import com.parlor.games.mafia.domain.reducer.MafiaReducer
+import com.parlor.games.mafia.domain.state.MafiaPeerSnapshotValidator
 import com.parlor.games.mafia.domain.state.MafiaState
 import com.parlor.games.mafia.domain.state.Role
 import com.parlor.games.mafia.domain.state.Team
+import com.parlor.games.mafia.snapshot.isValidRecoveryState
 import kotlinx.datetime.Instant
 import kotlinx.serialization.json.Json
 import kotlin.test.Test
+import kotlin.test.assertTrue
 
 /**
  * End-to-end reducer drive. Drives a 7-player game to a Mafia win and a
@@ -69,12 +73,34 @@ class FullGameDriveTest {
         )
 
     private fun step(state: MafiaState, action: MafiaAction, ctx: ReducerContext): MafiaState =
-        MafiaReducer.reduce(state, action, ctx).newState
+        MafiaReducer.reduce(state, action, ctx).newState.also(::assertSnapshotBoundaries)
+
+    /**
+     * Every reducer-produced state in the full-game drives must remain valid
+     * at both persistence and per-player network boundaries. This couples the
+     * validators to legal traces instead of testing only hand-built examples.
+     */
+    private fun assertSnapshotBoundaries(state: MafiaState) {
+        assertTrue(
+            state.isValidRecoveryState(),
+            "canonical Mafia state is not recoverable in ${state.phase}",
+        )
+        val publicState = MafiaProjectionPolicy.toPublic(state).state
+        state.players.forEach { player ->
+            val ownPrivate = MafiaProjectionPolicy.toPlayer(state, player.id)
+                .state
+                .privatePerPlayer[player.id]
+            assertTrue(
+                MafiaPeerSnapshotValidator.isValid(publicState, ownPrivate, player.id),
+                "peer Mafia projection is invalid in ${state.phase} for ${player.id.raw}",
+            )
+        }
+    }
 
     @Test
     fun seven_player_mafia_win_via_night_kills() {
         val seed = 1234L
-        var state = initialState(7, seed)
+        var state = initialState(7, seed).also(::assertSnapshotBoundaries)
         val c = ctx(seed)
 
         state = step(state, MafiaAction.StartGame, c)
@@ -127,7 +153,7 @@ class FullGameDriveTest {
     @Test
     fun five_player_town_wins_when_mafia_is_voted_out() {
         val seed = 5555L
-        var state = initialState(5, seed)
+        var state = initialState(5, seed).also(::assertSnapshotBoundaries)
         val c = ctx(seed)
 
         state = step(state, MafiaAction.StartGame, c)
@@ -174,7 +200,7 @@ class FullGameDriveTest {
         // Use a different setup to test the alternative: the Mafia survives
         // long enough to win by parity.
         val seed = 9999L
-        var state = initialState(5, seed)
+        var state = initialState(5, seed).also(::assertSnapshotBoundaries)
         val c = ctx(seed)
 
         state = step(state, MafiaAction.StartGame, c)

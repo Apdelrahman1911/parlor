@@ -4,6 +4,7 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
 import com.parlor.core.ids.CaseId
+import com.parlor.core.ids.GameId
 import com.parlor.core.ids.PlayerId
 import com.parlor.core.ids.SessionId
 import com.parlor.core.result.DataError
@@ -20,6 +21,7 @@ import com.parlor.games.mafia.domain.action.MafiaAction
 import com.parlor.games.mafia.domain.phase.MafiaPhase
 import com.parlor.games.mafia.domain.reducer.MafiaReducer
 import com.parlor.games.mafia.domain.settings.TieBehavior
+import com.parlor.games.mafia.domain.state.DetectiveSeesAs
 import com.parlor.games.mafia.domain.state.Role
 import com.parlor.storage.snapshot.InMemorySnapshotStore
 import kotlinx.coroutines.CancellationException
@@ -64,6 +66,19 @@ class MafiaSnapshotRecoveryTest {
         val corrupted = valid.copy(public = valid.public.copy(roster = valid.public.roster.dropLast(1)))
         val store = InMemorySnapshotStore()
         store.save(snapshot(sessionId, corrupted))
+
+        val result = loadMafiaResumedSession(store, definition, sessionId)
+
+        assertThat(result).isInstanceOf(Result.Failure::class)
+        assertThat((result as Result.Failure).error).isEqualTo(DataError.CorruptedData)
+    }
+
+    @Test
+    fun snapshot_from_another_game_is_rejected_before_state_installation() = runTest {
+        val sessionId = SessionId("mafia-foreign-game")
+        val state = definition.createInitialState(config(sessionId))
+        val store = InMemorySnapshotStore()
+        store.save(snapshot(sessionId, state).copy(gameId = GameId("another-game")))
 
         val result = loadMafiaResumedSession(store, definition, sessionId)
 
@@ -169,6 +184,48 @@ class MafiaSnapshotRecoveryTest {
 
         assertThat(result).isInstanceOf(Result.Failure::class)
         assertThat((result as Result.Failure).error).isEqualTo(DataError.CorruptedData)
+    }
+
+    @Test
+    fun private_night_action_and_detective_result_must_be_reducer_reachable() {
+        var state = nightState(SessionId("mafia-private-action-shape"))
+        val detectiveId = state.privatePerPlayer.entries.single { it.value.role == Role.Detective }.key
+        val targetId = state.players.first { it.id != detectiveId }.id
+        state = MafiaReducer.reduce(
+            state,
+            MafiaAction.SubmitDetectiveInspect(detectiveId, targetId),
+            reducerContext(),
+        ).newState
+        assertTrue(state.isValidRecoveryState())
+
+        val detective = state.privatePerPlayer.getValue(detectiveId)
+        val result = requireNotNull(detective.pendingDetectiveResult)
+        val forgedResult = result.copy(
+            seesAs = if (result.seesAs == DetectiveSeesAs.Mafia) {
+                DetectiveSeesAs.Town
+            } else {
+                DetectiveSeesAs.Mafia
+            },
+        )
+        assertFalse(
+            state.copy(
+                privatePerPlayer = state.privatePerPlayer +
+                    (detectiveId to detective.copy(pendingDetectiveResult = forgedResult)),
+            ).isValidRecoveryState(),
+            "a restored inspection result must match the authoritative role map",
+        )
+
+        val nonDetectiveId = state.privatePerPlayer.entries.first {
+            it.value.role == Role.Civilian
+        }.key
+        val nonDetective = state.privatePerPlayer.getValue(nonDetectiveId)
+        assertFalse(
+            state.copy(
+                privatePerPlayer = state.privatePerPlayer +
+                    (nonDetectiveId to nonDetective.copy(detectiveResultAcknowledged = true)),
+            ).isValidRecoveryState(),
+            "a non-Detective cannot carry inspection acknowledgement state",
+        )
     }
 
     @Test
@@ -303,6 +360,42 @@ class MafiaSnapshotRecoveryTest {
 
         assertFalse(reorderedRoster.isValidRecoveryState())
         assertFalse(unnormalizedName.isValidRecoveryState())
+    }
+
+    @Test
+    fun unassigned_post_game_accepts_only_the_exact_setup_cancellation_shape() {
+        val initial = definition.createInitialState(config(SessionId("mafia-unassigned-terminal")))
+        val ended = MafiaReducer.reduce(
+            initial,
+            MafiaAction.EndGame,
+            reducerContext(),
+        ).newState
+
+        assertTrue(ended.isValidRecoveryState(), "the reducer-produced setup cancellation must restore")
+
+        val mutations = listOf(
+            "terminal setup cancellation cannot claim a played day" to ended.copy(
+                public = ended.public.copy(day = 1),
+            ),
+            "terminal setup cancellation cannot contain a dead seat" to ended.copy(
+                public = ended.public.copy(
+                    roster = ended.public.roster.mapIndexed { index, slot ->
+                        if (index == 0) slot.copy(alive = false, revealedRole = Role.Civilian) else slot
+                    },
+                ),
+            ),
+            "terminal setup cancellation cannot expose an unassigned role" to ended.copy(
+                public = ended.public.copy(
+                    roster = ended.public.roster.mapIndexed { index, slot ->
+                        if (index == 0) slot.copy(revealedRole = Role.Mafia) else slot
+                    },
+                ),
+            ),
+        )
+
+        mutations.forEach { (label, mutated) ->
+            assertFalse(mutated.isValidRecoveryState(), label)
+        }
     }
 
     private fun config(sessionId: SessionId) = SessionConfig(

@@ -160,6 +160,78 @@ class WhodunitPeerProjectionBoundaryTest {
     }
 
     @Test
+    fun peer_rejects_privacy_safe_but_reducer_impossible_public_snapshot() = runTest {
+        val scope = TestScope(UnconfinedTestDispatcher(testScheduler))
+        val bus = InMemoryRoomBus()
+        bus.registerPeer(alice)
+        val bridge = WhodunitPeerRoomBridge(
+            room = InMemoryPeerRoom(bus, alice, "Alice", host),
+            selfPlayerId = alice,
+            initialPublic = canonicalSecretState(),
+            scope = scope,
+            protocol = protocol,
+            json = json,
+        )
+        val impossible = canonicalSecretState().copy(
+            phase = WhodunitPhase.Round(2),
+            public = canonicalSecretState().public.copy(currentRound = 2),
+        )
+
+        bus.fromHost(
+            SendTarget.Direct(alice),
+            playerSnapshot(canonicalSecretState(), sequence = 1, revision = 1),
+        )
+        scope.runCurrent()
+        assertThat(bridge.hasAuthoritativeSnapshot.value).isTrue()
+
+        bus.fromHost(
+            SendTarget.Direct(alice),
+            playerSnapshot(impossible, sequence = 2, revision = 2),
+        )
+        scope.runCurrent()
+
+        assertThat(bridge.hasAuthoritativeSnapshot.value).isTrue()
+        assertThat(bridge.controller.publicState.value.state.phase).isEqualTo(WhodunitPhase.PublicIntro)
+        assertThat(
+            bridge.controller.privateStateFor(alice).value.state.privatePerPlayer.getValue(alice),
+        ).isEqualTo(canonicalSecretState().privatePerPlayer.getValue(alice))
+        bridge.close()
+    }
+
+    @Test
+    fun peer_rejects_a_structurally_valid_case_substitution_for_the_same_session() = runTest {
+        val scope = TestScope(UnconfinedTestDispatcher(testScheduler))
+        val bus = InMemoryRoomBus()
+        bus.registerPeer(alice)
+        val bridge = WhodunitPeerRoomBridge(
+            room = InMemoryPeerRoom(bus, alice, "Alice", host),
+            selfPlayerId = alice,
+            initialPublic = canonicalSecretState(),
+            scope = scope,
+            protocol = protocol,
+            json = json,
+        )
+        bus.fromHost(
+            SendTarget.Direct(alice),
+            playerSnapshot(canonicalSecretState(), sequence = 1, revision = 1),
+        )
+        scope.runCurrent()
+
+        val substituted = canonicalSecretState().copy(
+            public = canonicalSecretState().public.copy(caseId = CaseId("another-case")),
+        )
+        bus.fromHost(
+            SendTarget.Direct(alice),
+            playerSnapshot(substituted, sequence = 2, revision = 2),
+        )
+        scope.runCurrent()
+
+        assertThat(bridge.controller.publicState.value.state.public.caseId)
+            .isEqualTo(CaseId("last-dinner"))
+        bridge.close()
+    }
+
+    @Test
     fun ownProjectionKeepsAssignmentEpochAndDossierFromTheSameRevision() = runTest {
         val scope = TestScope(UnconfinedTestDispatcher(testScheduler))
         val bus = InMemoryRoomBus()

@@ -11,6 +11,7 @@ import com.parlor.games.whodunit.domain.event.WhodunitEvent
 import com.parlor.games.whodunit.domain.projection.WhodunitProjectionPolicy
 import com.parlor.games.whodunit.domain.state.WhodunitPrivate
 import com.parlor.games.whodunit.domain.state.WhodunitState
+import com.parlor.games.whodunit.domain.state.WhodunitStateValidator
 import com.parlor.networking.protocol.SessionProtocol
 import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.NetError
@@ -62,6 +63,9 @@ class WhodunitPeerRoomBridge(
     private val publicSerializer = WhodunitState.serializer()
     private val privateSerializer = WhodunitPrivate.serializer()
     private val safeInitialPublic = WhodunitProjectionPolicy.toPublic(initialPublic).state
+    private val expectedCaseId = safeInitialPublic.public.caseId
+    private val expectedModeId = safeInitialPublic.public.modeId
+    private val expectedPlayers = safeInitialPublic.players
 
     val controller: ShadowSessionController<WhodunitState, WhodunitAction, WhodunitEvent> =
         ShadowSessionController(
@@ -120,17 +124,31 @@ class WhodunitPeerRoomBridge(
                     payload.privatePayload.decodeToString(),
                 )
             }
-            publicState to publicState.copy(
-                privatePerPlayer = ownPrivate?.let { mapOf(selfPlayerId to it) } ?: emptyMap(),
+            Triple(
+                publicState,
+                ownPrivate,
+                publicState.copy(
+                    privatePerPlayer = ownPrivate?.let { mapOf(selfPlayerId to it) } ?: emptyMap(),
+                ),
             )
         } catch (_: Exception) {
             return false
         }
-        val (publicState, playerState) = decoded
+        val (publicState, ownPrivate, playerState) = decoded
+        if (
+            publicState.public.caseId != expectedCaseId ||
+            publicState.public.modeId != expectedModeId ||
+            publicState.players != expectedPlayers
+        ) {
+            return false
+        }
         // A valid public payload is already a fixed point of the projection
         // policy. Anything else contains a private/host-only field (or an
         // unredacted in-progress vote) and must fail closed.
         if (WhodunitProjectionPolicy.toPublic(publicState).state != publicState) return false
+        if (!WhodunitStateValidator.isValidPeerProjection(publicState, ownPrivate, selfPlayerId)) {
+            return false
+        }
         // Keep the public bucket structurally public. The UI may combine its
         // own private projection locally, but no private slice is relabelled as
         // public where a future logger or rebroadcast path could consume it.

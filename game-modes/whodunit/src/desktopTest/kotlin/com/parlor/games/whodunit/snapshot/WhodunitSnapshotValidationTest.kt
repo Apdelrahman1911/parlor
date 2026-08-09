@@ -360,6 +360,25 @@ class WhodunitSnapshotValidationTest {
             ),
         )
         assertDecodeRejected(terminal)
+
+        val finalVote = classicFinalVoteState()
+        val validTerminal = finalVote.copy(
+            phase = WhodunitPhase.Reveal,
+            public = finalVote.public.copy(
+                voteState = VoteState.Resolved(killerId, wasKiller = true),
+                verdict = Verdict.PlayersWin(assigned.hostOnly.killerCharacterId.raw),
+            ),
+        )
+        assertEquals(validTerminal, codec.decode(codec.encode(validTerminal)))
+        assertDecodeRejected(
+            validTerminal.copy(
+                public = validTerminal.public.copy(
+                    currentRound = 0,
+                    revealedClues = emptyList(),
+                ),
+                hostOnly = validTerminal.hostOnly.copy(drawnClueIds = emptySet()),
+            ),
+        )
     }
 
     @Test
@@ -382,6 +401,35 @@ class WhodunitSnapshotValidationTest {
         assertEquals(emptySet(), ended.public.rolesViewed)
         assertEquals(0, ended.public.briefingCardIndex)
         WhodunitStateValidator.requireValid(ended)
+    }
+
+    @Test
+    fun unassigned_terminal_state_accepts_only_the_exact_setup_disconnect_cancellation_shape() {
+        val definition = WhodunitDefinition(json)
+        val initial = definition.createInitialState(
+            SessionConfig(
+                sessionId = SessionId("unassigned-terminal-shape"),
+                caseId = CaseId("snapshot-case"),
+                modeId = WhodunitIds.ClassicVoteModeId,
+                players = players,
+                randomSeed = 7L,
+            ),
+        )
+        val disconnected = WhodunitReducer.reduce(
+            initial,
+            WhodunitAction.MarkPlayerDisconnected(players.first().id),
+            reducerContext(),
+        ).newState
+        val ended = WhodunitReducer.reduce(
+            disconnected,
+            WhodunitAction.ContinueWithoutPlayer(players.first().id),
+            reducerContext(),
+        ).newState
+
+        WhodunitStateValidator.requireValid(ended)
+        assertDecodeRejected(
+            ended.copy(public = ended.public.copy(currentRound = 1)),
+        )
     }
 
     @Test

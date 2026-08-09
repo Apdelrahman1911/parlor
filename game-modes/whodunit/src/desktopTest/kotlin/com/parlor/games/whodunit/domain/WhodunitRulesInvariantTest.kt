@@ -18,6 +18,7 @@ import com.parlor.games.whodunit.content.TimelineEntry
 import com.parlor.games.whodunit.content.WhodunitCase
 import com.parlor.games.whodunit.domain.action.WhodunitAction
 import com.parlor.games.whodunit.domain.phase.WhodunitPhase
+import com.parlor.games.whodunit.domain.projection.WhodunitProjectionPolicy
 import com.parlor.games.whodunit.domain.reducer.WhodunitReducer
 import com.parlor.games.whodunit.domain.reducer.WhodunitReducerContext
 import com.parlor.games.whodunit.testing.validatedWhodunitCaseForTest
@@ -28,6 +29,7 @@ import com.parlor.games.whodunit.domain.state.WhodunitState
 import com.parlor.games.whodunit.domain.state.WhodunitStateValidator
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertFailsWith
 import kotlin.test.assertNotEquals
 import kotlin.test.assertTrue
@@ -52,7 +54,7 @@ class WhodunitRulesInvariantTest {
                     val second = assignedState(modeId, count, seed)
 
                     assertEquals(first, second)
-                    WhodunitStateValidator.requireValid(first)
+                    assertSnapshotBoundaries(first)
                     assertEquals(count, first.privatePerPlayer.size)
                     assertEquals(count, first.hostOnly.seatToCharacter.values.toSet().size)
                     assertEquals(
@@ -136,7 +138,7 @@ class WhodunitRulesInvariantTest {
                 val reveal = assigned.copy(phase = WhodunitPhase.CharacterReveal(0))
                 val rerolled = reduce(reveal, WhodunitAction.RequestReroll).newState
 
-                WhodunitStateValidator.requireValid(rerolled)
+                assertSnapshotBoundaries(rerolled)
                 assertEquals(WhodunitPhase.CharacterReveal(0), rerolled.phase)
                 assertNotEquals(assigned.hostOnly.killerId, rerolled.hostOnly.killerId)
                 assigned.players.forEach { player ->
@@ -162,7 +164,7 @@ class WhodunitRulesInvariantTest {
                 for (seed in 0L..10L) {
                     val roster = players(count)
                     var state = definition.createInitialState(config(modeId, roster, seed))
-                    WhodunitStateValidator.requireValid(state)
+                    assertSnapshotBoundaries(state)
                     state = submitValid(state, WhodunitAction.AssignRoles(seed))
                     roster.forEach { player ->
                         state = submitValid(state, WhodunitAction.AcknowledgeIntro(player.id))
@@ -209,6 +211,18 @@ class WhodunitRulesInvariantTest {
                     state = submitValid(state, WhodunitAction.CloseVote)
                     assertEquals(WhodunitPhase.Reveal, state.phase)
                     assertTrue(state.public.verdict is com.parlor.games.whodunit.domain.event.Verdict.PlayersWin)
+
+                    val innocent = state.privatePerPlayer.entries.first {
+                        it.value.role == PlayerRole.Innocent
+                    }
+                    assertFalse(
+                        WhodunitStateValidator.isValidPeerProjection(
+                            publicState = WhodunitProjectionPolicy.toPublic(state).state,
+                            ownPrivate = innocent.value.copy(role = PlayerRole.Killer),
+                            selfPlayerId = innocent.key,
+                        ),
+                        "terminal peer snapshot must agree with the receiving player's dossier",
+                    )
                 }
             }
         }
@@ -237,7 +251,26 @@ class WhodunitRulesInvariantTest {
         )
 
     private fun submitValid(state: WhodunitState, action: WhodunitAction): WhodunitState =
-        reduce(state, action).newState.also(WhodunitStateValidator::requireValid)
+        reduce(state, action).newState.also(::assertSnapshotBoundaries)
+
+    /** Validates each legal reducer state at canonical and peer trust boundaries. */
+    private fun assertSnapshotBoundaries(state: WhodunitState) {
+        WhodunitStateValidator.requireValid(state)
+        val publicState = WhodunitProjectionPolicy.toPublic(state).state
+        state.players.forEach { player ->
+            val ownPrivate = WhodunitProjectionPolicy.toPlayer(state, player.id)
+                .state
+                .privatePerPlayer[player.id]
+            assertTrue(
+                WhodunitStateValidator.isValidPeerProjection(
+                    publicState = publicState,
+                    ownPrivate = ownPrivate,
+                    selfPlayerId = player.id,
+                ),
+                "peer Whodunit projection is invalid in ${state.phase} for ${player.id.raw}",
+            )
+        }
+    }
 
     private fun config(
         modeId: com.parlor.core.ids.ModeId,
