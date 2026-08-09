@@ -62,8 +62,15 @@ interface LocalRoom {
     suspend fun rejectAdmission(playerId: PlayerId): Result<Unit, NetError> =
         Result.Failure(NetError.Unauthorized)
 
-    /** Stop accepting new seats once gameplay begins. Existing rejoin remains allowed. */
-    suspend fun closeAdmissions() = Unit
+    /**
+     * Atomically closes initial admission and returns the exact connected
+     * roster frozen for gameplay. A transport must fail with
+     * [NetError.CommandInFlight] rather than produce a partial roster while a
+     * credential handoff is still committing. Resumable rejoin for seats in
+     * the returned roster remains allowed after this barrier.
+     */
+    suspend fun closeAdmissions(): Result<List<RoomMember>, NetError> =
+        Result.Success(members.value.filter(RoomMember::connected))
 
     suspend fun send(target: SendTarget, message: HostMessage): Result<Unit, NetError>
     suspend fun sendToHost(message: PeerMessage): Result<Unit, NetError>

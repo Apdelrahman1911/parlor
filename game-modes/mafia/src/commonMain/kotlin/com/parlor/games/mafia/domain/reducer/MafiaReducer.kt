@@ -802,6 +802,10 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
     // ============================================================ Connection chrome ==
 
     private fun markDisconnected(state: MafiaState, id: PlayerId): Reduction<MafiaState, MafiaEvent> {
+        // PostGame is terminal; recording a fresh disconnect there only puts a
+        // permanent reconnect overlay over results because no grace recovery
+        // job is scheduled for a completed game.
+        if (state.phase == MafiaPhase.PostGame) return Reduction(state)
         if (id !in state.players.map { it.id }) return Reduction(state)
         if (id in state.public.disconnectedPlayers) return Reduction(state)
         return Reduction(
@@ -867,11 +871,11 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
                 activeVote = activeVote,
             ),
         )
-        if (state.phase == MafiaPhase.Setup) return Reduction(dropped)
-
         // Session orchestration owns the 120-second grace period. Once it
-        // dispatches ContinueWithoutPlayer during an active game, Mafia cannot
-        // preserve hidden-role fairness with an absent seat, so the game ends.
+        // dispatches ContinueWithoutPlayer, the frozen roster cannot be
+        // changed safely — including during Setup, because no replacement-seat
+        // admission UI exists after the lobby barrier. End the session instead
+        // of leaving StartGame permanently blocked by a dropped ghost seat.
         val winner = evaluateCurrentWinner(dropped)
         return Reduction(
             finishGame(dropped, winner),

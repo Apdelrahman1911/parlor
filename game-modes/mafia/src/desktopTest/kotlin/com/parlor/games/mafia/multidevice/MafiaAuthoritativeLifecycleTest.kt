@@ -3,6 +3,7 @@ package com.parlor.games.mafia.multidevice
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isFalse
+import assertk.assertions.isInstanceOf
 import assertk.assertions.isTrue
 import com.parlor.core.ids.CaseId
 import com.parlor.core.ids.PlayerId
@@ -173,7 +174,56 @@ class MafiaAuthoritativeLifecycleTest {
         fixture.peerBridge.close()
     }
 
-    private suspend fun fixture(scope: TestScope): Fixture {
+    @Test
+    fun production_topology_reconciliation_observes_disconnect_before_bridge_creation() = runTest {
+        val scope = TestScope(UnconfinedTestDispatcher(testScheduler))
+        val initialMembers = players.drop(1).map { player ->
+            RoomMember(
+                playerId = player.id,
+                displayName = player.displayName,
+                connected = player.id != alice,
+            )
+        }
+        val fixture = fixture(
+            scope = scope,
+            reconcileRoomTopology = true,
+            initialMembers = initialMembers,
+            startGame = false,
+        )
+        runCurrent()
+        assertThat(alice in fixture.session.hostState.value.state.public.disconnectedPlayers).isTrue()
+
+        fixture.hostRoom.setMembers(
+            initialMembers.map { member ->
+                if (member.playerId == alice) member.copy(connected = true) else member
+            },
+        )
+        runCurrent()
+        assertThat(alice in fixture.session.hostState.value.state.public.disconnectedPlayers).isFalse()
+        fixture.close()
+    }
+
+    @Test
+    fun post_game_disconnect_does_not_cover_terminal_results_with_reconnect_state() = runTest {
+        val fixture = fixture(TestScope(UnconfinedTestDispatcher(testScheduler)))
+        assertThat(fixture.bridge.submitHostAction(MafiaAction.EndGame))
+            .isInstanceOf(Result.Success::class)
+        val terminal = fixture.session.hostState.value.state
+        assertThat(terminal.phase).isEqualTo(MafiaPhase.PostGame)
+
+        fixture.bus.emitPeerLeft(alice, "Alice")
+        runCurrent()
+
+        assertThat(fixture.session.hostState.value.state).isEqualTo(terminal)
+        fixture.close()
+    }
+
+    private suspend fun fixture(
+        scope: TestScope,
+        reconcileRoomTopology: Boolean = false,
+        initialMembers: List<RoomMember> = emptyList(),
+        startGame: Boolean = true,
+    ): Fixture {
         val bus = InMemoryRoomBus()
         players.forEach { bus.registerPeer(it.id) }
         val session = PassAndPlaySessionController<MafiaState, MafiaAction, MafiaEvent>(
@@ -192,6 +242,7 @@ class MafiaAuthoritativeLifecycleTest {
             scope = scope,
         )
         val hostRoom = LifecycleHostRoom(bus, host)
+        hostRoom.setMembers(initialMembers)
         val bridge = MafiaHostRoomBridge(
             controller = session,
             room = hostRoom,
@@ -200,8 +251,9 @@ class MafiaAuthoritativeLifecycleTest {
             json = json,
             rejoinGraceMs = 200L,
             heartbeatIntervalMs = 0L,
+            reconcileRoomTopology = reconcileRoomTopology,
         )
-        bridge.submitHostAction(MafiaAction.StartGame)
+        if (startGame) bridge.submitHostAction(MafiaAction.StartGame)
         scope.runCurrent()
         val peerBridge = MafiaPeerRoomBridge(
             room = InMemoryPeerRoom(bus, alice, "Alice", host),
@@ -238,12 +290,17 @@ private class LifecycleHostRoom(
     override val info = MutableStateFlow(
         RoomInfo("test", "Mafia Host", hostId, RoomInfo.Status.Hosting),
     ).asStateFlow()
-    override val members = MutableStateFlow<List<RoomMember>>(emptyList()).asStateFlow()
+    private val memberState = MutableStateFlow<List<RoomMember>>(emptyList())
+    override val members = memberState.asStateFlow()
     override val isHost = true
     override val selfPlayerId = hostId
     override val incoming: Flow<RoomMessage> = bus.hostMessagesIn
     override val peerEvents: SharedFlow<PeerEvent> = bus.peerEvents
     val sent = mutableListOf<Pair<SendTarget, HostMessage>>()
+
+    fun setMembers(members: List<RoomMember>) {
+        memberState.value = members
+    }
 
     override suspend fun send(
         target: SendTarget,

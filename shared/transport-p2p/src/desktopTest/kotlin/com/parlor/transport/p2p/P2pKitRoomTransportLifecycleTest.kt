@@ -3,6 +3,7 @@ package com.parlor.transport.p2p
 import assertk.assertThat
 import assertk.assertions.contains
 import assertk.assertions.containsExactly
+import assertk.assertions.containsExactlyInAnyOrder
 import assertk.assertions.hasSize
 import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
@@ -321,7 +322,7 @@ class P2pKitRoomTransportLifecycleTest {
     }
 
     @Test
-    fun closing_admissions_rejects_waiters_but_does_not_abort_an_in_flight_approval() = runBlocking {
+    fun closing_admissions_is_an_atomic_barrier_around_in_flight_approval() = runBlocking {
         val kit = FakeP2pKit(P2pPeerId("host-pid"))
         val room = newHostRoom(kit, maxRemotePlayers = 2)
         val alice = FakeP2pSession(peer("alice-pid", "Alice"))
@@ -340,16 +341,58 @@ class P2pKitRoomTransportLifecycleTest {
         val approval = testScope.async { room.approveAdmission(PlayerId("alice-pid")) }
         acceptanceStarted.await()
 
-        room.closeAdmissions()
-        assertThat(bob.admissionRejections()).containsExactly(AdmissionRejection.SessionStarted)
+        val blocked = room.closeAdmissions()
+        assertThat(blocked).isInstanceOf(Result.Failure::class)
+        assertThat((blocked as Result.Failure).error).isEqualTo(NetError.CommandInFlight)
+        assertThat(bob.admissionRejections()).isEmpty()
         assertThat(room.pendingAdmissions.value.map { it.playerId })
-            .containsExactly(PlayerId("alice-pid"))
+            .containsExactlyInAnyOrder(PlayerId("alice-pid"), PlayerId("bob-pid"))
 
         releaseAcceptance.complete(Unit)
         assertThat(approval.await()).isInstanceOf(Result.Success::class)
-        assertThat(room.members.value.map(RoomMember::playerId))
+        val frozen = room.closeAdmissions()
+        assertThat(frozen).isInstanceOf(Result.Success::class)
+        assertThat((frozen as Result.Success).data.map(RoomMember::playerId))
             .containsExactly(PlayerId("alice-pid"))
+        assertThat(bob.admissionRejections()).containsExactly(AdmissionRejection.SessionStarted)
         assertThat(room.pendingAdmissions.value).isEmpty()
+    }
+
+    @Test
+    fun closing_admissions_excludes_and_invalidates_disconnected_lobby_members() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("host-pid"))
+        val room = newHostRoom(kit, maxRemotePlayers = 2)
+        val alice = FakeP2pSession(peer("alice-pid", "Alice"))
+        val credential = admit(room, kit, alice)
+
+        alice.stateFlow.value = ConnectionState.Closed
+        awaitCondition { room.members.value.singleOrNull()?.connected == false }
+
+        val frozen = room.closeAdmissions()
+        assertThat(frozen).isInstanceOf(Result.Success::class)
+        assertThat((frozen as Result.Success).data).isEmpty()
+        assertThat(room.members.value).isEmpty()
+
+        val returningAlice = FakeP2pSession(peer("alice-pid", "Alice"))
+        kit.incomingSessionsFlow.emit(returningAlice)
+        yield()
+        returningAlice.incomingFlow.emit(
+            P2pMessage.Binary(
+                codec.encode(
+                    PeerMessage.ResumeRequested(
+                        protocol = ProtocolVersion(),
+                        actor = PlayerId("forged-body-id"),
+                        roomCode = "ABCDEF",
+                        displayName = "Alice",
+                        secret = credential,
+                        generation = 1L,
+                    ),
+                ),
+            ),
+        )
+        awaitCondition { returningAlice.admissionRejections().isNotEmpty() }
+        assertThat(returningAlice.admissionRejections())
+            .containsExactly(AdmissionRejection.InvalidCredential)
     }
 
     @Test

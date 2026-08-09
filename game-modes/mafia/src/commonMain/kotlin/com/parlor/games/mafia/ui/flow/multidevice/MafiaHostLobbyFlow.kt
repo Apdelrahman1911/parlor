@@ -50,6 +50,7 @@ import com.parlor.games.mafia.resources.md_host_player_bullet_format
 import com.parlor.games.mafia.resources.md_host_players_in_room
 import com.parlor.games.mafia.resources.md_host_room_code
 import com.parlor.games.mafia.resources.md_host_start_description
+import com.parlor.games.mafia.resources.md_host_start_blocked
 import com.parlor.games.mafia.resources.md_host_start_need_more
 import com.parlor.games.mafia.resources.md_host_start_pending
 import com.parlor.games.mafia.resources.md_host_start_too_many
@@ -64,6 +65,7 @@ import com.parlor.games.mafia.resources.setup_back
 import com.parlor.games.mafia.resources.setup_back_description
 import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.NetError
+import com.parlor.networking.room.RoomMember
 import com.parlor.networking.transport.HostConfig
 import com.parlor.networking.transport.HostedGameProtocol
 import com.parlor.networking.transport.RoomTransport
@@ -93,7 +95,8 @@ fun MafiaHostLobbyFlow(
     var room by remember { mutableStateOf<LocalRoom?>(null) }
     var hostError by remember { mutableStateOf<NetError?>(null) }
     var hostAttempt by remember { mutableStateOf(0) }
-    var started by remember { mutableStateOf(false) }
+    var frozenRoster by remember { mutableStateOf<List<RoomMember>?>(null) }
+    var startBlocked by remember { mutableStateOf(false) }
     val seed = remember { RandomSource.system().nextLong() }
 
     LaunchedEffect(transport, hostAttempt) {
@@ -110,7 +113,11 @@ fun MafiaHostLobbyFlow(
                 ),
             )
         ) {
-            is Result.Success -> room = result.data
+            is Result.Success -> {
+                room = result.data
+                frozenRoster = null
+                startBlocked = false
+            }
             is Result.Failure -> hostError = result.error
         }
     }
@@ -145,13 +152,21 @@ fun MafiaHostLobbyFlow(
             label = stringResource(Res.string.md_host_opening_room),
             modifier = modifier,
         )
-        !started -> MafiaHostLobbyContent(
+        frozenRoster == null -> MafiaHostLobbyContent(
             room = current,
             hostName = hostName,
+            startBlocked = startBlocked,
             onStart = {
                 scope.launch {
-                    current.closeAdmissions()
-                    started = true
+                    when (val frozen = current.closeAdmissions()) {
+                        is Result.Success -> {
+                            frozenRoster = frozen.data
+                            startBlocked = false
+                        }
+                        is Result.Failure -> {
+                            startBlocked = frozen.error == NetError.CommandInFlight
+                        }
+                    }
                 }
             },
             onLeave = {
@@ -163,14 +178,14 @@ fun MafiaHostLobbyFlow(
             modifier = modifier,
         )
         else -> {
-            val members by current.members.collectAsState()
-            val players = remember(members, hostName, current) {
+            val roster = checkNotNull(frozenRoster)
+            val players = remember(roster, hostName, current) {
                 val hostPlayer = Player(
                     id = current.info.value.hostPlayerId,
                     displayName = hostName,
                     seat = 0,
                 )
-                val peers = members.mapIndexed { index, member ->
+                val peers = roster.mapIndexed { index, member ->
                     Player(member.playerId, member.displayName, seat = index + 1)
                 }
                 listOf(hostPlayer) + peers
@@ -190,6 +205,7 @@ fun MafiaHostLobbyFlow(
 private fun MafiaHostLobbyContent(
     room: LocalRoom,
     hostName: String,
+    startBlocked: Boolean,
     onStart: () -> Unit,
     onLeave: () -> Unit,
     modifier: Modifier = Modifier,
@@ -197,6 +213,7 @@ private fun MafiaHostLobbyContent(
     val info by room.info.collectAsState()
     val members by room.members.collectAsState()
     val pendingAdmissions by room.pendingAdmissions.collectAsState()
+    val connectedMembers = members.filter(RoomMember::connected)
     val scope = rememberCoroutineScope()
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
         Box(modifier = Modifier.fillMaxSize()) {
@@ -241,14 +258,14 @@ private fun MafiaHostLobbyContent(
                 }
 
                 EyebrowLabel(text = stringResource(Res.string.md_host_players_in_room), accent = false)
-                if (members.isEmpty()) {
+                if (connectedMembers.isEmpty()) {
                     Text(
                         text = stringResource(Res.string.md_host_waiting_for_players),
                         style = ParlorTheme.typography.bodyMedium,
                         color = ParlorTheme.colors.textTertiary,
                     )
                 } else {
-                    members.forEach { member ->
+                    connectedMembers.forEach { member ->
                         Text(
                             text = stringResource(Res.string.md_host_player_bullet_format, member.displayName),
                             style = ParlorTheme.typography.bodyLarge,
@@ -311,7 +328,15 @@ private fun MafiaHostLobbyContent(
                 }
             }
 
-            val playerCount = members.size + 1
+            if (startBlocked) {
+                Text(
+                    text = stringResource(Res.string.md_host_start_blocked),
+                    style = ParlorTheme.typography.bodyMedium,
+                    color = ParlorTheme.colors.semanticDanger,
+                )
+            }
+
+            val playerCount = connectedMembers.size + 1
             val canStart =
                 playerCount in MafiaSettings.MIN_PLAYERS..MafiaSettings.MAX_PLAYERS &&
                     pendingAdmissions.isEmpty()

@@ -29,6 +29,7 @@ import com.parlor.app.resources.error_back_description
 import com.parlor.app.resources.host_cancel
 import com.parlor.app.resources.host_error_title
 import com.parlor.app.resources.host_start_description
+import com.parlor.app.resources.host_start_blocked
 import com.parlor.app.resources.host_start_solo
 import com.parlor.app.resources.host_start_with_players_format
 import com.parlor.app.resources.host_cancel_description
@@ -77,6 +78,7 @@ import com.parlor.games.whodunit.ui.flow.WhodunitMultiplayerHostFlow
 import com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostRoomBridge
 import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.NetError
+import com.parlor.networking.room.RoomMember
 import com.parlor.networking.transport.HostConfig
 import com.parlor.networking.transport.HostedGameProtocol
 import com.parlor.networking.transport.RoomTransport
@@ -113,7 +115,8 @@ fun HostSessionFlow(
     // Keep the typed error so the rendering site can localise it.
     var hostError by remember { mutableStateOf<NetError?>(null) }
     var hostAttempt by remember { mutableStateOf(0) }
-    var started by remember { mutableStateOf(false) }
+    var frozenRoster by remember { mutableStateOf<List<RoomMember>?>(null) }
+    var startBlocked by remember { mutableStateOf(false) }
     val seed = remember(caseId) { RandomSource.system().nextLong() }
 
     val caseResult by produceState<Result<ValidatedCase<WhodunitCase>, DataError>?>(
@@ -137,7 +140,11 @@ fun HostSessionFlow(
                 ),
             )
         ) {
-            is Result.Success -> room = result.data
+            is Result.Success -> {
+                room = result.data
+                frozenRoster = null
+                startBlocked = false
+            }
             is Result.Failure -> hostError = result.error
         }
     }
@@ -175,7 +182,7 @@ fun HostSessionFlow(
             modifier = modifier,
         )
         current == null || case == null -> HostLoadingState(modifier = modifier)
-        !started -> HostLobbyContent(
+        frozenRoster == null -> HostLobbyContent(
             room = current,
             hostName = hostName,
             supportedPlayerCounts = if (modeId == WhodunitIds.EliminationModeId) {
@@ -184,10 +191,18 @@ fun HostSessionFlow(
                 4..minOf(6, case.payload.characters.size)
             },
             modifier = modifier,
+            startBlocked = startBlocked,
             onStart = {
                 scope.launch {
-                    current.closeAdmissions()
-                    started = true
+                    when (val frozen = current.closeAdmissions()) {
+                        is Result.Success -> {
+                            frozenRoster = frozen.data
+                            startBlocked = false
+                        }
+                        is Result.Failure -> {
+                            startBlocked = frozen.error == NetError.CommandInFlight
+                        }
+                    }
                 }
             },
             onLeave = {
@@ -198,14 +213,14 @@ fun HostSessionFlow(
             },
         )
         else -> {
-            val members by current.members.collectAsState()
-            val players = remember(members, hostName, current) {
+            val roster = checkNotNull(frozenRoster)
+            val players = remember(roster, hostName, current) {
                 val hostPlayer = Player(
                     id = current.info.value.hostPlayerId,
                     displayName = hostName,
                     seat = 0,
                 )
-                val peers = members.mapIndexed { index, member ->
+                val peers = roster.mapIndexed { index, member ->
                     Player(member.playerId, member.displayName, seat = index + 1)
                 }
                 listOf(hostPlayer) + peers
@@ -228,6 +243,7 @@ private fun HostLobbyContent(
     room: LocalRoom,
     hostName: String,
     supportedPlayerCounts: IntRange,
+    startBlocked: Boolean,
     onStart: () -> Unit,
     onLeave: () -> Unit,
     modifier: Modifier = Modifier,
@@ -235,6 +251,7 @@ private fun HostLobbyContent(
     val info by room.info.collectAsState()
     val members by room.members.collectAsState()
     val pendingAdmissions by room.pendingAdmissions.collectAsState()
+    val connectedMembers = members.filter(RoomMember::connected)
     val scope = rememberCoroutineScope()
 
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
@@ -286,14 +303,14 @@ private fun HostLobbyContent(
             }
 
             EyebrowLabel(text = stringResource(Res.string.host_members_eyebrow), accent = false)
-            if (members.isEmpty()) {
+            if (connectedMembers.isEmpty()) {
                 Text(
                     text = stringResource(Res.string.host_members_empty),
                     style = ParlorTheme.typography.bodyMedium,
                     color = ParlorTheme.colors.textTertiary,
                 )
             } else {
-                members.forEach { member ->
+                connectedMembers.forEach { member ->
                     Text(
                         text = "· ${member.displayName}",
                         style = ParlorTheme.typography.bodyLarge,
@@ -353,7 +370,15 @@ private fun HostLobbyContent(
 
         }
 
-        val playerCount = members.size + 1
+        if (startBlocked) {
+            Text(
+                text = stringResource(Res.string.host_start_blocked),
+                style = ParlorTheme.typography.bodyMedium,
+                color = ParlorTheme.colors.semanticDanger,
+            )
+        }
+
+        val playerCount = connectedMembers.size + 1
         val canStart =
             playerCount in supportedPlayerCounts && pendingAdmissions.isEmpty()
         val startLabel = when {
@@ -371,7 +396,7 @@ private fun HostLobbyContent(
                 )
             else ->
             stringResource(Res.string.host_start_with_players_format)
-                .replace("%1\$s", (members.size + 1).toString())
+                .replace("%1\$s", playerCount.toString())
         }
         StickyActionBar(modifier = Modifier.align(Alignment.BottomCenter)) {
             ParlorButton(

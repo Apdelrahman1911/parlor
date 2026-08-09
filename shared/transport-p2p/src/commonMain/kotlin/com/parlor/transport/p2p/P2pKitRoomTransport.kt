@@ -2307,17 +2307,62 @@ internal class HostP2pRoom(
         return Result.Success(Unit)
     }
 
-    override suspend fun closeAdmissions() {
-        val pending = stateMutex.withLock {
+    override suspend fun closeAdmissions(): Result<List<RoomMember>, NetError> {
+        data class FrozenRoster(
+            val members: List<RoomMember>,
+            val pending: List<PendingConnection>,
+            val disconnectedSessions: List<P2pSession>,
+            val discardedCredentials: List<HostCredential>,
+        )
+
+        val frozen = stateMutex.withLock {
+            // An offered/committed credential is a transaction, not a lobby
+            // seat. Starting through that transaction would either omit a
+            // peer that was approved or include one that cannot yet receive
+            // the first snapshot. Keep admissions open and make the caller
+            // retry after the deterministic ready/rollback result.
+            if (
+                admissionReservations.isNotEmpty() ||
+                admissionReadyByPlayer.isNotEmpty() ||
+                resumeReadyByPlayer.isNotEmpty()
+            ) {
+                return@withLock null
+            }
+
             admissionsClosed = true
-            pendingByPlayer.keys
-                .filterNot(admissionReservations::contains)
-                .mapNotNull(pendingByPlayer::remove)
-                .also {
-                    publishPendingAdmissions()
-                }
+            val pending = pendingByPlayer.values.toList()
+            pendingByPlayer.clear()
+
+            // A disconnected lobby member is not part of the frozen game
+            // roster. Invalidate its capability atomically so it cannot rejoin
+            // after gameplay starts as a seat the game never created.
+            val disconnectedIds = membersByPlayer
+                .filterValues { !it.connected }
+                .keys
+                .toList()
+            val disconnectedSessions = disconnectedIds.mapNotNull(sessionsByPlayer::remove)
+            val discardedCredentials = disconnectedIds.mapNotNull(credentialsByPlayer::remove)
+            disconnectedIds.forEach { playerId ->
+                membersByPlayer.remove(playerId)
+                rejoinDeadlineByPlayer.remove(playerId)
+            }
+
+            publishPendingAdmissions()
+            publishMembers()
+            FrozenRoster(
+                members = membersByPlayer.values.filter(RoomMember::connected),
+                pending = pending,
+                disconnectedSessions = disconnectedSessions,
+                discardedCredentials = discardedCredentials,
+            )
+        } ?: return Result.Failure(NetError.CommandInFlight)
+
+        frozen.discardedCredentials.forEach(HostCredential::wipe)
+        frozen.pending.forEach { pending ->
+            rejectSession(pending.session, AdmissionRejection.SessionStarted)
         }
-        pending.forEach { rejectSession(it.session, AdmissionRejection.SessionStarted) }
+        frozen.disconnectedSessions.forEach { session -> runCatching { session.close() } }
+        return Result.Success(frozen.members)
     }
 
     private suspend fun admit(
@@ -2331,6 +2376,14 @@ internal class HostP2pRoom(
             when {
                 pending?.session !== session -> null
                 playerId in admissionReservations -> AdmissionPreparation.InFlight
+                admissionsClosed -> {
+                    pendingByPlayer.remove(playerId)
+                    publishPendingAdmissions()
+                    AdmissionPreparation.Rejected(
+                        error = NetError.SessionStarted,
+                        reason = AdmissionRejection.SessionStarted,
+                    )
+                }
                 session.state.value != ConnectionState.Connected -> {
                     pendingByPlayer.remove(playerId)
                     publishPendingAdmissions()

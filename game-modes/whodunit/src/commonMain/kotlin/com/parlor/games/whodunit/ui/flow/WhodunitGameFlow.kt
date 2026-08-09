@@ -708,7 +708,13 @@ fun WhodunitMultiplayerHostFlow(
             PartyAwareSession(rawSession, hostPlayMode, WhodunitReadinessGate)
         }
     val bridge = remember(rawSession, room, rosterAtStart) {
-        WhodunitHostRoomBridge(rawSession, room, rosterAtStart, scope)
+        WhodunitHostRoomBridge(
+            rawSession,
+            room,
+            rosterAtStart,
+            scope,
+            reconcileRoomTopology = true,
+        )
     }
     val session: SessionController<WhodunitState, WhodunitAction, WhodunitEvent> =
         remember(partySession, bridge) {

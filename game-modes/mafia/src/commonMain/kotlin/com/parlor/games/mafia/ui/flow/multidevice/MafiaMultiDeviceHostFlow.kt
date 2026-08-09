@@ -133,7 +133,13 @@ fun MafiaMultiDeviceHostFlow(
             PartyAwareSession(rawSession, hostPlayMode, MafiaReadinessGate)
         }
     val bridge = remember(rawSession, room, rosterAtStart) {
-        MafiaHostRoomBridge(rawSession, room, rosterAtStart, scope)
+        MafiaHostRoomBridge(
+            rawSession,
+            room,
+            rosterAtStart,
+            scope,
+            reconcileRoomTopology = true,
+        )
     }
     val session: SessionController<MafiaState, MafiaAction, MafiaEvent> =
         remember(partySession, bridge) {

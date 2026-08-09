@@ -319,7 +319,7 @@ class MafiaReducerTest {
     }
 
     @Test
-    fun authenticated_setup_reconnect_atomically_readmits_dropped_seat() {
+    fun setup_disconnect_reconnects_before_grace_expiry_without_dropping_seat() {
         val state = initialState(7)
         val player = state.players.first().id
         val disconnected = MafiaReducer.reduce(
@@ -327,14 +327,8 @@ class MafiaReducerTest {
             MafiaAction.MarkPlayerDisconnected(player),
             ctx(),
         ).newState
-        val dropped = MafiaReducer.reduce(
-            disconnected,
-            MafiaAction.ContinueWithoutPlayer(player),
-            ctx(),
-        ).newState
-
         val reconnected = MafiaReducer.reduce(
-            dropped,
+            disconnected,
             MafiaAction.MarkPlayerReconnected(player),
             ctx(),
         ).newState
@@ -351,6 +345,7 @@ class MafiaReducerTest {
         val p = state.players.first().id
         val dropped = MafiaReducer.reduce(state, MafiaAction.ContinueWithoutPlayer(p), ctx()).newState
         assertThat(dropped.public.droppedPlayers.contains(p)).isTrue()
+        assertThat(dropped.phase).isEqualTo(MafiaPhase.PostGame)
     }
 
     @Test

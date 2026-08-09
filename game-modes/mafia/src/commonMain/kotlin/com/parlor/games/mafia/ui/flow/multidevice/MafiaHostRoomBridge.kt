@@ -19,6 +19,7 @@ import com.parlor.networking.protocol.SessionEnvelopeHeader
 import com.parlor.networking.protocol.SessionProtocol
 import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.PeerEvent
+import com.parlor.networking.room.RoomMember
 import com.parlor.networking.room.SendTarget
 import com.parlor.networking.security.SecureIds
 import com.parlor.session.multidevice.CommandApplication
@@ -54,6 +55,7 @@ class MafiaHostRoomBridge(
     private val rejoinGraceMs: Long = REJOIN_GRACE_MS,
     heartbeatIntervalMs: Long = HEARTBEAT_INTERVAL_MS,
     sessionIdGenerator: () -> String = SecureIds::id128,
+    reconcileRoomTopology: Boolean = false,
 ) {
     val protocol: SessionProtocol = SessionProtocol(
         sessionId = SessionId(sessionIdGenerator()),
@@ -78,8 +80,10 @@ class MafiaHostRoomBridge(
         heartbeatIntervalMs = heartbeatIntervalMs,
     )
 
-    private val peerEventsJob = scope.launch {
-        room.peerEvents.collect(::handlePeerEvent)
+    private val peerEventsJob = if (reconcileRoomTopology) {
+        scope.launch { room.members.collect(::reconcileMembers) }
+    } else {
+        scope.launch { room.peerEvents.collect(::handlePeerEvent) }
     }
 
     suspend fun announceStart(caseId: String, modeId: String) {
@@ -202,6 +206,21 @@ class MafiaHostRoomBridge(
             PeerEvent.HostRestored,
             PeerEvent.SelfOffline,
             PeerEvent.SelfOnline -> Unit
+        }
+    }
+
+    private suspend fun reconcileMembers(members: List<RoomMember>) {
+        val connected = members.asSequence()
+            .filter(RoomMember::connected)
+            .map(RoomMember::playerId)
+            .toSet()
+        remotePlayers.forEach { playerId ->
+            val markedDisconnected =
+                playerId in controller.currentState().public.disconnectedPlayers
+            when {
+                playerId !in connected && !markedDisconnected -> handlePeerLeft(playerId)
+                playerId in connected && markedDisconnected -> handlePeerReconnected(playerId)
+            }
         }
     }
 

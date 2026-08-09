@@ -142,6 +142,32 @@ class PartyConnectionEventsTest {
     }
 
     @Test
+    fun production_topology_reconciliation_observes_disconnect_before_bridge_creation() = runTest {
+        val scope = TestScope(UnconfinedTestDispatcher(testScheduler))
+        val room = PartyEventsHostRoom(InMemoryRoomBus(), hostId)
+        room.setMembers(listOf(RoomMember(alice, "Alice", connected = false)))
+        val session = buildHostSession(loadCase())
+
+        val bridge = WhodunitHostRoomBridge(
+            session,
+            room,
+            players,
+            scope,
+            json,
+            heartbeatIntervalMs = 0L,
+            reconcileRoomTopology = true,
+        )
+        runCurrent()
+        assertThat(session.hostState.value.state.public.disconnectedPlayers).contains(alice)
+
+        room.setMembers(listOf(RoomMember(alice, "Alice", connected = true)))
+        runCurrent()
+        assertThat(session.hostState.value.state.public.disconnectedPlayers)
+            .doesNotContain(alice)
+        bridge.close()
+    }
+
+    @Test
     fun host_can_continue_without_before_expiry_and_cancels_the_grace_job() = runTest {
         val scope = TestScope(UnconfinedTestDispatcher(testScheduler))
         val bus = InMemoryRoomBus()
@@ -354,6 +380,10 @@ private class PartyEventsHostRoom(
     override val peerEvents: SharedFlow<PeerEvent> = bus.peerEvents
     val lifecycleState = MutableStateFlow<RoomLifecycleState>(RoomLifecycleState.Active)
     override val lifecycle = lifecycleState.asStateFlow()
+
+    fun setMembers(members: List<RoomMember>) {
+        _members.value = members
+    }
 
     override suspend fun send(target: SendTarget, message: HostMessage): com.parlor.core.result.Result<Unit, NetError> {
         sent += target to message

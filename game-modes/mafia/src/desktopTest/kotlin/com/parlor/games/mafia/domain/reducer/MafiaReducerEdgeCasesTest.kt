@@ -432,7 +432,9 @@ class MafiaReducerEdgeCasesTest {
     fun readmit_player_accepted_in_setup() {
         var state = initialState(7)
         val p = state.players.first().id
-        state = MafiaReducer.reduce(state, MafiaAction.ContinueWithoutPlayer(p), ctx()).newState
+        // Defensive compatibility for an older serialized Setup state, where
+        // ContinueWithoutPlayer could leave a dropped lobby seat.
+        state = state.copy(public = state.public.copy(droppedPlayers = setOf(p)))
         assertThat(p in state.public.droppedPlayers).isTrue()
         state = MafiaReducer.reduce(state, MafiaAction.ReadmitPlayer(p), ctx()).newState
         assertThat(p in state.public.droppedPlayers).isFalse()
