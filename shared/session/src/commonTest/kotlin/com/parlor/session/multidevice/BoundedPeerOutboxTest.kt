@@ -172,6 +172,25 @@ class BoundedPeerOutboxTest {
         outbox.close()
     }
 
+    @Test
+    fun `concurrent terminal requests share one in flight delivery`() = runTest {
+        val room = TargetBlockingRoom(peer)
+        val outbox = BoundedPeerOutbox(peer, room, this, sendTimeoutMs = 1_000L)
+
+        val first = async { outbox.deliverTerminal(ended()) }
+        runCurrent()
+        room.blockEntered.await()
+
+        val duplicate = async { outbox.deliverTerminal(ended()) }
+        runCurrent()
+        room.releaseBlocked.complete(Unit)
+        runCurrent()
+
+        assertEquals(first.await(), duplicate.await())
+        assertEquals(1, room.attempts.count { it == SendTarget.Direct(peer) })
+        outbox.close()
+    }
+
     private fun result(index: Int) = HostMessage.CommandResult(
         header = header("result-${index.toString().padStart(16, '0')}", index + 1L),
         commandId = "command-${index.toString().padStart(16, '0')}",

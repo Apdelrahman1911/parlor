@@ -59,6 +59,13 @@ internal class BoundedPeerOutbox(
     private var latestSnapshot: HostMessage.PlayerSnapshot? = null
     private var latestHeartbeat: HostMessage.Heartbeat? = null
     private var terminal: Terminal? = null
+    /**
+     * A terminal transaction remains the authoritative result for duplicate
+     * callers even after its frame has been taken by the worker. Keeping the
+     * transaction separate from this queued bit prevents a second concurrent
+     * shutdown request from scheduling a duplicate terminal frame.
+     */
+    private var terminalQueued = false
     private var controlsSinceSnapshot = 0
 
     private val worker: Job = scope.launch {
@@ -127,6 +134,7 @@ internal class BoundedPeerOutbox(
             if (!worker.isActive) return Result.Failure(NetError.NotConnected)
             terminal?.completion ?: CompletableDeferred<Result<Unit, NetError>>().also {
                 terminal = Terminal(message, it)
+                terminalQueued = true
                 // Once the session is terminal, stale results/snapshots cannot
                 // be useful and must not delay or retain private payloads.
                 commandResults.clear()
@@ -139,14 +147,22 @@ internal class BoundedPeerOutbox(
     }
 
     fun close() {
+        // The terminal may still be queued and therefore never reach the
+        // worker's finally block. Complete it here so a caller cannot wait
+        // forever when the parent session is cancelled during shutdown.
+        terminal?.completion?.cancel(
+            CancellationException("Outbound terminal delivery was cancelled"),
+        )
         wakeUp.close()
         worker.cancel(CancellationException("Peer outbox closed"))
     }
 
     private fun takeNextLocked(): NextFrame? {
-        terminal?.let {
-            terminal = null
-            return NextFrame.End(it)
+        if (terminalQueued) {
+            terminalQueued = false
+            return checkNotNull(terminal).let {
+                NextFrame.End(it)
+            }
         }
 
         if (latestSnapshot != null && (
