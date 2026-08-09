@@ -45,6 +45,7 @@ import com.parlor.games.mafia.ui.flow.multidevice.MafiaHostLobbyFlow
 import com.parlor.games.mafia.ui.flow.multidevice.MafiaPeerLobbyFlow
 import com.parlor.games.mafia.ui.flow.passandplay.MafiaGameFlow
 import com.parlor.games.whodunit.WhodunitIds
+import com.parlor.games.whodunit.WhodunitPlayModePolicy
 import com.parlor.games.whodunit.ui.flow.WhodunitGameFlow
 import com.parlor.games.whodunit.ui.screens.setup.ModeSelectionScreen
 import com.parlor.app.shell.home.MAFIA_GAME_ID
@@ -103,11 +104,11 @@ fun App() {
             var unfinishedRefreshKey: Int by remember { mutableStateOf(0) }
 
             // Single-device entry (Library tab) — case + chosen play mode.
-            var soloCaseId: String by remember { mutableStateOf("last-dinner") }
+            var localCaseId: String by remember { mutableStateOf("last-dinner") }
             // Chosen on the play-mode picker between the case picker and the
             // game. Always one of the two local modes (multi-device is wired
             // separately through HostSessionFlow / PeerSessionFlow).
-            var soloPlayMode: PlayMode by remember { mutableStateOf(PlayMode.PassAndPlay) }
+            var localPlayMode: PlayMode by remember { mutableStateOf(PlayMode.PassAndPlay) }
 
             // Host flow selections (carried across screens).
             var hostName: String by remember { mutableStateOf("") }
@@ -207,25 +208,28 @@ fun App() {
                 )
 
                 // -------- Setup (the "how do you want to play?" gate) --------
-                // Branches into Solo/Pass-and-Play (case picker → game) or
+                // Whodunit supports Pass-and-Play (case picker → game) or
                 // Host/Join (permission → name → case → mode → lobby).
                 AppScreen.GameSetup -> PlayModePickerScreen(
                     onModeSelected = { mode ->
-                        soloPlayMode = mode
-                        screen = AppScreen.SoloCasePicker
+                        if (WhodunitPlayModePolicy.supportsLocalEntry(mode)) {
+                            localPlayMode = mode
+                            screen = AppScreen.LocalCasePicker
+                        }
                     },
                     onHost = { screen = AppScreen.HostPermission },
                     onJoin = { screen = AppScreen.JoinPermission },
                     onBack = backToHome,
                     multiplayerEnabled = true,
+                    soloEnabled = false,
                     modifier = Modifier.fillMaxSize(),
                 )
 
-                // -------- Single-device branch (Solo / PassAndPlay) --------
-                AppScreen.SoloCasePicker -> CasePickerScreen(
+                // -------- Single-device Pass-and-Play branch --------
+                AppScreen.LocalCasePicker -> CasePickerScreen(
                     repository = caseRepository,
                     onCasePicked = { summary ->
-                        soloCaseId = summary.caseId
+                        localCaseId = summary.caseId
                         resumeSessionId = null
                         screen = AppScreen.Whodunit
                     },
@@ -236,13 +240,13 @@ fun App() {
                     onBackToLibrary = backToHome,
                     modifier = Modifier.fillMaxSize(),
                     resumeSessionId = resumeSessionId,
-                    caseId = soloCaseId,
-                    // The user explicitly picked Solo or PassAndPlay on the
-                    // play-mode picker. Multi-device entries are wired
-                    // through HostSessionFlow / PeerSessionFlow, which use
-                    // their own composables that declare MultiDevice mode
-                    // internally — they never land here.
-                    playMode = soloPlayMode,
+                    caseId = localCaseId,
+                    // The user explicitly picked Pass-and-Play on the mode
+                    // picker. Solo is not a shipping Whodunit mode.
+                    // Multi-device entries are wired through HostSessionFlow /
+                    // PeerSessionFlow. Their composables declare MultiDevice
+                    // mode internally and never land here.
+                    playMode = localPlayMode,
                 )
 
                 // -------- Host branch --------
@@ -500,7 +504,7 @@ private fun P2pPermissionRoute(
 private enum class AppScreen {
     Home,
     GameSetup,
-    SoloCasePicker, Whodunit,
+    LocalCasePicker, Whodunit,
     MafiaSetup, Mafia,
     MafiaHostPermission, MafiaHostName, MafiaHostLobby,
     MafiaJoinPermission, MafiaJoinName, MafiaJoinPrompt, MafiaPeerLobby,

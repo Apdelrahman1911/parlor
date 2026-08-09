@@ -101,6 +101,10 @@ internal fun PhaseRouter(
     onBackToLibrary: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    if (playMode is PlayMode.Solo) {
+        UnsupportedLocalPlayModeScreen(onBackToLibrary, modifier)
+        return
+    }
     // The verdict lives on state.public so it auto-flows to peers via
     // PublicStateSnapshot and auto-persists in the game snapshot. No more
     // event-listener tracking, no more fallback guess on resume.
@@ -136,7 +140,7 @@ internal fun PhaseRouter(
 
 // ==================================================================== Host screens ==
 //
-// What Solo, PassAndPlay, and MultiDevice-host all render. UI buttons just
+// What PassAndPlay and MultiDevice-host render. UI buttons just
 // submit the host action; PartyAwareSession (wrapping the session in local
 // modes) issues per-player acks underneath. The router stays free of any
 // readiness ceremony knowledge.
@@ -212,17 +216,9 @@ private fun HostPhaseScreens(
         )
 
         is WhodunitPhase.CharacterReveal -> when (playMode) {
-            // Solo: one human at one phone reads through every dossier back-
-            // to-back. No hand-off, no hide-and-pass, no privacy ceremony —
-            // there's no second player to hide from.
-            is PlayMode.Solo -> SoloCharacterRevealSegment(
-                session = session,
-                roster = state.players,
-                rolesViewed = state.public.rolesViewed,
-                droppedPlayers = state.public.droppedPlayers,
-                payload = payload,
-                modifier = modifier,
-            )
+            // Guarded at PhaseRouter's entry. Kept exhaustive so a future
+            // PlayMode change cannot accidentally make Solo executable here.
+            is PlayMode.Solo -> UnsupportedLocalPlayModeScreen(onBackToLibrary, modifier)
             // Pass-and-play: the device holds every player's private slice
             // and we drive a single local cursor through the full hand-off
             // ceremony so the phone can move safely around the table.
@@ -482,9 +478,6 @@ private fun revealNarrativeFor(
 // Three distinct UIs live below — one per topology — with no shared
 // "is selfPlayerId null?" branch:
 //
-//   - [SoloCharacterRevealSegment]    Solo. One human at the phone — show
-//     every dossier back-to-back, no hand-off or hide-and-pass.
-//
 //   - [LocalCharacterRevealSegment]   Pass-and-play. One device passed
 //     around the table, full Handoff → Gate → Dossier → Hide ceremony so
 //     each player only sees their own role.
@@ -495,67 +488,6 @@ private fun revealNarrativeFor(
 //     gate (or by PartyAwareSession in local modes — not used here).
 
 private enum class RevealStage { Handoff, Gate, Dossier, Hide }
-
-/**
- * Solo character-reveal flow.
- *
- * One human at one phone — no second pair of eyes to hide from, so the
- * full privacy ceremony is pointless. Walks the active roster, showing
- * each player's dossier directly. When every dossier has been seen, the
- * segment submits the host's `AdvanceFromCharacterReveal`.
- */
-@Composable
-private fun SoloCharacterRevealSegment(
-    session: SessionController<WhodunitState, WhodunitAction, WhodunitEvent>,
-    roster: List<Player>,
-    rolesViewed: Set<PlayerId>,
-    droppedPlayers: Set<PlayerId>,
-    payload: WhodunitCase,
-    modifier: Modifier = Modifier,
-) {
-    val scope = rememberCoroutineScope()
-    val pending = roster.filter { it.id !in droppedPlayers && it.id !in rolesViewed }
-    val currentPlayer = pending.firstOrNull()
-
-    if (currentPlayer == null) {
-        LaunchedEffect(Unit) {
-            session.submit(WhodunitAction.AdvanceFromCharacterReveal)
-        }
-        LoadingScreen(modifier)
-        return
-    }
-
-    // Open the reveal so PassAndPlaySessionController projects the right
-    // private slice. No Gate/Handoff — the user is alone with the device.
-    LaunchedEffect(currentPlayer.id) {
-        session.setActiveViewer(ViewerContext.Player(currentPlayer.id))
-        session.submit(WhodunitAction.StartCharacterReveal(currentPlayer.id))
-    }
-
-    val privateProjection by session.privateStateFor(currentPlayer.id).collectAsState()
-    val privateData = privateProjection.state.privatePerPlayer[currentPlayer.id]
-    val role = privateData?.role
-    val characterId = privateData?.characterId?.raw
-    val character = characterId?.let { id -> payload.characters.firstOrNull { it.id == id } }
-
-    if (character == null || role == null) {
-        LoadingScreen(modifier)
-        return
-    }
-
-    DossierRevealScreen(
-        character = character,
-        role = role,
-        onDone = {
-            scope.launch {
-                session.setActiveViewer(ViewerContext.Public)
-                session.submit(WhodunitAction.CompleteCharacterReveal(currentPlayer.id))
-            }
-        },
-        modifier = modifier,
-        allCharacters = payload.characters,
-    )
-}
 
 /**
  * Pass-and-play character-reveal flow.

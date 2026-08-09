@@ -272,6 +272,54 @@ class WhodunitResumeReconstructionTest {
     }
 
     @Test
+    fun resume_deletes_a_retired_solo_snapshot_before_decoding_private_state() = runTest {
+        val sessionId = SessionId("retired-solo")
+        val store: SnapshotStore = FileBackedSnapshotStore(InMemorySnapshotFileSystem(), json)
+        store.save(
+            GameSnapshot(
+                sessionId = sessionId,
+                gameId = WhodunitIds.GameId,
+                engineVersion = engineVersion,
+                createdAt = Instant.fromEpochSeconds(1_700_000_022),
+                phaseId = "legacy-solo-phase",
+                // The retired-mode migration must happen from the authenticated
+                // envelope metadata; it must not need to deserialize old private state.
+                payload = "legacy payload that is intentionally not decodable".encodeToByteArray(),
+                metadata = mapOf("playMode" to "Solo"),
+            ),
+        )
+
+        val result = loadResumedSession(store, WhodunitDefinition(json), sessionId)
+
+        assertThat(result).isInstanceOf(Result.Failure::class)
+        assertThat((result as Result.Failure).error).isEqualTo(DataError.NotFound)
+        assertThat(store.load(sessionId)).isInstanceOf(Result.Failure::class)
+        assertThat((store.listUnfinished() as Result.Success).data).isEqualTo(emptyList())
+    }
+
+    @Test
+    fun resume_rejects_unknown_play_mode_metadata_instead_of_changing_ceremony() = runTest {
+        val sessionId = SessionId("unknown-play-mode")
+        val store: SnapshotStore = FileBackedSnapshotStore(InMemorySnapshotFileSystem(), json)
+        store.save(
+            GameSnapshot(
+                sessionId = sessionId,
+                gameId = WhodunitIds.GameId,
+                engineVersion = engineVersion,
+                createdAt = Instant.fromEpochSeconds(1_700_000_023),
+                phaseId = "unknown-mode-phase",
+                payload = "must not be decoded".encodeToByteArray(),
+                metadata = mapOf("playMode" to "FutureMode"),
+            ),
+        )
+
+        val result = loadResumedSession(store, WhodunitDefinition(json), sessionId)
+
+        assertThat(result).isInstanceOf(Result.Failure::class)
+        assertThat((result as Result.Failure).error).isEqualTo(DataError.CorruptedData)
+    }
+
+    @Test
     fun deleting_snapshot_removes_it_from_listUnfinished() = runTest {
         val payload = loadCase()
         val players = fourPlayers()

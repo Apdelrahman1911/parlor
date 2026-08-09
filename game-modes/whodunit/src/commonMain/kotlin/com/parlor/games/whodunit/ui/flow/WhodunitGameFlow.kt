@@ -54,6 +54,7 @@ import com.parlor.engine.session.SubmitError
 import com.parlor.engine.state.Player
 import com.parlor.games.whodunit.WhodunitDefinition
 import com.parlor.games.whodunit.WhodunitIds
+import com.parlor.games.whodunit.WhodunitPlayModePolicy
 import com.parlor.games.whodunit.content.WhodunitCase
 import com.parlor.games.whodunit.domain.action.WhodunitAction
 import com.parlor.games.whodunit.domain.event.WhodunitEvent
@@ -116,6 +117,9 @@ import com.parlor.games.whodunit.resources.whodunit_data_error_not_found
 import com.parlor.games.whodunit.resources.whodunit_data_error_permission_denied
 import com.parlor.games.whodunit.resources.whodunit_data_error_unknown
 import com.parlor.games.whodunit.resources.whodunit_loading_eyebrow
+import com.parlor.games.whodunit.resources.whodunit_unsupported_mode_body
+import com.parlor.games.whodunit.resources.whodunit_unsupported_mode_eyebrow
+import com.parlor.games.whodunit.resources.whodunit_unsupported_mode_title
 import com.parlor.games.whodunit.resources.whodunit_vote_counting
 import com.parlor.games.whodunit.resources.peer_paused_body
 import com.parlor.games.whodunit.resources.peer_paused_eyebrow
@@ -150,7 +154,6 @@ import com.parlor.session.multidevice.PeerCommandProgress
 import com.parlor.storage.snapshot.SnapshotStore
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.awaitCancellation
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.compose.koinInject
@@ -186,6 +189,11 @@ fun WhodunitGameFlow(
     val payloadValidator: PayloadValidator<WhodunitCase> = koinInject(qualifier = named("whodunit"))
     val snapshotStore: SnapshotStore = koinInject()
     val definition: WhodunitDefinition = koinInject()
+
+    if (resumeSessionId == null && !WhodunitPlayModePolicy.supportsLocalEntry(playMode)) {
+        UnsupportedLocalPlayModeScreen(onBackToLibrary, modifier)
+        return
+    }
 
     val resumeResult by produceState<Result<ResumedSession, DataError>?>(
         initialValue = null,
@@ -229,22 +237,24 @@ fun WhodunitGameFlow(
             val case = (caseResult as Result.Success).data
             val resumed = (resumeResult as? Result.Success)?.data
             if (resumed != null) {
-                // The persisted play mode wins over the incoming prop: the
-                // user originally chose Solo or PassAndPlay on the play-mode
-                // picker, and resuming should put them back into the same
-                // ceremony. Falls through to the prop only when the snapshot
-                // pre-dates the metadata field.
+                // The persisted play mode wins over the incoming prop. The
+                // only shipping local mode is PassAndPlay. Snapshots that
+                // pre-date this metadata field fall back to the entry prop.
                 val resumedPlayMode = resumed.playMode ?: playMode
-                SessionDrivenFlow(
-                    case = case,
-                    modeId = resumed.state.public.modeId,
-                    players = resumed.state.players,
-                    playMode = resumedPlayMode,
-                    onBackToLibrary = onBackToLibrary,
-                    restoredState = resumed.state,
-                    restoredSessionId = resumed.sessionId,
-                    modifier = modifier,
-                )
+                if (WhodunitPlayModePolicy.supportsLocalEntry(resumedPlayMode)) {
+                    SessionDrivenFlow(
+                        case = case,
+                        modeId = resumed.state.public.modeId,
+                        players = resumed.state.players,
+                        playMode = resumedPlayMode,
+                        onBackToLibrary = onBackToLibrary,
+                        restoredState = resumed.state,
+                        restoredSessionId = resumed.sessionId,
+                        modifier = modifier,
+                    )
+                } else {
+                    UnsupportedLocalPlayModeScreen(onBackToLibrary, modifier)
+                }
             } else {
                 ConfiguredFlow(
                     case = case,
@@ -262,11 +272,10 @@ internal data class ResumedSession(
     val sessionId: SessionId,
     val state: WhodunitState,
     /**
-     * Play mode read back from `GameSnapshot.metadata[PLAY_MODE_KEY]`. Solo
-     * and PassAndPlay are the only modes that ever land here — MultiDevice
-     * sessions don't resume from snapshots (the room is gone when the host
-     * died). `null` means the snapshot pre-dates the metadata field; the
-     * caller falls back to whatever play mode the entry point chose.
+     * Play mode read back from `GameSnapshot.metadata[PLAY_MODE_KEY]`.
+     * PassAndPlay is the only supported value. Retired Solo snapshots are
+     * deleted during loading; MultiDevice sessions are not stored here.
+     * `null` means the snapshot pre-dates the metadata field.
      */
     val playMode: PlayMode?,
 )
@@ -276,17 +285,11 @@ private const val PLAY_MODE_SOLO = "Solo"
 private const val PLAY_MODE_PASS_AND_PLAY = "PassAndPlay"
 
 private fun PlayMode.serializeForMetadata(): String? = when (this) {
-    is PlayMode.Solo -> PLAY_MODE_SOLO
+    is PlayMode.Solo -> null
     is PlayMode.PassAndPlay -> PLAY_MODE_PASS_AND_PLAY
     // MultiDevice never persists — the room is the source of truth; if the
     // host dies, peers leave and resume is a fresh local game (or nothing).
     is PlayMode.MultiDevice -> null
-}
-
-private fun playModeFromMetadata(raw: String?): PlayMode? = when (raw) {
-    PLAY_MODE_SOLO -> PlayMode.Solo
-    PLAY_MODE_PASS_AND_PLAY -> PlayMode.PassAndPlay
-    else -> null
 }
 
 internal suspend fun loadResumedSession(
@@ -308,11 +311,21 @@ internal suspend fun loadResumedSession(
         ) {
             return@runCatching Result.Failure(DataError.CorruptedData)
         }
+        val persistedPlayMode = snapshot.metadata[PLAY_MODE_KEY]
+        if (persistedPlayMode == PLAY_MODE_SOLO) {
+            return@runCatching when (val deleted = snapshotStore.delete(sessionId)) {
+                is Result.Success -> Result.Failure(DataError.NotFound)
+                is Result.Failure -> Result.Failure(deleted.error)
+            }
+        }
+        if (persistedPlayMode != null && persistedPlayMode != PLAY_MODE_PASS_AND_PLAY) {
+            return@runCatching Result.Failure(DataError.CorruptedData)
+        }
         val state = definition.snapshotCodec().decode(loaded.data.payload)
         if (snapshot.phaseId != state.phase.id) {
             return@runCatching Result.Failure(DataError.CorruptedData)
         }
-        val playMode = playModeFromMetadata(loaded.data.metadata[PLAY_MODE_KEY])
+        val playMode = persistedPlayMode?.let { PlayMode.PassAndPlay }
         Result.Success(ResumedSession(sessionId, state, playMode))
     }.getOrElse { Result.Failure(DataError.CorruptedData) }
 }
@@ -332,6 +345,49 @@ internal fun LoadingScreen(modifier: Modifier = Modifier) {
         ) {
             CandleFlame(size = ParlorTheme.iconSize.xl)
             EyebrowLabel(text = stringResource(Res.string.whodunit_loading_eyebrow), accent = false)
+        }
+    }
+}
+
+@Composable
+internal fun UnsupportedLocalPlayModeScreen(
+    onBack: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    HeroBackdrop(modifier = modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(ParlorTheme.spacing.xl),
+            verticalArrangement = Arrangement.spacedBy(
+                ParlorTheme.spacing.l,
+                Alignment.CenterVertically,
+            ),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            EyebrowLabel(
+                text = stringResource(Res.string.whodunit_unsupported_mode_eyebrow),
+                accent = false,
+            )
+            Text(
+                text = stringResource(Res.string.whodunit_unsupported_mode_title),
+                style = ParlorTheme.typography.displayMedium,
+                color = ParlorTheme.colors.textPrimary,
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+            )
+            Text(
+                text = stringResource(Res.string.whodunit_unsupported_mode_body),
+                style = ParlorTheme.typography.bodyMedium,
+                color = ParlorTheme.colors.textTertiary,
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+            )
+            ParlorButton(
+                label = stringResource(Res.string.whodunit_error_back),
+                contentDescription = stringResource(Res.string.whodunit_error_back_description),
+                onClick = onBack,
+                modifier = Modifier.fillMaxWidth(),
+                variant = ParlorButtonVariant.Ghost,
+            )
         }
     }
 }
@@ -421,35 +477,17 @@ private fun ConfiguredFlow(
                 modifier = modifier,
             )
         }
-        pre.players == null -> {
-            if (playMode is PlayMode.Solo) {
-                // Solo: there's only one human at the device, so asking for
-                // every "player" name would be busy-work. The reducer still
-                // needs N seats (a whodunit needs suspects), but their names
-                // are placeholders the player never has to look at again.
-                LaunchedEffect(pre.playerCount) {
-                    val count = pre.playerCount!!
-                    pre = pre.copy(
-                        players = (0 until count).map { i ->
-                            Player(PlayerId("p${i + 1}"), "Player ${i + 1}", seat = i)
-                        },
-                    )
-                }
-                LoadingScreen(modifier)
-            } else {
-                PlayerEntryScreen(
-                    playerCount = pre.playerCount!!,
-                    onConfirm = { names ->
-                        pre = pre.copy(
-                            players = names.mapIndexed { i, n ->
-                                Player(PlayerId("p${i + 1}"), n.trim().ifBlank { "Player ${i + 1}" }, seat = i)
-                            },
-                        )
+        pre.players == null -> PlayerEntryScreen(
+            playerCount = pre.playerCount!!,
+            onConfirm = { names ->
+                pre = pre.copy(
+                    players = names.mapIndexed { i, n ->
+                        Player(PlayerId("p${i + 1}"), n.trim().ifBlank { "Player ${i + 1}" }, seat = i)
                     },
-                    modifier = modifier,
                 )
-            }
-        }
+            },
+            modifier = modifier,
+        )
         else -> SessionDrivenFlow(
             case = case,
             modeId = pre.modeId!!,
@@ -528,15 +566,12 @@ private fun SessionDrivenFlow(
     LaunchedEffect(session) {
         val codec = definition.snapshotCodec()
         // Stamp the chosen play mode onto every persisted snapshot so resume
-        // restores the same UI ceremony. MultiDevice never reaches this code
-        // path (its own flows don't write snapshots), so the result is empty
-        // or one of {Solo, PassAndPlay}.
+        // restores the same UI ceremony. The route boundary permits only
+        // PassAndPlay; MultiDevice has its own flows and is not persisted here.
         val metadata: Map<String, String> = playMode.serializeForMetadata()
             ?.let { mapOf(PLAY_MODE_KEY to it) }
             ?: emptyMap()
-        @Suppress("UNCHECKED_CAST")
-        val events = session.events as SharedFlow<WhodunitEvent>
-        events.collect { event ->
+        session.events.collect { event ->
             val canonicalState = session.hostState?.value?.state ?: return@collect
             when {
                 event is WhodunitEvent.PhaseEntered && event.phase is WhodunitPhase.PostGame -> {
