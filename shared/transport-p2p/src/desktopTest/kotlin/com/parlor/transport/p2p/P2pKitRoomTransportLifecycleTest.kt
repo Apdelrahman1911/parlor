@@ -1951,6 +1951,31 @@ class P2pKitRoomTransportLifecycleTest {
     }
 
     @Test
+    fun host_broadcast_isolates_peer_failure_and_attempts_later_connected_peers() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("host-pid"))
+        val room = newHostRoom(kit)
+        val failing = FakeP2pSession(peer("alice-pid", "Alice"))
+        val healthy = FakeP2pSession(peer("bob-pid", "Bob"))
+        admit(room, kit, failing)
+        admit(room, kit, healthy)
+        failing.sent.clear()
+        healthy.sent.clear()
+        failing.sendHandler = { error("injected Alice send failure") }
+
+        val result = room.send(SendTarget.Broadcast, HostMessage.EndSession)
+
+        assertThat(result).isInstanceOf(Result.Failure::class)
+        assertThat((result as Result.Failure).error)
+            .isEqualTo(NetError.TransportFailure("injected Alice send failure"))
+        assertThat(
+            healthy.sent
+                .filterIsInstance<P2pMessage.Binary>()
+                .map { codec.decode(it.bytes) },
+        ).containsExactly(HostMessage.EndSession)
+        room.leave()
+    }
+
+    @Test
     fun host_send_propagates_coroutine_cancellation() = runBlocking {
         val kit = FakeP2pKit(P2pPeerId("host-pid"))
         val room = newHostRoom(kit)

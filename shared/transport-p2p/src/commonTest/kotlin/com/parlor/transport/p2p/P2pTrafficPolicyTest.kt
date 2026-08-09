@@ -100,6 +100,20 @@ class P2pTrafficPolicyTest {
     }
 
     @Test
+    fun rate_limited_identity_does_not_consume_global_admission_credit() {
+        val limiter = AdmissionAttemptLimiter(nowMillis = 0L)
+
+        repeat(P2pTrafficLimits.ADMISSION_PER_PEER_BURST) {
+            assertTrue(limiter.tryAcquire("attacker", 0L))
+        }
+        repeat(P2pTrafficLimits.ADMISSION_GLOBAL_BURST * 2) {
+            assertFalse(limiter.tryAcquire("attacker", 0L))
+        }
+
+        assertTrue(limiter.tryAcquire("legitimate-peer", 0L))
+    }
+
+    @Test
     fun admission_identity_bookkeeping_is_bounded_and_pruned() {
         val limiter = AdmissionAttemptLimiter(nowMillis = 0L)
         var now = 0L

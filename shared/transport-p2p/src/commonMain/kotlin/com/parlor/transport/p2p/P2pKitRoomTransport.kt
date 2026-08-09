@@ -2895,17 +2895,29 @@ internal class HostP2pRoom(
                     // handleIncomingSession / removals), then send off-lock.
                     val targets = stateMutex.withLock { sessionsByPlayer.values.toList() }
                     var delivered = 0
+                    var firstFailure: Throwable? = null
                     targets.forEach { session ->
                         if (session.state.value == ConnectionState.Connected) {
-                            session.send(payload)
-                            delivered++
+                            try {
+                                session.send(payload)
+                                delivered++
+                            } catch (failure: Throwable) {
+                                failure.rethrowIfCancellation()
+                                if (firstFailure == null) firstFailure = failure
+                            }
                         }
                     }
                     // p2p-014: a broadcast that reached zero Connected peers is a
                     // delivery failure, not a silent success — otherwise a caller
                     // treats a snapshot that reached nobody as delivered and never
                     // resyncs. (A solo host with no peers legitimately gets this.)
-                    if (delivered == 0) Result.Failure(NetError.NotConnected) else Result.Success(Unit)
+                    when {
+                        firstFailure != null -> Result.Failure(
+                            NetError.TransportFailure(firstFailure.message ?: "send failed"),
+                        )
+                        delivered == 0 -> Result.Failure(NetError.NotConnected)
+                        else -> Result.Success(Unit)
+                    }
                 }
                 is SendTarget.Direct -> {
                     val session = stateMutex.withLock { sessionsByPlayer[target.playerId] }

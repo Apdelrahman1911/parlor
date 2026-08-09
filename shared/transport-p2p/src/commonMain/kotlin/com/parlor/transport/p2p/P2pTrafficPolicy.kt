@@ -136,7 +136,6 @@ internal class AdmissionAttemptLimiter(nowMillis: Long) {
         ) {
             return false
         }
-        if (!global.tryTake(nowMillis)) return false
         val budget = existing ?: PeerBudget(
             bucket = TokenBucket(
                 capacity = P2pTrafficLimits.ADMISSION_PER_PEER_BURST,
@@ -145,9 +144,19 @@ internal class AdmissionAttemptLimiter(nowMillis: Long) {
                 nowMillis = nowMillis,
             ),
             lastSeenAtMillis = nowMillis,
-        ).also { peers[peerKey] = it }
+        )
         budget.lastSeenAtMillis = nowMillis
-        return budget.bucket.tryTake(nowMillis)
+        // Admission is one transaction across both budgets. Consuming the
+        // room-wide token before discovering that this identity is exhausted
+        // lets one attacker drain every global token with requests that could
+        // never be accepted. Refill/check both first, then commit both takes.
+        if (!budget.bucket.canTake(nowMillis) || !global.canTake(nowMillis)) {
+            return false
+        }
+        budget.bucket.take()
+        global.take()
+        if (existing == null) peers[peerKey] = budget
+        return true
     }
 
     internal fun trackedIdentityCount(): Int = peers.size
@@ -173,10 +182,19 @@ private class TokenBucket(
     private var lastRefillAtMillis: Long = nowMillis
 
     fun tryTake(nowMillis: Long): Boolean {
-        refill(nowMillis)
-        if (availableUnits < refillPeriodMs) return false
-        availableUnits -= refillPeriodMs
+        if (!canTake(nowMillis)) return false
+        take()
         return true
+    }
+
+    fun canTake(nowMillis: Long): Boolean {
+        refill(nowMillis)
+        return availableUnits >= refillPeriodMs
+    }
+
+    fun take() {
+        check(availableUnits >= refillPeriodMs) { "Token bucket credit was not reserved" }
+        availableUnits -= refillPeriodMs
     }
 
     private fun refill(nowMillis: Long) {
