@@ -65,7 +65,7 @@ import kotlin.test.Test
 
 /**
  * End-to-end contract for Party Play:
- *  - Host + two peers all wired through `WhodunitHostRoomBridge` and
+ *  - Host + three peers all wired through `WhodunitHostRoomBridge` and
  *    `WhodunitPeerRoomBridge` over an in-memory bus.
  *  - When a peer submits a SelfActor action (CompleteCharacterReveal of
  *    *themselves*), the host bridge accepts it and the canonical reducer
@@ -88,11 +88,13 @@ class MultiDevicePartyPlayContractTest {
     private val hostId = PlayerId("host")
     private val alice = PlayerId("alice")
     private val bob = PlayerId("bob")
+    private val carol = PlayerId("carol")
 
     private val players = listOf(
         Player(id = hostId, displayName = "Host", seat = 0),
         Player(id = alice, displayName = "Alice", seat = 1),
         Player(id = bob, displayName = "Bob", seat = 2),
+        Player(id = carol, displayName = "Carol", seat = 3),
     )
 
     @Test
@@ -106,6 +108,7 @@ class MultiDevicePartyPlayContractTest {
         bus.registerPeer(hostId)
         bus.registerPeer(alice)
         bus.registerPeer(bob)
+        bus.registerPeer(carol)
 
         val case = loadCase()
 
@@ -128,16 +131,21 @@ class MultiDevicePartyPlayContractTest {
         val hostRoom = TestHostRoom(bus, hostId = hostId)
         val hostBridge = WhodunitHostRoomBridge(
             hostSession, hostRoom, players, scope, json, heartbeatIntervalMs = 0L,
+            requireStartHandshake = false,
         )
 
         // Two peer bridges, each with their own InMemoryPeerRoom over the bus.
         val aliceRoom = InMemoryPeerRoom(bus, selfPlayerId = alice, displayName = "Alice", hostId = hostId)
         val bobRoom = InMemoryPeerRoom(bus, selfPlayerId = bob, displayName = "Bob", hostId = hostId)
+        val carolRoom = InMemoryPeerRoom(bus, selfPlayerId = carol, displayName = "Carol", hostId = hostId)
         val aliceBridge = WhodunitPeerRoomBridge(
             aliceRoom, alice, hostSession.publicState.value.state, scope, hostBridge.protocol, json,
         )
         val bobBridge = WhodunitPeerRoomBridge(
             bobRoom, bob, hostSession.publicState.value.state, scope, hostBridge.protocol, json,
+        )
+        val carolBridge = WhodunitPeerRoomBridge(
+            carolRoom, carol, hostSession.publicState.value.state, scope, hostBridge.protocol, json,
         )
 
         // Host starts the game — this seeds roles + advances to PublicIntro.
@@ -199,30 +207,32 @@ class MultiDevicePartyPlayContractTest {
         hostBridge.close()
         aliceBridge.close()
         bobBridge.close()
+        carolBridge.close()
     }
 
     /**
-     * Wave 9H-9: end-to-end party flow with two peers + host driving every
+     * Wave 9H-9: end-to-end party flow with three peers + host driving every
      * readiness gate. Asserts the peer shadow states converge with the host
      * canonical state at each major phase boundary.
      *
      * Trajectory:
      *   AssignRoles → PublicIntro
-     *   (host + alice + bob ack)
+     *   (host + alice + bob + carol ack)
      *   AdvanceFromIntro → RulesBriefing
-     *   (host + alice + bob ack)
+     *   (host + alice + bob + carol ack)
      *   AdvanceBriefingCard ×N → CharacterReveal
-     *   (host + alice + bob each CompleteCharacterReveal(self))
+     *   (host + alice + bob + carol each CompleteCharacterReveal(self))
      *   AdvanceFromCharacterReveal → Round(1)
      */
     @Test
-    fun full_party_flow_with_two_peers_converges_at_every_gate() = runTest {
+    fun full_party_flow_with_three_peers_converges_at_every_gate() = runTest {
         val dispatcher = UnconfinedTestDispatcher(testScheduler)
         val scope = TestScope(dispatcher)
         val bus = InMemoryRoomBus()
         bus.registerPeer(hostId)
         bus.registerPeer(alice)
         bus.registerPeer(bob)
+        bus.registerPeer(carol)
 
         val case = loadCase()
 
@@ -245,15 +255,20 @@ class MultiDevicePartyPlayContractTest {
         val hostRoom = TestHostRoom(bus, hostId = hostId)
         val hostBridge = WhodunitHostRoomBridge(
             hostSession, hostRoom, players, scope, json, heartbeatIntervalMs = 0L,
+            requireStartHandshake = false,
         )
 
         val aliceRoom = InMemoryPeerRoom(bus, selfPlayerId = alice, displayName = "Alice", hostId = hostId)
         val bobRoom = InMemoryPeerRoom(bus, selfPlayerId = bob, displayName = "Bob", hostId = hostId)
+        val carolRoom = InMemoryPeerRoom(bus, selfPlayerId = carol, displayName = "Carol", hostId = hostId)
         val aliceBridge = WhodunitPeerRoomBridge(
             aliceRoom, alice, hostSession.publicState.value.state, scope, hostBridge.protocol, json,
         )
         val bobBridge = WhodunitPeerRoomBridge(
             bobRoom, bob, hostSession.publicState.value.state, scope, hostBridge.protocol, json,
+        )
+        val carolBridge = WhodunitPeerRoomBridge(
+            carolRoom, carol, hostSession.publicState.value.state, scope, hostBridge.protocol, json,
         )
 
         // --- AssignRoles → PublicIntro ---
@@ -267,6 +282,7 @@ class MultiDevicePartyPlayContractTest {
             when (player.id) {
                 alice -> aliceBridge.controller.submit(WhodunitAction.AcknowledgeIntro(player.id))
                 bob -> bobBridge.controller.submit(WhodunitAction.AcknowledgeIntro(player.id))
+                carol -> carolBridge.controller.submit(WhodunitAction.AcknowledgeIntro(player.id))
                 else -> submitHost(
                     hostSession,
                     hostBridge,
@@ -291,6 +307,9 @@ class MultiDevicePartyPlayContractTest {
                             WhodunitAction.AcknowledgeBriefing(player.id),
                         )
                         bob -> bobBridge.controller.submit(
+                            WhodunitAction.AcknowledgeBriefing(player.id),
+                        )
+                        carol -> carolBridge.controller.submit(
                             WhodunitAction.AcknowledgeBriefing(player.id),
                         )
                         else -> submitHost(
@@ -318,6 +337,9 @@ class MultiDevicePartyPlayContractTest {
                 bob -> bobBridge.controller.submit(
                     WhodunitAction.CompleteCharacterReveal(player.id),
                 )
+                carol -> carolBridge.controller.submit(
+                    WhodunitAction.CompleteCharacterReveal(player.id),
+                )
                 else -> submitHost(
                     hostSession,
                     hostBridge,
@@ -340,6 +362,7 @@ class MultiDevicePartyPlayContractTest {
         hostBridge.close()
         aliceBridge.close()
         bobBridge.close()
+        carolBridge.close()
     }
 
     /** A peer departure pauses canonical play and grace expiry ends the case. */
@@ -351,6 +374,7 @@ class MultiDevicePartyPlayContractTest {
         bus.registerPeer(hostId)
         bus.registerPeer(alice)
         bus.registerPeer(bob)
+        bus.registerPeer(carol)
         val case = loadCase()
         val hostSession = PassAndPlaySessionController(
             definition = WhodunitDefinition(json),
@@ -377,14 +401,19 @@ class MultiDevicePartyPlayContractTest {
             json,
             rejoinGraceMs = 200L,
             heartbeatIntervalMs = 0L,
+            requireStartHandshake = false,
         )
         val aliceRoom = InMemoryPeerRoom(bus, selfPlayerId = alice, displayName = "Alice", hostId = hostId)
         val bobRoom = InMemoryPeerRoom(bus, selfPlayerId = bob, displayName = "Bob", hostId = hostId)
+        val carolRoom = InMemoryPeerRoom(bus, selfPlayerId = carol, displayName = "Carol", hostId = hostId)
         val aliceBridge = WhodunitPeerRoomBridge(
             aliceRoom, alice, hostSession.publicState.value.state, scope, hostBridge.protocol, json,
         )
         val bobBridge = WhodunitPeerRoomBridge(
             bobRoom, bob, hostSession.publicState.value.state, scope, hostBridge.protocol, json,
+        )
+        val carolBridge = WhodunitPeerRoomBridge(
+            carolRoom, carol, hostSession.publicState.value.state, scope, hostBridge.protocol, json,
         )
 
         submitHost(hostSession, hostBridge, WhodunitAction.AssignRoles(seed = 77L))
@@ -408,6 +437,7 @@ class MultiDevicePartyPlayContractTest {
         hostBridge.close()
         aliceBridge.close()
         bobBridge.close()
+        carolBridge.close()
     }
 
     private suspend fun submitHost(

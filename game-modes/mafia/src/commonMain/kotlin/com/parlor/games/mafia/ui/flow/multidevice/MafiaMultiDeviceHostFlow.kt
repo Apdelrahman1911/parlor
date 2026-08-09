@@ -18,6 +18,7 @@ import com.parlor.core.result.Result
 import com.parlor.core.time.Clock
 import com.parlor.designsystem.components.ContinueWithoutDialog
 import com.parlor.designsystem.components.HostDisconnectedOverlay
+import com.parlor.designsystem.components.ReconnectingOverlay
 import com.parlor.engine.reducer.DefaultReducerContext
 import com.parlor.engine.session.SessionConfig
 import com.parlor.engine.session.SubmitError
@@ -41,13 +42,25 @@ import com.parlor.games.mafia.resources.md_host_leave_session
 import com.parlor.games.mafia.resources.md_host_leave_session_description
 import com.parlor.games.mafia.resources.md_host_peer_away_body_format
 import com.parlor.games.mafia.resources.md_host_peer_away_title
+import com.parlor.games.mafia.resources.md_host_start_cancel
+import com.parlor.games.mafia.resources.md_host_start_cancel_description
+import com.parlor.games.mafia.resources.md_host_start_failed_body
+import com.parlor.games.mafia.resources.md_host_start_failed_timeout
+import com.parlor.games.mafia.resources.md_host_start_failed_title
+import com.parlor.games.mafia.resources.md_host_start_retry
+import com.parlor.games.mafia.resources.md_host_start_retry_description
+import com.parlor.games.mafia.resources.md_host_starting
 import com.parlor.networking.protocol.SessionEndReason
 import com.parlor.networking.room.LocalRoom
+import com.parlor.networking.room.NetError
 import com.parlor.session.PlayMode
 import com.parlor.session.SessionController
 import com.parlor.session.SubmissionReceipt
 import com.parlor.session.party.PartyAwareSession
 import com.parlor.session.passandplay.PassAndPlaySessionController
+import com.parlor.session.multidevice.HostStartGateState
+import com.parlor.session.multidevice.beginExit
+import com.parlor.session.multidevice.toHostStartGateState
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.launch
@@ -87,6 +100,7 @@ fun MafiaMultiDeviceHostFlow(
     seed: Long,
     room: LocalRoom,
     onBackToHome: () -> Unit,
+    onRetryStart: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val clock: Clock = koinInject()
@@ -139,23 +153,61 @@ fun MafiaMultiDeviceHostFlow(
             rosterAtStart,
             scope,
             reconcileRoomTopology = true,
+            requireStartHandshake = true,
         )
     }
     val session: SessionController<MafiaState, MafiaAction, MafiaEvent> =
         remember(partySession, bridge) {
             PublishingMafiaSessionController(partySession, bridge)
         }
+    var startGate by remember(bridge) {
+        mutableStateOf<HostStartGateState>(HostStartGateState.Starting)
+    }
+    LaunchedEffect(bridge) {
+        val result = bridge.announceStart(
+            caseId = "default",
+            modeId = MafiaIds.ClassicModeId.raw,
+        ).toHostStartGateState()
+        if (startGate != HostStartGateState.Exiting) startGate = result
+    }
     LaunchedEffect(bridge) {
         try {
-            bridge.announceStart(
-                caseId = "default",
-                modeId = MafiaIds.ClassicModeId.raw,
-            )
             awaitCancellation()
         } finally {
             withContext(NonCancellable) {
-                bridge.terminate(SessionEndReason.HostLeft)
-                bridge.close()
+                try {
+                    bridge.terminate(SessionEndReason.HostLeft)
+                } finally {
+                    try {
+                        room.leave()
+                    } finally {
+                        bridge.close()
+                    }
+                }
+            }
+        }
+    }
+
+    var terminalExitInFlight by remember(bridge) { mutableStateOf(false) }
+    val exitToHome: (SessionEndReason) -> Unit = { reason ->
+        if (!terminalExitInFlight) {
+            terminalExitInFlight = true
+            startGate = startGate.beginExit()
+            scope.launch {
+                bridge.terminate(reason)
+                room.leave()
+                onBackToHome()
+            }
+        }
+    }
+    val retryStartAfterTerminal: () -> Unit = {
+        if (!terminalExitInFlight) {
+            terminalExitInFlight = true
+            startGate = startGate.beginExit()
+            scope.launch {
+                bridge.terminate(SessionEndReason.Cancelled)
+                room.leave()
+                onRetryStart()
             }
         }
     }
@@ -167,7 +219,10 @@ fun MafiaMultiDeviceHostFlow(
     // meant the host could never see their own role or take night actions.
     // Peers correctly render their private projection in the peer flow.
     // See PROBLEMS_PARLOR.md → mafia-ui-001.
-    val hostProjection by session.hostState!!.collectAsState()
+    val authoritativeState = requireNotNull(session.hostState) {
+        "The Mafia host flow requires a host projection"
+    }
+    val hostProjection by authoritativeState.collectAsState()
     val state = hostProjection.state
     var confirmContinueFor by remember { mutableStateOf<Player?>(null) }
     val disconnectedPlayer = state.public.disconnectedPlayers
@@ -184,21 +239,22 @@ fun MafiaMultiDeviceHostFlow(
     }
 
     Box(modifier = modifier.fillMaxSize()) {
-        MafiaMultiDevicePhaseRouter(
-            state = state,
-            selfPlayerId = room.selfPlayerId,
-            isHost = true,
-            session = session,
-            scope = scope,
-            onBackToHome = {
-                scope.launch {
-                    bridge.terminate(SessionEndReason.HostLeft)
-                    onBackToHome()
-                }
-            },
-            modifier = Modifier.fillMaxSize(),
-        )
-        if (disconnectedPlayer != null && state.phase != MafiaPhase.PostGame) {
+        if (startGate == HostStartGateState.Started) {
+            MafiaMultiDevicePhaseRouter(
+                state = state,
+                selfPlayerId = room.selfPlayerId,
+                isHost = true,
+                session = session,
+                scope = scope,
+                onBackToHome = { exitToHome(SessionEndReason.HostLeft) },
+                modifier = Modifier.fillMaxSize(),
+            )
+        }
+        if (
+            startGate == HostStartGateState.Started &&
+            disconnectedPlayer != null &&
+            state.phase != MafiaPhase.PostGame
+        ) {
             val playerName = disconnectedPlayer.displayName
             if (confirmContinueFor?.id == disconnectedPlayer.id) {
                 ContinueWithoutDialog(
@@ -250,15 +306,50 @@ fun MafiaMultiDeviceHostFlow(
                         Res.string.md_host_leave_session_description,
                     ),
                     onContinue = { confirmContinueFor = disconnectedPlayer },
-                    onLeave = {
-                        scope.launch {
-                            bridge.terminate(SessionEndReason.Cancelled)
-                            onBackToHome()
-                        }
-                    },
+                    onLeave = { exitToHome(SessionEndReason.Cancelled) },
                     modifier = Modifier.fillMaxSize(),
                 )
             }
+        }
+        when (val gate = startGate) {
+            HostStartGateState.Started -> Unit
+            HostStartGateState.Starting,
+            HostStartGateState.Exiting -> ReconnectingOverlay(
+                title = stringResource(Res.string.md_host_starting),
+                leaveLabel = stringResource(Res.string.md_host_start_cancel),
+                leaveContentDescription = stringResource(
+                    Res.string.md_host_start_cancel_description,
+                ),
+                onLeave = {
+                    exitToHome(SessionEndReason.Cancelled)
+                },
+                modifier = Modifier.fillMaxSize(),
+            )
+            is HostStartGateState.Failed -> HostDisconnectedOverlay(
+                title = stringResource(Res.string.md_host_start_failed_title),
+                body = stringResource(
+                    if (gate.error == NetError.Timeout) {
+                        Res.string.md_host_start_failed_timeout
+                    } else {
+                        Res.string.md_host_start_failed_body
+                    },
+                ),
+                continueLabel = stringResource(Res.string.md_host_start_retry),
+                continueContentDescription = stringResource(
+                    Res.string.md_host_start_retry_description,
+                ),
+                leaveLabel = stringResource(Res.string.md_host_start_cancel),
+                leaveContentDescription = stringResource(
+                    Res.string.md_host_start_cancel_description,
+                ),
+                onContinue = {
+                    retryStartAfterTerminal()
+                },
+                onLeave = {
+                    exitToHome(SessionEndReason.Cancelled)
+                },
+                modifier = Modifier.fillMaxSize(),
+            )
         }
     }
 }

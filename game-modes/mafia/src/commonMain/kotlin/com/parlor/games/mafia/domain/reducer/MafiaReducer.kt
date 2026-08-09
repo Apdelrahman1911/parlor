@@ -996,6 +996,10 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
             public = state.public.copy(
                 winner = winner,
                 activeVote = null,
+                // PostGame has no reconnect transaction. Retaining any other
+                // concurrently disconnected seat would permanently cover the
+                // results UI after the first departure ends the game.
+                disconnectedPlayers = emptySet(),
                 roster = state.public.roster.map { slot ->
                     slot.copy(
                         revealedRole = state.hostOnly.fullRoleMap[slot.playerId]

@@ -1,5 +1,6 @@
 package com.parlor.games.mafia.domain.action
 
+import com.parlor.networking.protocol.MAX_COMMAND_PAYLOAD_BYTES
 import kotlinx.serialization.json.Json
 
 /**
@@ -19,8 +20,18 @@ object MafiaActionCodec {
     }
 
     fun encode(action: MafiaAction): ByteArray =
-        json.encodeToString(MafiaAction.serializer(), action).encodeToByteArray()
+        json.encodeToString(MafiaAction.serializer(), action)
+            .encodeToByteArray()
+            .also(::requireBounded)
 
-    fun decode(bytes: ByteArray): MafiaAction =
-        json.decodeFromString(MafiaAction.serializer(), bytes.decodeToString())
+    fun decode(bytes: ByteArray): MafiaAction {
+        requireBounded(bytes)
+        return json.decodeFromString(MafiaAction.serializer(), bytes.decodeToString())
+    }
+
+    private fun requireBounded(bytes: ByteArray) {
+        require(bytes.size <= MAX_COMMAND_PAYLOAD_BYTES) {
+            "Mafia action exceeds $MAX_COMMAND_PAYLOAD_BYTES bytes"
+        }
+    }
 }

@@ -115,6 +115,7 @@ class WhodunitReducerProductionGuardsTest {
 
         assertNoOp(start, WhodunitAction.CastVote(players[0].id, players[0].id))
         assertNoOp(start, WhodunitAction.CastVote(players[0].id, outsider))
+        assertNoOp(start, WhodunitAction.CastVote(players[1].id, players[2].id))
 
         val first = reduce(
             start,
@@ -141,10 +142,47 @@ class WhodunitReducerProductionGuardsTest {
     }
 
     @Test
+    fun simultaneous_ballots_commit_only_in_canonical_voter_order() {
+        val start = state(
+            phase = WhodunitPhase.FinalVote,
+            voteState = VoteState.Collecting(
+                isElimination = false,
+                ballotPlayerIds = players.map { it.id },
+            ),
+            timer = null,
+        )
+
+        // Model the second peer's command reaching the serialized reducer
+        // before the first peer's command. It must not reserve or skip a turn.
+        assertNoOp(start, WhodunitAction.CastVote(players[1].id, players[2].id))
+
+        val afterFirst = reduce(
+            start,
+            WhodunitAction.CastVote(players[0].id, players[1].id),
+        ).newState
+        val firstVote = afterFirst.public.voteState as VoteState.Collecting
+        assertThat(firstVote.currentVoterIndex).isEqualTo(1)
+        assertThat(firstVote.castSoFar).isEqualTo(mapOf(players[0].id to players[1].id))
+
+        // A delayed duplicate from the first voter cannot execute twice; the
+        // previously premature second-voter command is valid only when resent
+        // against the state where that player is now current.
+        assertNoOp(afterFirst, WhodunitAction.CastVote(players[0].id, players[2].id))
+        val afterSecond = reduce(
+            afterFirst,
+            WhodunitAction.CastVote(players[1].id, players[2].id),
+        ).newState
+        val secondVote = afterSecond.public.voteState as VoteState.Collecting
+        assertThat(secondVote.currentVoterIndex).isEqualTo(2)
+        assertThat(secondVote.castSoFar.keys.toList())
+            .isEqualTo(listOf(players[0].id, players[1].id))
+    }
+
+    @Test
     fun tied_revote_keeps_all_voters_but_only_tied_suspects_are_candidates() {
         val tied = VoteState.Tied(
             tiedPlayerIds = listOf(players[0].id, players[1].id),
-            debateSecondsRemaining = 60,
+            debateSecondsRemaining = 0,
         )
         val opened = reduce(
             state(
@@ -162,12 +200,27 @@ class WhodunitReducerProductionGuardsTest {
         assertNoOp(opened, WhodunitAction.CastVote(players[2].id, players[3].id))
         assertNoOp(opened, WhodunitAction.CastVote(players[0].id, players[0].id))
 
-        val valid = reduce(
+        assertNoOp(opened, WhodunitAction.CastVote(players[2].id, players[0].id))
+        val afterFirst = reduce(
             opened,
+            WhodunitAction.CastVote(players[0].id, players[1].id),
+        ).newState
+        val afterSecond = reduce(
+            afterFirst,
+            WhodunitAction.CastVote(players[1].id, players[0].id),
+        ).newState
+        val valid = reduce(
+            afterSecond,
             WhodunitAction.CastVote(players[2].id, players[0].id),
         )
         assertThat((valid.newState.public.voteState as VoteState.Collecting).castSoFar)
-            .isEqualTo(mapOf(players[2].id to players[0].id))
+            .isEqualTo(
+                mapOf(
+                    players[0].id to players[1].id,
+                    players[1].id to players[0].id,
+                    players[2].id to players[0].id,
+                ),
+            )
     }
 
     @Test

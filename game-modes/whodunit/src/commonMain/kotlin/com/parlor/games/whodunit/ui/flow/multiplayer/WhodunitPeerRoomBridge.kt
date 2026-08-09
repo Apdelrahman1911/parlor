@@ -8,6 +8,7 @@ import com.parlor.engine.session.SubmitError
 import com.parlor.games.whodunit.domain.action.WhodunitAction
 import com.parlor.games.whodunit.domain.action.WhodunitActionCodec
 import com.parlor.games.whodunit.domain.event.WhodunitEvent
+import com.parlor.games.whodunit.domain.projection.WhodunitProjectionPolicy
 import com.parlor.games.whodunit.domain.state.WhodunitPrivate
 import com.parlor.games.whodunit.domain.state.WhodunitState
 import com.parlor.networking.protocol.SessionProtocol
@@ -15,12 +16,11 @@ import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.NetError
 import com.parlor.networking.room.PeerEvent
 import com.parlor.session.multidevice.PeerAuthoritativeSessionCoordinator
+import com.parlor.session.multidevice.PeerConnectionTracker
 import com.parlor.session.multidevice.PlayerSnapshotPayload
 import com.parlor.session.multidevice.ShadowSessionController
 import com.parlor.session.SubmissionReceipt
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -51,26 +51,28 @@ class WhodunitPeerRoomBridge(
     private val _hostDisconnected = MutableSharedFlow<Unit>(replay = 1)
     val hostDisconnected: SharedFlow<Unit> = _hostDisconnected.asSharedFlow()
 
-    private val _connectionEvents = MutableSharedFlow<PeerEvent>(
-        replay = 0,
-        extraBufferCapacity = 16,
+    private val connectionTracker = PeerConnectionTracker(
+        scope = scope,
+        hostLostTimeoutMs = hostLostTimeoutMs,
+        onHostLossExpired = { _hostDisconnected.emit(Unit) },
     )
-    val connectionEvents: SharedFlow<PeerEvent> = _connectionEvents.asSharedFlow()
+    val connectionState = connectionTracker.state
+    val connectionEvents: SharedFlow<PeerEvent> = connectionTracker.events
 
     private val publicSerializer = WhodunitState.serializer()
     private val privateSerializer = WhodunitPrivate.serializer()
+    private val safeInitialPublic = WhodunitProjectionPolicy.toPublic(initialPublic).state
 
     val controller: ShadowSessionController<WhodunitState, WhodunitAction, WhodunitEvent> =
         ShadowSessionController(
             selfPlayerId = selfPlayerId,
             sendActionToHost = ::sendActionToHost,
-            initialPublic = PublicProjection(initialPublic),
-            initialPrivate = PrivateProjection(initialPublic, selfPlayerId),
+            // No state is authoritative until the first validated host
+            // snapshot. Never let a canonical state supplied by a mistaken
+            // caller become peer-visible during that waiting window.
+            initialPublic = PublicProjection(safeInitialPublic),
+            initialPrivate = PrivateProjection(safeInitialPublic, selfPlayerId),
         )
-
-    private var hostLost = false
-    private var selfOffline = false
-    private var hostLossJob: Job? = null
 
     private val coordinator = PeerAuthoritativeSessionCoordinator(
         room = room,
@@ -80,6 +82,7 @@ class WhodunitPeerRoomBridge(
         onSnapshot = ::installSnapshot,
         onSessionEnded = { _hostDisconnected.emit(Unit) },
         onProtocolViolation = { _hostDisconnected.emit(Unit) },
+        acceptedStartId = protocol.startId,
     )
 
     private val connectionJob = scope.launch {
@@ -87,14 +90,15 @@ class WhodunitPeerRoomBridge(
     }
 
     val commandProgress = coordinator.commandProgress
+    val hasAuthoritativeSnapshot = coordinator.hasAuthoritativeSnapshot
+    val initialSnapshotError = coordinator.initialSnapshotError
 
     suspend fun acknowledgeCommandOutcome(commandId: String) {
         coordinator.acknowledgeCommandOutcome(commandId)
     }
 
     fun close() {
-        hostLossJob?.cancel()
-        hostLossJob = null
+        connectionTracker.close()
         connectionJob.cancel()
         coordinator.close()
     }
@@ -103,7 +107,7 @@ class WhodunitPeerRoomBridge(
         payload: PlayerSnapshotPayload,
         @Suppress("UNUSED_PARAMETER") revision: Long,
     ): Boolean {
-        val decoded = runCatching {
+        val decoded = try {
             val publicState = json.decodeFromString(
                 publicSerializer,
                 payload.publicPayload.decodeToString(),
@@ -119,10 +123,14 @@ class WhodunitPeerRoomBridge(
             publicState to publicState.copy(
                 privatePerPlayer = ownPrivate?.let { mapOf(selfPlayerId to it) } ?: emptyMap(),
             )
-        }.getOrElse {
+        } catch (_: Exception) {
             return false
         }
         val (publicState, playerState) = decoded
+        // A valid public payload is already a fixed point of the projection
+        // policy. Anything else contains a private/host-only field (or an
+        // unredacted in-progress vote) and must fail closed.
+        if (WhodunitProjectionPolicy.toPublic(publicState).state != publicState) return false
         // Keep the public bucket structurally public. The UI may combine its
         // own private projection locally, but no private slice is relabelled as
         // public where a future logger or rebroadcast path could consume it.
@@ -136,7 +144,7 @@ class WhodunitPeerRoomBridge(
     ): Result<SubmissionReceipt, SubmitError> {
         return when (val sent = coordinator.submit(WhodunitActionCodec.encode(action))) {
             is Result.Success -> {
-                markSelfOnline()
+                connectionTracker.markSelfOnline()
                 Result.Success(
                     SubmissionReceipt(
                         stateChanged = false,
@@ -145,7 +153,7 @@ class WhodunitPeerRoomBridge(
                 )
             }
             is Result.Failure -> {
-                if (sent.error == NetError.NotConnected) markSelfOffline()
+                if (sent.error == NetError.NotConnected) connectionTracker.markSelfOffline()
                 if (sent.error == NetError.CommandInFlight) {
                     Result.Failure(SubmitError.CommandPending)
                 } else {
@@ -155,50 +163,7 @@ class WhodunitPeerRoomBridge(
         }
     }
 
-    private fun markSelfOffline() {
-        if (!selfOffline) {
-            selfOffline = true
-            _connectionEvents.tryEmit(PeerEvent.SelfOffline)
-        }
-    }
-
-    private fun markSelfOnline() {
-        if (selfOffline) {
-            selfOffline = false
-            _connectionEvents.tryEmit(PeerEvent.SelfOnline)
-        }
-    }
-
-    private fun handleConnectionEvent(event: PeerEvent) {
-        when (event) {
-            PeerEvent.HostLost -> {
-                if (!hostLost) {
-                    hostLost = true
-                    _connectionEvents.tryEmit(PeerEvent.HostLost)
-                }
-                hostLossJob?.cancel()
-                hostLossJob = scope.launch {
-                    delay(hostLostTimeoutMs)
-                    if (hostLost) _hostDisconnected.emit(Unit)
-                }
-            }
-            PeerEvent.HostRestored -> {
-                hostLossJob?.cancel()
-                hostLossJob = null
-                if (hostLost) {
-                    hostLost = false
-                    _connectionEvents.tryEmit(PeerEvent.HostRestored)
-                }
-                markSelfOnline()
-            }
-            PeerEvent.SelfOffline -> markSelfOffline()
-            PeerEvent.SelfOnline -> markSelfOnline()
-            is PeerEvent.AdmissionRequested,
-            is PeerEvent.PeerLeft,
-            is PeerEvent.PeerReconnected,
-            is PeerEvent.PeerJoined -> Unit
-        }
-    }
+    private suspend fun handleConnectionEvent(event: PeerEvent) = connectionTracker.handle(event)
 
     /** Compatibility test hook: command retry now lives in the coordinator. */
     internal fun queuedActionForTest(): WhodunitAction? = null

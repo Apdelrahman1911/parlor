@@ -31,6 +31,7 @@ import com.parlor.networking.protocol.HostMessage
 import com.parlor.networking.protocol.PeerMessage
 import com.parlor.networking.protocol.RoomMessage
 import com.parlor.networking.protocol.SessionEndReason
+import com.parlor.networking.protocol.SessionEnvelopeHeader
 import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.NetError
 import com.parlor.networking.room.PeerEvent
@@ -49,6 +50,8 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.utils.io.ByteReadChannel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -83,9 +86,13 @@ class PartyConnectionEventsTest {
 
     private val hostId = PlayerId("host")
     private val alice = PlayerId("alice")
+    private val bob = PlayerId("bob")
+    private val carol = PlayerId("carol")
     private val players = listOf(
         Player(hostId, "Host", seat = 0),
         Player(alice, "Alice", seat = 1),
+        Player(bob, "Bob", seat = 2),
+        Player(carol, "Carol", seat = 3),
     )
 
     @Test
@@ -101,6 +108,7 @@ class PartyConnectionEventsTest {
         val hostRoom = PartyEventsHostRoom(bus, hostId)
         val bridge = WhodunitHostRoomBridge(
             session, hostRoom, players, scope, json, heartbeatIntervalMs = 0L,
+            requireStartHandshake = false,
         )
         runCurrent()
 
@@ -125,6 +133,7 @@ class PartyConnectionEventsTest {
         val hostRoom = PartyEventsHostRoom(bus, hostId)
         val bridge = WhodunitHostRoomBridge(
             session, hostRoom, players, scope, json, heartbeatIntervalMs = 0L,
+            requireStartHandshake = false,
         )
         runCurrent()
 
@@ -142,10 +151,125 @@ class PartyConnectionEventsTest {
     }
 
     @Test
+    fun production_reconnect_waits_for_start_commit_ack_before_restoring_seat() = runTest {
+        val scope = TestScope(UnconfinedTestDispatcher(testScheduler))
+        val bus = InMemoryRoomBus()
+        listOf(alice, bob, carol).forEach(bus::registerPeer)
+        val session = buildHostSession(loadCase())
+        val room = PartyEventsHostRoom(bus, hostId)
+        val bridge = WhodunitHostRoomBridge(
+            session,
+            room,
+            players,
+            scope,
+            json,
+            rejoinGraceMs = 200L,
+            heartbeatIntervalMs = 0L,
+            requireStartHandshake = true,
+        )
+        val startId = completeStartHandshake(bridge, room, bus)
+        room.sent.clear()
+
+        bus.emitPeerLeft(alice, "Alice")
+        bus.emitPeerReconnected(alice, "Alice")
+        runCurrent()
+        assertThat(session.hostState.value.state.public.disconnectedPlayers).contains(alice)
+        assertThat(
+            room.sent.any {
+                it.first == SendTarget.Direct(alice) &&
+                    it.second is HostMessage.SessionStarting
+            },
+        ).isTrue()
+
+        bus.fromPeer(
+            PeerMessage.SessionStartReady(
+                peerHeader(bridge, "rejoin-ready"),
+                alice,
+                startId,
+            ),
+        )
+        runCurrent()
+        assertThat(session.hostState.value.state.public.disconnectedPlayers).contains(alice)
+        assertThat(
+            room.sent.any {
+                it.first == SendTarget.Direct(alice) &&
+                    it.second is HostMessage.SessionStartCommitted
+            },
+        ).isTrue()
+
+        bus.fromPeer(
+            PeerMessage.SessionStartCommitAck(
+                peerHeader(bridge, "rejoin-commit-ack"),
+                alice,
+                startId,
+            ),
+        )
+        runCurrent()
+        assertThat(session.hostState.value.state.public.disconnectedPlayers)
+            .doesNotContain(alice)
+        assertThat(session.hostState.value.state.public.droppedPlayers).doesNotContain(alice)
+        bridge.close()
+    }
+
+    @Test
+    fun failed_reconnect_cannot_cancel_or_outlive_grace_expiry() = runTest {
+        val scope = TestScope(UnconfinedTestDispatcher(testScheduler))
+        val bus = InMemoryRoomBus()
+        listOf(alice, bob, carol).forEach(bus::registerPeer)
+        val session = buildHostSession(loadCase())
+        val room = PartyEventsHostRoom(bus, hostId)
+        val bridge = WhodunitHostRoomBridge(
+            session,
+            room,
+            players,
+            scope,
+            json,
+            rejoinGraceMs = 200L,
+            heartbeatIntervalMs = 0L,
+            requireStartHandshake = true,
+        )
+        val startId = completeStartHandshake(bridge, room, bus)
+
+        bus.emitPeerLeft(alice, "Alice")
+        bus.emitPeerReconnected(alice, "Alice")
+        runCurrent()
+        advanceTimeBy(201L)
+        runCurrent()
+
+        val expired = session.hostState.value.state
+        assertThat(expired.public.disconnectedPlayers).doesNotContain(alice)
+        assertThat(expired.public.droppedPlayers).contains(alice)
+
+        bus.fromPeer(
+            PeerMessage.SessionStartReady(
+                peerHeader(bridge, "late-rejoin-ready"),
+                alice,
+                startId,
+            ),
+        )
+        bus.fromPeer(
+            PeerMessage.SessionStartCommitAck(
+                peerHeader(bridge, "late-rejoin-ack"),
+                alice,
+                startId,
+            ),
+        )
+        runCurrent()
+        assertThat(session.hostState.value.state).isEqualTo(expired)
+        bridge.close()
+    }
+
+    @Test
     fun production_topology_reconciliation_observes_disconnect_before_bridge_creation() = runTest {
         val scope = TestScope(UnconfinedTestDispatcher(testScheduler))
         val room = PartyEventsHostRoom(InMemoryRoomBus(), hostId)
-        room.setMembers(listOf(RoomMember(alice, "Alice", connected = false)))
+        room.setMembers(
+            listOf(
+                RoomMember(alice, "Alice", connected = false),
+                RoomMember(bob, "Bob", connected = true),
+                RoomMember(carol, "Carol", connected = true),
+            ),
+        )
         val session = buildHostSession(loadCase())
 
         val bridge = WhodunitHostRoomBridge(
@@ -156,11 +280,18 @@ class PartyConnectionEventsTest {
             json,
             heartbeatIntervalMs = 0L,
             reconcileRoomTopology = true,
+            requireStartHandshake = false,
         )
         runCurrent()
         assertThat(session.hostState.value.state.public.disconnectedPlayers).contains(alice)
 
-        room.setMembers(listOf(RoomMember(alice, "Alice", connected = true)))
+        room.setMembers(
+            listOf(
+                RoomMember(alice, "Alice", connected = true),
+                RoomMember(bob, "Bob", connected = true),
+                RoomMember(carol, "Carol", connected = true),
+            ),
+        )
         runCurrent()
         assertThat(session.hostState.value.state.public.disconnectedPlayers)
             .doesNotContain(alice)
@@ -182,6 +313,7 @@ class PartyConnectionEventsTest {
             json,
             rejoinGraceMs = 200L,
             heartbeatIntervalMs = 0L,
+            requireStartHandshake = false,
         )
 
         bus.emitPeerLeft(alice, "Alice")
@@ -205,10 +337,13 @@ class PartyConnectionEventsTest {
         val scope = TestScope(UnconfinedTestDispatcher(testScheduler))
         val bus = InMemoryRoomBus()
         bus.registerPeer(alice)
+        bus.registerPeer(bob)
+        bus.registerPeer(carol)
         val session = buildHostSession(loadCase())
         val hostRoom = PartyEventsHostRoom(bus, hostId)
         val bridge = WhodunitHostRoomBridge(
             session, hostRoom, players, scope, json, heartbeatIntervalMs = 0L,
+            requireStartHandshake = true,
         )
         val peerBridge = com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitPeerRoomBridge(
             room = InMemoryPeerRoom(bus, alice, "Alice", hostId),
@@ -223,11 +358,41 @@ class PartyConnectionEventsTest {
             peerBridge.hostDisconnected.collect { peerEnded = true }
         }
 
-        bridge.announceStart("last-dinner", WhodunitIds.ClassicVoteModeId.raw)
+        val announcing = async {
+            bridge.announceStart(
+                caseId = "last-dinner",
+                modeId = WhodunitIds.ClassicVoteModeId.raw,
+                caseVersion = "1.0.0",
+                caseDigest = "0".repeat(64),
+            )
+        }
         runCurrent()
-        val start = hostRoom.sent
+        val starts = hostRoom.sent
             .mapNotNull { it.second as? HostMessage.SessionStarting }
-            .single()
+        assertThat(starts.map(HostMessage.SessionStarting::startId).distinct().size)
+            .isEqualTo(1)
+        val start = starts.first()
+        listOf(alice, bob, carol).forEach { playerId ->
+            bus.fromPeer(
+                PeerMessage.SessionStartReady(
+                    peerHeader(bridge, "ready-${playerId.raw}"),
+                    playerId,
+                    start.startId,
+                ),
+            )
+        }
+        runCurrent()
+        listOf(alice, bob, carol).forEach { playerId ->
+            bus.fromPeer(
+                PeerMessage.SessionStartCommitAck(
+                    peerHeader(bridge, "commit-ack-${playerId.raw}"),
+                    playerId,
+                    start.startId,
+                ),
+            )
+        }
+        runCurrent()
+        assertThat(announcing.await() is PResult.Success).isTrue()
         assertThat(start.header?.sessionId == bridge.protocol.sessionId).isTrue()
         assertThat(start.header?.gameId == WhodunitIds.GameId).isTrue()
         assertThat(start.header?.gameVersion == WhodunitHostRoomBridge.GAME_VERSION).isTrue()
@@ -242,6 +407,34 @@ class PartyConnectionEventsTest {
     }
 
     @Test
+    fun terminate_waits_for_authenticated_terminal_delivery_before_returning() = runTest {
+        val scope = TestScope(UnconfinedTestDispatcher(testScheduler))
+        val room = PartyEventsHostRoom(InMemoryRoomBus(), hostId)
+        val terminalGate = CompletableDeferred<Unit>()
+        room.terminalSendGate = terminalGate
+        val bridge = WhodunitHostRoomBridge(
+            buildHostSession(loadCase()),
+            room,
+            players,
+            scope,
+            json,
+            heartbeatIntervalMs = 0L,
+            requireStartHandshake = false,
+        )
+
+        val terminating = async { bridge.terminate(SessionEndReason.HostLeft) }
+        runCurrent()
+
+        assertThat(terminating.isCompleted).isFalse()
+        assertThat(room.sent.count { it.second is HostMessage.SessionEnded }).isEqualTo(3)
+
+        terminalGate.complete(Unit)
+        terminating.await()
+        assertThat(terminating.isCompleted).isTrue()
+        bridge.close()
+    }
+
+    @Test
     fun app_lifecycle_suspension_freezes_and_then_resumes_the_authoritative_game() = runTest {
         val scope = TestScope(UnconfinedTestDispatcher(testScheduler))
         val session = buildHostSession(loadCase())
@@ -249,6 +442,7 @@ class PartyConnectionEventsTest {
         val room = PartyEventsHostRoom(InMemoryRoomBus(), hostId)
         val bridge = WhodunitHostRoomBridge(
             session, room, players, scope, json, heartbeatIntervalMs = 0L,
+            requireStartHandshake = false,
         )
         runCurrent()
 
@@ -275,6 +469,7 @@ class PartyConnectionEventsTest {
         val room = PartyEventsHostRoom(InMemoryRoomBus(), hostId)
         val bridge = WhodunitHostRoomBridge(
             session, room, players, scope, json, heartbeatIntervalMs = 0L,
+            requireStartHandshake = false,
         )
         runCurrent()
         session.submit(WhodunitAction.Pause)
@@ -286,6 +481,46 @@ class PartyConnectionEventsTest {
         runCurrent()
 
         assertThat(session.hostState.value.state.public.paused).isTrue()
+        bridge.close()
+    }
+
+    @Test
+    fun lifecycle_pause_resumes_after_active_precedes_final_peer_rejoin() = runTest {
+        val scope = TestScope(UnconfinedTestDispatcher(testScheduler))
+        val bus = InMemoryRoomBus()
+        bus.registerPeer(alice)
+        bus.registerPeer(bob)
+        val session = buildHostSession(loadCase())
+        advanceToTimedRound(session)
+        val room = PartyEventsHostRoom(bus, hostId)
+        val bridge = WhodunitHostRoomBridge(
+            session, room, players, scope, json, heartbeatIntervalMs = 0L,
+            requireStartHandshake = false,
+        )
+        runCurrent()
+
+        room.lifecycleState.value = RoomLifecycleState.Suspended(120_000L)
+        bus.emitPeerLeft(alice, "Alice")
+        bus.emitPeerLeft(bob, "Bob")
+        runCurrent()
+        assertThat(session.hostState.value.state.public.paused).isTrue()
+
+        // Foreground arrives first. Resume is correctly rejected while either
+        // retained seat is still disconnected, and Active will not re-emit.
+        room.lifecycleState.value = RoomLifecycleState.Active
+        runCurrent()
+        assertThat(session.hostState.value.state.public.paused).isTrue()
+
+        bus.emitPeerReconnected(alice, "Alice")
+        runCurrent()
+        assertThat(session.hostState.value.state.public.paused).isTrue()
+        assertThat(session.hostState.value.state.public.disconnectedPlayers).contains(bob)
+
+        bus.emitPeerReconnected(bob, "Bob")
+        runCurrent()
+        assertThat(session.hostState.value.state.public.disconnectedPlayers.isEmpty()).isTrue()
+        assertThat(session.hostState.value.state.public.paused).isFalse()
+        assertThat(session.hostState.value.state.public.timer?.paused).isEqualTo(false)
         bridge.close()
     }
 
@@ -355,6 +590,61 @@ class PartyConnectionEventsTest {
         session.submit(WhodunitAction.RevealNextClue)
         session.submit(WhodunitAction.StartDiscussionTimer(60))
     }
+
+    private fun peerHeader(
+        bridge: WhodunitHostRoomBridge,
+        label: String,
+    ) = SessionEnvelopeHeader(
+        protocol = bridge.protocol.protocol,
+        sessionId = bridge.protocol.sessionId,
+        gameId = bridge.protocol.gameId,
+        gameVersion = bridge.protocol.gameVersion,
+        messageId = "$label-012345678901234567890",
+        sequence = 0L,
+        connectionEpoch = bridge.protocol.connectionEpoch,
+    )
+
+    private suspend fun TestScope.completeStartHandshake(
+        bridge: WhodunitHostRoomBridge,
+        room: PartyEventsHostRoom,
+        bus: InMemoryRoomBus,
+    ): String {
+        val announcing = async {
+            bridge.announceStart(
+                caseId = "last-dinner",
+                modeId = WhodunitIds.ClassicVoteModeId.raw,
+                caseVersion = "1.0.0",
+                caseDigest = "0".repeat(64),
+            )
+        }
+        runCurrent()
+        val startId = room.sent
+            .mapNotNull { it.second as? HostMessage.SessionStarting }
+            .first()
+            .startId
+        listOf(alice, bob, carol).forEach { playerId ->
+            bus.fromPeer(
+                PeerMessage.SessionStartReady(
+                    peerHeader(bridge, "initial-ready-${playerId.raw}"),
+                    playerId,
+                    startId,
+                ),
+            )
+        }
+        runCurrent()
+        assertThat(announcing.await() is PResult.Success).isTrue()
+        listOf(alice, bob, carol).forEach { playerId ->
+            bus.fromPeer(
+                PeerMessage.SessionStartCommitAck(
+                    peerHeader(bridge, "initial-ack-${playerId.raw}"),
+                    playerId,
+                    startId,
+                ),
+            )
+        }
+        runCurrent()
+        return startId
+    }
 }
 
 private class PartyEventsHostRoom(
@@ -362,6 +652,7 @@ private class PartyEventsHostRoom(
     private val hostId: PlayerId,
 ) : LocalRoom {
     val sent = mutableListOf<Pair<SendTarget, HostMessage>>()
+    var terminalSendGate: CompletableDeferred<Unit>? = null
     private val _info = MutableStateFlow(
         RoomInfo(
             code = "test",
@@ -387,6 +678,7 @@ private class PartyEventsHostRoom(
 
     override suspend fun send(target: SendTarget, message: HostMessage): com.parlor.core.result.Result<Unit, NetError> {
         sent += target to message
+        if (message is HostMessage.SessionEnded) terminalSendGate?.await()
         bus.fromHost(target, message)
         return com.parlor.core.result.Result.Success(Unit)
     }

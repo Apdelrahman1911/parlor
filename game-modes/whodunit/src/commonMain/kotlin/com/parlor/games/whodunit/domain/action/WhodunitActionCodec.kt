@@ -1,5 +1,6 @@
 package com.parlor.games.whodunit.domain.action
 
+import com.parlor.networking.protocol.MAX_COMMAND_PAYLOAD_BYTES
 import kotlinx.serialization.json.Json
 
 /**
@@ -28,9 +29,19 @@ object WhodunitActionCodec {
 
     /** Encode an action to JSON bytes suitable for `PeerMessage.ActionSubmit.payload`. */
     fun encode(action: WhodunitAction): ByteArray =
-        json.encodeToString(WhodunitAction.serializer(), action).encodeToByteArray()
+        json.encodeToString(WhodunitAction.serializer(), action)
+            .encodeToByteArray()
+            .also(::requireBounded)
 
     /** Decode a `PeerMessage.ActionSubmit.payload` back to a typed action. */
-    fun decode(bytes: ByteArray): WhodunitAction =
-        json.decodeFromString(WhodunitAction.serializer(), bytes.decodeToString())
+    fun decode(bytes: ByteArray): WhodunitAction {
+        requireBounded(bytes)
+        return json.decodeFromString(WhodunitAction.serializer(), bytes.decodeToString())
+    }
+
+    private fun requireBounded(bytes: ByteArray) {
+        require(bytes.size <= MAX_COMMAND_PAYLOAD_BYTES) {
+            "Whodunit action exceeds $MAX_COMMAND_PAYLOAD_BYTES bytes"
+        }
+    }
 }

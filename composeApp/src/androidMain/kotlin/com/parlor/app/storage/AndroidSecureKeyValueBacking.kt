@@ -4,6 +4,7 @@ import android.content.Context
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import com.parlor.storage.secure.SecureKeyValueBacking
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -119,7 +120,9 @@ internal class AndroidSecureKeyValueBacking(
             }
         } catch (failure: AEADBadTagException) {
             throw IllegalStateException("Secure credential authentication failed", failure)
-        } catch (failure: Throwable) {
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (failure: Exception) {
             if (failure is IllegalStateException) throw failure
             throw IllegalStateException("Secure credential record is invalid", failure)
         }

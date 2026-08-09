@@ -10,6 +10,7 @@ import com.parlor.content.datasource.InMemoryCachedCaseDataSource
 import com.parlor.content.datasource.KtorRemoteCaseDataSource
 import com.parlor.content.repository.DefaultCaseRepository
 import com.parlor.content.validation.DefaultCaseValidator
+import com.parlor.content.validation.ValidatedCase
 import com.parlor.core.ids.CaseId
 import com.parlor.core.ids.GameId
 import com.parlor.core.ids.ModeId
@@ -17,6 +18,7 @@ import com.parlor.core.ids.PlayerId
 import com.parlor.core.ids.SessionId
 import com.parlor.core.random.RandomSource
 import com.parlor.core.result.DataError
+import com.parlor.core.result.EmptyResult
 import com.parlor.core.result.Result
 import com.parlor.core.time.FakeClock
 import com.parlor.core.versioning.SemVer
@@ -29,6 +31,7 @@ import com.parlor.games.whodunit.WhodunitIds
 import com.parlor.games.whodunit.ackIntroForAll
 import com.parlor.games.whodunit.content.BundledWhodunitCases
 import com.parlor.games.whodunit.content.WhodunitCase
+import com.parlor.games.whodunit.content.contentIdentity
 import com.parlor.games.whodunit.content.WhodunitPayloadValidator
 import com.parlor.games.whodunit.domain.action.WhodunitAction
 import com.parlor.games.whodunit.domain.event.WhodunitEvent
@@ -37,6 +40,9 @@ import com.parlor.games.whodunit.domain.reducer.WhodunitReducerContext
 import com.parlor.games.whodunit.domain.state.WhodunitState
 import com.parlor.games.whodunit.resources.Res
 import com.parlor.games.whodunit.ui.flow.loadResumedSession
+import com.parlor.games.whodunit.ui.flow.ResumedSession
+import com.parlor.games.whodunit.ui.flow.validateResumedSessionForCase
+import com.parlor.session.PlayMode
 import com.parlor.session.passandplay.PassAndPlaySessionController
 import com.parlor.storage.snapshot.FileBackedSnapshotStore
 import com.parlor.storage.snapshot.SnapshotStore
@@ -48,6 +54,7 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.utils.io.ByteReadChannel
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
@@ -55,6 +62,7 @@ import kotlinx.datetime.Instant
 import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import kotlin.test.Test
+import kotlin.test.assertFailsWith
 
 /**
  * Phase 6.2 reconstruction: walk the full resume path end-to-end. Save a real
@@ -83,7 +91,7 @@ class WhodunitResumeReconstructionTest {
         Player(PlayerId("p4"), "Diego", seat = 3),
     )
 
-    private suspend fun loadCase(): WhodunitCase {
+    private suspend fun loadValidatedCase(): ValidatedCase<WhodunitCase> {
         val bundled = BundledWhodunitCases(
             knownCaseIds = listOf("last-dinner"),
             loadJson = { id ->
@@ -110,8 +118,10 @@ class WhodunitResumeReconstructionTest {
             json = json,
         )
         val result = repo.loadCase(CaseId("last-dinner"), WhodunitPayloadValidator(json))
-        return (result as Result.Success).data.payload
+        return (result as Result.Success).data
     }
+
+    private suspend fun loadCase(): WhodunitCase = loadValidatedCase().payload
 
     @Test
     fun resumed_controller_state_equals_saved_state_and_advances_correctly() = runTest {
@@ -298,6 +308,36 @@ class WhodunitResumeReconstructionTest {
     }
 
     @Test
+    fun resume_propagates_cancellation_during_retired_snapshot_cleanup() = runTest {
+        val sessionId = SessionId("cancelled-retired-solo")
+        val snapshot = GameSnapshot(
+            sessionId = sessionId,
+            gameId = WhodunitIds.GameId,
+            engineVersion = engineVersion,
+            createdAt = Instant.fromEpochSeconds(1_700_000_024),
+            phaseId = "legacy-solo-phase",
+            payload = "must not be decoded".encodeToByteArray(),
+            metadata = mapOf("playMode" to "Solo"),
+        )
+        val store = object : SnapshotStore {
+            override suspend fun save(snapshot: GameSnapshot): EmptyResult<DataError> = Result.Success(Unit)
+
+            override suspend fun load(sessionId: SessionId): Result<GameSnapshot, DataError> =
+                Result.Success(snapshot)
+
+            override suspend fun delete(sessionId: SessionId): EmptyResult<DataError> =
+                throw CancellationException("resume was cancelled")
+
+            override suspend fun listUnfinished(): Result<List<SessionId>, DataError> =
+                Result.Success(emptyList())
+        }
+
+        assertFailsWith<CancellationException> {
+            loadResumedSession(store, WhodunitDefinition(json), sessionId)
+        }
+    }
+
+    @Test
     fun resume_rejects_unknown_play_mode_metadata_instead_of_changing_ceremony() = runTest {
         val sessionId = SessionId("unknown-play-mode")
         val store: SnapshotStore = FileBackedSnapshotStore(InMemorySnapshotFileSystem(), json)
@@ -317,6 +357,85 @@ class WhodunitResumeReconstructionTest {
 
         assertThat(result).isInstanceOf(Result.Failure::class)
         assertThat((result as Result.Failure).error).isEqualTo(DataError.CorruptedData)
+    }
+
+    @Test
+    fun resume_rejects_partial_or_malformed_content_identity_metadata() = runTest {
+        val definition = WhodunitDefinition(json)
+        val cases = listOf(
+            "partial" to mapOf("caseVersion" to "1.0.0"),
+            "malformed" to mapOf(
+                "caseVersion" to "not-semver",
+                "caseDigest" to "not-a-digest",
+            ),
+        )
+
+        cases.forEach { (suffix, metadata) ->
+            val sessionId = SessionId("bad-content-identity-$suffix")
+            val store: SnapshotStore = FileBackedSnapshotStore(InMemorySnapshotFileSystem(), json)
+            store.save(
+                GameSnapshot(
+                    sessionId = sessionId,
+                    gameId = WhodunitIds.GameId,
+                    engineVersion = engineVersion,
+                    createdAt = Instant.fromEpochSeconds(1_700_000_030),
+                    phaseId = "must-not-decode",
+                    payload = "must not decode".encodeToByteArray(),
+                    metadata = metadata,
+                ),
+            )
+
+            val result = loadResumedSession(store, definition, sessionId)
+
+            assertThat(result).isInstanceOf(Result.Failure::class)
+            assertThat((result as Result.Failure).error).isEqualTo(DataError.CorruptedData)
+        }
+    }
+
+    @Test
+    fun loaded_case_boundary_requires_exact_identity_and_content_compatible_state() = runTest {
+        val case = loadValidatedCase()
+        val sessionId = SessionId("content-bound-resume")
+        val state = WhodunitDefinition(json).createInitialState(
+            SessionConfig(
+                sessionId = sessionId,
+                caseId = CaseId(case.envelope.caseId),
+                modeId = WhodunitIds.ClassicVoteModeId,
+                players = fourPlayers(),
+                randomSeed = 91L,
+            ),
+        )
+        val exact = ResumedSession(
+            sessionId = sessionId,
+            state = state,
+            contentIdentity = case.envelope.contentIdentity(),
+            playMode = PlayMode.PassAndPlay,
+        )
+
+        assertThat(validateResumedSessionForCase(exact, case)).isInstanceOf(Result.Success::class)
+
+        val wrongDigest = if (exact.contentIdentity!!.digest.first() == '0') '1' else '0'
+        val mismatched = exact.copy(
+            contentIdentity = exact.contentIdentity.copy(
+                digest = wrongDigest + exact.contentIdentity.digest.drop(1),
+            ),
+        )
+        assertThat(validateResumedSessionForCase(mismatched, case)).isEqualTo(
+            Result.Failure(DataError.CorruptedData),
+        )
+
+        // Compatibility path for snapshots written before content identity was
+        // persisted: structural and loaded-content validation are mandatory.
+        assertThat(validateResumedSessionForCase(exact.copy(contentIdentity = null), case))
+            .isInstanceOf(Result.Success::class)
+
+        val wrongCase = exact.copy(
+            contentIdentity = null,
+            state = state.copy(public = state.public.copy(caseId = CaseId("other-case"))),
+        )
+        assertThat(validateResumedSessionForCase(wrongCase, case)).isEqualTo(
+            Result.Failure(DataError.CorruptedData),
+        )
     }
 
     @Test

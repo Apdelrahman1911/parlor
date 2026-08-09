@@ -79,6 +79,50 @@ class RoomMessageCodecTest {
         }
     }
 
+    @Test
+    fun `round trips every acknowledged session-start frame`() {
+        val startId = "start-012345678901234567890123"
+        val startHeader = header().copy(messageId = startId, sequence = 0L)
+        val ackHeader = header().copy(
+            messageId = "acknowledgement-012345678901",
+            sequence = 0L,
+        )
+        val frames: List<RoomMessage> = listOf(
+            HostMessage.SessionStarting(
+                startId = startId,
+                caseId = "fixture-case",
+                modeId = "classic",
+                players = listOf(
+                    com.parlor.engine.state.Player(PlayerId("host"), "Host", 0),
+                    com.parlor.engine.state.Player(PlayerId("alice"), "Alice", 1),
+                ),
+                sessionNonce = 42L,
+                header = startHeader,
+            ),
+            PeerMessage.SessionStartReady(
+                header = ackHeader,
+                actor = PlayerId("alice"),
+                startId = startId,
+            ),
+            HostMessage.SessionStartCommitted(
+                startId = startId,
+                header = header().copy(
+                    messageId = "commit-0123456789012345678901",
+                    sequence = 1L,
+                ),
+            ),
+            PeerMessage.SessionStartCommitAck(
+                header = ackHeader.copy(messageId = "commit-ack-01234567890123456"),
+                actor = PlayerId("alice"),
+                startId = startId,
+            ),
+        )
+
+        frames.forEach { frame ->
+            kotlin.test.assertEquals(frame, codec.decode(codec.encode(frame)))
+        }
+    }
+
     private fun header() = SessionEnvelopeHeader(
         protocol = ProtocolVersion(),
         sessionId = SessionId("session-0123456789"),

@@ -9,6 +9,7 @@ import com.parlor.games.whodunit.content.WhodunitCase
 import com.parlor.games.whodunit.content.WhodunitPayloadValidator
 import com.parlor.games.whodunit.resources.Res
 import com.parlor.navigation.ModuleNavGraph
+import kotlinx.coroutines.CancellationException
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -47,9 +48,13 @@ val whodunitModule = module {
                 "saidi-inheritance",
             ),
             loadJson = { caseId ->
-                runCatching {
+                try {
                     Res.readBytes("files/cases/$caseId.json").decodeToString()
-                }.getOrNull()
+                } catch (cancelled: CancellationException) {
+                    throw cancelled
+                } catch (_: Exception) {
+                    null
+                }
             },
             json = get(),
         )

@@ -57,6 +57,7 @@ fun netErrorMessage(error: NetError): String = stringResource(
         is NetError.CommandInFlight,
         is NetError.SessionSuspended,
         is NetError.TransportFailure -> Res.string.net_error_transport
-        is NetError.Unauthorized -> Res.string.net_error_unauthorized
+        is NetError.Unauthorized,
+        is NetError.InvalidInput -> Res.string.net_error_unauthorized
     },
 )

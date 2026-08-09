@@ -7,13 +7,22 @@ import com.parlor.core.result.Result
 import com.parlor.core.versioning.SemVer
 import com.parlor.engine.snapshot.GameSnapshot
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
-import kotlinx.datetime.Instant
 import kotlinx.serialization.json.Json
+import kotlin.coroutines.CoroutineContext
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertIs
+import kotlin.test.assertNull
+import kotlin.test.assertSame
+import kotlin.test.assertTrue
+import kotlin.time.Instant
 
 class FileBackedSnapshotStoreTest {
 
@@ -60,6 +69,76 @@ class FileBackedSnapshotStoreTest {
     }
 
     @Test
+    fun fatal_errors_are_never_converted_into_a_data_error() = runTest {
+        val store = FileBackedSnapshotStore(
+            fileSystem = FailingFileSystem(FatalSnapshotError()),
+            json = json,
+        )
+
+        assertFailsWith<FatalSnapshotError> {
+            store.load(sessionId)
+        }
+    }
+
+    @Test
+    fun envelope_codec_runs_on_injected_context_and_filesystem_stays_outside_it() = runTest {
+        val marker = SnapshotCodecContext()
+        val codec = ContextCheckingCodec(json, marker)
+        val fileSystem = MemoryFileSystem(marker)
+        val store = FileBackedSnapshotStore(
+            fileSystem = fileSystem,
+            serializationContext = StandardTestDispatcher(testScheduler) + marker,
+            codec = codec,
+        )
+        val snapshot = validSnapshot()
+
+        assertIs<Result.Success<Unit>>(store.save(snapshot))
+        val loaded = assertIs<Result.Success<GameSnapshot>>(store.load(sessionId)).data
+
+        assertEquals(snapshot, loaded)
+        assertTrue(codec.encodeContextObserved)
+        assertTrue(codec.decodeContextObserved)
+        assertTrue(fileSystem.operations > 0)
+    }
+
+    @Test
+    fun cancellation_during_codec_work_propagates_and_releases_store_mutex() = runTest {
+        val marker = SnapshotCodecContext()
+        val enteredDecode = CompletableDeferred<Unit>()
+        val snapshot = validSnapshot()
+        var decodeAttempts = 0
+        val codec = object : SnapshotEnvelopeCodec {
+            override suspend fun encode(snapshot: GameSnapshot): ByteArray = byteArrayOf(1)
+
+            override suspend fun decode(bytes: ByteArray): GameSnapshot {
+                assertSame(marker, currentCoroutineContext()[SnapshotCodecContext.Key])
+                decodeAttempts += 1
+                if (decodeAttempts == 1) {
+                    enteredDecode.complete(Unit)
+                    awaitCancellation()
+                }
+                return snapshot
+            }
+        }
+        val fileSystem = MemoryFileSystem().apply {
+            put("${sessionId.raw}${FileBackedSnapshotStore.SUFFIX}", byteArrayOf(1))
+        }
+        val store = FileBackedSnapshotStore(
+            fileSystem = fileSystem,
+            serializationContext = StandardTestDispatcher(testScheduler) + marker,
+            codec = codec,
+        )
+
+        val loading = async { store.load(sessionId) }
+        enteredDecode.await()
+        loading.cancel(CancellationException("screen disposed"))
+
+        assertFailsWith<CancellationException> { loading.await() }
+        assertIs<Result.Success<GameSnapshot>>(store.load(sessionId))
+        assertEquals(2, decodeAttempts)
+    }
+
+    @Test
     fun unfinished_sessions_are_filtered_deduplicated_and_stable() = runTest {
         val fileSystem = MemoryFileSystem().apply {
             names = listOf(
@@ -84,14 +163,7 @@ class FileBackedSnapshotStoreTest {
     fun valid_snapshot_round_trips_through_filesystem_boundary() = runTest {
         val fileSystem = MemoryFileSystem()
         val store = FileBackedSnapshotStore(fileSystem, json)
-        val snapshot = GameSnapshot(
-            sessionId = sessionId,
-            gameId = GameId("whodunit"),
-            engineVersion = SemVer(1, 0, 0),
-            createdAt = Instant.parse("2026-01-01T00:00:00Z"),
-            phaseId = "setup",
-            payload = byteArrayOf(1, 2, 3),
-        )
+        val snapshot = validSnapshot()
 
         assertIs<Result.Success<Unit>>(store.save(snapshot))
         val loaded = assertIs<Result.Success<GameSnapshot>>(store.load(sessionId)).data
@@ -114,6 +186,51 @@ class FileBackedSnapshotStoreTest {
         requireSafeSnapshotFileName("session-123.snapshot.json")
     }
 
+    private fun validSnapshot() = GameSnapshot(
+        sessionId = sessionId,
+        gameId = GameId("whodunit"),
+        engineVersion = SemVer(1, 0, 0),
+        createdAt = Instant.parse("2026-01-01T00:00:00Z"),
+        phaseId = "setup",
+        payload = byteArrayOf(1, 2, 3),
+    )
+
+    private class SnapshotCodecContext : CoroutineContext.Element {
+        override val key: CoroutineContext.Key<*> = Key
+
+        companion object Key : CoroutineContext.Key<SnapshotCodecContext>
+    }
+
+    private class ContextCheckingCodec(
+        private val json: Json,
+        private val expectedContext: SnapshotCodecContext,
+    ) : SnapshotEnvelopeCodec {
+        var encodeContextObserved = false
+            private set
+        var decodeContextObserved = false
+            private set
+
+        override suspend fun encode(snapshot: GameSnapshot): ByteArray {
+            assertSame(
+                expectedContext,
+                currentCoroutineContext()[SnapshotCodecContext.Key],
+            )
+            encodeContextObserved = true
+            return json
+                .encodeToString(GameSnapshot.serializer(), snapshot)
+                .encodeToByteArray()
+        }
+
+        override suspend fun decode(bytes: ByteArray): GameSnapshot {
+            assertSame(
+                expectedContext,
+                currentCoroutineContext()[SnapshotCodecContext.Key],
+            )
+            decodeContextObserved = true
+            return json.decodeFromString(GameSnapshot.serializer(), bytes.decodeToString())
+        }
+    }
+
     private class FailingFileSystem(
         private val failure: Throwable,
     ) : SnapshotFileSystem {
@@ -123,20 +240,45 @@ class FileBackedSnapshotStoreTest {
         override suspend fun list(): List<String> = throw failure
     }
 
-    private class MemoryFileSystem : SnapshotFileSystem {
+    private class MemoryFileSystem(
+        private val forbiddenContext: SnapshotCodecContext? = null,
+    ) : SnapshotFileSystem {
         private val files = mutableMapOf<String, ByteArray>()
         var names: List<String>? = null
+        var operations: Int = 0
+            private set
 
-        override suspend fun read(name: String): ByteArray? = files[name]?.copyOf()
+        fun put(name: String, bytes: ByteArray) {
+            files[name] = bytes.copyOf()
+        }
+
+        private suspend fun recordOperation() {
+            operations += 1
+            forbiddenContext?.let {
+                assertNull(currentCoroutineContext()[SnapshotCodecContext.Key])
+            }
+        }
+
+        override suspend fun read(name: String): ByteArray? {
+            recordOperation()
+            return files[name]?.copyOf()
+        }
 
         override suspend fun write(name: String, bytes: ByteArray) {
+            recordOperation()
             files[name] = bytes.copyOf()
         }
 
         override suspend fun delete(name: String) {
+            recordOperation()
             files.remove(name)
         }
 
-        override suspend fun list(): List<String> = names ?: files.keys.toList()
+        override suspend fun list(): List<String> {
+            recordOperation()
+            return names ?: files.keys.toList()
+        }
     }
+
+    private class FatalSnapshotError : Error("fatal snapshot failure")
 }

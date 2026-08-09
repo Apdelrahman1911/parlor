@@ -20,7 +20,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import com.parlor.core.random.RandomSource
 import com.parlor.core.result.Result
 import com.parlor.designsystem.backdrop.HeroBackdrop
 import com.parlor.designsystem.components.CandleFlame
@@ -66,6 +65,7 @@ import com.parlor.games.mafia.resources.setup_back_description
 import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.NetError
 import com.parlor.networking.room.RoomMember
+import com.parlor.networking.security.SecureIds
 import com.parlor.networking.transport.HostConfig
 import com.parlor.networking.transport.HostedGameProtocol
 import com.parlor.networking.transport.RoomTransport
@@ -96,8 +96,15 @@ fun MafiaHostLobbyFlow(
     var hostError by remember { mutableStateOf<NetError?>(null) }
     var hostAttempt by remember { mutableStateOf(0) }
     var frozenRoster by remember { mutableStateOf<List<RoomMember>?>(null) }
+    // Ownership transfers to MafiaMultiDeviceHostFlow only after admissions
+    // close successfully. From then on the child must deliver SessionEnded
+    // before it closes the physical room; the lobby must not race that work.
+    var gameOwnedRoom by remember { mutableStateOf<LocalRoom?>(null) }
     var startBlocked by remember { mutableStateOf(false) }
-    val seed = remember { RandomSource.system().nextLong() }
+    // This seed controls the hidden role map and remains host-only. Keep it
+    // independent from the public room/start nonce and source it from the
+    // platform CSPRNG used by the authenticated session protocol.
+    val seed = remember { SecureIds.randomLong() }
 
     LaunchedEffect(transport, hostAttempt) {
         hostError = null
@@ -115,6 +122,7 @@ fun MafiaHostLobbyFlow(
         ) {
             is Result.Success -> {
                 room = result.data
+                gameOwnedRoom = null
                 frozenRoster = null
                 startBlocked = false
             }
@@ -129,7 +137,7 @@ fun MafiaHostLobbyFlow(
                 awaitCancellation()
             } finally {
                 withContext(NonCancellable) {
-                    current.leave()
+                    if (gameOwnedRoom !== current) current.leave()
                 }
             }
         }
@@ -160,6 +168,7 @@ fun MafiaHostLobbyFlow(
                 scope.launch {
                     when (val frozen = current.closeAdmissions()) {
                         is Result.Success -> {
+                            gameOwnedRoom = current
                             frozenRoster = frozen.data
                             startBlocked = false
                         }
@@ -195,6 +204,16 @@ fun MafiaHostLobbyFlow(
                 seed = seed,
                 room = current,
                 onBackToHome = onBackToHome,
+                onRetryStart = {
+                    if (room === current) {
+                        // MafiaMultiDeviceHostFlow has already delivered the
+                        // terminal message and left this physical room.
+                        room = null
+                        frozenRoster = null
+                        startBlocked = false
+                        hostAttempt++
+                    }
+                },
                 modifier = modifier,
             )
         }

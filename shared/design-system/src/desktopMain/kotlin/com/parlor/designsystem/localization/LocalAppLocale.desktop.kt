@@ -12,17 +12,14 @@ import java.util.Locale
 @Suppress("FunctionName")
 actual object LocalAppLocale {
     private val Local = compositionLocalOf { Locale.getDefault().toLanguageTag() }
-    private var defaultLocale: Locale? = null
+    private val defaultLocale: Locale = Locale.getDefault()
 
     actual val current: String
         @Composable get() = Local.current
 
     @Composable
     actual infix fun provides(value: String?): ProvidedValue<*> {
-        if (defaultLocale == null) {
-            defaultLocale = Locale.getDefault()
-        }
-        val newLocale = value?.let { Locale.forLanguageTag(it) } ?: defaultLocale!!
+        val newLocale = value?.let { Locale.forLanguageTag(it) } ?: defaultLocale
         Locale.setDefault(newLocale)
         return Local provides newLocale.toLanguageTag()
     }

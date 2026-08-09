@@ -8,6 +8,7 @@ import com.parlor.storage.snapshot.SnapshotProtectionException
 import com.parlor.storage.snapshot.SnapshotFileSystem
 import com.parlor.storage.snapshot.isSafeSnapshotFileName
 import com.parlor.storage.snapshot.requireSafeSnapshotFileName
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -172,7 +173,9 @@ class AndroidSnapshotFileSystem(private val context: Context) : SnapshotFileSyst
                 offset += iv.size
                 ciphertext.copyInto(result, offset)
             }
-        } catch (failure: Throwable) {
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (failure: Exception) {
             if (failure is SnapshotProtectionException) throw failure
             throw SnapshotProtectionException(cause = failure)
         }
@@ -199,7 +202,9 @@ class AndroidSnapshotFileSystem(private val context: Context) : SnapshotFileSyst
             return cipher.doFinal(ciphertext)
         } catch (failure: AEADBadTagException) {
             throw SnapshotProtectionException(cause = failure)
-        } catch (failure: Throwable) {
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (failure: Exception) {
             if (failure is SnapshotProtectionException) throw failure
             throw SnapshotProtectionException(cause = failure)
         }

@@ -5,6 +5,7 @@ import com.parlor.core.result.Result
 import com.parlor.networking.protocol.HostMessage
 import com.parlor.networking.protocol.PeerMessage
 import com.parlor.networking.protocol.RoomMessage
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,7 +36,7 @@ interface LocalRoom {
      * The local device's player id. On the host this equals
      * [RoomInfo.hostPlayerId]; on a peer this is the peer's own id, distinct
      * from `info.hostPlayerId`. Used to map the local device into the game's
-     * player list when the host sends `SessionStarting`.
+     * player list during the acknowledged `SessionStarting` transaction.
      */
     val selfPlayerId: PlayerId
 
@@ -74,6 +75,73 @@ interface LocalRoom {
 
     suspend fun send(target: SendTarget, message: HostMessage): Result<Unit, NetError>
     suspend fun sendToHost(message: PeerMessage): Result<Unit, NetError>
+
+    /**
+     * Closes this physical room after admission when session start cannot be
+     * completed, while retaining any transport-managed resumable membership.
+     *
+     * The retained membership lets the next attempt resume the already-frozen
+     * game seat instead of trying to enter through initial admission again.
+     * Transports without resumable memberships safely fall back to [leave].
+     * Calling [leave] after this method must remain harmless.
+     */
+    suspend fun closeForRetry(): Result<Unit, NetError> {
+        return try {
+            leave()
+            Result.Success(Unit)
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (_: Exception) {
+            Result.Failure(NetError.TransportFailure("room close failed"))
+        }
+    }
+
+    /**
+     * Permanently discards the resumable membership retained by a successful
+     * [closeForRetry]. This is the explicit final-Leave/Back transaction for an
+     * already-closed physical room; it must be ownership checked so stale room
+     * cleanup cannot revoke an unrelated or replacement membership.
+     *
+     * Transports without a distinct resumable capability safely fall back to
+     * [leave]. A failure means the caller must keep the recovery UI available
+     * rather than claiming that the membership was discarded.
+     */
+    suspend fun discardRejoinCapability(): Result<Unit, NetError> {
+        return try {
+            leave()
+            Result.Success(Unit)
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (_: Exception) {
+            Result.Failure(NetError.TransportFailure("membership discard failed"))
+        }
+    }
+
+    /**
+     * Performs an explicit, permanent player Leave.
+     *
+     * Unlike lifecycle/disposal cleanup, callers that represent a user action
+     * must observe this result and navigate away only after it succeeds. A
+     * resumable transport uses the transaction to revoke the persisted logical
+     * membership as well as closing the physical room. A failure is retryable:
+     * the UI must remain on a recovery surface because the credential may still
+     * exist even though the socket has already been closed.
+     *
+     * Existing transports without a resumable capability retain their prior
+     * behavior through this compatibility default.
+     */
+    suspend fun finalLeave(): Result<Unit, NetError> {
+        return try {
+            leave()
+            Result.Success(Unit)
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (_: Exception) {
+            Result.Failure(NetError.TransportFailure("final leave failed"))
+        }
+    }
+
+    /** Best-effort physical cleanup for lifecycle/disposal ownership. */
     suspend fun leave()
 }
 
@@ -127,6 +195,7 @@ sealed interface NetError {
     data object RejoinExpired : NetError
     data object AlreadyConnected : NetError
     data object SecureStorageUnavailable : NetError
+    data object InvalidInput : NetError
     /** A mutating command is already awaiting an authoritative outcome. */
     data object CommandInFlight : NetError
     data object SessionSuspended : NetError

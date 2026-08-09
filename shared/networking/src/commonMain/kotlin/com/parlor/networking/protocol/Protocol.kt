@@ -17,12 +17,12 @@ import kotlinx.serialization.Serializable
 @Serializable
 sealed interface RoomMessage
 
-// v3 adds transactional admission/resume readiness barriers and cannot safely
-// interoperate with v2 peers, which may miss the first lobby/game snapshot.
-const val PARLOR_PROTOCOL_MAJOR: Int = 3
-// v3.1 adds an explicit admission-pending state so discovery/handshake and
-// human host-approval deadlines are independent and observable.
-const val PARLOR_PROTOCOL_MINOR: Int = 1
+// v4 replaces the one-shot game-start notification with an acknowledged,
+// idempotent offer -> ready -> commit -> commit-ack barrier. A v3 peer could
+// enter gameplay after seeing an unacknowledged SessionStarting frame and lose
+// the first authoritative snapshot, so the wire formats must not interoperate.
+const val PARLOR_PROTOCOL_MAJOR: Int = 4
+const val PARLOR_PROTOCOL_MINOR: Int = 0
 const val MAX_COMMAND_PAYLOAD_BYTES: Int = 32 * 1024
 const val MAX_SNAPSHOT_PAYLOAD_BYTES: Int = 256 * 1024
 const val MAX_CONTROL_PAYLOAD_BYTES: Int = 8 * 1024
@@ -204,10 +204,10 @@ sealed interface HostMessage : RoomMessage {
     ) : HostMessage
 
     /**
-     * Sent by the host once their lobby's *Start Game* is tapped. Tells every
-     * peer "stop showing the lobby; load this case and switch to the game
-     * flow." Carries the canonical session shape so peers can stand up their
-     * shadow controller with the same `SessionConfig` the host uses.
+     * Idempotent first phase sent after the host taps *Start Game*. It carries
+     * the canonical session shape so each peer can validate/load its game
+     * prerequisites while remaining in the lobby. Only a matching
+     * [SessionStartCommitted] authorizes that peer to enter gameplay.
      *
      * [sessionNonce] is a **public, non-secret** id nonce (derived from the room
      * code) used only for peer-side SessionId naming / debug. It is NOT the
@@ -218,11 +218,28 @@ sealed interface HostMessage : RoomMessage {
      */
     @Serializable
     data class SessionStarting(
+        /** Stable, non-secret id reused by every retry of this start attempt. */
+        val startId: String,
         val caseId: String,
         val modeId: String,
         val players: List<Player>,
         val sessionNonce: Long,
-        val header: SessionEnvelopeHeader? = null,
+        val header: SessionEnvelopeHeader,
+        /** Exact validated case revision; absent only for games without external case content. */
+        val caseVersion: String? = null,
+        /** Lowercase SHA-256 of canonical gameplay-visible case content. */
+        val caseDigest: String? = null,
+    ) : HostMessage
+
+    /**
+     * Authoritative second phase of [SessionStarting]. A peer must not leave
+     * the lobby or construct a game controller until this frame validates
+     * against the exact offer it acknowledged.
+     */
+    @Serializable
+    data class SessionStartCommitted(
+        val startId: String,
+        val header: SessionEnvelopeHeader,
     ) : HostMessage
 }
 
@@ -338,6 +355,25 @@ sealed interface PeerMessage : RoomMessage {
         val header: SessionEnvelopeHeader,
         val actor: PlayerId,
         val commandId: String,
+    ) : PeerMessage
+
+    /** Acknowledges a validated [HostMessage.SessionStarting] offer. */
+    @Serializable
+    data class SessionStartReady(
+        val header: SessionEnvelopeHeader,
+        val actor: PlayerId,
+        val startId: String,
+    ) : PeerMessage
+
+    /**
+     * Acknowledges a validated authoritative commit. Duplicate commits are
+     * answered with the same idempotent acknowledgement after game entry.
+     */
+    @Serializable
+    data class SessionStartCommitAck(
+        val header: SessionEnvelopeHeader,
+        val actor: PlayerId,
+        val startId: String,
     ) : PeerMessage
 
     @Serializable

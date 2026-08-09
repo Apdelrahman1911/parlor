@@ -21,6 +21,7 @@ import com.parlor.designsystem.components.ParlorButtonVariant
 import com.parlor.designsystem.components.ParlorCard
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.whodunit.content.Character
+import com.parlor.core.ids.CharacterId
 import com.parlor.games.whodunit.domain.state.PlayerRole
 import com.parlor.games.whodunit.resources.Res
 import com.parlor.games.whodunit.resources.dossier_acting_tips_label
@@ -55,11 +56,9 @@ import org.jetbrains.compose.resources.stringResource
  * Dossier card. Must Read + Optional Details. Renders text from validated case
  * content — never composes prose itself.
  *
- * [allCharacters] is used only on this local device to resolve killer-only
- * `deflectionTargets` (character ids) into display names. It must never be
- * combined with other players' private state and never sent off-device — the
- * payload is always present locally because the router plumbs it from the
- * loaded case, not from any per-player projection.
+ * [deflectionTargets] comes from the current player's private authoritative
+ * slice, already filtered to assigned suspects. [allCharacters] only resolves
+ * those safe ids into display names from the locally validated case.
  */
 @Composable
 fun DossierCard(
@@ -68,6 +67,7 @@ fun DossierCard(
     onDone: () -> Unit,
     modifier: Modifier = Modifier,
     allCharacters: List<Character> = emptyList(),
+    deflectionTargets: List<CharacterId> = emptyList(),
 ) {
     val killerGoalFallback = stringResource(Res.string.dossier_killer_goal_fallback)
     val killerMustHideFallback = stringResource(Res.string.dossier_killer_must_hide_fallback)
@@ -156,7 +156,11 @@ fun DossierCard(
 
             if (role == PlayerRole.Killer) {
                 Spacer(modifier = Modifier.height(ParlorTheme.spacing.s))
-                KillerOnlySections(character = character, allCharacters = allCharacters)
+                KillerOnlySections(
+                    character = character,
+                    allCharacters = allCharacters,
+                    deflectionTargets = deflectionTargets,
+                )
             }
 
             Spacer(modifier = Modifier.height(ParlorTheme.spacing.m))
@@ -234,6 +238,7 @@ private fun LabeledLine(label: String, value: String) {
 private fun KillerOnlySections(
     character: Character,
     allCharacters: List<Character>,
+    deflectionTargets: List<CharacterId>,
 ) {
     val methodLabel = stringResource(Res.string.dossier_killer_method_label)
     val timelineLabel = stringResource(Res.string.dossier_killer_timeline_label)
@@ -260,11 +265,11 @@ private fun KillerOnlySections(
                 }
             }
         }
-        if (guilty.deflectionTargets.isNotEmpty()) {
+        if (deflectionTargets.isNotEmpty()) {
             val unknownFormat = stringResource(Res.string.dossier_killer_deflection_unknown_format)
             val byId = allCharacters.associateBy { it.id }
-            val names = guilty.deflectionTargets.map { id ->
-                byId[id]?.displayName ?: unknownFormat.replace("%1\$s", id)
+            val names = deflectionTargets.map { id ->
+                byId[id.raw]?.displayName ?: unknownFormat.replace("%1\$s", id.raw)
             }
             LabeledLine(deflectionLabel, names.joinToString(separator = " · "))
         }

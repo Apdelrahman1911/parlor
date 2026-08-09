@@ -99,7 +99,7 @@ class VoteRedactionTest {
 
     @Test
     fun tied_vote_passes_through_unchanged() {
-        val state = baseState(VoteState.Tied(tiedPlayerIds = listOf(alice, bob), debateSecondsRemaining = 30))
+        val state = baseState(VoteState.Tied(tiedPlayerIds = listOf(alice, bob)))
         val publicVote = WhodunitProjectionPolicy.toPublic(state).state.public.voteState
         assertThat(publicVote).isInstanceOf(VoteState.Tied::class)
         assertThat((publicVote as VoteState.Tied).tiedPlayerIds).containsExactlyInAnyOrder(alice, bob)

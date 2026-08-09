@@ -25,9 +25,10 @@ import com.parlor.games.mafia.resources.Res
 import com.parlor.games.mafia.resources.md_peer_reconnecting
 import com.parlor.games.mafia.resources.md_peer_reconnecting_leave
 import com.parlor.games.mafia.resources.md_peer_reconnecting_leave_description
+import com.parlor.games.mafia.resources.md_peer_initial_snapshot_failed
+import com.parlor.games.mafia.resources.md_peer_initial_snapshot_loading
 import com.parlor.networking.protocol.SessionProtocol
 import com.parlor.networking.room.LocalRoom
-import com.parlor.networking.room.PeerEvent
 import com.parlor.session.PlayMode
 import com.parlor.session.SessionController
 import com.parlor.session.party.PartyAwareSession
@@ -40,6 +41,7 @@ import com.parlor.games.mafia.resources.peer_command_session_error
 import com.parlor.games.mafia.resources.peer_command_stale
 import com.parlor.networking.protocol.CommandStatus
 import com.parlor.session.multidevice.PeerCommandProgress
+import com.parlor.session.multidevice.PeerCommandDelivery
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -87,7 +89,10 @@ fun MafiaMultiDevicePeerFlow(
                 caseId = CaseId("default"),
                 modeId = MafiaIds.ClassicModeId,
                 players = players,
-                randomSeed = seed,
+                // The start nonce is public debug/session-label material, not
+                // gameplay randomness. Peers never reduce and begin from the
+                // same redacted host-only sentinel used by projections.
+                randomSeed = 0L,
             ),
         )
     }
@@ -116,6 +121,13 @@ fun MafiaMultiDevicePeerFlow(
         duplicateCommandCopy,
     ) {
         bridge.commandProgress.collect { progress ->
+            if (
+                progress is PeerCommandProgress.Awaiting &&
+                progress.delivery == PeerCommandDelivery.RecoveryTimedOut
+            ) {
+                toastState.show(sessionCommandCopy, ParlorToastSeverity.Danger)
+                return@collect
+            }
             val resolved = progress as? PeerCommandProgress.Resolved ?: return@collect
             val presentation = when (resolved.outcome.status) {
                 CommandStatus.Applied -> null
@@ -140,16 +152,12 @@ fun MafiaMultiDevicePeerFlow(
         bridge.hostDisconnected.collect { onBackToHome() }
     }
 
-    LaunchedEffect(bridge) {
-        bridge.connectionEvents.collect { event ->
-            when (event) {
-                PeerEvent.HostLost -> onHostLostChanged(true)
-                PeerEvent.HostRestored -> onHostLostChanged(false)
-                PeerEvent.SelfOffline -> onSelfOfflineChanged(true)
-                PeerEvent.SelfOnline -> onSelfOfflineChanged(false)
-                else -> Unit
-            }
-        }
+    val connectionState by bridge.connectionState.collectAsState()
+    LaunchedEffect(connectionState.hostLost) {
+        onHostLostChanged(connectionState.hostLost)
+    }
+    LaunchedEffect(connectionState.selfOffline) {
+        onSelfOfflineChanged(connectionState.selfOffline)
     }
 
     val peerPlayMode = remember(selfPlayerId) {
@@ -166,20 +174,34 @@ fun MafiaMultiDevicePeerFlow(
     // remains strictly public and can therefore be logged/rebroadcast safely.
     val playerProjection by session.privateStateFor(selfPlayerId).collectAsState()
     val state = playerProjection.state
+    val hasAuthoritativeSnapshot by bridge.hasAuthoritativeSnapshot.collectAsState()
+    val initialSnapshotError by bridge.initialSnapshotError.collectAsState()
 
     Box(modifier = modifier.fillMaxSize()) {
-        MafiaMultiDevicePhaseRouter(
-            state = state,
-            selfPlayerId = selfPlayerId,
-            isHost = false,
-            session = session,
-            scope = scope,
-            onBackToHome = onBackToHome,
-            modifier = Modifier.fillMaxSize(),
-        )
-        if (state.public.disconnectedPlayers.isNotEmpty()) {
+        if (hasAuthoritativeSnapshot) {
+            MafiaMultiDevicePhaseRouter(
+                state = state,
+                selfPlayerId = selfPlayerId,
+                isHost = false,
+                session = session,
+                scope = scope,
+                onBackToHome = onBackToHome,
+                modifier = Modifier.fillMaxSize(),
+            )
+        }
+        if (!hasAuthoritativeSnapshot || state.public.disconnectedPlayers.isNotEmpty()) {
             ReconnectingOverlay(
-                title = stringResource(Res.string.md_peer_reconnecting),
+                title = if (!hasAuthoritativeSnapshot) {
+                    stringResource(
+                        if (initialSnapshotError == null) {
+                            Res.string.md_peer_initial_snapshot_loading
+                        } else {
+                            Res.string.md_peer_initial_snapshot_failed
+                        },
+                    )
+                } else {
+                    stringResource(Res.string.md_peer_reconnecting)
+                },
                 leaveLabel = stringResource(Res.string.md_peer_reconnecting_leave),
                 leaveContentDescription = stringResource(
                     Res.string.md_peer_reconnecting_leave_description,

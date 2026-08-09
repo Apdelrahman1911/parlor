@@ -41,6 +41,7 @@ import kotlinx.coroutines.withTimeout
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertIs
 import kotlin.test.assertTrue
 
 @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
@@ -77,6 +78,7 @@ class AuthoritativeSessionCoordinatorTest {
                 )
             },
             heartbeatIntervalMs = 0,
+            requireStartHandshake = false,
             idGenerator = { "host-message-${(++id).toString().padStart(16, '0')}" },
         )
 
@@ -119,6 +121,7 @@ class AuthoritativeSessionCoordinatorTest {
                 PlayerSnapshotPayload(byteArrayOf(domainValue.toByte()), byteArrayOf())
             },
             heartbeatIntervalMs = 0,
+            requireStartHandshake = false,
         )
 
         val hostMutation = async {
@@ -155,6 +158,7 @@ class AuthoritativeSessionCoordinatorTest {
             applyCommand = { _, _ -> CommandApplication.InvalidAction },
             snapshotFor = { PlayerSnapshotPayload(byteArrayOf(), byteArrayOf()) },
             heartbeatIntervalMs = 0,
+            requireStartHandshake = false,
         )
 
         assertEquals(HostMutationResult.Unchanged, coordinator.applyHostMutation { false })
@@ -174,6 +178,7 @@ class AuthoritativeSessionCoordinatorTest {
             applyCommand = { _, _ -> CommandApplication.InvalidAction },
             snapshotFor = { PlayerSnapshotPayload(byteArrayOf(), byteArrayOf()) },
             heartbeatIntervalMs = 0,
+            requireStartHandshake = false,
             idGenerator = { "host-terminal-00000000000001" },
         )
 
@@ -197,6 +202,7 @@ class AuthoritativeSessionCoordinatorTest {
             applyCommand = { _, _ -> CommandApplication.InvalidAction },
             snapshotFor = { PlayerSnapshotPayload(byteArrayOf(), byteArrayOf()) },
             heartbeatIntervalMs = 0,
+            requireStartHandshake = false,
         )
         val executing = async {
             coordinator.applyHostMutation {
@@ -231,6 +237,7 @@ class AuthoritativeSessionCoordinatorTest {
             applyCommand = { _, _ -> CommandApplication.InvalidAction },
             snapshotFor = { PlayerSnapshotPayload(byteArrayOf(), byteArrayOf()) },
             heartbeatIntervalMs = 0,
+            requireStartHandshake = false,
         )
         val executing = async {
             coordinator.applyHostMutation {
@@ -266,6 +273,7 @@ class AuthoritativeSessionCoordinatorTest {
                 PlayerSnapshotPayload(byteArrayOf(1), byteArrayOf())
             },
             heartbeatIntervalMs = 0,
+            requireStartHandshake = false,
         )
 
         coordinator.publishState(incrementRevision = false)
@@ -280,7 +288,7 @@ class AuthoritativeSessionCoordinatorTest {
     }
 
     @Test
-    fun `failed terminal send completes end exceptionally and mailbox remains closable`() = runTest {
+    fun `failed terminal transport is bounded and mailbox remains closable`() = runTest {
         val room = RecordingRoom(isHost = true, selfPlayerId = PlayerId("host"))
         val coordinator = HostAuthoritativeSessionCoordinator(
             room = room,
@@ -290,12 +298,11 @@ class AuthoritativeSessionCoordinatorTest {
             applyCommand = { _, _ -> CommandApplication.InvalidAction },
             snapshotFor = { PlayerSnapshotPayload(byteArrayOf(), byteArrayOf()) },
             heartbeatIntervalMs = 0,
+            requireStartHandshake = false,
         )
         room.sendFailure = IllegalStateException("injected terminal send failure")
 
-        assertFailsWith<IllegalStateException> {
-            withTimeout(1_000L) { coordinator.end(SessionEndReason.HostLeft) }
-        }
+        withTimeout(1_000L) { coordinator.end(SessionEndReason.HostLeft) }
         coordinator.close()
     }
 
@@ -315,6 +322,7 @@ class AuthoritativeSessionCoordinatorTest {
             },
             snapshotFor = { PlayerSnapshotPayload(byteArrayOf(), byteArrayOf()) },
             heartbeatIntervalMs = 0,
+            requireStartHandshake = false,
             idGenerator = { "host-outcome-${(++id).toString().padStart(16, '0')}" },
         )
 
@@ -338,6 +346,59 @@ class AuthoritativeSessionCoordinatorTest {
     }
 
     @Test
+    fun `one peer cannot evict another peer command outcome`() = runTest {
+        val attacker = PlayerId("peer-two")
+        val room = RecordingRoom(isHost = true, selfPlayerId = PlayerId("host"))
+        var id = 0
+        val coordinator = HostAuthoritativeSessionCoordinator(
+            room = room,
+            protocol = protocol,
+            remotePlayers = setOf(peerId, attacker),
+            scope = this,
+            applyCommand = { _, _ -> CommandApplication.InvalidAction },
+            snapshotFor = { PlayerSnapshotPayload(byteArrayOf(), byteArrayOf()) },
+            heartbeatIntervalMs = 0,
+            requireStartHandshake = false,
+            idGenerator = { "host-ledger-${(++id).toString().padStart(16, '0')}" },
+        )
+
+        room.receive(command(id = COMMAND_ONE, clientSequence = 1, expectedRevision = 0))
+        runCurrent()
+        repeat(257) { index ->
+            val commandId = "attacker-command-${index.toString().padStart(16, '0')}"
+            room.receive(
+                PeerMessage.ClientCommand(
+                    header = header(sequence = 0, messageId = commandId),
+                    actor = attacker,
+                    commandId = commandId,
+                    clientSequence = index + 1L,
+                    expectedRevision = 0L,
+                    payload = byteArrayOf(1),
+                ),
+            )
+            runCurrent()
+        }
+        room.receive(
+            PeerMessage.CommandOutcomeRequest(
+                header = header(sequence = 0, messageId = COMMAND_ONE),
+                actor = peerId,
+                commandId = COMMAND_ONE,
+            ),
+        )
+        runCurrent()
+
+        val honestOutcomes = room.sent
+            .filter { it.target == SendTarget.Direct(peerId) }
+            .mapNotNull { it.message as? HostMessage.CommandResult }
+            .filter { it.commandId == COMMAND_ONE }
+        assertEquals(
+            listOf(CommandStatus.InvalidAction, CommandStatus.InvalidAction),
+            honestOutcomes.map { it.status },
+        )
+        coordinator.close()
+    }
+
+    @Test
     fun `malformed command id is dropped without killing host command processing`() = runTest {
         val room = RecordingRoom(isHost = true, selfPlayerId = PlayerId("host"))
         var applied = 0
@@ -353,6 +414,7 @@ class AuthoritativeSessionCoordinatorTest {
             },
             snapshotFor = { PlayerSnapshotPayload(byteArrayOf(), byteArrayOf()) },
             heartbeatIntervalMs = 0,
+            requireStartHandshake = false,
             idGenerator = { "host-malformed-${(++id).toString().padStart(16, '0')}" },
         )
 
@@ -380,6 +442,7 @@ class AuthoritativeSessionCoordinatorTest {
             applyCommand = { _, _ -> CommandApplication.InvalidAction },
             snapshotFor = { PlayerSnapshotPayload(byteArrayOf(1), byteArrayOf(2)) },
             heartbeatIntervalMs = 50L,
+            requireStartHandshake = false,
             idGenerator = { "host-message-${(++id).toString().padStart(16, '0')}" },
         )
 
@@ -666,6 +729,210 @@ class AuthoritativeSessionCoordinatorTest {
     }
 
     @Test
+    fun `peer automatically reconciles a lost result without replaying the action`() = runTest {
+        val room = RecordingRoom(isHost = false, selfPlayerId = peerId)
+        val coordinator = PeerAuthoritativeSessionCoordinator(
+            room = room,
+            protocol = protocol,
+            selfPlayerId = peerId,
+            scope = this,
+            onSnapshot = { _, _ -> true },
+            idGenerator = { COMMAND_ONE },
+            outcomeInitialRetryMs = 10L,
+            outcomeMaxRetryMs = 20L,
+            outcomeDeadlineMs = 100L,
+        )
+
+        assertTrue(coordinator.submit(byteArrayOf(1)) is Result.Success)
+        room.sentToHost.clear()
+        advanceTimeBy(10L)
+        runCurrent()
+
+        assertEquals(0, room.sentToHost.filterIsInstance<PeerMessage.ClientCommand>().size)
+        assertEquals(1, room.sentToHost.filterIsInstance<PeerMessage.CommandOutcomeRequest>().size)
+
+        room.receive(
+            HostMessage.CommandResult(
+                header = header(sequence = 1L),
+                commandId = COMMAND_ONE,
+                status = CommandStatus.Applied,
+                authoritativeRevision = 1L,
+                nextExpectedClientSequence = 2L,
+            ),
+        )
+        runCurrent()
+        val requestsAfterResolution =
+            room.sentToHost.filterIsInstance<PeerMessage.CommandOutcomeRequest>().size
+        advanceTimeBy(100L)
+        runCurrent()
+
+        assertEquals(
+            requestsAfterResolution,
+            room.sentToHost.filterIsInstance<PeerMessage.CommandOutcomeRequest>().size,
+        )
+        assertIs<PeerCommandProgress.Resolved>(coordinator.commandProgress.value)
+        coordinator.close()
+    }
+
+    @Test
+    fun `outcome lookup cannot overtake the original command write`() = runTest {
+        val room = RecordingRoom(isHost = false, selfPlayerId = peerId)
+        val writeGate = CompletableDeferred<Unit>()
+        room.commandSendGate = writeGate
+        val coordinator = PeerAuthoritativeSessionCoordinator(
+            room = room,
+            protocol = protocol,
+            selfPlayerId = peerId,
+            scope = this,
+            onSnapshot = { _, _ -> true },
+            idGenerator = { COMMAND_ONE },
+            outcomeInitialRetryMs = 10L,
+            outcomeMaxRetryMs = 20L,
+            outcomeDeadlineMs = 100L,
+        )
+
+        val submission = async { coordinator.submit(byteArrayOf(1)) }
+        runCurrent()
+        advanceTimeBy(50L)
+        runCurrent()
+
+        assertEquals(1, room.sentToHost.filterIsInstance<PeerMessage.ClientCommand>().size)
+        assertTrue(room.sentToHost.none { it is PeerMessage.CommandOutcomeRequest })
+
+        writeGate.complete(Unit)
+        assertTrue(submission.await() is Result.Success)
+        advanceTimeBy(10L)
+        runCurrent()
+
+        assertEquals(1, room.sentToHost.filterIsInstance<PeerMessage.ClientCommand>().size)
+        assertEquals(1, room.sentToHost.filterIsInstance<PeerMessage.CommandOutcomeRequest>().size)
+        coordinator.close()
+    }
+
+    @Test
+    fun `caller cancellation during command write propagates and starts query-only recovery`() =
+        runTest {
+            val room = RecordingRoom(isHost = false, selfPlayerId = peerId)
+            room.commandSendGate = CompletableDeferred()
+            val coordinator = PeerAuthoritativeSessionCoordinator(
+                room = room,
+                protocol = protocol,
+                selfPlayerId = peerId,
+                scope = this,
+                onSnapshot = { _, _ -> true },
+                idGenerator = { COMMAND_ONE },
+                outcomeInitialRetryMs = 10L,
+                outcomeMaxRetryMs = 20L,
+                outcomeDeadlineMs = 100L,
+            )
+
+            val submission = async { coordinator.submit(byteArrayOf(1)) }
+            runCurrent()
+            submission.cancel()
+            assertFailsWith<CancellationException> { submission.await() }
+            advanceTimeBy(10L)
+            runCurrent()
+
+            assertEquals(1, room.sentToHost.filterIsInstance<PeerMessage.ClientCommand>().size)
+            assertEquals(
+                1,
+                room.sentToHost.filterIsInstance<PeerMessage.CommandOutcomeRequest>().size,
+            )
+            coordinator.close()
+        }
+
+    @Test
+    fun `outcome reconciliation has a deadline and reports recovery timeout`() = runTest {
+        val room = RecordingRoom(isHost = false, selfPlayerId = peerId)
+        val coordinator = PeerAuthoritativeSessionCoordinator(
+            room = room,
+            protocol = protocol,
+            selfPlayerId = peerId,
+            scope = this,
+            onSnapshot = { _, _ -> true },
+            idGenerator = { COMMAND_ONE },
+            outcomeInitialRetryMs = 10L,
+            outcomeMaxRetryMs = 20L,
+            outcomeDeadlineMs = 55L,
+        )
+
+        assertTrue(coordinator.submit(byteArrayOf(1)) is Result.Success)
+        advanceTimeBy(56L)
+        runCurrent()
+
+        val awaiting = assertIs<PeerCommandProgress.Awaiting>(coordinator.commandProgress.value)
+        assertEquals(PeerCommandDelivery.RecoveryTimedOut, awaiting.delivery)
+        assertEquals(1, room.sentToHost.filterIsInstance<PeerMessage.ClientCommand>().size)
+        assertEquals(3, room.sentToHost.filterIsInstance<PeerMessage.CommandOutcomeRequest>().size)
+        assertEquals(
+            NetError.CommandInFlight,
+            (coordinator.submit(byteArrayOf(2)) as Result.Failure).error,
+        )
+        coordinator.close()
+    }
+
+    @Test
+    fun `authenticated host traffic restarts timed out outcome lookup without replay`() = runTest {
+        val room = RecordingRoom(isHost = false, selfPlayerId = peerId)
+        val coordinator = PeerAuthoritativeSessionCoordinator(
+            room = room,
+            protocol = protocol,
+            selfPlayerId = peerId,
+            scope = this,
+            onSnapshot = { _, _ -> true },
+            idGenerator = { COMMAND_ONE },
+            outcomeInitialRetryMs = 10L,
+            outcomeMaxRetryMs = 20L,
+            outcomeDeadlineMs = 55L,
+        )
+
+        assertTrue(coordinator.submit(byteArrayOf(1)) is Result.Success)
+        advanceTimeBy(56L)
+        runCurrent()
+        assertEquals(
+            PeerCommandDelivery.RecoveryTimedOut,
+            assertIs<PeerCommandProgress.Awaiting>(coordinator.commandProgress.value).delivery,
+        )
+        val requestsBeforeHeartbeat =
+            room.sentToHost.filterIsInstance<PeerMessage.CommandOutcomeRequest>().size
+
+        room.receive(
+            HostMessage.Heartbeat(
+                header = header(sequence = 99L),
+                authoritativeRevision = 0L,
+            ),
+        )
+        runCurrent()
+        advanceTimeBy(10L)
+        runCurrent()
+
+        assertEquals(1, room.sentToHost.filterIsInstance<PeerMessage.ClientCommand>().size)
+        assertTrue(
+            room.sentToHost.filterIsInstance<PeerMessage.CommandOutcomeRequest>().size >
+                requestsBeforeHeartbeat,
+        )
+        assertEquals(
+            PeerCommandDelivery.Reconciling,
+            assertIs<PeerCommandProgress.Awaiting>(coordinator.commandProgress.value).delivery,
+        )
+
+        room.receive(
+            HostMessage.CommandResult(
+                header = header(sequence = 100L),
+                commandId = COMMAND_ONE,
+                status = CommandStatus.Applied,
+                authoritativeRevision = 1L,
+                nextExpectedClientSequence = 2L,
+            ),
+        )
+        runCurrent()
+
+        assertIs<PeerCommandProgress.Resolved>(coordinator.commandProgress.value)
+        assertEquals(1, room.sentToHost.filterIsInstance<PeerMessage.ClientCommand>().size)
+        coordinator.close()
+    }
+
+    @Test
     fun `peer queries ambiguous send outcome on restore without replaying command`() = runTest {
         val room = RecordingRoom(isHost = false, selfPlayerId = peerId)
         room.sendToHostError = NetError.Timeout
@@ -737,6 +1004,7 @@ class AuthoritativeSessionCoordinatorTest {
             },
             snapshotFor = { PlayerSnapshotPayload(byteArrayOf(), byteArrayOf()) },
             heartbeatIntervalMs = 0,
+            requireStartHandshake = false,
             idGenerator = { "host-lifecycle-000000000001" },
         )
         val first = command(id = COMMAND_ONE, clientSequence = 1, expectedRevision = 0)
@@ -835,7 +1103,7 @@ private class RecordingRoom(
     override val isHost: Boolean,
     override val selfPlayerId: PlayerId,
 ) : LocalRoom {
-    private val inbox = Channel<RoomMessage>(Channel.UNLIMITED)
+    private val inbox = Channel<RoomMessage>(capacity = 64)
     private val events = MutableSharedFlow<PeerEvent>(extraBufferCapacity = 8)
     override val incoming: Flow<RoomMessage> = inbox.receiveAsFlow()
     override val peerEvents: SharedFlow<PeerEvent> = events.asSharedFlow()
@@ -848,6 +1116,7 @@ private class RecordingRoom(
     val sent = mutableListOf<SentMessage>()
     val sentToHost = mutableListOf<PeerMessage>()
     var sendToHostError: NetError? = null
+    var commandSendGate: CompletableDeferred<Unit>? = null
     var sendFailure: Throwable? = null
 
     suspend fun receive(message: RoomMessage) {
@@ -869,6 +1138,7 @@ private class RecordingRoom(
 
     override suspend fun sendToHost(message: PeerMessage): Result<Unit, NetError> {
         sentToHost += message
+        if (message is PeerMessage.ClientCommand) commandSendGate?.await()
         val error = sendToHostError
         return if (error == null) Result.Success(Unit) else Result.Failure(error)
     }

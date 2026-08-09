@@ -13,14 +13,11 @@ import com.parlor.games.mafia.domain.phase.MafiaPhase
 import com.parlor.games.mafia.domain.projection.MafiaProjectionPolicy
 import com.parlor.games.mafia.domain.state.MafiaPrivate
 import com.parlor.games.mafia.domain.state.MafiaState
-import com.parlor.networking.protocol.HostMessage
 import com.parlor.networking.protocol.SessionEndReason
-import com.parlor.networking.protocol.SessionEnvelopeHeader
 import com.parlor.networking.protocol.SessionProtocol
 import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.PeerEvent
 import com.parlor.networking.room.RoomMember
-import com.parlor.networking.room.SendTarget
 import com.parlor.networking.security.SecureIds
 import com.parlor.session.multidevice.CommandApplication
 import com.parlor.session.multidevice.HostAuthoritativeSessionCoordinator
@@ -30,9 +27,13 @@ import com.parlor.session.passandplay.PassAndPlaySessionController
 import com.parlor.session.SubmissionReceipt
 import com.parlor.engine.session.SubmitError
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.json.Json
 
 /**
@@ -54,8 +55,12 @@ class MafiaHostRoomBridge(
     },
     private val rejoinGraceMs: Long = REJOIN_GRACE_MS,
     heartbeatIntervalMs: Long = HEARTBEAT_INTERVAL_MS,
+    private val startRetryMs: Long = START_RETRY_MS,
+    private val startMaxRetryMs: Long = START_MAX_RETRY_MS,
+    private val startDeadlineMs: Long = START_DEADLINE_MS,
     sessionIdGenerator: () -> String = SecureIds::id128,
     reconcileRoomTopology: Boolean = false,
+    requireStartHandshake: Boolean = true,
 ) {
     val protocol: SessionProtocol = SessionProtocol(
         sessionId = SessionId(sessionIdGenerator()),
@@ -66,50 +71,53 @@ class MafiaHostRoomBridge(
     private val publicStateSerializer = MafiaState.serializer()
     private val privateSerializer = MafiaPrivate.serializer()
     private val remotePlayers = players.map(Player::id).toSet() - room.selfPlayerId
+    private val lifecycleMutex = Mutex()
     private val graceJobs = mutableMapOf<PlayerId, Job>()
-    private var lastSessionStarting: HostMessage.SessionStarting? = null
+    private val rejoinJobs = mutableMapOf<PlayerId, Job>()
     private var terminated = false
+    private val bridgeJob = SupervisorJob(scope.coroutineContext[Job])
+    private val bridgeScope = CoroutineScope(scope.coroutineContext + bridgeJob)
 
     private val coordinator = HostAuthoritativeSessionCoordinator(
         room = room,
         protocol = protocol,
         remotePlayers = remotePlayers,
-        scope = scope,
+        scope = bridgeScope,
         applyCommand = ::applyRemoteCommand,
         snapshotFor = ::snapshotFor,
         heartbeatIntervalMs = heartbeatIntervalMs,
+        requireStartHandshake = requireStartHandshake,
     )
 
     private val peerEventsJob = if (reconcileRoomTopology) {
-        scope.launch { room.members.collect(::reconcileMembers) }
+        bridgeScope.launch { room.members.collect(::reconcileMembers) }
     } else {
-        scope.launch { room.peerEvents.collect(::handlePeerEvent) }
+        bridgeScope.launch { room.peerEvents.collect(::handlePeerEvent) }
     }
 
-    suspend fun announceStart(caseId: String, modeId: String) {
-        val starting = HostMessage.SessionStarting(
-            caseId = caseId,
-            modeId = modeId,
-            players = players,
-            sessionNonce = room.info.value.code.hashCode().toLong(),
-            header = SessionEnvelopeHeader(
-                protocol = protocol.protocol,
-                sessionId = protocol.sessionId,
-                gameId = protocol.gameId,
-                gameVersion = protocol.gameVersion,
-                messageId = SecureIds.id128(),
-                sequence = 0L,
-            ),
-        )
-        lastSessionStarting = starting
-        room.send(SendTarget.Broadcast, starting)
-        coordinator.publishState(incrementRevision = false)
-    }
+    suspend fun announceStart(caseId: String, modeId: String): Result<Unit, com.parlor.networking.room.NetError> =
+        when (
+            val started = coordinator.startSession(
+                caseId = caseId,
+                modeId = modeId,
+                players = players,
+                sessionNonce = room.info.value.code.hashCode().toLong(),
+                initialRetryMs = startRetryMs,
+                maxRetryMs = startMaxRetryMs,
+                deadlineMs = startDeadlineMs,
+            )
+        ) {
+            is Result.Success -> Result.Success(Unit)
+            is Result.Failure -> Result.Failure(started.error)
+        }
 
     /** Serializes host UI actions with remote commands and protocol revisions. */
     suspend fun submitHostAction(
         action: MafiaAction,
     ): Result<SubmissionReceipt, SubmitError> {
+        if (!coordinator.awaitSessionStarted()) {
+            return Result.Failure(SubmitError.SessionClosed)
+        }
         var submission: Result<SubmissionReceipt, SubmitError>? = null
         val mutation = coordinator.applyHostMutation {
             if (controller.currentState().public.disconnectedPlayers.isNotEmpty()) {
@@ -122,14 +130,25 @@ class MafiaHostRoomBridge(
         }
         return when (mutation) {
             HostMutationResult.Closed -> Result.Failure(SubmitError.SessionClosed)
+            HostMutationResult.NotStarted -> Result.Failure(SubmitError.SessionClosed)
             HostMutationResult.Applied,
             HostMutationResult.Unchanged -> checkNotNull(submission)
         }
     }
 
     suspend fun terminate(reason: SessionEndReason = SessionEndReason.HostLeft) {
-        if (terminated) return
-        terminated = true
+        val jobsToCancel = lifecycleMutex.withLock {
+            if (terminated) {
+                null
+            } else {
+                terminated = true
+                (graceJobs.values + rejoinJobs.values).also {
+                    graceJobs.clear()
+                    rejoinJobs.clear()
+                }
+            }
+        } ?: return
+        jobsToCancel.forEach(Job::cancel)
         coordinator.end(reason)
     }
 
@@ -140,15 +159,19 @@ class MafiaHostRoomBridge(
      * blocked while any seat is transiently disconnected.
      */
     suspend fun continueWithout(playerId: PlayerId): Boolean {
-        if (terminated || playerId !in remotePlayers) return false
-        graceJobs.remove(playerId)?.cancel()
+        if (playerId !in remotePlayers) return false
+        val jobsToCancel = lifecycleMutex.withLock {
+            if (terminated) null else listOfNotNull(
+                graceJobs.remove(playerId),
+                rejoinJobs.remove(playerId),
+            )
+        } ?: return false
+        jobsToCancel.forEach(Job::cancel)
         return applyLifecycleAction(MafiaAction.ContinueWithoutPlayer(playerId))
     }
 
     fun close() {
-        graceJobs.values.forEach(Job::cancel)
-        graceJobs.clear()
-        peerEventsJob.cancel()
+        bridgeJob.cancel()
         coordinator.close()
     }
 
@@ -156,8 +179,11 @@ class MafiaHostRoomBridge(
         actor: PlayerId,
         payload: ByteArray,
     ): CommandApplication {
-        val action = runCatching { MafiaActionCodec.decode(payload) }.getOrNull()
-            ?: return CommandApplication.InvalidAction
+        val action = try {
+            MafiaActionCodec.decode(payload)
+        } catch (_: Exception) {
+            return CommandApplication.InvalidAction
+        }
         val before = controller.currentState()
         // A transiently missing seat pauses Mafia at the orchestration
         // boundary. The domain remains topology-agnostic.
@@ -226,30 +252,107 @@ class MafiaHostRoomBridge(
 
     private suspend fun handlePeerLeft(playerId: PlayerId) {
         if (playerId !in remotePlayers) return
+        if (lifecycleMutex.withLock { terminated }) return
         applyLifecycleAction(MafiaAction.MarkPlayerDisconnected(playerId))
-        if (
-            controller.currentState().phase != MafiaPhase.PostGame &&
-            graceJobs[playerId] == null
-        ) {
-            graceJobs[playerId] = scope.launch {
-                delay(rejoinGraceMs)
-                graceJobs.remove(playerId)
-                if (playerId in controller.currentState().public.disconnectedPlayers) {
-                    continueWithout(playerId)
-                }
-            }
+        val interruptedRejoin = lifecycleMutex.withLock { rejoinJobs.remove(playerId) }
+        interruptedRejoin?.cancel()
+        if (controller.currentState().phase != MafiaPhase.PostGame) {
+            scheduleGraceExpiry(playerId)
         }
     }
 
     private suspend fun handlePeerReconnected(playerId: PlayerId) {
-        if (playerId !in remotePlayers) return
-        graceJobs.remove(playerId)?.cancel()
-        lastSessionStarting?.let { room.send(SendTarget.Direct(playerId), it) }
+        if (
+            playerId !in remotePlayers ||
+            playerId !in controller.currentState().public.disconnectedPlayers
+        ) {
+            return
+        }
+        scheduleRejoin(playerId)
+    }
+
+    private suspend fun scheduleGraceExpiry(playerId: PlayerId) {
+        lateinit var graceJob: Job
+        graceJob = bridgeScope.launch(start = CoroutineStart.LAZY) {
+            delay(rejoinGraceMs)
+            expireGrace(playerId, graceJob)
+        }
+        val installed = lifecycleMutex.withLock {
+            if (terminated || graceJobs[playerId] != null) {
+                false
+            } else {
+                graceJobs[playerId] = graceJob
+                true
+            }
+        }
+        if (installed) graceJob.start() else graceJob.cancel()
+    }
+
+    private suspend fun expireGrace(playerId: PlayerId, graceJob: Job) {
+        var rejoinToCancel: Job? = null
+        val ownsDeadline = lifecycleMutex.withLock {
+            if (terminated || graceJobs[playerId] !== graceJob) {
+                false
+            } else {
+                graceJobs.remove(playerId)
+                rejoinToCancel = rejoinJobs.remove(playerId)
+                true
+            }
+        }
+        if (!ownsDeadline) return
+        rejoinToCancel?.cancel()
+        if (playerId in controller.currentState().public.disconnectedPlayers) {
+            applyLifecycleAction(MafiaAction.ContinueWithoutPlayer(playerId))
+        }
+    }
+
+    private suspend fun scheduleRejoin(playerId: PlayerId) {
+        lateinit var rejoinJob: Job
+        rejoinJob = bridgeScope.launch(start = CoroutineStart.LAZY) {
+            try {
+                val result = coordinator.resendStart(
+                    playerId = playerId,
+                    initialRetryMs = startRetryMs,
+                    maxRetryMs = startMaxRetryMs,
+                    readyDeadlineMs = startDeadlineMs,
+                    commitAckDeadlineMs = startDeadlineMs,
+                )
+                if (result is Result.Success) completeRejoin(playerId, rejoinJob)
+            } finally {
+                lifecycleMutex.withLock {
+                    if (rejoinJobs[playerId] === rejoinJob) rejoinJobs.remove(playerId)
+                }
+            }
+        }
+        val installed = lifecycleMutex.withLock {
+            if (terminated || rejoinJobs[playerId] != null) {
+                false
+            } else {
+                rejoinJobs[playerId] = rejoinJob
+                true
+            }
+        }
+        if (installed) rejoinJob.start() else rejoinJob.cancel()
+    }
+
+    private suspend fun completeRejoin(playerId: PlayerId, rejoinJob: Job) {
+        var graceToCancel: Job? = null
+        val ownsSeat = lifecycleMutex.withLock {
+            if (terminated || rejoinJobs[playerId] !== rejoinJob) {
+                false
+            } else {
+                graceToCancel = graceJobs.remove(playerId)
+                graceToCancel != null
+            }
+        }
+        if (!ownsSeat) return
+        graceToCancel?.cancel()
         val changed = applyLifecycleAction(MafiaAction.MarkPlayerReconnected(playerId))
         if (!changed) coordinator.publishState(incrementRevision = false)
     }
 
     private suspend fun applyLifecycleAction(action: MafiaAction): Boolean {
+        if (!coordinator.awaitSessionStarted()) return false
         var submission: Result<SubmissionReceipt, SubmitError>? = null
         val mutation = coordinator.applyHostMutation {
             controller.submit(action).also { submission = it }
@@ -262,5 +365,8 @@ class MafiaHostRoomBridge(
         const val GAME_VERSION: Int = 1
         const val REJOIN_GRACE_MS: Long = 120_000L
         const val HEARTBEAT_INTERVAL_MS: Long = 10_000L
+        const val START_RETRY_MS: Long = 250L
+        const val START_MAX_RETRY_MS: Long = 2_000L
+        const val START_DEADLINE_MS: Long = 20_000L
     }
 }

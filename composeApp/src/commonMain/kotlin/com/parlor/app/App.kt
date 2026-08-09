@@ -14,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,12 +30,15 @@ import com.parlor.app.shell.multiplayer.NameInputScreen
 import com.parlor.app.shell.multiplayer.PeerSessionFlow
 import com.parlor.app.shell.playmode.PlayModePickerScreen
 import com.parlor.app.shell.settings.SettingsScreen
+import com.parlor.app.resources.Res
+import com.parlor.app.resources.home_resume_open_failed
 import com.parlor.content.repository.CaseRepository
 import com.parlor.core.ids.ModeId
 import com.parlor.core.ids.SessionId
 import com.parlor.core.result.Result
 import com.parlor.designsystem.components.LocalParlorToastState
 import com.parlor.designsystem.components.ParlorToastHost
+import com.parlor.designsystem.components.ParlorToastSeverity
 import com.parlor.designsystem.components.ParlorToastState
 import com.parlor.designsystem.localization.AppLanguage
 import com.parlor.designsystem.localization.ProvideAppLanguage
@@ -54,7 +58,12 @@ import com.parlor.networking.transport.RoomTransport
 import com.parlor.session.PlayMode
 import com.parlor.storage.settings.SettingsStore
 import com.parlor.storage.snapshot.SnapshotStore
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * Parlor's root composable. Owns the high-level navigation state machine.
@@ -92,6 +101,7 @@ fun App() {
     }
 
     val toastState = remember { ParlorToastState() }
+    val appScope = rememberCoroutineScope()
 
     ProvideAppLanguage(language = language) {
         ParlorTheme(
@@ -99,8 +109,11 @@ fun App() {
             reducedMotion = reducedMotion,
         ) {
             CompositionLocalProvider(LocalParlorToastState provides toastState) {
+            val resumeOpenFailedText = stringResource(Res.string.home_resume_open_failed)
             var screen: AppScreen by remember { mutableStateOf(AppScreen.Home) }
             var resumeSessionId: SessionId? by remember { mutableStateOf(null) }
+            var localResumeJob: Job? by remember { mutableStateOf(null) }
+            val localResumeGate = remember { LocalResumeRequestGate() }
             var unfinishedRefreshKey: Int by remember { mutableStateOf(0) }
 
             // Single-device entry (Library tab) — case + chosen play mode.
@@ -156,6 +169,9 @@ fun App() {
             }
 
             val backToHome: () -> Unit = {
+                localResumeGate.invalidate()
+                localResumeJob?.cancel()
+                localResumeJob = null
                 resumeSessionId = null
                 hostName = ""
                 peerName = ""
@@ -166,6 +182,19 @@ fun App() {
                 mafiaPendingJoinCode = ""
                 unfinishedRefreshKey++
                 screen = AppScreen.Home
+            }
+
+            val backAction = appBackAction(screen)
+            PlatformBackHandler(enabled = backAction != AppBackAction.AllowPlatformExit) {
+                when (backAction) {
+                    AppBackAction.AllowPlatformExit,
+                    AppBackAction.Consume,
+                    -> Unit
+
+                    AppBackAction.NavigateHome -> backToHome()
+                    AppBackAction.NavigateGameSetup -> screen = AppScreen.GameSetup
+                    AppBackAction.NavigateHostCasePicker -> screen = AppScreen.HostCasePicker
+                }
             }
 
             // Screen transition: pure Crossfade with surfaceCanvas behind it.
@@ -188,21 +217,70 @@ fun App() {
             when (current) {
                 AppScreen.Home -> HomeScreen(
                     onGameSelected = { gameId ->
+                        localResumeGate.invalidate()
+                        localResumeJob?.cancel()
+                        localResumeJob = null
                         screen = when (gameId) {
                             MAFIA_GAME_ID -> AppScreen.MafiaSetup
                             WHODUNIT_GAME_ID -> AppScreen.GameSetup
-                            else -> AppScreen.GameSetup
+                            // Home only emits installed game ids. An unknown
+                            // id must not silently open another game's setup.
+                            else -> return@HomeScreen
                         }
                     },
-                    onSettings = { screen = AppScreen.Settings },
+                    onSettings = {
+                        localResumeGate.invalidate()
+                        localResumeJob?.cancel()
+                        localResumeJob = null
+                        screen = AppScreen.Settings
+                    },
                     modifier = Modifier.fillMaxSize(),
                     unfinishedSessions = unfinishedSessions,
                     onResume = { sessionId ->
-                        resumeSessionId = sessionId
-                        screen = AppScreen.Whodunit
+                        localResumeJob?.cancel()
+                        val requestGeneration = localResumeGate.begin()
+                        val request = appScope.launch(start = CoroutineStart.LAZY) {
+                            try {
+                                when (
+                                    val destination = resolveLocalResumeDestination(
+                                        snapshotStore,
+                                        sessionId,
+                                    )
+                                ) {
+                                    is Result.Success -> if (
+                                        localResumeGate.isCurrent(requestGeneration) &&
+                                        screen == AppScreen.Home
+                                    ) {
+                                        resumeSessionId = sessionId
+                                        screen = when (destination.data) {
+                                            LocalResumeDestination.Whodunit -> AppScreen.Whodunit
+                                            LocalResumeDestination.Mafia -> AppScreen.Mafia
+                                        }
+                                    }
+                                    is Result.Failure -> if (
+                                        localResumeGate.isCurrent(requestGeneration) &&
+                                        screen == AppScreen.Home
+                                    ) {
+                                        toastState.show(
+                                            text = resumeOpenFailedText,
+                                            severity = ParlorToastSeverity.Danger,
+                                        )
+                                    }
+                                }
+                            } finally {
+                                if (localResumeJob === currentCoroutineContext()[Job]) {
+                                    localResumeJob = null
+                                }
+                            }
+                        }
+                        localResumeJob = request
+                        request.start()
                     },
                     hasResumableMultiplayer = resumableMultiplayer != null,
                     onResumeMultiplayer = {
+                        localResumeGate.invalidate()
+                        localResumeJob?.cancel()
+                        localResumeJob = null
                         screen = AppScreen.MultiplayerResumePermission
                     },
                 )
@@ -283,7 +361,7 @@ fun App() {
                 )
                 AppScreen.HostLobby -> {
                     if (hostCaseId.isBlank() || hostName.isBlank()) {
-                        screen = AppScreen.Home
+                        InvalidRouteFallback(backToHome)
                     } else {
                         HostSessionFlow(
                             transport = roomTransport,
@@ -323,7 +401,7 @@ fun App() {
                 )
                 AppScreen.PeerLobby -> {
                     if (pendingJoinCode.isBlank() || peerName.isBlank()) {
-                        screen = AppScreen.Home
+                        InvalidRouteFallback(backToHome)
                     } else {
                         PeerSessionFlow(
                             transport = roomTransport,
@@ -357,6 +435,7 @@ fun App() {
                 )
                 AppScreen.Mafia -> MafiaGameFlow(
                     onBackToHome = backToHome,
+                    resumeSessionId = resumeSessionId,
                     modifier = Modifier.fillMaxSize(),
                 )
 
@@ -378,7 +457,7 @@ fun App() {
                 )
                 AppScreen.MafiaHostLobby -> {
                     if (mafiaHostName.isBlank()) {
-                        screen = AppScreen.Home
+                        InvalidRouteFallback(backToHome)
                     } else {
                         MafiaHostLobbyFlow(
                             transport = roomTransport,
@@ -416,7 +495,7 @@ fun App() {
                 )
                 AppScreen.MafiaPeerLobby -> {
                     if (mafiaPendingJoinCode.isBlank() || mafiaPeerName.isBlank()) {
-                        screen = AppScreen.Home
+                        InvalidRouteFallback(backToHome)
                     } else {
                         MafiaPeerLobbyFlow(
                             transport = roomTransport,
@@ -501,17 +580,11 @@ private fun P2pPermissionRoute(
     }
 }
 
-private enum class AppScreen {
-    Home,
-    GameSetup,
-    LocalCasePicker, Whodunit,
-    MafiaSetup, Mafia,
-    MafiaHostPermission, MafiaHostName, MafiaHostLobby,
-    MafiaJoinPermission, MafiaJoinName, MafiaJoinPrompt, MafiaPeerLobby,
-    HostPermission, HostName, HostCasePicker, HostMode, HostLobby,
-    JoinPermission, JoinName, JoinPrompt, PeerLobby,
-    MultiplayerResumePermission, ResumeWhodunitPeer, ResumeMafiaPeer,
-    Settings,
+/** Applies a corrupted/incomplete route reset after composition commits. */
+@Composable
+private fun InvalidRouteFallback(onBackToHome: () -> Unit) {
+    LaunchedEffect(Unit) { onBackToHome() }
+    Box(modifier = Modifier.fillMaxSize())
 }
 
 /** Tiny shim used by Compose previews to keep the API surface stable. */

@@ -136,7 +136,6 @@ fun VoteHandoffScreen(
 @Composable
 fun TiedRevoteScreen(
     tiedNames: List<String>,
-    debateSecondsRemaining: Int,
     onBeginRevote: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -161,11 +160,6 @@ fun TiedRevoteScreen(
                 style = ParlorTheme.typography.bodyLarge,
                 color = ParlorTheme.colors.textSecondary,
                 textAlign = TextAlign.Center,
-            )
-            Text(
-                text = "${debateSecondsRemaining}s",
-                style = ParlorTheme.typography.timerLarge,
-                color = ParlorTheme.colors.accentEmber,
             )
             Spacer(Modifier.height(ParlorTheme.spacing.l))
             ParlorButton(

@@ -458,6 +458,54 @@ class MafiaReducerEdgeCasesTest {
         }
     }
 
+    @Test
+    fun terminal_state_clears_every_concurrent_disconnect_marker() {
+        val active = atNight(7)
+        val first = active.players[1].id
+        val second = active.players[2].id
+        val disconnected = MafiaReducer.reduce(
+            MafiaReducer.reduce(
+                active,
+                MafiaAction.MarkPlayerDisconnected(first),
+                ctx(),
+            ).newState,
+            MafiaAction.MarkPlayerDisconnected(second),
+            ctx(),
+        ).newState
+
+        val ended = MafiaReducer.reduce(
+            disconnected,
+            MafiaAction.ContinueWithoutPlayer(first),
+            ctx(),
+        ).newState
+
+        assertThat(ended.phase).isEqualTo(MafiaPhase.PostGame)
+        assertThat(ended.public.disconnectedPlayers).isEmpty()
+        assertThat(first in ended.public.droppedPlayers).isTrue()
+        assertThat(
+            MafiaReducer.reduce(
+                ended,
+                MafiaAction.ContinueWithoutPlayer(second),
+                ctx(),
+            ).newState,
+        ).isEqualTo(ended)
+    }
+
+    @Test
+    fun explicit_end_also_clears_disconnect_markers() {
+        val active = atNight(7)
+        val disconnected = active.copy(
+            public = active.public.copy(
+                disconnectedPlayers = active.players.take(2).map { it.id }.toSet(),
+            ),
+        )
+
+        val ended = MafiaReducer.reduce(disconnected, MafiaAction.EndGame, ctx()).newState
+
+        assertThat(ended.phase).isEqualTo(MafiaPhase.PostGame)
+        assertThat(ended.public.disconnectedPlayers).isEmpty()
+    }
+
     // -------------------------------------------------------------------- Detective result delivery
 
     @Test

@@ -190,6 +190,7 @@ class TiedRevoteTest {
         assertThat(stateOf(session).phase).isInstanceOf(WhodunitPhase.TiedRevote::class)
         val tied = stateOf(session).public.voteState as VoteState.Tied
         assertThat(tied.tiedPlayerIds.toSet()).isEqualTo(setOf(targetA, targetB))
+        assertThat(tied.debateSecondsRemaining).isEqualTo(0)
 
         // Open the revote: Collecting.isSecondRound must be true (the bug fix).
         session.submit(WhodunitAction.OpenVote)

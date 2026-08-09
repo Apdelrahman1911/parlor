@@ -18,6 +18,7 @@ import kotlinx.cinterop.memScoped
 import kotlinx.cinterop.ptr
 import kotlinx.cinterop.usePinned
 import kotlinx.cinterop.value
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import platform.CoreCrypto.CCCrypt
@@ -240,7 +241,9 @@ internal class IosSnapshotFileSystem(
             val authenticated = header + name.encodeToByteArray() + iv + ciphertext
             val tag = hmacSha256(macKey, authenticated)
             header + iv + ciphertext + tag
-        } catch (failure: Throwable) {
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (failure: Exception) {
             if (failure is SnapshotProtectionException) throw failure
             throw SnapshotProtectionException(cause = failure)
         } finally {
@@ -292,7 +295,9 @@ internal class IosSnapshotFileSystem(
                 macKey.fill(0)
                 keyMaterial.fill(0)
             }
-        } catch (failure: Throwable) {
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (failure: Exception) {
             if (failure is SnapshotProtectionException) throw failure
             throw SnapshotProtectionException(cause = failure)
         }

@@ -43,10 +43,11 @@ import org.jetbrains.compose.resources.stringResource
 /**
  * Fullscreen pause overlay rendered on top of the current in-game screen.
  *
- * Three player-visible actions:
+ * Player-visible actions:
  * - **Resume** — submit `Resume` action; lift the pause.
- * - **Resume Later** — keep snapshot, return to Home (the in-progress session
- *   will appear on the Home resume list).
+ * - **Resume Later** — shown only when [onResumeLater] is non-null. Local
+ *   sessions flush a real snapshot before returning home; multiplayer does
+ *   not offer this action because its host session is not persisted.
  * - **End Game** — open a confirmation that deletes the snapshot and returns
  *   to Home.
  *
@@ -56,7 +57,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun PauseOverlay(
     onResume: () -> Unit,
-    onResumeLater: () -> Unit,
+    onResumeLater: (() -> Unit)?,
     onEndNow: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -99,13 +100,17 @@ fun PauseOverlay(
                         onClick = onResume,
                         modifier = Modifier.fillMaxWidth(),
                     )
-                    ParlorButton(
-                        label = stringResource(Res.string.pause_resume_later),
-                        contentDescription = stringResource(Res.string.pause_resume_later_description),
-                        onClick = onResumeLater,
-                        modifier = Modifier.fillMaxWidth(),
-                        variant = ParlorButtonVariant.Secondary,
-                    )
+                    if (onResumeLater != null) {
+                        ParlorButton(
+                            label = stringResource(Res.string.pause_resume_later),
+                            contentDescription = stringResource(
+                                Res.string.pause_resume_later_description,
+                            ),
+                            onClick = onResumeLater,
+                            modifier = Modifier.fillMaxWidth(),
+                            variant = ParlorButtonVariant.Secondary,
+                        )
+                    }
                     ParlorButton(
                         label = stringResource(Res.string.pause_end_game),
                         contentDescription = stringResource(Res.string.pause_end_game_description),

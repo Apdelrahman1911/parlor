@@ -541,11 +541,13 @@ class PauseRefuseLeaveTest {
         // Three players vote for the same innocent (a different innocent than
         // the killer); one refuses. Innocent wins the tally → KillerWins via
         // InnocentAccused.
-        for (voter in ballot.filterNot { it == anInnocent }) {
-            session.submit(WhodunitAction.CastVote(voter, anInnocent))
+        for (voter in ballot) {
+            if (voter == anInnocent) {
+                session.submit(WhodunitAction.RefuseToVote(voter))
+            } else {
+                session.submit(WhodunitAction.CastVote(voter, anInnocent))
+            }
         }
-        val refuser = anInnocent
-        session.submit(WhodunitAction.RefuseToVote(refuser))
         session.submit(WhodunitAction.CloseVote)
 
         assertThat(stateOf(session).phase).isInstanceOf(WhodunitPhase.Reveal::class)

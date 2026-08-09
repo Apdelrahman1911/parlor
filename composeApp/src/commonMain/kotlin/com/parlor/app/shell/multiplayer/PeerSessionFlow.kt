@@ -16,8 +16,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,18 +27,15 @@ import com.parlor.app.resources.party_offline_banner
 import com.parlor.app.resources.party_reconnecting_overlay_leave
 import com.parlor.app.resources.party_reconnecting_overlay_leave_description
 import com.parlor.app.resources.party_reconnecting_overlay_title
-import com.parlor.designsystem.components.LocalParlorToastState
 import com.parlor.designsystem.components.OfflineBanner
 import com.parlor.designsystem.components.ReconnectingOverlay
 import com.parlor.app.resources.error_back
 import com.parlor.app.resources.error_back_description
-import com.parlor.app.resources.peer_case_load_error_format
 import com.parlor.app.resources.peer_connecting_format
 import com.parlor.app.resources.peer_error_title
 import com.parlor.app.resources.peer_eyebrow
 import com.parlor.app.resources.peer_leave
 import com.parlor.app.resources.peer_leave_description
-import com.parlor.app.resources.peer_loading_case
 import com.parlor.app.resources.peer_room_code_label_format
 import com.parlor.app.resources.peer_room_header_format
 import com.parlor.app.resources.peer_waiting_for_start
@@ -64,32 +61,34 @@ import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.engine.state.Player
 import com.parlor.games.whodunit.WhodunitIds
 import com.parlor.games.whodunit.content.WhodunitCase
+import com.parlor.games.whodunit.content.matches
+import com.parlor.games.whodunit.domain.rules.WhodunitRules
 import com.parlor.games.whodunit.ui.flow.WhodunitMultiplayerPeerFlow
 import com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostRoomBridge
 import com.parlor.app.shell.dataErrorMessage
 import com.parlor.app.shell.netErrorMessage
-import com.parlor.networking.protocol.HostMessage
-import com.parlor.networking.protocol.PARLOR_PROTOCOL_MAJOR
-import com.parlor.networking.protocol.ProtocolValidation
 import com.parlor.networking.protocol.SessionProtocol
-import com.parlor.networking.protocol.validateFor
 import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.NetError
+import com.parlor.networking.room.PeerSessionAttempt
+import com.parlor.networking.room.PeerSessionRetryPolicy
 import com.parlor.networking.transport.RoomTransport
 import com.parlor.networking.transport.needsRecoveryGuidance
-import kotlinx.coroutines.flow.filterIsInstance
-import kotlinx.coroutines.flow.first
+import com.parlor.session.multidevice.awaitAuthoritativeSessionStart
+import com.parlor.session.multidevice.asNetError
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.core.qualifier.named
 
 /**
- * End-to-end peer flow: join the room, wait for the host's `SessionStarting`
- * message, load the chosen case, and hand off to [WhodunitMultiplayerPeerFlow].
+ * End-to-end peer flow: join the room, prepare and acknowledge the host's
+ * start offer, wait for its authoritative commit, then hand off to
+ * [WhodunitMultiplayerPeerFlow].
  * Owns the [LocalRoom] for the lifetime of the session.
  */
 @Composable
@@ -102,70 +101,122 @@ fun PeerSessionFlow(
     onOpenNetworkSettings: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
 ) {
+    val repository: CaseRepository = koinInject()
+    val payloadValidator: PayloadValidator<WhodunitCase> =
+        koinInject(qualifier = named("whodunit"))
     var room by remember { mutableStateOf<LocalRoom?>(null) }
     // Keep the typed error so the rendering site can localise it. Stringifying
     // here would lose the type and ship "NetError$TransportFailure(reason=...)"
     // straight to the user.
     var joinError by remember { mutableStateOf<NetError?>(null) }
     var sessionStart by remember { mutableStateOf<SessionStartingFromHost?>(null) }
+    var casePreparationError by remember { mutableStateOf<DataError?>(null) }
     var joinAttempt by remember { mutableStateOf(0) }
+    var retryPolicy by remember(transport, code, peerName, resumeExistingSession) {
+        mutableStateOf(PeerSessionRetryPolicy.initial(resumeExistingSession))
+    }
+    var retainedRetryRoom by remember(transport, code, peerName) {
+        mutableStateOf<LocalRoom?>(null)
+    }
+    var finalLeaveInFlight by remember { mutableStateOf(false) }
+    val flowScope = rememberCoroutineScope()
 
     LaunchedEffect(transport, code, resumeExistingSession, joinAttempt) {
         joinError = null
+        casePreparationError = null
         sessionStart = null
-        val result = if (resumeExistingSession) {
-            transport.resumeLastSession()
-        } else {
-            transport.join(code, peerName)
+        val result = when (retryPolicy.nextAttempt) {
+            PeerSessionAttempt.Resume -> transport.resumeLastSession()
+            PeerSessionAttempt.Join -> transport.join(code, peerName)
         }
         when (result) {
-            is Result.Success -> room = result.data
+            is Result.Success -> {
+                retainedRetryRoom = null
+                retryPolicy = retryPolicy.afterRoomAcquired()
+                room = result.data
+            }
             is Result.Failure -> joinError = result.error
         }
     }
 
     LaunchedEffect(room) {
         val active = room ?: return@LaunchedEffect
-        // Consume exactly one start frame, then release the Channel-backed
-        // inbox to WhodunitPeerRoomBridge. Keeping this collector alive would
-        // race the coordinator and nondeterministically steal snapshots.
-        val msg = active.incoming.filterIsInstance<HostMessage.SessionStarting>().first()
-        val header = msg.header
-        val candidate = header?.let {
-            SessionProtocol(
-                sessionId = it.sessionId,
-                gameId = WhodunitIds.GameId,
-                gameVersion = WhodunitHostRoomBridge.GAME_VERSION,
-            )
-        }
-        val ids = msg.players.map(Player::id)
-        val validPlayerCount = when (msg.modeId) {
-            WhodunitIds.ClassicVoteModeId.raw -> msg.players.size in 4..6
-            WhodunitIds.EliminationModeId.raw -> msg.players.size in 5..6
-            else -> false
-        }
-        if (
-            header == null ||
-            candidate == null ||
-            header.protocol.major != PARLOR_PROTOCOL_MAJOR ||
-            header.sequence != 0L ||
-            header.validateFor(candidate) != ProtocolValidation.Valid ||
-            msg.caseId.isBlank() ||
-            !validPlayerCount ||
-            active.selfPlayerId !in ids ||
-            active.info.value.hostPlayerId !in ids ||
-            ids.distinct().size != ids.size
+        var preparedCase: ValidatedCase<WhodunitCase>? = null
+        when (
+            val start = awaitAuthoritativeSessionStart(
+                room = active,
+                expectedGameId = WhodunitIds.GameId,
+                expectedGameVersion = WhodunitHostRoomBridge.GAME_VERSION,
+            ) { msg, _ ->
+                val ids = msg.players.map(Player::id)
+                val modeId = ModeId(msg.modeId)
+                val structurallyValid =
+                    WhodunitRules.supportedPlayerCounts(modeId) != null &&
+                        active.selfPlayerId in ids &&
+                        active.info.value.hostPlayerId in ids &&
+                        ids.distinct().size == ids.size
+                if (!structurallyValid) return@awaitAuthoritativeSessionStart false
+
+                when (
+                    val loaded = repository.loadCase(
+                        CaseId(msg.caseId),
+                        payloadValidator,
+                    )
+                ) {
+                    is Result.Success -> {
+                        val loadedCase = loaded.data
+                        val supportedCounts = WhodunitRules.supportedPlayerCountsForCase(
+                            modeId = modeId,
+                            casePlayerCounts = loadedCase.envelope.supportedPlayerCounts.toIntRange(),
+                            availableCharacters = loadedCase.payload.characters.size,
+                        )
+                        loadedCase.takeIf {
+                            msg.modeId in it.envelope.supportedModes &&
+                                supportedCounts != null &&
+                                msg.players.size in supportedCounts &&
+                                msg.matches(it.envelope)
+                        }?.also { preparedCase = it } != null
+                    }
+                    is Result.Failure -> {
+                        casePreparationError = loaded.error
+                        false
+                    }
+                }
+            }
         ) {
-            joinError = NetError.IncompatibleProtocol
-            return@LaunchedEffect
+            is Result.Success -> {
+                val offer = start.data.offer
+                val case = preparedCase
+                if (case == null) {
+                    joinError = NetError.IncompatibleProtocol
+                    when (val closed = active.closeForRetry()) {
+                        is Result.Success -> Unit
+                        is Result.Failure -> joinError = closed.error
+                    }
+                    retainedRetryRoom = active
+                    retryPolicy = retryPolicy.afterPostAdmissionStartFailure()
+                    if (room === active) room = null
+                } else {
+                    sessionStart = SessionStartingFromHost(
+                        case = case,
+                        modeId = offer.modeId,
+                        players = offer.players,
+                        seed = offer.sessionNonce,
+                        protocol = start.data.protocol,
+                    )
+                }
+            }
+            is Result.Failure -> {
+                if (casePreparationError == null) joinError = start.error.asNetError()
+                when (val closed = active.closeForRetry()) {
+                    is Result.Success -> Unit
+                    is Result.Failure -> joinError = closed.error
+                }
+                retainedRetryRoom = active
+                retryPolicy = retryPolicy.afterPostAdmissionStartFailure()
+                if (room === active) room = null
+            }
         }
-        sessionStart = SessionStartingFromHost(
-            caseId = msg.caseId,
-            modeId = msg.modeId,
-            players = msg.players,
-            seed = msg.sessionNonce,
-            protocol = candidate,
-        )
     }
 
     // Keep room teardown alive through composition cancellation. Launching
@@ -179,7 +230,44 @@ fun PeerSessionFlow(
             awaitCancellation()
         } finally {
             withContext(NonCancellable) {
-                runCatching { active.leave() }
+                active.leave()
+            }
+        }
+    }
+
+    val finalBackToLibrary: () -> Unit = {
+        val active = room
+        val retained = retainedRetryRoom
+        val leaveTarget = retained ?: active
+        if (leaveTarget == null) {
+            onBackToLibrary()
+        } else if (!finalLeaveInFlight) {
+            finalLeaveInFlight = true
+            flowScope.launch {
+                val discarded = try {
+                    if (retained != null) {
+                        retained.discardRejoinCapability()
+                    } else {
+                        leaveTarget.finalLeave()
+                    }
+                } catch (cancelled: CancellationException) {
+                    finalLeaveInFlight = false
+                    throw cancelled
+                } catch (_: Exception) {
+                    Result.Failure(NetError.TransportFailure("final leave failed"))
+                }
+                when (discarded) {
+                    is Result.Success -> {
+                        if (retainedRetryRoom === retained) retainedRetryRoom = null
+                        if (room === active) room = null
+                        onBackToLibrary()
+                    }
+                    is Result.Failure -> {
+                        casePreparationError = null
+                        joinError = discarded.error
+                        finalLeaveInFlight = false
+                    }
+                }
             }
         }
     }
@@ -187,15 +275,14 @@ fun PeerSessionFlow(
     val current = room
     val start = sessionStart
 
-    // Wave 9H-8 connection presenter state. The WhodunitMultiplayerPeerFlow
-    // owns the peer bridge that synthesises HostLost / SelfOffline events;
-    // when we wire its connectionEvents through here, these flags drive
-    // the overlay + banner. For now both default to false — the screens
-    // below still render the inner flow, and a follow-up will hook the
-    // bridge's SharedFlow into a PartyConnectionPresenter at this scope.
+    // The game-owned peer bridge exposes durable connection state through
+    // these callbacks. Keeping presentation state at the shell root makes the
+    // reconnect overlay and offline banner survive inner-screen transitions.
     var hostLost by remember { mutableStateOf(false) }
     var selfOffline by remember { mutableStateOf(false) }
     val localNetworkAccess by transport.localNetworkAccess.collectAsState()
+    val renderedCaseError = casePreparationError
+    val renderedJoinError = joinError
 
     Box(modifier = modifier.fillMaxSize()) {
         Column(modifier = Modifier.fillMaxSize()) {
@@ -204,14 +291,24 @@ fun PeerSessionFlow(
             }
             Box(modifier = Modifier.fillMaxSize()) {
                 when {
-                    joinError != null -> PeerErrorState(
-                        error = netErrorMessage(joinError!!),
-                        onRetry = { joinAttempt++ },
+                    renderedCaseError != null -> PeerErrorState(
+                        error = dataErrorMessage(renderedCaseError),
+                        onRetry = { if (!finalLeaveInFlight) joinAttempt++ },
+                        onBack = finalBackToLibrary,
+                        actionsEnabled = !finalLeaveInFlight,
+                        backInFlight = finalLeaveInFlight,
+                        modifier = Modifier.fillMaxSize(),
+                    )
+                    renderedJoinError != null -> PeerErrorState(
+                        error = netErrorMessage(renderedJoinError),
+                        onRetry = { if (!finalLeaveInFlight) joinAttempt++ },
                         onOpenNetworkSettings = onOpenNetworkSettings.takeIf {
                             localNetworkAccess.needsRecoveryGuidance
                         },
                         showNetworkRecovery = localNetworkAccess.needsRecoveryGuidance,
-                        onBack = onBackToLibrary,
+                        onBack = finalBackToLibrary,
+                        actionsEnabled = !finalLeaveInFlight,
+                        backInFlight = finalLeaveInFlight,
                         modifier = Modifier.fillMaxSize(),
                     )
                     current == null -> PeerConnectingState(code, modifier = Modifier.fillMaxSize())
@@ -219,14 +316,12 @@ fun PeerSessionFlow(
                         current,
                         peerName,
                         modifier = Modifier.fillMaxSize(),
-                        onLeave = onBackToLibrary,
+                        onLeave = finalBackToLibrary,
                     )
                     else -> PeerSessionWithCase(
-                        transport = transport,
                         room = current,
                         start = start,
-                        peerName = peerName,
-                        onBackToLibrary = onBackToLibrary,
+                        onBackToLibrary = finalBackToLibrary,
                         modifier = Modifier.fillMaxSize(),
                         onHostLostChanged = { hostLost = it },
                         onSelfOfflineChanged = { selfOffline = it },
@@ -239,7 +334,7 @@ fun PeerSessionFlow(
                 title = stringResource(Res.string.party_reconnecting_overlay_title),
                 leaveLabel = stringResource(Res.string.party_reconnecting_overlay_leave),
                 leaveContentDescription = stringResource(Res.string.party_reconnecting_overlay_leave_description),
-                onLeave = onBackToLibrary,
+                onLeave = finalBackToLibrary,
                 modifier = Modifier.fillMaxSize(),
             )
         }
@@ -248,50 +343,27 @@ fun PeerSessionFlow(
 
 @Composable
 private fun PeerSessionWithCase(
-    transport: RoomTransport,
     room: LocalRoom,
     start: SessionStartingFromHost,
-    peerName: String,
     onBackToLibrary: () -> Unit,
     modifier: Modifier = Modifier,
     onHostLostChanged: (Boolean) -> Unit = {},
     onSelfOfflineChanged: (Boolean) -> Unit = {},
 ) {
-    val repository: CaseRepository = koinInject()
-    val payloadValidator: PayloadValidator<WhodunitCase> = koinInject(qualifier = named("whodunit"))
-
-    val caseResult by produceState<Result<ValidatedCase<WhodunitCase>, DataError>?>(
-        initialValue = null,
-        key1 = start.caseId,
-    ) {
-        value = repository.loadCase(CaseId(start.caseId), payloadValidator)
-    }
-
-    when (val r = caseResult) {
-        null -> PeerLoadingCase(modifier)
-        is Result.Failure -> PeerErrorState(
-            stringResource(Res.string.peer_case_load_error_format).replace("%1\$s", dataErrorMessage(r.error)),
-            onBack = onBackToLibrary,
-            modifier = modifier,
-        )
-        is Result.Success -> {
-            val case = r.data
-            val selfId = room.selfPlayerId
-            WhodunitMultiplayerPeerFlow(
-                case = case,
-                modeId = ModeId(start.modeId),
-                players = start.players,
-                selfPlayerId = selfId,
-                seed = start.seed,
-                room = room,
-                protocol = start.protocol,
-                onBackToLibrary = onBackToLibrary,
-                modifier = modifier,
-                onHostLostChanged = onHostLostChanged,
-                onSelfOfflineChanged = onSelfOfflineChanged,
-            )
-        }
-    }
+    val selfId = room.selfPlayerId
+    WhodunitMultiplayerPeerFlow(
+        case = start.case,
+        modeId = ModeId(start.modeId),
+        players = start.players,
+        selfPlayerId = selfId,
+        seed = start.seed,
+        room = room,
+        protocol = start.protocol,
+        onBackToLibrary = onBackToLibrary,
+        modifier = modifier,
+        onHostLostChanged = onHostLostChanged,
+        onSelfOfflineChanged = onSelfOfflineChanged,
+    )
 }
 
 @Composable
@@ -377,28 +449,6 @@ private fun PeerWaitingForHostStart(
 }
 
 @Composable
-private fun PeerLoadingCase(modifier: Modifier = Modifier) {
-    HeroBackdrop(modifier = modifier.fillMaxSize()) {
-        Column(
-            modifier = Modifier.fillMaxSize().padding(ParlorTheme.spacing.xl),
-            verticalArrangement = Arrangement.spacedBy(
-                ParlorTheme.spacing.l,
-                Alignment.CenterVertically,
-            ),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            CandleFlame(size = androidx.compose.ui.unit.Dp(72f))
-            Text(
-                text = stringResource(Res.string.peer_loading_case),
-                style = ParlorTheme.typography.displayMedium,
-                color = ParlorTheme.colors.textPrimary,
-                textAlign = TextAlign.Center,
-            )
-        }
-    }
-}
-
-@Composable
 private fun PeerErrorState(
     error: String,
     onBack: () -> Unit,
@@ -406,6 +456,8 @@ private fun PeerErrorState(
     onRetry: (() -> Unit)? = null,
     onOpenNetworkSettings: (() -> Unit)? = null,
     showNetworkRecovery: Boolean = false,
+    actionsEnabled: Boolean = true,
+    backInFlight: Boolean = false,
 ) {
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
         Column(
@@ -441,6 +493,7 @@ private fun PeerErrorState(
                     label = stringResource(Res.string.network_retry),
                     contentDescription = stringResource(Res.string.network_retry_description),
                     onClick = onRetry,
+                    enabled = actionsEnabled,
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
@@ -449,6 +502,7 @@ private fun PeerErrorState(
                     label = stringResource(Res.string.network_open_settings),
                     contentDescription = stringResource(Res.string.network_open_settings_description),
                     onClick = onOpenNetworkSettings,
+                    enabled = actionsEnabled,
                     modifier = Modifier.fillMaxWidth(),
                     variant = ParlorButtonVariant.Secondary,
                 )
@@ -457,6 +511,8 @@ private fun PeerErrorState(
                 label = stringResource(Res.string.error_back),
                 contentDescription = stringResource(Res.string.error_back_description),
                 onClick = onBack,
+                enabled = actionsEnabled,
+                loading = backInFlight,
                 modifier = Modifier.fillMaxWidth(),
                 variant = ParlorButtonVariant.Ghost,
             )
@@ -466,7 +522,7 @@ private fun PeerErrorState(
 
 /** Local snapshot of a SessionStarting message — keeps the Compose state simple. */
 private data class SessionStartingFromHost(
-    val caseId: String,
+    val case: ValidatedCase<WhodunitCase>,
     val modeId: String,
     val players: List<Player>,
     val seed: Long,

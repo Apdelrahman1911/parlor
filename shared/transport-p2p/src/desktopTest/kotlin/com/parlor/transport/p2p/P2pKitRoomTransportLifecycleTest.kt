@@ -13,6 +13,8 @@ import assertk.assertions.isTrue
 import com.parlor.core.ids.GameId
 import com.parlor.core.ids.PlayerId
 import com.parlor.core.ids.SessionId
+import com.parlor.core.result.DataError
+import com.parlor.core.result.EmptyResult
 import com.parlor.core.result.Result
 import com.parlor.networking.protocol.AdmissionRejection
 import com.parlor.networking.protocol.CommandStatus
@@ -30,6 +32,7 @@ import com.parlor.networking.room.RoomLifecycleState
 import com.parlor.networking.room.RoomMember
 import com.parlor.networking.room.SendTarget
 import com.parlor.networking.transport.LocalNetworkAccess
+import com.parlor.networking.transport.HostConfig
 import dev.p2pkit.core.AppId
 import dev.p2pkit.core.ConnectionState
 import dev.p2pkit.core.P2pKit
@@ -56,6 +59,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -74,6 +78,7 @@ import kotlinx.coroutines.yield
 import kotlinx.io.RawSource
 import com.parlor.storage.secure.InMemorySecureKeyValueBacking
 import com.parlor.storage.secure.PlatformKeyedSecureStorage
+import com.parlor.storage.secure.SecureStorage
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertFailsWith
@@ -482,6 +487,88 @@ class P2pKitRoomTransportLifecycleTest {
                 reason = P2pDiagnosticReason.STALE_REVISION,
             ),
         )
+    }
+
+    @Test
+    fun host_overwrites_forged_reliable_start_ack_actors_with_authenticated_peer() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("host-pid"))
+        val room = newHostRoom(kit)
+        val alice = FakeP2pSession(peer("alice-pid", "Alice"))
+        admit(room, kit, alice)
+        val forgedActor = PlayerId("victim-pid")
+        val authenticatedActor = PlayerId("alice-pid")
+        val header = SessionEnvelopeHeader(
+            protocol = ProtocolVersion(),
+            sessionId = SessionId("session"),
+            gameId = GameId("test-game"),
+            gameVersion = 1,
+            messageId = "start-message-id",
+            sequence = 0L,
+        )
+        val startId = "start-id-1234567"
+        val acknowledgements = listOf<PeerMessage>(
+            PeerMessage.SessionStartReady(header, forgedActor, startId),
+            PeerMessage.SessionStartCommitAck(header, forgedActor, startId),
+        )
+
+        acknowledgements.forEach { forged ->
+            val received = testScope.async { room.incoming.first() }
+            yield()
+            alice.incomingFlow.emit(P2pMessage.Binary(codec.encode(forged)))
+
+            when (val stamped = withTimeout(2_000L) { received.await() }) {
+                is PeerMessage.SessionStartReady -> {
+                    assertThat(stamped.actor).isEqualTo(authenticatedActor)
+                    assertThat(stamped.header).isEqualTo(header)
+                    assertThat(stamped.startId).isEqualTo(startId)
+                }
+                is PeerMessage.SessionStartCommitAck -> {
+                    assertThat(stamped.actor).isEqualTo(authenticatedActor)
+                    assertThat(stamped.header).isEqualTo(header)
+                    assertThat(stamped.startId).isEqualTo(startId)
+                }
+                else -> error("unexpected reliable-start acknowledgement: $stamped")
+            }
+        }
+
+        room.leave()
+        assertThat(kit.stopCalls).isEqualTo(1)
+    }
+
+    @Test
+    fun host_rejects_reliable_start_acknowledgements_before_admission() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("host-pid"))
+        val room = newHostRoom(kit)
+        val header = SessionEnvelopeHeader(
+            protocol = ProtocolVersion(),
+            sessionId = SessionId("session"),
+            gameId = GameId("test-game"),
+            gameVersion = 1,
+            messageId = "start-message-id",
+            sequence = 0L,
+        )
+        val messages = listOf<(PlayerId) -> PeerMessage>(
+            { actor -> PeerMessage.SessionStartReady(header, actor, "start-id-1234567") },
+            { actor -> PeerMessage.SessionStartCommitAck(header, actor, "start-id-1234567") },
+        )
+
+        messages.forEachIndexed { index, message ->
+            val session = FakeP2pSession(peer("unadmitted-$index", "Unadmitted $index"))
+            kit.incomingSessionsFlow.emit(session)
+            yield()
+            session.incomingFlow.emit(
+                P2pMessage.Binary(codec.encode(message(PlayerId("forged-actor")))),
+            )
+
+            awaitCondition { session.state.value == ConnectionState.Closed }
+            assertThat(session.admissionRejections())
+                .containsExactly(AdmissionRejection.InvalidRequest)
+        }
+
+        assertThat(room.pendingAdmissions.value).isEmpty()
+        assertThat(room.members.value).isEmpty()
+        room.leave()
+        assertThat(kit.stopCalls).isEqualTo(1)
     }
 
     @Test
@@ -917,7 +1004,8 @@ class P2pKitRoomTransportLifecycleTest {
             scope = testScope,
             codec = codec,
         )
-        val frame = P2pMessage.Binary(codec.encode(HostMessage.EndSession))
+        val applicationMessage = HostMessage.PublicStateDelta(byteArrayOf(1))
+        val frame = P2pMessage.Binary(codec.encode(applicationMessage))
 
         val producer = async {
             // One frame may already be executing inside the collector in
@@ -929,8 +1017,13 @@ class P2pKitRoomTransportLifecycleTest {
         yield()
         assertThat(producer.isCompleted).isFalse()
 
-        assertThat(withTimeout(2_000) { room.incoming.first() })
-            .isEqualTo(HostMessage.EndSession)
+        val received = withTimeout(2_000) { room.incoming.first() }
+        assertThat(received).isInstanceOf(HostMessage.PublicStateDelta::class)
+        assertThat(
+            (received as HostMessage.PublicStateDelta).patch.contentEquals(
+                applicationMessage.patch,
+            ),
+        ).isTrue()
         withTimeout(2_000) { producer.await() }
         assertThat(session.state.value).isEqualTo(ConnectionState.Connected)
         room.leave()
@@ -1099,6 +1192,134 @@ class P2pKitRoomTransportLifecycleTest {
     }
 
     @Test
+    fun foreground_identity_mismatch_is_transient_and_retries_without_expiring_membership() =
+        runBlocking {
+            val kit = FakeP2pKit(P2pPeerId("peer-pid"))
+            val hostPeer = peer("host-pid", "Host Device")
+            val firstSession = FakeP2pSession(hostPeer)
+            val replacementSession = FakeP2pSession(hostPeer)
+            val credential = resumableCredential(generation = 1L)
+            var attempts = 0
+            val room = PeerP2pRoom(
+                kit = kit,
+                session = firstSession,
+                hostPeer = hostPeer,
+                roomCode = credential.roomCode,
+                scope = testScope,
+                codec = codec,
+                initialCredential = credential,
+                resumeConnector = {
+                    attempts += 1
+                    if (attempts == 1) {
+                        Result.Failure(
+                            ResumeConnectionFailure(
+                                error = NetError.Unauthorized,
+                                invalidatesCredential = false,
+                            ),
+                        )
+                    } else {
+                        Result.Success(
+                            ResumedPeerConnection(
+                                session = replacementSession,
+                                hostPeer = hostPeer,
+                                credential = credential.copy(generation = 2L),
+                            ),
+                        )
+                    }
+                },
+            )
+            val events = mutableListOf<PeerEvent>()
+            val collector = testScope.async { room.peerEvents.collect { events += it } }
+
+            firstSession.stateFlow.value = ConnectionState.Closed
+
+            awaitCondition { events.contains(PeerEvent.HostRestored) }
+            assertThat(attempts).isEqualTo(2)
+            assertThat(room.lifecycle.value).isEqualTo(RoomLifecycleState.Active)
+            assertThat(kit.stopCalls).isEqualTo(0)
+
+            collector.cancel()
+            room.leave()
+        }
+
+    @Test
+    fun foreground_authenticated_permanent_rejection_expires_and_invalidates_credential() =
+        runBlocking {
+            val kit = FakeP2pKit(P2pPeerId("peer-pid"))
+            val hostPeer = peer("host-pid", "Host Device")
+            val firstSession = FakeP2pSession(hostPeer)
+            val credential = resumableCredential(generation = 1L)
+            val store = ResumableCredentialStore(testSecureStorage())
+            store.stage(credential)
+            store.commit(credential.offerId, credential.generation)
+            val room = PeerP2pRoom(
+                kit = kit,
+                session = firstSession,
+                hostPeer = hostPeer,
+                roomCode = credential.roomCode,
+                scope = testScope,
+                codec = codec,
+                initialCredential = credential,
+                credentialStore = store,
+                resumeConnector = {
+                    Result.Failure(
+                        ResumeConnectionFailure(
+                            error = NetError.Unauthorized,
+                            invalidatesCredential = true,
+                        ),
+                    )
+                },
+            )
+
+            firstSession.stateFlow.value = ConnectionState.Closed
+
+            awaitCondition { kit.stopCalls == 1 }
+            assertThat(room.lifecycle.value).isEqualTo(RoomLifecycleState.Expired)
+            assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(null))
+            assertThat(kit.stopCalls).isEqualTo(1)
+        }
+
+    @Test
+    fun foreground_permanent_rejection_cannot_erase_a_concurrently_rotated_generation() =
+        runBlocking {
+            val kit = FakeP2pKit(P2pPeerId("peer-pid"))
+            val hostPeer = peer("host-pid", "Host Device")
+            val firstSession = FakeP2pSession(hostPeer)
+            val generationOne = resumableCredential(generation = 1L)
+            val generationTwo = resumableCredential(generation = 2L)
+            val store = ResumableCredentialStore(testSecureStorage())
+            store.stage(generationOne)
+            store.commit(generationOne.offerId, generationOne.generation)
+            val room = PeerP2pRoom(
+                kit = kit,
+                session = firstSession,
+                hostPeer = hostPeer,
+                roomCode = generationOne.roomCode,
+                scope = testScope,
+                codec = codec,
+                initialCredential = generationOne,
+                credentialStore = store,
+                resumeConnector = {
+                    store.stage(generationTwo)
+                    store.commit(generationTwo.offerId, generationTwo.generation)
+                    Result.Failure(
+                        ResumeConnectionFailure(
+                            error = NetError.Unauthorized,
+                            invalidatesCredential = true,
+                        ),
+                    )
+                },
+            )
+
+            firstSession.stateFlow.value = ConnectionState.Closed
+
+            awaitCondition { kit.stopCalls == 1 }
+            assertThat(room.lifecycle.value).isEqualTo(RoomLifecycleState.Expired)
+            assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(generationTwo))
+            assertThat(kit.stopCalls).isEqualTo(1)
+        }
+
+    @Test
     fun authoritative_session_end_disables_credential_resume_after_socket_close() = runBlocking {
         val kit = FakeP2pKit(P2pPeerId("peer-pid"))
         val hostPeer = peer("host-pid", "Host Device")
@@ -1114,7 +1335,7 @@ class P2pKitRoomTransportLifecycleTest {
             initialCredential = resumableCredential(generation = 1L),
             resumeConnector = { credential ->
                 resumeRequests += credential
-                Result.Failure(NetError.Timeout)
+                Result.Failure(ResumeConnectionFailure(NetError.Timeout))
             },
         )
         val terminal = HostMessage.SessionEnded(
@@ -1139,6 +1360,598 @@ class P2pKitRoomTransportLifecycleTest {
         assertThat(room.sendToHost(PeerMessage.Heartbeat))
             .isEqualTo(Result.Failure(NetError.NotConnected))
         room.leave()
+    }
+
+    @Test
+    fun authenticated_terminal_frame_invalidates_matching_credential_before_ui_cleanup() =
+        runBlocking {
+            val kit = FakeP2pKit(P2pPeerId("peer-pid"))
+            val hostPeer = peer("host-pid", "Host Device")
+            val session = FakeP2pSession(hostPeer)
+            val credential = resumableCredential(generation = 1L)
+            val store = ResumableCredentialStore(testSecureStorage())
+            assertThat(store.stage(credential)).isInstanceOf(Result.Success::class)
+            assertThat(store.commit(credential.offerId, credential.generation))
+                .isInstanceOf(Result.Success::class)
+            val room = PeerP2pRoom(
+                kit = kit,
+                session = session,
+                hostPeer = hostPeer,
+                roomCode = credential.roomCode,
+                scope = testScope,
+                codec = codec,
+                initialCredential = credential,
+                credentialStore = store,
+            )
+            val terminal = HostMessage.SessionEnded(
+                header = SessionEnvelopeHeader(
+                    protocol = ProtocolVersion(),
+                    sessionId = SessionId("session-terminal-cleanup"),
+                    gameId = GameId("game-terminal-cleanup"),
+                    gameVersion = 1,
+                    messageId = "terminal-cleanup-message-000001",
+                    sequence = 1L,
+                ),
+                reason = SessionEndReason.Completed,
+                finalRevision = 7L,
+            )
+
+            session.incomingFlow.emit(P2pMessage.Binary(codec.encode(terminal)))
+            assertThat(withTimeout(2_000L) { room.incoming.first() }).isEqualTo(terminal)
+
+            // Receipt of the authenticated terminal frame is the durability
+            // boundary; navigation/onDispose is not required to revoke resume.
+            assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(null))
+            assertThat(kit.stopCalls).isEqualTo(0)
+
+            // A second terminal frame and duplicate leave are both idempotent.
+            session.incomingFlow.emit(P2pMessage.Binary(codec.encode(HostMessage.EndSession)))
+            assertThat(withTimeoutOrNull(100L) { room.incoming.first() }).isEqualTo(null)
+            room.leave()
+            room.leave()
+            assertThat(kit.stopCalls).isEqualTo(1)
+            assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(null))
+        }
+
+    @Test
+    fun stale_room_leave_or_expiry_cannot_erase_a_newer_different_room_credential() =
+        runBlocking {
+            suspend fun runPath(expire: Boolean) {
+                val kit = FakeP2pKit(P2pPeerId("peer-pid"))
+                val hostPeer = peer("host-pid", "Host Device")
+                val oldCredential = resumableCredential(generation = 1L)
+                val replacement = resumableCredential(
+                    generation = 1L,
+                    offerId = "replacement-room-offer",
+                    roomCode = "XYZ789",
+                    playerId = "replacement-player",
+                    hostPeerId = "replacement-host",
+                )
+                val store = ResumableCredentialStore(testSecureStorage())
+                store.stage(oldCredential)
+                store.commit(oldCredential.offerId, oldCredential.generation)
+                val oldRoom = PeerP2pRoom(
+                    kit = kit,
+                    session = FakeP2pSession(hostPeer),
+                    hostPeer = hostPeer,
+                    roomCode = oldCredential.roomCode,
+                    scope = testScope,
+                    codec = codec,
+                    initialCredential = oldCredential,
+                    credentialStore = store,
+                )
+                store.stage(replacement)
+                store.commit(replacement.offerId, replacement.generation)
+
+                if (expire) {
+                    oldRoom.appBackgrounded(1_000L)
+                    oldRoom.appForegrounded(121_001L)
+                } else {
+                    oldRoom.leave()
+                }
+
+                assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(replacement))
+            }
+
+            runPath(expire = false)
+            runPath(expire = true)
+        }
+
+    @Test
+    fun peer_leave_and_lifecycle_expiry_conditionally_invalidate_their_matching_credential() =
+        runBlocking {
+            suspend fun runPath(expire: Boolean) {
+                val kit = FakeP2pKit(P2pPeerId("peer-pid"))
+                val hostPeer = peer("host-pid", "Host Device")
+                val credential = resumableCredential(generation = 1L)
+                val store = ResumableCredentialStore(testSecureStorage())
+                store.stage(credential)
+                store.commit(credential.offerId, credential.generation)
+                val room = PeerP2pRoom(
+                    kit = kit,
+                    session = FakeP2pSession(hostPeer),
+                    hostPeer = hostPeer,
+                    roomCode = credential.roomCode,
+                    scope = testScope,
+                    codec = codec,
+                    initialCredential = credential,
+                    credentialStore = store,
+                )
+
+                if (expire) {
+                    room.appBackgrounded(1_000L)
+                    room.appForegrounded(121_001L)
+                    assertThat(room.lifecycle.value).isEqualTo(RoomLifecycleState.Expired)
+                } else {
+                    room.leave()
+                    room.leave()
+                    assertThat(room.lifecycle.value).isEqualTo(RoomLifecycleState.Closed)
+                }
+
+                assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(null))
+                assertThat(kit.stopCalls).isEqualTo(1)
+            }
+
+            runPath(expire = false)
+            runPath(expire = true)
+        }
+
+    @Test
+    fun failed_start_cleanup_preserves_membership_until_explicit_final_discard() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("peer-pid"))
+        val hostPeer = peer("host-pid", "Host Device")
+        val session = FakeP2pSession(hostPeer)
+        val credential = resumableCredential(generation = 1L)
+        val store = ResumableCredentialStore(testSecureStorage())
+        store.stage(credential)
+        store.commit(credential.offerId, credential.generation)
+        val room = PeerP2pRoom(
+            kit = kit,
+            session = session,
+            hostPeer = hostPeer,
+            roomCode = credential.roomCode,
+            scope = testScope,
+            codec = codec,
+            initialCredential = credential,
+            credentialStore = store,
+        )
+
+        assertThat(room.closeForRetry()).isEqualTo(Result.Success(Unit))
+        assertThat(session.state.value).isEqualTo(ConnectionState.Closed)
+        assertThat(kit.stopCalls).isEqualTo(1)
+        assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(credential))
+        assertThat(
+            session.sent
+                .filterIsInstance<P2pMessage.Binary>()
+                .map { codec.decode(it.bytes) }
+                .filterIsInstance<PeerMessage.LeaveNotice>(),
+        ).isEmpty()
+
+        // The composition owner's normal idempotent cleanup must not turn the
+        // retained retry capability into a final Leave.
+        room.leave()
+        assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(credential))
+
+        assertThat(room.discardRejoinCapability()).isEqualTo(Result.Success(Unit))
+        assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(null))
+        assertThat(kit.stopCalls).isEqualTo(1)
+    }
+
+    @Test
+    fun final_discard_from_abandoned_room_revokes_a_concurrently_rotated_membership() =
+        runBlocking {
+            val kit = FakeP2pKit(P2pPeerId("peer-pid"))
+            val hostPeer = peer("host-pid", "Host Device")
+            val generationOne = resumableCredential(generation = 1L)
+            val generationTwo = generationOne.copy(
+                offerId = "resume-offer-2",
+                secret = "b".repeat(64),
+                generation = 2L,
+            )
+            val store = ResumableCredentialStore(testSecureStorage())
+            store.stage(generationOne)
+            store.commit(generationOne.offerId, generationOne.generation)
+            val room = PeerP2pRoom(
+                kit = kit,
+                session = FakeP2pSession(hostPeer),
+                hostPeer = hostPeer,
+                roomCode = generationOne.roomCode,
+                scope = testScope,
+                codec = codec,
+                initialCredential = generationOne,
+                credentialStore = store,
+            )
+
+            assertThat(room.closeForRetry()).isEqualTo(Result.Success(Unit))
+            store.stage(generationTwo)
+            store.commit(generationTwo.offerId, generationTwo.generation)
+            assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(generationTwo))
+
+            assertThat(room.discardRejoinCapability()).isEqualTo(Result.Success(Unit))
+            assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(null))
+        }
+
+    @Test
+    fun failed_final_discard_is_reported_and_remains_retryable() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("peer-pid"))
+        val hostPeer = peer("host-pid", "Host Device")
+        val credential = resumableCredential(generation = 1L)
+        val failingStorage = FailingRemoveSecureStorage(testSecureStorage())
+        val store = ResumableCredentialStore(failingStorage)
+        store.stage(credential)
+        store.commit(credential.offerId, credential.generation)
+        val room = PeerP2pRoom(
+            kit = kit,
+            session = FakeP2pSession(hostPeer),
+            hostPeer = hostPeer,
+            roomCode = credential.roomCode,
+            scope = testScope,
+            codec = codec,
+            initialCredential = credential,
+            credentialStore = store,
+        )
+        room.closeForRetry()
+
+        failingStorage.failRemove = true
+        assertThat(room.discardRejoinCapability())
+            .isEqualTo(Result.Failure(NetError.SecureStorageUnavailable))
+        assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(credential))
+
+        failingStorage.failRemove = false
+        failingStorage.cancelRemove = true
+        assertFailsWith<CancellationException> { room.discardRejoinCapability() }
+        assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(credential))
+
+        failingStorage.cancelRemove = false
+        failingStorage.fatalRemove = true
+        assertFailsWith<AssertionError> { room.discardRejoinCapability() }
+        assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(credential))
+
+        failingStorage.fatalRemove = false
+        assertThat(room.discardRejoinCapability()).isEqualTo(Result.Success(Unit))
+        assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(null))
+    }
+
+    @Test
+    fun terminal_policy_tracks_the_current_rotated_generation_not_the_old_collector() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("peer-pid"))
+        val hostPeer = peer("host-pid", "Host Device")
+        val firstSession = FakeP2pSession(hostPeer)
+        val replacementSession = FakeP2pSession(hostPeer)
+        val generationOne = resumableCredential(generation = 1L)
+        val generationTwo = resumableCredential(generation = 2L)
+        val store = ResumableCredentialStore(testSecureStorage())
+        store.stage(generationOne)
+        store.commit(generationOne.offerId, generationOne.generation)
+        val room = PeerP2pRoom(
+            kit = kit,
+            session = firstSession,
+            hostPeer = hostPeer,
+            roomCode = generationOne.roomCode,
+            scope = testScope,
+            codec = codec,
+            initialCredential = generationOne,
+            credentialStore = store,
+            resumeConnector = {
+                store.stage(generationTwo)
+                store.commit(generationTwo.offerId, generationTwo.generation)
+                Result.Success(
+                    ResumedPeerConnection(
+                        replacementSession,
+                        hostPeer,
+                        generationTwo,
+                    ),
+                )
+            },
+        )
+        val events = mutableListOf<PeerEvent>()
+        val eventCollector = testScope.async { room.peerEvents.collect { events += it } }
+        yield(); yield()
+
+        firstSession.stateFlow.value = ConnectionState.Closed
+        awaitCondition { events.contains(PeerEvent.HostRestored) }
+        assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(generationTwo))
+
+        // The replaced collector is generation-bound and cannot revoke G2.
+        firstSession.incomingFlow.emit(P2pMessage.Binary(codec.encode(HostMessage.EndSession)))
+        repeat(5) { yield() }
+        assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(generationTwo))
+
+        // The active replacement collector is bound to G2, so its terminal
+        // frame revokes G2 before the frame is exposed to game/UI code.
+        replacementSession.incomingFlow.emit(
+            P2pMessage.Binary(codec.encode(HostMessage.EndSession)),
+        )
+        assertThat(withTimeout(2_000L) { room.incoming.first() })
+            .isEqualTo(HostMessage.EndSession)
+        assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(null))
+
+        eventCollector.cancel()
+        room.leave()
+    }
+
+    @Test
+    fun successful_resume_that_loses_terminal_ownership_race_closes_unadopted_session() =
+        runBlocking {
+            val kit = FakeP2pKit(P2pPeerId("peer-pid"))
+            val hostPeer = peer("host-pid", "Host Device")
+            val firstSession = FakeP2pSession(hostPeer)
+            val unadoptedSession = FakeP2pSession(hostPeer)
+            val initialCredential = resumableCredential(generation = 1L)
+            val rotatedCredential = initialCredential.copy(
+                offerId = "resume-offer-2",
+                secret = "b".repeat(64),
+                generation = 2L,
+            )
+            val store = ResumableCredentialStore(testSecureStorage())
+            store.stage(initialCredential)
+            store.commit(initialCredential.offerId, initialCredential.generation)
+            val room = PeerP2pRoom(
+                kit = kit,
+                session = firstSession,
+                hostPeer = hostPeer,
+                roomCode = initialCredential.roomCode,
+                scope = testScope,
+                codec = codec,
+                initialCredential = initialCredential,
+                credentialStore = store,
+            )
+            val terminal = testScope.async { room.incoming.first() }
+            yield(); yield()
+
+            // The connector has durably committed G2, but has not yet crossed
+            // PeerP2pRoom's physical-session adoption boundary.
+            store.stage(rotatedCredential)
+            store.commit(rotatedCredential.offerId, rotatedCredential.generation)
+
+            firstSession.incomingFlow.emit(
+                P2pMessage.Binary(codec.encode(HostMessage.EndSession)),
+            )
+            assertThat(withTimeout(2_000L) { terminal.await() })
+                .isEqualTo(HostMessage.EndSession)
+            assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(null))
+
+            // Model the exact post-connector race: Success is already in hand,
+            // but authenticated terminal ownership committed first.
+            assertThat(
+                room.adoptResumedConnection(
+                    ResumedPeerConnection(
+                        unadoptedSession,
+                        hostPeer,
+                        rotatedCredential,
+                    ),
+                ),
+            ).isEqualTo(ResumeAdoptionOutcome.Terminal)
+            assertThat(unadoptedSession.closeCalls).isEqualTo(1)
+            assertThat(unadoptedSession.state.value).isEqualTo(ConnectionState.Closed)
+            assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(null))
+            assertThat(room.sendToHost(PeerMessage.Heartbeat))
+                .isEqualTo(Result.Failure(NetError.NotConnected))
+
+            room.leave()
+            assertThat(kit.stopCalls).isEqualTo(1)
+        }
+
+    @Test
+    fun final_leave_revokes_a_committed_rotation_that_has_not_been_adopted() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("peer-pid"))
+        val hostPeer = peer("host-pid", "Host Device")
+        val firstSession = FakeP2pSession(hostPeer)
+        val unadoptedSession = FakeP2pSession(hostPeer)
+        val generationOne = resumableCredential(generation = 1L)
+        val generationTwo = generationOne.copy(
+            offerId = "resume-offer-2",
+            secret = "b".repeat(64),
+            generation = 2L,
+        )
+        val store = ResumableCredentialStore(testSecureStorage())
+        store.stage(generationOne)
+        store.commit(generationOne.offerId, generationOne.generation)
+        val room = PeerP2pRoom(
+            kit = kit,
+            session = firstSession,
+            hostPeer = hostPeer,
+            roomCode = generationOne.roomCode,
+            scope = testScope,
+            codec = codec,
+            initialCredential = generationOne,
+            credentialStore = store,
+        )
+
+        // Model Success already returned by the connector: G2 is durable, but
+        // final Leave wins before adoptResumedConnection can install it.
+        store.stage(generationTwo)
+        store.commit(generationTwo.offerId, generationTwo.generation)
+        room.leave()
+        assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(null))
+
+        assertThat(
+            room.adoptResumedConnection(
+                ResumedPeerConnection(unadoptedSession, hostPeer, generationTwo),
+            ),
+        ).isEqualTo(ResumeAdoptionOutcome.Terminal)
+        assertThat(unadoptedSession.closeCalls).isEqualTo(1)
+        assertThat(unadoptedSession.state.value).isEqualTo(ConnectionState.Closed)
+        assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(null))
+        assertThat(kit.stopCalls).isEqualTo(1)
+    }
+
+    @Test
+    fun resume_ready_failure_or_cancellation_closes_the_adopted_physical_session() = runBlocking {
+        suspend fun runPath(cancelSend: Boolean) {
+            val kit = FakeP2pKit(P2pPeerId("peer-pid"))
+            val hostPeer = peer("host-pid", "Host Device")
+            val firstSession = FakeP2pSession(hostPeer)
+            val replacementSession = FakeP2pSession(hostPeer).apply {
+                sendHandler = {
+                    if (cancelSend) {
+                        throw CancellationException("cancel resume-ready handoff")
+                    } else {
+                        error("fail resume-ready handoff")
+                    }
+                }
+            }
+            val initialCredential = resumableCredential(generation = 1L)
+            val rotatedCredential = resumableCredential(generation = 2L)
+            val blockRetry = CompletableDeferred<Unit>()
+            var attempts = 0
+            val room = PeerP2pRoom(
+                kit = kit,
+                session = firstSession,
+                hostPeer = hostPeer,
+                roomCode = initialCredential.roomCode,
+                scope = testScope,
+                codec = codec,
+                initialCredential = initialCredential,
+                resumeConnector = {
+                    attempts += 1
+                    if (attempts == 1) {
+                        Result.Success(
+                            ResumedPeerConnection(
+                                replacementSession,
+                                hostPeer,
+                                rotatedCredential,
+                            ),
+                        )
+                    } else {
+                        blockRetry.await()
+                        Result.Failure(ResumeConnectionFailure(NetError.Timeout))
+                    }
+                },
+            )
+
+            firstSession.stateFlow.value = ConnectionState.Closed
+
+            awaitCondition { replacementSession.closeCalls == 1 }
+            assertThat(replacementSession.state.value).isEqualTo(ConnectionState.Closed)
+            room.leave()
+            assertThat(kit.stopCalls).isEqualTo(1)
+        }
+
+        runPath(cancelSend = false)
+        runPath(cancelSend = true)
+    }
+
+    @Test
+    fun credential_store_failure_is_diagnostic_and_never_exports_credential_material() =
+        runBlocking {
+            val kit = FakeP2pKit(P2pPeerId("peer-pid"))
+            val hostPeer = peer("host-pid", "Host Device")
+            val session = FakeP2pSession(hostPeer)
+            val credential = resumableCredential(generation = 1L)
+            val failingStorage = FailingRemoveSecureStorage(testSecureStorage())
+            val store = ResumableCredentialStore(failingStorage)
+            store.stage(credential)
+            store.commit(credential.offerId, credential.generation)
+            failingStorage.failRemove = true
+            val diagnostics = BoundedP2pDiagnostics(
+                scope = testScope,
+                writer = P2pDiagnosticWriter { _ -> },
+                outputIntervalMillis = 0L,
+            )
+            val room = PeerP2pRoom(
+                kit = kit,
+                session = session,
+                hostPeer = hostPeer,
+                roomCode = credential.roomCode,
+                scope = testScope,
+                codec = codec,
+                diagnostics = diagnostics,
+                initialCredential = credential,
+                credentialStore = store,
+            )
+
+            session.incomingFlow.emit(P2pMessage.Binary(codec.encode(HostMessage.EndSession)))
+            assertThat(withTimeout(2_000L) { room.incoming.first() })
+                .isEqualTo(HostMessage.EndSession)
+
+            assertThat(
+                diagnostics.snapshot().any {
+                    it.event.name == P2pDiagnosticEventName.CREDENTIAL_INVALIDATION_FAILED &&
+                        it.event.role == P2pDiagnosticRole.PEER &&
+                        it.event.result == P2pDiagnosticResult.FAILURE &&
+                        it.event.reason == P2pDiagnosticReason.INTERNAL
+                },
+            ).isTrue()
+            assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(credential))
+            val exported = diagnostics.export()
+            listOf(
+                credential.secret,
+                credential.offerId,
+                credential.roomCode,
+                credential.playerId,
+                credential.hostPeerId,
+                credential.hostFingerprint,
+            ).forEach { sensitive ->
+                assertThat(exported.contains(sensitive)).isFalse()
+            }
+
+            room.leave()
+        }
+
+    @Test
+    fun explicit_final_leave_reports_secure_delete_failure_and_can_retry_after_close() =
+        runBlocking {
+            val kit = FakeP2pKit(P2pPeerId("peer-pid"))
+            val hostPeer = peer("host-pid", "Host Device")
+            val session = FakeP2pSession(hostPeer)
+            val credential = resumableCredential(generation = 1L)
+            val failingStorage = FailingRemoveSecureStorage(testSecureStorage())
+            val store = ResumableCredentialStore(failingStorage)
+            store.stage(credential)
+            store.commit(credential.offerId, credential.generation)
+            failingStorage.failRemove = true
+            val room = PeerP2pRoom(
+                kit = kit,
+                session = session,
+                hostPeer = hostPeer,
+                roomCode = credential.roomCode,
+                scope = testScope,
+                codec = codec,
+                initialCredential = credential,
+                credentialStore = store,
+            )
+
+            assertThat(room.finalLeave())
+                .isEqualTo(Result.Failure(NetError.SecureStorageUnavailable))
+            assertThat(session.state.value).isEqualTo(ConnectionState.Closed)
+            assertThat(kit.stopCalls).isEqualTo(1)
+            assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(credential))
+
+            failingStorage.failRemove = false
+
+            assertThat(room.finalLeave()).isEqualTo(Result.Success(Unit))
+            assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(null))
+            assertThat(kit.stopCalls).isEqualTo(1)
+        }
+
+    @Test
+    fun cancellation_from_credential_invalidation_propagates_after_room_cleanup() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("peer-pid"))
+        val hostPeer = peer("host-pid", "Host Device")
+        val session = FakeP2pSession(hostPeer)
+        val credential = resumableCredential(generation = 1L)
+        val cancellingStorage = FailingRemoveSecureStorage(testSecureStorage())
+        val store = ResumableCredentialStore(cancellingStorage)
+        store.stage(credential)
+        store.commit(credential.offerId, credential.generation)
+        cancellingStorage.cancelRemove = true
+        val room = PeerP2pRoom(
+            kit = kit,
+            session = session,
+            hostPeer = hostPeer,
+            roomCode = credential.roomCode,
+            scope = testScope,
+            codec = codec,
+            initialCredential = credential,
+            credentialStore = store,
+        )
+
+        assertFailsWith<CancellationException> { room.leave() }
+
+        assertThat(session.state.value).isEqualTo(ConnectionState.Closed)
+        assertThat(kit.stopCalls).isEqualTo(1)
+        assertThat(room.lifecycle.value).isEqualTo(RoomLifecycleState.Closed)
     }
 
     @Test
@@ -1305,6 +2118,33 @@ class P2pKitRoomTransportLifecycleTest {
         // Kit must be cleaned up on timeout — otherwise an abandoned
         // join leaks a discovering instance.
         assertThat(kit.stopCalls).isEqualTo(1)
+    }
+
+    @Test
+    fun invalid_room_code_or_display_name_is_rejected_before_kit_initialization() = runBlocking {
+        var createCalls = 0
+        val transport = P2pKitRoomTransport(
+            appId = AppId("com.parlor.test"),
+            deviceName = "self-device",
+            scope = testScope,
+            kitFactory = object : P2pKitFactory {
+                override suspend fun createKit(appId: AppId, deviceName: String): P2pKit {
+                    createCalls += 1
+                    return FakeP2pKit(P2pPeerId("unused"))
+                }
+            },
+        )
+
+        listOf(
+            transport.join("ABCDE", "Alice"),
+            transport.join("ABC0DE", "Alice"),
+            transport.join("ABCDEF", "Alice\u202EAdmin"),
+            transport.host(HostConfig(roomDisplayName = "Host\nAdmin")),
+        ).forEach { result ->
+            assertThat(result).isEqualTo(Result.Failure(NetError.InvalidInput))
+        }
+        assertThat(createCalls).isEqualTo(0)
+        assertThat(transport.localNetworkAccess.value).isEqualTo(LocalNetworkAccess.Unknown)
     }
 
     @Test
@@ -1600,6 +2440,277 @@ class P2pKitRoomTransportLifecycleTest {
             assertThat(relaunchedTransport.resumableSession())
                 .isEqualTo(Result.Success(null))
         }
+
+    @Test
+    fun expired_process_credential_is_conditionally_invalidated_before_resume_is_offered() =
+        runBlocking {
+            val secureStorage = testSecureStorage()
+            val expired = resumableCredential(generation = 1L)
+            val store = ResumableCredentialStore(secureStorage)
+            store.stage(expired)
+            store.commit(expired.offerId, expired.generation)
+            val kit = FakeP2pKit(P2pPeerId("peer-pid"))
+            val transport = P2pKitRoomTransport(
+                appId = AppId("com.parlor.test"),
+                deviceName = "self-device",
+                scope = testScope,
+                kitFactory = object : P2pKitFactory {
+                    override suspend fun createKit(appId: AppId, deviceName: String): P2pKit = kit
+                },
+                secureStorage = secureStorage,
+            )
+
+            assertThat(transport.resumableSession()).isEqualTo(Result.Success(null))
+            assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(null))
+            store.stage(expired)
+            store.commit(expired.offerId, expired.generation)
+            assertThat(transport.resumeLastSession())
+                .isEqualTo(Result.Failure(NetError.RejoinExpired))
+            assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(null))
+            assertThat(kit.stopCalls).isEqualTo(0)
+        }
+
+    @Test
+    fun expired_process_credential_invalidation_failure_is_explicit_and_redacted() = runBlocking {
+        val failingStorage = FailingRemoveSecureStorage(testSecureStorage())
+        val expired = resumableCredential(generation = 1L)
+        val store = ResumableCredentialStore(failingStorage)
+        store.stage(expired)
+        store.commit(expired.offerId, expired.generation)
+        failingStorage.failRemove = true
+        val diagnostics = RecordingP2pDiagnostics()
+        val transport = P2pKitRoomTransport(
+            appId = AppId("com.parlor.test"),
+            deviceName = "self-device",
+            scope = testScope,
+            kitFactory = object : P2pKitFactory {
+                override suspend fun createKit(appId: AppId, deviceName: String): P2pKit =
+                    FakeP2pKit(P2pPeerId("peer-pid"))
+            },
+            diagnostics = diagnostics,
+            secureStorage = failingStorage,
+        )
+
+        assertThat(transport.resumableSession())
+            .isEqualTo(Result.Failure(NetError.SecureStorageUnavailable))
+        assertThat(
+            diagnostics.events.any {
+                it.name == P2pDiagnosticEventName.CREDENTIAL_INVALIDATION_FAILED &&
+                    it.role == P2pDiagnosticRole.PEER &&
+                    it.result == P2pDiagnosticResult.FAILURE &&
+                    it.reason == P2pDiagnosticReason.INTERNAL
+            },
+        ).isTrue()
+        listOf(
+            expired.secret,
+            expired.offerId,
+            expired.roomCode,
+            expired.playerId,
+            expired.hostPeerId,
+            expired.hostFingerprint,
+        ).forEach { sensitive ->
+            assertThat(diagnostics.export().contains(sensitive)).isFalse()
+        }
+    }
+
+    @Test
+    fun authenticated_permanent_resume_rejection_invalidates_matching_credential() = runBlocking {
+        val secureStorage = testSecureStorage()
+        val now = kotlin.time.Clock.System.now().toEpochMilliseconds()
+        val credential = resumableCredential(generation = 1L).copy(
+            issuedAtEpochMillis = now - 1_000L,
+            expiresAtEpochMillis = now + 60_000L,
+        )
+        val store = ResumableCredentialStore(secureStorage)
+        store.stage(credential)
+        store.commit(credential.offerId, credential.generation)
+        val hostPeer = peer(
+            credential.hostPeerId,
+            "${P2pKitRoomTransport.P2P_ROOM_PREFIX}Pinned Host",
+        )
+        val session = FakeP2pSession(hostPeer).apply {
+            sendHandler = { message ->
+                val decoded = (message as? P2pMessage.Binary)?.let { codec.decode(it.bytes) }
+                if (decoded is PeerMessage.ResumeRequested) {
+                    incomingFlow.emit(
+                        P2pMessage.Binary(
+                            codec.encode(
+                                HostMessage.AdmissionRejected(
+                                    AdmissionRejection.ExpiredCredential,
+                                ),
+                            ),
+                        ),
+                    )
+                }
+            }
+        }
+        val kit = FakeP2pKit(P2pPeerId(credential.playerId)).apply {
+            peersFlow.value = listOf(hostPeer)
+            connectHandler = { session }
+        }
+        val transport = P2pKitRoomTransport(
+            appId = AppId("com.parlor.test"),
+            deviceName = "self-device",
+            scope = testScope,
+            kitFactory = object : P2pKitFactory {
+                override suspend fun createKit(appId: AppId, deviceName: String): P2pKit = kit
+            },
+            secureStorage = secureStorage,
+        )
+
+        assertThat(transport.resumeLastSession())
+            .isEqualTo(Result.Failure(NetError.RejoinExpired))
+        assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(null))
+        assertThat(kit.stopCalls).isEqualTo(1)
+    }
+
+    @Test
+    fun stale_permanent_rejection_cannot_erase_a_concurrently_rotated_generation() = runBlocking {
+        val secureStorage = testSecureStorage()
+        val now = kotlin.time.Clock.System.now().toEpochMilliseconds()
+        val generationOne = resumableCredential(generation = 1L).copy(
+            issuedAtEpochMillis = now - 2_000L,
+            expiresAtEpochMillis = now + 60_000L,
+        )
+        val generationTwo = resumableCredential(generation = 2L).copy(
+            issuedAtEpochMillis = now - 1_000L,
+            expiresAtEpochMillis = now + 120_000L,
+        )
+        val store = ResumableCredentialStore(secureStorage)
+        store.stage(generationOne)
+        store.commit(generationOne.offerId, generationOne.generation)
+        val hostPeer = peer(
+            generationOne.hostPeerId,
+            "${P2pKitRoomTransport.P2P_ROOM_PREFIX}Pinned Host",
+        )
+        val session = FakeP2pSession(hostPeer).apply {
+            sendHandler = { message ->
+                val decoded = (message as? P2pMessage.Binary)?.let { codec.decode(it.bytes) }
+                if (decoded is PeerMessage.ResumeRequested) {
+                    store.stage(generationTwo)
+                    store.commit(generationTwo.offerId, generationTwo.generation)
+                    incomingFlow.emit(
+                        P2pMessage.Binary(
+                            codec.encode(
+                                HostMessage.AdmissionRejected(
+                                    AdmissionRejection.InvalidCredential,
+                                ),
+                            ),
+                        ),
+                    )
+                }
+            }
+        }
+        val kit = FakeP2pKit(P2pPeerId(generationOne.playerId)).apply {
+            peersFlow.value = listOf(hostPeer)
+            connectHandler = { session }
+        }
+        val transport = P2pKitRoomTransport(
+            appId = AppId("com.parlor.test"),
+            deviceName = "self-device",
+            scope = testScope,
+            kitFactory = object : P2pKitFactory {
+                override suspend fun createKit(appId: AppId, deviceName: String): P2pKit = kit
+            },
+            secureStorage = secureStorage,
+        )
+
+        assertThat(transport.resumeLastSession())
+            .isEqualTo(Result.Failure(NetError.Unauthorized))
+        assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(generationTwo))
+        assertThat(kit.stopCalls).isEqualTo(1)
+    }
+
+    @Test
+    fun transient_process_resume_failure_retains_exact_credential() = runBlocking {
+        val secureStorage = testSecureStorage()
+        val now = kotlin.time.Clock.System.now().toEpochMilliseconds()
+        val credential = resumableCredential(generation = 1L).copy(
+            issuedAtEpochMillis = now - 1_000L,
+            expiresAtEpochMillis = now + 60_000L,
+        )
+        val store = ResumableCredentialStore(secureStorage)
+        store.stage(credential)
+        store.commit(credential.offerId, credential.generation)
+        val kit = FakeP2pKit(P2pPeerId(credential.playerId)).apply {
+            startDiscoveryHandler = { error("transient discovery failure") }
+        }
+        val transport = P2pKitRoomTransport(
+            appId = AppId("com.parlor.test"),
+            deviceName = "self-device",
+            scope = testScope,
+            kitFactory = object : P2pKitFactory {
+                override suspend fun createKit(appId: AppId, deviceName: String): P2pKit = kit
+            },
+            secureStorage = secureStorage,
+        )
+
+        assertThat(transport.resumeLastSession()).isEqualTo(
+            Result.Failure(NetError.TransportFailure("transient discovery failure")),
+        )
+        assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(credential))
+        assertThat(kit.stopCalls).isEqualTo(1)
+    }
+
+    @Test
+    fun permanent_rejection_invalidation_failure_surfaces_secure_storage_error() = runBlocking {
+        val failingStorage = FailingRemoveSecureStorage(testSecureStorage())
+        val now = kotlin.time.Clock.System.now().toEpochMilliseconds()
+        val credential = resumableCredential(generation = 1L).copy(
+            issuedAtEpochMillis = now - 1_000L,
+            expiresAtEpochMillis = now + 60_000L,
+        )
+        val store = ResumableCredentialStore(failingStorage)
+        store.stage(credential)
+        store.commit(credential.offerId, credential.generation)
+        failingStorage.failRemove = true
+        val hostPeer = peer(
+            credential.hostPeerId,
+            "${P2pKitRoomTransport.P2P_ROOM_PREFIX}Pinned Host",
+        )
+        val session = FakeP2pSession(hostPeer).apply {
+            sendHandler = { message ->
+                val decoded = (message as? P2pMessage.Binary)?.let { codec.decode(it.bytes) }
+                if (decoded is PeerMessage.ResumeRequested) {
+                    incomingFlow.emit(
+                        P2pMessage.Binary(
+                            codec.encode(
+                                HostMessage.AdmissionRejected(
+                                    AdmissionRejection.InvalidCredential,
+                                ),
+                            ),
+                        ),
+                    )
+                }
+            }
+        }
+        val kit = FakeP2pKit(P2pPeerId(credential.playerId)).apply {
+            peersFlow.value = listOf(hostPeer)
+            connectHandler = { session }
+        }
+        val diagnostics = RecordingP2pDiagnostics()
+        val transport = P2pKitRoomTransport(
+            appId = AppId("com.parlor.test"),
+            deviceName = "self-device",
+            scope = testScope,
+            kitFactory = object : P2pKitFactory {
+                override suspend fun createKit(appId: AppId, deviceName: String): P2pKit = kit
+            },
+            diagnostics = diagnostics,
+            secureStorage = failingStorage,
+        )
+
+        assertThat(transport.resumeLastSession())
+            .isEqualTo(Result.Failure(NetError.SecureStorageUnavailable))
+        assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(credential))
+        assertThat(
+            diagnostics.events.any {
+                it.name == P2pDiagnosticEventName.CREDENTIAL_INVALIDATION_FAILED &&
+                    it.result == P2pDiagnosticResult.FAILURE
+            },
+        ).isTrue()
+        assertThat(kit.stopCalls).isEqualTo(1)
+    }
 
     @Test
     fun join_surfaces_wrong_code_and_cleans_up_when_visible_hosts_reject_it() = runBlocking {
@@ -2420,6 +3531,101 @@ class P2pKitRoomTransportLifecycleTest {
     }
 
     @Test
+    fun fatal_kit_factory_and_startup_failures_are_not_mapped_to_transport_results() = runBlocking {
+        val fatalFactory = object : P2pKitFactory {
+            override suspend fun createKit(appId: AppId, deviceName: String): P2pKit {
+                throw AssertionError("fatal kit factory")
+            }
+        }
+        val factoryTransport = P2pKitRoomTransport(
+            appId = AppId("com.parlor.test"),
+            deviceName = "self-device",
+            scope = testScope,
+            kitFactory = fatalFactory,
+        )
+        assertFailsWith<AssertionError> {
+            factoryTransport.host(com.parlor.networking.transport.HostConfig("Room"))
+        }
+        assertFailsWith<AssertionError> { factoryTransport.join("ABCDEF", "Alice") }
+
+        suspend fun assertStartupFatalIsCleanedUp(host: Boolean, failDiscovery: Boolean) {
+            val kit = FakeP2pKit(P2pPeerId(if (host) "host-pid" else "peer-pid")).apply {
+                if (failDiscovery) {
+                    startDiscoveryHandler = { throw AssertionError("fatal discovery startup") }
+                } else {
+                    startHandler = { throw AssertionError("fatal kit start") }
+                }
+            }
+            val transport = P2pKitRoomTransport(
+                appId = AppId("com.parlor.test"),
+                deviceName = "self-device",
+                scope = testScope,
+                kitFactory = object : P2pKitFactory {
+                    override suspend fun createKit(appId: AppId, deviceName: String): P2pKit = kit
+                },
+            )
+
+            assertFailsWith<AssertionError> {
+                if (host) {
+                    transport.host(com.parlor.networking.transport.HostConfig("Room"))
+                } else {
+                    transport.join("ABCDEF", "Alice")
+                }
+            }
+            assertThat(kit.stopCalls).isEqualTo(1)
+        }
+
+        assertStartupFatalIsCleanedUp(host = true, failDiscovery = false)
+        assertStartupFatalIsCleanedUp(host = false, failDiscovery = false)
+        assertStartupFatalIsCleanedUp(host = false, failDiscovery = true)
+    }
+
+    @Test
+    fun caller_timeout_cancellation_is_not_confused_with_the_join_deadline() = runTest {
+        val kit = FakeP2pKit(P2pPeerId("peer-pid"))
+        val transport = P2pKitRoomTransport(
+            appId = AppId("com.parlor.test"),
+            deviceName = "self-device",
+            scope = backgroundScope,
+            kitFactory = object : P2pKitFactory {
+                override suspend fun createKit(appId: AppId, deviceName: String): P2pKit = kit
+            },
+            joinTimeoutMs = 30_000L,
+        )
+
+        assertFailsWith<TimeoutCancellationException> {
+            withTimeout(1L) { transport.join("ABCDEF", "Alice") }
+        }
+        assertThat(kit.stopCalls).isEqualTo(1)
+    }
+
+    @Test
+    fun fatal_send_and_cleanup_failures_are_never_converted_to_normal_results() = runBlocking {
+        val hostKit = FakeP2pKit(P2pPeerId("host-pid"))
+        val hostRoom = newHostRoom(hostKit)
+        val alice = FakeP2pSession(peer("alice-pid", "Alice"))
+        admit(hostRoom, hostKit, alice)
+        alice.sendHandler = { throw AssertionError("fatal host send") }
+        assertFailsWith<AssertionError> {
+            hostRoom.send(SendTarget.Direct(PlayerId("alice-pid")), HostMessage.EndSession)
+        }
+        alice.sendHandler = null
+        hostKit.stopHandler = { throw AssertionError("fatal host cleanup") }
+        assertFailsWith<AssertionError> { hostRoom.leave() }
+
+        val peerKit = FakeP2pKit(P2pPeerId("peer-pid"))
+        val hostPeer = peer("host-pid", "Host Device")
+        val peerSession = FakeP2pSession(hostPeer).apply {
+            sendHandler = { throw AssertionError("fatal peer send") }
+        }
+        val peerRoom = PeerP2pRoom(peerKit, peerSession, hostPeer, "ABCDEF", testScope, codec)
+        assertFailsWith<AssertionError> { peerRoom.sendToHost(PeerMessage.LeaveNotice) }
+        peerSession.sendHandler = null
+        peerKit.stopHandler = { throw AssertionError("fatal peer cleanup") }
+        assertFailsWith<AssertionError> { peerRoom.leave() }
+    }
+
+    @Test
     fun cancellation_during_process_resume_stops_the_fresh_kit_and_propagates() = runBlocking {
         val secureStorage = testSecureStorage()
         val credential = resumableCredential(generation = 1L).copy(
@@ -2556,12 +3762,20 @@ class P2pKitRoomTransportLifecycleTest {
     private fun testSecureStorage() =
         PlatformKeyedSecureStorage(InMemorySecureKeyValueBacking())
 
-    private fun resumableCredential(generation: Long) = ResumableSessionCredential(
-        offerId = "resume-offer-$generation",
-        roomCode = "ABCDEF",
+    private fun resumableCredential(
+        generation: Long,
+        offerId: String = "resume-offer-$generation",
+        roomCode: String = "ABCDEF",
+        playerId: String = "peer-pid",
+        hostPeerId: String = "host-pid",
+        membershipId: String = "membership-$roomCode-$playerId-$hostPeerId",
+    ) = ResumableSessionCredential(
+        offerId = offerId,
+        membershipId = membershipId,
+        roomCode = roomCode,
         displayName = "fake-device",
-        playerId = "peer-pid",
-        hostPeerId = "host-pid",
+        playerId = playerId,
+        hostPeerId = hostPeerId,
         hostFingerprint = TEST_PEER_FINGERPRINT.value,
         secret = if (generation == 1L) "a".repeat(64) else "b".repeat(64),
         generation = generation,
@@ -2570,6 +3784,30 @@ class P2pKitRoomTransportLifecycleTest {
         gameId = "whodunit",
         gameVersion = 1,
     )
+
+    private class FailingRemoveSecureStorage(
+        private val delegate: SecureStorage,
+    ) : SecureStorage {
+        var failRemove: Boolean = false
+        var cancelRemove: Boolean = false
+        var fatalRemove: Boolean = false
+
+        override suspend fun put(key: String, value: ByteArray): EmptyResult<DataError> =
+            delegate.put(key, value)
+
+        override suspend fun get(key: String): Result<ByteArray?, DataError> = delegate.get(key)
+
+        override suspend fun remove(key: String): EmptyResult<DataError> =
+            if (fatalRemove) {
+                throw AssertionError("fatal credential invalidation")
+            } else if (cancelRemove) {
+                throw CancellationException("cancel credential invalidation")
+            } else if (failRemove) {
+                Result.Failure(DataError.IoError("injected-sensitive-storage-failure"))
+            } else {
+                delegate.remove(key)
+            }
+    }
 
     private fun testCredentialOffer(
         playerId: PlayerId,
@@ -2668,6 +3906,8 @@ internal class FakeP2pKit(
     var connectHandler: (suspend (Peer) -> P2pSession)? = null
     var lastExpectedFingerprint: PeerFingerprint? = null
     var startHandler: (suspend () -> Unit)? = null
+    var startDiscoveryHandler: (suspend () -> Unit)? = null
+    var stopHandler: (suspend () -> Unit)? = null
 
     override val appId: AppId = AppId("com.parlor.test")
     override val localDeviceName: String = "fake-device"
@@ -2700,7 +3940,10 @@ internal class FakeP2pKit(
         callLog += "stopAdvertising"
         stopAdvertisingCalls += 1
     }
-    override suspend fun startDiscovery() { callLog += "startDiscovery" }
+    override suspend fun startDiscovery() {
+        callLog += "startDiscovery"
+        startDiscoveryHandler?.invoke()
+    }
     override suspend fun stopDiscovery() { callLog += "stopDiscovery" }
     override suspend fun connect(peer: Peer): P2pSession =
         connectHandler?.invoke(peer)
@@ -2723,6 +3966,7 @@ internal class FakeP2pKit(
         // Faithful to the real kit: stop() is terminal and a second call throws
         // IllegalStateException (States.kt). The transport must guard against it.
         check(stopCalls == 0) { "kit already stopped" }
+        stopHandler?.invoke()
         callLog += "stop"
         stopCalls += 1
     }
@@ -2741,6 +3985,7 @@ internal class FakeP2pSession(
     private val incomingFilesFlow: MutableSharedFlow<P2pFileOffer> = MutableSharedFlow()
     val sent: MutableList<P2pMessage> = mutableListOf()
     var sendHandler: (suspend (P2pMessage) -> Unit)? = null
+    var closeHandler: (suspend () -> Unit)? = null
     var autoAdmissionReady: Boolean = true
     var autoResumeReady: Boolean = true
     var closeCalls: Int = 0
@@ -2838,6 +4083,7 @@ internal class FakeP2pSession(
 
     override suspend fun close() {
         closeCalls += 1
+        closeHandler?.invoke()
         stateFlow.value = ConnectionState.Closed
     }
 }

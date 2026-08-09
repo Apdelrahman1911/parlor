@@ -127,6 +127,35 @@ class SimultaneousCharacterRevealTest {
     }
 
     @Test
+    fun both_reveal_completion_actions_close_all_private_exposure_flags() = runTest {
+        val payload = loadCase()
+        val (session, _) = buildSession(payload, WhodunitIds.ClassicVoteModeId, players, seed = 22L)
+        session.submit(WhodunitAction.AssignRoles(seed = 22L))
+        session.ackIntroForAll(players)
+        session.submit(WhodunitAction.AdvanceFromIntro)
+        session.ackBriefingForAll(players)
+        for (i in 1..4) session.submit(WhodunitAction.AdvanceBriefingCard(i))
+
+        val completed = players[0].id
+        session.submit(WhodunitAction.StartCharacterReveal(completed))
+        session.submit(WhodunitAction.OpenPrivateReview(completed))
+        session.submit(WhodunitAction.CompleteCharacterReveal(completed))
+
+        val confirmed = players[1].id
+        session.submit(WhodunitAction.StartCharacterReveal(confirmed))
+        session.submit(WhodunitAction.OpenPrivateReview(confirmed))
+        session.submit(WhodunitAction.ConfirmRoleViewed(confirmed))
+
+        val state = hostStateOf(session)
+        assertThat(state.public.rolesViewed).isEqualTo(setOf(completed, confirmed))
+        for (playerId in listOf(completed, confirmed)) {
+            val privateState = state.privatePerPlayer.getValue(playerId)
+            assertThat(privateState.dossierUnlocked).isEqualTo(false)
+            assertThat(privateState.privateReviewOpen).isEqualTo(false)
+        }
+    }
+
+    @Test
     fun disconnect_during_character_reveal_pauses_and_expiry_ends_the_case() = runTest {
         val payload = loadCase()
         val (session, _) = buildSession(payload, WhodunitIds.ClassicVoteModeId, players, seed = 3L)
@@ -212,4 +241,8 @@ class SimultaneousCharacterRevealTest {
 
     private fun stateOf(session: PassAndPlaySessionController<WhodunitState, WhodunitAction, WhodunitEvent>) =
         session.publicState.value.state
+
+    private fun hostStateOf(
+        session: PassAndPlaySessionController<WhodunitState, WhodunitAction, WhodunitEvent>,
+    ) = requireNotNull(session.hostState).value.state
 }

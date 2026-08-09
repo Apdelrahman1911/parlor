@@ -15,7 +15,6 @@ import com.parlor.games.mafia.domain.action.MafiaAction
 import com.parlor.games.mafia.domain.event.MafiaEvent
 import com.parlor.games.mafia.domain.phase.MafiaPhase
 import com.parlor.games.mafia.domain.state.MafiaState
-import com.parlor.games.mafia.domain.state.PublicPlayerSlot
 import com.parlor.games.mafia.domain.state.Role
 import com.parlor.games.mafia.resources.Res
 import com.parlor.games.mafia.resources.night_detective_reveal_eyebrow
@@ -754,9 +753,3 @@ private fun finalRoles(state: MafiaState): List<Pair<String, Role>> =
         val priv = state.privatePerPlayer[p.id] ?: return@mapNotNull null
         p.displayName to priv.role
     }
-
-// Borrow the unused PublicPlayerSlot import marker — referenced only to keep
-// the explicit dependency visible to readers; the model type is used widely
-// by the segments above through state.public.roster.
-@Suppress("unused")
-private fun touchSlot(slot: PublicPlayerSlot) = slot

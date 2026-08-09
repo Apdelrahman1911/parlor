@@ -15,6 +15,7 @@ import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.whodunit.content.Character
 import com.parlor.games.whodunit.domain.state.PlayerRole
+import com.parlor.core.ids.CharacterId
 import com.parlor.games.whodunit.resources.Res
 import com.parlor.games.whodunit.resources.reveal_gate_headline_format
 import com.parlor.games.whodunit.resources.reveal_gate_hold_hint
@@ -141,6 +142,7 @@ fun DossierRevealScreen(
     onDone: () -> Unit,
     modifier: Modifier = Modifier,
     allCharacters: List<Character> = emptyList(),
+    deflectionTargets: List<CharacterId> = emptyList(),
 ) {
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
         DossierCard(
@@ -151,6 +153,7 @@ fun DossierRevealScreen(
                 .fillMaxSize()
                 .padding(ParlorTheme.spacing.m),
             allCharacters = allCharacters,
+            deflectionTargets = deflectionTargets,
         )
     }
 }

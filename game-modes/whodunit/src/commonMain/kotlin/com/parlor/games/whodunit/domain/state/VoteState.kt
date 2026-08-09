@@ -45,7 +45,14 @@ sealed interface VoteState {
     @Serializable
     data class Tied(
         val tiedPlayerIds: List<PlayerId>,
-        val debateSecondsRemaining: Int,
+        /**
+         * Wire/snapshot compatibility with the former countdown UI.
+         *
+         * Revotes are now explicitly host-paced and untimed. New state always
+         * writes zero; the snapshot codec normalizes legacy 0..60 values to
+         * zero before structural validation.
+         */
+        val debateSecondsRemaining: Int = 0,
     ) : VoteState
 
     @Serializable

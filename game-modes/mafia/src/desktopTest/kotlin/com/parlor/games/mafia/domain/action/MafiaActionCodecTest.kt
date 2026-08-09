@@ -9,6 +9,7 @@ import com.parlor.games.mafia.domain.settings.MafiaRoleCounts
 import com.parlor.games.mafia.domain.settings.MafiaSettings
 import com.parlor.games.mafia.domain.settings.TieBehavior
 import kotlin.test.Test
+import kotlin.test.assertFailsWith
 
 /**
  * Peer→host action submission rides `PeerMessage.ActionSubmit(payload: ByteArray)`.
@@ -20,6 +21,19 @@ class MafiaActionCodecTest {
 
     private val p1 = PlayerId("p1")
     private val p2 = PlayerId("p2")
+
+    @Test
+    fun oversizedActionIsRejectedOnEncodeAndDecode() {
+        val oversized = MafiaAction.CastVote(
+            by = PlayerId("x".repeat(33 * 1024)),
+            target = p2,
+        )
+
+        assertFailsWith<IllegalArgumentException> { MafiaActionCodec.encode(oversized) }
+        assertFailsWith<IllegalArgumentException> {
+            MafiaActionCodec.decode(ByteArray(32 * 1024 + 1))
+        }
+    }
 
     @Test
     fun singleton_data_object_round_trips() {

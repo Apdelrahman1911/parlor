@@ -37,6 +37,7 @@ import com.parlor.designsystem.components.ParlorTextField
 import com.parlor.designsystem.components.ScreenHeader
 import com.parlor.designsystem.components.StickyActionBar
 import com.parlor.designsystem.theme.ParlorTheme
+import com.parlor.networking.room.RoomInputPolicy
 import org.jetbrains.compose.resources.stringResource
 
 /**
@@ -58,7 +59,7 @@ fun NameInputScreen(
     modifier: Modifier = Modifier,
 ) {
     var name by remember { mutableStateOf(initial) }
-    val sanitized = name.trim().ifBlank { "Player" }
+    val sanitized = RoomInputPolicy.normalizeDisplayName(name).ifBlank { "Player" }
 
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
         Box(modifier = Modifier.fillMaxSize().imePadding()) {
@@ -86,7 +87,9 @@ fun NameInputScreen(
 
                 ParlorTextField(
                     value = name,
-                    onValueChange = { input -> name = input.take(32) },
+                    onValueChange = { input ->
+                        name = RoomInputPolicy.sanitizeDisplayNameInput(input)
+                    },
                     label = stringResource(Res.string.name_field),
                 )
             }
@@ -102,6 +105,7 @@ fun NameInputScreen(
                     },
                     onClick = { onConfirm(sanitized) },
                     modifier = Modifier.fillMaxWidth(),
+                    enabled = RoomInputPolicy.isValidDisplayName(sanitized),
                 )
             }
         }

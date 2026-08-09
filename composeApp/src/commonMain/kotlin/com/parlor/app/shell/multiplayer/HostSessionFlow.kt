@@ -60,7 +60,6 @@ import com.parlor.content.validation.PayloadValidator
 import com.parlor.content.validation.ValidatedCase
 import com.parlor.core.ids.CaseId
 import com.parlor.core.ids.ModeId
-import com.parlor.core.random.RandomSource
 import com.parlor.core.result.DataError
 import com.parlor.core.result.Result
 import com.parlor.designsystem.backdrop.HeroBackdrop
@@ -73,12 +72,14 @@ import com.parlor.designsystem.components.StickyActionBar
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.engine.state.Player
 import com.parlor.games.whodunit.content.WhodunitCase
+import com.parlor.games.whodunit.domain.rules.WhodunitRules
 import com.parlor.games.whodunit.WhodunitIds
 import com.parlor.games.whodunit.ui.flow.WhodunitMultiplayerHostFlow
 import com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostRoomBridge
 import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.NetError
 import com.parlor.networking.room.RoomMember
+import com.parlor.networking.security.SecureIds
 import com.parlor.networking.transport.HostConfig
 import com.parlor.networking.transport.HostedGameProtocol
 import com.parlor.networking.transport.RoomTransport
@@ -116,8 +117,15 @@ fun HostSessionFlow(
     var hostError by remember { mutableStateOf<NetError?>(null) }
     var hostAttempt by remember { mutableStateOf(0) }
     var frozenRoster by remember { mutableStateOf<List<RoomMember>?>(null) }
+    // Ownership transfers atomically when admissions close. The child game
+    // then guarantees SessionEnded-before-leave; this parent must not race it
+    // with an eager room close during composition teardown.
+    var gameOwnedRoom by remember { mutableStateOf<LocalRoom?>(null) }
     var startBlocked by remember { mutableStateOf(false) }
-    val seed = remember(caseId) { RandomSource.system().nextLong() }
+    // Hidden-role outcomes must not be seeded from peer-observable room data
+    // or a general-purpose PRNG. The value stays in authoritative host state;
+    // SessionStarting carries a separate public nonce.
+    val seed = remember(caseId) { SecureIds.randomLong() }
 
     val caseResult by produceState<Result<ValidatedCase<WhodunitCase>, DataError>?>(
         initialValue = null,
@@ -126,13 +134,24 @@ fun HostSessionFlow(
         value = repository.loadCase(CaseId(caseId), payloadValidator)
     }
 
-    LaunchedEffect(transport, hostAttempt) {
+    val case = (caseResult as? Result.Success)?.data
+    val caseError = (caseResult as? Result.Failure)?.error
+    val supportedPlayerCounts = case?.let {
+        WhodunitRules.supportedPlayerCountsForCase(
+            modeId = modeId,
+            casePlayerCounts = it.envelope.supportedPlayerCounts.toIntRange(),
+            availableCharacters = it.payload.characters.size,
+        )
+    }
+
+    LaunchedEffect(transport, hostAttempt, supportedPlayerCounts) {
+        val capacity = supportedPlayerCounts ?: return@LaunchedEffect
         hostError = null
         when (
             val result = transport.host(
                 HostConfig(
                     roomDisplayName = hostName,
-                    maxRemotePlayers = 5,
+                    maxRemotePlayers = capacity.last - 1,
                     gameProtocol = HostedGameProtocol(
                         gameId = WhodunitIds.GameId,
                         gameVersion = WhodunitHostRoomBridge.GAME_VERSION,
@@ -142,6 +161,7 @@ fun HostSessionFlow(
         ) {
             is Result.Success -> {
                 room = result.data
+                gameOwnedRoom = null
                 frozenRoster = null
                 startBlocked = false
             }
@@ -156,18 +176,17 @@ fun HostSessionFlow(
                 awaitCancellation()
             } finally {
                 withContext(NonCancellable) {
-                    current.leave()
+                    if (gameOwnedRoom !== current) current.leave()
                 }
             }
         }
     }
 
-    val case = (caseResult as? Result.Success)?.data
-    val caseError = (caseResult as? Result.Failure)?.error
     val localNetworkAccess by transport.localNetworkAccess.collectAsState()
+    val renderedHostError = hostError
     when {
-        hostError != null -> HostErrorState(
-            error = netErrorMessage(hostError!!),
+        renderedHostError != null -> HostErrorState(
+            error = netErrorMessage(renderedHostError),
             onRetry = { hostAttempt++ },
             onOpenNetworkSettings = onOpenNetworkSettings.takeIf {
                 localNetworkAccess.needsRecoveryGuidance
@@ -181,21 +200,23 @@ fun HostSessionFlow(
             onBack = onBackToLibrary,
             modifier = modifier,
         )
+        case != null && supportedPlayerCounts == null -> HostErrorState(
+            dataErrorMessage(DataError.CorruptedData),
+            onBack = onBackToLibrary,
+            modifier = modifier,
+        )
         current == null || case == null -> HostLoadingState(modifier = modifier)
         frozenRoster == null -> HostLobbyContent(
             room = current,
             hostName = hostName,
-            supportedPlayerCounts = if (modeId == WhodunitIds.EliminationModeId) {
-                5..minOf(6, case.payload.characters.size)
-            } else {
-                4..minOf(6, case.payload.characters.size)
-            },
+            supportedPlayerCounts = checkNotNull(supportedPlayerCounts),
             modifier = modifier,
             startBlocked = startBlocked,
             onStart = {
                 scope.launch {
                     when (val frozen = current.closeAdmissions()) {
                         is Result.Success -> {
+                            gameOwnedRoom = current
                             frozenRoster = frozen.data
                             startBlocked = false
                         }
@@ -232,6 +253,16 @@ fun HostSessionFlow(
                 seed = seed,
                 room = current,
                 onBackToLibrary = onBackToLibrary,
+                onRetryStart = {
+                    if (room === current) {
+                        // WhodunitMultiplayerHostFlow has already completed
+                        // terminal delivery and closed this physical room.
+                        room = null
+                        frozenRoster = null
+                        startBlocked = false
+                        hostAttempt++
+                    }
+                },
                 modifier = modifier,
             )
         }

@@ -26,6 +26,7 @@ import com.parlor.networking.protocol.HostMessage
 import com.parlor.networking.protocol.PeerMessage
 import com.parlor.networking.protocol.RoomMessage
 import com.parlor.networking.protocol.SessionEndReason
+import com.parlor.networking.protocol.SessionEnvelopeHeader
 import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.NetError
 import com.parlor.networking.room.PeerEvent
@@ -36,6 +37,8 @@ import com.parlor.session.multidevice.InMemoryPeerRoom
 import com.parlor.session.multidevice.InMemoryRoomBus
 import com.parlor.session.passandplay.PassAndPlaySessionController
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -113,6 +116,103 @@ class MafiaAuthoritativeLifecycleTest {
     }
 
     @Test
+    fun reconnect_keeps_seat_disconnected_until_start_commit_is_acknowledged() = runTest {
+        val fixture = fixture(
+            scope = TestScope(UnconfinedTestDispatcher(testScheduler)),
+            startGame = false,
+            requireStartHandshake = true,
+        )
+        val startId = completeStartHandshake(fixture)
+        assertThat(fixture.bridge.submitHostAction(MafiaAction.StartGame))
+            .isInstanceOf(Result.Success::class)
+        fixture.hostRoom.sent.clear()
+
+        fixture.bus.emitPeerLeft(alice, "Alice")
+        fixture.bus.emitPeerReconnected(alice, "Alice")
+        runCurrent()
+        assertThat(alice in fixture.session.hostState.value.state.public.disconnectedPlayers)
+            .isTrue()
+        assertThat(
+            fixture.hostRoom.sent.any {
+                it.first == SendTarget.Direct(alice) &&
+                    it.second is HostMessage.SessionStarting
+            },
+        ).isTrue()
+
+        fixture.bus.fromPeer(
+            PeerMessage.SessionStartReady(
+                peerHeader(fixture.bridge, "rejoin-ready"),
+                alice,
+                startId,
+            ),
+        )
+        runCurrent()
+        assertThat(alice in fixture.session.hostState.value.state.public.disconnectedPlayers)
+            .isTrue()
+        assertThat(
+            fixture.hostRoom.sent.any {
+                it.first == SendTarget.Direct(alice) &&
+                    it.second is HostMessage.SessionStartCommitted
+            },
+        ).isTrue()
+
+        fixture.bus.fromPeer(
+            PeerMessage.SessionStartCommitAck(
+                peerHeader(fixture.bridge, "rejoin-commit-ack"),
+                alice,
+                startId,
+            ),
+        )
+        runCurrent()
+        assertThat(alice in fixture.session.hostState.value.state.public.disconnectedPlayers)
+            .isFalse()
+        assertThat(alice in fixture.session.hostState.value.state.public.droppedPlayers).isFalse()
+        fixture.close()
+    }
+
+    @Test
+    fun reconnect_handshake_failure_leaves_grace_deadline_authoritative() = runTest {
+        val fixture = fixture(
+            scope = TestScope(UnconfinedTestDispatcher(testScheduler)),
+            startGame = false,
+            requireStartHandshake = true,
+        )
+        val startId = completeStartHandshake(fixture)
+        assertThat(fixture.bridge.submitHostAction(MafiaAction.StartGame))
+            .isInstanceOf(Result.Success::class)
+
+        fixture.bus.emitPeerLeft(alice, "Alice")
+        fixture.bus.emitPeerReconnected(alice, "Alice")
+        runCurrent()
+        advanceTimeBy(201L)
+        runCurrent()
+
+        val expired = fixture.session.hostState.value.state
+        assertThat(expired.phase is MafiaPhase.PostGame).isTrue()
+        assertThat(alice in expired.public.droppedPlayers).isTrue()
+        assertThat(alice in expired.public.disconnectedPlayers).isFalse()
+
+        // Frames delayed beyond the grace boundary cannot revive the seat.
+        fixture.bus.fromPeer(
+            PeerMessage.SessionStartReady(
+                peerHeader(fixture.bridge, "late-rejoin-ready"),
+                alice,
+                startId,
+            ),
+        )
+        fixture.bus.fromPeer(
+            PeerMessage.SessionStartCommitAck(
+                peerHeader(fixture.bridge, "late-rejoin-ack"),
+                alice,
+                startId,
+            ),
+        )
+        runCurrent()
+        assertThat(fixture.session.hostState.value.state).isEqualTo(expired)
+        fixture.close()
+    }
+
+    @Test
     fun rejoin_grace_expiry_deterministically_finishes_active_game() = runTest {
         val fixture = fixture(TestScope(UnconfinedTestDispatcher(testScheduler)))
 
@@ -149,18 +249,69 @@ class MafiaAuthoritativeLifecycleTest {
     }
 
     @Test
-    fun stamped_start_and_explicit_host_leave_are_terminal_for_peer() = runTest {
+    fun one_departure_ending_game_clears_other_concurrent_disconnects() = runTest {
         val fixture = fixture(TestScope(UnconfinedTestDispatcher(testScheduler)))
+        val bob = players[2].id
+
+        fixture.bus.emitPeerLeft(alice, "Alice")
+        fixture.bus.emitPeerLeft(bob, "Bob")
+        runCurrent()
+        assertThat(
+            fixture.session.hostState.value.state.public.disconnectedPlayers,
+        ).isEqualTo(setOf(alice, bob))
+
+        assertThat(fixture.bridge.continueWithout(alice)).isTrue()
+        runCurrent()
+        val terminal = fixture.session.hostState.value.state
+        assertThat(terminal.phase).isEqualTo(MafiaPhase.PostGame)
+        assertThat(terminal.public.disconnectedPlayers.isEmpty()).isTrue()
+
+        advanceTimeBy(201L)
+        runCurrent()
+        assertThat(fixture.session.hostState.value.state).isEqualTo(terminal)
+        fixture.close()
+    }
+
+    @Test
+    fun stamped_start_and_explicit_host_leave_are_terminal_for_peer() = runTest {
+        val fixture = fixture(
+            TestScope(UnconfinedTestDispatcher(testScheduler)),
+            startGame = false,
+            requireStartHandshake = true,
+        )
         var peerEnded = false
         val collector = fixture.scope.launch {
             fixture.peerBridge.hostDisconnected.collect { peerEnded = true }
         }
 
-        fixture.bridge.announceStart("default", MafiaIds.ClassicModeId.raw)
+        val announcing = async {
+            fixture.bridge.announceStart("default", MafiaIds.ClassicModeId.raw)
+        }
         runCurrent()
         val start = fixture.hostRoom.sent
             .mapNotNull { it.second as? HostMessage.SessionStarting }
-            .single()
+            .first()
+        players.drop(1).forEach { player ->
+            fixture.bus.fromPeer(
+                PeerMessage.SessionStartReady(
+                    peerHeader(fixture.bridge, "ready-${player.seat}"),
+                    player.id,
+                    start.startId,
+                ),
+            )
+        }
+        runCurrent()
+        players.drop(1).forEach { player ->
+            fixture.bus.fromPeer(
+                PeerMessage.SessionStartCommitAck(
+                    peerHeader(fixture.bridge, "commit-${player.seat}"),
+                    player.id,
+                    start.startId,
+                ),
+            )
+        }
+        runCurrent()
+        assertThat(announcing.await()).isInstanceOf(Result.Success::class)
         assertThat(start.header?.sessionId).isEqualTo(fixture.bridge.protocol.sessionId)
         assertThat(start.header?.gameId).isEqualTo(MafiaIds.GameId)
         assertThat(start.header?.gameVersion).isEqualTo(MafiaHostRoomBridge.GAME_VERSION)
@@ -172,6 +323,26 @@ class MafiaAuthoritativeLifecycleTest {
 
         collector.cancel()
         fixture.peerBridge.close()
+    }
+
+    @Test
+    fun terminate_waits_for_authenticated_terminal_delivery_before_returning() = runTest {
+        val fixture = fixture(TestScope(UnconfinedTestDispatcher(testScheduler)))
+        val terminalGate = CompletableDeferred<Unit>()
+        fixture.hostRoom.terminalSendGate = terminalGate
+
+        val terminating = async { fixture.bridge.terminate(SessionEndReason.HostLeft) }
+        runCurrent()
+
+        assertThat(terminating.isCompleted).isFalse()
+        assertThat(
+            fixture.hostRoom.sent.count { it.second is HostMessage.SessionEnded },
+        ).isEqualTo(players.drop(1).size)
+
+        terminalGate.complete(Unit)
+        terminating.await()
+        assertThat(terminating.isCompleted).isTrue()
+        fixture.close()
     }
 
     @Test
@@ -223,6 +394,7 @@ class MafiaAuthoritativeLifecycleTest {
         reconcileRoomTopology: Boolean = false,
         initialMembers: List<RoomMember> = emptyList(),
         startGame: Boolean = true,
+        requireStartHandshake: Boolean = false,
     ): Fixture {
         val bus = InMemoryRoomBus()
         players.forEach { bus.registerPeer(it.id) }
@@ -252,6 +424,7 @@ class MafiaAuthoritativeLifecycleTest {
             rejoinGraceMs = 200L,
             heartbeatIntervalMs = 0L,
             reconcileRoomTopology = reconcileRoomTopology,
+            requireStartHandshake = requireStartHandshake,
         )
         if (startGame) bridge.submitHostAction(MafiaAction.StartGame)
         scope.runCurrent()
@@ -266,6 +439,52 @@ class MafiaAuthoritativeLifecycleTest {
         )
         scope.runCurrent()
         return Fixture(scope, bus, session, hostRoom, bridge, peerBridge)
+    }
+
+    private fun peerHeader(
+        bridge: MafiaHostRoomBridge,
+        label: String,
+    ) = SessionEnvelopeHeader(
+        protocol = bridge.protocol.protocol,
+        sessionId = bridge.protocol.sessionId,
+        gameId = bridge.protocol.gameId,
+        gameVersion = bridge.protocol.gameVersion,
+        messageId = "$label-012345678901234567890",
+        sequence = 0L,
+        connectionEpoch = bridge.protocol.connectionEpoch,
+    )
+
+    private suspend fun TestScope.completeStartHandshake(fixture: Fixture): String {
+        val announcing = async {
+            fixture.bridge.announceStart("default", MafiaIds.ClassicModeId.raw)
+        }
+        runCurrent()
+        val startId = fixture.hostRoom.sent
+            .mapNotNull { it.second as? HostMessage.SessionStarting }
+            .first()
+            .startId
+        players.drop(1).forEach { player ->
+            fixture.bus.fromPeer(
+                PeerMessage.SessionStartReady(
+                    peerHeader(fixture.bridge, "initial-ready-${player.seat}"),
+                    player.id,
+                    startId,
+                ),
+            )
+        }
+        runCurrent()
+        assertThat(announcing.await()).isInstanceOf(Result.Success::class)
+        players.drop(1).forEach { player ->
+            fixture.bus.fromPeer(
+                PeerMessage.SessionStartCommitAck(
+                    peerHeader(fixture.bridge, "initial-ack-${player.seat}"),
+                    player.id,
+                    startId,
+                ),
+            )
+        }
+        runCurrent()
+        return startId
     }
 
     private data class Fixture(
@@ -297,6 +516,7 @@ private class LifecycleHostRoom(
     override val incoming: Flow<RoomMessage> = bus.hostMessagesIn
     override val peerEvents: SharedFlow<PeerEvent> = bus.peerEvents
     val sent = mutableListOf<Pair<SendTarget, HostMessage>>()
+    var terminalSendGate: CompletableDeferred<Unit>? = null
 
     fun setMembers(members: List<RoomMember>) {
         memberState.value = members
@@ -307,6 +527,7 @@ private class LifecycleHostRoom(
         message: HostMessage,
     ): Result<Unit, NetError> {
         sent += target to message
+        if (message is HostMessage.SessionEnded) terminalSendGate?.await()
         bus.fromHost(target, message)
         return Result.Success(Unit)
     }

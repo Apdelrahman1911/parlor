@@ -8,6 +8,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
 import io.ktor.http.HttpStatusCode
+import io.ktor.utils.io.ByteReadChannel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
@@ -67,6 +68,39 @@ class OfflineRemoteCaseDataSourceTest {
             }
             assertFailsWith<CancellationException> {
                 source.listCases(GameId("whodunit"))
+            }
+        } finally {
+            client.close()
+        }
+    }
+
+    @Test
+    fun ktor_source_rejects_oversized_chunked_bodies_before_json_decode() = runTest {
+        val client = HttpClient(
+            MockEngine {
+                respond(ByteReadChannel(ByteArray(MAX_CASE_RESPONSE_BYTES + 1) { 'x'.code.toByte() }))
+            },
+        )
+        val source = KtorRemoteCaseDataSource(client, "https://content.test")
+
+        try {
+            assertEquals(
+                Result.Failure(NetworkError.Serialization("response exceeds byte limit")),
+                source.fetchCase(CaseId("oversized")),
+            )
+        } finally {
+            client.close()
+        }
+    }
+
+    @Test
+    fun ktor_source_does_not_convert_fatal_errors_into_network_failures() = runTest {
+        val client = HttpClient(MockEngine { throw AssertionError("fatal adapter bug") })
+        val source = KtorRemoteCaseDataSource(client, "https://content.test")
+
+        try {
+            assertFailsWith<AssertionError> {
+                source.fetchCase(CaseId("fatal"))
             }
         } finally {
             client.close()

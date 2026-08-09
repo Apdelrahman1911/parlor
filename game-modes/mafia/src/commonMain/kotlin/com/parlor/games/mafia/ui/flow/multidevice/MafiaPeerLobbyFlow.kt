@@ -17,6 +17,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,7 +34,7 @@ import com.parlor.designsystem.components.ReconnectingOverlay
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.engine.state.Player
 import com.parlor.games.mafia.MafiaIds
-import com.parlor.games.mafia.domain.settings.MafiaSettings
+import com.parlor.games.mafia.domain.rules.MafiaSessionRules
 import com.parlor.games.mafia.resources.Res
 import com.parlor.games.mafia.resources.md_peer_connecting_format
 import com.parlor.games.mafia.resources.md_peer_error_title
@@ -55,26 +56,26 @@ import com.parlor.games.mafia.resources.md_network_retry
 import com.parlor.games.mafia.resources.md_network_retry_description
 import com.parlor.games.mafia.resources.setup_back
 import com.parlor.games.mafia.resources.setup_back_description
-import com.parlor.networking.protocol.HostMessage
-import com.parlor.networking.protocol.PARLOR_PROTOCOL_MAJOR
-import com.parlor.networking.protocol.ProtocolValidation
 import com.parlor.networking.protocol.SessionProtocol
-import com.parlor.networking.protocol.validateFor
 import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.NetError
+import com.parlor.networking.room.PeerSessionAttempt
+import com.parlor.networking.room.PeerSessionRetryPolicy
 import com.parlor.networking.transport.RoomTransport
 import com.parlor.networking.transport.needsRecoveryGuidance
-import kotlinx.coroutines.flow.filterIsInstance
-import kotlinx.coroutines.flow.first
+import com.parlor.session.multidevice.awaitAuthoritativeSessionStart
+import com.parlor.session.multidevice.asNetError
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.stringResource
 
 /**
  * Mafia-side peer lobby. Mirrors composeApp's shell `PeerSessionFlow` but
  * is Mafia-specific: no case loading (Mafia has no external content), and
- * once the host's `SessionStarting` arrives, it dispatches to
+ * once the host's acknowledged start transaction commits, it dispatches to
  * [MafiaMultiDevicePeerFlow] instead of the Whodunit peer flow.
  */
 @Composable
@@ -91,6 +92,14 @@ fun MafiaPeerLobbyFlow(
     var joinError by remember { mutableStateOf<NetError?>(null) }
     var sessionStart by remember { mutableStateOf<SessionStartingFromHost?>(null) }
     var joinAttempt by remember { mutableStateOf(0) }
+    var retryPolicy by remember(transport, code, peerName, resumeExistingSession) {
+        mutableStateOf(PeerSessionRetryPolicy.initial(resumeExistingSession))
+    }
+    var retainedRetryRoom by remember(transport, code, peerName) {
+        mutableStateOf<LocalRoom?>(null)
+    }
+    var finalLeaveInFlight by remember { mutableStateOf(false) }
+    val flowScope = rememberCoroutineScope()
 
     var hostLost by remember { mutableStateOf(false) }
     var selfOffline by remember { mutableStateOf(false) }
@@ -98,55 +107,57 @@ fun MafiaPeerLobbyFlow(
     LaunchedEffect(transport, code, resumeExistingSession, joinAttempt) {
         joinError = null
         sessionStart = null
-        val result = if (resumeExistingSession) {
-            transport.resumeLastSession()
-        } else {
-            transport.join(code, peerName)
+        val result = when (retryPolicy.nextAttempt) {
+            PeerSessionAttempt.Resume -> transport.resumeLastSession()
+            PeerSessionAttempt.Join -> transport.join(code, peerName)
         }
         when (result) {
-            is Result.Success -> room = result.data
+            is Result.Success -> {
+                retainedRetryRoom = null
+                retryPolicy = retryPolicy.afterRoomAcquired()
+                room = result.data
+            }
             is Result.Failure -> joinError = result.error
         }
     }
 
     LaunchedEffect(room) {
         val active = room ?: return@LaunchedEffect
-        // Take exactly one start frame, then relinquish the Channel-backed
-        // inbox to MafiaPeerRoomBridge. A long-lived lobby collector would
-        // race the coordinator and steal snapshots.
-        val msg = active.incoming.filterIsInstance<HostMessage.SessionStarting>().first()
-        val header = msg.header
-        val candidate = header?.let {
-            SessionProtocol(
-                sessionId = it.sessionId,
-                gameId = MafiaIds.GameId,
-                gameVersion = MafiaHostRoomBridge.GAME_VERSION,
-            )
-        }
-        val ids = msg.players.map(Player::id)
-        if (
-            header == null ||
-            candidate == null ||
-            header.protocol.major != PARLOR_PROTOCOL_MAJOR ||
-            header.sequence != 0L ||
-            header.validateFor(candidate) != ProtocolValidation.Valid ||
-            msg.caseId != "default" ||
-            msg.modeId != MafiaIds.ClassicModeId.raw ||
-            msg.players.size !in MafiaSettings.MIN_PLAYERS..MafiaSettings.MAX_PLAYERS ||
-            active.selfPlayerId !in ids ||
-            active.info.value.hostPlayerId !in ids ||
-            ids.distinct().size != ids.size
+        when (
+            val start = awaitAuthoritativeSessionStart(
+                room = active,
+                expectedGameId = MafiaIds.GameId,
+                expectedGameVersion = MafiaHostRoomBridge.GAME_VERSION,
+            ) { msg, _ ->
+                val ids = msg.players.map(Player::id)
+                msg.caseId == "default" &&
+                    msg.modeId == MafiaIds.ClassicModeId.raw &&
+                    MafiaSessionRules.isValidRoster(msg.players) &&
+                    active.selfPlayerId in ids &&
+                    active.info.value.hostPlayerId in ids
+            }
         ) {
-            joinError = NetError.IncompatibleProtocol
-            return@LaunchedEffect
+            is Result.Success -> {
+                val offer = start.data.offer
+                sessionStart = SessionStartingFromHost(
+                    caseId = offer.caseId,
+                    modeId = offer.modeId,
+                    players = offer.players,
+                    seed = offer.sessionNonce,
+                    protocol = start.data.protocol,
+                )
+            }
+            is Result.Failure -> {
+                joinError = start.error.asNetError()
+                when (val closed = active.closeForRetry()) {
+                    is Result.Success -> Unit
+                    is Result.Failure -> joinError = closed.error
+                }
+                retainedRetryRoom = active
+                retryPolicy = retryPolicy.afterPostAdmissionStartFailure()
+                if (room === active) room = null
+            }
         }
-        sessionStart = SessionStartingFromHost(
-            caseId = msg.caseId,
-            modeId = msg.modeId,
-            players = msg.players,
-            seed = msg.sessionNonce,
-            protocol = candidate,
-        )
     }
 
     val current = room
@@ -157,6 +168,42 @@ fun MafiaPeerLobbyFlow(
             } finally {
                 withContext(NonCancellable) {
                     current.leave()
+                }
+            }
+        }
+    }
+
+    val finalBackToHome: () -> Unit = {
+        val active = room
+        val retained = retainedRetryRoom
+        val leaveTarget = retained ?: active
+        if (leaveTarget == null) {
+            onBackToHome()
+        } else if (!finalLeaveInFlight) {
+            finalLeaveInFlight = true
+            flowScope.launch {
+                val discarded = try {
+                    if (retained != null) {
+                        retained.discardRejoinCapability()
+                    } else {
+                        leaveTarget.finalLeave()
+                    }
+                } catch (cancelled: CancellationException) {
+                    finalLeaveInFlight = false
+                    throw cancelled
+                } catch (_: Exception) {
+                    Result.Failure(NetError.TransportFailure("final leave failed"))
+                }
+                when (discarded) {
+                    is Result.Success -> {
+                        if (retainedRetryRoom === retained) retainedRetryRoom = null
+                        if (room === active) room = null
+                        onBackToHome()
+                    }
+                    is Result.Failure -> {
+                        joinError = discarded.error
+                        finalLeaveInFlight = false
+                    }
                 }
             }
         }
@@ -176,18 +223,20 @@ fun MafiaPeerLobbyFlow(
                         title = stringResource(Res.string.md_peer_error_title),
                         detail = stringResource(Res.string.md_peer_error_detail),
                         showNetworkRecovery = localNetworkAccess.needsRecoveryGuidance,
-                        onRetry = { joinAttempt++ },
+                        onRetry = { if (!finalLeaveInFlight) joinAttempt++ },
                         onOpenNetworkSettings = onOpenNetworkSettings.takeIf {
                             localNetworkAccess.needsRecoveryGuidance
                         },
-                        onBack = onBackToHome,
+                        onBack = finalBackToHome,
+                        actionsEnabled = !finalLeaveInFlight,
+                        backInFlight = finalLeaveInFlight,
                         modifier = Modifier.fillMaxSize(),
                     )
                     current == null -> MafiaPeerConnectingState(code = code, modifier = Modifier.fillMaxSize())
                     start == null -> MafiaPeerWaitingForStart(
                         room = current,
                         peerName = peerName,
-                        onLeave = onBackToHome,
+                        onLeave = finalBackToHome,
                         modifier = Modifier.fillMaxSize(),
                     )
                     else -> MafiaMultiDevicePeerFlow(
@@ -196,7 +245,7 @@ fun MafiaPeerLobbyFlow(
                         seed = start.seed,
                         room = current,
                         protocol = start.protocol,
-                        onBackToHome = onBackToHome,
+                        onBackToHome = finalBackToHome,
                         modifier = Modifier.fillMaxSize(),
                         onHostLostChanged = { hostLost = it },
                         onSelfOfflineChanged = { selfOffline = it },
@@ -209,7 +258,7 @@ fun MafiaPeerLobbyFlow(
                 title = stringResource(Res.string.md_peer_reconnecting),
                 leaveLabel = stringResource(Res.string.md_peer_reconnecting_leave),
                 leaveContentDescription = stringResource(Res.string.md_peer_reconnecting_leave_description),
-                onLeave = onBackToHome,
+                onLeave = finalBackToHome,
                 modifier = Modifier.fillMaxSize(),
             )
         }
@@ -301,6 +350,8 @@ private fun MafiaPeerErrorState(
     showNetworkRecovery: Boolean = false,
     onRetry: (() -> Unit)? = null,
     onOpenNetworkSettings: (() -> Unit)? = null,
+    actionsEnabled: Boolean = true,
+    backInFlight: Boolean = false,
 ) {
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
         Column(
@@ -336,6 +387,7 @@ private fun MafiaPeerErrorState(
                     label = stringResource(Res.string.md_network_retry),
                     contentDescription = stringResource(Res.string.md_network_retry_description),
                     onClick = onRetry,
+                    enabled = actionsEnabled,
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
@@ -346,6 +398,7 @@ private fun MafiaPeerErrorState(
                         Res.string.md_network_open_settings_description,
                     ),
                     onClick = onOpenNetworkSettings,
+                    enabled = actionsEnabled,
                     modifier = Modifier.fillMaxWidth(),
                     variant = ParlorButtonVariant.Secondary,
                 )
@@ -354,6 +407,8 @@ private fun MafiaPeerErrorState(
                 label = stringResource(Res.string.setup_back),
                 contentDescription = stringResource(Res.string.setup_back_description),
                 onClick = onBack,
+                enabled = actionsEnabled,
+                loading = backInFlight,
                 modifier = Modifier.fillMaxWidth(),
                 variant = ParlorButtonVariant.Ghost,
             )

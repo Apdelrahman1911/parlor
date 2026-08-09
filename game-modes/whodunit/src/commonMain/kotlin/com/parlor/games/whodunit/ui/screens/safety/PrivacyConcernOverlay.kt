@@ -26,6 +26,9 @@ import com.parlor.games.whodunit.resources.Res
 import com.parlor.games.whodunit.resources.privacy_body
 import com.parlor.games.whodunit.resources.privacy_continue
 import com.parlor.games.whodunit.resources.privacy_continue_description
+import com.parlor.games.whodunit.resources.privacy_peer_body
+import com.parlor.games.whodunit.resources.privacy_peer_close
+import com.parlor.games.whodunit.resources.privacy_peer_close_description
 import com.parlor.games.whodunit.resources.privacy_open
 import com.parlor.games.whodunit.resources.privacy_open_description
 import com.parlor.games.whodunit.resources.privacy_reroll
@@ -61,18 +64,25 @@ fun PrivacyConcernAffordance(
  *
  * - **Continue Anyway** — close the dialog, the game proceeds with the
  *   existing role assignment.
- * - **Reroll All Roles** — submit [com.parlor.games.whodunit.domain.action.WhodunitAction.RequestReroll].
+ * - On a host, **Reroll All Roles** submits
+ *   [com.parlor.games.whodunit.domain.action.WhodunitAction.RequestReroll].
  *   The reducer reshuffles characters + killer with a new derived seed and
  *   sends the flow back to `CharacterReveal(0)` so the new mapping is
  *   revealed cleanly. Anyone who saw their *old* role must mentally forget
  *   it — the table-side convention the design doc calls out.
+ * - On a peer, no reroll command is rendered because the authority layer
+ *   rejects it. The dialog truthfully tells the player to contact the host.
  */
 @Composable
-fun PrivacyConcernDialog(
+internal fun PrivacyConcernDialog(
+    policy: PrivacyConcernUiPolicy,
     onContinue: () -> Unit,
-    onReroll: () -> Unit,
+    onReroll: (() -> Unit)?,
     modifier: Modifier = Modifier,
 ) {
+    check((policy == PrivacyConcernUiPolicy.HostMayReroll) == (onReroll != null)) {
+        "Privacy reroll callback must match host authority"
+    }
     Box(modifier = modifier.fillMaxSize()) {
         Box(
             modifier = Modifier
@@ -95,21 +105,41 @@ fun PrivacyConcernDialog(
                 Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m)) {
                     EyebrowLabel(text = stringResource(Res.string.privacy_title))
                     Text(
-                        text = stringResource(Res.string.privacy_body),
+                        text = stringResource(
+                            if (policy == PrivacyConcernUiPolicy.HostMayReroll) {
+                                Res.string.privacy_body
+                            } else {
+                                Res.string.privacy_peer_body
+                            },
+                        ),
                         style = ParlorTheme.typography.displayMedium,
                         color = ParlorTheme.colors.textPrimary,
                         textAlign = TextAlign.Start,
                     )
                     Spacer(modifier = Modifier.height(ParlorTheme.spacing.s))
+                    if (onReroll != null) {
+                        ParlorButton(
+                            label = stringResource(Res.string.privacy_reroll),
+                            contentDescription = stringResource(Res.string.privacy_reroll_description),
+                            onClick = onReroll,
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                    }
                     ParlorButton(
-                        label = stringResource(Res.string.privacy_reroll),
-                        contentDescription = stringResource(Res.string.privacy_reroll_description),
-                        onClick = onReroll,
-                        modifier = Modifier.fillMaxWidth(),
-                    )
-                    ParlorButton(
-                        label = stringResource(Res.string.privacy_continue),
-                        contentDescription = stringResource(Res.string.privacy_continue_description),
+                        label = stringResource(
+                            if (policy == PrivacyConcernUiPolicy.HostMayReroll) {
+                                Res.string.privacy_continue
+                            } else {
+                                Res.string.privacy_peer_close
+                            },
+                        ),
+                        contentDescription = stringResource(
+                            if (policy == PrivacyConcernUiPolicy.HostMayReroll) {
+                                Res.string.privacy_continue_description
+                            } else {
+                                Res.string.privacy_peer_close_description
+                            },
+                        ),
                         onClick = onContinue,
                         modifier = Modifier.fillMaxWidth(),
                         variant = ParlorButtonVariant.Ghost,

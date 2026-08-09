@@ -117,6 +117,7 @@ class PartyPlayPassAndPlayParityTest {
             scope = partyPlayHost.scope,
             json = json,
             heartbeatIntervalMs = 0L,
+            requireStartHandshake = false,
         )
         runCurrent()
 

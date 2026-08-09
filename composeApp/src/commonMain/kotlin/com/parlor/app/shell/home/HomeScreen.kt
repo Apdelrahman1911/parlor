@@ -60,8 +60,8 @@ import org.jetbrains.compose.resources.stringResource
  *     SETTINGS text-link on the trailing edge.
  *  2. **Continue** (only when [unfinishedSessions] is non-empty). Tappable
  *     tiles that drop the user back into an in-progress investigation.
- *  3. **Games.** A hero card for Whodunit (the only active title), then a
- *     row of dimmed "Coming soon" placeholders. Tapping the hero card
+ *  3. **Games.** Hero cards for the installed Whodunit and Mafia titles,
+ *     followed by dimmed "Coming soon" placeholders. Tapping a game card
  *     invokes [onGameSelected]; the parent routes to the game setup screen
  *     (Solo / Pass-and-Play / Host / Join).
  *

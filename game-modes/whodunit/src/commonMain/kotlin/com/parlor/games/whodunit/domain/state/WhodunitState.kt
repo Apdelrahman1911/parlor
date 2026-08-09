@@ -92,6 +92,8 @@ data class WhodunitPublic(
 data class WhodunitPrivate(
     val role: PlayerRole,
     val characterId: CharacterId,
+    /** Assigned, non-self suspects the killer may safely name. Empty for innocents. */
+    val deflectionTargets: List<CharacterId> = emptyList(),
     val dossierUnlocked: Boolean = false,
     val privateReviewOpen: Boolean = false,
 )

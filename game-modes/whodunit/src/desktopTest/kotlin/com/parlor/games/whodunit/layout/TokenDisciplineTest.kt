@@ -20,21 +20,12 @@ import kotlin.test.Test
  *  3. No literal English strings as Compose `text = "..."` or
  *     `label = "..."` arguments — must go through `stringResource(...)`.
  *
- * Exemptions (legacy components / debug-only screens / generated code) are
- * listed explicitly so the guard stays honest. Adding a file to the
- * exemption list should be the rare path, not the easy one.
  */
 class TokenDisciplineTest {
 
     private val scanRoots: List<String> = listOf(
         "composeApp/src/commonMain/kotlin",
         "game-modes/whodunit/src/commonMain/kotlin",
-    )
-
-    /** Files exempt from one or more rules. */
-    private val exemptions: Set<String> = setOf(
-        // Phase-7 debug-only peer-pause screen.
-        "PeerLobbyScreen.kt",
     )
 
     @Test
@@ -83,7 +74,6 @@ class TokenDisciplineTest {
             if (!dir.isDirectory) continue
             dir.walkTopDown()
                 .filter { it.isFile && it.extension == "kt" }
-                .filterNot { it.name in exemptions }
                 .forEach { file -> block(file, file.readText()) }
         }
     }

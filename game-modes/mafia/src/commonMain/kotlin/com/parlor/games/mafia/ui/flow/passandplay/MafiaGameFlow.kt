@@ -125,6 +125,8 @@ fun MafiaGameFlow(
 
     var pre by remember { mutableStateOf(PreSession()) }
 
+    val selectedPlayerCount = pre.playerCount
+    val enteredPlayers = pre.players
     when {
         resumeSessionId != null && resumeResult == null -> MafiaLoadingScreen(modifier)
         resumeSessionId != null && resumeResult is Result.Failure -> MafiaRecoveryErrorScreen(
@@ -157,14 +159,14 @@ fun MafiaGameFlow(
                 modifier = modifier,
             )
         }
-        pre.playerCount == null -> MafiaPlayerCountScreen(
+        selectedPlayerCount == null -> MafiaPlayerCountScreen(
             range = definition.supportedPlayerCounts,
             onCountSelected = { count -> pre = pre.copy(playerCount = count) },
             onBack = onBackToHome,
             modifier = modifier,
         )
-        pre.players == null -> MafiaPlayerEntryScreen(
-            playerCount = pre.playerCount!!,
+        enteredPlayers == null -> MafiaPlayerEntryScreen(
+            playerCount = selectedPlayerCount,
             onConfirm = { names ->
                 pre = pre.copy(
                     players = names.mapIndexed { i, n ->
@@ -179,7 +181,7 @@ fun MafiaGameFlow(
             modifier = modifier,
         )
         else -> SessionDrivenFlow(
-            players = pre.players!!,
+            players = enteredPlayers,
             onBackToHome = onBackToHome,
             modifier = modifier,
         )
@@ -293,7 +295,10 @@ private fun SessionDrivenFlow(
     // submissions, detective results) without going through privateStateFor
     // for every cycle decision. Multi-device peers will use the public
     // projection + their own privateStateFor in M3.
-    val hostProjection by session.hostState!!.collectAsState()
+    val authoritativeState = requireNotNull(session.hostState) {
+        "The local Mafia flow requires a host projection"
+    }
+    val hostProjection by authoritativeState.collectAsState()
     val state = hostProjection.state
 
     Box(modifier = modifier.fillMaxSize()) {

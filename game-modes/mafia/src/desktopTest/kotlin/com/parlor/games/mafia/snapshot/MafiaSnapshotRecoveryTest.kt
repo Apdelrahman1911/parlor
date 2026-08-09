@@ -19,11 +19,17 @@ import com.parlor.games.mafia.MafiaIds
 import com.parlor.games.mafia.domain.action.MafiaAction
 import com.parlor.games.mafia.domain.phase.MafiaPhase
 import com.parlor.games.mafia.domain.reducer.MafiaReducer
+import com.parlor.games.mafia.domain.settings.TieBehavior
+import com.parlor.games.mafia.domain.state.Role
 import com.parlor.storage.snapshot.InMemorySnapshotStore
-import kotlinx.datetime.Instant as DateTimeInstant
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.test.runTest
+import kotlinx.datetime.Instant as DateTimeInstant
 import kotlinx.serialization.json.Json
 import kotlin.test.Test
+import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 import kotlin.time.Instant
 
 class MafiaSnapshotRecoveryTest {
@@ -96,6 +102,38 @@ class MafiaSnapshotRecoveryTest {
     }
 
     @Test
+    fun cancellation_during_snapshot_validation_is_not_reported_as_corruption() = runTest {
+        val sessionId = SessionId("mafia-cancelled-recovery")
+        val state = definition.createInitialState(config(sessionId))
+        val store = InMemorySnapshotStore()
+        store.save(
+            snapshot(sessionId, state).copy(
+                metadata = ThrowingMetadata(CancellationException("screen disposed")),
+            ),
+        )
+
+        assertFailsWith<CancellationException> {
+            loadMafiaResumedSession(store, definition, sessionId)
+        }
+    }
+
+    @Test
+    fun fatal_error_during_snapshot_validation_is_not_reported_as_corruption() = runTest {
+        val sessionId = SessionId("mafia-fatal-recovery")
+        val state = definition.createInitialState(config(sessionId))
+        val store = InMemorySnapshotStore()
+        store.save(
+            snapshot(sessionId, state).copy(
+                metadata = ThrowingMetadata(FatalRecoveryError()),
+            ),
+        )
+
+        assertFailsWith<FatalRecoveryError> {
+            loadMafiaResumedSession(store, definition, sessionId)
+        }
+    }
+
+    @Test
     fun phase_day_and_active_vote_must_form_a_reducer_reachable_state() = runTest {
         val sessionId = SessionId("mafia-impossible-phase")
         val state = nightState(sessionId)
@@ -165,6 +203,108 @@ class MafiaSnapshotRecoveryTest {
         }
     }
 
+    @Test
+    fun initial_vote_requires_the_exact_ordered_eligible_ballot_and_candidate_set() {
+        val valid = votingState(SessionId("mafia-vote-shape"))
+        val vote = requireNotNull(valid.public.activeVote)
+        assertTrue(valid.isValidRecoveryState())
+
+        val outsider = PlayerId("not-at-the-table")
+        val mutations = listOf(
+            "missing eligible voter" to vote.copy(ballot = vote.ballot.dropLast(1)),
+            "reordered ballot" to vote.copy(ballot = vote.ballot.reversed()),
+            "extra voter" to vote.copy(ballot = vote.ballot + outsider),
+            "missing initial candidate" to vote.copy(candidates = vote.candidates.dropLast(1)),
+            "reordered initial candidates" to vote.copy(candidates = vote.candidates.reversed()),
+            "extra initial candidate" to vote.copy(candidates = vote.candidates + outsider),
+        )
+
+        mutations.forEach { (label, mutatedVote) ->
+            val mutated = valid.copy(public = valid.public.copy(activeVote = mutatedVote))
+            assertFalse(mutated.isValidRecoveryState(), label)
+        }
+
+        val deadId = vote.ballot.last()
+        val withDeadEligibleVoter = valid.copy(
+            public = valid.public.copy(
+                roster = valid.public.roster.map { slot ->
+                    if (slot.playerId == deadId) {
+                        slot.copy(
+                            alive = false,
+                            revealedRole = valid.hostOnly.fullRoleMap.getValue(deadId),
+                        )
+                    } else {
+                        slot
+                    }
+                },
+            ),
+        )
+        assertFalse(
+            withDeadEligibleVoter.isValidRecoveryState(),
+            "a dead player cannot remain in an active ballot",
+        )
+    }
+
+    @Test
+    fun revote_candidates_must_be_reducer_reachable_for_the_configured_tie_policy() {
+        val valid = tiedRevoteState(SessionId("mafia-revote-shape"))
+        val vote = requireNotNull(valid.public.activeVote)
+        assertTrue(vote.revoteRound > 0)
+        assertTrue(valid.isValidRecoveryState())
+
+        val reversed = vote.candidates.reversed()
+        val mutations = listOf(
+            "a tied-only revote needs at least two candidates" to
+                valid.copy(public = valid.public.copy(activeVote = vote.copy(candidates = vote.candidates.take(1)))),
+            "tied-only candidates use deterministic PlayerId order" to
+                valid.copy(public = valid.public.copy(activeVote = vote.copy(candidates = reversed))),
+            "skip-on-tie cannot produce a revote" to
+                valid.copy(public = valid.public.copy(
+                    settings = valid.public.settings.copy(voteTieBehavior = TieBehavior.SKIP_ELIMINATION),
+                )),
+            "revote-all must retain every eligible candidate" to
+                valid.copy(public = valid.public.copy(
+                    settings = valid.public.settings.copy(voteTieBehavior = TieBehavior.REVOTE_ALL),
+                )),
+            "a revote cannot exceed the configured maximum" to
+                valid.copy(
+                    phase = (valid.phase as MafiaPhase.Voting).copy(revoteRound = 2),
+                    public = valid.public.copy(activeVote = vote.copy(revoteRound = 2)),
+                ),
+        )
+
+        mutations.forEach { (label, mutated) ->
+            assertFalse(mutated.isValidRecoveryState(), label)
+        }
+
+        val revoteAll = valid.copy(
+            public = valid.public.copy(
+                settings = valid.public.settings.copy(voteTieBehavior = TieBehavior.REVOTE_ALL),
+                activeVote = vote.copy(candidates = vote.ballot),
+            ),
+        )
+        assertTrue(revoteAll.isValidRecoveryState())
+    }
+
+    @Test
+    fun player_and_public_roster_order_or_name_mutations_are_not_recoverable() {
+        val valid = definition.createInitialState(config(SessionId("mafia-roster-shape")))
+        val reorderedRoster = valid.copy(public = valid.public.copy(roster = valid.public.roster.reversed()))
+        val unnormalizedName = valid.copy(
+            players = valid.players.toMutableList().also {
+                it[0] = it[0].copy(displayName = " Player 1")
+            },
+            public = valid.public.copy(
+                roster = valid.public.roster.toMutableList().also {
+                    it[0] = it[0].copy(displayName = " Player 1")
+                },
+            ),
+        )
+
+        assertFalse(reorderedRoster.isValidRecoveryState())
+        assertFalse(unnormalizedName.isValidRecoveryState())
+    }
+
     private fun config(sessionId: SessionId) = SessionConfig(
         sessionId = sessionId,
         caseId = CaseId("default"),
@@ -195,6 +335,52 @@ class MafiaSnapshotRecoveryTest {
         ).newState
     }
 
+    private fun votingState(sessionId: SessionId): com.parlor.games.mafia.domain.state.MafiaState {
+        var state = nightState(sessionId)
+        state.players.forEach { player ->
+            val action = when (state.privatePerPlayer.getValue(player.id).role) {
+                Role.Mafia -> MafiaAction.SubmitMafiaKillVote(player.id, null)
+                Role.Doctor -> MafiaAction.SubmitDoctorProtect(player.id, null)
+                Role.Detective -> MafiaAction.SubmitDetectiveInspect(player.id, null)
+                Role.Civilian -> MafiaAction.SubmitCivilianSuspicion(player.id, null)
+            }
+            state = MafiaReducer.reduce(state, action, reducerContext()).newState
+        }
+        state = MafiaReducer.reduce(state, MafiaAction.ResolveNight, reducerContext()).newState
+        state.players.forEach { player ->
+            state = MafiaReducer.reduce(
+                state,
+                MafiaAction.AcknowledgeNightAnnouncement(player.id),
+                reducerContext(),
+            ).newState
+        }
+        state = MafiaReducer.reduce(state, MafiaAction.OpenDiscussion, reducerContext()).newState
+        return MafiaReducer.reduce(state, MafiaAction.OpenVote, reducerContext()).newState
+    }
+
+    private fun tiedRevoteState(sessionId: SessionId): com.parlor.games.mafia.domain.state.MafiaState {
+        var state = votingState(sessionId)
+        val ballot = requireNotNull(state.public.activeVote).ballot
+        state = MafiaReducer.reduce(
+            state,
+            MafiaAction.CastVote(ballot[0], ballot[1]),
+            reducerContext(),
+        ).newState
+        state = MafiaReducer.reduce(
+            state,
+            MafiaAction.CastVote(ballot[1], ballot[0]),
+            reducerContext(),
+        ).newState
+        ballot.drop(2).forEach { voter ->
+            state = MafiaReducer.reduce(
+                state,
+                MafiaAction.AbstainVote(voter),
+                reducerContext(),
+            ).newState
+        }
+        return MafiaReducer.reduce(state, MafiaAction.CloseVote, reducerContext()).newState
+    }
+
     private fun snapshot(
         sessionId: SessionId,
         state: com.parlor.games.mafia.domain.state.MafiaState,
@@ -207,4 +393,12 @@ class MafiaSnapshotRecoveryTest {
         payload = definition.snapshotCodec().encode(state),
         metadata = mapOf(MAFIA_PLAY_MODE_KEY to MAFIA_PASS_AND_PLAY_MODE),
     )
+
+    private class ThrowingMetadata(
+        private val failure: Throwable,
+    ) : Map<String, String> by emptyMap() {
+        override fun get(key: String): String? = throw failure
+    }
+
+    private class FatalRecoveryError : Error("fatal recovery failure")
 }

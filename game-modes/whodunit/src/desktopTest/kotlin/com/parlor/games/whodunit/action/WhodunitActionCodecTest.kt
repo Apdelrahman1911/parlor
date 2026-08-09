@@ -9,6 +9,7 @@ import com.parlor.games.whodunit.domain.action.StructuredActionPayload
 import com.parlor.games.whodunit.domain.action.WhodunitAction
 import com.parlor.games.whodunit.domain.action.WhodunitActionCodec
 import kotlin.test.Test
+import kotlin.test.assertFailsWith
 
 /**
  * Closes the Phase 7 / P2P serialization gap: `PeerMessage.ActionSubmit`
@@ -23,6 +24,20 @@ import kotlin.test.Test
  * differs across these and a regression would show up only on one shape.
  */
 class WhodunitActionCodecTest {
+
+    @Test
+    fun oversizedActionIsRejectedOnEncodeAndDecode() {
+        val oversized = WhodunitAction.SubmitStructuredAction(
+            StructuredActionPayload.Alibi(PlayerId("alice"), "x".repeat(33 * 1024)),
+        )
+
+        assertFailsWith<IllegalArgumentException> {
+            WhodunitActionCodec.encode(oversized)
+        }
+        assertFailsWith<IllegalArgumentException> {
+            WhodunitActionCodec.decode(ByteArray(32 * 1024 + 1))
+        }
+    }
 
     @Test
     fun singleton_data_object_round_trips() {

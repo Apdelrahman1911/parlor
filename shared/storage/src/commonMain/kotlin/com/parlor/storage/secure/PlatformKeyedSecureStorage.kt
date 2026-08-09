@@ -24,7 +24,7 @@ class PlatformKeyedSecureStorage(
             EmptyOk
         } catch (cancelled: CancellationException) {
             throw cancelled
-        } catch (_: Throwable) {
+        } catch (_: Exception) {
             Result.Failure(DataError.IoError("secure_storage_io"))
         }
     }
@@ -34,7 +34,7 @@ class PlatformKeyedSecureStorage(
             Result.Success(backing.get(key))
         } catch (cancelled: CancellationException) {
             throw cancelled
-        } catch (_: Throwable) {
+        } catch (_: Exception) {
             Result.Failure(DataError.IoError("secure_storage_io"))
         }
     }
@@ -45,7 +45,7 @@ class PlatformKeyedSecureStorage(
             EmptyOk
         } catch (cancelled: CancellationException) {
             throw cancelled
-        } catch (_: Throwable) {
+        } catch (_: Exception) {
             Result.Failure(DataError.IoError("secure_storage_io"))
         }
     }

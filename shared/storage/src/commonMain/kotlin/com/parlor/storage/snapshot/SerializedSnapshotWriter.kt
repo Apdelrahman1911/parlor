@@ -63,24 +63,32 @@ class SerializedSnapshotWriter<S : GameState>(
                 try {
                     completed = isCompleted(state)
                     if (completed) {
-                        store.delete(sessionId)
+                        callStore { store.delete(sessionId) }
                     } else {
                         val snapshot = snapshotFor(state)
                         if (snapshot.sessionId != sessionId) {
                             Result.Failure(DataError.CorruptedData)
                         } else {
-                            store.save(snapshot)
+                            callStore { store.save(snapshot) }
                         }
                     }
                 } catch (cancelled: CancellationException) {
                     throw cancelled
-                } catch (_: Throwable) {
+                } catch (_: Exception) {
+                    // Snapshot construction/validation is an in-process codec
+                    // boundary. Ordinary failures here indicate state that
+                    // cannot be represented safely, not a filesystem fault.
                     Result.Failure(DataError.CorruptedData)
                 }
             }
         } catch (cancelled: CancellationException) {
             _status.value = previousStatus
             throw cancelled
+        } catch (_: Exception) {
+            Result.Failure(DataError.CorruptedData)
+        } catch (fatal: Error) {
+            _status.value = previousStatus
+            throw fatal
         }
 
         when (result) {
@@ -108,17 +116,16 @@ class SerializedSnapshotWriter<S : GameState>(
         _status.value = SnapshotWriteStatus.Writing
         val result = try {
             withContext(writeContext) {
-                try {
-                    store.delete(sessionId)
-                } catch (cancelled: CancellationException) {
-                    throw cancelled
-                } catch (_: Throwable) {
-                    Result.Failure(DataError.IoError("snapshot_io"))
-                }
+                callStore { store.delete(sessionId) }
             }
         } catch (cancelled: CancellationException) {
             _status.value = previousStatus
             throw cancelled
+        } catch (_: Exception) {
+            Result.Failure(DataError.IoError("snapshot_io"))
+        } catch (fatal: Error) {
+            _status.value = previousStatus
+            throw fatal
         }
         when (result) {
             is Result.Success -> {
@@ -129,5 +136,22 @@ class SerializedSnapshotWriter<S : GameState>(
             is Result.Failure -> _status.value = SnapshotWriteStatus.Failed(result.error)
         }
         result
+    }
+
+    /**
+     * [SnapshotStore] reports expected persistence failures as [Result]. If a
+     * custom/platform implementation instead throws an ordinary exception,
+     * keep that failure at the I/O boundary without exposing exception text.
+     * Cancellation and fatal runtime errors deliberately escape to their
+     * structured owner.
+     */
+    private suspend fun callStore(
+        operation: suspend () -> EmptyResult<DataError>,
+    ): EmptyResult<DataError> = try {
+        operation()
+    } catch (cancelled: CancellationException) {
+        throw cancelled
+    } catch (_: Exception) {
+        Result.Failure(DataError.IoError("snapshot_io"))
     }
 }

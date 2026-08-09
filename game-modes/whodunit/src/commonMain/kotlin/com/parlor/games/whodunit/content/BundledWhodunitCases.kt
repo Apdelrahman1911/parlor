@@ -29,6 +29,12 @@ class BundledWhodunitCases(
     private val json: Json,
 ) : BundledFallbackCaseDataSource {
 
+    init {
+        require(knownCaseIds.size == knownCaseIds.toSet().size) {
+            "Bundled Whodunit case ids must be unique"
+        }
+    }
+
     private val mutex = Mutex()
     private var envelopes: Map<String, CaseEnvelope>? = null
 
@@ -42,11 +48,17 @@ class BundledWhodunitCases(
         envelopes?.let { return@withLock it }
         val loaded = mutableMapOf<String, CaseEnvelope>()
         for (id in knownCaseIds) {
-            val raw = loadJson(id) ?: continue
+            val raw = requireNotNull(loadJson(id)) {
+                "Bundled Whodunit case '$id' is declared but its resource is missing"
+            }
             // A malformed bundle is a build bug. Let the deserialization
             // exception propagate so it's caught at first access (in tests or
             // at app startup), not silently hidden behind a "no cases" UI.
-            loaded[id] = json.decodeFromString(CaseEnvelope.serializer(), raw)
+            val envelope = json.decodeFromString(CaseEnvelope.serializer(), raw)
+            require(envelope.caseId == id) {
+                "Bundled case '$id' declares mismatched caseId '${envelope.caseId}'"
+            }
+            loaded[id] = envelope
         }
         envelopes = loaded
         loaded

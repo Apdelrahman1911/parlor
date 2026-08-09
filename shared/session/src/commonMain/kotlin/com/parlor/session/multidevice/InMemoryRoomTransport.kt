@@ -30,7 +30,7 @@ import kotlinx.coroutines.flow.consumeAsFlow
  */
 class InMemoryRoomBus {
 
-    private val hostInbox = Channel<PeerMessage>(Channel.UNLIMITED)
+    private val hostInbox = Channel<PeerMessage>(TEST_HOST_QUEUE_CAPACITY)
     private val peerInboxes = mutableMapOf<PlayerId, Channel<HostMessage>>()
 
     /**
@@ -48,7 +48,7 @@ class InMemoryRoomBus {
     val hostMessagesIn: Flow<PeerMessage> = hostInbox.consumeAsFlow()
 
     fun registerPeer(id: PlayerId) {
-        peerInboxes.getOrPut(id) { Channel(Channel.UNLIMITED) }
+        peerInboxes.getOrPut(id) { Channel(TEST_PEER_QUEUE_CAPACITY) }
     }
 
     fun peerMessagesIn(id: PlayerId): Flow<HostMessage> =
@@ -85,6 +85,13 @@ class InMemoryRoomBus {
     /** Test hook: synthesise a host-restored event (peer-side). */
     suspend fun emitHostRestored() {
         _peerEvents.emit(PeerEvent.HostRestored)
+    }
+
+    private companion object {
+        // This is a test transport, but bounded queues intentionally preserve
+        // the same backpressure failure class as production transports.
+        const val TEST_HOST_QUEUE_CAPACITY = 64
+        const val TEST_PEER_QUEUE_CAPACITY = 32
     }
 }
 
@@ -136,6 +143,8 @@ class InMemoryPeerRoom(
             is PeerMessage.SnapshotRequest -> message.copy(actor = selfPlayerId)
             is PeerMessage.SessionHeartbeat -> message.copy(actor = selfPlayerId)
             is PeerMessage.CommandOutcomeRequest -> message.copy(actor = selfPlayerId)
+            is PeerMessage.SessionStartReady -> message.copy(actor = selfPlayerId)
+            is PeerMessage.SessionStartCommitAck -> message.copy(actor = selfPlayerId)
             else -> message
         }
         bus.fromPeer(authenticated)

@@ -42,6 +42,8 @@ tasks.named("desktopTest") {
         rootProject.file("gradle/libs.versions.toml"),
         rootProject.file("gradle/verification-metadata.xml"),
         rootProject.file("composeApp/src/androidMain/AndroidManifest.xml"),
+        rootProject.file("composeApp/src/androidMain/res/xml/backup_rules.xml"),
+        rootProject.file("composeApp/src/androidMain/res/xml/data_extraction_rules.xml"),
         rootProject.file("iosApp/iosApp/Info.plist"),
         rootProject.fileTree("docs") {
             include("**/*.md")

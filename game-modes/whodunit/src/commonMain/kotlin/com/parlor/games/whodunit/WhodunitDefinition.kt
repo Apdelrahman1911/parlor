@@ -17,6 +17,7 @@ import com.parlor.games.whodunit.domain.modes.EliminationMode
 import com.parlor.games.whodunit.domain.phase.WhodunitPhase
 import com.parlor.games.whodunit.domain.projection.WhodunitProjectionPolicy
 import com.parlor.games.whodunit.domain.reducer.WhodunitReducer
+import com.parlor.games.whodunit.domain.rules.WhodunitRules
 import com.parlor.games.whodunit.domain.state.WhodunitHostOnly
 import com.parlor.games.whodunit.domain.state.WhodunitPublic
 import com.parlor.games.whodunit.domain.state.WhodunitState
@@ -40,8 +41,11 @@ class WhodunitDefinition(
     override val supportedModes: List<GameMode> = listOf(ClassicVoteMode, EliminationMode)
     override val supportedPlayerCounts: IntRange = 4..8
 
-    override fun createInitialState(config: SessionConfig): WhodunitState =
-        WhodunitState(
+    override fun createInitialState(config: SessionConfig): WhodunitState {
+        require(WhodunitRules.isValidRoster(config.modeId, config.players)) {
+            "Invalid Whodunit roster for mode '${config.modeId.raw}'"
+        }
+        return WhodunitState(
             public = WhodunitPublic(
                 caseId = CaseId(config.caseId.raw),
                 modeId = config.modeId,
@@ -58,6 +62,7 @@ class WhodunitDefinition(
             phase = WhodunitPhase.Setup,
             players = config.players,
         )
+    }
 
     override fun reducer(): GameReducer<WhodunitState, WhodunitAction, WhodunitEvent> = WhodunitReducer
 

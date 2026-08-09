@@ -15,6 +15,7 @@ import com.parlor.games.mafia.domain.modes.ClassicMode
 import com.parlor.games.mafia.domain.phase.MafiaPhase
 import com.parlor.games.mafia.domain.projection.MafiaProjectionPolicy
 import com.parlor.games.mafia.domain.reducer.MafiaReducer
+import com.parlor.games.mafia.domain.rules.MafiaSessionRules
 import com.parlor.games.mafia.domain.settings.MafiaSettingsPresets
 import com.parlor.games.mafia.domain.settings.MafiaSettings
 import com.parlor.games.mafia.domain.state.MafiaHostOnly
@@ -43,6 +44,7 @@ class MafiaDefinition(
         MafiaSettings.MIN_PLAYERS..MafiaSettings.MAX_PLAYERS
 
     override fun createInitialState(config: SessionConfig): MafiaState {
+        MafiaSessionRules.requireValidConfig(config)
         val preset = MafiaSettingsPresets.forPlayerCount(config.players.size)
         val roster = config.players.map { p ->
             PublicPlayerSlot(playerId = p.id, displayName = p.displayName, seat = p.seat)

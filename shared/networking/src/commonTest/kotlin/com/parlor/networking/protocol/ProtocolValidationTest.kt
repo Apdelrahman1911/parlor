@@ -3,6 +3,7 @@ package com.parlor.networking.protocol
 import com.parlor.core.ids.GameId
 import com.parlor.core.ids.PlayerId
 import com.parlor.core.ids.SessionId
+import com.parlor.engine.state.Player
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -84,6 +85,21 @@ class ProtocolValidationTest {
     }
 
     @Test
+    fun `snapshot request permits only the pre-snapshot minus-one sentinel`() {
+        val request = PeerMessage.SnapshotRequest(
+            header = header(),
+            actor = PlayerId("peer"),
+            lastAppliedRevision = -1L,
+        )
+
+        assertEquals(ProtocolValidation.Valid, request.validateFor(session))
+        assertEquals(
+            ProtocolValidation.InvalidRevision,
+            request.copy(lastAppliedRevision = -2L).validateFor(session),
+        )
+    }
+
+    @Test
     fun `validates epoch and control message semantics`() {
         assertEquals(
             ProtocolValidation.WrongConnectionEpoch,
@@ -115,18 +131,82 @@ class ProtocolValidationTest {
         )
     }
 
+    @Test
+    fun `session start identity metadata and phase sequences are strict`() {
+        val offer = HostMessage.SessionStarting(
+            startId = MESSAGE_ID,
+            caseId = "case",
+            modeId = "classic",
+            players = listOf(
+                Player(PlayerId("host"), "Host", 0),
+                Player(PlayerId("peer"), "Peer", 1),
+            ),
+            sessionNonce = 1L,
+            header = header(messageId = MESSAGE_ID),
+        )
+        assertEquals(ProtocolValidation.Valid, offer.validateFor(session))
+        assertEquals(
+            ProtocolValidation.InvalidMessageId,
+            offer.copy(startId = "different-start-012345678901").validateFor(session),
+        )
+        assertEquals(
+            ProtocolValidation.InvalidSessionStart,
+            offer.copy(players = offer.players + offer.players.last()).validateFor(session),
+        )
+        assertEquals(
+            ProtocolValidation.InvalidSessionStart,
+            offer.copy(
+                players = offer.players.mapIndexed { index, player ->
+                    player.copy(seat = index * 2)
+                },
+            ).validateFor(session),
+        )
+        assertEquals(
+            ProtocolValidation.InvalidSessionStart,
+            offer.copy(players = offer.players.reversed()).validateFor(session),
+        )
+        val contentBound = offer.copy(
+            caseVersion = "1.2.3",
+            caseDigest = "a".repeat(64),
+        )
+        assertEquals(ProtocolValidation.Valid, contentBound.validateFor(session))
+        assertEquals(
+            ProtocolValidation.InvalidSessionStart,
+            contentBound.copy(caseDigest = null).validateFor(session),
+        )
+        assertEquals(
+            ProtocolValidation.InvalidSessionStart,
+            contentBound.copy(caseVersion = "1.beta").validateFor(session),
+        )
+        assertEquals(
+            ProtocolValidation.InvalidSessionStart,
+            contentBound.copy(caseDigest = "A".repeat(64)).validateFor(session),
+        )
+
+        val commit = HostMessage.SessionStartCommitted(
+            startId = MESSAGE_ID,
+            header = header(sequence = 1L),
+        )
+        assertEquals(ProtocolValidation.Valid, commit.validateFor(session))
+        assertEquals(
+            ProtocolValidation.InvalidSequence,
+            commit.copy(header = commit.header.copy(sequence = 0L)).validateFor(session),
+        )
+    }
+
     private fun header(
         protocol: ProtocolVersion = ProtocolVersion(),
         sessionId: SessionId = session.sessionId,
         gameId: GameId = session.gameId,
         gameVersion: Int = session.gameVersion,
         sequence: Long = 0,
+        messageId: String = MESSAGE_ID,
     ) = SessionEnvelopeHeader(
         protocol = protocol,
         sessionId = sessionId,
         gameId = gameId,
         gameVersion = gameVersion,
-        messageId = MESSAGE_ID,
+        messageId = messageId,
         sequence = sequence,
     )
 

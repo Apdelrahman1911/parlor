@@ -2,6 +2,7 @@ package com.parlor.transport.p2p
 
 import com.parlor.core.result.Result
 import com.parlor.storage.secure.SecureStorage
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.Serializable
@@ -20,6 +21,14 @@ import kotlinx.serialization.json.Json
 internal data class ResumableSessionCredential(
     val schemaVersion: Int = CREDENTIAL_SCHEMA_VERSION,
     val offerId: String,
+    /**
+     * Stable local identity for one logical membership across credential rotations.
+     *
+     * Older schema-v1 records did not persist this field. Defaulting it to the
+     * loaded offer id gives those records a safe upgrade identity; every later
+     * rotation is produced with `copy`, so it preserves that identity.
+     */
+    val membershipId: String = offerId,
     val roomCode: String,
     val displayName: String,
     val playerId: String,
@@ -35,6 +44,7 @@ internal data class ResumableSessionCredential(
     fun requireValid(): ResumableSessionCredential = apply {
         require(schemaVersion == CREDENTIAL_SCHEMA_VERSION)
         require(offerId.isSafeIdentifier())
+        require(membershipId.isSafeIdentifier())
         require(roomCode.length == ROOM_CODE_LENGTH && roomCode.all(Char::isLetterOrDigit))
         require(displayName.isNotBlank() && displayName.length <= MAX_DISPLAY_NAME_LENGTH)
         require(playerId.isSafeIdentifier())
@@ -62,7 +72,11 @@ private data class StoredCredentialRecord(
         require(active != null || pending != null)
         active?.requireValid()
         pending?.requireValid()
-        if (active != null && pending != null && active.hostPeerId == pending.hostPeerId) {
+        if (
+            active != null &&
+            pending != null &&
+            active.ownsSameMembershipAs(pending)
+        ) {
             require(pending.generation > active.generation)
         }
     }
@@ -73,6 +87,47 @@ internal sealed interface CredentialStoreError {
     data object Corrupted : CredentialStoreError
     data object TransactionMismatch : CredentialStoreError
 }
+
+/** Result of an ownership-checked credential invalidation transaction. */
+internal enum class CredentialInvalidationResult {
+    Invalidated,
+    NotOwned,
+}
+
+/**
+ * Matches one issued capability generation without comparing its secret.
+ *
+ * Game metadata may be attached after admission, so it is deliberately not
+ * part of the ownership key. The logical membership and issued generation are
+ * all required: a delayed collector from generation N must never invalidate a
+ * rotated generation N+1, even when both belong to the same logical room.
+ */
+internal fun ResumableSessionCredential.ownsSameGenerationAs(
+    other: ResumableSessionCredential,
+): Boolean =
+    offerId == other.offerId &&
+        membershipId == other.membershipId &&
+        generation == other.generation &&
+        roomCode == other.roomCode &&
+        playerId == other.playerId &&
+        hostPeerId == other.hostPeerId &&
+        hostFingerprint == other.hostFingerprint
+
+/**
+ * Matches every rotated generation of one logical membership.
+ *
+ * This broader ownership key is reserved for an active room's authoritative
+ * terminal/final-leave transaction. Routine retry, expiry, and stale-operation
+ * cleanup must continue to use [ownsSameGenerationAs].
+ */
+internal fun ResumableSessionCredential.ownsSameMembershipAs(
+    other: ResumableSessionCredential,
+): Boolean =
+    membershipId == other.membershipId &&
+        roomCode == other.roomCode &&
+        playerId == other.playerId &&
+        hostPeerId == other.hostPeerId &&
+        hostFingerprint == other.hostFingerprint
 
 internal class ResumableCredentialStore(
     private val storage: SecureStorage,
@@ -97,8 +152,8 @@ internal class ResumableCredentialStore(
     suspend fun stage(
         credential: ResumableSessionCredential,
     ): Result<Unit, CredentialStoreError> = mutex.withLock {
-        val valid = runCatching { credential.requireValid() }
-            .getOrElse { return Result.Failure(CredentialStoreError.Corrupted) }
+        val valid = credential.validOrNull()
+            ?: return Result.Failure(CredentialStoreError.Corrupted)
         val current = when (val loaded = loadRecord()) {
             is Result.Failure -> return loaded
             is Result.Success -> loaded.data
@@ -156,6 +211,98 @@ internal class ResumableCredentialStore(
         )
     }
 
+    /**
+     * Removes only the capability generation owned by [credential].
+     *
+     * The load/compare/write operation is serialized with staging, rotation,
+     * and game-metadata updates. A stale room therefore cannot erase a newer
+     * generation or a credential belonging to another logical room. If the
+     * record contains both an old active generation and a new pending one,
+     * invalidating the old generation preserves the pending replacement.
+     */
+    suspend fun invalidateOwned(
+        credential: ResumableSessionCredential,
+    ): Result<CredentialInvalidationResult, CredentialStoreError> = mutex.withLock {
+        val valid = credential.validOrNull()
+            ?: return Result.Failure(CredentialStoreError.Corrupted)
+        val current = when (val loaded = loadRecord()) {
+            is Result.Failure -> return loaded
+            is Result.Success -> loaded.data
+        } ?: return Result.Success(CredentialInvalidationResult.NotOwned)
+
+        val activeMatches = current.active?.ownsSameGenerationAs(valid) == true
+        val pendingMatches = current.pending?.ownsSameGenerationAs(valid) == true
+        if (!activeMatches && !pendingMatches) {
+            return Result.Success(CredentialInvalidationResult.NotOwned)
+        }
+
+        val remainingActive = current.active?.takeUnless { activeMatches }
+        val remainingPending = current.pending?.takeUnless { pendingMatches }
+        val persisted = if (remainingActive == null && remainingPending == null) {
+            removeRecord()
+        } else {
+            writeRecord(
+                StoredCredentialRecord(
+                    active = remainingActive,
+                    pending = remainingPending,
+                ),
+            )
+        }
+        return when (persisted) {
+            is Result.Success -> Result.Success(CredentialInvalidationResult.Invalidated)
+            is Result.Failure -> persisted
+        }
+    }
+
+    /**
+     * Revokes every stored rotation owned by [credential]'s logical membership.
+     *
+     * A resume connector durably commits generation N+1 before the room adopts
+     * its replacement physical session. If an authenticated terminal frame or
+     * explicit final Leave wins in that gap, exact-generation invalidation of N
+     * would leave N+1 resumable. This serialized transaction removes N and any
+     * pending/active descendant with the same stable
+     * [ResumableSessionCredential.membershipId], while a
+     * credential for another room/membership is preserved even if its player,
+     * host, and room-code fields happen to match.
+     *
+     * Callers must be the room that currently owns [credential]. Other cleanup
+     * paths use [invalidateOwned] so delayed work cannot revoke a live rotation.
+     */
+    suspend fun invalidateMembershipOwned(
+        credential: ResumableSessionCredential,
+    ): Result<CredentialInvalidationResult, CredentialStoreError> = mutex.withLock {
+        val valid = credential.validOrNull()
+            ?: return Result.Failure(CredentialStoreError.Corrupted)
+        val current = when (val loaded = loadRecord()) {
+            is Result.Failure -> return loaded
+            is Result.Success -> loaded.data
+        } ?: return Result.Success(CredentialInvalidationResult.NotOwned)
+
+        val activeMatches = current.active?.ownsSameMembershipAs(valid) == true
+        val pendingMatches = current.pending?.ownsSameMembershipAs(valid) == true
+        if (!activeMatches && !pendingMatches) {
+            return Result.Success(CredentialInvalidationResult.NotOwned)
+        }
+
+        val remainingActive = current.active?.takeUnless { activeMatches }
+        val remainingPending = current.pending?.takeUnless { pendingMatches }
+        val persisted = if (remainingActive == null && remainingPending == null) {
+            removeRecord()
+        } else {
+            writeRecord(
+                StoredCredentialRecord(
+                    active = remainingActive,
+                    pending = remainingPending,
+                ),
+            )
+        }
+        return when (persisted) {
+            is Result.Success -> Result.Success(CredentialInvalidationResult.Invalidated)
+            is Result.Failure -> persisted
+        }
+    }
+
     suspend fun clear(): Result<Unit, CredentialStoreError> = mutex.withLock { removeRecord() }
 
     private suspend fun removeRecord(): Result<Unit, CredentialStoreError> =
@@ -177,7 +324,8 @@ internal class ResumableCredentialStore(
                     .requireValid()
                 Result.Success(decoded)
             }
-        } catch (_: Throwable) {
+        } catch (failure: Exception) {
+            if (failure is CancellationException) throw failure
             Result.Failure(CredentialStoreError.Corrupted)
         } finally {
             bytes.fill(0)
@@ -189,7 +337,8 @@ internal class ResumableCredentialStore(
     ): Result<Unit, CredentialStoreError> {
         val encoded = try {
             json.encodeToString(record.requireValid()).encodeToByteArray()
-        } catch (_: Throwable) {
+        } catch (failure: Exception) {
+            if (failure is CancellationException) throw failure
             return Result.Failure(CredentialStoreError.Corrupted)
         }
         return try {
@@ -211,6 +360,14 @@ internal class ResumableCredentialStore(
         const val MAX_RECORD_BYTES = 8 * 1024
     }
 }
+
+/** Validation failures are corrupted input; VM/runtime failures remain fatal. */
+private fun ResumableSessionCredential.validOrNull(): ResumableSessionCredential? =
+    try {
+        requireValid()
+    } catch (_: Exception) {
+        null
+    }
 
 private const val CREDENTIAL_SCHEMA_VERSION = 1
 private const val ROOM_CODE_LENGTH = 6

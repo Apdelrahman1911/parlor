@@ -8,6 +8,7 @@ import com.parlor.engine.session.SubmitError
 import com.parlor.games.mafia.domain.action.MafiaAction
 import com.parlor.games.mafia.domain.action.MafiaActionCodec
 import com.parlor.games.mafia.domain.event.MafiaEvent
+import com.parlor.games.mafia.domain.projection.MafiaProjectionPolicy
 import com.parlor.games.mafia.domain.state.MafiaPrivate
 import com.parlor.games.mafia.domain.state.MafiaState
 import com.parlor.networking.protocol.SessionProtocol
@@ -15,12 +16,11 @@ import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.NetError
 import com.parlor.networking.room.PeerEvent
 import com.parlor.session.multidevice.PeerAuthoritativeSessionCoordinator
+import com.parlor.session.multidevice.PeerConnectionTracker
 import com.parlor.session.multidevice.PlayerSnapshotPayload
 import com.parlor.session.multidevice.ShadowSessionController
 import com.parlor.session.SubmissionReceipt
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -44,26 +44,28 @@ class MafiaPeerRoomBridge(
     private val _hostDisconnected = MutableSharedFlow<Unit>(replay = 1)
     val hostDisconnected: SharedFlow<Unit> = _hostDisconnected.asSharedFlow()
 
-    private val _connectionEvents = MutableSharedFlow<PeerEvent>(
-        replay = 0,
-        extraBufferCapacity = 16,
+    private val connectionTracker = PeerConnectionTracker(
+        scope = scope,
+        hostLostTimeoutMs = hostLostTimeoutMs,
+        onHostLossExpired = { _hostDisconnected.emit(Unit) },
     )
-    val connectionEvents: SharedFlow<PeerEvent> = _connectionEvents.asSharedFlow()
+    val connectionState = connectionTracker.state
+    val connectionEvents: SharedFlow<PeerEvent> = connectionTracker.events
 
     private val publicSerializer = MafiaState.serializer()
     private val privateSerializer = MafiaPrivate.serializer()
+    private val safeInitialPublic = MafiaProjectionPolicy.toPublic(initialPublic).state
 
     val controller: ShadowSessionController<MafiaState, MafiaAction, MafiaEvent> =
         ShadowSessionController(
             selfPlayerId = selfPlayerId,
             sendActionToHost = ::sendActionToHost,
-            initialPublic = PublicProjection(initialPublic),
-            initialPrivate = PrivateProjection(initialPublic, selfPlayerId),
+            // The peer has not authenticated a state snapshot yet. Treat the
+            // placeholder as public-only even if a future caller accidentally
+            // passes a canonical host state here.
+            initialPublic = PublicProjection(safeInitialPublic),
+            initialPrivate = PrivateProjection(safeInitialPublic, selfPlayerId),
         )
-
-    private var hostLost = false
-    private var selfOffline = false
-    private var hostLossJob: Job? = null
 
     private val coordinator = PeerAuthoritativeSessionCoordinator(
         room = room,
@@ -73,6 +75,7 @@ class MafiaPeerRoomBridge(
         onSnapshot = ::installSnapshot,
         onSessionEnded = { _hostDisconnected.emit(Unit) },
         onProtocolViolation = { _hostDisconnected.emit(Unit) },
+        acceptedStartId = protocol.startId,
     )
 
     private val connectionJob = scope.launch {
@@ -80,14 +83,15 @@ class MafiaPeerRoomBridge(
     }
 
     val commandProgress = coordinator.commandProgress
+    val hasAuthoritativeSnapshot = coordinator.hasAuthoritativeSnapshot
+    val initialSnapshotError = coordinator.initialSnapshotError
 
     suspend fun acknowledgeCommandOutcome(commandId: String) {
         coordinator.acknowledgeCommandOutcome(commandId)
     }
 
     fun close() {
-        hostLossJob?.cancel()
-        hostLossJob = null
+        connectionTracker.close()
         connectionJob.cancel()
         coordinator.close()
     }
@@ -96,7 +100,7 @@ class MafiaPeerRoomBridge(
         payload: PlayerSnapshotPayload,
         @Suppress("UNUSED_PARAMETER") revision: Long,
     ): Boolean {
-        val decoded = runCatching {
+        val decoded = try {
             val publicState = json.decodeFromString(
                 publicSerializer,
                 payload.publicPayload.decodeToString(),
@@ -112,10 +116,14 @@ class MafiaPeerRoomBridge(
             publicState to publicState.copy(
                 privatePerPlayer = ownPrivate?.let { mapOf(selfPlayerId to it) } ?: emptyMap(),
             )
-        }.getOrElse {
+        } catch (_: Exception) {
             return false
         }
         val (publicState, playerState) = decoded
+        // The public half of an atomic snapshot is a trust boundary. Reject a
+        // canonical/host projection instead of installing host-only secrets
+        // and relying on UI code not to read them.
+        if (MafiaProjectionPolicy.toPublic(publicState).state != publicState) return false
         controller.updatePrivate(PrivateProjection(playerState, selfPlayerId))
         controller.updatePublic(PublicProjection(publicState))
         return true
@@ -126,7 +134,7 @@ class MafiaPeerRoomBridge(
     ): Result<SubmissionReceipt, SubmitError> {
         return when (val sent = coordinator.submit(MafiaActionCodec.encode(action))) {
             is Result.Success -> {
-                markSelfOnline()
+                connectionTracker.markSelfOnline()
                 Result.Success(
                     SubmissionReceipt(
                         stateChanged = false,
@@ -135,7 +143,7 @@ class MafiaPeerRoomBridge(
                 )
             }
             is Result.Failure -> {
-                if (sent.error == NetError.NotConnected) markSelfOffline()
+                if (sent.error == NetError.NotConnected) connectionTracker.markSelfOffline()
                 if (sent.error == NetError.CommandInFlight) {
                     Result.Failure(SubmitError.CommandPending)
                 } else {
@@ -145,50 +153,7 @@ class MafiaPeerRoomBridge(
         }
     }
 
-    private fun markSelfOffline() {
-        if (!selfOffline) {
-            selfOffline = true
-            _connectionEvents.tryEmit(PeerEvent.SelfOffline)
-        }
-    }
-
-    private fun markSelfOnline() {
-        if (selfOffline) {
-            selfOffline = false
-            _connectionEvents.tryEmit(PeerEvent.SelfOnline)
-        }
-    }
-
-    private fun handleConnectionEvent(event: PeerEvent) {
-        when (event) {
-            PeerEvent.HostLost -> {
-                if (!hostLost) {
-                    hostLost = true
-                    _connectionEvents.tryEmit(PeerEvent.HostLost)
-                }
-                hostLossJob?.cancel()
-                hostLossJob = scope.launch {
-                    delay(hostLostTimeoutMs)
-                    if (hostLost) _hostDisconnected.emit(Unit)
-                }
-            }
-            PeerEvent.HostRestored -> {
-                hostLossJob?.cancel()
-                hostLossJob = null
-                if (hostLost) {
-                    hostLost = false
-                    _connectionEvents.tryEmit(PeerEvent.HostRestored)
-                }
-                markSelfOnline()
-            }
-            PeerEvent.SelfOffline -> markSelfOffline()
-            PeerEvent.SelfOnline -> markSelfOnline()
-            is PeerEvent.AdmissionRequested,
-            is PeerEvent.PeerLeft,
-            is PeerEvent.PeerReconnected,
-            is PeerEvent.PeerJoined -> Unit
-        }
-    }
+    private suspend fun handleConnectionEvent(event: PeerEvent) = connectionTracker.handle(event)
 
     internal fun queuedActionForTest(): MafiaAction? = null
 

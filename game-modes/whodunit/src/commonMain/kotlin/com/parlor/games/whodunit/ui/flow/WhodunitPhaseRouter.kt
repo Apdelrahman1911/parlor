@@ -53,6 +53,8 @@ import com.parlor.games.whodunit.ui.screens.round.DiscussionScreen
 import com.parlor.games.whodunit.ui.screens.round.RoundTitleCardScreen
 import com.parlor.games.whodunit.ui.screens.safety.PrivacyConcernAffordance
 import com.parlor.games.whodunit.ui.screens.safety.PrivacyConcernDialog
+import com.parlor.games.whodunit.ui.screens.safety.PrivacyConcernUiPolicy
+import com.parlor.games.whodunit.ui.screens.safety.privacyConcernUiPolicy
 import com.parlor.games.whodunit.ui.screens.setup.PublicIntroScreen
 import com.parlor.games.whodunit.ui.screens.setup.RulesBriefingScreen
 import com.parlor.games.whodunit.ui.screens.vote.EliminationInnocentOutcomeScreen
@@ -249,6 +251,7 @@ private fun HostPhaseScreens(
             roundIndex = phase.index,
             state = state,
             payload = payload,
+            playMode = playMode,
             modifier = modifier,
         )
 
@@ -257,8 +260,7 @@ private fun HostPhaseScreens(
             state = state,
             players = state.players,
             modifier = modifier,
-            selfPlayerId = playMode.selfPlayerId,
-            isHost = true,
+            playMode = playMode,
         )
 
         is WhodunitPhase.TiedRevote -> {
@@ -266,7 +268,7 @@ private fun HostPhaseScreens(
             // the same vote UI takes over. While still Tied, show the revote
             // explainer card.
             if (state.public.voteState is VoteState.Collecting) {
-                VoteSegment(session, state, state.players, modifier, playMode.selfPlayerId, true)
+                VoteSegment(session, state, state.players, playMode, modifier)
             } else {
                 TiedRevoteSegment(session, state, modifier)
             }
@@ -371,8 +373,7 @@ private fun PeerPhaseScreens(
                     state = state,
                     players = state.players,
                     modifier = modifier,
-                    selfPlayerId = playMode.selfPlayerId,
-                    isHost = false,
+                    playMode = playMode,
                 )
                 // The host is holding on the "innocent eliminated" announcement
                 // — peers see the same card, read-only, until the host advances.
@@ -401,13 +402,12 @@ private fun PeerPhaseScreens(
             state = state,
             players = state.players,
             modifier = modifier,
-            selfPlayerId = playMode.selfPlayerId,
-            isHost = false,
+            playMode = playMode,
         )
 
         is WhodunitPhase.TiedRevote -> {
             if (state.public.voteState is VoteState.Collecting) {
-                VoteSegment(session, state, state.players, modifier, playMode.selfPlayerId, false)
+                VoteSegment(session, state, state.players, playMode, modifier)
             } else {
                 PeerWaitingForHostScreen(
                     eyebrow = waitingEyebrow,
@@ -563,6 +563,7 @@ private fun LocalCharacterRevealSegment(
                         onDone = { stage = RevealStage.Hide },
                         modifier = Modifier.fillMaxSize(),
                         allCharacters = payload.characters,
+                        deflectionTargets = privateData.deflectionTargets,
                     )
                 }
             }
@@ -591,6 +592,7 @@ private fun LocalCharacterRevealSegment(
 
         if (privacyOpen) {
             PrivacyConcernDialog(
+                policy = PrivacyConcernUiPolicy.HostMayReroll,
                 onContinue = { privacyOpen = false },
                 onReroll = {
                     privacyOpen = false
@@ -658,6 +660,7 @@ private fun SelfCharacterRevealSegment(
 
     var stage by remember(selfPlayer.id) { mutableStateOf(RevealStage.Handoff) }
     var privacyOpen by remember { mutableStateOf(false) }
+    val privacyPolicy = privacyConcernUiPolicy(isHost)
 
     Box(modifier = modifier.fillMaxSize()) {
         when (stage) {
@@ -684,6 +687,7 @@ private fun SelfCharacterRevealSegment(
                         onDone = { stage = RevealStage.Hide },
                         modifier = Modifier.fillMaxSize(),
                         allCharacters = payload.characters,
+                        deflectionTargets = privateData.deflectionTargets,
                     )
                 }
             }
@@ -710,10 +714,15 @@ private fun SelfCharacterRevealSegment(
 
         if (privacyOpen) {
             PrivacyConcernDialog(
+                policy = privacyPolicy,
                 onContinue = { privacyOpen = false },
-                onReroll = {
-                    privacyOpen = false
-                    scope.launch { session.submit(WhodunitAction.RequestReroll) }
+                onReroll = if (privacyPolicy == PrivacyConcernUiPolicy.HostMayReroll) {
+                    {
+                        privacyOpen = false
+                        scope.launch { session.submit(WhodunitAction.RequestReroll) }
+                    }
+                } else {
+                    null
                 },
             )
         }
@@ -728,6 +737,7 @@ private fun RoundSegment(
     roundIndex: Int,
     state: WhodunitState,
     payload: WhodunitCase,
+    playMode: PlayMode,
     modifier: Modifier = Modifier,
 ) {
     val scope = rememberCoroutineScope()
@@ -791,6 +801,7 @@ private fun RoundSegment(
             session = session,
             state = state,
             players = state.players,
+            playMode = playMode,
             modifier = modifier,
         )
         // Elimination mode: the room voted off a non-killer and the game
@@ -907,9 +918,8 @@ private fun VoteSegment(
     session: SessionController<WhodunitState, WhodunitAction, WhodunitEvent>,
     state: WhodunitState,
     players: List<Player>,
+    playMode: PlayMode,
     modifier: Modifier = Modifier,
-    selfPlayerId: PlayerId? = null,
-    isHost: Boolean = true,
 ) {
     val scope = rememberCoroutineScope()
     val vote = state.public.voteState as? VoteState.Collecting
@@ -920,45 +930,54 @@ private fun VoteSegment(
         return
     }
 
-    val votedOrAbstained = vote.castSoFar.keys + vote.abstained
-    val nextVoter = vote.ballotPlayerIds.firstOrNull { it !in votedOrAbstained }
+    val presentation = voteTurnPresentation(playMode, vote)
+    val nextVoter = when (presentation) {
+        is VoteTurnPresentation.LocalBallot -> presentation.voterId
+        is VoteTurnPresentation.WaitingForVoter -> presentation.voterId
+        VoteTurnPresentation.CloseByHost,
+        VoteTurnPresentation.WaitingForHostTally,
+        VoteTurnPresentation.Unsupported -> null
+    }
     val nextVoterName = nextVoter?.let { id -> players.firstOrNull { it.id == id }?.displayName }
 
-    if (nextVoter == null) {
-        // Everyone has voted or abstained — close the vote. Only the host
-        // submits CloseVote; peers just wait for the host's tally to ripple
-        // back as a phase change.
-        if (isHost) {
+    when (presentation) {
+        VoteTurnPresentation.CloseByHost -> {
+            // Everyone has voted or abstained. Only the authoritative device
+            // closes; peers wait for the resulting snapshot.
             LaunchedEffect(Unit) {
                 session.submit(WhodunitAction.CloseVote)
             }
+            HideScreen(
+                line = stringResource(Res.string.whodunit_vote_counting),
+                onTap = {},
+                modifier = modifier,
+            )
+            return
         }
-        // While the reducer tallies, briefly show a dim hide screen.
-        HideScreen(
-            line = stringResource(Res.string.whodunit_vote_counting),
-            onTap = {},
-            modifier = modifier,
-        )
-        return
+        VoteTurnPresentation.WaitingForHostTally -> {
+            HideScreen(
+                line = stringResource(Res.string.whodunit_vote_counting),
+                onTap = {},
+                modifier = modifier,
+            )
+            return
+        }
+        is VoteTurnPresentation.WaitingForVoter -> {
+            VoteHandoffScreen(
+                nextVoterName = nextVoterName ?: "the next voter",
+                onContinue = { /* only the named player's device may open this ballot */ },
+                modifier = modifier,
+            )
+            return
+        }
+        VoteTurnPresentation.Unsupported -> return
+        is VoteTurnPresentation.LocalBallot -> Unit
     }
 
-    // Multi-device per-voter gating: only the device whose self is nextVoter
-    // sees the ballot. Other devices show the standard hand-off cover with
-    // the next voter's name. Pass-and-play (selfPlayerId == null) keeps the
-    // pre-existing tap-to-continue behaviour for everyone on one phone.
-    val isLocalVoter = selfPlayerId == null || nextVoter == selfPlayerId
-
-    var ballotOpen by remember(nextVoter) { mutableStateOf(false) }
-
-    if (!isLocalVoter) {
-        VoteHandoffScreen(
-            nextVoterName = nextVoterName ?: "the next voter",
-            onContinue = { /* not the local voter — host drives the flow */ },
-            modifier = modifier,
-        )
-        return
-    }
-
+    val localVoter = presentation.voterId
+    // Keying by the policy-owned voter identity closes any ballot as soon as
+    // the authoritative turn moves to another player.
+    var ballotOpen by remember(localVoter) { mutableStateOf(false) }
     if (!ballotOpen) {
         VoteHandoffScreen(
             nextVoterName = nextVoterName ?: "the next voter",
@@ -968,20 +987,20 @@ private fun VoteSegment(
     } else {
         val candidates = players
             .filter { it.id in vote.candidatePlayerIds }
-            .filter { it.id != nextVoter }   // can't vote for yourself
+            .filter { it.id != localVoter }   // can't vote for yourself
             .map { it.id to it.displayName }
         VoteBallotScreen(
             currentVoterName = nextVoterName ?: "Voter",
             candidates = candidates,
             onVote = { target ->
                 scope.launch {
-                    session.submit(WhodunitAction.CastVote(nextVoter, target))
+                    session.submit(WhodunitAction.CastVote(localVoter, target))
                     ballotOpen = false
                 }
             },
             onRefuse = {
                 scope.launch {
-                    session.submit(WhodunitAction.RefuseToVote(nextVoter))
+                    session.submit(WhodunitAction.RefuseToVote(localVoter))
                     ballotOpen = false
                 }
             },
@@ -1003,7 +1022,6 @@ private fun TiedRevoteSegment(
     }
     TiedRevoteScreen(
         tiedNames = tiedNames,
-        debateSecondsRemaining = tied.debateSecondsRemaining,
         onBeginRevote = { scope.launch { session.submit(WhodunitAction.OpenVote) } },
         modifier = modifier,
     )

@@ -35,12 +35,13 @@ import com.parlor.designsystem.components.ScreenHeader
 import com.parlor.designsystem.components.StickyActionBar
 import com.parlor.designsystem.theme.ParlorTheme
 import androidx.compose.foundation.text.KeyboardOptions
+import com.parlor.networking.room.RoomInputPolicy
 import org.jetbrains.compose.resources.stringResource
 
 /**
- * Phase 8 join prompt — minimal code-entry screen. Submits the entered code
- * to [onConfirm], which kicks off `RoomTransport.join(code, displayName)`
- * and transitions to [PeerLobbyScreen] on success.
+ * Room-code entry shared by the shipping game-specific peer session flows.
+ * [onConfirm] hands the validated code to the app shell, which starts the
+ * authoritative join/resume and acknowledged-session-start workflow.
  */
 @Composable
 fun JoinPromptScreen(
@@ -74,7 +75,7 @@ fun JoinPromptScreen(
 
                 ParlorTextField(
                     value = code,
-                    onValueChange = { input -> code = input.uppercase().filter { it.isLetterOrDigit() }.take(6) },
+                    onValueChange = { input -> code = RoomInputPolicy.normalizeRoomCode(input) },
                     label = stringResource(Res.string.join_code_field),
                     capitalization = KeyboardCapitalization.Characters,
                 )
@@ -86,7 +87,7 @@ fun JoinPromptScreen(
                     contentDescription = stringResource(Res.string.join_confirm_description),
                     onClick = { onConfirm(code) },
                     modifier = Modifier.fillMaxWidth(),
-                    enabled = code.isNotBlank(),
+                    enabled = RoomInputPolicy.isValidRoomCode(code),
                 )
             }
         }

@@ -3,6 +3,7 @@ package com.parlor.games.mafia.multidevice
 import assertk.assertThat
 import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
+import assertk.assertions.isFalse
 import assertk.assertions.isNull
 import assertk.assertions.isTrue
 import com.parlor.core.ids.GameId
@@ -68,6 +69,7 @@ class MafiaPeerPrivateTargetGateTest {
         sessionId = SessionId("mafia-session-000001"),
         gameId = MafiaIds.GameId,
         gameVersion = MafiaHostRoomBridge.GAME_VERSION,
+        startId = "mafia-start-00000001",
     )
 
     private fun emptyPublic() = MafiaState(
@@ -90,6 +92,79 @@ class MafiaPeerPrivateTargetGateTest {
             messageId = "mafia-snapshot-0000000$sequence",
             sequence = sequence,
         )
+
+    private fun canonicalSecretState() = emptyPublic().copy(
+        privatePerPlayer = mapOf(
+            alice to MafiaPrivate(Role.Civilian, Team.Town),
+            bob to MafiaPrivate(Role.Mafia, Team.Mafia, knownTeammates = setOf(frank)),
+        ),
+        hostOnly = MafiaHostOnly(
+            fullRoleMap = mapOf(alice to Role.Civilian, bob to Role.Mafia),
+            randomSeed = 9_001L,
+        ),
+    )
+
+    @Test
+    fun peer_redacts_an_accidentally_canonical_initial_placeholder() = runTest {
+        val scope = TestScope(UnconfinedTestDispatcher(testScheduler))
+        val bus = InMemoryRoomBus()
+        bus.registerPeer(alice)
+        val bridge = MafiaPeerRoomBridge(
+            room = InMemoryPeerRoom(bus, alice, "Alice", hostId),
+            selfPlayerId = alice,
+            initialPublic = canonicalSecretState(),
+            scope = scope,
+            protocol = protocol,
+            json = json,
+        )
+
+        val public = bridge.controller.publicState.value.state
+        val own = bridge.controller.privateStateFor(alice).value.state
+        assertThat(public.privatePerPlayer).isEmpty()
+        assertThat(public.hostOnly.fullRoleMap).isEmpty()
+        assertThat(public.hostOnly.randomSeed).isEqualTo(0L)
+        assertThat(own.privatePerPlayer).isEmpty()
+        assertThat(own.hostOnly.fullRoleMap).isEmpty()
+        assertThat(own.hostOnly.randomSeed).isEqualTo(0L)
+        bridge.close()
+    }
+
+    @Test
+    fun peer_rejects_snapshot_whose_public_payload_contains_host_secrets() = runTest {
+        val scope = TestScope(UnconfinedTestDispatcher(testScheduler))
+        val bus = InMemoryRoomBus()
+        bus.registerPeer(alice)
+        val bridge = MafiaPeerRoomBridge(
+            room = InMemoryPeerRoom(bus, alice, "Alice", hostId),
+            selfPlayerId = alice,
+            initialPublic = emptyPublic(),
+            scope = scope,
+            protocol = protocol,
+            json = json,
+        )
+        var failedClosed = false
+        val endCollector = scope.launch { bridge.hostDisconnected.collect { failedClosed = true } }
+
+        bus.fromHost(
+            SendTarget.Direct(alice),
+            HostMessage.PlayerSnapshot(
+                header = header(1),
+                revision = 1,
+                publicPayload = json.encodeToString(
+                    MafiaState.serializer(),
+                    canonicalSecretState(),
+                ).encodeToByteArray(),
+                privatePayload = ByteArray(0),
+            ),
+        )
+        scope.runCurrent()
+
+        assertThat(bridge.hasAuthoritativeSnapshot.value).isFalse()
+        assertThat(bridge.controller.publicState.value.state.hostOnly.randomSeed).isEqualTo(0L)
+        assertThat(failedClosed).isTrue()
+        endCollector.cancel()
+        bridge.close()
+    }
 
     @Test
     fun peer_rejects_private_payload_from_wrong_game_envelope() = runTest {

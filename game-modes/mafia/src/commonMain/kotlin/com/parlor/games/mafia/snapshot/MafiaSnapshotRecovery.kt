@@ -7,14 +7,19 @@ import com.parlor.core.versioning.SemVer
 import com.parlor.games.mafia.MafiaDefinition
 import com.parlor.games.mafia.MafiaIds
 import com.parlor.games.mafia.domain.phase.MafiaPhase
+import com.parlor.games.mafia.domain.rules.MafiaSessionRules
 import com.parlor.games.mafia.domain.rules.WinCheck
 import com.parlor.games.mafia.domain.settings.MafiaSettingsValidation
+import com.parlor.games.mafia.domain.settings.TieBehavior
+import com.parlor.games.mafia.domain.state.ActiveVote
 import com.parlor.games.mafia.domain.state.MafiaState
+import com.parlor.games.mafia.domain.state.PublicPlayerSlot
 import com.parlor.games.mafia.domain.state.Role
 import com.parlor.games.mafia.domain.state.Team
 import com.parlor.games.mafia.domain.state.team
 import com.parlor.games.mafia.domain.state.MafiaHostOnly
 import com.parlor.storage.snapshot.SnapshotStore
+import kotlinx.coroutines.CancellationException
 
 internal val MAFIA_SNAPSHOT_VERSION = SemVer(1, 0, 0)
 internal const val MAFIA_PLAY_MODE_KEY = "playMode"
@@ -49,9 +54,9 @@ internal suspend fun loadMafiaResumedSession(
                 Result.Success(ResumedMafiaSession(sessionId, state))
             }
         }
-    } catch (cancelled: kotlinx.coroutines.CancellationException) {
+    } catch (cancelled: CancellationException) {
         throw cancelled
-    } catch (_: Throwable) {
+    } catch (_: Exception) {
         Result.Failure(DataError.CorruptedData)
     }
 }
@@ -60,11 +65,7 @@ internal suspend fun loadMafiaResumedSession(
 internal fun MafiaState.isValidRecoveryState(): Boolean {
     val playerIds = players.map { it.id }
     val playerIdSet = playerIds.toSet()
-    if (playerIds.size != playerIdSet.size || players.map { it.seat }.toSet().size != players.size) {
-        return false
-    }
-    if (players.map { it.seat }.sorted() != players.indices.toList()) return false
-    if (players.any { it.displayName.isBlank() }) return false
+    if (!MafiaSessionRules.isValidRoster(players)) return false
     if (public.settings.validate(players.size) !is MafiaSettingsValidation.Valid) return false
 
     // Only local pass-and-play snapshots are resumable through this path.
@@ -80,36 +81,16 @@ internal fun MafiaState.isValidRecoveryState(): Boolean {
         return false
     }
 
-    val rosterById = public.roster.associateBy { it.playerId }
-    if (rosterById.size != players.size || rosterById.keys != playerIdSet) return false
-    if (players.any { player ->
-            val slot = rosterById[player.id] ?: return@any true
-            slot.displayName != player.displayName || slot.seat != player.seat
+    if (public.roster.size != players.size) return false
+    if (public.roster.zip(players).any { (slot, player) ->
+            slot.playerId != player.id ||
+                slot.displayName != player.displayName ||
+                slot.seat != player.seat
         }
     ) {
         return false
     }
-    public.activeVote?.let { vote ->
-        val voting = phase as? MafiaPhase.Voting ?: return false
-        val alive = public.roster.filter { it.alive }.map { it.playerId }.toSet()
-        if (
-            vote.day != voting.day || vote.revoteRound != voting.revoteRound ||
-            vote.revoteRound !in 0..public.settings.maxRevotes ||
-            vote.candidates.isEmpty() || vote.ballot.isEmpty() ||
-            vote.candidates.distinct().size != vote.candidates.size ||
-            vote.ballot.distinct().size != vote.ballot.size ||
-            !alive.containsAll(vote.candidates) ||
-            !alive.containsAll(vote.ballot) ||
-            !vote.ballot.containsAll(vote.castSoFar.keys) ||
-            !vote.candidates.containsAll(vote.castSoFar.values) ||
-            !vote.ballot.containsAll(vote.abstained) ||
-            vote.castSoFar.keys.any(vote.abstained::contains) ||
-            (!public.settings.allowSelfVote && vote.castSoFar.any { (voter, target) -> voter == target })
-        ) {
-            return false
-        }
-    }
-    if (phase !is MafiaPhase.Voting && public.activeVote != null) return false
+    if (!hasReachableActiveVote()) return false
 
     if (!public.isValidAnnouncements(playerIdSet)) return false
     if (!isValidPhaseShape()) return false
@@ -183,6 +164,62 @@ internal fun MafiaState.isValidRecoveryState(): Boolean {
         if (WinCheck.evaluate(alive, hostOnly.fullRoleMap) != public.winner) return false
     }
     return true
+}
+
+/**
+ * Validates the exact vote shape emitted by [com.parlor.games.mafia.domain.reducer.MafiaReducer].
+ * A subset check is insufficient: deleting a living voter or arbitrary candidate from a
+ * snapshot would otherwise restore a ballot the reducer can never create.
+ */
+private fun MafiaState.hasReachableActiveVote(): Boolean {
+    val voting = phase as? MafiaPhase.Voting
+    val vote = public.activeVote
+    if (voting == null) return vote == null
+    vote ?: return false
+
+    val eligible = public.roster
+        .asSequence()
+        .filter(PublicPlayerSlot::alive)
+        .map(PublicPlayerSlot::playerId)
+        .filterNot(public.droppedPlayers::contains)
+        .toList()
+
+    if (
+        vote.day != voting.day ||
+        vote.revoteRound != voting.revoteRound ||
+        vote.revoteRound !in 0..public.settings.maxRevotes ||
+        vote.ballot != eligible ||
+        vote.ballot.isEmpty()
+    ) {
+        return false
+    }
+    if (!vote.hasReachableCandidates(eligible, public.settings.voteTieBehavior)) return false
+
+    return vote.castSoFar.keys.all(vote.ballot::contains) &&
+        vote.castSoFar.values.all(vote.candidates::contains) &&
+        vote.abstained.all(vote.ballot::contains) &&
+        vote.castSoFar.keys.none(vote.abstained::contains) &&
+        (public.settings.allowSelfVote || vote.castSoFar.none { (voter, target) -> voter == target })
+}
+
+private fun ActiveVote.hasReachableCandidates(
+    eligible: List<com.parlor.core.ids.PlayerId>,
+    tieBehavior: TieBehavior,
+): Boolean {
+    if (revoteRound == 0) return candidates == eligible
+
+    // A positive revote round can only follow a tied ballot. REVOTE_ALL retains
+    // the original ordered ballot. REVOTE_TIED_ONLY receives the tied targets
+    // in PlayerId order from VoteResolution and a tie necessarily has 2+ targets.
+    return when (tieBehavior) {
+        TieBehavior.SKIP_ELIMINATION -> false
+        TieBehavior.REVOTE_ALL -> candidates == eligible
+        TieBehavior.REVOTE_TIED_ONLY ->
+            candidates.size >= 2 &&
+                candidates.distinct().size == candidates.size &&
+                eligible.containsAll(candidates) &&
+                candidates == candidates.sortedBy { it.raw }
+    }
 }
 
 private fun com.parlor.games.mafia.domain.state.MafiaPublic.isValidAnnouncements(
@@ -273,8 +310,10 @@ private fun MafiaState.hasValidMafiaCoordination(
     val aliveIds = public.roster.filter { it.alive }.map { it.playerId }.toSet()
     val expectedOwners = if (expectedRound == null) emptySet() else mafiaIds.intersect(aliveIds)
     val snapshots = privatePerPlayer
-        .filterValues { it.mafiaCoordination != null }
-        .mapValues { it.value.mafiaCoordination!! }
+        .mapNotNull { (playerId, private) ->
+            private.mafiaCoordination?.let { playerId to it }
+        }
+        .toMap()
     if (snapshots.keys != expectedOwners) return false
     if (snapshots.isEmpty()) return expectedOwners.isEmpty()
     val canonical = snapshots.values.first()

@@ -129,10 +129,14 @@ class SerializedSnapshotWriterTest {
     fun cancellation_propagates_and_does_not_leave_a_false_writing_status() = runTest {
         val saveEntered = CompletableDeferred<Unit>()
         val neverRelease = CompletableDeferred<Unit>()
+        var blockNextSave = true
         val store = RecordingStore(
             beforeSave = {
-                saveEntered.complete(Unit)
-                neverRelease.await()
+                if (blockNextSave) {
+                    blockNextSave = false
+                    saveEntered.complete(Unit)
+                    neverRelease.await()
+                }
             },
         )
         val writer = writer(store)
@@ -143,25 +147,178 @@ class SerializedSnapshotWriterTest {
 
         assertFailsWith<CancellationException> { saving.await() }
         assertThat(writer.status.value).isEqualTo(SnapshotWriteStatus.Idle)
+        assertThat(writer.persist(TestState(9))).isInstanceOf(Result.Success::class)
+        assertThat(store.saveCalls).isEqualTo(2)
+        assertThat(writer.status.value).isEqualTo(SnapshotWriteStatus.Saved)
     }
 
-    private fun writer(store: SnapshotStore) = SerializedSnapshotWriter<TestState>(
+    @Test
+    fun snapshot_construction_exception_is_corruption_and_same_state_can_retry() = runTest {
+        val store = RecordingStore()
+        var failNextSnapshot = true
+        val writer = writer(
+            store = store,
+            snapshotFor = { state ->
+                if (failNextSnapshot) {
+                    failNextSnapshot = false
+                    throw IllegalStateException("fixture codec failure")
+                }
+                snapshot(state)
+            },
+        )
+
+        val failed = writer.persist(TestState(4))
+
+        assertThat(failed).isInstanceOf(Result.Failure::class)
+        assertThat((failed as Result.Failure).error).isEqualTo(DataError.CorruptedData)
+        assertThat(writer.status.value).isEqualTo(
+            SnapshotWriteStatus.Failed(DataError.CorruptedData),
+        )
+        assertThat(writer.persist(TestState(4))).isInstanceOf(Result.Success::class)
+        assertThat(store.savedPayloads).containsExactly(4)
+    }
+
+    @Test
+    fun thrown_store_exception_is_sanitized_as_io_and_same_state_can_retry() = runTest {
+        var failNextSave = true
+        val store = RecordingStore(
+            beforeSave = {
+                if (failNextSave) {
+                    failNextSave = false
+                    throw IllegalStateException("/private/snapshot/path")
+                }
+            },
+        )
+        val writer = writer(store)
+
+        val failed = writer.persist(TestState(5))
+
+        assertThat(failed).isInstanceOf(Result.Failure::class)
+        assertThat((failed as Result.Failure).error).isEqualTo(DataError.IoError("snapshot_io"))
+        assertThat(writer.status.value).isEqualTo(
+            SnapshotWriteStatus.Failed(DataError.IoError("snapshot_io")),
+        )
+        assertThat(writer.persist(TestState(5))).isInstanceOf(Result.Success::class)
+        assertThat(store.savedPayloads).containsExactly(5)
+    }
+
+    @Test
+    fun fatal_snapshot_error_propagates_restores_status_and_releases_mutex() = runTest {
+        val store = RecordingStore()
+        var failNextSnapshot = true
+        val writer = writer(
+            store = store,
+            snapshotFor = { state ->
+                if (state.value == 2 && failNextSnapshot) {
+                    failNextSnapshot = false
+                    throw FatalSnapshotWriterError()
+                }
+                snapshot(state)
+            },
+        )
+        writer.persist(TestState(1))
+
+        assertFailsWith<FatalSnapshotWriterError> {
+            writer.persist(TestState(2))
+        }
+        assertThat(writer.status.value).isEqualTo(SnapshotWriteStatus.Saved)
+        assertThat(writer.persist(TestState(2))).isInstanceOf(Result.Success::class)
+        assertThat(store.savedPayloads).containsExactly(1, 2)
+    }
+
+    @Test
+    fun discard_cancellation_propagates_restores_status_and_can_retry() = runTest {
+        val deleteEntered = CompletableDeferred<Unit>()
+        val neverRelease = CompletableDeferred<Unit>()
+        var blockNextDelete = true
+        val store = RecordingStore(
+            beforeDelete = {
+                if (blockNextDelete) {
+                    blockNextDelete = false
+                    deleteEntered.complete(Unit)
+                    neverRelease.await()
+                }
+            },
+        )
+        val writer = writer(store)
+        val deleting = async { writer.discard() }
+        deleteEntered.await()
+
+        deleting.cancel(CancellationException("screen disposed"))
+
+        assertFailsWith<CancellationException> { deleting.await() }
+        assertThat(writer.status.value).isEqualTo(SnapshotWriteStatus.Idle)
+        assertThat(writer.discard()).isInstanceOf(Result.Success::class)
+        assertThat(store.deleteCalls).isEqualTo(2)
+        assertThat(writer.status.value).isEqualTo(SnapshotWriteStatus.Deleted)
+    }
+
+    @Test
+    fun fatal_discard_error_propagates_restores_status_and_can_retry() = runTest {
+        var failNextDelete = true
+        val store = RecordingStore(
+            beforeDelete = {
+                if (failNextDelete) {
+                    failNextDelete = false
+                    throw FatalSnapshotWriterError()
+                }
+            },
+        )
+        val writer = writer(store)
+        writer.persist(TestState(6))
+
+        assertFailsWith<FatalSnapshotWriterError> { writer.discard() }
+        assertThat(writer.status.value).isEqualTo(SnapshotWriteStatus.Saved)
+        assertThat(writer.discard()).isInstanceOf(Result.Success::class)
+        assertThat(store.deleteCalls).isEqualTo(2)
+        assertThat(writer.status.value).isEqualTo(SnapshotWriteStatus.Deleted)
+    }
+
+    @Test
+    fun thrown_discard_store_exception_is_sanitized_as_io_and_can_retry() = runTest {
+        var failNextDelete = true
+        val store = RecordingStore(
+            beforeDelete = {
+                if (failNextDelete) {
+                    failNextDelete = false
+                    throw IllegalStateException("/private/snapshot/path")
+                }
+            },
+        )
+        val writer = writer(store)
+
+        val failed = writer.discard()
+
+        assertThat(failed).isInstanceOf(Result.Failure::class)
+        assertThat((failed as Result.Failure).error).isEqualTo(DataError.IoError("snapshot_io"))
+        assertThat(writer.status.value).isEqualTo(
+            SnapshotWriteStatus.Failed(DataError.IoError("snapshot_io")),
+        )
+        assertThat(writer.discard()).isInstanceOf(Result.Success::class)
+        assertThat(store.deleteCalls).isEqualTo(2)
+        assertThat(writer.status.value).isEqualTo(SnapshotWriteStatus.Deleted)
+    }
+
+    private fun writer(
+        store: SnapshotStore,
+        snapshotFor: (TestState) -> GameSnapshot = ::snapshot,
+    ) = SerializedSnapshotWriter(
         store = store,
         sessionId = sessionId,
-        snapshotFor = { state ->
-            GameSnapshot(
-                sessionId = sessionId,
-                gameId = GameId("test"),
-                engineVersion = SemVer(1, 0, 0),
-                createdAt = Instant.fromEpochSeconds(state.value.toLong()),
-                phaseId = state.phase.id,
-                payload = byteArrayOf(state.value.toByte()),
-            )
-        },
+        snapshotFor = snapshotFor,
         isCompleted = TestState::completed,
         // Keep scheduling under runTest; production uses Dispatchers.Default
         // so game/envelope serialization cannot block the UI dispatcher.
         writeContext = EmptyCoroutineContext,
+    )
+
+    private fun snapshot(state: TestState) = GameSnapshot(
+        sessionId = sessionId,
+        gameId = GameId("test"),
+        engineVersion = SemVer(1, 0, 0),
+        createdAt = Instant.fromEpochSeconds(state.value.toLong()),
+        phaseId = state.phase.id,
+        payload = byteArrayOf(state.value.toByte()),
     )
 }
 
@@ -178,6 +335,8 @@ private data class TestState(
 private class RecordingStore(
     private val beforeSave: suspend (GameSnapshot) -> Unit = {},
     private val saveResult: () -> EmptyResult<DataError> = { EmptyOk },
+    private val beforeDelete: suspend () -> Unit = {},
+    private val deleteResult: () -> EmptyResult<DataError> = { EmptyOk },
 ) : SnapshotStore {
     val savedPayloads = mutableListOf<Int>()
     var saveCalls = 0
@@ -206,7 +365,8 @@ private class RecordingStore(
         maxConcurrentCalls = maxOf(maxConcurrentCalls, concurrentCalls)
         return try {
             deleteCalls += 1
-            EmptyOk
+            beforeDelete()
+            deleteResult()
         } finally {
             concurrentCalls -= 1
         }
@@ -218,3 +378,5 @@ private class RecordingStore(
     override suspend fun listUnfinished(): Result<List<SessionId>, DataError> =
         Result.Success(emptyList())
 }
+
+private class FatalSnapshotWriterError : Error("fatal snapshot writer failure")

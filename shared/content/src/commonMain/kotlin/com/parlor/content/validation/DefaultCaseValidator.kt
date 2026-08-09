@@ -1,6 +1,7 @@
 package com.parlor.content.validation
 
 import com.parlor.content.schema.CaseEnvelope
+import com.parlor.core.ids.GameId
 import com.parlor.core.result.Result
 import com.parlor.core.result.ValidationError
 import com.parlor.core.versioning.SemVer
@@ -47,8 +48,16 @@ class DefaultCaseValidator(
             )
         }
 
-        // 4. GameId registered.
-        if (gameRegistry.byId(com.parlor.core.ids.GameId(envelope.gameId)) == null) {
+        // 4. GameId registered. The envelope is untrusted; a blank value must
+        // become a typed validation failure instead of escaping GameId's
+        // constructor as an IllegalArgumentException.
+        val gameId = try {
+            GameId(envelope.gameId)
+        } catch (_: IllegalArgumentException) {
+            return Result.Failure(ValidationError.MalformedField("gameId", "blank"))
+        }
+        val definition = gameRegistry.byId(gameId)
+        if (definition == null) {
             return Result.Failure(ValidationError.UnknownGame(envelope.gameId))
         }
         if (envelope.gameId != payloadValidator.gameId) {
@@ -76,20 +85,19 @@ class DefaultCaseValidator(
         }
 
         // 7. Player counts within the resolved game definition's range.
-        val def = gameRegistry.byId(com.parlor.core.ids.GameId(envelope.gameId))!!
-        if (playerCounts.first < def.supportedPlayerCounts.first ||
-            playerCounts.last > def.supportedPlayerCounts.last
+        if (playerCounts.first < definition.supportedPlayerCounts.first ||
+            playerCounts.last > definition.supportedPlayerCounts.last
         ) {
             return Result.Failure(
                 ValidationError.PlayerCountOutOfRange(
                     supplied = playerCounts,
-                    allowed = def.supportedPlayerCounts,
+                    allowed = definition.supportedPlayerCounts,
                 ),
             )
         }
 
         // 8. Modes recognized.
-        val declaredModeIds = def.supportedModes.map { it.id.raw }.toSet()
+        val declaredModeIds = definition.supportedModes.map { it.id.raw }.toSet()
         envelope.supportedModes.forEach { mode ->
             if (mode !in declaredModeIds) {
                 return Result.Failure(ValidationError.UnknownMode(mode))

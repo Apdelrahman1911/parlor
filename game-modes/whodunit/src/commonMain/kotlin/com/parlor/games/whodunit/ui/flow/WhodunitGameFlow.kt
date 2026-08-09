@@ -46,6 +46,7 @@ import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.HostDisconnectedOverlay
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorButtonVariant
+import com.parlor.designsystem.components.ReconnectingOverlay
 import com.parlor.designsystem.components.LocalParlorToastState
 import com.parlor.designsystem.components.ParlorToastSeverity
 import com.parlor.designsystem.theme.ParlorTheme
@@ -56,6 +57,8 @@ import com.parlor.games.whodunit.WhodunitDefinition
 import com.parlor.games.whodunit.WhodunitIds
 import com.parlor.games.whodunit.WhodunitPlayModePolicy
 import com.parlor.games.whodunit.content.WhodunitCase
+import com.parlor.games.whodunit.content.WhodunitContentIdentity
+import com.parlor.games.whodunit.content.contentIdentity
 import com.parlor.games.whodunit.domain.action.WhodunitAction
 import com.parlor.games.whodunit.domain.event.WhodunitEvent
 import com.parlor.games.whodunit.domain.modes.ClassicVoteMode
@@ -64,6 +67,7 @@ import com.parlor.games.whodunit.domain.phase.WhodunitPhase
 import com.parlor.games.whodunit.domain.reducer.WhodunitReducerContext
 import com.parlor.games.whodunit.domain.state.VoteState
 import com.parlor.games.whodunit.domain.state.WhodunitState
+import com.parlor.games.whodunit.domain.state.WhodunitStateValidator
 import com.parlor.games.whodunit.ui.components.HideScreen
 import com.parlor.games.whodunit.ui.screens.peer.PeerWaitingForHostScreen
 import com.parlor.games.whodunit.ui.screens.postgame.PostGameScreen
@@ -77,6 +81,8 @@ import com.parlor.games.whodunit.ui.screens.round.DiscussionScreen
 import com.parlor.games.whodunit.ui.screens.round.RoundTitleCardScreen
 import com.parlor.games.whodunit.ui.screens.safety.PauseOverlay
 import com.parlor.games.whodunit.ui.screens.safety.PrivacyConcernAffordance
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
 import com.parlor.games.whodunit.ui.screens.safety.PrivacyConcernDialog
 import com.parlor.games.whodunit.ui.timer.runDiscussionTickerLoop
 import com.parlor.games.whodunit.resources.Res
@@ -92,6 +98,14 @@ import com.parlor.games.whodunit.resources.host_leave_session
 import com.parlor.games.whodunit.resources.host_leave_session_description
 import com.parlor.games.whodunit.resources.host_peer_away_body_format
 import com.parlor.games.whodunit.resources.host_peer_away_title
+import com.parlor.games.whodunit.resources.host_start_cancel
+import com.parlor.games.whodunit.resources.host_start_cancel_description
+import com.parlor.games.whodunit.resources.host_start_failed_body
+import com.parlor.games.whodunit.resources.host_start_failed_timeout
+import com.parlor.games.whodunit.resources.host_start_failed_title
+import com.parlor.games.whodunit.resources.host_start_retry
+import com.parlor.games.whodunit.resources.host_start_retry_description
+import com.parlor.games.whodunit.resources.host_starting
 import com.parlor.games.whodunit.resources.peer_briefing_body
 import com.parlor.games.whodunit.resources.peer_briefing_title
 import com.parlor.games.whodunit.resources.peer_intro_body
@@ -117,6 +131,12 @@ import com.parlor.games.whodunit.resources.whodunit_data_error_not_found
 import com.parlor.games.whodunit.resources.whodunit_data_error_permission_denied
 import com.parlor.games.whodunit.resources.whodunit_data_error_unknown
 import com.parlor.games.whodunit.resources.whodunit_loading_eyebrow
+import com.parlor.games.whodunit.resources.whodunit_recovery_discard
+import com.parlor.games.whodunit.resources.whodunit_recovery_discard_description
+import com.parlor.games.whodunit.resources.whodunit_recovery_discard_failed
+import com.parlor.games.whodunit.resources.whodunit_recovery_retry
+import com.parlor.games.whodunit.resources.whodunit_recovery_retry_description
+import com.parlor.games.whodunit.resources.whodunit_save_failed
 import com.parlor.games.whodunit.resources.whodunit_unsupported_mode_body
 import com.parlor.games.whodunit.resources.whodunit_unsupported_mode_eyebrow
 import com.parlor.games.whodunit.resources.whodunit_unsupported_mode_title
@@ -127,6 +147,8 @@ import com.parlor.games.whodunit.resources.peer_command_duplicate
 import com.parlor.games.whodunit.resources.peer_command_invalid
 import com.parlor.games.whodunit.resources.peer_command_session_error
 import com.parlor.games.whodunit.resources.peer_command_stale
+import com.parlor.games.whodunit.resources.peer_initial_snapshot_failed
+import com.parlor.games.whodunit.resources.peer_initial_snapshot_loading
 import org.jetbrains.compose.resources.stringResource
 import com.parlor.games.whodunit.ui.screens.setup.ModeSelectionScreen
 import com.parlor.games.whodunit.ui.screens.setup.PlayerCountDisplayStrategy
@@ -143,6 +165,7 @@ import com.parlor.networking.protocol.SessionEndReason
 import com.parlor.networking.protocol.SessionProtocol
 import com.parlor.networking.protocol.CommandStatus
 import com.parlor.networking.room.LocalRoom
+import com.parlor.networking.room.NetError
 import com.parlor.games.whodunit.domain.party.WhodunitReadinessGate
 import com.parlor.session.PlayMode
 import com.parlor.session.SessionController
@@ -151,7 +174,13 @@ import com.parlor.session.ViewerContext
 import com.parlor.session.party.PartyAwareSession
 import com.parlor.session.passandplay.PassAndPlaySessionController
 import com.parlor.session.multidevice.PeerCommandProgress
+import com.parlor.session.multidevice.PeerCommandDelivery
+import com.parlor.session.multidevice.HostStartGateState
+import com.parlor.session.multidevice.beginExit
+import com.parlor.session.multidevice.toHostStartGateState
 import com.parlor.storage.snapshot.SnapshotStore
+import com.parlor.storage.snapshot.SerializedSnapshotWriter
+import com.parlor.storage.snapshot.SnapshotWriteStatus
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.launch
@@ -189,6 +218,11 @@ fun WhodunitGameFlow(
     val payloadValidator: PayloadValidator<WhodunitCase> = koinInject(qualifier = named("whodunit"))
     val snapshotStore: SnapshotStore = koinInject()
     val definition: WhodunitDefinition = koinInject()
+    val recoveryScope = rememberCoroutineScope()
+    val toastState = LocalParlorToastState.current
+    val discardFailureText = stringResource(Res.string.whodunit_recovery_discard_failed)
+    var recoveryAttempt by remember(resumeSessionId) { mutableStateOf(0) }
+    var discardInFlight by remember(resumeSessionId) { mutableStateOf(false) }
 
     if (resumeSessionId == null && !WhodunitPlayModePolicy.supportsLocalEntry(playMode)) {
         UnsupportedLocalPlayModeScreen(onBackToLibrary, modifier)
@@ -198,7 +232,9 @@ fun WhodunitGameFlow(
     val resumeResult by produceState<Result<ResumedSession, DataError>?>(
         initialValue = null,
         key1 = resumeSessionId,
+        key2 = recoveryAttempt,
     ) {
+        value = null
         value = if (resumeSessionId == null) null
         else loadResumedSession(snapshotStore, definition, resumeSessionId)
     }
@@ -217,22 +253,67 @@ fun WhodunitGameFlow(
         // load once the snapshot has decoded successfully (so a corrupt resume
         // bails out fast instead of loading content unnecessarily).
         if (resumeSessionId == null || resumeResult is Result.Success) {
-            value = repository.loadCase(CaseId(targetCaseId), payloadValidator)
+            val loadedCase = repository.loadCase(CaseId(targetCaseId), payloadValidator)
+            value = if (loadedCase is Result.Success && resumeResult is Result.Success) {
+                withContext(Dispatchers.Default) {
+                    when (
+                        validateResumedSessionForCase(
+                            resumed = (resumeResult as Result.Success).data,
+                            case = loadedCase.data,
+                        )
+                    ) {
+                        is Result.Success -> loadedCase
+                        is Result.Failure -> Result.Failure(DataError.CorruptedData)
+                    }
+                }
+            } else {
+                loadedCase
+            }
+        }
+    }
+
+    val discardResume: () -> Unit = {
+        val id = resumeSessionId
+        if (id != null && !discardInFlight) {
+            discardInFlight = true
+            recoveryScope.launch {
+                when (snapshotStore.delete(id)) {
+                    is Result.Success -> onBackToLibrary()
+                    is Result.Failure -> {
+                        discardInFlight = false
+                        toastState.show(discardFailureText, ParlorToastSeverity.Danger)
+                    }
+                }
+            }
         }
     }
 
     when {
-        resumeSessionId != null && resumeResult is Result.Failure -> ErrorScreen(
+        resumeSessionId != null && resumeResult is Result.Failure -> RecoveryErrorScreen(
             error = (resumeResult as Result.Failure).error,
             onBack = onBackToLibrary,
+            onRetry = { recoveryAttempt++ },
+            onDiscard = discardResume,
+            actionsEnabled = !discardInFlight,
             modifier = modifier,
         )
         caseResult == null -> LoadingScreen(modifier)
-        caseResult is Result.Failure -> ErrorScreen(
-            error = (caseResult as Result.Failure).error,
-            onBack = onBackToLibrary,
-            modifier = modifier,
-        )
+        caseResult is Result.Failure -> if (resumeSessionId != null) {
+            RecoveryErrorScreen(
+                error = (caseResult as Result.Failure).error,
+                onBack = onBackToLibrary,
+                onRetry = { recoveryAttempt++ },
+                onDiscard = discardResume,
+                actionsEnabled = !discardInFlight,
+                modifier = modifier,
+            )
+        } else {
+            ErrorScreen(
+                error = (caseResult as Result.Failure).error,
+                onBack = onBackToLibrary,
+                modifier = modifier,
+            )
+        }
         else -> {
             val case = (caseResult as Result.Success).data
             val resumed = (resumeResult as? Result.Success)?.data
@@ -271,6 +352,8 @@ fun WhodunitGameFlow(
 internal data class ResumedSession(
     val sessionId: SessionId,
     val state: WhodunitState,
+    /** Exact case identity for snapshots written by content-bound builds. */
+    val contentIdentity: WhodunitContentIdentity?,
     /**
      * Play mode read back from `GameSnapshot.metadata[PLAY_MODE_KEY]`.
      * PassAndPlay is the only supported value. Retired Solo snapshots are
@@ -283,6 +366,8 @@ internal data class ResumedSession(
 private const val PLAY_MODE_KEY = "playMode"
 private const val PLAY_MODE_SOLO = "Solo"
 private const val PLAY_MODE_PASS_AND_PLAY = "PassAndPlay"
+private const val CASE_VERSION_KEY = "caseVersion"
+private const val CASE_DIGEST_KEY = "caseDigest"
 
 private fun PlayMode.serializeForMetadata(): String? = when (this) {
     is PlayMode.Solo -> null
@@ -296,10 +381,13 @@ internal suspend fun loadResumedSession(
     snapshotStore: SnapshotStore,
     definition: WhodunitDefinition,
     sessionId: SessionId,
-): Result<ResumedSession, DataError> = when (val loaded = snapshotStore.load(sessionId)) {
-    is Result.Failure -> Result.Failure(loaded.error)
-    is Result.Success -> runCatching {
-        val snapshot = loaded.data
+): Result<ResumedSession, DataError> {
+    val snapshot = when (val loaded = snapshotStore.load(sessionId)) {
+        is Result.Failure -> return Result.Failure(loaded.error)
+        is Result.Success -> loaded.data
+    }
+
+    return try {
         // The snapshot envelope is authoritative for routing. Never try to
         // decode another game's bytes with Whodunit's codec, and never restore
         // a future/incompatible engine schema merely because its payload
@@ -309,25 +397,64 @@ internal suspend fun loadResumedSession(
             snapshot.engineVersion.major != ENGINE_VERSION.major ||
             snapshot.engineVersion > ENGINE_VERSION
         ) {
-            return@runCatching Result.Failure(DataError.CorruptedData)
+            return Result.Failure(DataError.CorruptedData)
         }
         val persistedPlayMode = snapshot.metadata[PLAY_MODE_KEY]
         if (persistedPlayMode == PLAY_MODE_SOLO) {
-            return@runCatching when (val deleted = snapshotStore.delete(sessionId)) {
+            return when (val deleted = snapshotStore.delete(sessionId)) {
                 is Result.Success -> Result.Failure(DataError.NotFound)
                 is Result.Failure -> Result.Failure(deleted.error)
             }
         }
         if (persistedPlayMode != null && persistedPlayMode != PLAY_MODE_PASS_AND_PLAY) {
-            return@runCatching Result.Failure(DataError.CorruptedData)
+            return Result.Failure(DataError.CorruptedData)
         }
-        val state = definition.snapshotCodec().decode(loaded.data.payload)
+        val persistedCaseVersion = snapshot.metadata[CASE_VERSION_KEY]
+        val persistedCaseDigest = snapshot.metadata[CASE_DIGEST_KEY]
+        if ((persistedCaseVersion == null) != (persistedCaseDigest == null)) {
+            return Result.Failure(DataError.CorruptedData)
+        }
+        val contentIdentity = if (persistedCaseVersion != null && persistedCaseDigest != null) {
+            WhodunitContentIdentity(persistedCaseVersion, persistedCaseDigest)
+        } else {
+            null
+        }
+        val state = definition.snapshotCodec().decode(snapshot.payload)
         if (snapshot.phaseId != state.phase.id) {
-            return@runCatching Result.Failure(DataError.CorruptedData)
+            return Result.Failure(DataError.CorruptedData)
         }
         val playMode = persistedPlayMode?.let { PlayMode.PassAndPlay }
-        Result.Success(ResumedSession(sessionId, state, playMode))
-    }.getOrElse { Result.Failure(DataError.CorruptedData) }
+        Result.Success(ResumedSession(sessionId, state, contentIdentity, playMode))
+    } catch (cancelled: CancellationException) {
+        throw cancelled
+    } catch (_: Exception) {
+        Result.Failure(DataError.CorruptedData)
+    }
+}
+
+/**
+ * Binds a decoded local snapshot to the exact validated case that will drive
+ * its reducer. New snapshots must match the persisted content identity. A
+ * legacy snapshot without that metadata is accepted only when every stored
+ * gameplay reference still exists and agrees with the currently loaded case.
+ */
+internal fun validateResumedSessionForCase(
+    resumed: ResumedSession,
+    case: ValidatedCase<WhodunitCase>,
+): Result<Unit, DataError> = try {
+    val persistedIdentity = resumed.contentIdentity
+    if (persistedIdentity != null && persistedIdentity != case.envelope.contentIdentity()) {
+        Result.Failure(DataError.CorruptedData)
+    } else {
+        WhodunitStateValidator.requireValidForCase(
+            state = resumed.state,
+            expectedCaseId = CaseId(case.envelope.caseId),
+            payload = case.payload,
+        )
+        Result.Success(Unit)
+    }
+} catch (_: Exception) {
+    Result.Failure(DataError.CorruptedData)
 }
 
 // ============================================================================= Loading / Error ==
@@ -435,6 +562,64 @@ private fun ErrorScreen(error: DataError, onBack: () -> Unit, modifier: Modifier
     }
 }
 
+@Composable
+private fun RecoveryErrorScreen(
+    error: DataError,
+    onBack: () -> Unit,
+    onRetry: () -> Unit,
+    onDiscard: () -> Unit,
+    actionsEnabled: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    HeroBackdrop(modifier = modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier.fillMaxSize().padding(ParlorTheme.spacing.xl),
+            verticalArrangement = Arrangement.spacedBy(
+                ParlorTheme.spacing.l,
+                Alignment.CenterVertically,
+            ),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            EyebrowLabel(text = stringResource(Res.string.whodunit_error_eyebrow), accent = false)
+            Text(
+                text = stringResource(Res.string.whodunit_error_title),
+                style = ParlorTheme.typography.displayMedium,
+                color = ParlorTheme.colors.textPrimary,
+                textAlign = TextAlign.Center,
+            )
+            Text(
+                text = stringResource(whodunitDataErrorResource(error)),
+                style = ParlorTheme.typography.bodyMedium,
+                color = ParlorTheme.colors.textTertiary,
+                textAlign = TextAlign.Center,
+            )
+            ParlorButton(
+                label = stringResource(Res.string.whodunit_recovery_retry),
+                contentDescription = stringResource(Res.string.whodunit_recovery_retry_description),
+                onClick = onRetry,
+                enabled = actionsEnabled,
+                modifier = Modifier.fillMaxWidth(),
+            )
+            ParlorButton(
+                label = stringResource(Res.string.whodunit_recovery_discard),
+                contentDescription = stringResource(Res.string.whodunit_recovery_discard_description),
+                onClick = onDiscard,
+                enabled = actionsEnabled,
+                modifier = Modifier.fillMaxWidth(),
+                variant = ParlorButtonVariant.Ghost,
+            )
+            ParlorButton(
+                label = stringResource(Res.string.whodunit_error_back),
+                contentDescription = stringResource(Res.string.whodunit_error_back_description),
+                onClick = onBack,
+                enabled = actionsEnabled,
+                modifier = Modifier.fillMaxWidth(),
+                variant = ParlorButtonVariant.Ghost,
+            )
+        }
+    }
+}
+
 // ===================================================================== Pre-session config ==
 
 /**
@@ -455,14 +640,17 @@ private fun ConfiguredFlow(
     modifier: Modifier = Modifier,
 ) {
     var pre by remember { mutableStateOf(PreSession()) }
+    val selectedMode = pre.modeId
+    val selectedPlayerCount = pre.playerCount
+    val enteredPlayers = pre.players
 
     when {
-        pre.modeId == null -> ModeSelectionScreen(
+        selectedMode == null -> ModeSelectionScreen(
             onModeSelected = { mode -> pre = pre.copy(modeId = mode) },
             modifier = modifier,
         )
-        pre.playerCount == null -> {
-            val moduleRange = when (pre.modeId) {
+        selectedPlayerCount == null -> {
+            val moduleRange = when (selectedMode) {
                 WhodunitIds.ClassicVoteModeId -> ClassicVoteMode.supportedPlayerCounts
                 WhodunitIds.EliminationModeId -> EliminationMode.supportedPlayerCounts
                 else -> 4..8
@@ -477,8 +665,8 @@ private fun ConfiguredFlow(
                 modifier = modifier,
             )
         }
-        pre.players == null -> PlayerEntryScreen(
-            playerCount = pre.playerCount!!,
+        enteredPlayers == null -> PlayerEntryScreen(
+            playerCount = selectedPlayerCount,
             onConfirm = { names ->
                 pre = pre.copy(
                     players = names.mapIndexed { i, n ->
@@ -490,8 +678,8 @@ private fun ConfiguredFlow(
         )
         else -> SessionDrivenFlow(
             case = case,
-            modeId = pre.modeId!!,
-            players = pre.players!!,
+            modeId = selectedMode,
+            players = enteredPlayers,
             playMode = playMode,
             onBackToLibrary = onBackToLibrary,
             modifier = modifier,
@@ -556,43 +744,77 @@ private fun SessionDrivenFlow(
         )
     }
 
-    // Phase 6.1 snapshot writer: persist the canonical (host) state on every
-    // PhaseEntered so the game can be resumed after process death. PostGame
-    // deletes the snapshot — game is over, nothing to resume.
-    //
-    // Phase 6.3 adds an eager write on PauseEngaged so a quick pause-then-crash
-    // doesn't lose recent un-phase-transitioning actions (e.g., briefing-card
-    // taps that don't change the phase).
-    LaunchedEffect(session) {
+    val canonicalState = requireNotNull(session.canonicalState) {
+        "The local Whodunit flow requires an authoritative controller"
+    }
+    val contentIdentity = remember(case.envelope) { case.envelope.contentIdentity() }
+    val snapshotWriter = remember(
+        sessionConfig,
+        definition,
+        snapshotStore,
+        playMode,
+        clock,
+        contentIdentity,
+    ) {
         val codec = definition.snapshotCodec()
-        // Stamp the chosen play mode onto every persisted snapshot so resume
-        // restores the same UI ceremony. The route boundary permits only
-        // PassAndPlay; MultiDevice has its own flows and is not persisted here.
-        val metadata: Map<String, String> = playMode.serializeForMetadata()
-            ?.let { mapOf(PLAY_MODE_KEY to it) }
-            ?: emptyMap()
-        session.events.collect { event ->
-            val canonicalState = session.hostState?.value?.state ?: return@collect
-            when {
-                event is WhodunitEvent.PhaseEntered && event.phase is WhodunitPhase.PostGame -> {
-                    snapshotStore.delete(sessionConfig.sessionId)
+        val metadata = buildMap {
+            playMode.serializeForMetadata()?.let { put(PLAY_MODE_KEY, it) }
+            put(CASE_VERSION_KEY, contentIdentity.version)
+            put(CASE_DIGEST_KEY, contentIdentity.digest)
+        }
+        SerializedSnapshotWriter(
+            store = snapshotStore,
+            sessionId = sessionConfig.sessionId,
+            snapshotFor = { state: WhodunitState ->
+                com.parlor.engine.snapshot.GameSnapshot(
+                    sessionId = sessionConfig.sessionId,
+                    gameId = WhodunitIds.GameId,
+                    engineVersion = ENGINE_VERSION,
+                    createdAt = clock.now(),
+                    phaseId = state.phase.id,
+                    payload = codec.encode(state),
+                    metadata = metadata,
+                )
+            },
+            isCompleted = { state -> state.phase is WhodunitPhase.PostGame },
+        )
+    }
+    val persistenceStatus by snapshotWriter.status.collectAsState()
+    val toastState = LocalParlorToastState.current
+    val saveFailureText = stringResource(Res.string.whodunit_save_failed)
+
+    // Canonical state is updated in the reducer commit section. StateFlow is
+    // conflated, so a slow disk write retains at most the latest state rather
+    // than building an unbounded queue; the writer serializes UI flush/delete
+    // requests with this collector.
+    LaunchedEffect(canonicalState, snapshotWriter) {
+        canonicalState.collect { state -> snapshotWriter.persist(state) }
+    }
+    LaunchedEffect(persistenceStatus) {
+        if (persistenceStatus is SnapshotWriteStatus.Failed) {
+            toastState.show(saveFailureText, ParlorToastSeverity.Danger)
+        }
+    }
+
+    var exitInFlight by remember(sessionConfig.sessionId) { mutableStateOf(false) }
+    val requestExit: (discard: Boolean) -> Unit = { discard ->
+        if (!exitInFlight) {
+            exitInFlight = true
+            scope.launch {
+                val result = if (discard) {
+                    snapshotWriter.discard()
+                } else {
+                    snapshotWriter.persist(canonicalState.value)
                 }
-                event is WhodunitEvent.PhaseEntered || event == WhodunitEvent.PauseEngaged -> {
-                    snapshotStore.save(
-                        com.parlor.engine.snapshot.GameSnapshot(
-                            sessionId = sessionConfig.sessionId,
-                            gameId = WhodunitIds.GameId,
-                            engineVersion = ENGINE_VERSION,
-                            createdAt = clock.now(),
-                            phaseId = canonicalState.phase.id,
-                            payload = codec.encode(canonicalState),
-                            metadata = metadata,
-                        ),
-                    )
+                if (result is Result.Success) {
+                    onBackToLibrary()
+                } else {
+                    exitInFlight = false
                 }
             }
         }
     }
+    val exitAfterFlush: () -> Unit = { requestExit(false) }
 
     val publicProjection by session.publicState.collectAsState()
     val state = publicProjection.state
@@ -614,7 +836,7 @@ private fun SessionDrivenFlow(
             payload = payload,
             session = session,
             scope = scope,
-            onBackToLibrary = onBackToLibrary,
+            onBackToLibrary = exitAfterFlush,
             modifier = Modifier.fillMaxSize(),
         )
 
@@ -638,14 +860,10 @@ private fun SessionDrivenFlow(
             PauseOverlay(
                 onResume = { scope.launch { session.submit(WhodunitAction.Resume) } },
                 onResumeLater = {
-                    // Snapshot was already written on PauseEngaged; just leave.
-                    onBackToLibrary()
+                    exitAfterFlush()
                 },
                 onEndNow = {
-                    scope.launch {
-                        snapshotStore.delete(sessionConfig.sessionId)
-                        onBackToLibrary()
-                    }
+                    requestExit(true)
                 },
             )
         }
@@ -703,6 +921,7 @@ fun WhodunitMultiplayerHostFlow(
     seed: Long,
     room: LocalRoom,
     onBackToLibrary: () -> Unit,
+    onRetryStart: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val clock: Clock = koinInject()
@@ -757,23 +976,62 @@ fun WhodunitMultiplayerHostFlow(
             rosterAtStart,
             scope,
             reconcileRoomTopology = true,
+            requireStartHandshake = true,
         )
     }
     val session: SessionController<WhodunitState, WhodunitAction, WhodunitEvent> =
         remember(partySession, bridge) {
             PublishingWhodunitSessionController(partySession, bridge)
         }
+    var startGate by remember(bridge) {
+        mutableStateOf<HostStartGateState>(HostStartGateState.Starting)
+    }
+    LaunchedEffect(bridge) {
+        val contentIdentity = case.envelope.contentIdentity()
+        val result = bridge.announceStart(
+            caseId = case.envelope.caseId,
+            modeId = modeId.raw,
+            caseVersion = contentIdentity.version,
+            caseDigest = contentIdentity.digest,
+        ).toHostStartGateState()
+        if (startGate != HostStartGateState.Exiting) startGate = result
+    }
     LaunchedEffect(bridge) {
         try {
-            bridge.announceStart(
-                caseId = case.envelope.caseId,
-                modeId = modeId.raw,
-            )
             awaitCancellation()
         } finally {
             withContext(NonCancellable) {
-                bridge.terminate(SessionEndReason.HostLeft)
-                bridge.close()
+                try {
+                    bridge.terminate(SessionEndReason.HostLeft)
+                } finally {
+                    try {
+                        room.leave()
+                    } finally {
+                        bridge.close()
+                    }
+                }
+            }
+        }
+    }
+
+    var terminalExitInFlight by remember(bridge) { mutableStateOf(false) }
+    val exitToLibrary: (SessionEndReason) -> Unit = { reason ->
+        if (!terminalExitInFlight) {
+            terminalExitInFlight = true
+            scope.launch {
+                bridge.terminate(reason)
+                room.leave()
+                onBackToLibrary()
+            }
+        }
+    }
+    val retryStartAfterTerminal: () -> Unit = {
+        if (!terminalExitInFlight) {
+            terminalExitInFlight = true
+            scope.launch {
+                bridge.terminate(SessionEndReason.Cancelled)
+                room.leave()
+                onRetryStart()
             }
         }
     }
@@ -802,48 +1060,44 @@ fun WhodunitMultiplayerHostFlow(
     }
 
     Box(modifier = modifier.fillMaxSize()) {
-        PhaseRouter(
-            playMode = hostPlayMode,
-            phase = state.phase,
-            state = state,
-            case = case,
-            payload = payload,
-            session = session,
-            scope = scope,
-            onBackToLibrary = {
-                scope.launch {
-                    bridge.terminate(SessionEndReason.HostLeft)
-                    onBackToLibrary()
-                }
-            },
-            modifier = Modifier.fillMaxSize(),
-        )
+        if (startGate == HostStartGateState.Started) {
+            PhaseRouter(
+                playMode = hostPlayMode,
+                phase = state.phase,
+                state = state,
+                case = case,
+                payload = payload,
+                session = session,
+                scope = scope,
+                onBackToLibrary = { exitToLibrary(SessionEndReason.HostLeft) },
+                modifier = Modifier.fillMaxSize(),
+            )
 
-        if (!state.public.paused &&
-            state.phase is WhodunitPhase.Round &&
-            state.public.voteState !is VoteState.Collecting
+            if (!state.public.paused &&
+                state.phase is WhodunitPhase.Round &&
+                state.public.voteState !is VoteState.Collecting
+            ) {
+                PauseAffordance(
+                    onPause = { scope.launch { session.submit(WhodunitAction.Pause) } },
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .windowInsetsPadding(WindowInsets.statusBars)
+                        .padding(ParlorTheme.spacing.m),
+                )
+            }
+            if (state.public.paused) {
+                PauseOverlay(
+                    onResume = { scope.launch { session.submit(WhodunitAction.Resume) } },
+                    onResumeLater = null,
+                    onEndNow = { exitToLibrary(SessionEndReason.Cancelled) },
+                )
+            }
+        }
+        if (
+            startGate == HostStartGateState.Started &&
+            disconnectedPlayer != null &&
+            state.phase !is WhodunitPhase.PostGame
         ) {
-            PauseAffordance(
-                onPause = { scope.launch { session.submit(WhodunitAction.Pause) } },
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .windowInsetsPadding(WindowInsets.statusBars)
-                    .padding(ParlorTheme.spacing.m),
-            )
-        }
-        if (state.public.paused) {
-            PauseOverlay(
-                onResume = { scope.launch { session.submit(WhodunitAction.Resume) } },
-                onResumeLater = { onBackToLibrary() },
-                onEndNow = {
-                    scope.launch {
-                        bridge.terminate(SessionEndReason.Cancelled)
-                        onBackToLibrary()
-                    }
-                },
-            )
-        }
-        if (disconnectedPlayer != null && state.phase !is WhodunitPhase.PostGame) {
             val playerName = disconnectedPlayer.displayName
             if (confirmContinueFor?.id == disconnectedPlayer.id) {
                 ContinueWithoutDialog(
@@ -893,15 +1147,59 @@ fun WhodunitMultiplayerHostFlow(
                         Res.string.host_leave_session_description,
                     ),
                     onContinue = { confirmContinueFor = disconnectedPlayer },
-                    onLeave = {
-                        scope.launch {
-                            bridge.terminate(SessionEndReason.Cancelled)
-                            onBackToLibrary()
-                        }
-                    },
+                    onLeave = { exitToLibrary(SessionEndReason.Cancelled) },
                     modifier = Modifier.fillMaxSize(),
                 )
             }
+        }
+        when (val gate = startGate) {
+            HostStartGateState.Started -> Unit
+            HostStartGateState.Starting,
+            HostStartGateState.Exiting -> ReconnectingOverlay(
+                title = stringResource(Res.string.host_starting),
+                leaveLabel = stringResource(Res.string.host_start_cancel),
+                leaveContentDescription = stringResource(
+                    Res.string.host_start_cancel_description,
+                ),
+                onLeave = {
+                    if (startGate != HostStartGateState.Exiting) {
+                        startGate = startGate.beginExit()
+                        exitToLibrary(SessionEndReason.Cancelled)
+                    }
+                },
+                modifier = Modifier.fillMaxSize(),
+            )
+            is HostStartGateState.Failed -> HostDisconnectedOverlay(
+                title = stringResource(Res.string.host_start_failed_title),
+                body = stringResource(
+                    if (gate.error == NetError.Timeout) {
+                        Res.string.host_start_failed_timeout
+                    } else {
+                        Res.string.host_start_failed_body
+                    },
+                ),
+                continueLabel = stringResource(Res.string.host_start_retry),
+                continueContentDescription = stringResource(
+                    Res.string.host_start_retry_description,
+                ),
+                leaveLabel = stringResource(Res.string.host_start_cancel),
+                leaveContentDescription = stringResource(
+                    Res.string.host_start_cancel_description,
+                ),
+                onContinue = {
+                    if (startGate !is HostStartGateState.Exiting) {
+                        startGate = startGate.beginExit()
+                        retryStartAfterTerminal()
+                    }
+                },
+                onLeave = {
+                    if (startGate !is HostStartGateState.Exiting) {
+                        startGate = startGate.beginExit()
+                        exitToLibrary(SessionEndReason.Cancelled)
+                    }
+                },
+                modifier = Modifier.fillMaxSize(),
+            )
         }
     }
 }
@@ -945,7 +1243,10 @@ fun WhodunitMultiplayerPeerFlow(
                 caseId = CaseId(case.envelope.caseId),
                 modeId = modeId,
                 players = players,
-                randomSeed = seed,
+                // `seed` is the public SessionStarting nonce on this peer,
+                // never the host's hidden reducer seed. The peer does not
+                // reduce and starts from a structurally redacted placeholder.
+                randomSeed = 0L,
             ),
         )
     }
@@ -974,6 +1275,13 @@ fun WhodunitMultiplayerPeerFlow(
         duplicateCommandCopy,
     ) {
         bridge.commandProgress.collect { progress ->
+            if (
+                progress is PeerCommandProgress.Awaiting &&
+                progress.delivery == PeerCommandDelivery.RecoveryTimedOut
+            ) {
+                toastState.show(sessionCommandCopy, ParlorToastSeverity.Danger)
+                return@collect
+            }
             val resolved = progress as? PeerCommandProgress.Resolved ?: return@collect
             val presentation = when (resolved.outcome.status) {
                 CommandStatus.Applied -> null
@@ -998,25 +1306,14 @@ fun WhodunitMultiplayerPeerFlow(
         bridge.hostDisconnected.collect { onBackToLibrary() }
     }
 
-    // Wave 9H-8: forward HostLost / SelfOffline to the screen root.
-    // Toast emission for PeerLeft / PeerReconnected / HostRestored
-    // is layered later when the host bridge's peerEvents surface
-    // reaches this flow (host-side concern); the offline banner +
-    // reconnecting overlay only need the boolean state.
-    LaunchedEffect(bridge) {
-        bridge.connectionEvents.collect { event ->
-            when (event) {
-                com.parlor.networking.room.PeerEvent.HostLost ->
-                    onHostLostChanged(true)
-                com.parlor.networking.room.PeerEvent.HostRestored ->
-                    onHostLostChanged(false)
-                com.parlor.networking.room.PeerEvent.SelfOffline ->
-                    onSelfOfflineChanged(true)
-                com.parlor.networking.room.PeerEvent.SelfOnline ->
-                    onSelfOfflineChanged(false)
-                else -> Unit
-            }
-        }
+    // Reachability is state, not a lossy one-shot event: a collector attached
+    // after an immediate disconnect must still render the correct overlay.
+    val connectionState by bridge.connectionState.collectAsState()
+    LaunchedEffect(connectionState.hostLost) {
+        onHostLostChanged(connectionState.hostLost)
+    }
+    LaunchedEffect(connectionState.selfOffline) {
+        onSelfOfflineChanged(connectionState.selfOffline)
     }
 
     val peerPlayMode = remember(selfPlayerId) {
@@ -1032,21 +1329,41 @@ fun WhodunitMultiplayerPeerFlow(
     val publicProjection by session.publicState.collectAsState()
     val state = publicProjection.state
     val payload = case.payload
+    val hasAuthoritativeSnapshot by bridge.hasAuthoritativeSnapshot.collectAsState()
+    val initialSnapshotError by bridge.initialSnapshotError.collectAsState()
 
     Box(modifier = modifier.fillMaxSize()) {
-        PhaseRouter(
-            playMode = peerPlayMode,
-            phase = state.phase,
-            state = state,
-            case = case,
-            payload = payload,
-            session = session,
-            scope = scope,
-            onBackToLibrary = onBackToLibrary,
-            modifier = Modifier.fillMaxSize(),
-        )
-        if (state.public.paused) {
-            PeerHostPausedBanner(modifier = Modifier.align(Alignment.Center))
+        if (hasAuthoritativeSnapshot) {
+            PhaseRouter(
+                playMode = peerPlayMode,
+                phase = state.phase,
+                state = state,
+                case = case,
+                payload = payload,
+                session = session,
+                scope = scope,
+                onBackToLibrary = onBackToLibrary,
+                modifier = Modifier.fillMaxSize(),
+            )
+            if (state.public.paused) {
+                PeerHostPausedBanner(modifier = Modifier.align(Alignment.Center))
+            }
+        } else {
+            ReconnectingOverlay(
+                title = stringResource(
+                    if (initialSnapshotError == null) {
+                        Res.string.peer_initial_snapshot_loading
+                    } else {
+                        Res.string.peer_initial_snapshot_failed
+                    },
+                ),
+                leaveLabel = stringResource(Res.string.peer_leave_room),
+                leaveContentDescription = stringResource(
+                    Res.string.peer_leave_room_description,
+                ),
+                onLeave = onBackToLibrary,
+                modifier = Modifier.fillMaxSize(),
+            )
         }
     }
 }

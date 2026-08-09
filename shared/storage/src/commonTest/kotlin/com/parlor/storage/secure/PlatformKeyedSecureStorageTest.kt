@@ -1,9 +1,12 @@
 package com.parlor.storage.secure
 
+import com.parlor.core.result.DataError
+import com.parlor.core.result.Result
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
+import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class PlatformKeyedSecureStorageTest {
@@ -48,5 +51,35 @@ class PlatformKeyedSecureStorageTest {
         assertFailsWith<CancellationException> {
             storage.remove("key")
         }
+    }
+
+    @Test
+    fun adapter_maps_ordinary_backing_failures_without_exposing_details() = runTest {
+        val storage = PlatformKeyedSecureStorage(FailingBacking(IllegalStateException("secret detail")))
+        val expected = Result.Failure(DataError.IoError("secure_storage_io"))
+
+        assertEquals(expected, storage.put("key", byteArrayOf(1)))
+        assertEquals(expected, storage.get("key"))
+        assertEquals(expected, storage.remove("key"))
+    }
+
+    @Test
+    fun adapter_never_converts_fatal_errors_into_recoverable_io_failures() = runTest {
+        val fatal = AssertionError("fatal")
+        val storage = PlatformKeyedSecureStorage(FailingBacking(fatal))
+
+        assertFailsWith<AssertionError> { storage.put("key", byteArrayOf(1)) }
+        assertFailsWith<AssertionError> { storage.get("key") }
+        assertFailsWith<AssertionError> { storage.remove("key") }
+    }
+
+    private class FailingBacking(
+        private val failure: Throwable,
+    ) : SecureKeyValueBacking {
+        override suspend fun put(key: String, value: ByteArray): Nothing = throw failure
+
+        override suspend fun get(key: String): Nothing = throw failure
+
+        override suspend fun remove(key: String): Nothing = throw failure
     }
 }

@@ -22,6 +22,8 @@ import com.parlor.engine.session.SessionConfig
 import com.parlor.engine.snapshot.SnapshotCodec
 import com.parlor.engine.state.GameState
 import com.parlor.engine.state.Player
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 import kotlin.time.Duration.Companion.minutes
 
 /**
@@ -65,14 +67,19 @@ object RrMode : GameMode {
     override val estimatedDuration: DurationRange = DurationRange(1.minutes, 1.minutes)
 }
 
+@Serializable
 data class RrState(
     override val phase: RrPhase,
     override val players: List<Player>,
     val announcedBy: List<PlayerId>,
 ) : GameState
 
+@Serializable
 sealed class RrPhase(override val id: String) : GamePhase {
+    @Serializable
     data class Announcing(val currentSeat: Int) : RrPhase("announcing")
+
+    @Serializable
     data object Finished : RrPhase("finished")
 }
 
@@ -132,9 +139,20 @@ object RrProjectionPolicy : ProjectionPolicy<RrState> {
     override fun toHost(state: RrState) = HostProjection(state)
 }
 
-/** Placeholder codec — the real engine uses kotlinx.serialization. */
+/**
+ * A real round-trip codec keeps this fixture honest when it is used by
+ * snapshot/session tests. It deliberately rejects unknown fields so schema
+ * drift cannot make a compatibility test pass accidentally.
+ */
 object RrSnapshotCodec : SnapshotCodec<RrState> {
-    override fun encode(state: RrState): ByteArray = state.toString().encodeToByteArray()
+    private val json = Json {
+        encodeDefaults = true
+        ignoreUnknownKeys = false
+    }
+
+    override fun encode(state: RrState): ByteArray =
+        json.encodeToString(RrState.serializer(), state).encodeToByteArray()
+
     override fun decode(payload: ByteArray): RrState =
-        throw NotImplementedError("RrSnapshotCodec.decode is a smoke stub")
+        json.decodeFromString(RrState.serializer(), payload.decodeToString())
 }

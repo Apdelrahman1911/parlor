@@ -38,11 +38,11 @@ import com.parlor.session.multidevice.InMemoryPeerRoom
 import com.parlor.session.multidevice.InMemoryRoomBus
 import com.parlor.session.passandplay.PassAndPlaySessionController
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -127,6 +127,7 @@ class MafiaPeerActionAuthorityTest {
         val hostRoom = TestHostRoom(bus, hostId)
         val bridge = MafiaHostRoomBridge(
             hostSession, hostRoom, players, scope, json, heartbeatIntervalMs = 0L,
+            requireStartHandshake = false,
         )
 
         // Apply settings + start the game so we reach Night with assigned
@@ -383,18 +384,36 @@ class MafiaPeerActionAuthorityTest {
         val scope = TestScope(UnconfinedTestDispatcher(testScheduler))
         val f = startedFixture(scope)
         try {
-            var captured: HostMessage.SessionStarting? = null
-            val job = scope.launch {
-                f.bus.peerMessagesIn(alice)
-                    .filterIsInstance<HostMessage.SessionStarting>()
-                    .collect { captured = it }
+            val announcing = async {
+                f.bridge.announceStart("default", MafiaIds.ClassicModeId.raw)
             }
-            f.bridge.announceStart("default", MafiaIds.ClassicModeId.raw)
             scope.runCurrent()
-            job.cancel()
+            val captured = f.hostRoom.sent
+                .mapNotNull { it.second as? HostMessage.SessionStarting }
+                .first()
+            players.drop(1).forEach { player ->
+                f.bus.fromPeer(
+                    PeerMessage.SessionStartReady(
+                        header = startAckHeader(f.bridge.protocol, "ready-${player.seat}"),
+                        actor = player.id,
+                        startId = captured.startId,
+                    ),
+                )
+            }
+            scope.runCurrent()
+            players.drop(1).forEach { player ->
+                f.bus.fromPeer(
+                    PeerMessage.SessionStartCommitAck(
+                        header = startAckHeader(f.bridge.protocol, "commit-${player.seat}"),
+                        actor = player.id,
+                        startId = captured.startId,
+                    ),
+                )
+            }
+            scope.runCurrent()
+            assertThat(announcing.await() is Result.Success).isTrue()
             val roleSeed = f.session.hostState.value.state.hostOnly.randomSeed
-            assertThat(captured != null).isTrue()
-            assertThat(captured!!.sessionNonce != roleSeed).isTrue()
+            assertThat(captured.sessionNonce != roleSeed).isTrue()
         } finally {
             f.bridge.close()
         }
@@ -432,6 +451,19 @@ class MafiaPeerActionAuthorityTest {
         )
     }
 
+    private fun startAckHeader(
+        protocol: SessionProtocol,
+        label: String,
+    ) = SessionEnvelopeHeader(
+        protocol = protocol.protocol,
+        sessionId = protocol.sessionId,
+        gameId = protocol.gameId,
+        gameVersion = protocol.gameVersion,
+        messageId = "$label-012345678901234567890",
+        sequence = 0L,
+        connectionEpoch = protocol.connectionEpoch,
+    )
+
     /**
      * Test-only host-side room: routes outbound to the bus, exposes the
      * bus's host inbox as `incoming`, reports `isHost = true`. Mirrors the
@@ -457,8 +489,10 @@ class MafiaPeerActionAuthorityTest {
         override val selfPlayerId: PlayerId = hostId
         override val incoming: Flow<RoomMessage> = bus.hostMessagesIn
         override val peerEvents: SharedFlow<PeerEvent> = bus.peerEvents
+        val sent = mutableListOf<Pair<SendTarget, HostMessage>>()
 
         override suspend fun send(target: SendTarget, message: HostMessage): Result<Unit, NetError> {
+            sent += target to message
             bus.fromHost(target, message)
             return Result.Success(Unit)
         }

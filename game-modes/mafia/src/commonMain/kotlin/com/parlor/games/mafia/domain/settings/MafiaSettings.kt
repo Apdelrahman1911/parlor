@@ -1,6 +1,5 @@
 package com.parlor.games.mafia.domain.settings
 
-import kotlin.time.Duration
 import kotlinx.serialization.Serializable
 
 /**
@@ -132,6 +131,3 @@ sealed interface MafiaSettingsError {
     data object TimersNotSupported : MafiaSettingsError
     data class DurationTooShort(val kind: String, val seconds: Int) : MafiaSettingsError
 }
-
-@Suppress("unused")
-fun seconds(duration: Duration): Int = duration.inWholeSeconds.toInt()

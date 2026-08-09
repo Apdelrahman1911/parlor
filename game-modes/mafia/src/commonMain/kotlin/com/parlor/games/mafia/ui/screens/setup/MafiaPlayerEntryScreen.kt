@@ -32,6 +32,7 @@ import com.parlor.games.mafia.resources.player_entry_continue_description
 import com.parlor.games.mafia.resources.player_entry_field_format
 import com.parlor.games.mafia.resources.player_entry_headline
 import com.parlor.games.mafia.resources.setup_eyebrow
+import com.parlor.networking.room.RoomInputPolicy
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -43,6 +44,7 @@ fun MafiaPlayerEntryScreen(
     val names = remember(playerCount) {
         mutableStateListOf<String>().apply { repeat(playerCount) { add("") } }
     }
+    val normalizedNames = names.map(RoomInputPolicy::normalizeDisplayName)
 
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
         Column(
@@ -73,8 +75,9 @@ fun MafiaPlayerEntryScreen(
             ParlorButton(
                 label = stringResource(Res.string.player_entry_continue),
                 contentDescription = stringResource(Res.string.player_entry_continue_description),
-                onClick = { onConfirm(names.map { it.trim() }) },
-                enabled = names.all { it.isNotBlank() } && names.map { it.trim() }.toSet().size == names.size,
+                onClick = { onConfirm(normalizedNames) },
+                enabled = normalizedNames.all(RoomInputPolicy::isValidDisplayName) &&
+                    normalizedNames.toSet().size == normalizedNames.size,
                 modifier = Modifier.fillMaxWidth(),
             )
         }
@@ -93,7 +96,9 @@ private fun NameField(
     val keyboardController = LocalSoftwareKeyboardController.current
     OutlinedTextField(
         value = value,
-        onValueChange = onValueChange,
+        onValueChange = { input ->
+            onValueChange(RoomInputPolicy.sanitizeDisplayNameInput(input))
+        },
         label = { Text(label, style = ParlorTheme.typography.labelMedium) },
         singleLine = true,
         textStyle = ParlorTheme.typography.bodyLarge,

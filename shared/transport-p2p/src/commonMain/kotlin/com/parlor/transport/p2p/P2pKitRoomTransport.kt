@@ -19,6 +19,7 @@ import com.parlor.networking.room.NetError
 import com.parlor.networking.room.PendingAdmission
 import com.parlor.networking.room.PeerEvent
 import com.parlor.networking.room.RoomInfo
+import com.parlor.networking.room.RoomInputPolicy
 import com.parlor.networking.room.RoomLifecycleState
 import com.parlor.networking.room.RoomMember
 import com.parlor.networking.room.SendTarget
@@ -47,7 +48,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.channels.Channel
@@ -67,7 +67,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import kotlinx.coroutines.withTimeout
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.coroutines.withContext
 import kotlin.time.TimeSource
@@ -106,7 +105,7 @@ class P2pKitRoomTransport private constructor(
     // Upper bound on how long [join] will wait for a matching, *fresh*
     // host advertisement before failing with [NetError.Timeout]. Kept
     // configurable so tests can fail quickly instead of waiting the full
-    // production budget (10s). Production wiring uses the default.
+    // production budget (30s). Production wiring uses the default.
     private val joinTimeoutMs: Long,
     // Maximum age of `kit.lastSeen(peerId)` for a peer with a populated
     // timestamp to be considered live. Older = treated as a stale Bonjour
@@ -217,7 +216,7 @@ class P2pKitRoomTransport private constructor(
                             }
                         }
                     }
-                } catch (failure: Throwable) {
+                } catch (failure: Exception) {
                     failure.rethrowIfCancellation()
                     diagnostics.event(
                         P2pDiagnosticEventName.CLEANUP_FAILED,
@@ -280,9 +279,13 @@ class P2pKitRoomTransport private constructor(
     )
 
     override suspend fun host(config: HostConfig): Result<LocalRoom, NetError> {
+        val roomDisplayName = RoomInputPolicy.normalizeDisplayName(config.roomDisplayName)
+        if (!RoomInputPolicy.isValidDisplayName(roomDisplayName)) {
+            return Result.Failure(NetError.InvalidInput)
+        }
         _localNetworkAccess.value = LocalNetworkAccess.Attempting
         diagnostics.event(P2pDiagnosticEventName.SESSION_CREATE_STARTED, P2pDiagnosticRole.HOST)
-        return runCatching {
+        return try {
             val roomCode = generateRoomCode()
             // The low-entropy admission code never leaves the encrypted
             // channel. Discovery advertises only a generic Parlor room.
@@ -297,6 +300,7 @@ class P2pKitRoomTransport private constructor(
             // registration, kit scope) leaks for the process lifetime. join()
             // already does this; host() didn't.
             var room: HostP2pRoom? = null
+            var initializationComplete = false
             try {
                 kit.start()
                 checkNotNull(kit.localFingerprint) {
@@ -308,7 +312,7 @@ class P2pKitRoomTransport private constructor(
                 room = HostP2pRoom(
                     kit = kit,
                     roomCode = roomCode,
-                    roomDisplayName = config.roomDisplayName,
+                    roomDisplayName = roomDisplayName,
                     hostPlayerId = PlayerId(kit.localPeerId.value),
                     maxRemotePlayers = config.maxRemotePlayers,
                     gameProtocol = config.gameProtocol,
@@ -319,41 +323,39 @@ class P2pKitRoomTransport private constructor(
                 )
                 kit.startAdvertising()
                 _localNetworkAccess.value = LocalNetworkAccess.Operational
-            } catch (t: Throwable) {
-                withContext(NonCancellable) {
+                initializationComplete = true
+            } finally {
+                if (!initializationComplete) withContext(NonCancellable) {
                     if (room == null) {
                         kit.stopAfterFailure(diagnostics)
                     } else {
-                        room.leave()
+                        attemptCleanup(
+                            diagnostics,
+                            P2pDiagnosticRole.HOST,
+                            preserveCancellation = false,
+                        ) { room.leave() }
                     }
                 }
-                t.rethrowIfCancellation()
-                throw t
             }
-            checkNotNull(room).also {
-                registerLifecycleRoom(lifecycleRegistrationId, it)
-            }
-        }.fold(
-            onSuccess = {
-                diagnostics.event(
-                    P2pDiagnosticEventName.SESSION_CREATE_SUCCEEDED,
-                    P2pDiagnosticRole.HOST,
-                    P2pDiagnosticResult.SUCCESS,
-                )
-                Result.Success(it)
-            },
-            onFailure = {
-                it.rethrowIfCancellation()
-                recordLocalNetworkFailure(it)
-                diagnostics.event(
-                    P2pDiagnosticEventName.SESSION_CREATE_FAILED,
-                    P2pDiagnosticRole.HOST,
-                    P2pDiagnosticResult.FAILURE,
-                    it.toDiagnosticReason(),
-                )
-                Result.Failure(NetError.TransportFailure(it.message ?: "host failed"))
-            },
-        )
+            val hostedRoom = checkNotNull(room)
+            registerLifecycleRoom(lifecycleRegistrationId, hostedRoom)
+            diagnostics.event(
+                P2pDiagnosticEventName.SESSION_CREATE_SUCCEEDED,
+                P2pDiagnosticRole.HOST,
+                P2pDiagnosticResult.SUCCESS,
+            )
+            Result.Success(hostedRoom)
+        } catch (failure: Exception) {
+            failure.rethrowIfCancellation()
+            recordLocalNetworkFailure(failure)
+            diagnostics.event(
+                P2pDiagnosticEventName.SESSION_CREATE_FAILED,
+                P2pDiagnosticRole.HOST,
+                P2pDiagnosticResult.FAILURE,
+                failure.toDiagnosticReason(),
+            )
+            Result.Failure(NetError.TransportFailure(failure.message ?: "host failed"))
+        }
     }
 
     override suspend fun join(code: String, displayName: String): Result<LocalRoom, NetError> {
@@ -364,11 +366,23 @@ class P2pKitRoomTransport private constructor(
         if (config.rejoinToken != null) {
             return Result.Failure(NetError.Unauthorized)
         }
+        val normalizedCode = config.code.trim().uppercase()
+        val normalizedName = RoomInputPolicy.normalizeDisplayName(config.displayName)
+        if (
+            !RoomInputPolicy.isValidRoomCode(normalizedCode) ||
+            !RoomInputPolicy.isValidDisplayName(normalizedName)
+        ) {
+            return Result.Failure(NetError.InvalidInput)
+        }
+        val effectiveConfig = config.copy(
+            code = normalizedCode,
+            displayName = normalizedName,
+        )
         _localNetworkAccess.value = LocalNetworkAccess.Attempting
         diagnostics.event(P2pDiagnosticEventName.SESSION_CREATE_STARTED, P2pDiagnosticRole.PEER)
         val kit = try {
-            kitFactory.createKit(appId = appId, deviceName = config.displayName)
-        } catch (t: Throwable) {
+            kitFactory.createKit(appId = appId, deviceName = effectiveConfig.displayName)
+        } catch (t: Exception) {
             t.rethrowIfCancellation()
             recordLocalNetworkFailure(t)
             diagnostics.event(
@@ -380,13 +394,16 @@ class P2pKitRoomTransport private constructor(
             return Result.Failure(NetError.TransportFailure(t.message ?: "kit initialization failed"))
         }
         try {
-            kit.also {
-                it.start()
-                it.startDiscovery()
+            var initializationComplete = false
+            try {
+                kit.start()
+                kit.startDiscovery()
                 diagnostics.event(P2pDiagnosticEventName.DISCOVERY_STARTED, P2pDiagnosticRole.PEER)
+                initializationComplete = true
+            } finally {
+                if (!initializationComplete) kit.stopAfterFailure(diagnostics)
             }
-        } catch (t: Throwable) {
-            kit.stopAfterFailure(diagnostics)
+        } catch (t: Exception) {
             t.rethrowIfCancellation()
             recordLocalNetworkFailure(t)
             diagnostics.event(
@@ -397,6 +414,7 @@ class P2pKitRoomTransport private constructor(
             )
             return Result.Failure(NetError.TransportFailure(t.message ?: "join failed"))
         }
+        var keepKitRunning = false
         return try {
             val startedAt = TimeSource.Monotonic.markNow()
             val scheduler = DiscoveryCandidateScheduler(
@@ -466,7 +484,7 @@ class P2pKitRoomTransport private constructor(
                     withTimeoutOrNull(remainingDialBudgetMs) {
                         kit.connect(hostPeer)
                     }
-                } catch (failure: Throwable) {
+                } catch (failure: Exception) {
                     failure.rethrowIfCancellation()
                     null
                 }
@@ -495,15 +513,15 @@ class P2pKitRoomTransport private constructor(
                 val remainingFirstResponseBudgetMs = joinTimeoutMs -
                     startedAt.elapsedNow().inWholeMilliseconds
                 if (remainingFirstResponseBudgetMs <= 0L) {
-                    runCatching { session.close() }
+                    attemptCleanup(diagnostics, P2pDiagnosticRole.PEER) { session.close() }
                     break
                 }
                 when (
                     val admission = awaitAdmission(
                         session = session,
                         hostPeer = hostPeer,
-                        code = config.code,
-                        displayName = config.displayName,
+                        code = effectiveConfig.code,
+                        displayName = effectiveConfig.displayName,
                         selfPlayerId = PlayerId(kit.localPeerId.value),
                         firstResponseTimeoutMs = minOf(
                             FIRST_ADMISSION_RESPONSE_TIMEOUT_MS,
@@ -518,11 +536,11 @@ class P2pKitRoomTransport private constructor(
                             kit = kit,
                             session = session,
                             hostPeer = hostPeer,
-                            roomCode = config.code,
+                            roomCode = effectiveConfig.code,
                             initialCredential = admission.credential,
                             credentialStore = credentialStore,
                             resumeConnector = { credential ->
-                                resumeConnection(kit, credential)
+                                resumeConnectionDetailed(kit, credential)
                             },
                             scope = scope,
                             codec = codec,
@@ -540,7 +558,7 @@ class P2pKitRoomTransport private constructor(
                         }
                     }
                     is AdmissionOutcome.Rejected -> {
-                        runCatching { session.close() }
+                        attemptCleanup(diagnostics, P2pDiagnosticRole.PEER) { session.close() }
                         when (admission.reason) {
                             AdmissionRejection.WrongCode -> scheduler.recordResult(
                                 scheduledAttempt,
@@ -556,7 +574,7 @@ class P2pKitRoomTransport private constructor(
                         }
                     }
                     is AdmissionOutcome.TransientFailure -> {
-                        runCatching { session.close() }
+                        attemptCleanup(diagnostics, P2pDiagnosticRole.PEER) { session.close() }
                         scheduler.recordResult(
                             scheduledAttempt,
                             DiscoveryAttemptResult.TransientFailure,
@@ -564,7 +582,7 @@ class P2pKitRoomTransport private constructor(
                         )
                     }
                     is AdmissionOutcome.Failed -> {
-                        runCatching { session.close() }
+                        attemptCleanup(diagnostics, P2pDiagnosticRole.PEER) { session.close() }
                         result = Result.Failure(admission.error)
                     }
                 }
@@ -573,8 +591,7 @@ class P2pKitRoomTransport private constructor(
                 result = Result.Failure(scheduler.finalError().toNetError())
             }
             if (result is Result.Failure) {
-                runCatching { kit.stopDiscovery() }
-                kit.stopAfterFailure(diagnostics)
+                attemptCleanup(diagnostics, P2pDiagnosticRole.PEER) { kit.stopDiscovery() }
                 if (_localNetworkAccess.value != LocalNetworkAccess.Operational) {
                     _localNetworkAccess.value = LocalNetworkAccess.FailureUnclassified
                 }
@@ -582,6 +599,7 @@ class P2pKitRoomTransport private constructor(
             checkNotNull(result).also { completed ->
                 when (completed) {
                     is Result.Success -> {
+                        keepKitRunning = true
                         diagnostics.event(
                             P2pDiagnosticEventName.DISCOVERY_FINISHED,
                             P2pDiagnosticRole.PEER,
@@ -609,8 +627,7 @@ class P2pKitRoomTransport private constructor(
                     }
                 }
             }
-        } catch (t: Throwable) {
-            kit.stopAfterFailure(diagnostics)
+        } catch (t: Exception) {
             t.rethrowIfCancellation()
             recordLocalNetworkFailure(t)
             diagnostics.event(
@@ -620,6 +637,8 @@ class P2pKitRoomTransport private constructor(
                 t.toDiagnosticReason(),
             )
             Result.Failure(NetError.TransportFailure(t.message ?: "join failed"))
+        } finally {
+            if (!keepKitRunning) kit.stopAfterFailure(diagnostics)
         }
     }
 
@@ -629,8 +648,15 @@ class P2pKitRoomTransport private constructor(
             is Result.Success -> {
                 val credential = loaded.data ?: return Result.Success(null)
                 if (credential.expiresAtEpochMillis <= nowMillis()) {
-                    credentialStore.clear()
-                    Result.Success(null)
+                    when (
+                        invalidateStoredCredential(
+                            credential,
+                            P2pDiagnosticReason.LIFECYCLE,
+                        )
+                    ) {
+                        is Result.Success -> Result.Success(null)
+                        is Result.Failure -> Result.Failure(NetError.SecureStorageUnavailable)
+                    }
                 } else {
                     val gameId = credential.gameId?.let(::GameId)
                         ?: return Result.Failure(NetError.IncompatibleProtocol)
@@ -654,7 +680,14 @@ class P2pKitRoomTransport private constructor(
             is Result.Success -> loaded.data ?: return Result.Failure(NetError.NotConnected)
         }
         if (credential.expiresAtEpochMillis <= nowMillis()) {
-            credentialStore.clear()
+            if (
+                invalidateStoredCredential(
+                    credential,
+                    P2pDiagnosticReason.LIFECYCLE,
+                ) is Result.Failure
+            ) {
+                return Result.Failure(NetError.SecureStorageUnavailable)
+            }
             diagnostics.event(
                 P2pDiagnosticEventName.LIFECYCLE_EXPIRED,
                 P2pDiagnosticRole.PEER,
@@ -670,7 +703,7 @@ class P2pKitRoomTransport private constructor(
         _localNetworkAccess.value = LocalNetworkAccess.Attempting
         val kit = try {
             kitFactory.createKit(appId = appId, deviceName = credential.displayName)
-        } catch (failure: Throwable) {
+        } catch (failure: Exception) {
             failure.rethrowIfCancellation()
             recordLocalNetworkFailure(failure)
             diagnostics.event(
@@ -684,9 +717,14 @@ class P2pKitRoomTransport private constructor(
             )
         }
         try {
-            kit.start()
-        } catch (failure: Throwable) {
-            kit.stopAfterFailure(diagnostics)
+            var initializationComplete = false
+            try {
+                kit.start()
+                initializationComplete = true
+            } finally {
+                if (!initializationComplete) kit.stopAfterFailure(diagnostics)
+            }
+        } catch (failure: Exception) {
             failure.rethrowIfCancellation()
             recordLocalNetworkFailure(failure)
             diagnostics.event(
@@ -699,24 +737,35 @@ class P2pKitRoomTransport private constructor(
                 NetError.TransportFailure(failure.message ?: "resume initialization failed"),
             )
         }
+        var keepKitRunning = false
         return try {
-            when (val resumed = resumeConnection(kit, credential)) {
+            when (val resumed = resumeConnectionDetailed(kit, credential)) {
                 is Result.Failure -> {
-                    kit.stopAfterFailure(diagnostics)
+                    val resumeError = resumed.error.error
                     if (_localNetworkAccess.value != LocalNetworkAccess.Operational) {
                         _localNetworkAccess.value = LocalNetworkAccess.FailureUnclassified
                     }
+                    if (resumed.error.invalidatesCredential) {
+                        val reason = if (resumeError == NetError.Unauthorized) {
+                            P2pDiagnosticReason.UNAUTHORIZED
+                        } else {
+                            P2pDiagnosticReason.LIFECYCLE
+                        }
+                        if (invalidateStoredCredential(credential, reason) is Result.Failure) {
+                            return Result.Failure(NetError.SecureStorageUnavailable)
+                        }
+                    }
                     diagnostics.event(
-                        if (resumed.error == NetError.RejoinExpired) {
+                        if (resumeError == NetError.RejoinExpired) {
                             P2pDiagnosticEventName.LIFECYCLE_EXPIRED
                         } else {
                             P2pDiagnosticEventName.SESSION_CREATE_FAILED
                         },
                         P2pDiagnosticRole.PEER,
-                        resumed.error.toDiagnosticResult(),
-                        resumed.error.toDiagnosticReason(),
+                        resumeError.toDiagnosticResult(),
+                        resumeError.toDiagnosticReason(),
                     )
-                    resumed
+                    Result.Failure(resumeError)
                 }
                 is Result.Success -> {
                     val lifecycleRegistrationId = SecureIds.id128()
@@ -730,7 +779,7 @@ class P2pKitRoomTransport private constructor(
                         diagnostics = diagnostics,
                         initialCredential = resumed.data.credential,
                         credentialStore = credentialStore,
-                        resumeConnector = { next -> resumeConnection(kit, next) },
+                        resumeConnector = { next -> resumeConnectionDetailed(kit, next) },
                         onClosed = { roomClosed(lifecycleRegistrationId) },
                     )
                     if (!room.finishInitialResumeHandoff(resumed.data)) {
@@ -743,12 +792,12 @@ class P2pKitRoomTransport private constructor(
                             P2pDiagnosticRole.PEER,
                             P2pDiagnosticResult.SUCCESS,
                         )
+                        keepKitRunning = true
                         Result.Success(room)
                     }
                 }
             }
-        } catch (failure: Throwable) {
-            kit.stopAfterFailure(diagnostics)
+        } catch (failure: Exception) {
             failure.rethrowIfCancellation()
             recordLocalNetworkFailure(failure)
             diagnostics.event(
@@ -758,6 +807,51 @@ class P2pKitRoomTransport private constructor(
                 failure.toDiagnosticReason(),
             )
             Result.Failure(NetError.TransportFailure(failure.message ?: "resume failed"))
+        } finally {
+            if (!keepKitRunning) kit.stopAfterFailure(diagnostics)
+        }
+    }
+
+    /** Invalidates one loaded capability without allowing a stale caller to clear a replacement. */
+    private suspend fun invalidateStoredCredential(
+        credential: ResumableSessionCredential,
+        reason: P2pDiagnosticReason,
+    ): Result<CredentialInvalidationResult, NetError> {
+        val invalidated = try {
+            credentialStore.invalidateOwned(credential)
+        } catch (failure: Exception) {
+            failure.rethrowIfCancellation()
+            diagnostics.event(
+                P2pDiagnosticEventName.CREDENTIAL_INVALIDATION_FAILED,
+                P2pDiagnosticRole.PEER,
+                P2pDiagnosticResult.FAILURE,
+                P2pDiagnosticReason.INTERNAL,
+            )
+            return Result.Failure(NetError.SecureStorageUnavailable)
+        }
+        return when (invalidated) {
+            is Result.Success -> {
+                diagnostics.event(
+                    P2pDiagnosticEventName.CREDENTIAL_INVALIDATED,
+                    P2pDiagnosticRole.PEER,
+                    if (invalidated.data == CredentialInvalidationResult.Invalidated) {
+                        P2pDiagnosticResult.SUCCESS
+                    } else {
+                        P2pDiagnosticResult.DUPLICATE
+                    },
+                    reason,
+                )
+                invalidated
+            }
+            is Result.Failure -> {
+                diagnostics.event(
+                    P2pDiagnosticEventName.CREDENTIAL_INVALIDATION_FAILED,
+                    P2pDiagnosticRole.PEER,
+                    P2pDiagnosticResult.FAILURE,
+                    P2pDiagnosticReason.INTERNAL,
+                )
+                Result.Failure(NetError.SecureStorageUnavailable)
+            }
         }
     }
 
@@ -782,9 +876,12 @@ class P2pKitRoomTransport private constructor(
                 .filterIsInstance<P2pMessage.Binary>()
                 .collect { frame ->
                     if (frame.bytes.size > MAX_ROOM_FRAME_BYTES) return@collect
-                    val decoded = runCatching {
+                    val decoded = try {
                         codec.decode(frame.bytes)
-                    }.getOrNull() as? HostMessage ?: return@collect
+                    } catch (failure: Exception) {
+                        failure.rethrowIfCancellation()
+                        return@collect
+                    } as? HostMessage ?: return@collect
                     when (decoded) {
                         is HostMessage.AdmissionOffered,
                         is HostMessage.AdmissionPending,
@@ -796,60 +893,52 @@ class P2pKitRoomTransport private constructor(
                 }
         }
         try {
-            val first = try {
-                sendUntilResponse(
-                    session = session,
-                    responses = responses,
-                    message = PeerMessage.AdmissionRequest(
-                        protocol = ProtocolVersion(),
-                        actor = selfPlayerId,
-                        roomCode = code,
-                        displayName = displayName,
-                    ),
-                    timeoutMs = firstResponseTimeoutMs,
-                    accepts = { response ->
-                        when (response) {
-                            is HostMessage.AdmissionPending ->
-                                response.playerId == selfPlayerId
-                            is HostMessage.AdmissionOffered ->
-                                response.offer.playerId == selfPlayerId
-                            is HostMessage.AdmissionAccepted ->
-                                response.playerId == selfPlayerId
-                            // Rejections are terminal for this physical session:
-                            // the host flushes the frame and immediately closes it.
-                            is HostMessage.AdmissionRejected -> true
-                            else -> false
-                        }
-                    },
-                )
-            } catch (_: TimeoutCancellationException) {
-                return@coroutineScope AdmissionOutcome.TransientFailure(NetError.Timeout)
-            }
+            val first = sendUntilResponse(
+                session = session,
+                responses = responses,
+                message = PeerMessage.AdmissionRequest(
+                    protocol = ProtocolVersion(),
+                    actor = selfPlayerId,
+                    roomCode = code,
+                    displayName = displayName,
+                ),
+                timeoutMs = firstResponseTimeoutMs,
+                accepts = { response ->
+                    when (response) {
+                        is HostMessage.AdmissionPending ->
+                            response.playerId == selfPlayerId
+                        is HostMessage.AdmissionOffered ->
+                            response.offer.playerId == selfPlayerId
+                        is HostMessage.AdmissionAccepted ->
+                            response.playerId == selfPlayerId
+                        // Rejections are terminal for this physical session:
+                        // the host flushes the frame and immediately closes it.
+                        is HostMessage.AdmissionRejected -> true
+                        else -> false
+                    }
+                },
+            ) ?: return@coroutineScope AdmissionOutcome.TransientFailure(NetError.Timeout)
             val decision = if (first is HostMessage.AdmissionPending) {
                 if (first.playerId != selfPlayerId) {
                     return@coroutineScope AdmissionOutcome.Rejected(
                         AdmissionRejection.InvalidCredential,
                     )
                 }
-                try {
-                    withTimeout<HostMessage>(HOST_APPROVAL_TIMEOUT_MS) {
-                        responses.receiveMatching { response ->
-                            when (response) {
-                                is HostMessage.AdmissionOffered ->
-                                    response.offer.playerId == selfPlayerId
-                                is HostMessage.AdmissionAccepted ->
-                                    response.playerId == selfPlayerId
-                                is HostMessage.AdmissionRejected -> true
-                                // AdmissionPending is a duplicate of the current
-                                // phase; AdmissionCommitted belongs to a later
-                                // offer/generation and must not poison this wait.
-                                else -> false
-                            }
+                withTimeoutOrNull(HOST_APPROVAL_TIMEOUT_MS) {
+                    responses.receiveMatching { response ->
+                        when (response) {
+                            is HostMessage.AdmissionOffered ->
+                                response.offer.playerId == selfPlayerId
+                            is HostMessage.AdmissionAccepted ->
+                                response.playerId == selfPlayerId
+                            is HostMessage.AdmissionRejected -> true
+                            // AdmissionPending is a duplicate of the current
+                            // phase; AdmissionCommitted belongs to a later
+                            // offer/generation and must not poison this wait.
+                            else -> false
                         }
                     }
-                } catch (_: TimeoutCancellationException) {
-                    return@coroutineScope AdmissionOutcome.Failed(NetError.Timeout)
-                }
+                } ?: return@coroutineScope AdmissionOutcome.Failed(NetError.Timeout)
             } else {
                 first
             }
@@ -896,7 +985,10 @@ class P2pKitRoomTransport private constructor(
                                 else -> false
                             }
                         },
-                    )
+                    ) ?: run {
+                        credentialStore.discardPending(credential.offerId)
+                        return@coroutineScope AdmissionOutcome.Failed(NetError.Timeout)
+                    }
                     when (committed) {
                         is HostMessage.AdmissionRejected -> {
                             credentialStore.discardPending(credential.offerId)
@@ -927,8 +1019,14 @@ class P2pKitRoomTransport private constructor(
                 else -> AdmissionOutcome.Rejected(AdmissionRejection.InvalidCredential)
             }
         } finally {
-            collector.cancelAndJoin()
-            responses.close()
+            withContext(NonCancellable) {
+                attemptCleanup(
+                    diagnostics,
+                    P2pDiagnosticRole.PEER,
+                    preserveCancellation = false,
+                ) { collector.cancelAndJoin() }
+                responses.close()
+            }
         }
     }
 
@@ -938,7 +1036,7 @@ class P2pKitRoomTransport private constructor(
         message: PeerMessage,
         timeoutMs: Long,
         accepts: (HostMessage) -> Boolean,
-    ): HostMessage = withTimeout<HostMessage>(timeoutMs) {
+    ): HostMessage? = withTimeoutOrNull(timeoutMs) {
         var response: HostMessage? = null
         while (response == null) {
             sendRoomMessage(session, message)
@@ -970,22 +1068,26 @@ class P2pKitRoomTransport private constructor(
      * the connection is cryptographically pinned to the fingerprint captured
      * during initial admission.
      */
-    private suspend fun resumeConnection(
+    private suspend fun resumeConnectionDetailed(
         kit: P2pKit,
         credential: ResumableSessionCredential,
-    ): Result<ResumedPeerConnection, NetError> {
+    ): Result<ResumedPeerConnection, ResumeConnectionFailure> {
         if (credential.expiresAtEpochMillis <= nowMillis()) {
-            return Result.Failure(NetError.RejoinExpired)
+            return Result.Failure(
+                ResumeConnectionFailure(NetError.RejoinExpired, invalidatesCredential = true),
+            )
         }
-        val expectedFingerprint = runCatching {
+        val expectedFingerprint = try {
             PeerFingerprint(credential.hostFingerprint)
-        }.getOrElse {
-            return Result.Failure(NetError.Unauthorized)
+        } catch (_: Exception) {
+            return Result.Failure(
+                ResumeConnectionFailure(NetError.Unauthorized, invalidatesCredential = true),
+            )
         }
         return try {
             kit.startDiscovery()
             diagnostics.event(P2pDiagnosticEventName.DISCOVERY_STARTED, P2pDiagnosticRole.PEER)
-            withTimeout(REJOIN_GRACE_MS) {
+            withTimeoutOrNull(REJOIN_GRACE_MS) {
                 while (true) {
                     val hostPeer = kit.peers.first { peers ->
                         peers.any { peer ->
@@ -1002,7 +1104,7 @@ class P2pKitRoomTransport private constructor(
                             P2pDiagnosticRole.PEER,
                         )
                         kit.connect(hostPeer, expectedFingerprint)
-                    } catch (failure: Throwable) {
+                    } catch (failure: Exception) {
                         failure.rethrowIfCancellation()
                         delay(ADMISSION_RETRY_MS)
                         continue
@@ -1013,8 +1115,10 @@ class P2pKitRoomTransport private constructor(
                             session.peerIdentity.peerId == hostPeer.id &&
                             session.peerIdentity.fingerprint == expectedFingerprint
                     if (!identityMatches) {
-                        runCatching { session.close() }
-                        return@withTimeout Result.Failure(NetError.Unauthorized)
+                        attemptCleanup(diagnostics, P2pDiagnosticRole.PEER) { session.close() }
+                        return@withTimeoutOrNull Result.Failure(
+                            ResumeConnectionFailure(NetError.Unauthorized),
+                        )
                     }
                     diagnostics.event(
                         P2pDiagnosticEventName.CONNECTION_SECURE,
@@ -1022,31 +1126,46 @@ class P2pKitRoomTransport private constructor(
                         P2pDiagnosticResult.SUCCESS,
                     )
                     when (val resumed = awaitResume(session, hostPeer, credential)) {
-                        is Result.Success -> return@withTimeout resumed
+                        is Result.Success -> return@withTimeoutOrNull resumed
                         is Result.Failure -> {
-                            runCatching { session.close() }
+                            attemptCleanup(diagnostics, P2pDiagnosticRole.PEER) { session.close() }
                             if (
                                 resumed.error == NetError.Unauthorized ||
                                 resumed.error == NetError.RejoinExpired ||
                                 resumed.error == NetError.IncompatibleProtocol ||
                                 resumed.error == NetError.AlreadyConnected
                             ) {
-                                return@withTimeout resumed
+                                return@withTimeoutOrNull Result.Failure(
+                                    ResumeConnectionFailure(
+                                        error = resumed.error,
+                                        invalidatesCredential =
+                                            resumed.error == NetError.Unauthorized ||
+                                                resumed.error == NetError.RejoinExpired,
+                                    ),
+                                )
                             }
                             delay(ADMISSION_RETRY_MS)
                         }
                     }
                 }
                 @Suppress("UNREACHABLE_CODE")
-                Result.Failure(NetError.Timeout)
-            }
-        } catch (_: TimeoutCancellationException) {
-            Result.Failure(NetError.Timeout)
-        } catch (failure: Throwable) {
+                Result.Failure(ResumeConnectionFailure(NetError.Timeout))
+            } ?: Result.Failure(ResumeConnectionFailure(NetError.Timeout))
+        } catch (failure: Exception) {
             failure.rethrowIfCancellation()
-            Result.Failure(NetError.TransportFailure(failure.message ?: "resume failed"))
+            Result.Failure(
+                ResumeConnectionFailure(
+                    NetError.TransportFailure(failure.message ?: "resume failed"),
+                ),
+            )
         } finally {
-            runCatching { kit.stopDiscovery() }
+            withContext(NonCancellable) {
+                attemptCleanup(
+                    diagnostics,
+                    P2pDiagnosticRole.PEER,
+                    preserveCancellation = false,
+                ) { kit.stopDiscovery() }
+            }
         }
     }
 
@@ -1059,8 +1178,12 @@ class P2pKitRoomTransport private constructor(
         val collector = launch(start = CoroutineStart.UNDISPATCHED) {
             session.incoming.filterIsInstance<P2pMessage.Binary>().collect { frame ->
                 if (frame.bytes.size > MAX_ROOM_FRAME_BYTES) return@collect
-                val decoded = runCatching { codec.decode(frame.bytes) }.getOrNull()
-                    as? HostMessage ?: return@collect
+                val decoded = try {
+                    codec.decode(frame.bytes)
+                } catch (failure: Exception) {
+                    failure.rethrowIfCancellation()
+                    return@collect
+                } as? HostMessage ?: return@collect
                 when (decoded) {
                     is HostMessage.ResumeOffered,
                     is HostMessage.ResumeCommitted,
@@ -1092,7 +1215,7 @@ class P2pKitRoomTransport private constructor(
                         else -> false
                     }
                 },
-            )
+            ) ?: return@coroutineScope Result.Failure(NetError.Timeout)
             if (first is HostMessage.AdmissionRejected) {
                 return@coroutineScope Result.Failure(first.reason.toNetError())
             }
@@ -1104,28 +1227,30 @@ class P2pKitRoomTransport private constructor(
             if (credentialStore.stage(rotated) is Result.Failure) {
                 return@coroutineScope Result.Failure(NetError.SecureStorageUnavailable)
             }
-            when (
-                val committed = sendUntilResponse(
-                    session = session,
-                    responses = responses,
-                    message = PeerMessage.ResumeConfirmed(
-                        actor = PlayerId(rotated.playerId),
-                        offerId = rotated.offerId,
-                        generation = rotated.generation,
-                    ),
-                    timeoutMs = ADMISSION_CONFIRM_TIMEOUT_MS,
-                    accepts = { response ->
-                        when (response) {
-                            is HostMessage.ResumeCommitted ->
-                                response.playerId.raw == rotated.playerId &&
-                                    response.offerId == rotated.offerId &&
-                                    response.generation == rotated.generation
-                            is HostMessage.AdmissionRejected -> true
-                            else -> false
-                        }
-                    },
-                )
-            ) {
+            val committed = sendUntilResponse(
+                session = session,
+                responses = responses,
+                message = PeerMessage.ResumeConfirmed(
+                    actor = PlayerId(rotated.playerId),
+                    offerId = rotated.offerId,
+                    generation = rotated.generation,
+                ),
+                timeoutMs = ADMISSION_CONFIRM_TIMEOUT_MS,
+                accepts = { response ->
+                    when (response) {
+                        is HostMessage.ResumeCommitted ->
+                            response.playerId.raw == rotated.playerId &&
+                                response.offerId == rotated.offerId &&
+                                response.generation == rotated.generation
+                        is HostMessage.AdmissionRejected -> true
+                        else -> false
+                    }
+                },
+            ) ?: run {
+                credentialStore.discardPending(rotated.offerId)
+                return@coroutineScope Result.Failure(NetError.Timeout)
+            }
+            when (committed) {
                 is HostMessage.AdmissionRejected -> {
                     credentialStore.discardPending(rotated.offerId)
                     Result.Failure(committed.reason.toNetError())
@@ -1150,13 +1275,23 @@ class P2pKitRoomTransport private constructor(
                 else -> Result.Failure(NetError.Unauthorized)
             }
         } finally {
-            collector.cancelAndJoin()
-            responses.close()
-            val pending = stagedOfferId
-            if (pending != null && !committedCredential) {
-                // On an interrupted handshake retain the last committed
-                // generation and remove only this staged rotation.
-                credentialStore.discardPending(pending)
+            withContext(NonCancellable) {
+                attemptCleanup(
+                    diagnostics,
+                    P2pDiagnosticRole.PEER,
+                    preserveCancellation = false,
+                ) { collector.cancelAndJoin() }
+                responses.close()
+                val pending = stagedOfferId
+                if (pending != null && !committedCredential) {
+                    // On an interrupted handshake retain the last committed
+                    // generation and remove only this staged rotation.
+                    attemptCleanup(
+                        diagnostics,
+                        P2pDiagnosticRole.PEER,
+                        preserveCancellation = false,
+                    ) { credentialStore.discardPending(pending) }
+                }
             }
         }
     }
@@ -1180,7 +1315,7 @@ class P2pKitRoomTransport private constructor(
         ) {
             return null
         }
-        return runCatching {
+        return try {
             ResumableSessionCredential(
                 offerId = offerId,
                 roomCode = roomCode,
@@ -1195,7 +1330,9 @@ class P2pKitRoomTransport private constructor(
                 gameId = gameId,
                 gameVersion = gameVersion,
             ).requireValid()
-        }.getOrNull()
+        } catch (_: Exception) {
+            null
+        }
     }
 
     private fun ResumableCredentialOffer.toRotatedCredentialOrNull(
@@ -1217,7 +1354,7 @@ class P2pKitRoomTransport private constructor(
         ) {
             return null
         }
-        return runCatching {
+        return try {
             current.copy(
                 offerId = offerId,
                 secret = secret,
@@ -1225,7 +1362,9 @@ class P2pKitRoomTransport private constructor(
                 issuedAtEpochMillis = issuedAtEpochMillis,
                 expiresAtEpochMillis = expiresAtEpochMillis,
             ).requireValid()
-        }.getOrNull()
+        } catch (_: Exception) {
+            null
+        }
     }
 
     private fun Peer.isFreshParlorHost(kit: P2pKit): Boolean {
@@ -1255,13 +1394,13 @@ class P2pKitRoomTransport private constructor(
     private inline fun nowMillis(): Long =
         kotlin.time.Clock.System.now().toEpochMilliseconds()
 
-    private fun generateRoomCode(): String =
-        SecureIds.randomCharacters(length = 6, alphabet = ROOM_CODE_ALPHABET)
+    private fun generateRoomCode(): String = SecureIds.randomCharacters(
+        length = RoomInputPolicy.ROOM_CODE_LENGTH,
+        alphabet = RoomInputPolicy.ROOM_CODE_ALPHABET,
+    )
 
     companion object {
         const val P2P_ROOM_PREFIX = "parlor-room|"
-        // Unambiguous alphabet — no 0/O, no 1/I — for in-person dictation.
-        private const val ROOM_CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
         /** Discovery, dial, secure handshake and first admission-state response budget. */
         internal const val DEFAULT_JOIN_TIMEOUT_MS: Long = 30_000L
         internal const val DIAL_AND_HANDSHAKE_TIMEOUT_MS: Long = 5_000L
@@ -1277,7 +1416,6 @@ class P2pKitRoomTransport private constructor(
         internal const val ADMISSION_CONFIRM_TIMEOUT_MS: Long = 60_000L
         internal const val CREDENTIAL_MAX_AGE_MS: Long = 24L * 60L * 60L * 1_000L
         internal const val INITIAL_CREDENTIAL_GENERATION: Long = 1L
-        internal const val MAX_DISPLAY_NAME_LENGTH: Int = 32
         // P2pKit publishes lastSeen on every heartbeat; a live host on the
         // same LAN refreshes well inside a 5s window. Tightening this
         // further risks false-rejecting a host whose Wi-Fi link briefly
@@ -1346,6 +1484,7 @@ private fun NetError.toDiagnosticReason(): P2pDiagnosticReason = when (this) {
     NetError.SessionStarted -> P2pDiagnosticReason.SESSION_STARTED
     NetError.IncompatibleProtocol -> P2pDiagnosticReason.INCOMPATIBLE_PROTOCOL
     NetError.Unauthorized -> P2pDiagnosticReason.UNAUTHORIZED
+    NetError.InvalidInput -> P2pDiagnosticReason.UNAUTHORIZED
     NetError.RateLimited -> P2pDiagnosticReason.RATE_LIMIT
     NetError.PayloadTooLarge -> P2pDiagnosticReason.PAYLOAD_LIMIT
     NetError.NotConnected,
@@ -1416,13 +1555,41 @@ private suspend fun P2pKit.stopAfterFailure(diagnostics: P2pDiagnostics) {
                 P2pDiagnosticEventName.CLEANUP_COMPLETED,
                 result = P2pDiagnosticResult.SUCCESS,
             )
-        } catch (failure: Throwable) {
+        } catch (failure: Exception) {
             diagnostics.event(
                 P2pDiagnosticEventName.CLEANUP_FAILED,
                 result = P2pDiagnosticResult.FAILURE,
                 reason = failure.toDiagnosticReason(),
             )
         }
+    }
+}
+
+/**
+ * Runs one best-effort cleanup step without ever converting a VM/runtime
+ * [Error] into an ordinary transport outcome.
+ *
+ * Outside a [NonCancellable] owner cleanup, cancellation remains structural
+ * and is rethrown. Terminal owner cleanup may set [preserveCancellation] to
+ * false because it records the failure and must finish releasing the rest of
+ * the room before returning to its already-cancelled caller.
+ */
+private suspend inline fun attemptCleanup(
+    diagnostics: P2pDiagnostics,
+    role: P2pDiagnosticRole,
+    preserveCancellation: Boolean = true,
+    block: suspend () -> Unit,
+) {
+    try {
+        block()
+    } catch (failure: Exception) {
+        if (preserveCancellation) failure.rethrowIfCancellation()
+        diagnostics.event(
+            P2pDiagnosticEventName.CLEANUP_FAILED,
+            role,
+            P2pDiagnosticResult.FAILURE,
+            failure.toDiagnosticReason(),
+        )
     }
 }
 
@@ -1582,9 +1749,8 @@ internal class HostP2pRoom(
 
     // p2p-016: leave() runs from a "Leave" tap AND from DisposableEffect.onDispose,
     // so a real double-call is expected. kit.stop() is terminal — a second call
-    // throws IllegalStateException. Guard so leave() is idempotent. (Plain var:
-    // leave() calls are sequential on the UI/teardown path, and kit.stop() is
-    // additionally runCatching-guarded; no cross-platform @Volatile needed.)
+    // throws IllegalStateException. Guard so leave() is idempotent. Every access
+    // is serialized by stateMutex, so no cross-platform @Volatile is needed.
     private var left = false
 
     private val acceptJob: Job = sessionScope.launch {
@@ -1645,7 +1811,7 @@ internal class HostP2pRoom(
             )
             try {
                 session.close()
-            } catch (failure: Throwable) {
+            } catch (failure: Exception) {
                 failure.rethrowIfCancellation()
             }
         }
@@ -1672,9 +1838,10 @@ internal class HostP2pRoom(
                 // p2p-002: never let a malformed/oversized/version-skewed frame
                 // throw out of this collect — that would cancel the coroutine and
                 // permanently kill THIS session's inbound stream. Skip + log.
-                val rawDecoded = runCatching {
+                val rawDecoded = try {
                     codec.decode(msg.bytes)
-                }.getOrElse {
+                } catch (failure: Exception) {
+                    failure.rethrowIfCancellation()
                     enforceTrafficDecision(
                         trafficGuard.malformedFrame(nowMillis()),
                         session,
@@ -1709,6 +1876,8 @@ internal class HostP2pRoom(
                     is PeerMessage.SnapshotRequest -> rawDecoded.copy(actor = playerId)
                     is PeerMessage.SessionHeartbeat -> rawDecoded.copy(actor = playerId)
                     is PeerMessage.CommandOutcomeRequest -> rawDecoded.copy(actor = playerId)
+                    is PeerMessage.SessionStartReady -> rawDecoded.copy(actor = playerId)
+                    is PeerMessage.SessionStartCommitAck -> rawDecoded.copy(actor = playerId)
                     else -> rawDecoded
                 }
                 val admitted = stateMutex.withLock {
@@ -1969,8 +2138,7 @@ internal class HostP2pRoom(
         }
         val displayName = transportDisplayName.trim()
         if (
-            displayName.isEmpty() ||
-            displayName.length > P2pKitRoomTransport.MAX_DISPLAY_NAME_LENGTH ||
+            !RoomInputPolicy.isValidDisplayName(displayName) ||
             request.displayName.trim() != displayName
         ) {
             rejectSession(session, AdmissionRejection.InvalidRequest)
@@ -2013,9 +2181,9 @@ internal class HostP2pRoom(
                         session,
                         HostMessage.AdmissionPending(requestEvent.admission.playerId),
                     )
-                } catch (failure: Throwable) {
+                } catch (failure: Exception) {
                     failure.rethrowIfCancellation()
-                    runCatching { session.close() }
+                    attemptCleanup(diagnostics, P2pDiagnosticRole.HOST) { session.close() }
                     return
                 }
                 if (requestEvent.emitEvent) {
@@ -2089,8 +2257,7 @@ internal class HostP2pRoom(
         if (
             !request.protocol.isCompatibleWith(ProtocolVersion()) ||
             request.roomCode != roomCode ||
-            displayName.isEmpty() ||
-            displayName.length > P2pKitRoomTransport.MAX_DISPLAY_NAME_LENGTH ||
+            !RoomInputPolicy.isValidDisplayName(displayName) ||
             request.displayName.trim() != displayName ||
             request.secret.length != 64 ||
             request.secret.any { it !in '0'..'9' && it !in 'a'..'f' }
@@ -2125,18 +2292,21 @@ internal class HostP2pRoom(
                         credential.peerFingerprint != peerFingerprint ->
                         ResumePreparation.Rejected(AdmissionRejection.InvalidCredential)
                     else -> {
+                        val previousGeneration = credential.previousGeneration
+                        val previousDigest = credential.previousDigest
                         val matchedGeneration = when {
                             request.generation == credential.generation &&
                                 SecureHashes.constantTimeEquals(
                                     providedDigest,
                                     credential.digest,
                                 ) -> credential.generation
-                            request.generation == credential.previousGeneration &&
-                                credential.previousDigest != null &&
+                            previousGeneration != null &&
+                                previousDigest != null &&
+                                request.generation == previousGeneration &&
                                 SecureHashes.constantTimeEquals(
                                     providedDigest,
-                                    credential.previousDigest!!,
-                                ) -> checkNotNull(credential.previousGeneration)
+                                    previousDigest,
+                                ) -> previousGeneration
                             else -> null
                         } ?: return@withLock ResumePreparation.Rejected(
                             AdmissionRejection.InvalidCredential,
@@ -2212,13 +2382,17 @@ internal class HostP2pRoom(
             if (!confirmed) {
                 prepared.matchedDigest.fill(0)
                 rollbackAdmission(playerId, session)
-                runCatching { session.close() }
+                attemptCleanup(diagnostics, P2pDiagnosticRole.HOST) { session.close() }
                 return
             }
-        } catch (failure: Throwable) {
+        } catch (failure: Exception) {
             withContext(NonCancellable) {
                 rollbackAdmission(playerId, session)
-                runCatching { session.close() }
+                attemptCleanup(
+                    diagnostics,
+                    P2pDiagnosticRole.HOST,
+                    preserveCancellation = false,
+                ) { session.close() }
             }
             prepared.matchedDigest.fill(0)
             failure.rethrowIfCancellation()
@@ -2265,11 +2439,13 @@ internal class HostP2pRoom(
         } ?: run {
             prepared.matchedDigest.fill(0)
             rollbackAdmission(playerId, session)
-            runCatching { session.close() }
+            attemptCleanup(diagnostics, P2pDiagnosticRole.HOST) { session.close() }
             return
         }
         prepared.matchedDigest.fill(0)
-        commit.previousSession?.let { runCatching { it.close() } }
+        commit.previousSession?.let { previous ->
+            attemptCleanup(diagnostics, P2pDiagnosticRole.HOST) { previous.close() }
+        }
         commit.previousCredential?.wipe()
         try {
             sendRaw(
@@ -2280,8 +2456,14 @@ internal class HostP2pRoom(
                     generation = transaction.offer.generation,
                 ),
             )
-        } catch (failure: Throwable) {
-            withContext(NonCancellable) { runCatching { session.close() } }
+        } catch (failure: Exception) {
+            withContext(NonCancellable) {
+                attemptCleanup(
+                    diagnostics,
+                    P2pDiagnosticRole.HOST,
+                    preserveCancellation = false,
+                ) { session.close() }
+            }
             failure.rethrowIfCancellation()
             return
         }
@@ -2310,7 +2492,7 @@ internal class HostP2pRoom(
                     resumeReadyByPlayer.remove(playerId)
                 }
             }
-            runCatching { session.close() }
+            attemptCleanup(diagnostics, P2pDiagnosticRole.HOST) { session.close() }
             return
         }
         _peerEvents.emit(PeerEvent.PeerReconnected(playerId, displayName))
@@ -2474,7 +2656,9 @@ internal class HostP2pRoom(
         frozen.pending.forEach { pending ->
             rejectSession(pending.session, AdmissionRejection.SessionStarted)
         }
-        frozen.disconnectedSessions.forEach { session -> runCatching { session.close() } }
+        frozen.disconnectedSessions.forEach { session ->
+            attemptCleanup(diagnostics, P2pDiagnosticRole.HOST) { session.close() }
+        }
         return Result.Success(frozen.members)
     }
 
@@ -2552,10 +2736,14 @@ internal class HostP2pRoom(
 
         try {
             sendRaw(session, HostMessage.AdmissionOffered(transaction.offer))
-        } catch (failure: Throwable) {
+        } catch (failure: Exception) {
             withContext(NonCancellable) {
                 rollbackAdmission(playerId, session)
-                runCatching { session.close() }
+                attemptCleanup(
+                    diagnostics,
+                    P2pDiagnosticRole.HOST,
+                    preserveCancellation = false,
+                ) { session.close() }
             }
             failure.rethrowIfCancellation()
             return Result.Failure(NetError.TransportFailure("admission offer failed"))
@@ -2566,17 +2754,21 @@ internal class HostP2pRoom(
                 transaction.confirmation.await()
                 true
             } ?: false
-        } catch (failure: Throwable) {
+        } catch (failure: Exception) {
             withContext(NonCancellable) {
                 rollbackAdmission(playerId, session)
-                runCatching { session.close() }
+                attemptCleanup(
+                    diagnostics,
+                    P2pDiagnosticRole.HOST,
+                    preserveCancellation = false,
+                ) { session.close() }
             }
             failure.rethrowIfCancellation()
             return Result.Failure(NetError.TransportFailure("admission confirmation failed"))
         }
         if (!confirmed) {
             rollbackAdmission(playerId, session)
-            runCatching { session.close() }
+            attemptCleanup(diagnostics, P2pDiagnosticRole.HOST) { session.close() }
             return Result.Failure(NetError.Timeout)
         }
 
@@ -2623,7 +2815,7 @@ internal class HostP2pRoom(
             }
         } ?: run {
             rollbackAdmission(playerId, session)
-            runCatching { session.close() }
+            attemptCleanup(diagnostics, P2pDiagnosticRole.HOST) { session.close() }
             return Result.Failure(NetError.NotConnected)
         }
         diagnostics.event(
@@ -2631,7 +2823,9 @@ internal class HostP2pRoom(
             P2pDiagnosticRole.HOST,
             P2pDiagnosticResult.SUCCESS,
         )
-        commit.previousSession?.let { runCatching { it.close() } }
+        commit.previousSession?.let { previous ->
+            attemptCleanup(diagnostics, P2pDiagnosticRole.HOST) { previous.close() }
+        }
         commit.previousCredential?.wipe()
         try {
             sendRaw(
@@ -2642,8 +2836,14 @@ internal class HostP2pRoom(
                     generation = transaction.offer.generation,
                 ),
             )
-        } catch (failure: Throwable) {
-            withContext(NonCancellable) { runCatching { session.close() } }
+        } catch (failure: Exception) {
+            withContext(NonCancellable) {
+                attemptCleanup(
+                    diagnostics,
+                    P2pDiagnosticRole.HOST,
+                    preserveCancellation = false,
+                ) { session.close() }
+            }
             failure.rethrowIfCancellation()
             // Confirmation proves that the peer durably owns this committed
             // capability. A lost commit frame is recovered through resume;
@@ -2674,7 +2874,7 @@ internal class HostP2pRoom(
                     admissionReadyByPlayer.remove(playerId)
                 }
             }
-            runCatching { session.close() }
+            attemptCleanup(diagnostics, P2pDiagnosticRole.HOST) { session.close() }
             return Result.Failure(NetError.Timeout)
         }
         if (isRejoin) {
@@ -2763,7 +2963,7 @@ internal class HostP2pRoom(
             )
             try {
                 session.close()
-            } catch (failure: Throwable) {
+            } catch (failure: Exception) {
                 failure.rethrowIfCancellation()
             }
             false
@@ -2786,9 +2986,11 @@ internal class HostP2pRoom(
             P2pDiagnosticResult.REJECTED,
             reason.toDiagnosticReason(),
         )
-        runCatching { sendRaw(session, HostMessage.AdmissionRejected(reason)) }
+        attemptCleanup(diagnostics, P2pDiagnosticRole.HOST) {
+            sendRaw(session, HostMessage.AdmissionRejected(reason))
+        }
         delay(P2pKitRoomTransport.ADMISSION_REJECTION_FLUSH_MS)
-        runCatching { session.close() }
+        attemptCleanup(diagnostics, P2pDiagnosticRole.HOST) { session.close() }
     }
 
     private suspend fun sendRaw(session: P2pSession, message: HostMessage) {
@@ -2849,7 +3051,7 @@ internal class HostP2pRoom(
             // P2pKit's notification starts cleanup asynchronously. Await the
             // host feature here so a rapid foreground cannot race an old stop.
             kit.stopAdvertising()
-        } catch (failure: Throwable) {
+        } catch (failure: Exception) {
             failure.rethrowIfCancellation()
             diagnostics.event(
                 P2pDiagnosticEventName.CLEANUP_FAILED,
@@ -2990,7 +3192,7 @@ internal class HostP2pRoom(
         // Best-effort cooperative close so the per-session collectors
         // complete. We deliberately don't await it (close is suspending);
         // launching keeps this helper synchronous for the collect lambda.
-        runCatching { session.close() }
+        attemptCleanup(diagnostics, P2pDiagnosticRole.HOST) { session.close() }
     }
 
     override suspend fun send(target: SendTarget, message: HostMessage): Result<Unit, NetError> {
@@ -3000,7 +3202,7 @@ internal class HostP2pRoom(
             return Result.Failure(NetError.PayloadTooLarge)
         }
         val payload = P2pMessage.Binary(bytes)
-        val result = runCatching {
+        val result = try {
             when (target) {
                 SendTarget.Broadcast -> {
                     // p2p-001: snapshot the session list under the lock
@@ -3008,13 +3210,13 @@ internal class HostP2pRoom(
                     // handleIncomingSession / removals), then send off-lock.
                     val targets = stateMutex.withLock { sessionsByPlayer.values.toList() }
                     var delivered = 0
-                    var firstFailure: Throwable? = null
+                    var firstFailure: Exception? = null
                     targets.forEach { session ->
                         if (session.state.value == ConnectionState.Connected) {
                             try {
                                 session.send(payload)
                                 delivered++
-                            } catch (failure: Throwable) {
+                            } catch (failure: Exception) {
                                 failure.rethrowIfCancellation()
                                 if (firstFailure == null) firstFailure = failure
                             }
@@ -3042,9 +3244,9 @@ internal class HostP2pRoom(
                     Result.Success(Unit)
                 }
             }
-        }.getOrElse {
-            it.rethrowIfCancellation()
-            Result.Failure(NetError.TransportFailure(it.message ?: "send failed"))
+        } catch (failure: Exception) {
+            failure.rethrowIfCancellation()
+            Result.Failure(NetError.TransportFailure(failure.message ?: "send failed"))
         }
         if (result is Result.Success) {
             when (message) {
@@ -3088,14 +3290,11 @@ internal class HostP2pRoom(
             // the "service-removed" packet before the kit goes down. Skipping
             // this is the root cause of dead rooms lingering in remote join
             // lobbies for the entire Bonjour eviction window (5–30s on iOS).
-            runCatching { kit.stopAdvertising() }.onFailure {
-                diagnostics.event(
-                    P2pDiagnosticEventName.CLEANUP_FAILED,
-                    P2pDiagnosticRole.HOST,
-                    P2pDiagnosticResult.FAILURE,
-                    P2pDiagnosticReason.TRANSPORT,
-                )
-            }
+            attemptCleanup(
+                diagnostics,
+                P2pDiagnosticRole.HOST,
+                preserveCancellation = false,
+            ) { kit.stopAdvertising() }
             delay(P2pKitRoomTransport.BONJOUR_GOODBYE_FLUSH_MS)
             sessionSupervisor.cancelAndJoin()
             val toClose = stateMutex.withLock {
@@ -3117,17 +3316,20 @@ internal class HostP2pRoom(
                 publishPendingAdmissions()
                 sessions
             }
-            toClose.forEach { runCatching { it.close() } }
+            toClose.forEach { session ->
+                attemptCleanup(
+                    diagnostics,
+                    P2pDiagnosticRole.HOST,
+                    preserveCancellation = false,
+                ) { session.close() }
+            }
             // kit.stop() is terminal; guard it so a late/duplicate teardown can't
             // throw out of a disposal path. See PROBLEMS_PARLOR.md → p2p-016.
-            runCatching { kit.stop() }.onFailure {
-                diagnostics.event(
-                    P2pDiagnosticEventName.CLEANUP_FAILED,
-                    P2pDiagnosticRole.HOST,
-                    P2pDiagnosticResult.FAILURE,
-                    P2pDiagnosticReason.TRANSPORT,
-                )
-            }
+            attemptCleanup(
+                diagnostics,
+                P2pDiagnosticRole.HOST,
+                preserveCancellation = false,
+            ) { kit.stop() }
             if (_lifecycle.value != RoomLifecycleState.Expired) {
                 _lifecycle.value = RoomLifecycleState.Closed
             }
@@ -3148,6 +3350,29 @@ internal data class ResumedPeerConnection(
     val credential: ResumableSessionCredential,
 )
 
+internal data class ResumeConnectionFailure(
+    val error: NetError,
+    /** True only for local expiry/corruption or an authenticated host rejection. */
+    val invalidatesCredential: Boolean = false,
+)
+
+private enum class SessionReplacementOutcome {
+    Ready,
+    AdoptedHandoffFailed,
+    NotAdopted,
+}
+
+private enum class CredentialInvalidationScope {
+    ExactGeneration,
+    LogicalMembership,
+}
+
+internal enum class ResumeAdoptionOutcome {
+    Ready,
+    Retry,
+    Terminal,
+}
+
 // ============================================================================ Peer room ==
 
 internal class PeerP2pRoom(
@@ -3161,7 +3386,8 @@ internal class PeerP2pRoom(
     initialCredential: ResumableSessionCredential? = null,
     private val credentialStore: ResumableCredentialStore? = null,
     private val resumeConnector: (
-        suspend (ResumableSessionCredential) -> Result<ResumedPeerConnection, NetError>
+        suspend (ResumableSessionCredential) ->
+            Result<ResumedPeerConnection, ResumeConnectionFailure>
     )? = null,
     private val onClosed: () -> Unit = {},
     private val appResumeGraceMs: Long = P2pKitRoomTransport.APP_RESUME_GRACE_MS,
@@ -3215,7 +3441,7 @@ internal class PeerP2pRoom(
     /** An authenticated host terminal frame permanently disables logical resume. */
     private var terminalByHost = false
     private var activeSession: P2pSession = session
-    private var collectorJob: Job = launchIncomingCollector(session)
+    private var collectorJob: Job = launchIncomingCollector(session, initialCredential)
     private var stateJob: Job = launchSessionStateCollector(session)
 
     override suspend fun appBackgrounded(atEpochMillis: Long) {
@@ -3299,6 +3525,7 @@ internal class PeerP2pRoom(
                 while (
                     lifecycleMutex.withLock {
                         !left &&
+                            !terminalByHost &&
                             (_lifecycle.value as? RoomLifecycleState.Resuming)
                                 ?.resumeDeadlineEpochMillis == deadline
                     }
@@ -3306,17 +3533,19 @@ internal class PeerP2pRoom(
                     when (val resumed = connector(candidate)) {
                         is Result.Success -> {
                             candidate = resumed.data.credential
-                            activeCredential.value = candidate
-                            if (replaceSession(resumed.data)) {
-                                restoreActiveRoom(emitEvent = true)
-                                return@launch
+                            when (adoptResumedConnection(resumed.data)) {
+                                ResumeAdoptionOutcome.Ready,
+                                ResumeAdoptionOutcome.Terminal -> return@launch
+                                ResumeAdoptionOutcome.Retry -> Unit
                             }
                         }
                         is Result.Failure -> {
-                            if (
-                                resumed.error == NetError.RejoinExpired ||
-                                resumed.error == NetError.Unauthorized
-                            ) {
+                            // Only local expiry/corruption or a rejection received
+                            // through the pinned authenticated host session is
+                            // terminal. A defensive post-connect identity mismatch
+                            // is Unauthorized too, but must retain the capability
+                            // and retry until the lifecycle deadline.
+                            if (resumed.error.invalidatesCredential) {
                                 expireLifecycle(deadline)
                                 return@launch
                             }
@@ -3326,7 +3555,7 @@ internal class PeerP2pRoom(
                 }
         }
         val accepted = lifecycleMutex.withLock {
-            if (left || resumeJob?.isActive == true) {
+            if (left || terminalByHost || resumeJob?.isActive == true) {
                 false
             } else {
                 resumeJob = job
@@ -3347,21 +3576,84 @@ internal class PeerP2pRoom(
         job.start()
     }
 
-    private suspend fun replaceSession(resumed: ResumedPeerConnection): Boolean {
+    /**
+     * Transfers a successful connector result into this room or closes it when
+     * terminal/leave ownership won first. This is the single ownership boundary
+     * for every physical resume session returned by [resumeConnector].
+     */
+    internal suspend fun adoptResumedConnection(
+        resumed: ResumedPeerConnection,
+    ): ResumeAdoptionOutcome {
+        var adopted = false
+        return try {
+            when (replaceSession(resumed)) {
+                SessionReplacementOutcome.Ready -> {
+                    adopted = true
+                    restoreActiveRoom(emitEvent = true)
+                    ResumeAdoptionOutcome.Ready
+                }
+                SessionReplacementOutcome.AdoptedHandoffFailed -> {
+                    adopted = true
+                    ResumeAdoptionOutcome.Retry
+                }
+                SessionReplacementOutcome.NotAdopted -> ResumeAdoptionOutcome.Terminal
+            }
+        } finally {
+            if (!adopted) {
+                withContext(NonCancellable) {
+                    closeSessionUnlessActive(resumed.session)
+                }
+            }
+        }
+    }
+
+    private suspend fun replaceSession(
+        resumed: ResumedPeerConnection,
+    ): SessionReplacementOutcome {
         val old = lifecycleMutex.withLock {
-            if (left) return false
+            if (left || terminalByHost) return SessionReplacementOutcome.NotAdopted
             sessionMutex.withLock {
                 val previous = Triple(activeSession, collectorJob, stateJob)
                 activeSession = resumed.session
-                collectorJob = launchIncomingCollector(resumed.session)
+                activeCredential.value = resumed.credential
+                collectorJob = launchIncomingCollector(
+                    resumed.session,
+                    resumed.credential,
+                )
                 stateJob = launchSessionStateCollector(resumed.session)
                 previous
             }
         }
         old.second.cancelAndJoin()
         old.third.cancelAndJoin()
-        runCatching { old.first.close() }
-        return signalResumeReady(resumed)
+        if (old.first !== resumed.session) closeSessionSafely(old.first)
+        return if (signalResumeReady(resumed)) {
+            SessionReplacementOutcome.Ready
+        } else {
+            SessionReplacementOutcome.AdoptedHandoffFailed
+        }
+    }
+
+    /** Closes a connector result only when it was never installed as the active session. */
+    private suspend fun closeSessionUnlessActive(session: P2pSession) {
+        val isActive = lifecycleMutex.withLock {
+            sessionMutex.withLock { activeSession === session }
+        }
+        if (!isActive) closeSessionSafely(session)
+    }
+
+    private suspend fun closeSessionSafely(session: P2pSession) {
+        try {
+            session.close()
+        } catch (failure: Exception) {
+            failure.rethrowIfCancellation()
+            diagnostics.event(
+                P2pDiagnosticEventName.CLEANUP_FAILED,
+                P2pDiagnosticRole.PEER,
+                P2pDiagnosticResult.FAILURE,
+                P2pDiagnosticReason.TRANSPORT,
+            )
+        }
     }
 
     internal suspend fun finishInitialResumeHandoff(
@@ -3384,9 +3676,18 @@ internal class PeerP2pRoom(
                     ),
                 ),
             )
-        } catch (failure: Throwable) {
-            failure.rethrowIfCancellation()
-            runCatching { session.close() }
+        } catch (failure: Exception) {
+            if (failure is CancellationException) {
+                withContext(NonCancellable) {
+                    attemptCleanup(
+                        diagnostics,
+                        P2pDiagnosticRole.PEER,
+                        preserveCancellation = false,
+                    ) { session.close() }
+                }
+                throw failure
+            }
+            closeSessionSafely(session)
             return false
         }
         try {
@@ -3401,14 +3702,14 @@ internal class PeerP2pRoom(
                     ),
                 ),
             )
-        } catch (failure: Throwable) {
+        } catch (failure: Exception) {
             failure.rethrowIfCancellation()
         }
         return true
     }
 
     internal suspend fun abandonFailedResume() {
-        leave(sendNotice = false, clearCredential = false)
+        closeForRetry()
     }
 
     private suspend fun signalResumeReady(resumed: ResumedPeerConnection): Boolean {
@@ -3420,9 +3721,25 @@ internal class PeerP2pRoom(
                 generation = credential.generation,
             )
             resumed.session.send(P2pMessage.Binary(codec.encode(ready)))
-        } catch (failure: Throwable) {
-            failure.rethrowIfCancellation()
-            runCatching { resumed.session.close() }
+        } catch (failure: Exception) {
+            if (failure is CancellationException) {
+                withContext(NonCancellable) {
+                    try {
+                        resumed.session.close()
+                    } catch (_: Exception) {
+                        // The original handoff cancellation is rethrown below;
+                        // this records that its non-cancellable close also failed.
+                        diagnostics.event(
+                            P2pDiagnosticEventName.CLEANUP_FAILED,
+                            P2pDiagnosticRole.PEER,
+                            P2pDiagnosticResult.FAILURE,
+                            P2pDiagnosticReason.TRANSPORT,
+                        )
+                    }
+                }
+                throw failure
+            }
+            closeSessionSafely(resumed.session)
             return false
         }
         try {
@@ -3432,7 +3749,7 @@ internal class PeerP2pRoom(
                 generation = credential.generation,
             )
             resumed.session.send(P2pMessage.Binary(codec.encode(acknowledgement)))
-        } catch (failure: Throwable) {
+        } catch (failure: Exception) {
             failure.rethrowIfCancellation()
             // Ready is the ordering barrier. A lost cleanup acknowledgement
             // leaves one prior generation valid until the next successful
@@ -3443,7 +3760,7 @@ internal class PeerP2pRoom(
 
     private suspend fun restoreActiveRoom(emitEvent: Boolean) {
         val restored = lifecycleMutex.withLock {
-            if (left || _lifecycle.value == RoomLifecycleState.Expired) {
+            if (left || terminalByHost || _lifecycle.value == RoomLifecycleState.Expired) {
                 false
             } else {
                 lifecycleExpiryJob?.cancel()
@@ -3498,11 +3815,17 @@ internal class PeerP2pRoom(
                 P2pDiagnosticResult.TIMEOUT,
                 P2pDiagnosticReason.LIFECYCLE,
             )
-            leave(sendNotice = false)
+            leave(
+                sendNotice = false,
+                invalidationReason = P2pDiagnosticReason.LIFECYCLE,
+            )
         }
     }
 
-    private fun launchIncomingCollector(session: P2pSession): Job = scope.launch {
+    private fun launchIncomingCollector(
+        session: P2pSession,
+        credentialBinding: ResumableSessionCredential?,
+    ): Job = scope.launch {
         val trafficGuard = InboundTrafficGuard(
             maxFrameBytes = P2pTrafficLimits.MAX_HOST_TO_PEER_FRAME_BYTES,
             nowMillis = nowMillis(),
@@ -3527,9 +3850,10 @@ internal class PeerP2pRoom(
             }
             // p2p-002: a malformed host frame must not cancel this collector
             // (which would permanently sever the peer's inbound stream).
-            val decoded = runCatching {
+            val decoded = try {
                 codec.decode(msg.bytes)
-            }.getOrElse {
+            } catch (failure: Exception) {
+                failure.rethrowIfCancellation()
                 enforceTrafficDecision(
                     trafficGuard.malformedFrame(nowMillis()),
                     session,
@@ -3546,10 +3870,8 @@ internal class PeerP2pRoom(
                 return@collect
             }
             if (decoded is HostMessage.SessionEnded || decoded == HostMessage.EndSession) {
-                lifecycleMutex.withLock {
-                    terminalByHost = true
-                    resumeJob?.cancel()
-                    resumeJob = null
+                if (!acceptAuthenticatedTerminal(session, credentialBinding)) {
+                    return@collect
                 }
             }
             when (decoded) {
@@ -3573,6 +3895,114 @@ internal class PeerP2pRoom(
                     }
                     incomingHostMessages.send(decoded)
                 }
+            }
+        }
+    }
+
+    /**
+     * Accepts a terminal frame only from the currently owned physical session.
+     * The collector's credential binding is invalidated before the frame reaches
+     * UI/game cleanup, so process/UI teardown is not required for correctness.
+     */
+    private suspend fun acceptAuthenticatedTerminal(
+        session: P2pSession,
+        credentialBinding: ResumableSessionCredential?,
+    ): Boolean {
+        var resumeToCancel: Job? = null
+        val accepted = lifecycleMutex.withLock {
+            if (left || terminalByHost) {
+                false
+            } else {
+                sessionMutex.withLock {
+                    if (activeSession !== session) {
+                        false
+                    } else {
+                        terminalByHost = true
+                        resumeToCancel = resumeJob
+                        resumeJob = null
+                        true
+                    }
+                }
+            }
+        }
+        if (!accepted) return false
+
+        resumeToCancel?.cancel()
+        invalidateCredentialForRoom(
+            credentialBinding,
+            P2pDiagnosticReason.SESSION_ENDED,
+            CredentialInvalidationScope.LogicalMembership,
+        )
+        return true
+    }
+
+    /**
+     * Invalidates the ownership scope selected by the lifecycle transaction.
+     * Authenticated terminal/final Leave revokes the logical membership,
+     * including a just-committed rotation; expiry and stale cleanup retain
+     * exact-generation behavior.
+     */
+    private suspend fun invalidateCredentialForRoom(
+        credentialBinding: ResumableSessionCredential?,
+        reason: P2pDiagnosticReason,
+        scope: CredentialInvalidationScope,
+    ): Result<Unit, NetError> {
+        credentialBinding ?: return Result.Success(Unit)
+        fun ownsCredential(candidate: ResumableSessionCredential?): Boolean = when (scope) {
+            CredentialInvalidationScope.ExactGeneration ->
+                candidate?.ownsSameGenerationAs(credentialBinding) == true
+            CredentialInvalidationScope.LogicalMembership ->
+                candidate?.ownsSameMembershipAs(credentialBinding) == true
+        }
+        val store = credentialStore
+        if (store == null) {
+            if (ownsCredential(activeCredential.value)) {
+                activeCredential.value = null
+            }
+            return Result.Success(Unit)
+        }
+        val invalidated = try {
+            when (scope) {
+                CredentialInvalidationScope.ExactGeneration ->
+                    store.invalidateOwned(credentialBinding)
+                CredentialInvalidationScope.LogicalMembership ->
+                    store.invalidateMembershipOwned(credentialBinding)
+            }
+        } catch (failure: Exception) {
+            failure.rethrowIfCancellation()
+            diagnostics.event(
+                P2pDiagnosticEventName.CREDENTIAL_INVALIDATION_FAILED,
+                P2pDiagnosticRole.PEER,
+                P2pDiagnosticResult.FAILURE,
+                P2pDiagnosticReason.INTERNAL,
+            )
+            return Result.Failure(NetError.SecureStorageUnavailable)
+        }
+        return when (invalidated) {
+            is Result.Success -> {
+                if (ownsCredential(activeCredential.value)) {
+                    activeCredential.value = null
+                }
+                diagnostics.event(
+                    P2pDiagnosticEventName.CREDENTIAL_INVALIDATED,
+                    P2pDiagnosticRole.PEER,
+                    if (invalidated.data == CredentialInvalidationResult.Invalidated) {
+                        P2pDiagnosticResult.SUCCESS
+                    } else {
+                        P2pDiagnosticResult.DUPLICATE
+                    },
+                    reason,
+                )
+                Result.Success(Unit)
+            }
+            is Result.Failure -> {
+                diagnostics.event(
+                    P2pDiagnosticEventName.CREDENTIAL_INVALIDATION_FAILED,
+                    P2pDiagnosticRole.PEER,
+                    P2pDiagnosticResult.FAILURE,
+                    P2pDiagnosticReason.INTERNAL,
+                )
+                Result.Failure(NetError.SecureStorageUnavailable)
             }
         }
     }
@@ -3601,7 +4031,7 @@ internal class PeerP2pRoom(
             )
             try {
                 session.close()
-            } catch (failure: Throwable) {
+            } catch (failure: Exception) {
                 failure.rethrowIfCancellation()
             }
             false
@@ -3714,16 +4144,14 @@ internal class PeerP2pRoom(
         if (bytes.size > P2pTrafficLimits.MAX_PEER_TO_HOST_FRAME_BYTES) {
             return Result.Failure(NetError.PayloadTooLarge)
         }
-        val result = runCatching {
+        val result = try {
             val payload = P2pMessage.Binary(bytes)
             session.send(payload)
-        }.fold(
-            onSuccess = { Result.Success(Unit) },
-            onFailure = {
-                it.rethrowIfCancellation()
-                Result.Failure(NetError.TransportFailure(it.message ?: "send failed"))
-            },
-        )
+            Result.Success(Unit)
+        } catch (failure: Exception) {
+            failure.rethrowIfCancellation()
+            Result.Failure(NetError.TransportFailure(failure.message ?: "send failed"))
+        }
         if (result is Result.Success && message is PeerMessage.ClientCommand) {
             diagnostics.event(
                 P2pDiagnosticEventName.COMMAND_SENT,
@@ -3734,27 +4162,76 @@ internal class PeerP2pRoom(
         return result
     }
 
-    override suspend fun leave() = leave(sendNotice = true)
+    override suspend fun leave() = leave(
+        sendNotice = true,
+        invalidationScope = CredentialInvalidationScope.LogicalMembership,
+    )
+
+    override suspend fun finalLeave(): Result<Unit, NetError> {
+        val credentialBinding = activeCredential.value
+        // Close transport resources first but retain the credential binding so
+        // a failed secure deletion can be retried after this room is closed.
+        leave(sendNotice = true, invalidateCredential = false)
+        return invalidateCredentialForRoom(
+            credentialBinding = credentialBinding,
+            reason = P2pDiagnosticReason.LIFECYCLE,
+            scope = CredentialInvalidationScope.LogicalMembership,
+        )
+    }
+
+    /**
+     * A failed game-start transaction is not an explicit membership Leave.
+     * Close the socket/kit without a LeaveNotice (the host interprets that as
+     * permanent revocation) and preserve the secure credential for the next
+     * process-level resume attempt.
+     */
+    override suspend fun closeForRetry(): Result<Unit, NetError> {
+        leave(sendNotice = false, invalidateCredential = false)
+        return Result.Success(Unit)
+    }
+
+    /**
+     * Revokes the stable membership retained by [closeForRetry]. This remains
+     * callable after physical cleanup made [leave] idempotent, and membership
+     * ownership intentionally spans a credential rotation committed by a
+     * concurrent resume transaction.
+     */
+    override suspend fun discardRejoinCapability(): Result<Unit, NetError> =
+        invalidateCredentialForRoom(
+            credentialBinding = activeCredential.value,
+            reason = P2pDiagnosticReason.LIFECYCLE,
+            scope = CredentialInvalidationScope.LogicalMembership,
+        )
 
     private suspend fun leave(
         sendNotice: Boolean,
-        clearCredential: Boolean = true,
+        invalidateCredential: Boolean = true,
+        invalidationReason: P2pDiagnosticReason = P2pDiagnosticReason.NONE,
+        invalidationScope: CredentialInvalidationScope =
+            CredentialInvalidationScope.ExactGeneration,
     ) {
-        val (shouldLeave, jobs) = lifecycleMutex.withLock {
-            if (left) false to emptyList() else {
+        val (shouldLeave, jobs, credentialAtLeave) = lifecycleMutex.withLock {
+            if (left) {
+                Triple(false, emptyList(), null)
+            } else {
                 left = true
                 val toCancel = listOfNotNull(lifecycleExpiryJob, resumeJob)
                 lifecycleExpiryJob = null
                 resumeJob = null
-                true to toCancel
+                Triple(true, toCancel, activeCredential.value)
             }
         }
         if (!shouldLeave) {
             return
         }
+        // Capture the owning job before replacing the context with
+        // NonCancellable. Inside that context currentCoroutineContext()[Job]
+        // is the non-cancellable cleanup job, not the resume/expiry job that
+        // invoked leave(); joining the latter from itself deadlocks cleanup.
+        val leavingJob = kotlinx.coroutines.currentCoroutineContext()[Job]
         withContext(NonCancellable) {
             jobs.forEach { job ->
-                if (job != kotlinx.coroutines.currentCoroutineContext()[Job]) {
+                if (job !== leavingJob) {
                     job.cancelAndJoin()
                 }
             }
@@ -3770,7 +4247,11 @@ internal class PeerP2pRoom(
             // otherwise; any send failure is non-fatal — the host's
             // state-watcher will still emit PeerLeft once the socket dies.
             if (sendNotice && session.state.value == ConnectionState.Connected) {
-                runCatching {
+                attemptCleanup(
+                    diagnostics,
+                    P2pDiagnosticRole.PEER,
+                    preserveCancellation = false,
+                ) {
                     val notice = P2pMessage.Binary(
                         codec.encode(PeerMessage.LeaveNotice),
                     )
@@ -3783,27 +4264,31 @@ internal class PeerP2pRoom(
             }
             collectorJob.cancelAndJoin()
             stateJob.cancelAndJoin()
-            if (clearCredential) {
-                credentialStore?.clear()
-                activeCredential.value = null
+            var invalidationCancellation: CancellationException? = null
+            if (invalidateCredential) {
+                try {
+                    invalidateCredentialForRoom(
+                        credentialAtLeave,
+                        invalidationReason,
+                        invalidationScope,
+                    )
+                } catch (cancelled: CancellationException) {
+                    // Finish terminal resource cleanup, then preserve structured
+                    // cancellation for the caller instead of translating it.
+                    invalidationCancellation = cancelled
+                }
             }
-            runCatching { session.close() }.onFailure {
-                diagnostics.event(
-                    P2pDiagnosticEventName.CLEANUP_FAILED,
-                    P2pDiagnosticRole.PEER,
-                    P2pDiagnosticResult.FAILURE,
-                    P2pDiagnosticReason.TRANSPORT,
-                )
-            }
+            attemptCleanup(
+                diagnostics,
+                P2pDiagnosticRole.PEER,
+                preserveCancellation = false,
+            ) { session.close() }
             // kit.stop() is terminal — guard against a duplicate/late teardown.
-            runCatching { kit.stop() }.onFailure {
-                diagnostics.event(
-                    P2pDiagnosticEventName.CLEANUP_FAILED,
-                    P2pDiagnosticRole.PEER,
-                    P2pDiagnosticResult.FAILURE,
-                    P2pDiagnosticReason.TRANSPORT,
-                )
-            }
+            attemptCleanup(
+                diagnostics,
+                P2pDiagnosticRole.PEER,
+                preserveCancellation = false,
+            ) { kit.stop() }
             if (_lifecycle.value != RoomLifecycleState.Expired) {
                 _lifecycle.value = RoomLifecycleState.Closed
             }
@@ -3814,6 +4299,7 @@ internal class PeerP2pRoom(
                 P2pDiagnosticRole.PEER,
                 P2pDiagnosticResult.SUCCESS,
             )
+            invalidationCancellation?.let { throw it }
         }
     }
 }

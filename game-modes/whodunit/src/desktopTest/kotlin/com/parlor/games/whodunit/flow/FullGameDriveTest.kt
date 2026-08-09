@@ -381,15 +381,23 @@ class FullGameDriveTest {
         session.submit(WhodunitAction.AcknowledgeReveal)
         assertThat(phaseOf(session)).isInstanceOf(WhodunitPhase.PostGame::class)
 
-        val firstSeed = hostState(session).hostOnly.randomSeed
+        val completedHostState = hostState(session)
+        val firstSeed = completedHostState.hostOnly.randomSeed
+        assertThat(completedHostState.hostOnly.drawnClueIds.isEmpty()).isEqualTo(false)
 
         session.submit(WhodunitAction.BeginReplay)
         assertThat(phaseOf(session)).isInstanceOf(WhodunitPhase.PublicIntro::class)
         val after = stateOf(session)
         assertThat(after.public.revealedClues.isEmpty()).isTrue()
         assertThat(after.public.voteState).isEqualTo(VoteState.Idle)
-        val replaySeed = hostState(session).hostOnly.randomSeed
+        val replayHostState = hostState(session)
+        val replaySeed = replayHostState.hostOnly.randomSeed
         assertThat(replaySeed == firstSeed).isEqualTo(false)
+        assertThat(replayHostState.hostOnly.drawnClueIds.isEmpty()).isTrue()
+        assertThat(replayHostState.hostOnly.seatToCharacter.keys)
+            .isEqualTo(players.map { it.id }.toSet())
+        assertThat(replayHostState.privatePerPlayer.keys)
+            .isEqualTo(players.map { it.id }.toSet())
 
         session.close()
     }
