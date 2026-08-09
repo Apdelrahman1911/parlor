@@ -22,6 +22,7 @@ import com.parlor.games.mafia.domain.phase.MafiaPhase
 import com.parlor.games.mafia.domain.reducer.MafiaReducer
 import com.parlor.games.mafia.domain.settings.TieBehavior
 import com.parlor.games.mafia.domain.state.DetectiveSeesAs
+import com.parlor.games.mafia.domain.state.MafiaState
 import com.parlor.games.mafia.domain.state.Role
 import com.parlor.storage.snapshot.InMemorySnapshotStore
 import kotlinx.coroutines.CancellationException
@@ -65,7 +66,7 @@ class MafiaSnapshotRecoveryTest {
         val valid = definition.createInitialState(config(sessionId))
         val corrupted = valid.copy(public = valid.public.copy(roster = valid.public.roster.dropLast(1)))
         val store = InMemorySnapshotStore()
-        store.save(snapshot(sessionId, corrupted))
+        store.save(snapshot(sessionId, corrupted, encodeThroughValidatedCodec = false))
 
         val result = loadMafiaResumedSession(store, definition, sessionId)
 
@@ -155,7 +156,7 @@ class MafiaSnapshotRecoveryTest {
         val phase = state.phase as MafiaPhase.Night
         val corrupted = state.copy(phase = phase.copy(day = phase.day + 1))
         val store = InMemorySnapshotStore()
-        store.save(snapshot(sessionId, corrupted))
+        store.save(snapshot(sessionId, corrupted, encodeThroughValidatedCodec = false))
 
         val result = loadMafiaResumedSession(store, definition, sessionId)
 
@@ -476,14 +477,23 @@ class MafiaSnapshotRecoveryTest {
 
     private fun snapshot(
         sessionId: SessionId,
-        state: com.parlor.games.mafia.domain.state.MafiaState,
+        state: MafiaState,
+        encodeThroughValidatedCodec: Boolean = true,
     ) = GameSnapshot(
         sessionId = sessionId,
         gameId = MafiaIds.GameId,
         engineVersion = MAFIA_SNAPSHOT_VERSION,
         createdAt = Instant.fromEpochSeconds(1),
         phaseId = state.phase.id,
-        payload = definition.snapshotCodec().encode(state),
+        // Recovery tests for malformed records must bypass the production
+        // encoder: the encoder is intentionally fail-closed and cannot emit
+        // an impossible state. The strict decoder still exercises the real
+        // persistence boundary and must reject this raw serialized fixture.
+        payload = if (encodeThroughValidatedCodec) {
+            definition.snapshotCodec().encode(state)
+        } else {
+            json.encodeToString(MafiaState.serializer(), state).encodeToByteArray()
+        },
         metadata = mapOf(MAFIA_PLAY_MODE_KEY to MAFIA_PASS_AND_PLAY_MODE),
     )
 
