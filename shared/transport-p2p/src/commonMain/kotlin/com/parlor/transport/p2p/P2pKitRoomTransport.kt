@@ -1870,7 +1870,7 @@ internal class HostP2pRoom(
                     return@collect
                 }
                 // wu-ui-01 / NN-03: the actor identity is the AUTHENTICATED
-                // session peer id, never the self-attested ActionSubmit.sender.
+                // session peer id, never a peer-authored actor/sender field.
                 // Overwrite the body field so the authority gate downstream can
                 // only ever see who actually owns this connection — a peer can no
                 // longer forge another player's vote/action by lying in the body.

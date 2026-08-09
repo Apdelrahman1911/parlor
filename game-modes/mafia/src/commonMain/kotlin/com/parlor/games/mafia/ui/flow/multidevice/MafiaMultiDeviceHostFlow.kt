@@ -65,7 +65,8 @@ import org.koin.compose.koinInject
  *  - Broadcasts `MafiaProjectionPolicy.toPublic` snapshots on every host
  *    state change.
  *  - Direct-sends each peer their own `MafiaPrivate` slice.
- *  - Ingests `PeerMessage.ActionSubmit`, authorising via
+ *  - Ingests authenticated `PeerMessage.ClientCommand` payloads through the
+ *    shared coordinator, authorising via
  *    [com.parlor.games.mafia.domain.authority.MafiaActionAuthority] before
  *    forwarding to the controller.
  *

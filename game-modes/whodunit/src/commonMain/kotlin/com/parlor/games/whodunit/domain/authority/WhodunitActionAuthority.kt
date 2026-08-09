@@ -72,7 +72,7 @@ object WhodunitActionAuthority {
      *
      * The host is implicitly trusted (they never call this on their own
      * actions); this is consulted by the host on inbound peer
-     * [com.parlor.networking.protocol.PeerMessage.ActionSubmit].
+     * [com.parlor.networking.protocol.PeerMessage.ClientCommand].
      *
      * Three-rule gate:
      *  1. HostOnly actions: only the host may submit.

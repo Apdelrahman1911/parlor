@@ -9,7 +9,7 @@
 > accepted decisions in [`docs/adr/`](docs/adr/).
 > In particular, the `JoinRequest`/`ActionSubmit` examples and references to
 > Android Nearby Connections, iOS MultipeerConnectivity, and Desktop WebSockets
-> are historical proposals. Shipping multiplayer uses the strict Parlor 3.1
+> are historical proposals. Shipping multiplayer uses the strict Parlor 4.0
 > protocol over P2pKit 0.7.0-rc2 LAN discovery/encrypted TCP.
 
 ---

@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
  * reveal actions; Phase 5 adds round/vote/reveal/replay; Phase 6 adds safety.
  *
  * Annotated `@Serializable` so peer→host action submissions can ride the
- * `PeerMessage.ActionSubmit(payload: ByteArray)` wire (see
+ * `PeerMessage.ClientCommand(payload: ByteArray)` wire (see
  * [com.parlor.games.whodunit.domain.action.WhodunitActionCodec]).
  * kotlinx-serialization emits a JSON polymorphic discriminator on the sealed
  * interface. Compatibility is still governed by the negotiated game version:

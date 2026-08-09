@@ -8,6 +8,8 @@ still requires release or physical-device evidence. It is deliberately
 stricter than a feature checklist: **implemented does not mean production
 verified**.
 
+Runtime protocol: `4.0`.
+
 The recoverable pre-remediation baseline is commit
 `8186f7d70786057b791bd5c1aa80ca868835ec37`. Every remediation commit is on
 top of that checkpoint; no baseline change was reset, cleaned, or rewritten.
@@ -49,7 +51,7 @@ its regression fixes are separate commits above that baseline.
 | `3416917` | Atomic capacity reservation and transactional admission base. |
 | `b75325e` | Platform-protected storage for resumable credentials. |
 | `b49a7c4` | Serialized credential staging, promotion, rotation, and deletion. |
-| `284c594` | Protocol 3 transactional admission/resume readiness barriers. |
+| `284c594` | Historical protocol-3-era transactional admission/resume readiness barriers; superseded on the wire by protocol 4.0's start barrier. |
 | `4170266` | Pinned, rotating, process-resumable admission and rejoin implementation. |
 | `afe9936` | Bounded queues, payloads, rates, attempts, and admission bookkeeping. |
 | `bc05b34` | Deadline-owned multi-candidate discovery scheduler and retry policy. |
@@ -115,7 +117,7 @@ remediation boundary.
 | Manifest/plist | PASS for source and unsigned merged output: Android min 26/target 36 with only four base LAN permissions, cleartext and backup disabled; `plutil` accepts the plist with Local Network usage and `_p2pkit2._tcp`, without Bluetooth wording. | Archive the signed merged manifest/app plist and repeat platform inspection. |
 | Encryption/authenticated identity | Parlor relies on P2pKit authenticated-v2 encrypted sessions and pins the authenticated host fingerprint for resume. It does not claim account identity or an internet trust anchor. | P2pKit artifact/API provenance, adapter tests, and physical authenticated connection/rejoin receipts; residual first-contact threat documented. |
 | Host authority/actor binding | Implemented at transport and coordinator boundaries. | Modified-client actor-spoof tests, both game authority tests, and physical private-state/command results. |
-| Version/order/duplicate/snapshot | Strict protocol 3.1 and monotonic authoritative revisions implemented. | Codec compatibility fixtures, fault injection, coordinator/adapter tests, and physical simultaneous-action evidence. |
+| Version/order/duplicate/snapshot | Strict protocol 4.0, reliable offer/Ready/commit/commit-ack game start, and monotonic authoritative revisions implemented. | Codec/start-barrier compatibility fixtures, fault injection, coordinator/adapter tests, and physical simultaneous-action evidence. |
 | Admission/capacity/backpressure | Implemented and bounded in code. | Deterministic race/flood suites plus physical last-seat, disconnect, sustained, and repeated-session rows. |
 | Direct-connect decision | Unsupported under ADR-0002. | Capability remains false, docs remain aligned, and manual row remains N/A. |
 | Android-to-Android | UNVERIFIED for the release SHA. | PHY-01 and applicable recovery/hotspot/signed rows. |

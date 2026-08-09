@@ -12,7 +12,7 @@ import kotlin.test.Test
 import kotlin.test.assertFailsWith
 
 /**
- * Closes the Phase 7 / P2P serialization gap: `PeerMessage.ActionSubmit`
+ * Closes the Phase 7 / P2P serialization gap: `PeerMessage.ClientCommand`
  * carries a `ByteArray` payload, and Whodunit's actions can now flow over
  * it because every variant is `@Serializable` and round-trips cleanly
  * through [WhodunitActionCodec].

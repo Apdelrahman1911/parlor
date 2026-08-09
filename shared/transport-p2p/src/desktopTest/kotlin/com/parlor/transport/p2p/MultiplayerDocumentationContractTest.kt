@@ -1,5 +1,7 @@
 package com.parlor.transport.p2p
 
+import com.parlor.networking.protocol.PARLOR_PROTOCOL_MAJOR
+import com.parlor.networking.protocol.PARLOR_PROTOCOL_MINOR
 import java.io.File
 import kotlin.test.Test
 import kotlin.test.assertFalse
@@ -16,6 +18,57 @@ import kotlin.test.assertTrue
 class MultiplayerDocumentationContractTest {
 
     private val repositoryRoot: File by lazy(::locateRepositoryRoot)
+
+    @Test
+    fun operational_docs_track_runtime_protocol_and_reliable_start_contract() {
+        val runtimeVersion = "$PARLOR_PROTOCOL_MAJOR.$PARLOR_PROTOCOL_MINOR"
+        val currentDocuments = listOf(
+            "docs/P2P_MANUAL_TEST.md",
+            "docs/P2P_REMEDIATION_STATUS.md",
+            "docs/PRODUCTION_ARCHITECTURE.md",
+        )
+        val marker = "Runtime protocol: `$runtimeVersion`."
+
+        currentDocuments.forEach { path ->
+            assertTrue(
+                read(path).contains(marker),
+                "$path must derive its current wire-version claim from $marker",
+            )
+        }
+
+        val reliableStartDocuments = listOf(
+            "docs/P2P_MANUAL_TEST.md",
+            "docs/PRODUCTION_ARCHITECTURE.md",
+        )
+        val requiredStartContract = listOf(
+            "SessionStarting",
+            "SessionStartReady",
+            "SessionStartCommitted",
+            "SessionStartCommitAck",
+            "stable `startId`",
+            "Only `SessionStartCommitted` authorizes gameplay",
+        )
+        reliableStartDocuments.forEach { path ->
+            // Markdown line wrapping is presentation, not a contract change.
+            // Normalize whitespace while retaining the exact protocol terms.
+            val text = read(path).replace(Regex("\\s+"), " ")
+            requiredStartContract.forEach { required ->
+                assertTrue(
+                    text.contains(required),
+                    "$path must document protocol-$runtimeVersion start behavior: $required",
+                )
+            }
+        }
+
+        val historicalBanner = read("ARCHITECTURE.md")
+            .take(1_000)
+            .replace(">", "")
+            .replace(Regex("\\s+"), " ")
+        assertTrue(
+            historicalBanner.contains("strict Parlor $runtimeVersion protocol"),
+            "ARCHITECTURE.md's current-truth banner must name runtime protocol $runtimeVersion",
+        )
+    }
 
     @Test
     fun canonical_manual_runbook_matches_the_runtime_contract() {
@@ -53,6 +106,18 @@ class MultiplayerDocumentationContractTest {
             "docs/RELEASE_RUNBOOK.md",
         )
         val currentText = canonicalDocuments.joinToString(separator = "\n") { read(it) }
+
+        listOf(
+            "Protocol 3.1",
+            "strict Parlor 3.1",
+            "shipping multiplayer uses the strict Parlor 3.1",
+        )
+            .forEach { obsoleteProtocolClaim ->
+                assertFalse(
+                    currentText.contains(obsoleteProtocolClaim, ignoreCase = true),
+                    "Current multiplayer docs contain obsolete protocol claim: $obsoleteProtocolClaim",
+                )
+            }
 
         listOf(
             "iOS reports `Granted` immediately",

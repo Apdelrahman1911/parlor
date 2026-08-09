@@ -11,9 +11,10 @@ import kotlinx.serialization.json.jsonPrimitive
  *
  * Used by the multi-device path: a peer submits a `WhodunitAction` to the
  * host by wrapping the encoded bytes in
- * `com.parlor.networking.protocol.PeerMessage.ActionSubmit(payload)`. The
- * host decodes back to a typed `WhodunitAction` and feeds it to the same
- * reducer that pass-and-play uses.
+ * `com.parlor.networking.protocol.PeerMessage.ClientCommand(payload)`. The
+ * shared coordinator authenticates, orders, and acknowledges the command;
+ * the host then decodes back to a typed `WhodunitAction` and feeds it to the
+ * same reducer that pass-and-play uses.
  *
  * The codec is intentionally JSON for now — easy to inspect on the wire,
  * easy to evolve via kotlinx-serialization's `@SerialName` / `@JsonNames`
@@ -30,13 +31,13 @@ object WhodunitActionCodec {
         encodeDefaults = true
     }
 
-    /** Encode an action to JSON bytes suitable for `PeerMessage.ActionSubmit.payload`. */
+    /** Encode an action to JSON bytes suitable for `PeerMessage.ClientCommand.payload`. */
     fun encode(action: WhodunitAction): ByteArray =
         json.encodeToString(WhodunitAction.serializer(), action.requireValidRevealGeneration())
             .encodeToByteArray()
             .also(::requireBounded)
 
-    /** Decode a `PeerMessage.ActionSubmit.payload` back to a typed action. */
+    /** Decode a `PeerMessage.ClientCommand.payload` back to a typed action. */
     fun decode(bytes: ByteArray): WhodunitAction {
         requireBounded(bytes)
         val encoded = bytes.decodeToString()
@@ -46,9 +47,9 @@ object WhodunitActionCodec {
     }
 
     /**
-     * Game-protocol v3 advertised structured actions even though its reducer
-     * silently ignored them. They are deliberately absent from the v4 action
-     * model. Recognising the retired discriminator here turns an old payload
+     * The pre-v4 game-action contract advertised structured actions even though
+     * its reducer silently ignored them. They are deliberately absent from the
+     * v4 action model. Recognising the retired discriminator here turns an old payload
      * into an explicit, auditable InvalidAction result instead of relying on
      * an incidental unknown-subclass serialization error.
      */

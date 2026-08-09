@@ -35,6 +35,11 @@ below pass consistently on recorded physical devices.
 | One dial plus secure handshake attempt | 5 seconds |
 | First admission response after a secure connection | 5 seconds |
 | Human host approval after `AdmissionPending` | 60 seconds |
+| Initial host start Ready quorum | 20 seconds |
+| Peer start preparation after a compatible offer | 20 seconds |
+| Peer commit delivery after sending Ready | 20 seconds |
+| Start commit-ack delivery/retry window | 20 seconds; expiry does not roll back a committed start |
+| One start-control-frame send | 2 seconds |
 | Peer transport resume attempt / disconnected-seat grace | 120 seconds |
 | App background-to-resume grace | 120 seconds from the first background event |
 | Resumable credential cryptographic expiry | 24 hours; this does not extend the host's 120-second seat reservation |
@@ -68,8 +73,11 @@ separate 60-second human-approval state.
 
 ### Wire and authority
 
+Runtime protocol: `4.0`.
+
 Parlor serializes `RoomMessage` as strict CBOR inside `P2pMessage.Binary`.
-Protocol 3.1 admission is transactional:
+Protocol compatibility is exact: a 4.0 binary fails closed when paired with a
+different major or minor schema. Admission is transactional:
 
 ```text
 AdmissionRequest -> AdmissionPending -> host approval
@@ -83,6 +91,34 @@ Resume rotates the credential through:
 ResumeRequested -> ResumeOffered -> ResumeConfirmed -> ResumeCommitted
 -> ResumeReady -> ResumeCommitAck
 ```
+
+Starting gameplay is a separate reliable protocol-4.0 transaction:
+
+```text
+SessionStarting(startId) -> SessionStartReady(startId)
+-> SessionStartCommitted(startId) -> SessionStartCommitAck(startId)
+```
+
+The host retries one immutable offer with a stable `startId`, starting at 250
+milliseconds and backing off to at most 2 seconds. Every admitted peer must
+validate its game/session/content shape and answer Ready inside the host's
+20-second quorum window. A peer gets its own 20-second preparation window only
+after a structurally compatible offer arrives, followed by a fresh 20-second
+commit-delivery window after it sends Ready. If the Ready quorum is not met,
+the host cancels the start and ends that session attempt.
+
+After every peer is Ready, the host commits irreversibly. Only
+`SessionStartCommitted` authorizes gameplay. `SessionStartCommitAck` confirms
+delivery but is not a rollback boundary: the host retries the same commit for
+up to 20 seconds, and a lost acknowledgement cannot undo a committed game. A
+resumed seat repeats the same stable offer/Ready and commit/acknowledgement
+barrier before it receives live gameplay.
+
+During the start transaction, the host publishes gameplay snapshots only after
+commit. The peer attaches its gameplay collector after accepting that commit
+and explicitly requests a validated initial snapshot until one arrives;
+commands remain blocked before that snapshot. This makes a lost eager
+revision-zero snapshot recoverable rather than relying on transport timing.
 
 Gameplay uses `ClientCommand(commandId, clientSequence, expectedRevision)` and
 returns `CommandResult`; accepted mutations advance the authoritative revision

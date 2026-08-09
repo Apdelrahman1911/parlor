@@ -127,10 +127,10 @@ class InMemoryPeerRoom(
     override suspend fun sendToHost(message: PeerMessage): Result<Unit, NetError> {
         if (simulateNotConnected) return Result.Failure(NetError.NotConnected)
         // Stamp the transport-authenticated sender (this room's bound
-        // [selfPlayerId]) onto an ActionSubmit, mirroring the P2pKit host's
-        // session-bound stamp. A peer cannot claim to be a different seat, so
-        // ActionSubmit.sender reaching the host is always authenticated — the
-        // authority gate can trust it. See PROBLEMS_PARLOR.md → wu-ui-01/NN-03.
+        // [selfPlayerId]) onto a legacy ActionSubmit, mirroring the P2pKit
+        // host's session-bound stamp. This compatibility branch is not the
+        // shipping v4 command path, which uses ClientCommand below. See
+        // PROBLEMS_PARLOR.md → wu-ui-01/NN-03.
         val authenticated = when (message) {
             is PeerMessage.ActionSubmit -> message.copy(sender = selfPlayerId)
             is PeerMessage.AdmissionRequest -> message.copy(actor = selfPlayerId)

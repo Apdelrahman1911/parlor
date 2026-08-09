@@ -50,6 +50,37 @@ admission, reconnect, ordering, or a P2pKit instance.
 The host is the sole authority. Peers never run a reducer to predict canonical
 state.
 
+Runtime protocol: `4.0`.
+
+Protocol 4.0 makes game entry an acknowledged, idempotent barrier rather than
+a one-shot notification:
+
+```mermaid
+sequenceDiagram
+    participant H as Host coordinator
+    participant P as Peer start gate
+    participant G as Peer game coordinator
+
+    H->>P: SessionStarting(stable startId, canonical session shape)
+    P->>P: validate version/session/game/content and prepare locally
+    P-->>H: SessionStartReady(same startId)
+    H->>H: wait for every admitted peer Ready, then commit irreversibly
+    H->>P: SessionStartCommitted(same startId)
+    P-->>H: SessionStartCommitAck(same startId)
+    P->>G: attach gameplay collector
+    G-->>H: request initial authoritative snapshot until received
+```
+
+The host retries the immutable offer/commit with bounded exponential backoff.
+The initial Ready quorum, peer preparation, peer commit delivery, and commit
+acknowledgement delivery each own a bounded 20-second phase; a control-frame
+send is bounded to 2 seconds. Only `SessionStartCommitted` authorizes gameplay.
+Commit acknowledgement is delivery evidence, not a rollback boundary, and a
+resumed seat must replay the stable `startId` barrier before live snapshots.
+During the start transaction, gameplay snapshots are not published before host
+commit, and peer commands remain blocked until the peer installs a structurally
+validated initial snapshot.
+
 ```mermaid
 sequenceDiagram
     participant P as Peer UI
@@ -69,8 +100,9 @@ sequenceDiagram
     PC->>P: install only monotonic authoritative revision
 ```
 
-The strict Parlor protocol is version 3.1. The cross-game envelope carries
-protocol version, session ID, game ID, game
+Protocol compatibility is strict and exact: a 4.0 binary interoperates only
+with the same major and minor schema. The cross-game envelope carries protocol
+version, session ID, game ID, game
 version, message ID, and sequence metadata. Commands add a random command ID,
 per-player client sequence, and expected host revision. The coordinator
 deduplicates commands in a bounded ledger, handles sequence gaps and stale

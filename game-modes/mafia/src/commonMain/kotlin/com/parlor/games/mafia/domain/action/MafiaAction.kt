@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
  * Mafia's full sealed input vocabulary.
  *
  * Annotated `@Serializable` so peer→host action submissions can ride the
- * `PeerMessage.ActionSubmit(payload: ByteArray)` wire (see [MafiaActionCodec]).
+ * `PeerMessage.ClientCommand(payload: ByteArray)` wire (see [MafiaActionCodec]).
  */
 @Serializable
 sealed interface MafiaAction : GameAction {

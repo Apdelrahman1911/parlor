@@ -12,7 +12,7 @@ import kotlin.test.Test
 import kotlin.test.assertFailsWith
 
 /**
- * Peer→host action submission rides `PeerMessage.ActionSubmit(payload: ByteArray)`.
+ * Peer→host action submission rides `PeerMessage.ClientCommand(payload: ByteArray)`.
  * Every variant must round-trip cleanly through [MafiaActionCodec]; a regression
  * in any shape (singleton, primitive-carrying, id-carrying, nested data class)
  * would only surface on that shape, so each shape gets its own test.

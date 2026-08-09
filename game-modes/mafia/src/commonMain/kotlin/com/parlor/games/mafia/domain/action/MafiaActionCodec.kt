@@ -8,8 +8,9 @@ import kotlinx.serialization.json.Json
  *
  * Mirrors [com.parlor.games.whodunit.domain.action.WhodunitActionCodec]: a peer
  * submits a `MafiaAction` to the host by wrapping the encoded bytes in
- * `PeerMessage.ActionSubmit(payload)`; the host decodes back to a typed action
- * and feeds it to the same reducer that pass-and-play uses.
+ * `PeerMessage.ClientCommand(payload)`; the shared coordinator authenticates,
+ * orders, and acknowledges the command before the host decodes it to a typed
+ * action and feeds it to the same reducer that pass-and-play uses.
  */
 object MafiaActionCodec {
 
