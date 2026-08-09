@@ -12,6 +12,7 @@ import com.parlor.core.ids.SessionId
 import com.parlor.engine.state.Player
 import com.parlor.games.whodunit.WhodunitIds
 import com.parlor.games.whodunit.domain.phase.WhodunitPhase
+import com.parlor.games.whodunit.domain.projection.WhodunitProjectionPolicy
 import com.parlor.games.whodunit.domain.state.PlayerRole
 import com.parlor.games.whodunit.domain.state.WhodunitHostOnly
 import com.parlor.games.whodunit.domain.state.WhodunitPrivate
@@ -157,4 +158,71 @@ class WhodunitPeerProjectionBoundaryTest {
         endCollector.cancel()
         bridge.close()
     }
+
+    @Test
+    fun ownProjectionKeepsAssignmentEpochAndDossierFromTheSameRevision() = runTest {
+        val scope = TestScope(UnconfinedTestDispatcher(testScheduler))
+        val bus = InMemoryRoomBus()
+        bus.registerPeer(alice)
+        val bridge = WhodunitPeerRoomBridge(
+            room = InMemoryPeerRoom(bus, alice, "Alice", host),
+            selfPlayerId = alice,
+            initialPublic = canonicalSecretState(),
+            scope = scope,
+            protocol = protocol,
+            json = json,
+        )
+        val first = canonicalSecretState().copy(
+            phase = WhodunitPhase.CharacterReveal(0),
+            privatePerPlayer = canonicalSecretState().privatePerPlayer + (
+                alice to canonicalSecretState().privatePerPlayer.getValue(alice).copy(
+                    dossierUnlocked = true,
+                )
+            ),
+        )
+        val second = first.copy(
+            public = first.public.copy(roleAssignmentGeneration = 8L),
+            privatePerPlayer = first.privatePerPlayer + (
+                alice to WhodunitPrivate(
+                    role = PlayerRole.Innocent,
+                    characterId = CharacterId("doctor"),
+                    dossierUnlocked = false,
+                )
+            ),
+        )
+
+        bus.fromHost(SendTarget.Direct(alice), playerSnapshot(first, sequence = 1, revision = 1))
+        scope.runCurrent()
+        val firstRenderState = bridge.controller.privateStateFor(alice).value.state
+        assertThat(firstRenderState.public.roleAssignmentGeneration).isEqualTo(7L)
+        assertThat(firstRenderState.privatePerPlayer.getValue(alice).characterId)
+            .isEqualTo(CharacterId("heir"))
+        assertThat(firstRenderState.privatePerPlayer.getValue(alice).dossierUnlocked).isTrue()
+
+        bus.fromHost(SendTarget.Direct(alice), playerSnapshot(second, sequence = 2, revision = 2))
+        scope.runCurrent()
+        val secondRenderState = bridge.controller.privateStateFor(alice).value.state
+        assertThat(secondRenderState.public.roleAssignmentGeneration).isEqualTo(8L)
+        assertThat(secondRenderState.privatePerPlayer.getValue(alice).characterId)
+            .isEqualTo(CharacterId("doctor"))
+        assertThat(secondRenderState.privatePerPlayer.getValue(alice).dossierUnlocked).isFalse()
+        bridge.close()
+    }
+
+    private fun playerSnapshot(
+        state: WhodunitState,
+        sequence: Long,
+        revision: Long,
+    ): HostMessage.PlayerSnapshot = HostMessage.PlayerSnapshot(
+        header = header(sequence),
+        revision = revision,
+        publicPayload = json.encodeToString(
+            WhodunitState.serializer(),
+            WhodunitProjectionPolicy.toPublic(state).state,
+        ).encodeToByteArray(),
+        privatePayload = json.encodeToString(
+            WhodunitPrivate.serializer(),
+            state.privatePerPlayer.getValue(alice),
+        ).encodeToByteArray(),
+    )
 }

@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import com.parlor.content.validation.ValidatedCase
 import com.parlor.core.ids.PlayerId
 import com.parlor.designsystem.theme.ParlorTheme
+import com.parlor.engine.projection.PrivateProjection
 import com.parlor.engine.state.Player
 import com.parlor.games.whodunit.content.WhodunitCase
 import com.parlor.games.whodunit.domain.action.WhodunitAction
@@ -25,6 +26,7 @@ import com.parlor.games.whodunit.domain.phase.WhodunitPhase
 import com.parlor.games.whodunit.domain.rules.WhodunitRoundPolicy
 import com.parlor.games.whodunit.domain.state.PartyReadiness
 import com.parlor.games.whodunit.domain.state.VoteState
+import com.parlor.games.whodunit.domain.state.WhodunitPrivate
 import com.parlor.games.whodunit.domain.state.WhodunitState
 import com.parlor.games.whodunit.resources.Res
 import com.parlor.games.whodunit.resources.peer_briefing_body
@@ -70,28 +72,15 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 
 /**
- * Top-level dispatch for the Whodunit per-phase UI.
+ * Host/local dispatch for the Whodunit per-phase UI.
  *
- * The router takes a [PlayMode] and branches **once** at the top into one
- * of two distinct UI trees:
- *
- *  - [HostPhaseScreens] — what the device running the canonical session
- *    shows. Solo, PassAndPlay, and MultiDevice-host all land here; the
- *    underlying [SessionController] is wrapped in
- *    [com.parlor.session.party.PartyAwareSession] for the two local modes
- *    so the host's gated advance actions don't need any auto-ack code in
- *    the UI.
- *
- *  - [PeerPhaseScreens] — what a non-host MultiDevice peer shows.
- *    Mostly cover/waiting screens with two real exceptions (the peer
- *    sees its own character reveal and casts its own ballot).
- *
- * No phase branch checks `isHost` or `selfPlayerId == null` — the
- * top-level dispatch made that distinction once and the two trees are
- * structurally separate.
+ * Peers use [PeerPhaseRouter], whose type requires a complete own-player
+ * projection from one authoritative revision. Keeping these entry points
+ * separate prevents a peer screen from accidentally combining independently
+ * collected public and private flows.
  */
 @Composable
-internal fun PhaseRouter(
+internal fun HostPhaseRouter(
     playMode: PlayMode,
     phase: WhodunitPhase,
     state: WhodunitState,
@@ -102,41 +91,56 @@ internal fun PhaseRouter(
     onBackToLibrary: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    require(playMode.isHost) { "A peer must render through PeerPhaseRouter" }
     if (playMode is PlayMode.Solo) {
         UnsupportedLocalPlayModeScreen(onBackToLibrary, modifier)
         return
     }
-    // The verdict lives on state.public so it auto-flows to peers via
-    // PublicStateSnapshot and auto-persists in the game snapshot. No more
-    // event-listener tracking, no more fallback guess on resume.
+    // The verdict lives on state.public so it travels in the public slice of
+    // each PlayerSnapshot and persists in the game snapshot. No side-channel
+    // event listener or resume-time outcome guess is required.
     val verdict = state.public.verdict
-    if (playMode.isHost) {
-        HostPhaseScreens(
-            playMode = playMode,
-            phase = phase,
-            state = state,
-            case = case,
-            payload = payload,
-            session = session,
-            scope = scope,
-            verdict = verdict,
-            onBackToLibrary = onBackToLibrary,
-            modifier = modifier,
-        )
-    } else {
-        // Only MultiDevice can produce `!isHost`. The cast is checked here so
-        // the peer composables can rely on the typed shape (selfPlayerId is
-        // guaranteed non-null for peers).
-        PeerPhaseScreens(
-            playMode = playMode as PlayMode.MultiDevice,
-            phase = phase,
-            state = state,
-            payload = payload,
-            session = session,
-            verdict = verdict,
-            modifier = modifier,
-        )
+    HostPhaseScreens(
+        playMode = playMode,
+        phase = phase,
+        state = state,
+        case = case,
+        payload = payload,
+        session = session,
+        scope = scope,
+        verdict = verdict,
+        onBackToLibrary = onBackToLibrary,
+        modifier = modifier,
+    )
+}
+
+/**
+ * Peer-only router. [projection] is the sole rendering source for this tree:
+ * its public fields and own-private bucket were decoded from the same host
+ * snapshot and therefore cannot cross role-assignment generations.
+ */
+@Composable
+internal fun PeerPhaseRouter(
+    playMode: PlayMode.MultiDevice,
+    projection: PrivateProjection<WhodunitState>,
+    payload: WhodunitCase,
+    session: SessionController<WhodunitState, WhodunitAction, WhodunitEvent>,
+    modifier: Modifier = Modifier,
+) {
+    require(!playMode.isHost) { "A host must render through HostPhaseRouter" }
+    require(projection.playerId == playMode.selfPlayerId) {
+        "Peer projection belongs to another player"
     }
+    val state = projection.state
+    PeerPhaseScreens(
+        playMode = playMode,
+        phase = state.phase,
+        state = state,
+        payload = payload,
+        session = session,
+        verdict = state.public.verdict,
+        modifier = modifier,
+    )
 }
 
 // ==================================================================== Host screens ==
@@ -217,7 +221,7 @@ private fun HostPhaseScreens(
         )
 
         is WhodunitPhase.CharacterReveal -> when (playMode) {
-            // Guarded at PhaseRouter's entry. Kept exhaustive so a future
+            // Guarded at HostPhaseRouter's entry. Kept exhaustive so a future
             // PlayMode change cannot accidentally make Solo executable here.
             is PlayMode.Solo -> UnsupportedLocalPlayModeScreen(onBackToLibrary, modifier)
             // Pass-and-play: the device holds every player's private slice
@@ -234,12 +238,8 @@ private fun HostPhaseScreens(
             )
             // MultiDevice host is also a player at the table — they render only
             // their own dossier and wait while the other peers do the same.
-            is PlayMode.MultiDevice -> SelfCharacterRevealSegment(
+            is PlayMode.MultiDevice -> SessionBackedSelfCharacterRevealSegment(
                 session = session,
-                roster = state.players,
-                rolesViewed = state.public.rolesViewed,
-                droppedPlayers = state.public.droppedPlayers,
-                roleAssignmentGeneration = state.public.roleAssignmentGeneration,
                 selfPlayerId = playMode.selfPlayerId,
                 isHost = true,
                 payload = payload,
@@ -353,10 +353,7 @@ private fun PeerPhaseScreens(
 
         is WhodunitPhase.CharacterReveal -> SelfCharacterRevealSegment(
             session = session,
-            roster = state.players,
-            rolesViewed = state.public.rolesViewed,
-            droppedPlayers = state.public.droppedPlayers,
-            roleAssignmentGeneration = state.public.roleAssignmentGeneration,
+            state = state,
             selfPlayerId = playMode.selfPlayerId,
             isHost = false,
             payload = payload,
@@ -637,12 +634,9 @@ private fun LocalCharacterRevealSegment(
 /**
  * Multi-device character-reveal flow.
  *
- * Renders only for the local device's own [selfPlayerId]. Critically, the
- * peer's [SessionController] is a `ShadowSessionController` that intentionally
- * throws on `privateStateFor(otherPlayer.id)` — so this composable must never
- * ask for any private slice but its own. Pre-9H, an earlier bug did exactly
- * that and crashed peers; the [CharacterRevealAuthorityTest] still pins the
- * "render only for self" rule.
+ * Renders only for the local device's own [selfPlayerId]. [state] must be the
+ * complete own-player projection from one revision; the public assignment
+ * generation and private dossier are deliberately read from that one object.
  *
  * Stages:
  *  - self in `rolesViewed`  → waiting screen (others are still viewing).
@@ -650,18 +644,41 @@ private fun LocalCharacterRevealSegment(
  *                             `CompleteCharacterReveal(self)`.
  */
 @Composable
+private fun SessionBackedSelfCharacterRevealSegment(
+    session: SessionController<WhodunitState, WhodunitAction, WhodunitEvent>,
+    selfPlayerId: PlayerId,
+    isHost: Boolean,
+    payload: WhodunitCase,
+    modifier: Modifier = Modifier,
+) {
+    val projection by session.privateStateFor(selfPlayerId).collectAsState()
+    require(projection.playerId == selfPlayerId) {
+        "Self reveal received another player's projection"
+    }
+    SelfCharacterRevealSegment(
+        session = session,
+        state = projection.state,
+        selfPlayerId = selfPlayerId,
+        isHost = isHost,
+        payload = payload,
+        modifier = modifier,
+    )
+}
+
+@Composable
 private fun SelfCharacterRevealSegment(
     session: SessionController<WhodunitState, WhodunitAction, WhodunitEvent>,
-    roster: List<Player>,
-    rolesViewed: Set<PlayerId>,
-    droppedPlayers: Set<PlayerId>,
-    roleAssignmentGeneration: Long,
+    state: WhodunitState,
     selfPlayerId: PlayerId,
     isHost: Boolean,
     payload: WhodunitCase,
     modifier: Modifier = Modifier,
 ) {
     val scope = rememberCoroutineScope()
+    val roster = state.players
+    val rolesViewed = state.public.rolesViewed
+    val droppedPlayers = state.public.droppedPlayers
+    val roleAssignmentGeneration = state.public.roleAssignmentGeneration
     val selfPlayer = roster.firstOrNull { it.id == selfPlayerId } ?: return
     val pending = roster.filter { it.id !in droppedPlayers && it.id !in rolesViewed }
 
@@ -684,8 +701,7 @@ private fun SelfCharacterRevealSegment(
         session.setActiveViewer(ViewerContext.Player(selfPlayer.id))
     }
 
-    val privateProjection by session.privateStateFor(selfPlayer.id).collectAsState()
-    val privateData = privateProjection.state.privatePerPlayer[selfPlayer.id]
+    val privateData: WhodunitPrivate? = state.privatePerPlayer[selfPlayer.id]
     val role = privateData?.role
     val characterId = privateData?.characterId?.raw
     val character = characterId?.let { id -> payload.characters.firstOrNull { it.id == id } }

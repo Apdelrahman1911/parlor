@@ -828,7 +828,7 @@ private fun SessionDrivenFlow(
     }
 
     Box(modifier = modifier.fillMaxSize()) {
-        PhaseRouter(
+        HostPhaseRouter(
             playMode = playMode,
             phase = state.phase,
             state = state,
@@ -1052,7 +1052,7 @@ fun WhodunitMultiplayerHostFlow(
 
     Box(modifier = modifier.fillMaxSize()) {
         if (startGate == HostStartGateState.Started) {
-            PhaseRouter(
+            HostPhaseRouter(
                 playMode = hostPlayMode,
                 phase = state.phase,
                 state = state,
@@ -1317,23 +1317,23 @@ fun WhodunitMultiplayerPeerFlow(
             // mode is the only one that actually issues auto-acks.
             PartyAwareSession(bridge.controller, peerPlayMode, WhodunitReadinessGate)
         }
-    val publicProjection by session.publicState.collectAsState()
-    val state = publicProjection.state
+    // A peer's own projection contains both the public and private slices from
+    // one authenticated host revision. Rendering from this single StateFlow is
+    // required: collecting publicState separately can pair a new dossier with
+    // the previous role-assignment generation during recomposition.
+    val playerProjection by session.privateStateFor(selfPlayerId).collectAsState()
+    val state = playerProjection.state
     val payload = case.payload
     val hasAuthoritativeSnapshot by bridge.hasAuthoritativeSnapshot.collectAsState()
     val initialSnapshotError by bridge.initialSnapshotError.collectAsState()
 
     Box(modifier = modifier.fillMaxSize()) {
         if (hasAuthoritativeSnapshot) {
-            PhaseRouter(
+            PeerPhaseRouter(
                 playMode = peerPlayMode,
-                phase = state.phase,
-                state = state,
-                case = case,
+                projection = playerProjection,
                 payload = payload,
                 session = session,
-                scope = scope,
-                onBackToLibrary = onBackToLibrary,
                 modifier = Modifier.fillMaxSize(),
             )
             if (state.public.paused) {
