@@ -13,9 +13,9 @@ remain separate evidence.
 |---|---|---|
 | Common/domain/desktop tests | `./gradlew productionDesktopCheck` | Every KMP module's `desktopTest` passes; the app's desktop main code compiles as a dependency. |
 | Repository test aggregate | `./gradlew allTests` | The explicit root aggregate runs every KMP module's `allTests` task that exists; platform-host limitations are reported by Gradle rather than silently omitted. |
-| Android release | `./gradlew productionAndroidCheck` | Android debug and release unit tests, release Kotlin compilation, R8, unsigned release AAB, and `lintRelease` all pass. |
+| Android release | `./gradlew productionAndroidCheck` | Android debug and release unit tests, release Kotlin compilation, R8, unsigned release AAB, `lintRelease`, and the allowlist-enforcing `verifyReleaseLintWarnings` task all pass. |
 | iOS KMP release | `./gradlew productionAppleCheck` on macOS | Release frameworks link serially for `iosArm64`, `iosSimulatorArm64`, and `iosX64` without concurrent-LTO heap pressure. |
-| Host-independent aggregate | `./gradlew productionCheck` | Desktop/common, Android unit, static-analysis, and unsigned Android release gates pass. Apple remains a separate macOS job. |
+| Host-independent aggregate | `./gradlew productionCheck` | Desktop/common, Android unit, repository-wide Detekt/static-analysis, shell-dispatch validation, and unsigned Android release gates (including lint warning verification) pass. Apple remains a separate macOS job. |
 | Exact-candidate aggregate | `./gradlew productionCheck productionAppleCheck allTests --dependency-verification=strict --no-daemon --stacktrace --console=plain` on macOS | Every configured automated suite and unsigned Android/Apple release gate passes in one invocation at the recorded clean Git SHA. |
 
 The root tasks discover KMP modules through the multiplatform plugin. A newly
@@ -57,8 +57,10 @@ unit test.
 `.github/workflows/production-verification.yml` runs two required jobs:
 
 - Linux: strict dependency verification, the root `productionCheck` and
-  `allTests` aggregates, Android debug/release unit tests, Detekt, release
-  compilation/R8/lint/AAB, merged-manifest inspection, and artifact hashes.
+  `allTests` aggregates, Android debug/release unit tests, repository-wide
+  Detekt, release compilation/R8/lint plus the enforced
+  `verifyReleaseLintWarnings` contract, unsigned AAB, merged-manifest
+  inspection, and artifact hashes.
 - macOS: strict KMP `allTests`, release framework linkage for all supported
   Apple targets (linkage-only for `iosArm64`/`iosX64` on this job), plist and
   privacy-manifest validation, and an unsigned Xcode Swift Release wrapper

@@ -25,24 +25,25 @@ baseline.
 - The P2P architecture now has explicit host authority, bounded traffic,
   transactional admission/resume, deterministic lifecycle and discovery
   state, truthful Local Network UX, and privacy-safe diagnostics.
-- At exact reviewed input `a5e7a0d9076f5a4c01e876030b5984fb717abb51`, the
-  strict checksum-verified
-  `productionCheck`, `productionAppleCheck`, and repository-wide `allTests`
-  matrix passed together: 1,186 actionable tasks, 196 executed and 990
-  up-to-date. Android release compilation, R8, lint, unsigned AAB packaging,
-  all three iOS release framework architectures, Desktop/common tests,
-  Android unit variants, and executable Apple-simulator tests were included.
+- The current FR remediation has completed root-cause fixes for FR-01 through
+  FR-15 in separate recoverable commits above the protected baseline. Focused
+  regression suites and the enforced static-analysis/lint gates pass for the
+  latest phase boundaries; the exact final aggregate is rerun after the last
+  documentation and source changes.
 - No physical-device row in `P2P_MANUAL_TEST.md` is implied by automated
   evidence. Cross-platform, hotspot, process-death, permission-recovery,
   sustained-session, and signed-artifact behavior remain **UNVERIFIED** until
   dated receipts exist for the exact release SHA.
 - Raw-IP/manual endpoint connection is intentionally unsupported for the first
   release under accepted ADR-0002. `MAN-00` is **N/A**, not PASS.
-- The automated/code verdict is currently **NOT READY FOR PHYSICAL-DEVICE
-  VALIDATION**. FR-05 is being remediated in the current branch, and FR-08,
-  FR-09, FR-10, plus newly discovered release-integration findings still need
-  root-cause fixes and exact-HEAD evidence. The production-readiness verdict
-  remains **NOT READY FOR RELEASE**.
+- The code-review verdict remains **NOT READY FOR PHYSICAL-DEVICE
+  VALIDATION** until the final exact-HEAD matrix, clean-worktree check, and
+  closure register are recorded. The production-readiness verdict remains
+  **NOT READY FOR RELEASE**.
+
+The finding-by-finding root-cause register is
+[`FR_REMEDIATION_FINDINGS.md`](FR_REMEDIATION_FINDINGS.md). “Implemented” in
+that register is not a physical-device or store claim.
 
 ## Recoverable implementation chain
 
@@ -72,6 +73,19 @@ baseline.
 | `5fa4205..aba2215` | Whodunit private-assignment epochs, state validation, centralized rules, authored-content binding, legacy compatibility, and versioned persistence. |
 | `6eda8c8..9539f49` | Single peer projection and atomic disconnected-seat retirement. |
 | `5115d87..a5e7a0d` | Process-owned multiplayer sessions and retained host/peer game runtimes across UI/controller recreation. |
+| `cbd1663` | FR-02/FR-03 reducer-reachable recovery and peer projection validation. |
+| `fd46a6e` | FR-07 explicit removal/rejection of unsupported structured actions. |
+| `e2109cd` | FR-01 registry-driven app shell and local/multiplayer/resume binding contract. |
+| `5efca1a` | FR-04 repository-wide Detekt application and enforced static gate. |
+| `d8c453b` | FR-06 protocol-4.0 operational documentation/contract. |
+| `f76c285` | FR-05 CI release/test/artifact verification matrix. |
+| `ba1ff74` | FR-08/FR-09 lint/assets/stale shell-resource cleanup. |
+| `30bdf7b` | FR-10 removal of unverified placeholder attribution metadata. |
+| `325b302` | FR-11 game-owned shell/multiplayer flow isolation. |
+| `bf71c10` + `83b6a79` | FR-12 registry-aware case-manifest validation and strict static-analysis cleanup. |
+| `d281140` | FR-13 idempotent bounded terminal outbox delivery. |
+| `31783c1` | FR-14 strict Mafia snapshot codec validation. |
+| `57c9475` + `ac9da45` + `0c1ac6e` | FR-15 cache only validated content and recover from corrupt cached records. |
 
 Every entry is a separate checkpoint above the approved baseline. Do not
 squash any remediation into `8186f7d` when reviewing or rolling back. A later
@@ -150,10 +164,12 @@ Root-cause regression coverage lives primarily in:
   game, projection privacy, and serialization; and
 - platform compilation plus manifest/plist contract tests.
 
-## 2026-08-09 automated receipt
+## 2026-08-09 historical automated receipt
 
-The following evidence was collected locally on macOS. It is automated build
-evidence, not physical-device, signing, or store evidence.
+The following evidence was collected locally on macOS at the earlier
+`a5e7a0d` receipt. It remains useful historical evidence but is not an exact
+final-HEAD receipt for the current FR branch. It is automated build evidence,
+not physical-device, signing, or store evidence.
 
 | Command/check | Result |
 |---|---|
