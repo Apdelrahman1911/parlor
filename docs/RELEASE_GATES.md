@@ -15,6 +15,7 @@ remain separate evidence.
 | Android release | `./gradlew productionAndroidCheck` | Unsigned release AAB builds and `lintRelease` reports no blocking finding. |
 | iOS KMP release | `./gradlew productionAppleCheck` on macOS | Release frameworks link serially for `iosArm64`, `iosSimulatorArm64`, and `iosX64` without concurrent-LTO heap pressure. |
 | Host-independent aggregate | `./gradlew productionCheck` | Desktop/common and unsigned Android gates pass. Apple remains a separate macOS job. |
+| Exact-candidate aggregate | `./gradlew productionCheck productionAppleCheck allTests --dependency-verification=strict --no-daemon --stacktrace --console=plain` on macOS | Every configured automated suite and unsigned Android/Apple release gate passes in one invocation at the recorded clean Git SHA. |
 
 The root tasks discover KMP modules through the multiplatform plugin. A newly
 included game module therefore joins the desktop gate automatically.
@@ -24,6 +25,10 @@ coordinates. Release CI must not use `mavenLocal()`, a sibling checkout, a
 repository override, or a developer home repository. Gradle's checked-in
 verification metadata is enforced in strict mode by default; generation mode
 is prohibited in ordinary CI and release builds.
+
+Automated evidence is attributable only when the command starts and finishes
+at the same recorded commit and `git status --short` is empty. A later code or
+repository-contract change invalidates that receipt and requires a new run.
 
 ## External gates
 

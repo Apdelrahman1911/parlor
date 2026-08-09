@@ -164,8 +164,8 @@ restarting devices. A single success is evidence for that run, not a claim of
 1. Run the automated gates for the exact SHA first:
 
    ```bash
-   ./gradlew productionCheck --no-daemon --stacktrace --console=plain
-   ./gradlew productionAppleCheck --no-daemon --stacktrace --console=plain
+   ./gradlew productionCheck productionAppleCheck allTests \
+     --dependency-verification=strict --no-daemon --stacktrace --console=plain
    ```
 
 2. Use the same release candidate on every device. Final release acceptance
