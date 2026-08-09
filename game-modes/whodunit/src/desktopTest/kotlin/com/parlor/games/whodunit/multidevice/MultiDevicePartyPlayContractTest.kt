@@ -344,7 +344,7 @@ class MultiDevicePartyPlayContractTest {
 
     /** A peer departure pauses canonical play and grace expiry ends the case. */
     @Test
-    fun disconnected_peer_cannot_be_dropped_to_continue_and_expiry_is_terminal() = runTest {
+    fun disconnected_peer_is_recorded_as_dropped_when_grace_expiry_ends_case() = runTest {
         val dispatcher = UnconfinedTestDispatcher(testScheduler)
         val scope = TestScope(dispatcher)
         val bus = InMemoryRoomBus()
@@ -402,7 +402,7 @@ class MultiDevicePartyPlayContractTest {
         val terminal = hostSession.publicState.value.state
         assertThat(terminal.phase is WhodunitPhase.Reveal).isTrue()
         assertThat(terminal.public.paused).isEqualTo(false)
-        assertThat(terminal.public.droppedPlayers.isEmpty()).isTrue()
+        assertThat(terminal.public.droppedPlayers).isEqualTo(setOf(bob))
         assertThat(terminal.players.map { it.id }).isEqualTo(players.map { it.id })
 
         hostBridge.close()

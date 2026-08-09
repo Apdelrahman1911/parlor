@@ -145,7 +145,7 @@ class ContinueWithoutPlayerTest {
     }
 
     @Test
-    fun grace_expiry_reveals_case_and_never_shrinks_the_roster() = runTest {
+    fun grace_expiry_reveals_case_marks_missing_seat_and_never_shrinks_roster() = runTest {
         val payload = loadCase()
         val (session, _) = buildSession(payload, WhodunitIds.ClassicVoteModeId, players, seed = 3L)
         session.submit(WhodunitAction.AssignRoles(seed = 3L))
@@ -157,11 +157,44 @@ class ContinueWithoutPlayerTest {
         assertThat(state.public.paused).isEqualTo(false)
         assertThat(state.public.timer).isEqualTo(null)
         assertThat(state.public.disconnectedPlayers).isEmpty()
-        assertThat(state.public.droppedPlayers).isEmpty()
+        assertThat(state.public.droppedPlayers).contains(players[3].id)
         assertThat(state.players.map { it.id }).containsExactlyInAnyOrder(*players.map { it.id }.toTypedArray())
         assertThat(state.public.verdict as Any).isInstanceOf(Verdict.KillerWins::class)
         assertThat((state.public.verdict as Verdict.KillerWins).cause)
             .isEqualTo(KillerWinCause.GameEndedEarly)
+    }
+
+    @Test
+    fun grace_expiry_during_reveal_completes_terminal_flow_and_blocks_replay() = runTest {
+        val payload = loadCase()
+        val (session, _) = buildSession(payload, WhodunitIds.ClassicVoteModeId, players, seed = 31L)
+        session.submit(WhodunitAction.AssignRoles(seed = 31L))
+        session.submit(WhodunitAction.EndGameEarly(withReveal = true))
+        assertThat(phaseOf(session)).isEqualTo(WhodunitPhase.Reveal)
+
+        val missing = players.last().id
+        session.submit(WhodunitAction.MarkPlayerDisconnected(missing))
+        session.submit(WhodunitAction.ContinueWithoutPlayer(missing))
+
+        assertThat(phaseOf(session)).isEqualTo(WhodunitPhase.PostGame)
+        assertThat(stateOf(session).public.disconnectedPlayers).isEmpty()
+        assertThat(stateOf(session).public.droppedPlayers).contains(missing)
+        val terminal = stateOf(session)
+        session.submit(WhodunitAction.BeginReplay)
+        assertThat(stateOf(session)).isEqualTo(terminal)
+    }
+
+    @Test
+    fun post_game_disconnect_is_ignored_instead_of_creating_permanent_overlay_state() = runTest {
+        val payload = loadCase()
+        val (session, _) = buildSession(payload, WhodunitIds.ClassicVoteModeId, players, seed = 32L)
+        session.submit(WhodunitAction.AssignRoles(seed = 32L))
+        session.submit(WhodunitAction.EndGameEarly(withReveal = false))
+        val terminal = stateOf(session)
+
+        session.submit(WhodunitAction.MarkPlayerDisconnected(players.last().id))
+
+        assertThat(stateOf(session)).isEqualTo(terminal)
     }
 
     @Test

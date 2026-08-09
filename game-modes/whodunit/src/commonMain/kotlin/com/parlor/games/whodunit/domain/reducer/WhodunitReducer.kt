@@ -244,6 +244,9 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
         state: WhodunitState,
         playerId: PlayerId,
     ): Reduction<WhodunitState, WhodunitEvent> {
+        // PostGame is terminal. Tracking a new disconnect there only creates a
+        // permanent overlay because no gameplay recovery remains to perform.
+        if (state.phase == WhodunitPhase.PostGame) return Reduction(state)
         if (playerId !in state.players.map { it.id }) return Reduction(state)
         if (playerId in state.public.disconnectedPlayers) return Reduction(state)
         val activeGame = state.phase != WhodunitPhase.Setup &&
@@ -287,7 +290,29 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
         // A missing dossier makes the case invalid. The compatibility action
         // name is retained for the wire/snapshot API, but its only legal
         // meaning is "the rejoin grace period expired: reveal and end."
-        return endGameEarly(state, withReveal = true)
+        val missingSeat = state.copy(
+            public = state.public.copy(
+                droppedPlayers = state.public.droppedPlayers + playerId,
+            ),
+        )
+        // The verdict already exists in Reveal. Expiry there completes the
+        // result ceremony instead of delegating to EndGameEarly, which quite
+        // correctly rejects an already-ended game and previously left the
+        // disconnect overlay stuck forever.
+        if (state.phase == WhodunitPhase.Reveal) {
+            return Reduction(
+                missingSeat.copy(
+                    phase = WhodunitPhase.PostGame,
+                    public = missingSeat.public.copy(
+                        disconnectedPlayers = missingSeat.public.disconnectedPlayers - playerId,
+                        paused = false,
+                        timer = null,
+                    ),
+                ),
+                listOf(WhodunitEvent.PhaseEntered(WhodunitPhase.PostGame)),
+            )
+        }
+        return endGameEarly(missingSeat, withReveal = true)
     }
 
     /**
@@ -940,6 +965,12 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
         ctx: WhodunitReducerContext,
     ): Reduction<WhodunitState, WhodunitEvent> {
         if (state.phase != WhodunitPhase.PostGame) return Reduction(state)
+        if (
+            state.public.disconnectedPlayers.isNotEmpty() ||
+            state.public.droppedPlayers.isNotEmpty()
+        ) {
+            return Reduction(state)
+        }
         val newSeed = state.hostOnly.randomSeed * 31 + 17
         val fresh = state.copy(
             public = state.public.copy(
