@@ -53,9 +53,9 @@
 
 ## 8. Sound
 
-- [ ] All sound cues are paired with a visual beat (never sound-only signals).
-- [ ] System mute is respected.
-- [ ] Settings expose a "Sound on/off" toggle separate from "Reduce motion".
+- [x] No sound-only signal exists: the current release contains no audio playback.
+- [ ] If sound is introduced, pair every cue with a visual beat, respect system
+  audio policy, and expose a setting backed by real behavior.
 
 ## 9. Cognitive load
 

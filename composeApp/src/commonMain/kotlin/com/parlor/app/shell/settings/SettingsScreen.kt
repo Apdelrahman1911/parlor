@@ -2,7 +2,6 @@ package com.parlor.app.shell.settings
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,50 +20,47 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.parlor.app.resources.Res
-import com.parlor.app.resources.settings_analytics_description
-import com.parlor.app.resources.settings_analytics_title
 import com.parlor.app.resources.settings_appearance_dark
 import com.parlor.app.resources.settings_appearance_label
 import com.parlor.app.resources.settings_appearance_light
 import com.parlor.app.resources.settings_appearance_system
-import com.parlor.app.resources.settings_back
 import com.parlor.app.resources.settings_back_description
-import com.parlor.app.resources.settings_crash_reporting_description
-import com.parlor.app.resources.settings_crash_reporting_title
 import com.parlor.app.resources.settings_experience_label
 import com.parlor.app.resources.settings_language_arabic
 import com.parlor.app.resources.settings_language_english
 import com.parlor.app.resources.settings_language_label
-import com.parlor.app.resources.settings_privacy_label
-import com.parlor.app.resources.settings_privacy_note
 import com.parlor.app.resources.settings_reduced_motion_description
 import com.parlor.app.resources.settings_reduced_motion_title
-import com.parlor.app.resources.settings_sound_description
-import com.parlor.app.resources.settings_sound_title
+import com.parlor.app.resources.settings_save_failed
 import com.parlor.app.resources.settings_title
 import com.parlor.designsystem.backdrop.HeroBackdrop
+import com.parlor.designsystem.components.LocalParlorToastState
 import com.parlor.designsystem.components.ParlorCard
+import com.parlor.designsystem.components.ParlorToastSeverity
 import com.parlor.designsystem.components.ScreenHeader
 import com.parlor.designsystem.localization.AppLanguage
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.designsystem.theme.ThemeMode
 import com.parlor.storage.settings.SettingsStore
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.CoroutineScope
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 /**
- * Settings — language, appearance, accessibility, and privacy controls.
- * Persists immediately via
- * [SettingsStore]; the running UI updates in place because `App.kt` collects
- * the same flows and wires them to [ParlorTheme] + `ProvideAppLanguage`.
+ * Settings — language, appearance, and accessibility controls backed by
+ * shipping behavior. Writes run in the app-owned [mutationScope], so leaving
+ * this screen cannot cancel an accepted choice. The running UI updates in
+ * place because `App.kt` collects the same [SettingsStore] flows and wires
+ * them to [ParlorTheme] + `ProvideAppLanguage`.
  *
  * Per Phase 8 polish bar: the screen is small, polished, and inherits the
  * cozy-noir tokens. No bespoke colors.
@@ -71,17 +68,21 @@ import org.koin.compose.koinInject
 @Composable
 fun SettingsScreen(
     onBack: () -> Unit,
+    mutationScope: CoroutineScope,
     modifier: Modifier = Modifier,
 ) {
     val settings: SettingsStore = koinInject()
-    val scope = rememberCoroutineScope()
+    val toastState = LocalParlorToastState.current
+    val saveFailedText = stringResource(Res.string.settings_save_failed)
+    val mutations = remember(mutationScope, toastState, saveFailedText) {
+        SettingsMutationDispatcher(mutationScope) {
+            toastState.show(saveFailedText, ParlorToastSeverity.Danger)
+        }
+    }
 
     val languageTag by settings.languageOverride.collectAsState(initial = null)
     val themeModeTag by settings.themeMode.collectAsState(initial = ThemeMode.Default.tag)
-    val soundEnabled by settings.soundEnabled.collectAsState(initial = true)
     val reducedMotion by settings.reducedMotion.collectAsState(initial = false)
-    val analyticsEnabled by settings.analyticsEnabled.collectAsState(initial = false)
-    val crashReportingEnabled by settings.crashReportingEnabled.collectAsState(initial = false)
 
     val currentLanguage = AppLanguage.fromTag(languageTag)
     val currentThemeMode = ThemeMode.fromTag(themeModeTag)
@@ -105,14 +106,14 @@ fun SettingsScreen(
                     label = stringResource(Res.string.settings_language_english),
                     selected = currentLanguage == AppLanguage.English,
                     onSelected = {
-                        scope.launch { settings.setLanguageOverride(AppLanguage.English.tag) }
+                        mutations.submit { settings.setLanguageOverride(AppLanguage.English.tag) }
                     },
                 )
                 LanguageOption(
                     label = stringResource(Res.string.settings_language_arabic),
                     selected = currentLanguage == AppLanguage.Arabic,
                     onSelected = {
-                        scope.launch { settings.setLanguageOverride(AppLanguage.Arabic.tag) }
+                        mutations.submit { settings.setLanguageOverride(AppLanguage.Arabic.tag) }
                     },
                 )
             }
@@ -122,65 +123,33 @@ fun SettingsScreen(
                     label = stringResource(Res.string.settings_appearance_system),
                     selected = currentThemeMode == ThemeMode.System,
                     onSelected = {
-                        scope.launch { settings.setThemeMode(ThemeMode.System.tag) }
+                        mutations.submit { settings.setThemeMode(ThemeMode.System.tag) }
                     },
                 )
                 AppearanceOption(
                     label = stringResource(Res.string.settings_appearance_light),
                     selected = currentThemeMode == ThemeMode.Light,
                     onSelected = {
-                        scope.launch { settings.setThemeMode(ThemeMode.Light.tag) }
+                        mutations.submit { settings.setThemeMode(ThemeMode.Light.tag) }
                     },
                 )
                 AppearanceOption(
                     label = stringResource(Res.string.settings_appearance_dark),
                     selected = currentThemeMode == ThemeMode.Dark,
                     onSelected = {
-                        scope.launch { settings.setThemeMode(ThemeMode.Dark.tag) }
+                        mutations.submit { settings.setThemeMode(ThemeMode.Dark.tag) }
                     },
                 )
             }
 
             SettingsSection(label = stringResource(Res.string.settings_experience_label)) {
                 ToggleOption(
-                    title = stringResource(Res.string.settings_sound_title),
-                    description = stringResource(Res.string.settings_sound_description),
-                    checked = soundEnabled,
-                    onCheckedChange = { enabled ->
-                        scope.launch { settings.setSoundEnabled(enabled) }
-                    },
-                )
-                ToggleOption(
                     title = stringResource(Res.string.settings_reduced_motion_title),
                     description = stringResource(Res.string.settings_reduced_motion_description),
                     checked = reducedMotion,
                     onCheckedChange = { enabled ->
-                        scope.launch { settings.setReducedMotion(enabled) }
+                        mutations.submit { settings.setReducedMotion(enabled) }
                     },
-                )
-            }
-
-            SettingsSection(label = stringResource(Res.string.settings_privacy_label)) {
-                ToggleOption(
-                    title = stringResource(Res.string.settings_analytics_title),
-                    description = stringResource(Res.string.settings_analytics_description),
-                    checked = analyticsEnabled,
-                    onCheckedChange = { enabled ->
-                        scope.launch { settings.setAnalyticsEnabled(enabled) }
-                    },
-                )
-                ToggleOption(
-                    title = stringResource(Res.string.settings_crash_reporting_title),
-                    description = stringResource(Res.string.settings_crash_reporting_description),
-                    checked = crashReportingEnabled,
-                    onCheckedChange = { enabled ->
-                        scope.launch { settings.setCrashReportingEnabled(enabled) }
-                    },
-                )
-                Text(
-                    text = stringResource(Res.string.settings_privacy_note),
-                    style = ParlorTheme.typography.bodySmall,
-                    color = ParlorTheme.colors.textSecondary,
                 )
             }
 
@@ -205,6 +174,7 @@ private fun SettingsSection(
                 text = label.uppercase(),
                 style = ParlorTheme.typography.labelSmall,
                 color = ParlorTheme.colors.textSecondary,
+                modifier = Modifier.semantics { heading() },
             )
             content()
         }
@@ -291,7 +261,11 @@ private fun OptionRow(
                 if (selected) colors.accentEmber else colors.borderElevated,
                 RoundedCornerShape(ParlorTheme.radii.card),
             )
-            .clickable(onClick = onSelected)
+            .selectable(
+                selected = selected,
+                role = Role.RadioButton,
+                onClick = onSelected,
+            )
             .padding(horizontal = ParlorTheme.spacing.l, vertical = ParlorTheme.spacing.m),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -299,7 +273,7 @@ private fun OptionRow(
             text = label,
             style = ParlorTheme.typography.bodyLarge,
             color = colors.textPrimary,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.weight(1f),
         )
         if (selected) {
             Box(

@@ -6,7 +6,8 @@ import com.parlor.games.mafia.domain.phase.MafiaPhase
 import com.parlor.games.mafia.domain.state.Team
 
 /**
- * One-shot signals out of the reducer. Consumers: UI motion, sound, telemetry.
+ * One-shot signals out of the reducer. Current consumers drive UI feedback;
+ * the domain contract does not imply an audio or upload provider.
  */
 sealed interface MafiaEvent : GameEvent {
     data object SettingsApplied : MafiaEvent

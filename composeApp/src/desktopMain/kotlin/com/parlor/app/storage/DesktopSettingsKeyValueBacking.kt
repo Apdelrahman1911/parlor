@@ -1,15 +1,17 @@
 package com.parlor.app.storage
 
 import com.parlor.storage.settings.SettingsKeyValueBacking
+import com.parlor.storage.settings.SettingsPersistenceException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.util.prefs.BackingStoreException
 import java.util.prefs.Preferences
 
 /**
  * Desktop development preferences scoped to the current OS user.
  *
- * Only non-sensitive UI/telemetry consent flags are stored here; game secrets
- * use the separately protected snapshot filesystem.
+ * Only non-sensitive UI preferences are stored here; game secrets use the
+ * separately protected snapshot filesystem.
  */
 internal class DesktopSettingsKeyValueBacking(
     private val preferences: Preferences =
@@ -34,8 +36,14 @@ internal class DesktopSettingsKeyValueBacking(
 
     private suspend fun persist(change: () -> Unit) {
         withContext(Dispatchers.IO) {
-            change()
-            preferences.flush()
+            try {
+                change()
+                preferences.flush()
+            } catch (failure: BackingStoreException) {
+                throw SettingsPersistenceException("Couldn't persist app preference", failure)
+            } catch (failure: SecurityException) {
+                throw SettingsPersistenceException("Preference storage is unavailable", failure)
+            }
         }
     }
 }

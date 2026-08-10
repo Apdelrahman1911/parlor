@@ -452,8 +452,8 @@ class TickerAndRerollTest {
 
         session.submit(WhodunitAction.RequestReroll)
 
-        // No phantom PublicIntro event — the snapshot writer and any telemetry
-        // listener must not be told we re-entered the public intro phase.
+        // No phantom PublicIntro event — the snapshot writer and other event
+        // observers must not be told we re-entered the public intro phase.
         val phaseEntered = events.filterIsInstance<WhodunitEvent.PhaseEntered>()
         assertThat(phaseEntered.map { it.phase }).containsExactly(WhodunitPhase.CharacterReveal(0))
 

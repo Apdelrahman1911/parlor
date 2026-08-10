@@ -47,7 +47,7 @@ receipt:
 | Accessibility | TalkBack and VoiceOver passes in EN and AR, 200% text, reduced motion, contrast, touch targets, and RTL. |
 | Store/privacy | Final privacy policy/support URLs, Google Data safety, Apple privacy answers/manifest, age-rating questionnaires, export-compliance answer, and reviewer notes approved. |
 | Legal | Product distribution license, third-party notices, content rights, trademarks, and dependency licenses approved. |
-| Operations | Opt-in analytics and crash reporting tested separately; both default off; payload/log redaction reviewed. |
+| Operations | Signed-artifact dependency/network inspection confirms no analytics or crash-upload provider; local `ParlorP2p` diagnostics remain bounded and redacted. Any future provider reopens privacy, consent, retention, and payload testing. |
 
 Device or store evidence must never be inferred from a simulator, compiler, or
 unit test.

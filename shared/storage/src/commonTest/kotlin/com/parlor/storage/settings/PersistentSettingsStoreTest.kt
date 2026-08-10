@@ -16,33 +16,24 @@ class PersistentSettingsStoreTest {
     fun absent_preferences_use_safe_defaults() = runTest {
         val store = PersistentSettingsStore(FakeBacking())
 
-        assertTrue(store.soundEnabled.first())
         assertFalse(store.reducedMotion.first())
         assertNull(store.languageOverride.first())
         assertEquals("system", store.themeMode.first())
-        assertFalse(store.analyticsEnabled.first())
-        assertFalse(store.crashReportingEnabled.first())
     }
 
     @Test
     fun every_preference_survives_store_recreation() = runTest {
         val backing = FakeBacking()
         PersistentSettingsStore(backing).apply {
-            setSoundEnabled(false)
             setReducedMotion(true)
             setLanguageOverride("AR")
             setThemeMode("DARK")
-            setAnalyticsEnabled(true)
-            setCrashReportingEnabled(true)
         }
 
         val restored = PersistentSettingsStore(backing)
-        assertFalse(restored.soundEnabled.first())
         assertTrue(restored.reducedMotion.first())
         assertEquals("ar", restored.languageOverride.first())
         assertEquals("dark", restored.themeMode.first())
-        assertTrue(restored.analyticsEnabled.first())
-        assertTrue(restored.crashReportingEnabled.first())
     }
 
     @Test
@@ -84,17 +75,17 @@ class PersistentSettingsStoreTest {
             FakeBacking(writeFailure = CancellationException("stopped")),
         )
         assertFailsWith<CancellationException> {
-            cancelled.setAnalyticsEnabled(true)
+            cancelled.setReducedMotion(true)
         }
-        assertFalse(cancelled.analyticsEnabled.first())
+        assertFalse(cancelled.reducedMotion.first())
 
         val failed = PersistentSettingsStore(
-            FakeBacking(writeFailure = IllegalStateException("disk unavailable")),
+            FakeBacking(writeFailure = SettingsPersistenceException("disk unavailable")),
         )
-        assertFailsWith<IllegalStateException> {
-            failed.setCrashReportingEnabled(true)
+        assertFailsWith<SettingsPersistenceException> {
+            failed.setReducedMotion(true)
         }
-        assertFalse(failed.crashReportingEnabled.first())
+        assertFalse(failed.reducedMotion.first())
     }
 
     private class FakeBacking(

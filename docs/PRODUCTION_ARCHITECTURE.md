@@ -218,7 +218,7 @@ navigation IDs fail fast. The non-shipping engine-testing fixture registers and
 completes a second minimal definition without changing session, networking, or
 P2pKit adapter code. See `HOW_TO_ADD_A_GAME.md`.
 
-## Persistence, content, and telemetry
+## Persistence, content, and diagnostics
 
 Shipping game content is bundled and validated offline; release behavior does
 not depend on a mock HTTP engine or network service. Canonical Whodunit
@@ -230,11 +230,12 @@ Mafia currently does not write a pass-and-play cold-start snapshot. Multiplayer
 resume is a separate transport credential and is available for both shipping
 games while the original host/seat remains valid.
 
-Settings are persistent per platform. Language, theme, reduced motion, sound,
-analytics consent, and crash-reporting consent have validated defaults.
-Analytics and crash reporting are separate, default-off choices. If a
-consent-aware provider is not externally configured, `NoOpTelemetry` collects
-nothing.
+Settings are persistent per platform. The shipping controls are language,
+theme, and reduced motion; each has a validated default and a typed persistence
+failure path. Parlor currently ships no sound implementation, analytics SDK,
+crash-reporting SDK, upload provider, or placeholder consent control. Adding
+any of those is a product/privacy change that requires an implementation,
+truthful UI, store disclosures, and release evidence together.
 
 ## Release boundaries
 

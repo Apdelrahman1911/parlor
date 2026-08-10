@@ -3,6 +3,7 @@ package com.parlor.app.storage
 import android.content.Context
 import android.content.SharedPreferences
 import com.parlor.storage.settings.SettingsKeyValueBacking
+import com.parlor.storage.settings.SettingsPersistenceException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -34,7 +35,9 @@ internal class AndroidSettingsKeyValueBacking(
 
     private suspend fun persist(editor: SharedPreferences.Editor) {
         withContext(Dispatchers.IO) {
-            check(editor.commit()) { "Couldn't persist app preference" }
+            if (!editor.commit()) {
+                throw SettingsPersistenceException("Couldn't persist app preference")
+            }
         }
     }
 

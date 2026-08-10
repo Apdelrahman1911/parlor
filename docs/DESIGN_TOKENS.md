@@ -1,8 +1,9 @@
 # Parlor — Design Tokens
 
-> The base token spec that drives the Parlor design system and Whodunit's `CozyNoirTheme` overlay.
-> Phase 0 lock — sufficient for Phase 1 implementation without further design clarification.
-> Tokens are named here; their Kotlin/Compose implementation lands in `:shared:design-system/tokens/`.
+> The base visual token reference that drives the Parlor design system and
+> Whodunit's `CozyNoirTheme` overlay. The sound direction in §9 is explicitly
+> reserved design work, not shipping behavior. Current production behavior is
+> documented in `PRODUCTION_ARCHITECTURE.md` and implemented by the source.
 
 ---
 
@@ -227,7 +228,12 @@ Devices opt into the downgrade tier via a runtime capability flag (Desktop integ
 
 ---
 
-## 9. Sound
+## 9. Reserved sound direction (not shipping)
+
+Parlor currently ships no audio assets, playback implementation, ambient
+layer, or sound setting. The following values are design candidates only. A
+future audio feature must implement platform playback, lifecycle/audio-focus
+handling, accessibility behavior, and tests before exposing a control.
 
 ### 9.1 Named cues
 
@@ -248,9 +254,9 @@ Devices opt into the downgrade tier via a runtime capability flag (Desktop integ
 |---|---|---|
 | `sound.ambient.parlor` | Looped: distant piano (low), soft fireplace crackle, faint clock tick. | -22 LUFS, headroom -12 dBFS |
 
-### 9.3 Behavior
+### 9.3 Target behavior if implemented
 
-- Sound respects the user's `soundEnabled` preference (default: on).
+- Sound must be controlled by a real persisted preference only after playback exists.
 - Sound is independent from `reduceMotion`: motion may downgrade while sound continues.
 - Sound is paired with visual beats — never play sound without a visual cue.
 - Audio mixing uses ducking: ambient drops to -32 LUFS when a cue plays.

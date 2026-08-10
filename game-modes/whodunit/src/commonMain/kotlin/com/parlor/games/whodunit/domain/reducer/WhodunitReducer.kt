@@ -672,7 +672,7 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
     /**
      * Abstain/refuse share tally semantics: the voter contributes no count and
      * the ballot pointer advances. Refusal additionally emits [WhodunitEvent.VoteRefused]
-     * so UI / telemetry can distinguish "no opinion" from "protest."
+     * so UI observers can distinguish "no opinion" from "protest."
      */
     private fun abstainVote(
         state: WhodunitState,

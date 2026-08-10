@@ -84,9 +84,10 @@ fallback. Do not claim universal hotspot support from a single successful run.
 Complete `docs/PRIVACY_AND_COMPLIANCE.md` and
 `docs/DEPENDENCY_REVIEW.md`.
 
-- Analytics and crash reporting are separate opt-ins and default off.
-- Verify the no-consent path emits no provider traffic.
-- Verify consent withdrawal stops future collection.
+- Confirm the signed artifact contains no analytics or crash-upload provider
+  and emits no provider traffic. Adding either provider requires a separate
+  reviewed consent, withdrawal, retention, and disclosure design before it can
+  enter a release candidate.
 - Inspect captured events/crashes for player names, room/peer/session IDs, IP
   addresses, fingerprints, room codes, tokens, private/host content, exception
   text, and payloads. `ParlorP2p` must retain only its fixed event fields.
@@ -106,7 +107,7 @@ Complete `docs/PRIVACY_AND_COMPLIANCE.md` and
    expected upload certificate, and byte-identical in inputs to the unsigned
    candidate other than signing.
 4. Upload to Play internal testing. Re-run install, startup, LAN multiplayer,
-   background/rejoin, and telemetry-consent smokes from the delivered build.
+   background/rejoin, and no-provider-traffic inspection from the delivered build.
 
 ### iOS
 
@@ -114,7 +115,7 @@ Complete `docs/PRIVACY_AND_COMPLIANCE.md` and
    provisioning profile, bundle ID, and App Store configuration.
 2. Validate the archive and privacy manifest in Xcode/Organizer.
 3. Upload to TestFlight. Re-run install, startup, LAN multiplayer,
-   background/rejoin, and telemetry-consent smokes from the delivered build.
+   background/rejoin, and no-provider-traffic inspection from the delivered build.
 
 Promote through internal/TestFlight cohorts before broader rollout. Store
 submission is blocked while any Blocker/Critical/High issue is open without
@@ -123,8 +124,9 @@ written risk acceptance.
 ## 6. Rollout and rollback
 
 Start with the smallest store cohort that provides useful operational evidence.
-Monitor only consented, sanitized crash/analytics aggregates plus support
-reports. Do not inspect or retain gameplay payloads to diagnose a release.
+The current release has no crash/analytics upload provider, so operational
+signals are store crash dashboards and user support reports. Do not inspect or
+retain gameplay payloads to diagnose a release.
 
 Stop rollout for crashes, privacy/security regressions, incompatible peers,
 state corruption, inability to finish either game, or discovery/session leaks.

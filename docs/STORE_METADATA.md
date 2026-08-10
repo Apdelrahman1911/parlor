@@ -43,10 +43,10 @@ Capture final EN-LTR and AR-RTL builds on every required store size:
 4. Whodunit clue/discussion;
 5. Mafia private role reveal;
 6. Mafia day discussion/vote; and
-7. accessibility/settings including separate analytics and crash consent.
+7. accessibility/settings showing language, appearance, and reduced motion.
 
 Do not include real player names, production room codes, device identifiers,
-unreleased content, debug overlays, or consented telemetry identifiers.
+unreleased content, or debug overlays.
 
 ## Privacy and networking copy
 
@@ -54,7 +54,7 @@ unreleased content, debug overlays, or consented telemetry identifiers.
 - Local-network multiplayer only; no internet matchmaking, NAT traversal, or
   hosted relay.
 - Player names and gameplay state are used for the local session.
-- Analytics and crash reporting are separate opt-ins and default off.
+- No analytics or uploaded crash-reporting provider is included in this build.
 - No advertising/tracking SDK or sale of data.
 
 The final disclosure is derived from the signed artifact and

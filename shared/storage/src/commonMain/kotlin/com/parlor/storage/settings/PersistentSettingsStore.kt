@@ -32,7 +32,6 @@ class PersistentSettingsStore(
 ) : SettingsStore {
 
     private val writes = Mutex()
-    private val _sound = MutableStateFlow(backing.readBoolean(KEY_SOUND) ?: DEFAULT_SOUND)
     private val _reducedMotion =
         MutableStateFlow(backing.readBoolean(KEY_REDUCED_MOTION) ?: DEFAULT_REDUCED_MOTION)
     private val _language = MutableStateFlow(
@@ -41,24 +40,10 @@ class PersistentSettingsStore(
     private val _themeMode = MutableStateFlow(
         SettingsPolicy.canonicalStoredTheme(backing.readString(KEY_THEME)),
     )
-    private val _analytics =
-        MutableStateFlow(backing.readBoolean(KEY_ANALYTICS) ?: DEFAULT_ANALYTICS)
-    private val _crashReporting =
-        MutableStateFlow(backing.readBoolean(KEY_CRASH_REPORTING) ?: DEFAULT_CRASH_REPORTING)
 
-    override val soundEnabled = _sound.asStateFlow()
     override val reducedMotion = _reducedMotion.asStateFlow()
     override val languageOverride = _language.asStateFlow()
     override val themeMode = _themeMode.asStateFlow()
-    override val analyticsEnabled = _analytics.asStateFlow()
-    override val crashReportingEnabled = _crashReporting.asStateFlow()
-
-    override suspend fun setSoundEnabled(enabled: Boolean) {
-        writes.withLock {
-            backing.writeBoolean(KEY_SOUND, enabled)
-            _sound.value = enabled
-        }
-    }
 
     override suspend fun setReducedMotion(enabled: Boolean) {
         writes.withLock {
@@ -83,32 +68,12 @@ class PersistentSettingsStore(
         }
     }
 
-    override suspend fun setAnalyticsEnabled(enabled: Boolean) {
-        writes.withLock {
-            backing.writeBoolean(KEY_ANALYTICS, enabled)
-            _analytics.value = enabled
-        }
-    }
-
-    override suspend fun setCrashReportingEnabled(enabled: Boolean) {
-        writes.withLock {
-            backing.writeBoolean(KEY_CRASH_REPORTING, enabled)
-            _crashReporting.value = enabled
-        }
-    }
-
     private companion object {
-        const val KEY_SOUND = "sound_enabled"
         const val KEY_REDUCED_MOTION = "reduced_motion"
         const val KEY_LANGUAGE = "language_override"
         const val KEY_THEME = "theme_mode"
-        const val KEY_ANALYTICS = "analytics_enabled"
-        const val KEY_CRASH_REPORTING = "crash_reporting_enabled"
 
-        const val DEFAULT_SOUND = true
         const val DEFAULT_REDUCED_MOTION = false
-        const val DEFAULT_ANALYTICS = false
-        const val DEFAULT_CRASH_REPORTING = false
     }
 }
 

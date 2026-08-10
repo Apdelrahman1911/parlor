@@ -276,6 +276,7 @@ fun App() {
 
                             AppScreen.Settings -> SettingsScreen(
                                 onBack = backToHome,
+                                mutationScope = appScope,
                                 modifier = Modifier.fillMaxSize(),
                             )
                         }

@@ -7,6 +7,6 @@ package com.parlor.engine.phase
  * The engine treats phases opaquely; only the module's reducer interprets them.
  */
 interface GamePhase {
-    /** Stable id for telemetry, snapshots, debugging. Not localized. */
+    /** Stable id for snapshots, protocol state, and debugging. Not localized. */
     val id: String
 }

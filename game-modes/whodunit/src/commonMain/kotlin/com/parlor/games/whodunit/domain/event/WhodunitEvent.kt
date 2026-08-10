@@ -7,8 +7,8 @@ import com.parlor.games.whodunit.domain.phase.WhodunitPhase
 import kotlinx.serialization.Serializable
 
 /**
- * One-shot signals out of the reducer. Consumers: sound playback, UI motion,
- * persistence triggers, telemetry.
+ * One-shot signals out of the reducer. Consumers drive UI motion,
+ * persistence triggers, and other in-process behavior.
  */
 sealed interface WhodunitEvent : GameEvent {
     // Lifecycle

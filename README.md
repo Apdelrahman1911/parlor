@@ -89,7 +89,7 @@ parlor/
 │   ├── whodunit/                 # Rules, protocol adapter, UI, assets, tests
 │   └── mafia/                    # Rules, protocol adapter, UI, assets, tests
 ├── shared/
-│   ├── core/                     # IDs, result, time, logging, telemetry contracts
+│   ├── core/                     # IDs, results, time, randomness, and versioning
 │   ├── design-system/            # Tokens, components, localization, motion
 │   ├── engine/                   # Generic game contracts and registry
 │   ├── engine-testing/           # Non-shipping extensibility fixture

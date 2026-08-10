@@ -77,7 +77,7 @@ sealed interface WhodunitAction : GameAction {
     /**
      * Player-facing intent to skip the ballot. Tally-equivalent to
      * [AbstainVote] (the voter contributes no count), but the reducer emits
-     * a distinct `VoteRefused` event so the UI / telemetry can distinguish
+     * a distinct `VoteRefused` event so UI observers can distinguish
      * a deliberate protest from a no-opinion abstention.
      */
     @Serializable data class RefuseToVote(val voter: PlayerId) : WhodunitAction

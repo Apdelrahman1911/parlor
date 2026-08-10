@@ -10,8 +10,7 @@ the published privacy policy.
 - No advertising or in-app purchases.
 - No account or authenticated real-world identity.
 - Multiplayer is limited to peers reachable on the same local network.
-- Analytics consent and crash-reporting consent are separate, default-off
-  choices.
+- No analytics or crash-reporting provider is included in the shipping source.
 
 ## Data inventory
 
@@ -23,11 +22,11 @@ the published privacy policy.
 | Game state | Enables play and (currently for Whodunit) optional local resume. Includes public, per-player private, and host-only buckets. | Local snapshot only when the game supplies a snapshot adapter; protected by platform storage/file protection and removed at session completion or explicit deletion. Host-only state never leaves the host. |
 | P2P cryptographic identity | Authenticates encrypted same-app transport sessions; it is not a Parlor account. | Device-local protected storage until app data is cleared or the app is removed. Never analytics. |
 | Local multiplayer diagnostics | Fixed event/result/reason vocabulary plus sequence, elapsed time, role, and coarse count bucket. | In-process ring of at most 256 records; platform console output is rate-limited to ten lines/second with a one-record backlog. No upload by Parlor. OS/device log retention is platform-controlled. |
-| Analytics events | Optional aggregate product behavior from an allowlist with no names, peer IDs, room codes, rejoin tokens, content prose, or network payloads. | No collection until separate analytics opt-in. Provider retention must be documented before enabling. |
-| Crash diagnostics | Optional stack/build/device diagnostics. Network payloads and identifiers must be removed before provider submission. | No collection until separate crash-reporting opt-in. Provider retention must be documented before enabling. |
+| Analytics events | Not collected. The shipping dependency graph and application contain no analytics provider or event API. | None. Introducing collection requires a new reviewed allowlist, informed consent where required, retention policy, and store-disclosure update. |
+| Uploaded crash diagnostics | Not collected. Local allowlisted P2P console diagnostics are not an upload mechanism. | None. Introducing a crash provider requires redaction, consent/legal review where required, retention policy, and store-disclosure update. |
 
-The current safe fallback is `NoOpTelemetry`: if a consent-aware provider is
-not completely configured, nothing is collected.
+Absence of a provider and upload API is the current enforcement mechanism; a
+no-op placeholder must not be treated as a privacy control.
 
 ## Least privilege
 
