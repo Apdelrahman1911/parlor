@@ -23,6 +23,7 @@ import com.parlor.session.multidevice.PeerConnectionTracker
 import com.parlor.session.multidevice.PlayerSnapshotPayload
 import com.parlor.session.multidevice.ShadowSessionController
 import com.parlor.session.SubmissionReceipt
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -134,6 +135,8 @@ class WhodunitPeerRoomBridge(
                     privatePerPlayer = ownPrivate?.let { mapOf(selfPlayerId to it) } ?: emptyMap(),
                 ),
             )
+        } catch (cancelled: CancellationException) {
+            throw cancelled
         } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
             return false
         }

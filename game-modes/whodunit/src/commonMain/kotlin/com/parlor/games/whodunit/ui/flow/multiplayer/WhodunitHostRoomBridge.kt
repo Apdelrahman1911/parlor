@@ -27,6 +27,7 @@ import com.parlor.session.multidevice.PlayerSnapshotPayload
 import com.parlor.session.passandplay.PassAndPlaySessionController
 import com.parlor.session.SubmissionReceipt
 import com.parlor.engine.session.SubmitError
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Job
@@ -228,6 +229,8 @@ class WhodunitHostRoomBridge(
     ): CommandApplication {
         val action = try {
             WhodunitActionCodec.decode(payload)
+        } catch (cancelled: CancellationException) {
+            throw cancelled
         } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
             return CommandApplication.InvalidAction
         }
