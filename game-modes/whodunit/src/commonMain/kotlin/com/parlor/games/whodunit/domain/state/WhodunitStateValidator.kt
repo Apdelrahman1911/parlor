@@ -458,8 +458,8 @@ internal object WhodunitStateValidator {
             }
             is WhodunitPhase.CharacterReveal -> {
                 require(state.public.currentRound == 0) { "Character reveal has a current round" }
-                require(phase.playerIndex in state.players.indices) {
-                    "Character-reveal index is outside roster"
+                require(phase.playerIndex == 0) {
+                    "Simultaneous character reveal has a non-canonical legacy cursor"
                 }
             }
             is WhodunitPhase.Round -> require(

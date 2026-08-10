@@ -48,16 +48,10 @@ fun CharacterRevealHandoffScreen(
 }
 
 /**
- * Multi-device-only screen shown to peers when the current
- * [com.parlor.games.whodunit.domain.phase.WhodunitPhase.CharacterReveal] is
- * focused on **another** player. The local device is the one whose
- * `selfPlayerId` differs from `players[phase.playerIndex].id`. Each peer waits
- * on this screen until the host advances `phase.playerIndex` to point at
- * them; at that point the standard Handoff → Gate → Dossier → Hide
- * ceremony takes over locally.
- *
- * No action affordance — peers can't advance another player's reveal. The
- * screen auto-clears when state.phase moves.
+ * Multi-device waiting surface shown after this device has confirmed its own
+ * dossier while another active player is still completing the simultaneous
+ * reveal ceremony. There is no action affordance: the screen clears from the
+ * next authoritative snapshot once all required confirmations arrive.
  */
 @Composable
 fun CharacterRevealWaitingScreen(

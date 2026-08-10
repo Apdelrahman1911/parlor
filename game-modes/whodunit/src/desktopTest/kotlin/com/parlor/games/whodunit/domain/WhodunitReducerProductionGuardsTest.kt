@@ -88,13 +88,14 @@ class WhodunitReducerProductionGuardsTest {
 
     @Test
     fun timer_expiry_progresses_instead_of_restarting_the_same_discussion() {
-        val classic = reduce(roundState(), WhodunitAction.TimerExpired)
+        val terminalTimer = PublicTimerState("discussion-1", 60, 1)
+        val classic = reduce(roundState(timer = terminalTimer), WhodunitAction.TimerExpired)
         assertThat(classic.newState.phase).isEqualTo(WhodunitPhase.Round(2))
         assertThat(classic.newState.public.timer).isNull()
         assertThat(classic.events).contains(WhodunitEvent.TimerExhausted)
 
         val elimination = reduce(
-            roundState(modeId = WhodunitIds.EliminationModeId),
+            roundState(modeId = WhodunitIds.EliminationModeId, timer = terminalTimer),
             WhodunitAction.TimerExpired,
         )
         assertThat(elimination.newState.phase).isEqualTo(WhodunitPhase.Round(1))

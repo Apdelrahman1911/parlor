@@ -274,6 +274,16 @@ class WhodunitSnapshotValidationTest {
     }
 
     @Test
+    fun simultaneousCharacterRevealRejectsLegacySequentialCursor() {
+        val canonical = assigned.copy(phase = WhodunitPhase.CharacterReveal(0))
+        assertEquals(canonical, codec.decode(codec.encode(canonical)))
+
+        assertDecodeRejected(
+            canonical.copy(phase = WhodunitPhase.CharacterReveal(1)),
+        )
+    }
+
+    @Test
     fun phaseSpecificReadinessAndBriefingCursorCannotLeakIntoAnotherPhase() {
         assertDecodeRejected(
             assigned.copy(

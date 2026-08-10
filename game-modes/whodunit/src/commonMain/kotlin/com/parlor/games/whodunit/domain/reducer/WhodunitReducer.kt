@@ -634,6 +634,12 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
     private fun timerExpired(state: WhodunitState): Reduction<WhodunitState, WhodunitEvent> {
         val timer = state.public.timer ?: return Reduction(state)
         if (state.phase !is WhodunitPhase.Round || timer.paused) return Reduction(state)
+        // TimerExpired is the ticker's terminal edge, not a host shortcut for
+        // skipping an arbitrary amount of discussion. The ticker submits it
+        // when one second remains; explicit host progression uses
+        // AdvanceFromDiscussion. Keeping the distinction in the reducer makes
+        // an early/stale expiry action harmless even outside the UI path.
+        if (timer.remainingSeconds > 1) return Reduction(state)
 
         // Expiry is a real state-machine transition, not merely a timer clear.
         // Clearing in-place made the router redisplay the clue CTA, which could

@@ -141,7 +141,9 @@ class ContinueWithoutPlayerTest {
         session.submit(WhodunitAction.MarkPlayerReconnected(players[3].id))
         session.submit(WhodunitAction.Resume)
         assertThat(stateOf(session).public.timer?.paused).isEqualTo(false)
-        session.submit(WhodunitAction.TimerExpired)
+        // The host may explicitly end the discussion after recovery. A timer
+        // expiry is reserved for the ticker's terminal one-second edge.
+        session.submit(WhodunitAction.AdvanceFromDiscussion)
         assertThat((phaseOf(session) as WhodunitPhase.Round).index).isEqualTo(2)
     }
 

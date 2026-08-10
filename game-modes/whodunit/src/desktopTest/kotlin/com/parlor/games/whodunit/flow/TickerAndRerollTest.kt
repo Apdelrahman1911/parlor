@@ -225,7 +225,7 @@ class TickerAndRerollTest {
     }
 
     @Test
-    fun ticker_submits_TimerExpired_at_zero_and_clears_timer() = runTest {
+    fun ticker_submitsTimerExpiredAtTerminalEdgeAndClearsTimer() = runTest {
         val payload = loadCase()
         val players = fourPlayers()
         val (session, scope) = buildSession(payload, WhodunitIds.ClassicVoteModeId, players, seed = 3L)
@@ -247,6 +247,20 @@ class TickerAndRerollTest {
         // The ticker loop returned on its own; cancelling it is a no-op.
         tickerJob.cancelAndJoin()
         collector.cancel()
+        session.close()
+    }
+
+    @Test
+    fun prematureTimerExpiredCannotSkipAnActiveDiscussion() = runTest {
+        val payload = loadCase()
+        val players = fourPlayers()
+        val (session, _) = buildSession(payload, WhodunitIds.ClassicVoteModeId, players, seed = 31L)
+        driveToFirstDiscussionTimer(session, players, 31L)
+
+        val before = stateOf(session)
+        session.submit(WhodunitAction.TimerExpired)
+
+        assertThat(stateOf(session)).isEqualTo(before)
         session.close()
     }
 
