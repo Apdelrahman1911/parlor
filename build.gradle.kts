@@ -56,6 +56,14 @@ val staticAnalysis = tasks.register("staticAnalysis") {
     description = "Runs Detekt over every Kotlin source set in every production subproject."
 }
 
+// Stable release-facing name. Keep the shorter staticAnalysis task for local
+// use, while automation and release evidence can invoke an unambiguous gate.
+val productionStaticAnalysis = tasks.register("productionStaticAnalysis") {
+    group = "verification"
+    description = "Runs the complete repository-wide production static-analysis policy."
+    dependsOn(staticAnalysis)
+}
+
 tasks.register("productionAppleCheck") {
     group = "verification"
     description = "Links release frameworks for physical, Apple-silicon simulator, and Intel simulator iOS targets."
@@ -72,7 +80,7 @@ tasks.register("productionCheck") {
     dependsOn(
         productionDesktopCheck,
         productionAndroidCheck,
-        staticAnalysis,
+        productionStaticAnalysis,
         ":composeApp:verifyGameShellDispatch",
     )
 }

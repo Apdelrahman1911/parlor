@@ -23,13 +23,13 @@ jobs:
 
     steps:
       - name: Check out source
-        uses: actions/checkout@v7.0.1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 1
           persist-credentials: false
 
       - name: Set up JDK 21
-        uses: actions/setup-java@v5.6.0
+        uses: actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95 # v5.6.0
         with:
           distribution: temurin
           java-version: "21"
@@ -52,7 +52,7 @@ jobs:
           test -z "$(git status --porcelain)"
 
       - name: Run common, desktop, Android, static-analysis, and release gates
-        run: ./gradlew productionCheck allTests --dependency-verification=strict --no-daemon --stacktrace --console=plain
+        run: ./gradlew productionCheck productionStaticAnalysis allTests --dependency-verification=strict --no-daemon --stacktrace --console=plain
 
       - name: Inspect unsigned Android release artifact and merged manifest
         shell: bash
@@ -73,7 +73,7 @@ jobs:
 
       - name: Upload verification reports, mappings, and unsigned AAB
         if: always()
-        uses: actions/upload-artifact@v7.0.1
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: desktop-android-verification
           if-no-files-found: warn
@@ -93,13 +93,13 @@ jobs:
 
     steps:
       - name: Check out source
-        uses: actions/checkout@v7.0.1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 1
           persist-credentials: false
 
       - name: Set up JDK 21
-        uses: actions/setup-java@v5.6.0
+        uses: actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95 # v5.6.0
         with:
           distribution: temurin
           java-version: "21"
@@ -152,7 +152,7 @@ jobs:
 
       - name: Upload Apple verification evidence
         if: always()
-        uses: actions/upload-artifact@v7.0.1
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: ios-verification
           if-no-files-found: warn

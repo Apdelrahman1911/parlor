@@ -3,6 +3,7 @@ package com.parlor.transport.p2p
 import java.io.File
 import kotlin.test.Test
 import kotlin.test.assertContains
+import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
@@ -22,6 +23,7 @@ class ProductionVerificationWorkflowContractTest {
 
         listOf(
             "productionCheck",
+            "productionStaticAnalysis",
             "allTests",
             "--dependency-verification=strict",
             "unzip -t",
@@ -54,6 +56,13 @@ class ProductionVerificationWorkflowContractTest {
             )
         }
 
+        val staticGate = rootBuild.substringAfter("val productionStaticAnalysis")
+            .substringBefore("tasks.register(\"productionAppleCheck\")")
+        assertContains(staticGate, "dependsOn(staticAnalysis)")
+        val productionGate = rootBuild.substringAfter("tasks.register(\"productionCheck\")")
+            .substringBefore("subprojects")
+        assertContains(productionGate, "productionStaticAnalysis")
+
         listOf(
             "**/build/reports/detekt/",
             "**/build/reports/tests/",
@@ -67,6 +76,23 @@ class ProductionVerificationWorkflowContractTest {
                 message = "CI must retain diagnostic evidence: $evidence",
             )
         }
+    }
+
+    @Test
+    fun third_party_actions_are_pinned_to_reviewed_immutable_commits() {
+        val workflow = read(".github/workflows/production-verification.yml")
+        val expectedPins = listOf(
+            "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1",
+            "actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95 # v5.6.0",
+            "actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1",
+        )
+        expectedPins.forEach { assertContains(workflow, it) }
+
+        val unpinned = Regex("uses:\\s+[^\\s@]+@(?:v|main|master)[^\\s]*")
+            .findAll(workflow)
+            .map { it.value }
+            .toList()
+        assertFalse(unpinned.isNotEmpty(), "Mutable third-party action refs: $unpinned")
     }
 
     @Test
