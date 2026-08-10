@@ -74,6 +74,24 @@ class TestTransportIsolationContractTest {
         }
     }
 
+    @Test
+    fun `terminal lifecycle ownership cleanup never uses the lossy signal queue`() {
+        val source = repositoryRoot.resolve(
+            "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/" +
+                "P2pKitRoomTransport.kt",
+        ).readText()
+
+        // Background/foreground callbacks are advisory and may be conflated,
+        // but removing a closed room is terminal ownership state. Keeping this
+        // assertion source-level is deliberate: it would have failed for the
+        // former RoomClosed event even when a fast test consumer happened to
+        // drain the bounded channel before it overflowed.
+        assertFalse("data class RoomClosed" in source)
+        assertFalse("trySend(AppLifecycleEvent.RoomClosed" in source)
+        assertTrue("private suspend fun roomClosed(registrationId: String)" in source)
+        assertTrue("private val onClosed: suspend () -> Unit" in source)
+    }
+
     private fun findRepositoryRoot(): File {
         var candidate = File(System.getProperty("user.dir")).absoluteFile
         repeat(8) {

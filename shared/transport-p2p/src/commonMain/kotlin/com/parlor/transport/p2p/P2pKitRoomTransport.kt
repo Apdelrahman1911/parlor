@@ -176,7 +176,6 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
     private sealed interface AppLifecycleEvent {
         data class Backgrounded(val atEpochMillis: Long) : AppLifecycleEvent
         data class Foregrounded(val atEpochMillis: Long) : AppLifecycleEvent
-        data class RoomClosed(val registrationId: String) : AppLifecycleEvent
     }
 
     private data class ActiveLifecycleRoom(
@@ -213,11 +212,6 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
                             }
                             room?.appForegrounded(event.atEpochMillis)
                         }
-                        is AppLifecycleEvent.RoomClosed -> activeLifecycleMutex.withLock {
-                            if (activeLifecycleRoom?.registrationId == event.registrationId) {
-                                activeLifecycleRoom = null
-                            }
-                        }
                     }
                 } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
                     failure.rethrowIfCancellation()
@@ -251,8 +245,16 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
         }
     }
 
-    private fun roomClosed(registrationId: String) {
-        lifecycleEvents.trySend(AppLifecycleEvent.RoomClosed(registrationId))
+    private suspend fun roomClosed(registrationId: String) {
+        // Ownership teardown is terminal state, not a best-effort lifecycle
+        // hint. It must never share the DROP_OLDEST signal queue above: a
+        // foreground/background burst could otherwise evict this removal and
+        // retain a closed room until another room happened to register.
+        activeLifecycleMutex.withLock {
+            if (activeLifecycleRoom?.registrationId == registrationId) {
+                activeLifecycleRoom = null
+            }
+        }
     }
 
     private fun recordLocalNetworkFailure(failure: Throwable) {
@@ -1633,7 +1635,7 @@ internal class HostP2pRoom(
     private val scope: CoroutineScope,
     private val codec: RoomMessageCodec,
     private val diagnostics: P2pDiagnostics = NoOpP2pDiagnostics,
-    private val onClosed: () -> Unit = {},
+    private val onClosed: suspend () -> Unit = {},
     private val appResumeGraceMs: Long = P2pKitRoomTransport.APP_RESUME_GRACE_MS,
     private val firstApplicationMessageTimeoutMs: Long =
         P2pKitRoomTransport.FIRST_APPLICATION_MESSAGE_TIMEOUT_MS,
@@ -3483,7 +3485,7 @@ internal class PeerP2pRoom(
         suspend (ResumableSessionCredential) ->
             Result<ResumedPeerConnection, ResumeConnectionFailure>
     )? = null,
-    private val onClosed: () -> Unit = {},
+    private val onClosed: suspend () -> Unit = {},
     private val appResumeGraceMs: Long = P2pKitRoomTransport.APP_RESUME_GRACE_MS,
 ) : LocalRoom, AppLifecycleAwareRoom {
 
