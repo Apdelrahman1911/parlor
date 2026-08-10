@@ -108,7 +108,7 @@ internal class MafiaHostRuntime(
         bridge.terminate(reason)
     }
 
-    override fun close() {
+    override suspend fun close() {
         bridge.close()
     }
 }
@@ -147,7 +147,7 @@ internal class MafiaPeerRuntime(
 
     override suspend fun terminate(reason: SessionEndReason) = Unit
 
-    override fun close() {
+    override suspend fun close() {
         bridge.close()
     }
 }

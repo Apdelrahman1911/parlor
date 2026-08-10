@@ -47,8 +47,6 @@ interface SessionController<S : GameState, A : GameAction, E : GameEvent> {
      */
     suspend fun submit(action: A): Result<SubmissionReceipt, SubmitError>
     suspend fun setActiveViewer(viewer: ViewerContext)
-    suspend fun pause()
-    suspend fun resume()
     suspend fun close()
 }
 

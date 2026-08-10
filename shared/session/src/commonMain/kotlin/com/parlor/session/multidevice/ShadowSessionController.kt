@@ -71,8 +71,6 @@ class ShadowSessionController<S : GameState, A : GameAction, E : GameEvent>(
         _activeViewer.value = viewer
     }
 
-    override suspend fun pause() {}
-    override suspend fun resume() {}
     override suspend fun close() {}
 
     /**

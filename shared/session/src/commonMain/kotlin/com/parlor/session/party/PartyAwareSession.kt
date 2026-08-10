@@ -82,7 +82,5 @@ class PartyAwareSession<S : GameState, A : GameAction, E : GameEvent>(
     }
 
     override suspend fun setActiveViewer(viewer: ViewerContext) = delegate.setActiveViewer(viewer)
-    override suspend fun pause() = delegate.pause()
-    override suspend fun resume() = delegate.resume()
     override suspend fun close() = delegate.close()
 }

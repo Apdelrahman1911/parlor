@@ -142,7 +142,7 @@ interface RetainedMultiplayerRuntime {
 
     suspend fun terminate(reason: SessionEndReason)
 
-    fun close()
+    suspend fun close()
 }
 
 sealed interface RetainedValueResult<out T> {

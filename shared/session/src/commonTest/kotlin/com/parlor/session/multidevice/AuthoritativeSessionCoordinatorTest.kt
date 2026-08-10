@@ -24,8 +24,10 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,6 +35,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runCurrent
@@ -743,6 +746,84 @@ class AuthoritativeSessionCoordinatorTest {
             assertEquals(PeerCommandProgress.Idle, coordinator.commandProgress.value)
         }
         coordinator.close()
+    }
+
+    @Test
+    fun `slow compatibility result observer cannot block authoritative inbound frames`() = runTest {
+        val room = RecordingRoom(isHost = false, selfPlayerId = peerId)
+        var id = 0
+        var installedRevision = -1L
+        val coordinator = PeerAuthoritativeSessionCoordinator(
+            room = room,
+            protocol = protocol,
+            selfPlayerId = peerId,
+            scope = this,
+            onSnapshot = { _, revision ->
+                installedRevision = revision
+                true
+            },
+            idGenerator = { "peer-command-${(++id).toString().padStart(16, '0')}" },
+        )
+        val observerEntered = CompletableDeferred<Unit>()
+        val releaseObserver = CompletableDeferred<Unit>()
+        val observer = backgroundScope.launch(start = CoroutineStart.UNDISPATCHED) {
+            coordinator.results.collect {
+                observerEntered.complete(Unit)
+                releaseObserver.await()
+            }
+        }
+
+        repeat(3) { index ->
+            val receipt = (coordinator.submit(byteArrayOf(index.toByte())) as Result.Success).data
+            room.receive(
+                HostMessage.CommandResult(
+                    header = header(sequence = index.toLong() + 1L),
+                    commandId = receipt.commandId,
+                    status = CommandStatus.Applied,
+                    authoritativeRevision = index.toLong(),
+                    nextExpectedClientSequence = index.toLong() + 2L,
+                ),
+            )
+            runCurrent()
+            val resolved = assertIs<PeerCommandProgress.Resolved>(
+                coordinator.commandProgress.value,
+            )
+            assertEquals(receipt.commandId, resolved.outcome.commandId)
+            coordinator.acknowledgeCommandOutcome(receipt.commandId)
+        }
+        observerEntered.await()
+        room.receive(snapshot(revision = 3L, sequence = 4L, public = 1, private = 2))
+        runCurrent()
+
+        assertEquals(3L, installedRevision)
+        releaseObserver.complete(Unit)
+        observer.cancel()
+        coordinator.close()
+    }
+
+    @Test
+    fun `close rejects stale submissions and wipes retained command payload`() = runTest {
+        val room = RecordingRoom(isHost = false, selfPlayerId = peerId)
+        val coordinator = PeerAuthoritativeSessionCoordinator(
+            room = room,
+            protocol = protocol,
+            selfPlayerId = peerId,
+            scope = this,
+            onSnapshot = { _, _ -> true },
+            idGenerator = { COMMAND_ONE },
+        )
+        val callerPayload = byteArrayOf(7, 8, 9)
+        assertIs<Result.Success<PeerCommandReceipt>>(coordinator.submit(callerPayload))
+        val retained = assertIs<PeerMessage.ClientCommand>(room.sentToHost.single())
+
+        coordinator.close()
+
+        assertTrue(retained.payload.all { it == 0.toByte() })
+        assertTrue(callerPayload.contentEquals(byteArrayOf(7, 8, 9)))
+        assertEquals(
+            NetError.NotConnected,
+            (coordinator.submit(byteArrayOf(1)) as Result.Failure).error,
+        )
     }
 
     @Test

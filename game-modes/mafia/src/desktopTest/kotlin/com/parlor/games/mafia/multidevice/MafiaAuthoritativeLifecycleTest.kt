@@ -528,7 +528,7 @@ class MafiaAuthoritativeLifecycleTest {
         val bridge: MafiaHostRoomBridge,
         val peerBridge: MafiaPeerRoomBridge,
     ) {
-        fun close() {
+        suspend fun close() {
             bridge.close()
             peerBridge.close()
         }

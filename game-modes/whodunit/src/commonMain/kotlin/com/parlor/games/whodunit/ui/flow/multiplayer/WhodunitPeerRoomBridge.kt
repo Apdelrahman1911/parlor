@@ -104,7 +104,7 @@ class WhodunitPeerRoomBridge(
         coordinator.acknowledgeCommandOutcome(commandId)
     }
 
-    fun close() {
+    suspend fun close() {
         connectionTracker.close()
         connectionJob.cancel()
         coordinator.close()

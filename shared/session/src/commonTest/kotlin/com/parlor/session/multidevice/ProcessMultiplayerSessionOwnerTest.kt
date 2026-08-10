@@ -649,7 +649,7 @@ private class FakeRuntime(
         terminatedWith += reason
     }
 
-    override fun close() {
+    override suspend fun close() {
         closeCalls++
         closeFailure?.let { throw it }
         closed = true

@@ -4,6 +4,7 @@ import com.parlor.core.versioning.SemVer
 
 import com.parlor.core.ids.GameId
 import com.parlor.core.ids.SessionId
+import com.parlor.networking.room.RoomInputPolicy
 
 /** The immutable identity/version tuple for one authoritative game session. */
 data class SessionProtocol(
@@ -150,8 +151,7 @@ fun HostMessage.SessionStarting.validateFor(expected: SessionProtocol): Protocol
             players.map { it.seat } != players.indices.toList() ||
             players.any {
                 it.id.raw.length !in 1..MAX_START_TEXT_LENGTH ||
-                    it.displayName.length !in 1..MAX_START_DISPLAY_NAME_LENGTH ||
-                    it.displayName.isBlank() ||
+                !RoomInputPolicy.isValidDisplayName(it.displayName) ||
                     it.seat < 0
             } -> ProtocolValidation.InvalidSessionStart
         (caseVersion == null) != (caseDigest == null) ->
@@ -215,6 +215,5 @@ private fun String.isValidSha256(): Boolean =
 private const val MIN_START_PLAYERS = 2
 private const val MAX_START_PLAYERS = 16
 private const val MAX_START_TEXT_LENGTH = 128
-private const val MAX_START_DISPLAY_NAME_LENGTH = 64
 private const val MAX_CASE_VERSION_LENGTH = 32
 private const val SHA_256_HEX_LENGTH = 64

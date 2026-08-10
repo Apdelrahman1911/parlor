@@ -127,7 +127,7 @@ internal class WhodunitHostRuntime(
         bridge.terminate(reason)
     }
 
-    override fun close() {
+    override suspend fun close() {
         bridge.close()
     }
 }
@@ -170,7 +170,7 @@ internal class WhodunitPeerRuntime(
 
     override suspend fun terminate(reason: SessionEndReason) = Unit
 
-    override fun close() {
+    override suspend fun close() {
         bridge.close()
     }
 }

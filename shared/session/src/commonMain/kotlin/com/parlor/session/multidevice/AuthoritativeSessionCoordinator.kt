@@ -24,8 +24,10 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ClosedSendChannelException
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -1339,9 +1341,14 @@ class PeerAuthoritativeSessionCoordinator(
     private val _initialSnapshotError = MutableStateFlow<NetError?>(null)
     val initialSnapshotError: StateFlow<NetError?> = _initialSnapshotError.asStateFlow()
 
-    // At most one command may be in flight, so replaying the latest outcome is
-    // bounded and prevents a temporarily absent UI collector from losing it.
-    private val _results = MutableSharedFlow<HostMessage.CommandResult>(replay = 1)
+    // Compatibility-only observation stream. [commandProgress] is the durable
+    // UI contract; this bounded best-effort stream must never suspend the sole
+    // authenticated inbound-frame collector when a subscriber is slow.
+    private val _results = MutableSharedFlow<HostMessage.CommandResult>(
+        replay = 1,
+        extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST,
+    )
     val results: SharedFlow<HostMessage.CommandResult> = _results.asSharedFlow()
 
     private val _commandProgress = MutableStateFlow<PeerCommandProgress>(PeerCommandProgress.Idle)
@@ -1351,9 +1358,12 @@ class PeerAuthoritativeSessionCoordinator(
     private var nextClientSequence = 1L
     private var lastInstalledSnapshotRevision = -1L
     private var terminalAccepted = false
+    private var closed = false
     private val seenHostMessageIds = mutableSetOf<String>()
     private val seenHostMessageOrder = ArrayDeque<String>()
     private val stateMutex = Mutex()
+    /** Serializes the full submit/send boundary with deterministic close. */
+    private val submitMutex = Mutex()
     private val outcomeJobMutex = Mutex()
     private val jobs = mutableListOf<Job>()
     private var pendingOutcomeJob: Job? = null
@@ -1404,59 +1414,63 @@ class PeerAuthoritativeSessionCoordinator(
         }
     }
 
-    suspend fun submit(payload: ByteArray): Result<PeerCommandReceipt, NetError> {
-        if (room.lifecycle.value != RoomLifecycleState.Active) {
-            return Result.Failure(NetError.SessionSuspended)
-        }
-        if (!_hasAuthoritativeSnapshot.value) {
-            return Result.Failure(NetError.SessionSuspended)
-        }
-        if (payload.size > com.parlor.networking.protocol.MAX_COMMAND_PAYLOAD_BYTES) {
-            return Result.Failure(NetError.PayloadTooLarge)
-        }
-        val command = stateMutex.withLock {
-            if (pending.isNotEmpty()) return Result.Failure(NetError.CommandInFlight)
-            val commandId = idGenerator()
-            val clientSequence = nextClientSequence++
-            PeerMessage.ClientCommand(
-                header = peerHeader(commandId),
-                actor = selfPlayerId,
-                commandId = commandId,
-                clientSequence = clientSequence,
-                expectedRevision = _revision.value,
-                payload = payload.copyOf(),
-            ).also {
-                pending[commandId] = it
-                _commandProgress.value = PeerCommandProgress.Awaiting(
-                    receipt = PeerCommandReceipt(commandId, clientSequence),
-                    expectedRevision = it.expectedRevision,
-                    delivery = PeerCommandDelivery.Sending,
-                )
+    suspend fun submit(payload: ByteArray): Result<PeerCommandReceipt, NetError> =
+        submitMutex.withLock submit@{
+            if (isClosed()) return@submit Result.Failure(NetError.NotConnected)
+            if (room.lifecycle.value != RoomLifecycleState.Active) {
+                return@submit Result.Failure(NetError.SessionSuspended)
             }
-        }
-        val sent = try {
-            sendPeerFrame(command)
-        } catch (cancelled: CancellationException) {
-            // Cancellation of an in-progress transport write is ambiguous.
-            // Establish coordinator-owned recovery before propagating it, but
-            // never let a query overtake a write that is still in progress.
-            establishOutcomeRecovery(command.commandId, PeerCommandDelivery.Ambiguous)
-            throw cancelled
-        }
-        return when (sent) {
-            is Result.Success -> {
-                establishOutcomeRecovery(command.commandId, PeerCommandDelivery.Sent)
-                Result.Success(PeerCommandReceipt(command.commandId, command.clientSequence))
+            if (!_hasAuthoritativeSnapshot.value) {
+                return@submit Result.Failure(NetError.SessionSuspended)
             }
-            is Result.Failure -> {
-                // A transport error does not prove that the host did not apply
-                // the action. Keep it pending and reconcile by command id after
-                // recovery; never replay a non-idempotent game action.
+            if (payload.size > com.parlor.networking.protocol.MAX_COMMAND_PAYLOAD_BYTES) {
+                return@submit Result.Failure(NetError.PayloadTooLarge)
+            }
+            val command = stateMutex.withLock {
+                if (pending.isNotEmpty()) {
+                    return@submit Result.Failure(NetError.CommandInFlight)
+                }
+                val commandId = idGenerator()
+                val clientSequence = nextClientSequence++
+                PeerMessage.ClientCommand(
+                    header = peerHeader(commandId),
+                    actor = selfPlayerId,
+                    commandId = commandId,
+                    clientSequence = clientSequence,
+                    expectedRevision = _revision.value,
+                    payload = payload.copyOf(),
+                ).also {
+                    pending[commandId] = it
+                    _commandProgress.value = PeerCommandProgress.Awaiting(
+                        receipt = PeerCommandReceipt(commandId, clientSequence),
+                        expectedRevision = it.expectedRevision,
+                        delivery = PeerCommandDelivery.Sending,
+                    )
+                }
+            }
+            val sent = try {
+                sendPeerFrame(command)
+            } catch (cancelled: CancellationException) {
+                // Cancellation of an in-progress transport write is ambiguous.
+                // Establish coordinator-owned recovery before propagating it, but
+                // never let a query overtake a write that is still in progress.
                 establishOutcomeRecovery(command.commandId, PeerCommandDelivery.Ambiguous)
-                Result.Failure(sent.error)
+                throw cancelled
+            }
+            when (sent) {
+                is Result.Success -> {
+                    establishOutcomeRecovery(command.commandId, PeerCommandDelivery.Sent)
+                    Result.Success(PeerCommandReceipt(command.commandId, command.clientSequence))
+                }
+                is Result.Failure -> {
+                    // A transport error does not prove that the host did not apply
+                    // the action. Keep it pending and reconcile by command id after
+                    // recovery; never replay a non-idempotent game action.
+                    establishOutcomeRecovery(command.commandId, PeerCommandDelivery.Ambiguous)
+                    Result.Failure(sent.error)
+                }
             }
         }
-    }
 
     /**
      * Once a command write settles, ownership of its unresolved outcome must
@@ -1490,7 +1504,10 @@ class PeerAuthoritativeSessionCoordinator(
     }
 
     suspend fun requestSnapshot(): Result<Unit, NetError> {
-        val revision = stateMutex.withLock { _revision.value }
+        val revision = stateMutex.withLock {
+            if (closed) return Result.Failure(NetError.NotConnected)
+            _revision.value
+        }
         return sendPeerFrame(
             PeerMessage.SnapshotRequest(
                 header = peerHeader(idGenerator()),
@@ -1516,8 +1533,17 @@ class PeerAuthoritativeSessionCoordinator(
         }
     }
 
-    fun close() {
-        peerJob.cancel(CancellationException("Peer coordinator closed"))
+    suspend fun close() {
+        submitMutex.withLock {
+            stateMutex.withLock {
+                closed = true
+                pending.values.forEach { it.payload.fill(0) }
+                pending.clear()
+                _commandProgress.value = PeerCommandProgress.Idle
+            }
+        }
+        cancelOutcomeReconciliation()
+        peerJob.cancelAndJoin()
         pendingOutcomeJob = null
         jobs.clear()
     }
@@ -1530,6 +1556,7 @@ class PeerAuthoritativeSessionCoordinator(
         }
         val eligible = stateMutex.withLock {
             if (
+                closed ||
                 terminalAccepted ||
                 snapshot.header.messageId in seenHostMessageIds ||
                 snapshot.revision <= lastInstalledSnapshotRevision
@@ -1575,6 +1602,7 @@ class PeerAuthoritativeSessionCoordinator(
         }
         val accepted = stateMutex.withLock {
             if (
+                closed ||
                 terminalAccepted ||
                 !rememberHostMessage(result.header.messageId) ||
                 result.commandId !in pending
@@ -1582,7 +1610,7 @@ class PeerAuthoritativeSessionCoordinator(
                 false
             } else {
                 nextClientSequence = result.nextExpectedClientSequence
-                pending.remove(result.commandId)
+                pending.remove(result.commandId)?.payload?.fill(0)
                 _commandProgress.value = PeerCommandProgress.Resolved(
                     PeerCommandOutcome(
                         commandId = result.commandId,
@@ -1596,7 +1624,7 @@ class PeerAuthoritativeSessionCoordinator(
         }
         if (!accepted) return
         cancelOutcomeReconciliation()
-        _results.emit(result)
+        _results.tryEmit(result)
         if (
             result.status == CommandStatus.SequenceGap ||
             result.status == CommandStatus.StaleRevision
@@ -1613,6 +1641,7 @@ class PeerAuthoritativeSessionCoordinator(
         }
         val heartbeatAccepted = stateMutex.withLock {
             if (
+                closed ||
                 terminalAccepted ||
                 !rememberHostMessage(heartbeat.header.messageId)
             ) {
@@ -1636,6 +1665,7 @@ class PeerAuthoritativeSessionCoordinator(
         }
         val accepted = stateMutex.withLock {
             if (
+                closed ||
                 terminalAccepted ||
                 !rememberHostMessage(ended.header.messageId) ||
                 ended.finalRevision < _revision.value
@@ -1654,6 +1684,7 @@ class PeerAuthoritativeSessionCoordinator(
                         ),
                     )
                 }
+                pending.values.forEach { it.payload.fill(0) }
                 pending.clear()
                 true
             }
@@ -1708,7 +1739,10 @@ class PeerAuthoritativeSessionCoordinator(
      * potentially non-idempotent game action.
      */
     suspend fun requestPendingOutcomes(): Result<Unit, NetError> {
-        val commands = stateMutex.withLock { pending.values.toList() }
+        val commands = stateMutex.withLock {
+            if (closed) return Result.Failure(NetError.NotConnected)
+            pending.values.toList()
+        }
         for (command in commands) {
             when (val sent = requestCommandOutcome(command.commandId)) {
                 is Result.Success -> Unit
@@ -1776,6 +1810,8 @@ class PeerAuthoritativeSessionCoordinator(
 
     private suspend fun isTerminalAccepted(): Boolean =
         stateMutex.withLock { terminalAccepted }
+
+    private suspend fun isClosed(): Boolean = stateMutex.withLock { closed }
 
     private suspend fun requestCommandOutcome(commandId: String): Result<Unit, NetError> =
         sendPeerFrame(

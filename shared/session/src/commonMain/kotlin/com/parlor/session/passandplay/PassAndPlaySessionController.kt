@@ -18,7 +18,6 @@ import com.parlor.session.SessionController
 import com.parlor.session.SubmissionReceipt
 import com.parlor.session.ViewerContext
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -37,15 +36,9 @@ import kotlinx.coroutines.sync.withLock
  * rendered. The reducer never sees the topology — it sees actions in and
  * state out.
  *
- * Phase 4 wires the Whodunit definition into this controller. Phase 6.2 adds
- * `restoredState` so a snapshot-driven resume can boot the controller at the
- * persisted state instead of `definition.createInitialState(config)`. Phase 7
- * adds a shape test that proves the same engine code can drive a multi-device
- * flow with no changes here.
- *
  * @param restoredState When non-null, the controller starts with this state
- * (used by Phase 6.2 resume). When null, the controller calls
- * `definition.createInitialState(config)` as before — the prior contract.
+ * after validated snapshot recovery. When null, the controller calls
+ * `definition.createInitialState(config)`.
  */
 class PassAndPlaySessionController<S : GameState, A : GameAction, E : GameEvent>(
     private val definition: GameDefinition<S, A, E>,
@@ -108,8 +101,6 @@ class PassAndPlaySessionController<S : GameState, A : GameAction, E : GameEvent>
     fun currentState(): S = state.value
 
     @Volatile private var closed: Boolean = false
-    @Volatile private var paused: Boolean = false
-    private var resumeBlocker: Job? = null
 
     override suspend fun submit(action: A): Result<SubmissionReceipt, SubmitError> {
         // Serialize ONLY the state mutation under the lock. Emitting events
@@ -133,11 +124,7 @@ class PassAndPlaySessionController<S : GameState, A : GameAction, E : GameEvent>
         _activeViewer.value = viewer
     }
 
-    override suspend fun pause() { paused = true }
-    override suspend fun resume() { paused = false }
-
     override suspend fun close() {
         closed = true
-        resumeBlocker?.cancel()
     }
 }

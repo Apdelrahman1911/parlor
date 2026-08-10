@@ -91,7 +91,5 @@ private class StaleProjectionController(
     }
 
     override suspend fun setActiveViewer(viewer: ViewerContext) = Unit
-    override suspend fun pause() = Unit
-    override suspend fun resume() = Unit
     override suspend fun close() = Unit
 }

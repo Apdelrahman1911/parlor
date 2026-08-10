@@ -165,6 +165,30 @@ class ProtocolValidationTest {
             ProtocolValidation.InvalidSessionStart,
             offer.copy(players = offer.players.reversed()).validateFor(session),
         )
+        listOf(
+            "   ",
+            "Alice\nAdmin",
+            "Alice\u202EAdmin",
+            "A".repeat(33),
+        ).forEach { invalidName ->
+            assertEquals(
+                ProtocolValidation.InvalidSessionStart,
+                offer.copy(
+                    players = offer.players.mapIndexed { index, player ->
+                        if (index == 1) player.copy(displayName = invalidName) else player
+                    },
+                ).validateFor(session),
+                "invalid start display name: ${invalidName.encodeToByteArray().contentToString()}",
+            )
+        }
+        assertEquals(
+            ProtocolValidation.Valid,
+            offer.copy(
+                players = offer.players.mapIndexed { index, player ->
+                    if (index == 1) player.copy(displayName = "عبد الرحمن 🎲") else player
+                },
+            ).validateFor(session),
+        )
         val contentBound = offer.copy(
             caseVersion = "1.2.3",
             caseDigest = "a".repeat(64),
