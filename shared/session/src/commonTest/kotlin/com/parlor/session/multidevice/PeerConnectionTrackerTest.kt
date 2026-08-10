@@ -2,6 +2,7 @@ package com.parlor.session.multidevice
 
 import com.parlor.networking.room.PeerEvent
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
@@ -70,5 +71,24 @@ class PeerConnectionTrackerTest {
         runCurrent()
 
         assertFalse(expired)
+    }
+
+    @Test
+    fun `tracker owns and removes all timer jobs when closed`() = runTest {
+        val parent = coroutineContext[Job] ?: error("runTest must provide a parent Job")
+        val tracker = PeerConnectionTracker(this, 10_000L) {}
+
+        tracker.handle(PeerEvent.HostLost)
+        runCurrent()
+        assertTrue(parent.children.any(), "host-loss timer must be a structured child")
+
+        tracker.close()
+        runCurrent()
+
+        assertFalse(parent.children.any(), "close must leave no tracker timer in the parent scope")
+
+        tracker.handle(PeerEvent.HostLost)
+        runCurrent()
+        assertFalse(parent.children.any(), "closed tracker must reject stale callbacks")
     }
 }

@@ -3,6 +3,8 @@ package com.parlor.session.multidevice
 import com.parlor.networking.room.PeerEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,10 +28,18 @@ data class PeerConnectionState(
  * never extend that deadline.
  */
 class PeerConnectionTracker(
-    private val scope: CoroutineScope,
+    scope: CoroutineScope,
     private val hostLostTimeoutMs: Long,
     private val onHostLossExpired: suspend () -> Unit,
 ) {
+    /**
+     * Timers belong to this tracker, not to the caller's whole session scope.
+     * Cancelling this child job makes close-vs-callback races safe: even when
+     * a callback passed the closed check immediately before [close], any job
+     * it launches is born cancelled and cannot outlive the tracker.
+     */
+    private val trackerJob = SupervisorJob(scope.coroutineContext[Job])
+    private val trackerScope = CoroutineScope(scope.coroutineContext + trackerJob)
     private val mutex = Mutex()
     private val _state = MutableStateFlow(PeerConnectionState())
     val state: StateFlow<PeerConnectionState> = _state.asStateFlow()
@@ -58,7 +68,7 @@ class PeerConnectionTracker(
                         emitted += PeerEvent.HostLost
                         val generation = ++hostLossGeneration
                         hostLossJob?.cancel()
-                        hostLossJob = scope.launch {
+                        hostLossJob = trackerScope.launch {
                             delay(hostLostTimeoutMs)
                             val expired = mutex.withLock {
                                 !closed.value &&
@@ -109,7 +119,7 @@ class PeerConnectionTracker(
 
     fun close() {
         closed.value = true
-        hostLossJob?.cancel()
+        trackerScope.cancel()
         hostLossJob = null
     }
 

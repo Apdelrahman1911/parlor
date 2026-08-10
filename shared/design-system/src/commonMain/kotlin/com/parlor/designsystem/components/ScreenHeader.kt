@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import com.parlor.designsystem.theme.ParlorTheme
 
@@ -63,6 +64,7 @@ fun ScreenHeader(
                 text = title,
                 style = ParlorTheme.typography.displayLarge,
                 color = colors.textPrimary,
+                modifier = Modifier.semantics { heading() },
             )
             if (subtitle != null) {
                 Spacer(modifier = Modifier.padding(top = ParlorTheme.spacing.xs))
@@ -89,7 +91,7 @@ private fun BackChevron(
     val description = contentDescription
     Box(
         modifier = Modifier
-            .size(ParlorTheme.iconSize.xl)
+            .size(ParlorTheme.spacing.xxl)
             .clickable(onClick = onClick)
             .then(
                 if (description != null) {

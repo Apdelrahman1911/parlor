@@ -87,28 +87,89 @@ class AndroidReleaseLintContractTest {
     }
 
     @Test
-    fun application_strings_are_reachable_and_locales_have_identical_keys() {
-        val englishFile = repositoryRoot.resolve(
-            "composeApp/src/commonMain/composeResources/values/strings.xml",
+    fun all_shipping_strings_are_reachable_and_locales_have_identical_keys() {
+        val resourceModules = listOf(
+            "composeApp",
+            "game-modes/mafia",
+            "game-modes/whodunit",
         )
-        val arabicFile = repositoryRoot.resolve(
-            "composeApp/src/commonMain/composeResources/values-ar/strings.xml",
-        )
-        val englishNames = stringNames(englishFile)
-        val arabicNames = stringNames(arabicFile)
-        assertEquals(englishNames, arabicNames, "English and Arabic resource keys diverged")
+        resourceModules.forEach { module ->
+            val englishFile = repositoryRoot.resolve(
+                "$module/src/commonMain/composeResources/values/strings.xml",
+            )
+            val arabicFile = repositoryRoot.resolve(
+                "$module/src/commonMain/composeResources/values-ar/strings.xml",
+            )
+            val englishNames = stringNames(englishFile)
+            val arabicNames = stringNames(arabicFile)
+            assertEquals(
+                englishNames,
+                arabicNames,
+                "$module English and Arabic resource keys diverged",
+            )
 
-        val productionKotlin = buildString {
-            repositoryRoot.resolve("composeApp/src").walkTopDown()
-                .filter(File::isFile)
-                .filter { it.extension == "kt" && "Test" !in it.invariantSeparatorsPath }
-                .forEach { appendLine(it.readText()) }
+            val productionText = buildString {
+                repositoryRoot.resolve("$module/src").walkTopDown()
+                    .filter(File::isFile)
+                    .filter { file ->
+                        file.extension in setOf("kt", "xml") &&
+                            "/src/commonTest/" !in file.invariantSeparatorsPath &&
+                            "/src/desktopTest/" !in file.invariantSeparatorsPath &&
+                            "/src/androidUnitTest/" !in file.invariantSeparatorsPath
+                    }
+                    .forEach { appendLine(it.readText()) }
+            }
+            val unreachable = englishNames.filterNot { name ->
+                "Res.string.$name" in productionText ||
+                    ".resources.$name" in productionText ||
+                    "@string/$name" in productionText
+            }
+            assertTrue(
+                unreachable.isEmpty(),
+                "Unreachable $module string resources: $unreachable",
+            )
         }
-        val androidManifest = read("composeApp/src/androidMain/AndroidManifest.xml")
-        val unreachable = englishNames.filterNot { name ->
-            "Res.string.$name" in productionKotlin || "@string/$name" in androidManifest
-        }
-        assertTrue(unreachable.isEmpty(), "Unreachable app string resources: $unreachable")
+    }
+
+    @Test
+    fun compact_interactive_affordances_enforce_accessible_semantics_and_touch_targets() {
+        val header = read(
+            "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ScreenHeader.kt",
+        )
+        assertContains(header, ".size(ParlorTheme.spacing.xxl)")
+        assertContains(header, "Modifier.semantics { heading() }")
+
+        val tabs = read(
+            "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorBottomTabBar.kt",
+        )
+        assertContains(tabs, ".heightIn(min = ParlorTheme.spacing.xxl)")
+        assertContains(tabs, "role = Role.Tab")
+        assertContains(tabs, "this.selected = selected")
+
+        val home = read("composeApp/src/commonMain/kotlin/com/parlor/app/shell/home/HomeScreen.kt")
+        assertContains(home, ".heightIn(min = ParlorTheme.spacing.xxl)")
+
+        val privacy = read(
+            "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/screens/safety/PrivacyConcernOverlay.kt",
+        )
+        assertContains(privacy, ".heightIn(min = ParlorTheme.spacing.xxl)")
+    }
+
+    @Test
+    fun unsupported_play_modes_are_described_truthfully() {
+        val picker = read(
+            "composeApp/src/commonMain/kotlin/com/parlor/app/shell/playmode/PlayModePickerScreen.kt",
+        )
+        val english = read("composeApp/src/commonMain/composeResources/values/strings.xml")
+        val arabic = read("composeApp/src/commonMain/composeResources/values-ar/strings.xml")
+
+        assertContains(picker, "Res.string.setup_mode_unavailable")
+        assertContains(picker, "enabled = availability.solo")
+        assertContains(picker, "enabled = availability.passAndPlay")
+        assertContains(picker, "enabled = availability.join")
+        assertContains(english, "This setup is not available for this game.")
+        assertFalse(english.contains("All four work with the same case"))
+        assertContains(arabic, "هذا الإعداد غير متاح لهذه اللعبة.")
     }
 
     private fun stringNames(file: File): Set<String> {

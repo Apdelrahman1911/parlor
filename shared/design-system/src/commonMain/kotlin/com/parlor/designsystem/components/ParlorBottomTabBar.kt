@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.WindowInsets
@@ -19,6 +20,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import com.parlor.designsystem.theme.ParlorTheme
@@ -71,9 +75,14 @@ fun ParlorBottomTabBar(
                 Box(
                     modifier = Modifier
                         .weight(1f)
+                        .heightIn(min = ParlorTheme.spacing.xxl)
                         .clickable { onTabSelected(index) }
                         .padding(vertical = ParlorTheme.spacing.s)
-                        .semantics { contentDescription = tab.contentDescription },
+                        .semantics {
+                            contentDescription = tab.contentDescription
+                            role = Role.Tab
+                            this.selected = selected
+                        },
                     contentAlignment = Alignment.Center,
                 ) {
                     Text(

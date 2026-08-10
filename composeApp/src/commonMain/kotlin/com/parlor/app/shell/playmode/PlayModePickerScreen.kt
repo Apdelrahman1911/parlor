@@ -36,6 +36,7 @@ import com.parlor.app.resources.setup_join_choose_description
 import com.parlor.app.resources.setup_join_meta
 import com.parlor.app.resources.setup_join_title
 import com.parlor.app.resources.setup_multiplayer_disabled
+import com.parlor.app.resources.setup_mode_unavailable
 import com.parlor.app.resources.setup_subtitle
 import com.parlor.app.resources.setup_title
 import com.parlor.designsystem.backdrop.HeroBackdrop
@@ -118,6 +119,11 @@ internal fun PlayModePickerScreen(
                 onClick = { onModeSelected(PlayMode.Solo) },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = availability.solo,
+                disabledHint = if (availability.solo) {
+                    null
+                } else {
+                    stringResource(Res.string.setup_mode_unavailable)
+                },
             )
 
             SetupCard(
@@ -129,6 +135,11 @@ internal fun PlayModePickerScreen(
                 onClick = { onModeSelected(PlayMode.PassAndPlay) },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = availability.passAndPlay,
+                disabledHint = if (availability.passAndPlay) {
+                    null
+                } else {
+                    stringResource(Res.string.setup_mode_unavailable)
+                },
             )
 
             SetupCard(
@@ -156,8 +167,11 @@ internal fun PlayModePickerScreen(
                 onClick = onJoin,
                 modifier = Modifier.fillMaxWidth(),
                 enabled = availability.join,
-                // Host card already explains; keep the Join card terse.
-                disabledHint = null,
+                disabledHint = if (availability.join) {
+                    null
+                } else {
+                    stringResource(Res.string.setup_multiplayer_disabled)
+                },
                 buttonVariant = ParlorButtonVariant.Secondary,
             )
         }

@@ -57,11 +57,10 @@ data class WhodunitPublic(
     val paused: Boolean = false,
 
     /**
-     * Party Play readiness sets — Wave 9H. Each ack-required phase has
+     * Party Play readiness sets. Each acknowledgement-required phase has
      * exactly one set. The host's "advance" CTA is gated by
      * `PartyReadiness.isComplete(set, activeRoster)`. Defaults to empty
-     * so deserialised pre-9H snapshots fall through gracefully (no one
-     * has acked yet — UI re-prompts on resume).
+     * so a newly created phase starts with no acknowledgements.
      */
     val introAcknowledged: Set<PlayerId> = emptySet(),
     val briefingReady: Set<PlayerId> = emptySet(),
@@ -87,8 +86,8 @@ data class WhodunitPublic(
      * The decided verdict, set when the reducer transitions to [WhodunitPhase.Reveal].
      * Part of public state because the Reveal screen exposes it to the whole table
      * by definition. Living in state means:
-     *   - Peers receive the verdict via [HostMessage.PublicStateSnapshot] (no
-     *     extra protocol surface needed).
+     *   - Peers receive the verdict in their authoritative player snapshot
+     *     (no extra protocol surface is needed).
      *   - Snapshot resume restores the verdict for free.
      *   - The UI reads from a single source of truth instead of a side-channel
      *     event listener (which was prone to losing the verdict on resume).

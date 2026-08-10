@@ -278,7 +278,7 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
     ): Reduction<WhodunitState, WhodunitEvent> {
         if (state.phase != WhodunitPhase.PublicIntro) return Reduction(state)
         if (playerId !in state.players.map { it.id }) return Reduction(state)
-        // Dropped-spectator defense: a dropped player cannot ack.
+        // Terminal dropped seats cannot acknowledge a prior-phase command.
         if (playerId in state.public.droppedPlayers) return Reduction(state)
         val updated = state.public.introAcknowledged + playerId
         if (updated == state.public.introAcknowledged) return Reduction(state)
@@ -448,11 +448,9 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
      * The host explicitly fires `AdvanceFromCharacterReveal` when all
      * active-roster players have confirmed.
      *
-     * The vestigial `phase.playerIndex` field is left at 0 — the
-     * simultaneous-reveal model doesn't sequence players any more, but
-     * the field is preserved for snapshot back-compat (pre-9H snapshots
-     * mid-CharacterReveal still deserialise; the next host advance
-     * normalises).
+     * `phase.playerIndex` remains at 0 because the simultaneous-reveal model
+     * does not sequence players. The field remains serialized as part of the
+     * current state schema and validators require this canonical value.
      */
     private fun completeCharacterReveal(
         state: WhodunitState,
@@ -718,9 +716,7 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
         target: PlayerId,
     ): Reduction<WhodunitState, WhodunitEvent> {
         if (voter in state.public.droppedPlayers) return Reduction(state)
-        // A dropped player is a spectator, not a candidate: they must not be
-        // a votable target (the ballot UI also filters them out). Without this
-        // a dropped seat could be "eliminated", skewing the survivor count.
+        // A terminal dropped seat cannot be used by a delayed/replayed vote.
         if (target in state.public.droppedPlayers) return Reduction(state)
         val vote = state.public.voteState as? VoteState.Collecting ?: return Reduction(state)
         if (voter !in vote.ballotPlayerIds) return Reduction(state)

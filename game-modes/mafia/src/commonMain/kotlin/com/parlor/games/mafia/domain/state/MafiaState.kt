@@ -47,9 +47,10 @@ data class MafiaPublic(
     val activeVote: ActiveVote? = null,
     val winner: Team? = null,
     /**
-     * Players the host bridge has flagged as transiently offline. Mirror
-     * of the Whodunit pattern. Does not change role count or readiness;
-     * the host can `ContinueWithoutPlayer` to drop them.
+     * Players the host bridge has flagged as transiently offline. The game is
+     * paused while this set is non-empty. If grace expires, the host's
+     * `ContinueWithoutPlayer` transition ends the game instead of continuing
+     * with a reduced roster.
      */
     val disconnectedPlayers: Set<PlayerId> = emptySet(),
     val droppedPlayers: Set<PlayerId> = emptySet(),
