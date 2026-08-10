@@ -69,7 +69,6 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
         is MafiaAction.CastVote -> castVote(state, action.by, action.target)
         is MafiaAction.AbstainVote -> abstainVote(state, action.by)
         is MafiaAction.AcknowledgeVoteAnnouncement -> ackVote(state, action.by)
-        is MafiaAction.AcknowledgePostGame -> Reduction(state)
 
         // Host progression
         MafiaAction.ResolveNight -> resolveNight(state, ctx)
@@ -83,7 +82,6 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
         is MafiaAction.MarkPlayerDisconnected -> markDisconnected(state, action.playerId)
         is MafiaAction.MarkPlayerReconnected -> markReconnected(state, action.playerId)
         is MafiaAction.ContinueWithoutPlayer -> continueWithout(state, action.playerId)
-        is MafiaAction.ReadmitPlayer -> readmit(state, action.playerId)
     }
 
     // ============================================================ Setup ==
@@ -883,18 +881,6 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
                 }
                 add(MafiaEvent.PhaseEntered(MafiaPhase.PostGame))
             },
-        )
-    }
-
-    private fun readmit(state: MafiaState, id: PlayerId): Reduction<MafiaState, MafiaEvent> {
-        if (id !in state.public.droppedPlayers) return Reduction(state)
-        // A dropped Setup seat must be restored before StartGame can proceed.
-        val canReadmit = state.phase == MafiaPhase.Setup
-        if (!canReadmit) return Reduction(state)
-        return Reduction(
-            state.copy(public = state.public.copy(
-                droppedPlayers = state.public.droppedPlayers - id,
-            )),
         )
     }
 

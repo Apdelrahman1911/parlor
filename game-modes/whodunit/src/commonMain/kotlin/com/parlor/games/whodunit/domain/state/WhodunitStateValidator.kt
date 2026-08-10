@@ -77,6 +77,27 @@ internal object WhodunitStateValidator {
         false
     }
 
+    /**
+     * Case-bound peer trust boundary.
+     *
+     * Generic projection validation cannot prove that a syntactically valid
+     * clue, timer, character, or verdict belongs to the content identity that
+     * completed the reliable-start handshake. Production peers therefore use
+     * this stronger form before atomically installing a host snapshot.
+     */
+    fun isValidPeerProjectionForCase(
+        publicState: WhodunitState,
+        ownPrivate: WhodunitPrivate?,
+        selfPlayerId: com.parlor.core.ids.PlayerId,
+        case: ValidatedCase<WhodunitCase>,
+    ): Boolean = try {
+        requireValidPeerProjection(publicState, ownPrivate, selfPlayerId)
+        requireValidPeerCaseReferences(publicState, ownPrivate, case)
+        true
+    } catch (_: IllegalArgumentException) {
+        false
+    }
+
     private fun requireValidPeerProjection(
         state: WhodunitState,
         ownPrivate: WhodunitPrivate?,
@@ -213,6 +234,120 @@ internal object WhodunitStateValidator {
             require(timer.remainingSeconds in 0..expectedSeconds) {
                 "Timer remainder is outside the authored duration"
             }
+        }
+    }
+
+    private fun requireValidPeerCaseReferences(
+        state: WhodunitState,
+        ownPrivate: WhodunitPrivate?,
+        case: ValidatedCase<WhodunitCase>,
+    ) {
+        require(
+            WhodunitRules.isSupportedByCase(
+                case = case,
+                caseId = state.public.caseId,
+                modeId = state.public.modeId,
+                playerCount = state.players.size,
+            ),
+        ) { "Projected state is unsupported by the loaded case" }
+
+        val payload = case.payload
+        val charactersById = payload.characters.associateBy { CharacterId(it.id) }
+        ownPrivate?.let { privateState ->
+            val ownCharacter = charactersById[privateState.characterId]
+                ?: throw IllegalArgumentException("Private character is absent from the loaded case")
+            require(charactersById.keys.containsAll(privateState.deflectionTargets)) {
+                "Private dossier references a character absent from the loaded case"
+            }
+            if (privateState.role == PlayerRole.Killer) {
+                val authoredTargets = ownCharacter.guiltyBrief.deflectionTargets
+                    .map(::CharacterId)
+                    .toSet()
+                require(authoredTargets.containsAll(privateState.deflectionTargets)) {
+                    "Private dossier contains an unauthored deflection target"
+                }
+            }
+        }
+
+        if (state.public.revealedClues.isNotEmpty()) {
+            val possibleKillerCharacters = when (ownPrivate?.role) {
+                PlayerRole.Killer -> setOf(ownPrivate.characterId)
+                PlayerRole.Innocent -> charactersById.keys - ownPrivate.characterId
+                null -> charactersById.keys
+            }
+            require(possibleKillerCharacters.any { killerCharacterId ->
+                state.public.revealedClues.all { revealed ->
+                    possibleCluesForRound(
+                        case = payload,
+                        killerCharacterId = killerCharacterId,
+                        modeId = state.public.modeId.raw,
+                        playerCount = state.players.size,
+                        roundIndex = revealed.roundIndex,
+                    ).any { clue ->
+                        clue.id == revealed.id.raw && clue.text == revealed.text
+                    }
+                }
+            }) { "Revealed clue history is not possible for the loaded case" }
+        }
+
+        state.public.timer?.let { timer ->
+            val expectedSeconds = WhodunitRoundPolicy.discussionSeconds(
+                case = payload,
+                roundIndex = state.public.currentRound,
+                playerCount = state.players.size,
+            )
+            require(timer.totalSeconds == expectedSeconds) {
+                "Projected timer duration differs from the loaded case"
+            }
+        }
+
+        val verdictCharacterId = when (val verdict = state.public.verdict) {
+            is Verdict.PlayersWin -> CharacterId(verdict.killerCharacterId)
+            is Verdict.KillerWins -> CharacterId(verdict.killerCharacterId)
+            null -> null
+        }
+        verdictCharacterId?.let { killerCharacterId ->
+            require(killerCharacterId in charactersById) {
+                "Projected verdict references a character absent from the loaded case"
+            }
+            ownPrivate?.let { privateState ->
+                require(
+                    (privateState.role == PlayerRole.Killer) ==
+                        (privateState.characterId == killerCharacterId),
+                ) { "Projected verdict conflicts with the receiving player's private role" }
+            }
+        }
+    }
+
+    private fun possibleCluesForRound(
+        case: WhodunitCase,
+        killerCharacterId: CharacterId,
+        modeId: String,
+        playerCount: Int,
+        roundIndex: Int,
+    ): List<com.parlor.games.whodunit.content.Clue> {
+        val pools = case.cluePools
+        val killerId = killerCharacterId.raw
+        val lastRound = WhodunitRules.maximumRoundCount(
+            com.parlor.core.ids.ModeId(modeId),
+            playerCount,
+        )?.let { roundIndex >= it } ?: return emptyList()
+        val candidates = when {
+            lastRound ->
+                pools.finalStrong[killerId].orEmpty() +
+                    pools.killerPointing[killerId].orEmpty() +
+                    pools.contradiction[killerId].orEmpty() +
+                    pools.redHerring[killerId].orEmpty() +
+                    pools.publicUniversal
+            roundIndex == 1 ->
+                pools.publicUniversal + pools.killerPointing[killerId].orEmpty()
+            else ->
+                pools.killerPointing[killerId].orEmpty() +
+                    pools.contradiction[killerId].orEmpty() +
+                    pools.redHerring[killerId].orEmpty()
+        }
+        return candidates.filter { clue ->
+            clue.appliesToModes?.let { modeId in it } != false
         }
     }
 
@@ -510,6 +645,9 @@ internal object WhodunitStateValidator {
         require(public.disconnectedPlayers.intersect(public.droppedPlayers).isEmpty()) {
             "A player is both disconnected and permanently dropped"
         }
+        require(
+            state.phase == WhodunitPhase.PostGame || public.droppedPlayers.isEmpty(),
+        ) { "Active Whodunit state contains a permanently dropped player" }
         require(
             state.public.modeId == WhodunitIds.EliminationModeId ||
                 public.eliminatedPlayers.isEmpty(),

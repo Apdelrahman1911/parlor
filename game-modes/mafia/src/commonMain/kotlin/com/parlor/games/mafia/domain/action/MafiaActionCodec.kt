@@ -2,6 +2,9 @@ package com.parlor.games.mafia.domain.action
 
 import com.parlor.networking.protocol.MAX_COMMAND_PAYLOAD_BYTES
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.contentOrNull
+import kotlinx.serialization.json.jsonPrimitive
 
 /**
  * Codec for sending [MafiaAction] payloads over the wire as `ByteArray`.
@@ -27,7 +30,17 @@ object MafiaActionCodec {
 
     fun decode(bytes: ByteArray): MafiaAction {
         requireBounded(bytes)
-        return json.decodeFromString(MafiaAction.serializer(), bytes.decodeToString())
+        val encoded = bytes.decodeToString(throwOnInvalidSequence = true)
+        rejectRetiredAction(encoded)
+        return json.decodeFromString(MafiaAction.serializer(), encoded)
+    }
+
+    private fun rejectRetiredAction(encoded: String) {
+        val root = json.parseToJsonElement(encoded) as? JsonObject ?: return
+        val actionType = root[TYPE_DISCRIMINATOR]?.jsonPrimitive?.contentOrNull
+        if (actionType in RETIRED_ACTION_TYPES) {
+            throw UnsupportedLegacyMafiaActionException()
+        }
     }
 
     private fun requireBounded(bytes: ByteArray) {
@@ -35,4 +48,14 @@ object MafiaActionCodec {
             "Mafia action exceeds $MAX_COMMAND_PAYLOAD_BYTES bytes"
         }
     }
+
+    private const val TYPE_DISCRIMINATOR = "type"
+    private val RETIRED_ACTION_TYPES = setOf(
+        "com.parlor.games.mafia.domain.action.MafiaAction.AcknowledgePostGame",
+        "com.parlor.games.mafia.domain.action.MafiaAction.ReadmitPlayer",
+    )
 }
+
+internal class UnsupportedLegacyMafiaActionException : IllegalArgumentException(
+    "Retired Mafia actions are not supported by the shipping game rules",
+)

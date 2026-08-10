@@ -9,6 +9,7 @@ import com.parlor.games.mafia.domain.settings.MafiaRoleCounts
 import com.parlor.games.mafia.domain.settings.MafiaSettings
 import com.parlor.games.mafia.domain.settings.TieBehavior
 import kotlin.test.Test
+import kotlin.test.assertFails
 import kotlin.test.assertFailsWith
 
 /**
@@ -107,7 +108,6 @@ class MafiaActionCodecTest {
             MafiaAction.AcknowledgeNightAnnouncement(p1),
             MafiaAction.AcknowledgeDetectiveResult(p1),
             MafiaAction.AcknowledgeVoteAnnouncement(p1),
-            MafiaAction.AcknowledgePostGame(p1),
         )
         for (a in acks) {
             assertThat(MafiaActionCodec.decode(MafiaActionCodec.encode(a))).isEqualTo(a)
@@ -120,7 +120,6 @@ class MafiaActionCodecTest {
             MafiaAction.MarkPlayerDisconnected(p1),
             MafiaAction.MarkPlayerReconnected(p1),
             MafiaAction.ContinueWithoutPlayer(p1),
-            MafiaAction.ReadmitPlayer(p1),
         )
         for (a in actions) {
             assertThat(MafiaActionCodec.decode(MafiaActionCodec.encode(a))).isEqualTo(a)
@@ -152,5 +151,31 @@ class MafiaActionCodecTest {
         val bytes = MafiaActionCodec.encode(MafiaAction.OpenVote)
         val text = bytes.decodeToString()
         assertThat(text).contains("\"type\":")
+    }
+
+    @Test
+    fun retired_actions_are_rejected_explicitly() {
+        val retired = listOf(
+            "com.parlor.games.mafia.domain.action.MafiaAction.AcknowledgePostGame",
+            "com.parlor.games.mafia.domain.action.MafiaAction.ReadmitPlayer",
+        )
+
+        retired.forEach { type ->
+            assertFailsWith<UnsupportedLegacyMafiaActionException> {
+                MafiaActionCodec.decode(
+                    """{"type":"$type","by":"p1","playerId":"p1"}"""
+                        .encodeToByteArray(),
+                )
+            }
+        }
+    }
+
+    @Test
+    fun malformedUtf8IsRejectedInsteadOfBeingReplacedInsideJsonStrings() {
+        val valid = MafiaActionCodec.encode(MafiaAction.CastVote(p1, p2))
+        val quoteIndex = valid.indexOfFirst { byte -> byte == 'p'.code.toByte() }
+        val malformed = valid.copyOf().also { it[quoteIndex] = 0x80.toByte() }
+
+        assertFails { MafiaActionCodec.decode(malformed) }
     }
 }

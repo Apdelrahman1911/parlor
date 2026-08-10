@@ -236,6 +236,80 @@ class MafiaPeerPrivateTargetGateTest {
     }
 
     @Test
+    fun peer_rejects_active_snapshot_with_a_permanently_dropped_seat_atomically() = runTest {
+        val scope = TestScope(UnconfinedTestDispatcher(testScheduler))
+        val bus = InMemoryRoomBus()
+        bus.registerPeer(alice)
+        val bridge = MafiaPeerRoomBridge(
+            room = InMemoryPeerRoom(bus, alice, "Alice", hostId),
+            selfPlayerId = alice,
+            initialPublic = emptyPublic(),
+            scope = scope,
+            protocol = protocol,
+            json = json,
+        )
+        val own = MafiaPrivate(Role.Civilian, Team.Town)
+        bus.fromHost(
+            SendTarget.Direct(alice),
+            playerSnapshot(emptyPublic(), own, sequence = 1, revision = 1),
+        )
+        scope.runCurrent()
+        val accepted = bridge.controller.publicState.value.state
+
+        val impossible = emptyPublic().copy(
+            public = emptyPublic().public.copy(droppedPlayers = setOf(bob)),
+        )
+        bus.fromHost(
+            SendTarget.Direct(alice),
+            playerSnapshot(impossible, own, sequence = 2, revision = 2),
+        )
+        scope.runCurrent()
+
+        assertThat(bridge.controller.publicState.value.state).isEqualTo(accepted)
+        assertThat(bridge.controller.privateStateFor(alice).value.state.privatePerPlayer[alice])
+            .isEqualTo(own)
+        bridge.close()
+    }
+
+    @Test
+    fun peer_rejects_malformed_utf8_snapshot_without_replacing_last_good_state() = runTest {
+        val scope = TestScope(UnconfinedTestDispatcher(testScheduler))
+        val bus = InMemoryRoomBus()
+        bus.registerPeer(alice)
+        val bridge = MafiaPeerRoomBridge(
+            room = InMemoryPeerRoom(bus, alice, "Alice", hostId),
+            selfPlayerId = alice,
+            initialPublic = emptyPublic(),
+            scope = scope,
+            protocol = protocol,
+            json = json,
+        )
+        val own = MafiaPrivate(Role.Civilian, Team.Town)
+        bus.fromHost(
+            SendTarget.Direct(alice),
+            playerSnapshot(emptyPublic(), own, sequence = 1, revision = 1),
+        )
+        scope.runCurrent()
+        val accepted = bridge.controller.publicState.value.state
+
+        bus.fromHost(
+            SendTarget.Direct(alice),
+            HostMessage.PlayerSnapshot(
+                header = header(2),
+                revision = 2,
+                publicPayload = byteArrayOf('{'.code.toByte(), 0xC3.toByte(), '}'.code.toByte()),
+                privatePayload = json.encodeToString(MafiaPrivate.serializer(), own).encodeToByteArray(),
+            ),
+        )
+        scope.runCurrent()
+
+        assertThat(bridge.controller.publicState.value.state).isEqualTo(accepted)
+        assertThat(bridge.controller.privateStateFor(alice).value.state.privatePerPlayer[alice])
+            .isEqualTo(own)
+        bridge.close()
+    }
+
+    @Test
     fun peer_rejects_a_structurally_valid_roster_substitution_for_the_same_session() = runTest {
         val scope = TestScope(UnconfinedTestDispatcher(testScheduler))
         val bus = InMemoryRoomBus()

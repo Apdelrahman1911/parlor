@@ -44,7 +44,8 @@ val whodunitModule = module {
             ),
             loadJson = { caseId ->
                 try {
-                    Res.readBytes("files/cases/$caseId.json").decodeToString()
+                    Res.readBytes("files/cases/$caseId.json")
+                        .decodeToString(throwOnInvalidSequence = true)
                 } catch (cancelled: CancellationException) {
                     throw cancelled
                 } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {

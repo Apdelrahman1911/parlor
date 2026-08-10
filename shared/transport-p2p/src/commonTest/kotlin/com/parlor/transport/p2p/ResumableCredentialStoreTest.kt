@@ -88,6 +88,18 @@ class ResumableCredentialStoreTest {
     }
 
     @Test
+    fun malformed_utf8_record_is_rejected_without_replacement_decoding() = runTest {
+        storage.put(
+            "p2p-resumable-session-v1",
+            byteArrayOf('{'.code.toByte(), 0xC3.toByte(), '}'.code.toByte()),
+        )
+
+        assertThat(store.loadResumeCandidate()).isEqualTo(
+            Result.Failure(CredentialStoreError.Corrupted),
+        )
+    }
+
+    @Test
     fun invalid_credential_is_reported_as_corrupted_before_storage_is_mutated() = runTest {
         val invalid = credential(offerId = "offer-1", generation = 1).copy(secret = "not-hex")
 

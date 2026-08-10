@@ -7,6 +7,7 @@ import assertk.assertions.isFalse
 import assertk.assertions.isTrue
 import com.parlor.core.ids.CaseId
 import com.parlor.core.ids.CharacterId
+import com.parlor.core.ids.ClueId
 import com.parlor.core.ids.PlayerId
 import com.parlor.core.ids.SessionId
 import com.parlor.engine.state.Player
@@ -14,10 +15,13 @@ import com.parlor.games.whodunit.WhodunitIds
 import com.parlor.games.whodunit.domain.phase.WhodunitPhase
 import com.parlor.games.whodunit.domain.projection.WhodunitProjectionPolicy
 import com.parlor.games.whodunit.domain.state.PlayerRole
+import com.parlor.games.whodunit.domain.state.PublicTimerState
+import com.parlor.games.whodunit.domain.state.RevealedClue
 import com.parlor.games.whodunit.domain.state.WhodunitHostOnly
 import com.parlor.games.whodunit.domain.state.WhodunitPrivate
 import com.parlor.games.whodunit.domain.state.WhodunitPublic
 import com.parlor.games.whodunit.domain.state.WhodunitState
+import com.parlor.games.whodunit.testing.whodunitPeerCaseForTest
 import com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostRoomBridge
 import com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitPeerRoomBridge
 import com.parlor.networking.protocol.HostMessage
@@ -59,6 +63,7 @@ class WhodunitPeerProjectionBoundaryTest {
         gameVersion = WhodunitHostRoomBridge.GAME_VERSION,
         startId = "whodunit-start-0001",
     )
+    private val case = whodunitPeerCaseForTest()
 
     private fun canonicalSecretState() = WhodunitState(
         public = WhodunitPublic(
@@ -105,6 +110,7 @@ class WhodunitPeerProjectionBoundaryTest {
             room = InMemoryPeerRoom(bus, alice, "Alice", host),
             selfPlayerId = alice,
             initialPublic = canonicalSecretState(),
+            case = case,
             scope = scope,
             protocol = protocol,
             json = json,
@@ -131,6 +137,7 @@ class WhodunitPeerProjectionBoundaryTest {
             room = InMemoryPeerRoom(bus, alice, "Alice", host),
             selfPlayerId = alice,
             initialPublic = canonicalSecretState(),
+            case = case,
             scope = scope,
             protocol = protocol,
             json = json,
@@ -168,6 +175,7 @@ class WhodunitPeerProjectionBoundaryTest {
             room = InMemoryPeerRoom(bus, alice, "Alice", host),
             selfPlayerId = alice,
             initialPublic = canonicalSecretState(),
+            case = case,
             scope = scope,
             protocol = protocol,
             json = json,
@@ -207,6 +215,7 @@ class WhodunitPeerProjectionBoundaryTest {
             room = InMemoryPeerRoom(bus, alice, "Alice", host),
             selfPlayerId = alice,
             initialPublic = canonicalSecretState(),
+            case = case,
             scope = scope,
             protocol = protocol,
             json = json,
@@ -232,6 +241,104 @@ class WhodunitPeerProjectionBoundaryTest {
     }
 
     @Test
+    fun peer_rejects_malformed_utf8_snapshot_without_replacing_last_good_state() = runTest {
+        val scope = TestScope(UnconfinedTestDispatcher(testScheduler))
+        val bus = InMemoryRoomBus()
+        bus.registerPeer(alice)
+        val bridge = WhodunitPeerRoomBridge(
+            room = InMemoryPeerRoom(bus, alice, "Alice", host),
+            selfPlayerId = alice,
+            initialPublic = canonicalSecretState(),
+            case = case,
+            scope = scope,
+            protocol = protocol,
+            json = json,
+        )
+        bus.fromHost(
+            SendTarget.Direct(alice),
+            playerSnapshot(canonicalSecretState(), sequence = 1, revision = 1),
+        )
+        scope.runCurrent()
+        val accepted = bridge.controller.publicState.value.state
+
+        bus.fromHost(
+            SendTarget.Direct(alice),
+            HostMessage.PlayerSnapshot(
+                header = header(2),
+                revision = 2,
+                publicPayload = byteArrayOf('{'.code.toByte(), 0xC3.toByte(), '}'.code.toByte()),
+                privatePayload = json.encodeToString(
+                    WhodunitPrivate.serializer(),
+                    canonicalSecretState().privatePerPlayer.getValue(alice),
+                ).encodeToByteArray(),
+            ),
+        )
+        scope.runCurrent()
+
+        assertThat(bridge.controller.publicState.value.state).isEqualTo(accepted)
+        assertThat(
+            bridge.controller.privateStateFor(alice).value.state.privatePerPlayer.getValue(alice),
+        ).isEqualTo(canonicalSecretState().privatePerPlayer.getValue(alice))
+        bridge.close()
+    }
+
+    @Test
+    fun peer_case_boundary_accepts_authored_round_and_rejects_forged_content_atomically() = runTest {
+        val scope = TestScope(UnconfinedTestDispatcher(testScheduler))
+        val bus = InMemoryRoomBus()
+        bus.registerPeer(alice)
+        val bridge = WhodunitPeerRoomBridge(
+            room = InMemoryPeerRoom(bus, alice, "Alice", host),
+            selfPlayerId = alice,
+            initialPublic = canonicalSecretState(),
+            case = case,
+            scope = scope,
+            protocol = protocol,
+            json = json,
+        )
+        fun roundState(clueId: String, clueText: String, discussionSeconds: Int) =
+            canonicalSecretState().copy(
+                public = canonicalSecretState().public.copy(
+                    currentRound = 1,
+                    revealedClues = listOf(RevealedClue(ClueId(clueId), clueText, 1)),
+                    timer = PublicTimerState(
+                        timerId = "discussion-1",
+                        totalSeconds = discussionSeconds,
+                        remainingSeconds = discussionSeconds,
+                    ),
+                ),
+                phase = WhodunitPhase.Round(1),
+            )
+
+        val authored = roundState("public-one", "Public clue", discussionSeconds = 180)
+        bus.fromHost(
+            SendTarget.Direct(alice),
+            playerSnapshot(authored, sequence = 1, revision = 1),
+        )
+        scope.runCurrent()
+        assertThat(bridge.controller.publicState.value.state.public.revealedClues)
+            .isEqualTo(authored.public.revealedClues)
+
+        val accepted = bridge.controller.publicState.value.state
+        val forgedClue = roundState("public-one", "Host-substituted text", discussionSeconds = 180)
+        bus.fromHost(
+            SendTarget.Direct(alice),
+            playerSnapshot(forgedClue, sequence = 2, revision = 2),
+        )
+        scope.runCurrent()
+        assertThat(bridge.controller.publicState.value.state).isEqualTo(accepted)
+
+        val forgedTimer = roundState("public-one", "Public clue", discussionSeconds = 181)
+        bus.fromHost(
+            SendTarget.Direct(alice),
+            playerSnapshot(forgedTimer, sequence = 3, revision = 3),
+        )
+        scope.runCurrent()
+        assertThat(bridge.controller.publicState.value.state).isEqualTo(accepted)
+        bridge.close()
+    }
+
+    @Test
     fun ownProjectionKeepsAssignmentEpochAndDossierFromTheSameRevision() = runTest {
         val scope = TestScope(UnconfinedTestDispatcher(testScheduler))
         val bus = InMemoryRoomBus()
@@ -240,6 +347,7 @@ class WhodunitPeerProjectionBoundaryTest {
             room = InMemoryPeerRoom(bus, alice, "Alice", host),
             selfPlayerId = alice,
             initialPublic = canonicalSecretState(),
+            case = case,
             scope = scope,
             protocol = protocol,
             json = json,

@@ -83,7 +83,6 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
             is WhodunitAction.MarkPlayerDisconnected -> markPlayerDisconnected(state, action.playerId)
             is WhodunitAction.MarkPlayerReconnected -> markPlayerReconnected(state, action.playerId)
             is WhodunitAction.ContinueWithoutPlayer -> continueWithoutPlayer(state, action.playerId)
-            is WhodunitAction.ReadmitPlayer -> readmitPlayer(state, action.playerId)
 
             // Rounds (Phase 5)
             WhodunitAction.RevealNextClue -> revealNextClue(state, wctx)
@@ -422,35 +421,6 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
             )
         }
         return endGameEarly(missingSeat, withReveal = true)
-    }
-
-    /**
-     * Reverts a `ContinueWithoutPlayer` decision. Only valid while still in
-     * the same phase as the original drop — once the host has advanced past
-     * that phase, the readmit ship has sailed. We approximate this with the
-     * coarser rule "only valid in `PublicIntro`, `RulesBriefing`, or
-     * `CharacterReveal`" (the readiness-gated phases). Once a Round has
-     * begun, readmit is rejected.
-     */
-    private fun readmitPlayer(
-        state: WhodunitState,
-        playerId: PlayerId,
-    ): Reduction<WhodunitState, WhodunitEvent> {
-        if (playerId !in state.public.droppedPlayers) return Reduction(state)
-        val canReadmit = when (state.phase) {
-            WhodunitPhase.PublicIntro,
-            WhodunitPhase.RulesBriefing,
-            is WhodunitPhase.CharacterReveal -> true
-            else -> false
-        }
-        if (!canReadmit) return Reduction(state)
-        return Reduction(
-            state.copy(
-                public = state.public.copy(
-                    droppedPlayers = state.public.droppedPlayers - playerId,
-                ),
-            ),
-        )
     }
 
     private fun startCharacterReveal(

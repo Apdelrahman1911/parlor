@@ -105,14 +105,14 @@ class MafiaPeerRoomBridge(
         val decoded = try {
             val publicState = json.decodeFromString(
                 publicSerializer,
-                payload.publicPayload.decodeToString(),
+                payload.publicPayload.decodeToString(throwOnInvalidSequence = true),
             )
             val ownPrivate = if (payload.privatePayload.isEmpty()) {
                 null
             } else {
                 json.decodeFromString(
                     privateSerializer,
-                    payload.privatePayload.decodeToString(),
+                    payload.privatePayload.decodeToString(throwOnInvalidSequence = true),
                 )
             }
             Triple(

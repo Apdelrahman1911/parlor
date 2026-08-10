@@ -56,7 +56,7 @@ class KtorRemoteCaseDataSource(
             is Result.Failure -> return body
         }
         val summaries = withContext(decodeContext) {
-            json.decodeFromString<List<CaseSummary>>(bytes.decodeToString())
+            json.decodeFromString<List<CaseSummary>>(bytes.decodeUtf8StrictForContent())
         }
         Result.Success(summaries)
     } catch (cancelled: CancellationException) {
@@ -76,7 +76,7 @@ class KtorRemoteCaseDataSource(
             is Result.Failure -> return body
         }
         val envelope = withContext(decodeContext) {
-            json.decodeFromString(CaseEnvelope.serializer(), bytes.decodeToString())
+            json.decodeFromString(CaseEnvelope.serializer(), bytes.decodeUtf8StrictForContent())
         }
         Result.Success(envelope)
     } catch (cancelled: CancellationException) {
@@ -133,4 +133,10 @@ class KtorRemoteCaseDataSource(
             encodeDefaults = true
         }
     }
+}
+
+private fun ByteArray.decodeUtf8StrictForContent(): String = try {
+    decodeToString(throwOnInvalidSequence = true)
+} catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
+    throw SerializationException("response is not valid UTF-8", failure)
 }

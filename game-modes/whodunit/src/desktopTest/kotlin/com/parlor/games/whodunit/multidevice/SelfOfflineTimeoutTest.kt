@@ -13,6 +13,7 @@ import com.parlor.games.whodunit.domain.phase.WhodunitPhase
 import com.parlor.games.whodunit.domain.state.WhodunitHostOnly
 import com.parlor.games.whodunit.domain.state.WhodunitPublic
 import com.parlor.games.whodunit.domain.state.WhodunitState
+import com.parlor.games.whodunit.testing.whodunitPeerCaseForTest
 import com.parlor.games.whodunit.WhodunitIds
 import com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostRoomBridge
 import com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitPeerRoomBridge
@@ -71,6 +72,7 @@ class SelfOfflineTimeoutTest {
             room = room,
             selfPlayerId = alice,
             initialPublic = initialState,
+            case = whodunitPeerCaseForTest(),
             scope = scope,
             protocol = SessionProtocol(
                 sessionId = SessionId("whodunit-session-0001"),

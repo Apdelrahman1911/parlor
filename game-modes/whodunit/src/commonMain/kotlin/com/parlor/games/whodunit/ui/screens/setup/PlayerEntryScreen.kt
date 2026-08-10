@@ -32,6 +32,7 @@ import com.parlor.games.whodunit.resources.setup_player_entry_confirm_descriptio
 import com.parlor.games.whodunit.resources.setup_player_entry_eyebrow
 import com.parlor.games.whodunit.resources.setup_player_entry_field_format
 import com.parlor.games.whodunit.resources.setup_player_entry_headline
+import com.parlor.networking.room.RoomInputPolicy
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -68,7 +69,9 @@ fun PlayerEntryScreen(
                 NameField(
                     index = index,
                     value = current,
-                    onValueChange = { names[index] = it },
+                    onValueChange = { input ->
+                        names[index] = RoomInputPolicy.sanitizeDisplayNameInput(input)
+                    },
                     isLast = index == names.lastIndex,
                 )
             }
@@ -76,8 +79,10 @@ fun PlayerEntryScreen(
             ParlorButton(
                 label = stringResource(Res.string.setup_player_entry_confirm),
                 contentDescription = stringResource(Res.string.setup_player_entry_confirm_description),
-                onClick = { onConfirm(names.toList()) },
-                enabled = names.all { it.isNotBlank() },
+                onClick = {
+                    onConfirm(names.map(RoomInputPolicy::normalizeDisplayName))
+                },
+                enabled = names.all(RoomInputPolicy::isValidDisplayName),
                 modifier = Modifier.fillMaxWidth(),
             )
         }

@@ -79,13 +79,6 @@ sealed interface WhodunitAction : GameAction {
      * roster. HostOnly.
      */
     @Serializable data class ContinueWithoutPlayer(val playerId: PlayerId) : WhodunitAction
-    /**
-     * Legacy snapshot compatibility for sessions created by versions that
-     * could mark players as dropped. New sessions never enter that state.
-     * HostOnly.
-     */
-    @Serializable data class ReadmitPlayer(val playerId: PlayerId) : WhodunitAction
-
     // --- Rounds (Phase 5) ---
     @Serializable data object RevealNextClue : WhodunitAction
     @Serializable data class StartDiscussionTimer(val seconds: Int) : WhodunitAction

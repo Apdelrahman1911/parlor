@@ -40,7 +40,7 @@ object WhodunitActionCodec {
     /** Decode a `PeerMessage.ClientCommand.payload` back to a typed action. */
     fun decode(bytes: ByteArray): WhodunitAction {
         requireBounded(bytes)
-        val encoded = bytes.decodeToString()
+        val encoded = bytes.decodeToString(throwOnInvalidSequence = true)
         rejectRetiredAction(encoded)
         return json.decodeFromString(WhodunitAction.serializer(), encoded)
             .requireValidRevealGeneration()
@@ -56,8 +56,8 @@ object WhodunitActionCodec {
     private fun rejectRetiredAction(encoded: String) {
         val root = json.parseToJsonElement(encoded) as? JsonObject ?: return
         val actionType = root[TYPE_DISCRIMINATOR]?.jsonPrimitive?.contentOrNull
-        if (actionType == RETIRED_STRUCTURED_ACTION_TYPE) {
-            throw UnsupportedLegacyWhodunitActionException()
+        if (actionType in RETIRED_ACTION_TYPES) {
+            throw UnsupportedLegacyWhodunitActionException(actionType)
         }
     }
 
@@ -80,10 +80,18 @@ object WhodunitActionCodec {
     }
 
     private const val TYPE_DISCRIMINATOR = "type"
-    private const val RETIRED_STRUCTURED_ACTION_TYPE =
-        "com.parlor.games.whodunit.domain.action.WhodunitAction.SubmitStructuredAction"
+    private val RETIRED_ACTION_TYPES = setOf(
+        "com.parlor.games.whodunit.domain.action.WhodunitAction.SubmitStructuredAction",
+        "com.parlor.games.whodunit.domain.action.WhodunitAction.ReadmitPlayer",
+    )
 }
 
-internal class UnsupportedLegacyWhodunitActionException : IllegalArgumentException(
-    "Structured actions are not supported by the shipping Whodunit rules",
+internal class UnsupportedLegacyWhodunitActionException(
+    actionType: String?,
+) : IllegalArgumentException(
+    if (actionType?.endsWith("SubmitStructuredAction") == true) {
+        "Structured actions are not supported by the shipping Whodunit rules"
+    } else {
+        "Retired Whodunit actions are not supported by the shipping game rules"
+    },
 )

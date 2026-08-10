@@ -27,6 +27,7 @@ import com.parlor.games.whodunit.domain.state.PlayerRole
 import com.parlor.games.whodunit.domain.state.VoteState
 import com.parlor.games.whodunit.domain.state.WhodunitState
 import com.parlor.games.whodunit.domain.state.WhodunitStateValidator
+import com.parlor.networking.room.RoomInputPolicy
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -128,6 +129,39 @@ class WhodunitRulesInvariantTest {
                 definition.createInitialState(config(modeId, roster, seed = index.toLong()))
             }
         }
+    }
+
+    @Test
+    fun displayNamesMustBeCanonicalBoundedAndSafeAtTheDomainBoundary() {
+        val invalidNames = listOf(
+            " Player 1",
+            "Player 1 ",
+            "A".repeat(RoomInputPolicy.MAX_DISPLAY_NAME_LENGTH + 1),
+            "Player\u0000One",
+            "Player\u202eOne",
+        )
+
+        invalidNames.forEachIndexed { index, name ->
+            val roster = players(4).toMutableList().also {
+                it[index % it.size] = it[index % it.size].copy(displayName = name)
+            }
+            assertFalse(
+                WhodunitRules.isValidRoster(WhodunitIds.ClassicVoteModeId, roster),
+                "unsafe display name at index $index was accepted",
+            )
+            assertFailsWith<IllegalArgumentException> {
+                definition.createInitialState(config(WhodunitIds.ClassicVoteModeId, roster, 1L))
+            }
+        }
+
+        val international = players(4).toMutableList().also {
+            it[0] = it[0].copy(displayName = "عبد الرحمن")
+            it[1] = it[1].copy(
+                displayName = "A".repeat(RoomInputPolicy.MAX_DISPLAY_NAME_LENGTH),
+            )
+            it[2] = it[2].copy(displayName = "Player 🎲")
+        }
+        assertTrue(WhodunitRules.isValidRoster(WhodunitIds.ClassicVoteModeId, international))
     }
 
     @Test

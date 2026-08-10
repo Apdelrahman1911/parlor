@@ -176,6 +176,22 @@ class FileBackedSnapshotStoreTest {
     }
 
     @Test
+    fun malformed_utf8_snapshot_is_rejected_as_corrupted() = runTest {
+        val fileSystem = MemoryFileSystem().apply {
+            put(
+                "${sessionId.raw}${FileBackedSnapshotStore.SUFFIX}",
+                byteArrayOf('{'.code.toByte(), 0xC3.toByte(), '}'.code.toByte()),
+            )
+        }
+        val store = FileBackedSnapshotStore(fileSystem, json)
+
+        assertEquals(
+            Result.Failure(DataError.CorruptedData),
+            store.load(sessionId),
+        )
+    }
+
+    @Test
     fun traversal_and_temporary_names_are_rejected() {
         listOf("../escape", "nested/file", "nested\\file", "state.tmp", "\u0000")
             .forEach { name ->

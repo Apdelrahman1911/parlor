@@ -132,6 +132,15 @@ class WhodunitSnapshotValidationTest {
     }
 
     @Test
+    fun activeStateCannotContainAFormerlyDroppedCompatibilitySeat() {
+        assertDecodeRejected(
+            assigned.copy(
+                public = assigned.public.copy(droppedPlayers = setOf(players.last().id)),
+            ),
+        )
+    }
+
+    @Test
     fun assignmentGenerationMustMatchWhetherRolesExist() {
         assertDecodeRejected(
             assigned.copy(

@@ -1,11 +1,13 @@
 package com.parlor.games.whodunit.ui.flow.multiplayer
 
+import com.parlor.content.validation.ValidatedCase
 import com.parlor.core.ids.PlayerId
 import com.parlor.core.result.Result
 import com.parlor.engine.projection.PrivateProjection
 import com.parlor.engine.projection.PublicProjection
 import com.parlor.engine.session.SubmitError
 import com.parlor.games.whodunit.domain.action.WhodunitAction
+import com.parlor.games.whodunit.content.WhodunitCase
 import com.parlor.games.whodunit.domain.action.WhodunitActionCodec
 import com.parlor.games.whodunit.domain.event.WhodunitEvent
 import com.parlor.games.whodunit.domain.projection.WhodunitProjectionPolicy
@@ -40,6 +42,7 @@ class WhodunitPeerRoomBridge(
     private val room: LocalRoom,
     val selfPlayerId: PlayerId,
     initialPublic: WhodunitState,
+    private val case: ValidatedCase<WhodunitCase>,
     private val scope: CoroutineScope,
     val protocol: SessionProtocol,
     private val json: Json = Json {
@@ -114,14 +117,14 @@ class WhodunitPeerRoomBridge(
         val decoded = try {
             val publicState = json.decodeFromString(
                 publicSerializer,
-                payload.publicPayload.decodeToString(),
+                payload.publicPayload.decodeToString(throwOnInvalidSequence = true),
             )
             val ownPrivate = if (payload.privatePayload.isEmpty()) {
                 null
             } else {
                 json.decodeFromString(
                     privateSerializer,
-                    payload.privatePayload.decodeToString(),
+                    payload.privatePayload.decodeToString(throwOnInvalidSequence = true),
                 )
             }
             Triple(
@@ -146,7 +149,14 @@ class WhodunitPeerRoomBridge(
         // policy. Anything else contains a private/host-only field (or an
         // unredacted in-progress vote) and must fail closed.
         if (WhodunitProjectionPolicy.toPublic(publicState).state != publicState) return false
-        if (!WhodunitStateValidator.isValidPeerProjection(publicState, ownPrivate, selfPlayerId)) {
+        if (
+            !WhodunitStateValidator.isValidPeerProjectionForCase(
+                publicState = publicState,
+                ownPrivate = ownPrivate,
+                selfPlayerId = selfPlayerId,
+                case = case,
+            )
+        ) {
             return false
         }
         // Keep the public bucket structurally public. The UI may combine its

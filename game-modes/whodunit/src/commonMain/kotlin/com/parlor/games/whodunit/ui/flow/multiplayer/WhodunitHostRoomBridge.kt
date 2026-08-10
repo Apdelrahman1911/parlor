@@ -474,7 +474,8 @@ class WhodunitHostRoomBridge(
          * never implemented. Negotiation rejects v3/v4 peers before gameplay,
          * rather than allowing one side to submit a command the other rejects.
          */
-        const val GAME_VERSION: Int = 4
+        // v5 removes the unreachable legacy ReadmitPlayer wire action.
+        const val GAME_VERSION: Int = 5
         const val REJOIN_GRACE_MS: Long = 120_000L
         const val HEARTBEAT_INTERVAL_MS: Long = 10_000L
         const val START_RETRY_MS: Long = 250L

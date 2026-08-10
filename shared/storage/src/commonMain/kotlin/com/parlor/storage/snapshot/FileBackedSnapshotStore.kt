@@ -149,7 +149,13 @@ private class JsonSnapshotEnvelopeCodec(
             .encodeToByteArray()
 
     override suspend fun decode(bytes: ByteArray): GameSnapshot =
-        json.decodeFromString(GameSnapshot.serializer(), bytes.decodeToString())
+        json.decodeFromString(GameSnapshot.serializer(), bytes.decodeUtf8StrictForSnapshot())
+}
+
+private fun ByteArray.decodeUtf8StrictForSnapshot(): String = try {
+    decodeToString(throwOnInvalidSequence = true)
+} catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
+    throw SerializationException("snapshot is not valid UTF-8", failure)
 }
 
 /**

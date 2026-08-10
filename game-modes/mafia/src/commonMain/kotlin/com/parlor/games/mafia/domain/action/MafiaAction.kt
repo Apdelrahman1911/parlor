@@ -46,7 +46,6 @@ sealed interface MafiaAction : GameAction {
     @Serializable data class MarkPlayerDisconnected(val playerId: PlayerId) : MafiaAction
     @Serializable data class MarkPlayerReconnected(val playerId: PlayerId) : MafiaAction
     @Serializable data class ContinueWithoutPlayer(val playerId: PlayerId) : MafiaAction
-    @Serializable data class ReadmitPlayer(val playerId: PlayerId) : MafiaAction
 
     // -------- Self-actor (player-submitted) --------
     @Serializable data class AcknowledgeRoleViewed(val by: PlayerId) : MafiaAction
@@ -65,5 +64,4 @@ sealed interface MafiaAction : GameAction {
     @Serializable data class AbstainVote(val by: PlayerId) : MafiaAction
 
     @Serializable data class AcknowledgeVoteAnnouncement(val by: PlayerId) : MafiaAction
-    @Serializable data class AcknowledgePostGame(val by: PlayerId) : MafiaAction
 }

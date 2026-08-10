@@ -54,7 +54,6 @@ class WhodunitActionAuthorityTest {
             WhodunitAction.MarkPlayerDisconnected(alice),
             WhodunitAction.MarkPlayerReconnected(alice),
             WhodunitAction.ContinueWithoutPlayer(alice),
-            WhodunitAction.ReadmitPlayer(alice),
         )
         for (action in hostOnly) {
             assertEquals(AuthorityScope.HostOnly, WhodunitActionAuthority.classify(action),

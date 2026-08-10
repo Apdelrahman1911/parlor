@@ -320,7 +320,9 @@ internal class ResumableCredentialStore(
             if (bytes.size !in 1..MAX_RECORD_BYTES) {
                 Result.Failure(CredentialStoreError.Corrupted)
             } else {
-                val decoded = json.decodeFromString<StoredCredentialRecord>(bytes.decodeToString())
+                val decoded = json.decodeFromString<StoredCredentialRecord>(
+                    bytes.decodeToString(throwOnInvalidSequence = true),
+                )
                     .requireValid()
                 Result.Success(decoded)
             }

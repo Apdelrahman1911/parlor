@@ -19,6 +19,7 @@ import com.parlor.games.whodunit.domain.phase.WhodunitPhase
 import com.parlor.games.whodunit.domain.state.WhodunitHostOnly
 import com.parlor.games.whodunit.domain.state.WhodunitPublic
 import com.parlor.games.whodunit.domain.state.WhodunitState
+import com.parlor.games.whodunit.testing.whodunitPeerCaseForTest
 import com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostRoomBridge
 import com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitPeerRoomBridge
 import com.parlor.networking.protocol.PeerMessage
@@ -70,6 +71,7 @@ class QueuedActionSafetyTest {
         room = room,
         selfPlayerId = alice,
         initialPublic = initialState,
+        case = whodunitPeerCaseForTest(),
         scope = scope,
         protocol = protocol,
     )

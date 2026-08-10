@@ -140,13 +140,13 @@ class MultiDevicePartyPlayContractTest {
         val bobRoom = InMemoryPeerRoom(bus, selfPlayerId = bob, displayName = "Bob", hostId = hostId)
         val carolRoom = InMemoryPeerRoom(bus, selfPlayerId = carol, displayName = "Carol", hostId = hostId)
         val aliceBridge = WhodunitPeerRoomBridge(
-            aliceRoom, alice, hostSession.publicState.value.state, scope, hostBridge.protocol, json,
+            aliceRoom, alice, hostSession.publicState.value.state, case, scope, hostBridge.protocol, json,
         )
         val bobBridge = WhodunitPeerRoomBridge(
-            bobRoom, bob, hostSession.publicState.value.state, scope, hostBridge.protocol, json,
+            bobRoom, bob, hostSession.publicState.value.state, case, scope, hostBridge.protocol, json,
         )
         val carolBridge = WhodunitPeerRoomBridge(
-            carolRoom, carol, hostSession.publicState.value.state, scope, hostBridge.protocol, json,
+            carolRoom, carol, hostSession.publicState.value.state, case, scope, hostBridge.protocol, json,
         )
 
         // Host starts the game — this seeds roles + advances to PublicIntro.
@@ -321,13 +321,13 @@ class MultiDevicePartyPlayContractTest {
         val bobRoom = InMemoryPeerRoom(bus, selfPlayerId = bob, displayName = "Bob", hostId = hostId)
         val carolRoom = InMemoryPeerRoom(bus, selfPlayerId = carol, displayName = "Carol", hostId = hostId)
         val aliceBridge = WhodunitPeerRoomBridge(
-            aliceRoom, alice, hostSession.publicState.value.state, scope, hostBridge.protocol, json,
+            aliceRoom, alice, hostSession.publicState.value.state, case, scope, hostBridge.protocol, json,
         )
         val bobBridge = WhodunitPeerRoomBridge(
-            bobRoom, bob, hostSession.publicState.value.state, scope, hostBridge.protocol, json,
+            bobRoom, bob, hostSession.publicState.value.state, case, scope, hostBridge.protocol, json,
         )
         val carolBridge = WhodunitPeerRoomBridge(
-            carolRoom, carol, hostSession.publicState.value.state, scope, hostBridge.protocol, json,
+            carolRoom, carol, hostSession.publicState.value.state, case, scope, hostBridge.protocol, json,
         )
 
         // --- AssignRoles → PublicIntro ---
@@ -494,13 +494,13 @@ class MultiDevicePartyPlayContractTest {
         val bobRoom = InMemoryPeerRoom(bus, selfPlayerId = bob, displayName = "Bob", hostId = hostId)
         val carolRoom = InMemoryPeerRoom(bus, selfPlayerId = carol, displayName = "Carol", hostId = hostId)
         val aliceBridge = WhodunitPeerRoomBridge(
-            aliceRoom, alice, hostSession.publicState.value.state, scope, hostBridge.protocol, json,
+            aliceRoom, alice, hostSession.publicState.value.state, case, scope, hostBridge.protocol, json,
         )
         val bobBridge = WhodunitPeerRoomBridge(
-            bobRoom, bob, hostSession.publicState.value.state, scope, hostBridge.protocol, json,
+            bobRoom, bob, hostSession.publicState.value.state, case, scope, hostBridge.protocol, json,
         )
         val carolBridge = WhodunitPeerRoomBridge(
-            carolRoom, carol, hostSession.publicState.value.state, scope, hostBridge.protocol, json,
+            carolRoom, carol, hostSession.publicState.value.state, case, scope, hostBridge.protocol, json,
         )
 
         submitHost(hostSession, hostBridge, WhodunitAction.AssignRoles(seed = 77L))

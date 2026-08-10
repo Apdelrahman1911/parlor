@@ -45,6 +45,9 @@ internal object MafiaObservableStateValidator {
         require(state.public.disconnectedPlayers.intersect(state.public.droppedPlayers).isEmpty()) {
             "Mafia player is both disconnected and dropped"
         }
+        require(
+            state.phase == MafiaPhase.PostGame || state.public.droppedPlayers.isEmpty(),
+        ) { "Active Mafia state contains a permanently dropped player" }
         require(state.public.day >= 0) { "Mafia day is negative" }
 
         validateAnnouncements(state, playerIdSet)

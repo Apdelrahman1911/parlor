@@ -160,6 +160,7 @@ internal class WhodunitPeerRuntime(
         room = room,
         selfPlayerId = selfPlayerId,
         initialPublic = initialState,
+        case = case,
         scope = scope,
         protocol = protocol,
     )

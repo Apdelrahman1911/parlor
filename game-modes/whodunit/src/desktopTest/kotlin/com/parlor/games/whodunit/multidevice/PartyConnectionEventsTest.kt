@@ -159,7 +159,8 @@ class PartyConnectionEventsTest {
         val scope = TestScope(UnconfinedTestDispatcher(testScheduler))
         val bus = InMemoryRoomBus()
         listOf(alice, bob, carol).forEach(bus::registerPeer)
-        val session = buildHostSession(loadCase())
+        val payload = loadCase()
+        val session = buildHostSession(payload)
         val room = PartyEventsHostRoom(bus, hostId)
         val bridge = WhodunitHostRoomBridge(
             session,
@@ -220,7 +221,8 @@ class PartyConnectionEventsTest {
         val scope = TestScope(UnconfinedTestDispatcher(testScheduler))
         val bus = InMemoryRoomBus()
         listOf(alice, bob, carol).forEach(bus::registerPeer)
-        val session = buildHostSession(loadCase())
+        val payload = loadCase()
+        val session = buildHostSession(payload)
         val room = PartyEventsHostRoom(bus, hostId)
         val bridge = WhodunitHostRoomBridge(
             session,
@@ -401,7 +403,8 @@ class PartyConnectionEventsTest {
         bus.registerPeer(alice)
         bus.registerPeer(bob)
         bus.registerPeer(carol)
-        val session = buildHostSession(loadCase())
+        val payload = loadCase()
+        val session = buildHostSession(payload)
         val hostRoom = PartyEventsHostRoom(bus, hostId)
         val bridge = WhodunitHostRoomBridge(
             session, hostRoom, players, scope, json, heartbeatIntervalMs = 0L,
@@ -411,6 +414,7 @@ class PartyConnectionEventsTest {
             room = InMemoryPeerRoom(bus, alice, "Alice", hostId),
             selfPlayerId = alice,
             initialPublic = session.publicState.value.state,
+            case = validatedWhodunitCaseForTest(payload, caseId = "last-dinner"),
             scope = scope,
             protocol = bridge.protocol,
             json = json,
@@ -458,7 +462,7 @@ class PartyConnectionEventsTest {
         assertThat(start.header?.sessionId == bridge.protocol.sessionId).isTrue()
         assertThat(start.header?.gameId == WhodunitIds.GameId).isTrue()
         assertThat(start.header?.gameVersion == WhodunitHostRoomBridge.GAME_VERSION).isTrue()
-        assertThat(WhodunitHostRoomBridge.GAME_VERSION).isEqualTo(4)
+        assertThat(WhodunitHostRoomBridge.GAME_VERSION).isEqualTo(5)
 
         bridge.terminate(SessionEndReason.HostLeft)
         bridge.close()

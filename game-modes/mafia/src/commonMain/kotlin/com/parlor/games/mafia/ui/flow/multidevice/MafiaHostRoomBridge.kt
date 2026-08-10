@@ -402,7 +402,9 @@ class MafiaHostRoomBridge(
     }
 
     companion object {
-        const val GAME_VERSION: Int = 1
+        // v2 removes two serialized actions that never represented a legal
+        // state transition (AcknowledgePostGame and ReadmitPlayer).
+        const val GAME_VERSION: Int = 2
         const val REJOIN_GRACE_MS: Long = 120_000L
         const val HEARTBEAT_INTERVAL_MS: Long = 10_000L
         const val START_RETRY_MS: Long = 250L

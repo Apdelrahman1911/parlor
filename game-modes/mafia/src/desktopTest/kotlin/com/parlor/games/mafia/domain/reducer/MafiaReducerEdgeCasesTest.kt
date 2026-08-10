@@ -417,30 +417,6 @@ class MafiaReducerEdgeCasesTest {
     }
 
     @Test
-    fun readmit_player_rejected_outside_setup_or_role_assignment() {
-        val state = atNight(7)
-        val p = state.players.first().id
-        // First drop them via the host action (allowed any phase).
-        val dropped = MafiaReducer.reduce(state, MafiaAction.ContinueWithoutPlayer(p), ctx()).newState
-        assertThat(p in dropped.public.droppedPlayers).isTrue()
-        // Try to readmit during Night — must be rejected.
-        val attempt = MafiaReducer.reduce(dropped, MafiaAction.ReadmitPlayer(p), ctx()).newState
-        assertThat(p in attempt.public.droppedPlayers).isTrue()
-    }
-
-    @Test
-    fun readmit_player_accepted_in_setup() {
-        var state = initialState(7)
-        val p = state.players.first().id
-        // Defensive compatibility for an older serialized Setup state, where
-        // ContinueWithoutPlayer could leave a dropped lobby seat.
-        state = state.copy(public = state.public.copy(droppedPlayers = setOf(p)))
-        assertThat(p in state.public.droppedPlayers).isTrue()
-        state = MafiaReducer.reduce(state, MafiaAction.ReadmitPlayer(p), ctx()).newState
-        assertThat(p in state.public.droppedPlayers).isFalse()
-    }
-
-    @Test
     fun continue_without_player_during_active_game_ends_and_reveals_every_role() {
         val state = atNight(7)
         val dropped = state.players.first().id

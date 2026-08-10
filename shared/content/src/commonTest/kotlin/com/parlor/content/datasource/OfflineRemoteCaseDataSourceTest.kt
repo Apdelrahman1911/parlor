@@ -94,6 +94,32 @@ class OfflineRemoteCaseDataSourceTest {
     }
 
     @Test
+    fun ktor_source_rejects_malformed_utf8_before_json_interpretation() = runTest {
+        val malformed = byteArrayOf(
+            '{'.code.toByte(),
+            '"'.code.toByte(),
+            'x'.code.toByte(),
+            '"'.code.toByte(),
+            ':'.code.toByte(),
+            '"'.code.toByte(),
+            0xC3.toByte(),
+            '"'.code.toByte(),
+            '}'.code.toByte(),
+        )
+        val client = HttpClient(MockEngine { respond(ByteReadChannel(malformed)) })
+        val source = KtorRemoteCaseDataSource(client, "https://content.test")
+
+        try {
+            assertEquals(
+                Result.Failure(NetworkError.Serialization("response is not valid UTF-8")),
+                source.fetchCase(CaseId("malformed")),
+            )
+        } finally {
+            client.close()
+        }
+    }
+
+    @Test
     fun ktor_source_does_not_convert_fatal_errors_into_network_failures() = runTest {
         val client = HttpClient(MockEngine { throw AssertionError("fatal adapter bug") })
         val source = KtorRemoteCaseDataSource(client, "https://content.test")

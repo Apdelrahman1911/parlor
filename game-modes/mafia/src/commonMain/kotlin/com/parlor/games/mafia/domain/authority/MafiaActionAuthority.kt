@@ -42,8 +42,7 @@ object MafiaActionAuthority {
         MafiaAction.EndGame,
         is MafiaAction.MarkPlayerDisconnected,
         is MafiaAction.MarkPlayerReconnected,
-        is MafiaAction.ContinueWithoutPlayer,
-        is MafiaAction.ReadmitPlayer -> AuthorityScope.HostOnly
+        is MafiaAction.ContinueWithoutPlayer -> AuthorityScope.HostOnly
 
         // Self-actor.
         is MafiaAction.AcknowledgeRoleViewed -> AuthorityScope.SelfActor(action.by)
@@ -56,7 +55,6 @@ object MafiaActionAuthority {
         is MafiaAction.CastVote -> AuthorityScope.SelfActor(action.by)
         is MafiaAction.AbstainVote -> AuthorityScope.SelfActor(action.by)
         is MafiaAction.AcknowledgeVoteAnnouncement -> AuthorityScope.SelfActor(action.by)
-        is MafiaAction.AcknowledgePostGame -> AuthorityScope.SelfActor(action.by)
     }
 
     /**

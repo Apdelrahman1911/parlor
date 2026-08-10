@@ -9,6 +9,7 @@ import com.parlor.games.whodunit.domain.action.WhodunitAction
 import com.parlor.games.whodunit.domain.action.WhodunitActionCodec
 import kotlinx.serialization.SerializationException
 import kotlin.test.Test
+import kotlin.test.assertFails
 import kotlin.test.assertFailsWith
 
 /**
@@ -146,6 +147,34 @@ class WhodunitActionCodecTest {
         val bytes = WhodunitActionCodec.encode(WhodunitAction.OpenVote)
         val text = bytes.decodeToString()
         assertThat(text).contains("\"type\":")
+    }
+
+    @Test
+    fun retired_readmit_action_is_rejected_explicitly() {
+        val payload = """
+            {
+              "type":"com.parlor.games.whodunit.domain.action.WhodunitAction.ReadmitPlayer",
+              "playerId":"p1"
+            }
+        """.trimIndent()
+
+        val failure = assertFailsWith<UnsupportedLegacyWhodunitActionException> {
+            WhodunitActionCodec.decode(payload.encodeToByteArray())
+        }
+        assertThat(failure.message).isEqualTo(
+            "Retired Whodunit actions are not supported by the shipping game rules",
+        )
+    }
+
+    @Test
+    fun malformedUtf8IsRejectedInsteadOfBeingReplacedInsideJsonStrings() {
+        val valid = WhodunitActionCodec.encode(
+            WhodunitAction.CastVote(PlayerId("p1"), PlayerId("p2")),
+        )
+        val playerByte = valid.indexOfFirst { byte -> byte == 'p'.code.toByte() }
+        val malformed = valid.copyOf().also { it[playerByte] = 0x80.toByte() }
+
+        assertFails { WhodunitActionCodec.decode(malformed) }
     }
 
     private fun legacyPayload(payload: String): String =
