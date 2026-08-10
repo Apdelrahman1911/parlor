@@ -32,6 +32,8 @@ include(":shared:engine-testing")
 include(":shared:session")
 include(":shared:content")
 include(":shared:networking")
+// Test fixtures are isolated from every shipping source-set dependency.
+include(":shared:networking-testing")
 include(":shared:storage")
 
 // Multiplayer is a production feature, so the adapter is always part of the

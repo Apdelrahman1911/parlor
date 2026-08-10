@@ -43,8 +43,8 @@ import com.parlor.networking.room.RoomInfo
 import com.parlor.networking.room.RoomLifecycleState
 import com.parlor.networking.room.RoomMember
 import com.parlor.networking.room.SendTarget
-import com.parlor.session.multidevice.InMemoryRoomBus
-import com.parlor.session.multidevice.InMemoryPeerRoom
+import com.parlor.networking.testing.InMemoryRoomBus
+import com.parlor.networking.testing.InMemoryPeerRoom
 import com.parlor.session.passandplay.PassAndPlaySessionController
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine

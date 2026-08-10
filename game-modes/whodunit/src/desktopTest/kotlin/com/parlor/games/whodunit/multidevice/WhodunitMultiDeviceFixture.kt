@@ -7,7 +7,7 @@ import com.parlor.games.whodunit.domain.event.WhodunitEvent
 import com.parlor.games.whodunit.domain.state.WhodunitState
 import com.parlor.networking.protocol.HostMessage
 import com.parlor.networking.room.SendTarget
-import com.parlor.session.multidevice.InMemoryRoomBus
+import com.parlor.networking.testing.InMemoryRoomBus
 import com.parlor.session.passandplay.PassAndPlaySessionController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job

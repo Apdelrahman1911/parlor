@@ -24,8 +24,8 @@ import com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostRoomBridge
 import com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitPeerRoomBridge
 import com.parlor.networking.protocol.PeerMessage
 import com.parlor.networking.protocol.SessionProtocol
-import com.parlor.session.multidevice.InMemoryPeerRoom
-import com.parlor.session.multidevice.InMemoryRoomBus
+import com.parlor.networking.testing.InMemoryPeerRoom
+import com.parlor.networking.testing.InMemoryRoomBus
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestScope

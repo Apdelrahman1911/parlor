@@ -42,6 +42,16 @@ tasks.named("desktopTest") {
         rootProject.file("iosApp/iosApp.xcodeproj/project.pbxproj"),
         rootProject.file("whodunit-game-design.md"),
         rootProject.file("settings.gradle.kts"),
+        rootProject.fileTree(".") {
+            include("**/build.gradle.kts")
+            exclude("**/build/**")
+        },
+        rootProject.fileTree("shared/session/src/commonMain") {
+            include("**/*.kt")
+        },
+        rootProject.fileTree("shared/networking-testing/src/commonMain") {
+            include("**/*.kt")
+        },
         rootProject.file("gradle/libs.versions.toml"),
         rootProject.file("gradle/verification-metadata.xml"),
         rootProject.file("composeApp/src/androidMain/AndroidManifest.xml"),

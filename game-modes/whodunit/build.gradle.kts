@@ -31,10 +31,10 @@ kotlin {
             implementation(libs.koin.test)
             implementation(libs.bundles.ktor.common)
             implementation(libs.ktor.client.mock)
-            // Phase 7 shape test needs networking protocol types
-            // (HostMessage / PeerMessage) directly; production whodunit code
-            // does not reach into the transport layer.
+            // Multiplayer shape tests use protocol types and the isolated
+            // in-process room fixture without exposing either as app-shell API.
             implementation(project(":shared:networking"))
+            implementation(project(":shared:networking-testing"))
         }
     }
 }

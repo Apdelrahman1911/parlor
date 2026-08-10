@@ -37,7 +37,7 @@ import com.parlor.games.whodunit.testing.validatedWhodunitCaseForTest
 import com.parlor.games.whodunit.domain.state.VoteState
 import com.parlor.games.whodunit.domain.state.WhodunitState
 import com.parlor.games.whodunit.resources.Res
-import com.parlor.session.multidevice.InMemoryRoomBus
+import com.parlor.networking.testing.InMemoryRoomBus
 import com.parlor.session.passandplay.PassAndPlaySessionController
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine

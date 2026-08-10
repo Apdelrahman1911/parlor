@@ -1,5 +1,6 @@
 package com.parlor.session.multidevice
 
+import com.parlor.networking.testing.InMemoryRoomBus
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf

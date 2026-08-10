@@ -20,6 +20,8 @@ import com.parlor.networking.room.RoomInfo
 import com.parlor.networking.room.RoomLifecycleState
 import com.parlor.networking.room.RoomMember
 import com.parlor.networking.room.SendTarget
+import com.parlor.networking.testing.InMemoryRoomBus
+import com.parlor.networking.testing.InMemoryPeerRoom
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CancellationException

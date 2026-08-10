@@ -28,6 +28,7 @@ kotlin {
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.assertk)
             implementation(libs.koin.test)
+            implementation(project(":shared:networking-testing"))
         }
     }
 }

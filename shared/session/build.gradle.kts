@@ -16,6 +16,7 @@ kotlin {
             implementation(libs.turbine)
             implementation(libs.assertk)
             implementation(project(":shared:engine-testing"))
+            implementation(project(":shared:networking-testing"))
         }
     }
 }
