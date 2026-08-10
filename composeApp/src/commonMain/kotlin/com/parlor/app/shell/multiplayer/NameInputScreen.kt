@@ -25,6 +25,7 @@ import com.parlor.app.resources.name_confirm_host
 import com.parlor.app.resources.name_confirm_host_description
 import com.parlor.app.resources.name_confirm_peer
 import com.parlor.app.resources.name_confirm_peer_description
+import com.parlor.app.resources.name_default_player
 import com.parlor.app.resources.name_eyebrow_host
 import com.parlor.app.resources.name_eyebrow_peer
 import com.parlor.app.resources.name_field
@@ -43,8 +44,8 @@ import org.jetbrains.compose.resources.stringResource
 /**
  * Asks the player to enter the name shown to the room. Reused by both
  * Host and Join flows — the [isHost] flag chooses the right eyebrow and
- * confirm label. Names default to a culture-neutral "Player" placeholder
- * if the user leaves the field blank; non-empty values trim whitespace.
+ * confirm label. Blank input resolves to a localized player label; non-empty
+ * values trim whitespace.
  *
  * Mobile-first: scrollable container, full-width input, full-width primary
  * button, and a secondary back row so the layout fits comfortably on a
@@ -59,7 +60,8 @@ fun NameInputScreen(
     modifier: Modifier = Modifier,
 ) {
     var name by remember { mutableStateOf(initial) }
-    val sanitized = RoomInputPolicy.normalizeDisplayName(name).ifBlank { "Player" }
+    val defaultPlayerName = stringResource(Res.string.name_default_player)
+    val sanitized = RoomInputPolicy.normalizeDisplayName(name).ifBlank { defaultPlayerName }
 
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
         Box(modifier = Modifier.fillMaxSize().imePadding()) {

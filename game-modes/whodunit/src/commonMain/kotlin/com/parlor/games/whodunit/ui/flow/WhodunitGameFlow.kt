@@ -166,6 +166,7 @@ import com.parlor.networking.protocol.SessionEndReason
 import com.parlor.networking.protocol.SessionProtocol
 import com.parlor.networking.protocol.CommandStatus
 import com.parlor.networking.room.NetError
+import com.parlor.networking.room.RoomInputPolicy
 import com.parlor.games.whodunit.domain.party.WhodunitReadinessGate
 import com.parlor.session.PlayMode
 import com.parlor.session.SessionController
@@ -667,7 +668,11 @@ private fun ConfiguredFlow(
             onConfirm = { names ->
                 pre = pre.copy(
                     players = names.mapIndexed { i, n ->
-                        Player(PlayerId("p${i + 1}"), n.trim().ifBlank { "Player ${i + 1}" }, seat = i)
+                        Player(
+                            id = PlayerId("p${i + 1}"),
+                            displayName = RoomInputPolicy.normalizeDisplayName(n),
+                            seat = i,
+                        )
                     },
                 )
             },
