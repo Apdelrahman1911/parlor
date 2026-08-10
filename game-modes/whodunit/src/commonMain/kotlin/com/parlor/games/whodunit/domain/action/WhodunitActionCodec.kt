@@ -68,9 +68,6 @@ object WhodunitActionCodec {
         val generation = when (this) {
             is WhodunitAction.StartCharacterReveal -> roleAssignmentGeneration
             is WhodunitAction.CompleteCharacterReveal -> roleAssignmentGeneration
-            is WhodunitAction.OpenPrivateReview -> roleAssignmentGeneration
-            is WhodunitAction.CloseHide -> roleAssignmentGeneration
-            is WhodunitAction.ConfirmRoleViewed -> roleAssignmentGeneration
             else -> return@also
         }
         require(generation > 0L) { "Reveal action has an invalid assignment generation" }
@@ -80,6 +77,9 @@ object WhodunitActionCodec {
     private val RETIRED_ACTION_TYPES = setOf(
         "com.parlor.games.whodunit.domain.action.WhodunitAction.SubmitStructuredAction",
         "com.parlor.games.whodunit.domain.action.WhodunitAction.ReadmitPlayer",
+        "com.parlor.games.whodunit.domain.action.WhodunitAction.OpenPrivateReview",
+        "com.parlor.games.whodunit.domain.action.WhodunitAction.CloseHide",
+        "com.parlor.games.whodunit.domain.action.WhodunitAction.ConfirmRoleViewed",
     )
 }
 

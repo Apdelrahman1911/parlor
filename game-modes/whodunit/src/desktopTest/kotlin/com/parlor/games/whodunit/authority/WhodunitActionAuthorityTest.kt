@@ -74,8 +74,6 @@ class WhodunitActionAuthorityTest {
         val actions = listOf<WhodunitAction>(
             WhodunitAction.StartCharacterReveal(alice, 1L),
             WhodunitAction.CompleteCharacterReveal(alice, 1L),
-            WhodunitAction.OpenPrivateReview(alice, 1L),
-            WhodunitAction.CloseHide(alice, 1L),
         )
         for (action in actions) {
             assertEquals(AuthorityScope.SelfActor(alice), WhodunitActionAuthority.classify(action))
@@ -92,7 +90,6 @@ class WhodunitActionAuthorityTest {
         val actions = listOf<WhodunitAction>(
             WhodunitAction.AcknowledgeIntro(alice),
             WhodunitAction.AcknowledgeBriefing(alice),
-            WhodunitAction.ConfirmRoleViewed(alice, 1L),
         )
         for (action in actions) {
             assertEquals(AuthorityScope.SelfActor(alice), WhodunitActionAuthority.classify(action))
@@ -127,11 +124,8 @@ class WhodunitActionAuthorityTest {
         val actions = listOf<WhodunitAction>(
             WhodunitAction.AcknowledgeIntro(alice),
             WhodunitAction.AcknowledgeBriefing(alice),
-            WhodunitAction.ConfirmRoleViewed(alice, 1L),
             WhodunitAction.StartCharacterReveal(alice, 1L),
             WhodunitAction.CompleteCharacterReveal(alice, 1L),
-            WhodunitAction.OpenPrivateReview(alice, 1L),
-            WhodunitAction.CloseHide(alice, 1L),
             WhodunitAction.CastVote(voter = alice, target = bob),
             WhodunitAction.AbstainVote(alice),
             WhodunitAction.RefuseToVote(alice),

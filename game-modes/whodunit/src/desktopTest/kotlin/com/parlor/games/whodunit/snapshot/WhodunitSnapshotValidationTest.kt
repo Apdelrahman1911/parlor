@@ -258,14 +258,14 @@ class WhodunitSnapshotValidationTest {
     }
 
     @Test
-    fun privateReviewRequiresTheSameDossierToBeUnlocked() {
+    fun retiredPrivateReviewFlagIsRejectedEvenDuringCharacterReveal() {
         val playerId = players.first().id
         val privateState = assigned.privatePerPlayer.getValue(playerId)
         val impossible = assigned.copy(
             phase = WhodunitPhase.CharacterReveal(0),
             privatePerPlayer = assigned.privatePerPlayer + (
                 playerId to privateState.copy(
-                    dossierUnlocked = false,
+                    dossierUnlocked = true,
                     privateReviewOpen = true,
                 )
             ),

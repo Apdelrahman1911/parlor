@@ -54,11 +54,8 @@ object WhodunitActionAuthority {
         // Self-actor: only the named player may submit.
         is WhodunitAction.StartCharacterReveal -> AuthorityScope.SelfActor(action.playerId)
         is WhodunitAction.CompleteCharacterReveal -> AuthorityScope.SelfActor(action.playerId)
-        is WhodunitAction.OpenPrivateReview -> AuthorityScope.SelfActor(action.playerId)
-        is WhodunitAction.CloseHide -> AuthorityScope.SelfActor(action.playerId)
         is WhodunitAction.AcknowledgeIntro -> AuthorityScope.SelfActor(action.playerId)
         is WhodunitAction.AcknowledgeBriefing -> AuthorityScope.SelfActor(action.playerId)
-        is WhodunitAction.ConfirmRoleViewed -> AuthorityScope.SelfActor(action.playerId)
         is WhodunitAction.CastVote -> AuthorityScope.SelfActor(action.voter)
         is WhodunitAction.AbstainVote -> AuthorityScope.SelfActor(action.voter)
         is WhodunitAction.RefuseToVote -> AuthorityScope.SelfActor(action.voter)

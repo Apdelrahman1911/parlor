@@ -56,7 +56,7 @@ import kotlin.test.Test
 /**
  * Wave 9H-3: CharacterReveal is now the simultaneous-reveal phase.
  *
- *  - `CompleteCharacterReveal(p)` (or `ConfirmRoleViewed(p)`) adds `p` to
+ *  - `CompleteCharacterReveal(p)` adds `p` to
  *    `public.rolesViewed` without auto-advancing.
  *  - `AdvanceFromCharacterReveal` (HostOnly) advances to `Round(1)` only
  *    when every active-roster player is in `rolesViewed`.
@@ -109,7 +109,7 @@ class SimultaneousCharacterRevealTest {
     }
 
     @Test
-    fun confirm_role_viewed_is_equivalent_to_complete_character_reveal_for_readiness() = runTest {
+    fun canonicalCompletionCollectsEveryPlayersReadiness() = runTest {
         val payload = loadCase()
         val (session, _) = buildSession(payload, WhodunitIds.ClassicVoteModeId, players, seed = 2L)
         session.submit(WhodunitAction.AssignRoles(seed = 2L))
@@ -118,17 +118,16 @@ class SimultaneousCharacterRevealTest {
         session.ackBriefingForAll(players)
         for (i in 1..4) session.submit(WhodunitAction.AdvanceBriefingCard(i))
 
-        // Mix the two action names — they should both feed the same set.
         revealAndComplete(session, players[0].id)
-        revealAndConfirm(session, players[1].id)
+        revealAndComplete(session, players[1].id)
         revealAndComplete(session, players[2].id)
-        revealAndConfirm(session, players[3].id)
+        revealAndComplete(session, players[3].id)
         session.submit(WhodunitAction.AdvanceFromCharacterReveal)
         assertThat(phaseOf(session)).isInstanceOf(WhodunitPhase.Round::class)
     }
 
     @Test
-    fun both_reveal_completion_actions_close_all_private_exposure_flags() = runTest {
+    fun canonicalRevealCompletionClosesAllPrivateExposureFlags() = runTest {
         val payload = loadCase()
         val (session, _) = buildSession(payload, WhodunitIds.ClassicVoteModeId, players, seed = 22L)
         session.submit(WhodunitAction.AssignRoles(seed = 22L))
@@ -140,21 +139,13 @@ class SimultaneousCharacterRevealTest {
         val generation = hostStateOf(session).public.roleAssignmentGeneration
         val completed = players[0].id
         session.submit(WhodunitAction.StartCharacterReveal(completed, generation))
-        session.submit(WhodunitAction.OpenPrivateReview(completed, generation))
         session.submit(WhodunitAction.CompleteCharacterReveal(completed, generation))
 
-        val confirmed = players[1].id
-        session.submit(WhodunitAction.StartCharacterReveal(confirmed, generation))
-        session.submit(WhodunitAction.OpenPrivateReview(confirmed, generation))
-        session.submit(WhodunitAction.ConfirmRoleViewed(confirmed, generation))
-
         val state = hostStateOf(session)
-        assertThat(state.public.rolesViewed).isEqualTo(setOf(completed, confirmed))
-        for (playerId in listOf(completed, confirmed)) {
-            val privateState = state.privatePerPlayer.getValue(playerId)
-            assertThat(privateState.dossierUnlocked).isEqualTo(false)
-            assertThat(privateState.privateReviewOpen).isEqualTo(false)
-        }
+        assertThat(state.public.rolesViewed).isEqualTo(setOf(completed))
+        val privateState = state.privatePerPlayer.getValue(completed)
+        assertThat(privateState.dossierUnlocked).isEqualTo(false)
+        assertThat(privateState.privateReviewOpen).isEqualTo(false)
     }
 
     @Test
@@ -231,23 +222,15 @@ class SimultaneousCharacterRevealTest {
 
         session.submit(WhodunitAction.StartCharacterReveal(playerId, oldGeneration))
         session.submit(WhodunitAction.CompleteCharacterReveal(playerId, oldGeneration))
-        session.submit(WhodunitAction.ConfirmRoleViewed(playerId, oldGeneration))
-        session.submit(WhodunitAction.OpenPrivateReview(playerId, oldGeneration))
-        session.submit(WhodunitAction.CloseHide(playerId, oldGeneration))
         state = hostStateOf(session)
         assertThat(state.public.rolesViewed).isEmpty()
         assertThat(state.privatePerPlayer.getValue(playerId).dossierUnlocked).isEqualTo(false)
 
         session.submit(WhodunitAction.StartCharacterReveal(playerId, newGeneration))
-        session.submit(WhodunitAction.CloseHide(playerId, oldGeneration))
+        session.submit(WhodunitAction.CompleteCharacterReveal(playerId, oldGeneration))
         state = hostStateOf(session)
         assertThat(state.privatePerPlayer.getValue(playerId).dossierUnlocked).isEqualTo(true)
-        session.submit(WhodunitAction.OpenPrivateReview(playerId, newGeneration))
-        session.submit(WhodunitAction.CloseHide(playerId, oldGeneration))
-        state = hostStateOf(session)
-        assertThat(state.privatePerPlayer.getValue(playerId).dossierUnlocked).isEqualTo(true)
-        assertThat(state.privatePerPlayer.getValue(playerId).privateReviewOpen).isEqualTo(true)
-        session.submit(WhodunitAction.ConfirmRoleViewed(playerId, newGeneration))
+        session.submit(WhodunitAction.CompleteCharacterReveal(playerId, newGeneration))
         state = hostStateOf(session)
         assertThat(state.public.rolesViewed).contains(playerId)
         assertThat(state.privatePerPlayer.getValue(playerId).dossierUnlocked).isEqualTo(false)
@@ -329,12 +312,4 @@ class SimultaneousCharacterRevealTest {
         session.submit(WhodunitAction.CompleteCharacterReveal(playerId, generation))
     }
 
-    private suspend fun revealAndConfirm(
-        session: PassAndPlaySessionController<WhodunitState, WhodunitAction, WhodunitEvent>,
-        playerId: PlayerId,
-    ) {
-        val generation = hostStateOf(session).public.roleAssignmentGeneration
-        session.submit(WhodunitAction.StartCharacterReveal(playerId, generation))
-        session.submit(WhodunitAction.ConfirmRoleViewed(playerId, generation))
-    }
 }

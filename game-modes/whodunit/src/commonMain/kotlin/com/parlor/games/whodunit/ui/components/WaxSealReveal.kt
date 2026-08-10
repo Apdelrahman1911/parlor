@@ -18,6 +18,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -64,6 +65,8 @@ fun WaxSealReveal(
     var pressing by remember { mutableStateOf(false) }
     var progress by remember { mutableStateOf(0f) }
     var completed by remember { mutableStateOf(false) }
+    val completionGate = remember { RevealCompletionGate() }
+    val currentOnRevealed by rememberUpdatedState(onRevealed)
 
     val pressScale by animateFloatAsState(
         targetValue = when {
@@ -88,10 +91,17 @@ fun WaxSealReveal(
             progress = (elapsed.toFloat() / holdMs).coerceIn(0f, 1f)
         }
         if (pressing && elapsed >= holdMs) {
-            completed = true
-            delay(180L)
-            onRevealed()
+            if (completionGate.tryComplete()) completed = true
         }
+    }
+
+    // This effect is keyed to completion rather than `pressing`. Releasing the
+    // pointer immediately after the ring fills must not cancel the delayed
+    // callback and strand the ceremony in a completed-but-unadvanced state.
+    LaunchedEffect(completed) {
+        if (!completed) return@LaunchedEffect
+        if (!reduced) delay(180L)
+        currentOnRevealed()
     }
 
     Column(
@@ -113,7 +123,7 @@ fun WaxSealReveal(
                 .pointerInput(reduced) {
                     detectTapGestures(
                         onPress = {
-                            if (reduced) return@detectTapGestures
+                            if (reduced || completed) return@detectTapGestures
                             pressing = true
                             try {
                                 tryAwaitRelease()
@@ -122,7 +132,7 @@ fun WaxSealReveal(
                             }
                         },
                         onTap = {
-                            if (reduced) onRevealed()
+                            if (reduced && completionGate.tryComplete()) completed = true
                         },
                     )
                 }
@@ -186,5 +196,16 @@ fun WaxSealReveal(
                 modifier = Modifier.fillMaxWidth(),
             )
         }
+    }
+}
+
+/** One-shot contract shared by hold and reduced-motion tap completion paths. */
+internal class RevealCompletionGate {
+    private var completed: Boolean = false
+
+    fun tryComplete(): Boolean {
+        if (completed) return false
+        completed = true
+        return true
     }
 }

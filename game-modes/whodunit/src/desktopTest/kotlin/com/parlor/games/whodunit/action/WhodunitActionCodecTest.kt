@@ -59,15 +59,12 @@ class WhodunitActionCodecTest {
     }
 
     @Test
-    fun every_private_reveal_action_round_trips_its_assignment_generation() {
+    fun everyShippingPrivateRevealActionRoundTripsItsAssignmentGeneration() {
         val playerId = PlayerId("p1")
         val generation = 42L
         val actions = listOf<WhodunitAction>(
             WhodunitAction.StartCharacterReveal(playerId, generation),
             WhodunitAction.CompleteCharacterReveal(playerId, generation),
-            WhodunitAction.OpenPrivateReview(playerId, generation),
-            WhodunitAction.CloseHide(playerId, generation),
-            WhodunitAction.ConfirmRoleViewed(playerId, generation),
         )
 
         actions.forEach { action ->
@@ -134,6 +131,22 @@ class WhodunitActionCodecTest {
             }
             assertThat(failure.message).isEqualTo(
                 "Structured actions are not supported by the shipping Whodunit rules",
+            )
+        }
+    }
+
+    @Test
+    fun retiredRevealDuplicatesAreRejectedExplicitly() {
+        val retired = listOf("OpenPrivateReview", "CloseHide", "ConfirmRoleViewed")
+
+        retired.forEach { name ->
+            val payload =
+                """{"type":"com.parlor.games.whodunit.domain.action.WhodunitAction.$name"}"""
+            val failure = assertFailsWith<UnsupportedLegacyWhodunitActionException> {
+                WhodunitActionCodec.decode(payload.encodeToByteArray())
+            }
+            assertThat(failure.message).isEqualTo(
+                "Retired Whodunit actions are not supported by the shipping game rules",
             )
         }
     }

@@ -37,29 +37,11 @@ sealed interface WhodunitAction : GameAction {
         val roleAssignmentGeneration: Long,
     ) : WhodunitAction
 
-    @Serializable
-    data class OpenPrivateReview(
-        val playerId: PlayerId,
-        val roleAssignmentGeneration: Long,
-    ) : WhodunitAction
-
-    @Serializable
-    data class CloseHide(
-        val playerId: PlayerId,
-        val roleAssignmentGeneration: Long,
-    ) : WhodunitAction
-
     // --- Party Play readiness (Wave 9H) ---
     /** Peer signals they've read the case intro. SelfActor. */
     @Serializable data class AcknowledgeIntro(val playerId: PlayerId) : WhodunitAction
     /** Peer signals they're ready to start after the briefing. SelfActor. */
     @Serializable data class AcknowledgeBriefing(val playerId: PlayerId) : WhodunitAction
-    /** Peer signals they've viewed their assigned role. SelfActor. */
-    @Serializable
-    data class ConfirmRoleViewed(
-        val playerId: PlayerId,
-        val roleAssignmentGeneration: Long,
-    ) : WhodunitAction
     /**
      * Host advances from CharacterReveal (simultaneous-reveal model) to
      * Round(1). Gated by `PartyReadiness.isComplete(rolesViewed, active)`.

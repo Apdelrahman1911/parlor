@@ -6,8 +6,7 @@ import kotlinx.serialization.Serializable
 /**
  * Whodunit phases — the sealed flow from Setup through to PostGame.
  *
- * Pause and PrivateReview are NOT phases — they are modal overlays that
- * suspend the active phase without changing it.
+ * Pause is a modal overlay that suspends the active phase without changing it.
  */
 @Serializable
 sealed class WhodunitPhase : GamePhase {

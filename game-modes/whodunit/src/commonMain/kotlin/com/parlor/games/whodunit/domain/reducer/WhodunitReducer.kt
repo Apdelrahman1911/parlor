@@ -58,25 +58,9 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
                 action.playerId,
                 action.roleAssignmentGeneration,
             )
-            is WhodunitAction.OpenPrivateReview -> openPrivateReview(
-                state,
-                action.playerId,
-                action.roleAssignmentGeneration,
-            )
-            is WhodunitAction.CloseHide -> closeHide(
-                state,
-                action.playerId,
-                action.roleAssignmentGeneration,
-            )
-
             // Party Play readiness (Wave 9H)
             is WhodunitAction.AcknowledgeIntro -> acknowledgeIntro(state, action.playerId)
             is WhodunitAction.AcknowledgeBriefing -> acknowledgeBriefing(state, action.playerId)
-            is WhodunitAction.ConfirmRoleViewed -> confirmRoleViewed(
-                state,
-                action.playerId,
-                action.roleAssignmentGeneration,
-            )
             WhodunitAction.AdvanceFromCharacterReveal -> advanceFromCharacterReveal(state)
 
             // Party Play connection rules (Wave 9H)
@@ -297,36 +281,6 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
         return Reduction(state.copy(public = state.public.copy(briefingReady = updated)))
     }
 
-    private fun confirmRoleViewed(
-        state: WhodunitState,
-        playerId: PlayerId,
-        roleAssignmentGeneration: Long,
-    ): Reduction<WhodunitState, WhodunitEvent> {
-        if (state.phase !is WhodunitPhase.CharacterReveal) return Reduction(state)
-        if (roleAssignmentGeneration != state.public.roleAssignmentGeneration) return Reduction(state)
-        if (playerId !in state.players.map { it.id }) return Reduction(state)
-        if (playerId in state.public.droppedPlayers) return Reduction(state)
-        val privateState = state.privatePerPlayer[playerId] ?: return Reduction(state)
-        if (!privateState.dossierUnlocked) return Reduction(state)
-        val updatedRolesViewed = state.public.rolesViewed + playerId
-        val closedPrivateState = privateState.copy(
-            dossierUnlocked = false,
-            privateReviewOpen = false,
-        )
-        if (
-            updatedRolesViewed == state.public.rolesViewed &&
-            closedPrivateState == privateState
-        ) {
-            return Reduction(state)
-        }
-        return Reduction(
-            state.copy(
-                public = state.public.copy(rolesViewed = updatedRolesViewed),
-                privatePerPlayer = state.privatePerPlayer + (playerId to closedPrivateState),
-            ),
-        )
-    }
-
     // -------------------------------------------------- Connection rules (9H-2) --
 
     private fun markPlayerDisconnected(
@@ -502,36 +456,6 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
             },
         )
         return Reduction(newState, listOf(WhodunitEvent.PhaseEntered(newState.phase)))
-    }
-
-    private fun openPrivateReview(
-        state: WhodunitState,
-        playerId: PlayerId,
-        roleAssignmentGeneration: Long,
-    ): Reduction<WhodunitState, WhodunitEvent> {
-        if (state.phase !is WhodunitPhase.CharacterReveal) return Reduction(state)
-        if (roleAssignmentGeneration != state.public.roleAssignmentGeneration) return Reduction(state)
-        if (playerId in state.public.rolesViewed) return Reduction(state)
-        if (playerId in state.public.droppedPlayers || playerId in state.public.eliminatedPlayers) {
-            return Reduction(state)
-        }
-        val priv = state.privatePerPlayer[playerId] ?: return Reduction(state)
-        if (!priv.dossierUnlocked) return Reduction(state)
-        if (priv.privateReviewOpen) return Reduction(state)
-        val updated = state.privatePerPlayer + (playerId to priv.copy(privateReviewOpen = true))
-        return Reduction(state.copy(privatePerPlayer = updated), listOf(WhodunitEvent.PrivateRevealRequested(playerId)))
-    }
-
-    private fun closeHide(
-        state: WhodunitState,
-        playerId: PlayerId,
-        roleAssignmentGeneration: Long,
-    ): Reduction<WhodunitState, WhodunitEvent> {
-        if (state.phase !is WhodunitPhase.CharacterReveal) return Reduction(state)
-        if (roleAssignmentGeneration != state.public.roleAssignmentGeneration) return Reduction(state)
-        val priv = state.privatePerPlayer[playerId] ?: return Reduction(state)
-        val updated = state.privatePerPlayer + (playerId to priv.copy(privateReviewOpen = false, dossierUnlocked = false))
-        return Reduction(state.copy(privatePerPlayer = updated))
     }
 
     // ======================================================================= Rounds (P5) ==

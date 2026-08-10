@@ -425,15 +425,13 @@ internal object WhodunitStateValidator {
     }
 
     private fun validatePrivateRevealState(state: WhodunitState) {
+        require(state.privatePerPlayer.values.none { it.privateReviewOpen }) {
+            "Retired private-review state is not canonical"
+        }
         if (state.phase !is WhodunitPhase.CharacterReveal) {
             require(state.privatePerPlayer.values.none { privateState ->
-                privateState.dossierUnlocked || privateState.privateReviewOpen
+                privateState.dossierUnlocked
             }) { "Private dossier state is open outside character reveal" }
-        }
-        state.privatePerPlayer.values.forEach { privateState ->
-            require(!privateState.privateReviewOpen || privateState.dossierUnlocked) {
-                "Private review is open while its dossier is locked"
-            }
         }
         state.public.rolesViewed.forEach { playerId ->
             val privateState = state.privatePerPlayer[playerId]
@@ -868,9 +866,7 @@ internal object WhodunitStateValidator {
                 "Projected innocent dossier contains killer-only targets"
             }
         }
-        require(!private.privateReviewOpen || private.dossierUnlocked) {
-            "Projected private review is open while locked"
-        }
+        require(!private.privateReviewOpen) { "Projected state contains retired private-review state" }
         if (state.phase !is WhodunitPhase.CharacterReveal) {
             require(!private.dossierUnlocked && !private.privateReviewOpen) {
                 "Projected dossier is exposed outside character reveal"

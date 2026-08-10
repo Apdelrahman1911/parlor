@@ -103,6 +103,7 @@ data class WhodunitPrivate(
     /** Assigned, non-self suspects the killer may safely name. Empty for innocents. */
     val deflectionTargets: List<CharacterId> = emptyList(),
     val dossierUnlocked: Boolean = false,
+    /** Legacy snapshot field. Current game version never opens a canonical review overlay. */
     val privateReviewOpen: Boolean = false,
 )
 
