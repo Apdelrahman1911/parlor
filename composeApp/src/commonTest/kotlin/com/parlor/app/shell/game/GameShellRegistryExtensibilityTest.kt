@@ -110,7 +110,7 @@ class GameShellRegistryExtensibilityTest {
         val peerRoute = MultiplayerSessionRoute.peer(
             gameId = fixtureDefinition.id,
             displayName = "Peer",
-            roomCode = "ROOM-1",
+            roomCode = "A23456",
         )
 
         val hostLaunch = assertNotNull(router.restoreOwned(hostRoute))

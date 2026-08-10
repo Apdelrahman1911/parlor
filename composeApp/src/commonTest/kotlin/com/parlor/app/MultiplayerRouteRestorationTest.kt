@@ -65,7 +65,7 @@ class MultiplayerRouteRestorationTest {
         val route = MultiplayerSessionRoute.peer(
             gameId = GameId("modified-client-game"),
             displayName = "Peer",
-            roomCode = "ROOM",
+            roomCode = "A23456",
         )
 
         assertNull(router.restoreOwned(route))

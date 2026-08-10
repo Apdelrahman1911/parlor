@@ -5,6 +5,7 @@ import com.parlor.core.result.Result
 import com.parlor.networking.protocol.SessionEndReason
 import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.NetError
+import com.parlor.networking.room.RoomInputPolicy
 import com.parlor.networking.room.RoomMember
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CompletableDeferred
@@ -47,13 +48,25 @@ class MultiplayerSessionRoute private constructor(
     init {
         require(gameId.raw.isNotBlank()) { "gameId must not be blank" }
         when (role) {
-            MultiplayerSessionRole.Host -> require(displayName.isNotBlank()) {
-                "A host route requires a display name"
+            MultiplayerSessionRole.Host -> {
+                requireCanonicalDisplayName(displayName)
+                require(roomCode == null) { "A host route cannot contain a room code" }
             }
 
             MultiplayerSessionRole.Peer -> if (!resumeExistingSession) {
-                require(displayName.isNotBlank()) { "A join route requires a display name" }
-                require(!roomCode.isNullOrBlank()) { "A join route requires a room code" }
+                requireCanonicalDisplayName(displayName)
+                require(roomCode != null && RoomInputPolicy.isValidRoomCode(roomCode)) {
+                    "A join route requires a canonical room code"
+                }
+            } else {
+                require(
+                    displayName.isBlank() ||
+                        displayName == RoomInputPolicy.normalizeDisplayName(displayName) &&
+                        RoomInputPolicy.isValidDisplayName(displayName),
+                ) { "A resume route contains an invalid display name" }
+                require(roomCode == null || RoomInputPolicy.isValidRoomCode(roomCode)) {
+                    "A resume route contains an invalid room code"
+                }
             }
         }
     }
@@ -89,6 +102,13 @@ class MultiplayerSessionRoute private constructor(
             ")"
 
     companion object {
+        private fun requireCanonicalDisplayName(displayName: String) {
+            require(
+                displayName == RoomInputPolicy.normalizeDisplayName(displayName) &&
+                    RoomInputPolicy.isValidDisplayName(displayName),
+            ) { "A multiplayer route requires a canonical display name" }
+        }
+
         fun host(
             gameId: GameId,
             displayName: String,

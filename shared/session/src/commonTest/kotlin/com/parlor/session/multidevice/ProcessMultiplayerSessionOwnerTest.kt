@@ -39,6 +39,35 @@ import kotlin.test.assertFailsWith
 @OptIn(ExperimentalCoroutinesApi::class)
 class ProcessMultiplayerSessionOwnerTest {
     @Test
+    fun multiplayerRoutesRejectNonCanonicalUserInputAtTheOwnershipBoundary() {
+        listOf("", " Host", "Host\nAdmin", "A".repeat(33)).forEach { invalidName ->
+            assertFailsWith<IllegalArgumentException> {
+                MultiplayerSessionRoute.host(GameId("whodunit"), invalidName)
+            }
+        }
+        listOf("ROOM", "123456", "ABC0DE", "abcdef").forEach { invalidCode ->
+            assertFailsWith<IllegalArgumentException> {
+                MultiplayerSessionRoute.peer(GameId("whodunit"), "Peer", invalidCode)
+            }
+        }
+        assertFailsWith<IllegalArgumentException> {
+            MultiplayerSessionRoute.peer(
+                gameId = GameId("whodunit"),
+                displayName = "Peer\nAdmin",
+                roomCode = "A23456",
+                resumeExistingSession = true,
+            )
+        }
+
+        MultiplayerSessionRoute.peer(
+            gameId = GameId("whodunit"),
+            displayName = "",
+            roomCode = "",
+            resumeExistingSession = true,
+        )
+    }
+
+    @Test
     fun sameRouteReattachesWithoutOpeningAnotherRoom() = runTest {
         val owner = ProcessMultiplayerSessionOwner(backgroundScope)
         val route = hostRoute()
@@ -629,7 +658,7 @@ class ProcessMultiplayerSessionOwnerTest {
     private fun peerRoute(): MultiplayerSessionRoute = MultiplayerSessionRoute.peer(
         gameId = GameId("whodunit"),
         displayName = "Peer",
-        roomCode = "123456",
+        roomCode = "A23456",
     )
 }
 
