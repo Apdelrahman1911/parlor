@@ -25,14 +25,60 @@ object RoomInputPolicy {
     fun isValidDisplayName(name: String): Boolean {
         val normalized = normalizeDisplayName(name)
         return normalized.length in 1..MAX_DISPLAY_NAME_LENGTH &&
+            normalized.hasWellFormedSurrogatePairs() &&
             normalized.none(::isUnsafeDisplayCharacter)
     }
 
     /** UI convenience only; [isValidDisplayName] remains authoritative. */
-    fun sanitizeDisplayNameInput(input: String): String = input
-        .filterNot(::isUnsafeDisplayCharacter)
-        .take(MAX_DISPLAY_NAME_LENGTH)
+    fun sanitizeDisplayNameInput(input: String): String = buildString {
+        var index = 0
+        while (index < input.length && length < MAX_DISPLAY_NAME_LENGTH) {
+            val character = input[index]
+            when {
+                character.isHighSurrogateCodeUnit() -> {
+                    val low = input.getOrNull(index + 1)
+                    if (low != null && low.isLowSurrogateCodeUnit()) {
+                        if (length + SURROGATE_PAIR_LENGTH > MAX_DISPLAY_NAME_LENGTH) break
+                        append(character)
+                        append(low)
+                        index += SURROGATE_PAIR_LENGTH
+                    } else {
+                        // An unpaired surrogate cannot be encoded consistently
+                        // across JVM/Native UTF-8 boundaries. Drop it at input.
+                        index++
+                    }
+                }
+                character.isLowSurrogateCodeUnit() || isUnsafeDisplayCharacter(character) -> index++
+                else -> {
+                    append(character)
+                    index++
+                }
+            }
+        }
+    }
 
     private fun isUnsafeDisplayCharacter(character: Char): Boolean =
         character.isISOControl() || character.category == CharCategory.FORMAT
+
+    private fun String.hasWellFormedSurrogatePairs(): Boolean {
+        var index = 0
+        while (index < length) {
+            val character = this[index]
+            when {
+                character.isHighSurrogateCodeUnit() -> {
+                    if (getOrNull(index + 1)?.isLowSurrogateCodeUnit() != true) return false
+                    index += SURROGATE_PAIR_LENGTH
+                }
+                character.isLowSurrogateCodeUnit() -> return false
+                else -> index++
+            }
+        }
+        return true
+    }
+
+    private fun Char.isHighSurrogateCodeUnit(): Boolean = this in '\uD800'..'\uDBFF'
+
+    private fun Char.isLowSurrogateCodeUnit(): Boolean = this in '\uDC00'..'\uDFFF'
+
+    private const val SURROGATE_PAIR_LENGTH = 2
 }
