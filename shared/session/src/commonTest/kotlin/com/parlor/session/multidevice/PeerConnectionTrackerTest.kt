@@ -1,8 +1,12 @@
 package com.parlor.session.multidevice
 
 import com.parlor.networking.room.PeerEvent
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
@@ -90,5 +94,35 @@ class PeerConnectionTrackerTest {
         tracker.handle(PeerEvent.HostLost)
         runCurrent()
         assertFalse(parent.children.any(), "closed tracker must reject stale callbacks")
+    }
+
+    @Test
+    fun `close waits for an expiry callback that already started`() = runTest {
+        val callbackEntered = CompletableDeferred<Unit>()
+        val releaseCallback = CompletableDeferred<Unit>()
+        var callbackCompleted = false
+        val tracker = PeerConnectionTracker(this, 100L) {
+            callbackEntered.complete(Unit)
+            // Model a platform callback already inside a non-cancellable
+            // cleanup section. close() must not return until it has unwound.
+            withContext(NonCancellable) {
+                releaseCallback.await()
+                callbackCompleted = true
+            }
+        }
+
+        tracker.handle(PeerEvent.HostLost)
+        advanceTimeBy(100L)
+        runCurrent()
+        assertTrue(callbackEntered.isCompleted)
+
+        val close = launch { tracker.close() }
+        runCurrent()
+        assertFalse(close.isCompleted, "teardown must join an in-flight stale callback")
+
+        releaseCallback.complete(Unit)
+        runCurrent()
+        assertTrue(callbackCompleted)
+        assertTrue(close.isCompleted)
     }
 }

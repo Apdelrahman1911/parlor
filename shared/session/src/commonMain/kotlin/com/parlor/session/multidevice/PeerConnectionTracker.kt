@@ -4,7 +4,7 @@ import com.parlor.networking.room.PeerEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -51,7 +51,7 @@ class PeerConnectionTracker(
 
     private var hostLossJob: Job? = null
     private var hostLossGeneration = 0L
-    private val closed = MutableStateFlow(false)
+    private var closed = false
 
     init {
         require(hostLostTimeoutMs > 0L) { "hostLostTimeoutMs must be positive" }
@@ -60,7 +60,7 @@ class PeerConnectionTracker(
     suspend fun handle(event: PeerEvent) {
         val emitted = mutableListOf<PeerEvent>()
         mutex.withLock {
-            if (closed.value) return
+            if (closed) return
             when (event) {
                 PeerEvent.HostLost -> {
                     if (!_state.value.hostLost) {
@@ -71,7 +71,7 @@ class PeerConnectionTracker(
                         hostLossJob = trackerScope.launch {
                             delay(hostLostTimeoutMs)
                             val expired = mutex.withLock {
-                                !closed.value &&
+                                !closed &&
                                     generation == hostLossGeneration &&
                                     _state.value.hostLost
                             }
@@ -117,10 +117,23 @@ class PeerConnectionTracker(
 
     suspend fun markSelfOnline() = handle(PeerEvent.SelfOnline)
 
-    fun close() {
-        closed.value = true
-        trackerScope.cancel()
-        hostLossJob = null
+    /**
+     * Seals the tracker against new callbacks and waits for every timer/callback
+     * child to finish. Returning before an already-started expiry callback had
+     * stopped allowed an old peer session to race teardown and affect its owner.
+     */
+    suspend fun close() {
+        val shouldJoin = mutex.withLock {
+            if (closed) {
+                false
+            } else {
+                closed = true
+                hostLossGeneration++
+                hostLossJob = null
+                true
+            }
+        }
+        if (shouldJoin) trackerJob.cancelAndJoin()
     }
 
     private companion object {
