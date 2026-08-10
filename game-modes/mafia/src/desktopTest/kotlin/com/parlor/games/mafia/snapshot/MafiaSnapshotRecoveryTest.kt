@@ -27,7 +27,7 @@ import com.parlor.games.mafia.domain.state.Role
 import com.parlor.storage.snapshot.InMemorySnapshotStore
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.test.runTest
-import kotlinx.datetime.Instant as DateTimeInstant
+import kotlin.time.Instant as DateTimeInstant
 import kotlinx.serialization.json.Json
 import kotlin.test.Test
 import kotlin.test.assertFailsWith

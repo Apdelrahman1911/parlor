@@ -17,7 +17,7 @@ import com.parlor.engine.testing.fakes.RrAction
 import com.parlor.engine.testing.fakes.RrEvent
 import com.parlor.engine.testing.fakes.RrPhase
 import com.parlor.engine.testing.fakes.RrState
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith

@@ -9,18 +9,12 @@ import java.util.Locale
  * Desktop (JVM) `actual`: updates the JVM default `Locale` so Compose
  * Multiplatform's resource lookup picks the right `values-XX/`.
  */
-@Suppress("FunctionName")
-actual object LocalAppLocale {
-    private val Local = compositionLocalOf { Locale.getDefault().toLanguageTag() }
-    private val defaultLocale: Locale = Locale.getDefault()
+private val LocalAppLocale = compositionLocalOf { Locale.getDefault().toLanguageTag() }
+private val defaultAppLocale: Locale = Locale.getDefault()
 
-    actual val current: String
-        @Composable get() = Local.current
-
-    @Composable
-    actual infix fun provides(value: String?): ProvidedValue<*> {
-        val newLocale = value?.let { Locale.forLanguageTag(it) } ?: defaultLocale
-        Locale.setDefault(newLocale)
-        return Local provides newLocale.toLanguageTag()
-    }
+@Composable
+internal actual fun appLocaleProvidedValue(value: String?): ProvidedValue<*> {
+    val newLocale = value?.let { Locale.forLanguageTag(it) } ?: defaultAppLocale
+    Locale.setDefault(newLocale)
+    return LocalAppLocale provides newLocale.toLanguageTag()
 }

@@ -53,7 +53,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import kotlin.test.Test
@@ -139,7 +139,7 @@ class TiedRevoteTest {
 
     private fun hostState(
         session: PassAndPlaySessionController<WhodunitState, WhodunitAction, WhodunitEvent>,
-    ): WhodunitState = session.hostState!!.value.state
+    ): WhodunitState = session.hostState.value.state
 
     /** Drive setup through to the open vote ballot in a 4-player Classic game. */
     private suspend fun driveToClassicVote(

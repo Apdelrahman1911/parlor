@@ -67,7 +67,7 @@ import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import kotlin.test.Test
 import com.parlor.core.result.Result as PResult
@@ -459,9 +459,9 @@ class PartyConnectionEventsTest {
         }
         runCurrent()
         assertThat(announcing.await() is PResult.Success).isTrue()
-        assertThat(start.header?.sessionId == bridge.protocol.sessionId).isTrue()
-        assertThat(start.header?.gameId == WhodunitIds.GameId).isTrue()
-        assertThat(start.header?.gameVersion == WhodunitHostRoomBridge.GAME_VERSION).isTrue()
+        assertThat(start.header.sessionId == bridge.protocol.sessionId).isTrue()
+        assertThat(start.header.gameId == WhodunitIds.GameId).isTrue()
+        assertThat(start.header.gameVersion == WhodunitHostRoomBridge.GAME_VERSION).isTrue()
         assertThat(WhodunitHostRoomBridge.GAME_VERSION).isEqualTo(5)
 
         bridge.terminate(SessionEndReason.HostLeft)

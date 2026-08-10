@@ -59,7 +59,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import kotlin.test.Test
@@ -164,7 +164,7 @@ class WhodunitResumeReconstructionTest {
         // briefingCardIndex (so a regression that drops public state surfaces).
         original.submit(WhodunitAction.AdvanceBriefingCard(1))
         original.submit(WhodunitAction.AdvanceBriefingCard(2))
-        val savedState = original.hostState!!.value.state
+        val savedState = original.hostState.value.state
         assertThat(savedState.phase).isInstanceOf(WhodunitPhase.RulesBriefing::class)
         assertThat(savedState.public.briefingCardIndex).isEqualTo(2)
         original.close()
@@ -218,7 +218,7 @@ class WhodunitResumeReconstructionTest {
         )
 
         // 5) Boot state equals what we saved — phase, public, private, host-only.
-        val bootState = resumed.hostState!!.value.state
+        val bootState = resumed.hostState.value.state
         assertThat(bootState).isEqualTo(savedState)
         assertThat(bootState.phase).isInstanceOf(WhodunitPhase.RulesBriefing::class)
         assertThat(bootState.public.briefingCardIndex).isEqualTo(2)
@@ -226,7 +226,7 @@ class WhodunitResumeReconstructionTest {
         // 6) Submitting the *next* action advances from the restored phase, not
         // from Setup. This proves the reducer sees the resumed state.
         resumed.submit(WhodunitAction.AdvanceBriefingCard(3))
-        val afterAdvance = resumed.hostState!!.value.state
+        val afterAdvance = resumed.hostState.value.state
         assertThat(afterAdvance.public.briefingCardIndex).isEqualTo(3)
         // RulesBriefing's last card is 3 (4 cards total, 0-indexed). Advancing
         // beyond should move us forward; the briefing transitions out — but
@@ -517,7 +517,7 @@ class WhodunitResumeReconstructionTest {
 
         val store: SnapshotStore = FileBackedSnapshotStore(InMemorySnapshotFileSystem(), json)
         val codec = WhodunitDefinition(json).snapshotCodec()
-        val state = controller.hostState!!.value.state
+        val state = controller.hostState.value.state
         store.save(
             GameSnapshot(
                 sessionId = sessionId,

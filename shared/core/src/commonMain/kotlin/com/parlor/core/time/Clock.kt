@@ -1,6 +1,6 @@
 package com.parlor.core.time
 
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 
 /**
  * Time abstraction. The engine takes a Clock via constructor parameter so

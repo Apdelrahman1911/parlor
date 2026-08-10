@@ -50,7 +50,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import kotlin.test.Test
@@ -155,7 +155,7 @@ class FullGameDriveTest {
 
     private fun hostState(
         session: PassAndPlaySessionController<WhodunitState, WhodunitAction, WhodunitEvent>,
-    ): WhodunitState = session.hostState!!.value.state
+    ): WhodunitState = session.hostState.value.state
 
     @Test
     fun classic_vote_four_player_game_reaches_reveal_with_a_verdict() = runTest {

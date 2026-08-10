@@ -12,6 +12,7 @@ kotlinx-datetime = "0.7.1"
 
 # Compose Multiplatform
 compose-multiplatform = "1.10.3"
+compose-material3 = "1.9.0-beta03"
 
 # Android
 agp = "8.13.2"
@@ -42,6 +43,16 @@ assertk = "0.28.1"
 
 # AndroidX
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version = "1.9.3" }
+
+# Compose Multiplatform runtime artifacts. These explicit coordinates replace
+# the deprecated Gradle-plugin convenience dependency accessors while keeping
+# every module on the single pinned Compose version above.
+compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "compose-multiplatform" }
+compose-foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "compose-multiplatform" }
+compose-material3 = { module = "org.jetbrains.compose.material3:material3", version.ref = "compose-material3" }
+compose-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "compose-multiplatform" }
+compose-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "compose-multiplatform" }
+compose-ui-tooling-preview = { module = "org.jetbrains.compose.components:components-ui-tooling-preview", version.ref = "compose-multiplatform" }
 
 # Kotlinx
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }

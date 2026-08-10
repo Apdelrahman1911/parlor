@@ -51,7 +51,7 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlinx.serialization.json.Json
 import kotlin.test.Test
 
@@ -345,9 +345,9 @@ class MafiaAuthoritativeLifecycleTest {
         }
         runCurrent()
         assertThat(announcing.await()).isInstanceOf(Result.Success::class)
-        assertThat(start.header?.sessionId).isEqualTo(fixture.bridge.protocol.sessionId)
-        assertThat(start.header?.gameId).isEqualTo(MafiaIds.GameId)
-        assertThat(start.header?.gameVersion).isEqualTo(MafiaHostRoomBridge.GAME_VERSION)
+        assertThat(start.header.sessionId).isEqualTo(fixture.bridge.protocol.sessionId)
+        assertThat(start.header.gameId).isEqualTo(MafiaIds.GameId)
+        assertThat(start.header.gameVersion).isEqualTo(MafiaHostRoomBridge.GAME_VERSION)
 
         fixture.bridge.terminate(SessionEndReason.HostLeft)
         fixture.bridge.close()

@@ -59,7 +59,7 @@ import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import kotlin.test.Test
@@ -124,7 +124,7 @@ class PartyPlayPassAndPlayParityTest {
 
         playFullGame(
             driver = driver,
-            killerHint = { partyPlayHost.session.hostState!!.value.state.hostOnly.killerId },
+            killerHint = { partyPlayHost.session.hostState.value.state.hostOnly.killerId },
             generationHint = {
                 partyPlayHost.session.publicState.value.state.public.roleAssignmentGeneration
             },

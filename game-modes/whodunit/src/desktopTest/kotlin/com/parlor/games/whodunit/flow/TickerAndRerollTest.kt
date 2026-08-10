@@ -60,7 +60,7 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import kotlin.test.Test
@@ -154,7 +154,7 @@ class TickerAndRerollTest {
         s.publicState.value.state
 
     private fun hostState(s: PassAndPlaySessionController<WhodunitState, WhodunitAction, WhodunitEvent>) =
-        s.hostState!!.value.state
+        s.hostState.value.state
 
     private suspend fun driveToFirstDiscussionTimer(
         session: PassAndPlaySessionController<WhodunitState, WhodunitAction, WhodunitEvent>,

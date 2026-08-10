@@ -59,7 +59,7 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.withTimeout
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import kotlin.test.Test
@@ -204,7 +204,7 @@ class MultiDevicePartyPlayContractTest {
         )
         runCurrent()
         assertThat(
-            hostSession.hostState!!.value.state.privatePerPlayer
+            hostSession.hostState.value.state.privatePerPlayer
                 .getValue(alice)
                 .dossierUnlocked,
         ).isTrue()
@@ -217,7 +217,7 @@ class MultiDevicePartyPlayContractTest {
         assertThat(phaseBeforeImpersonation == phaseAfterImpersonation).isTrue()
         assertThat(alice in hostSession.publicState.value.state.public.rolesViewed).isEqualTo(false)
         assertThat(
-            hostSession.hostState!!.value.state.privatePerPlayer
+            hostSession.hostState.value.state.privatePerPlayer
                 .getValue(alice)
                 .dossierUnlocked,
         ).isTrue()
@@ -249,7 +249,7 @@ class MultiDevicePartyPlayContractTest {
         )
         runCurrent()
         assertThat(
-            hostSession.hostState!!.value.state.privatePerPlayer
+            hostSession.hostState.value.state.privatePerPlayer
                 .getValue(alice)
                 .dossierUnlocked,
         ).isEqualTo(false)
@@ -258,7 +258,7 @@ class MultiDevicePartyPlayContractTest {
         )
         runCurrent()
         assertThat(
-            hostSession.hostState!!.value.state.privatePerPlayer
+            hostSession.hostState.value.state.privatePerPlayer
                 .getValue(alice)
                 .dossierUnlocked,
         ).isTrue()

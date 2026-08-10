@@ -60,7 +60,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import kotlin.test.Test
@@ -156,7 +156,7 @@ class PauseRefuseLeaveTest {
         s.publicState.value.state
 
     private fun hostState(s: PassAndPlaySessionController<WhodunitState, WhodunitAction, WhodunitEvent>) =
-        s.hostState!!.value.state
+        s.hostState.value.state
 
     private suspend fun driveToFirstRoundTimer(
         session: PassAndPlaySessionController<WhodunitState, WhodunitAction, WhodunitEvent>,
@@ -304,7 +304,7 @@ class PauseRefuseLeaveTest {
         )
 
         // The resumed controller boots paused — UI will render the overlay.
-        val bootState = resumed.hostState!!.value.state
+        val bootState = resumed.hostState.value.state
         assertThat(bootState.public.paused).isTrue()
         assertThat(bootState.public.timer!!.paused).isTrue()
         // Sanity: the in-game phase is preserved too.

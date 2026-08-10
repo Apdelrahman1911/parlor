@@ -30,7 +30,7 @@ fun ProvideAppLanguage(
     val direction = resolved.layoutDirection
 
     CompositionLocalProvider(
-        LocalAppLocale provides resolved.tag,
+        appLocaleProvidedValue(resolved.tag),
         LocalLayoutDirection provides direction,
     ) {
         key(resolved) {

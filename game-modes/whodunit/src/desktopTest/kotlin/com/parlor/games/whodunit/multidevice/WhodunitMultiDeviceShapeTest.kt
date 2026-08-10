@@ -51,7 +51,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import kotlin.test.Test
@@ -199,8 +199,8 @@ class WhodunitMultiDeviceShapeTest {
         host.submit(WhodunitAction.AssignRoles(seed))
         assertPeerMirrorsHostAndRedactsHostOnly(host, peers, "after AssignRoles")
         // Host has rich hostOnly data; peer must not.
-        assertThat(host.hostState!!.value.state.hostOnly.killerId.raw).isEqualTo(
-            host.hostState!!.value.state.hostOnly.killerId.raw,
+        assertThat(host.hostState.value.state.hostOnly.killerId.raw).isEqualTo(
+            host.hostState.value.state.hostOnly.killerId.raw,
         )
         // (The peer mirror equality check above already enforces redaction.)
 
@@ -240,7 +240,7 @@ class WhodunitMultiDeviceShapeTest {
 
         // --- FinalVote: cast and refuse; the peer never learns the killer
         // until reveal. ---
-        val killer = host.hostState!!.value.state.hostOnly.killerId
+        val killer = host.hostState.value.state.hostOnly.killerId
         val ballot = (stateOf(host).public.voteState as VoteState.Collecting).ballotPlayerIds
         for (voter in ballot) {
             val action = if (voter == killer) {
@@ -320,7 +320,7 @@ class WhodunitMultiDeviceShapeTest {
             host.submit(WhodunitAction.StartDiscussionTimer(180)); pin("Round$r-timer")
             host.submit(WhodunitAction.AdvanceFromDiscussion); pin("Round$r-advance")
         }
-        val killer = host.hostState!!.value.state.hostOnly.killerId
+        val killer = host.hostState.value.state.hostOnly.killerId
         val ballot = (stateOf(host).public.voteState as VoteState.Collecting).ballotPlayerIds
         for (v in ballot) {
             if (v == killer) host.submit(WhodunitAction.AbstainVote(v))

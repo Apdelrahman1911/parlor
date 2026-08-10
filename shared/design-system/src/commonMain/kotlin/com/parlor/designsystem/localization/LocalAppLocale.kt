@@ -13,20 +13,15 @@ import androidx.compose.runtime.setValue
  *
  * Per the official Compose Multiplatform workaround for runtime locale
  * override (Kotlin docs: *Manage local resource environment*). The
- * platform-specific `actual` for [LocalAppLocale] updates the platform-level
+ * platform-specific locale provider updates the platform-level
  * locale so `stringResource()` resolves against the right `values-XX/`.
  */
 var customAppLocale: String? by mutableStateOf<String?>(null)
 
 /**
- * The platform-shimmed composition local for the active language tag.
- * Each platform's `actual` updates the system locale so resource lookup
- * picks the right `values-<lang>/strings.xml`.
+ * Returns the platform-shimmed composition-local value for the active language
+ * tag. A top-level expect/actual function is sufficient here and avoids opting
+ * the whole build into Kotlin's still-beta expect/actual-class ABI.
  */
-expect object LocalAppLocale {
-    val current: String
-        @Composable get
-
-    @Composable
-    infix fun provides(value: String?): ProvidedValue<*>
-}
+@Composable
+internal expect fun appLocaleProvidedValue(value: String?): ProvidedValue<*>

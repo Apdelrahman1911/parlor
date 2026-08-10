@@ -56,7 +56,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import kotlin.test.Test
@@ -168,7 +168,7 @@ class WhodunitSnapshotRoundTripTest {
         session.submit(WhodunitAction.RevealNextClue)
         session.submit(WhodunitAction.StartDiscussionTimer(180))
 
-        val originalState = session.hostState!!.value.state
+        val originalState = session.hostState.value.state
         assertThat(originalState.phase).isInstanceOf(WhodunitPhase.Round::class)
         assertThat(originalState.public.revealedClues).hasSize(1)
         assertThat(originalState.public.timer).isNotNull()
@@ -218,7 +218,7 @@ class WhodunitSnapshotRoundTripTest {
             session.submit(WhodunitAction.StartDiscussionTimer(180))
             session.submit(WhodunitAction.AdvanceFromDiscussion)
         }
-        val killer = session.hostState!!.value.state.hostOnly.killerId
+        val killer = session.hostState.value.state.hostOnly.killerId
         val innocents = players.filter { it.id != killer }
         val targetA = innocents[0].id
         val targetB = innocents[1].id
@@ -228,7 +228,7 @@ class WhodunitSnapshotRoundTripTest {
         session.submit(WhodunitAction.CloseVote)
         session.submit(WhodunitAction.OpenVote)
 
-        val tiedRevoteState = session.hostState!!.value.state
+        val tiedRevoteState = session.hostState.value.state
         val collecting = tiedRevoteState.public.voteState as VoteState.Collecting
         assertThat(collecting.isSecondRound).isTrue()
 
@@ -266,7 +266,7 @@ class WhodunitSnapshotRoundTripTest {
             sessionId = SessionId("first"),
         )
         session.submit(WhodunitAction.AssignRoles(1L))
-        val s1 = session.hostState!!.value.state
+        val s1 = session.hostState.value.state
 
         store.save(
             GameSnapshot(

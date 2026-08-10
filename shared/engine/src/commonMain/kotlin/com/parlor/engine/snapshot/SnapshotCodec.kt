@@ -4,7 +4,7 @@ import com.parlor.core.ids.GameId
 import com.parlor.core.ids.SessionId
 import com.parlor.core.versioning.SemVer
 import com.parlor.engine.state.GameState
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlinx.serialization.Serializable
 
 /**

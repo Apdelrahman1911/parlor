@@ -15,28 +15,22 @@ import platform.Foundation.languageCode
  * The first time `provides` is invoked with a non-null value we snapshot the
  * original `AppleLanguages` so passing `null` later restores the system default.
  */
-@Suppress("FunctionName")
-actual object LocalAppLocale {
-    private val Local = compositionLocalOf {
-        NSLocale.currentLocale.languageCode
-    }
-    private var defaultLanguages: List<*>? = null
+private val LocalAppLocale = compositionLocalOf {
+    NSLocale.currentLocale.languageCode
+}
+private var defaultAppLanguages: List<*>? = null
 
-    actual val current: String
-        @Composable get() = Local.current
-
-    @Composable
-    actual infix fun provides(value: String?): ProvidedValue<*> {
-        val effective = value ?: NSLocale.currentLocale.languageCode
-        val userDefaults = NSUserDefaults.standardUserDefaults
-        if (defaultLanguages == null) {
-            defaultLanguages = userDefaults.arrayForKey("AppleLanguages") as? List<*>
-        }
-        if (value == null) {
-            userDefaults.setObject(defaultLanguages, "AppleLanguages")
-        } else {
-            userDefaults.setObject(listOf(value), "AppleLanguages")
-        }
-        return Local provides effective
+@Composable
+internal actual fun appLocaleProvidedValue(value: String?): ProvidedValue<*> {
+    val effective = value ?: NSLocale.currentLocale.languageCode
+    val userDefaults = NSUserDefaults.standardUserDefaults
+    if (defaultAppLanguages == null) {
+        defaultAppLanguages = userDefaults.arrayForKey("AppleLanguages")
     }
+    if (value == null) {
+        userDefaults.setObject(defaultAppLanguages, "AppleLanguages")
+    } else {
+        userDefaults.setObject(listOf(value), "AppleLanguages")
+    }
+    return LocalAppLocale provides effective
 }

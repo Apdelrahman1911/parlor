@@ -3968,6 +3968,7 @@ internal class PeerP2pRoom(
                     return@collect
                 }
             }
+            @Suppress("DEPRECATION")
             if (decoded is HostMessage.AdmissionAccepted) {
                 enforceTrafficDecision(
                     trafficGuard.malformedFrame(nowMillis()),

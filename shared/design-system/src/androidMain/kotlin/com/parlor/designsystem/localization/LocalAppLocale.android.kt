@@ -13,22 +13,16 @@ import java.util.Locale
  * The first time `provides` is invoked we snapshot the original Locale so
  * passing `null` later restores the system default.
  */
-@Suppress("FunctionName")
-actual object LocalAppLocale {
-    private val defaultLocale: Locale = Locale.getDefault()
+private val defaultAppLocale: Locale = Locale.getDefault()
 
-    actual val current: String
-        @Composable get() = LocalConfiguration.current.locales[0].toLanguageTag()
-
-    @Composable
-    actual infix fun provides(value: String?): ProvidedValue<*> {
-        val configuration = LocalConfiguration.current
-        val newLocale = value?.let { Locale.forLanguageTag(it) } ?: defaultLocale
-        Locale.setDefault(newLocale)
-        configuration.setLocale(newLocale)
-        val resources = LocalContext.current.resources
-        @Suppress("DEPRECATION")
-        resources.updateConfiguration(configuration, resources.displayMetrics)
-        return LocalConfiguration provides configuration
-    }
+@Composable
+internal actual fun appLocaleProvidedValue(value: String?): ProvidedValue<*> {
+    val configuration = LocalConfiguration.current
+    val newLocale = value?.let { Locale.forLanguageTag(it) } ?: defaultAppLocale
+    Locale.setDefault(newLocale)
+    configuration.setLocale(newLocale)
+    val resources = LocalContext.current.resources
+    @Suppress("DEPRECATION")
+    resources.updateConfiguration(configuration, resources.displayMetrics)
+    return LocalConfiguration provides configuration
 }
