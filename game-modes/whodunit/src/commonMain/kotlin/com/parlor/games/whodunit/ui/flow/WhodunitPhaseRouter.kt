@@ -40,6 +40,17 @@ import com.parlor.games.whodunit.resources.peer_round_body
 import com.parlor.games.whodunit.resources.peer_round_title
 import com.parlor.games.whodunit.resources.peer_waiting_eyebrow
 import com.parlor.games.whodunit.resources.peer_waiting_for_host
+import com.parlor.games.whodunit.resources.round_default_alibis_tagline
+import com.parlor.games.whodunit.resources.round_default_alibis_title
+import com.parlor.games.whodunit.resources.round_default_contradictions_tagline
+import com.parlor.games.whodunit.resources.round_default_contradictions_title
+import com.parlor.games.whodunit.resources.round_default_final_evidence_tagline
+import com.parlor.games.whodunit.resources.round_default_final_evidence_title
+import com.parlor.games.whodunit.resources.round_default_generic_title_format
+import com.parlor.games.whodunit.resources.round_default_motives_tagline
+import com.parlor.games.whodunit.resources.round_default_motives_title
+import com.parlor.games.whodunit.resources.vote_next_voter_fallback
+import com.parlor.games.whodunit.resources.vote_voter_fallback
 import com.parlor.games.whodunit.resources.whodunit_vote_counting
 import com.parlor.games.whodunit.ui.components.HideScreen
 import com.parlor.games.whodunit.ui.screens.peer.PeerWaitingForHostScreen
@@ -924,6 +935,7 @@ private data class RoundDisplayConfig(
  * `roundIndex` is 1-based to match the router; the JSON `rounds` list is
  * indexed `roundIndex - 1`.
  */
+@Composable
 private fun resolveRoundDisplayConfig(
     payload: WhodunitCase,
     roundIndex: Int,
@@ -942,18 +954,24 @@ private fun resolveRoundDisplayConfig(
     )
 }
 
+@Composable
 private fun defaultRoundTitleAndTagline(roundIndex: Int, playerCount: Int): Pair<String, String> {
     val isLast = if (playerCount <= 4) roundIndex >= 3 else roundIndex >= 4
     return when (roundIndex) {
-        1 -> "Alibis" to "Where were you when it happened?"
-        2 -> "Motives" to "Why would anyone want them dead?"
+        1 -> stringResource(Res.string.round_default_alibis_title) to
+            stringResource(Res.string.round_default_alibis_tagline)
+        2 -> stringResource(Res.string.round_default_motives_title) to
+            stringResource(Res.string.round_default_motives_tagline)
         3 -> if (isLast) {
-            "Final Evidence" to "One last truth before the vote."
+            stringResource(Res.string.round_default_final_evidence_title) to
+                stringResource(Res.string.round_default_final_evidence_tagline)
         } else {
-            "Contradictions" to "Someone's story doesn't fit."
+            stringResource(Res.string.round_default_contradictions_title) to
+                stringResource(Res.string.round_default_contradictions_tagline)
         }
-        4 -> "Final Evidence" to "One last truth before the vote."
-        else -> "Round $roundIndex" to ""
+        4 -> stringResource(Res.string.round_default_final_evidence_title) to
+            stringResource(Res.string.round_default_final_evidence_tagline)
+        else -> stringResource(Res.string.round_default_generic_title_format, roundIndex) to ""
     }
 }
 
@@ -988,6 +1006,8 @@ private fun VoteSegment(
         VoteTurnPresentation.Unsupported -> null
     }
     val nextVoterName = nextVoter?.let { id -> players.firstOrNull { it.id == id }?.displayName }
+    val nextVoterFallback = stringResource(Res.string.vote_next_voter_fallback)
+    val voterFallback = stringResource(Res.string.vote_voter_fallback)
 
     when (presentation) {
         VoteTurnPresentation.CloseByHost -> {
@@ -1013,7 +1033,7 @@ private fun VoteSegment(
         }
         is VoteTurnPresentation.WaitingForVoter -> {
             VoteHandoffScreen(
-                nextVoterName = nextVoterName ?: "the next voter",
+                nextVoterName = nextVoterName ?: nextVoterFallback,
                 onContinue = { /* only the named player's device may open this ballot */ },
                 modifier = modifier,
             )
@@ -1029,7 +1049,7 @@ private fun VoteSegment(
     var ballotOpen by remember(localVoter) { mutableStateOf(false) }
     if (!ballotOpen) {
         VoteHandoffScreen(
-            nextVoterName = nextVoterName ?: "the next voter",
+            nextVoterName = nextVoterName ?: nextVoterFallback,
             onContinue = { ballotOpen = true },
             modifier = modifier,
         )
@@ -1039,7 +1059,7 @@ private fun VoteSegment(
             .filter { it.id != localVoter }   // can't vote for yourself
             .map { it.id to it.displayName }
         VoteBallotScreen(
-            currentVoterName = nextVoterName ?: "Voter",
+            currentVoterName = nextVoterName ?: voterFallback,
             candidates = candidates,
             onVote = { target ->
                 scope.launch {
