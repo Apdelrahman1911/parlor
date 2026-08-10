@@ -182,21 +182,6 @@ sealed interface HostMessage : RoomMessage {
     ) : HostMessage
 
     @Serializable
-    data class PublicStateSnapshot(val payload: ByteArray) : HostMessage
-    @Serializable
-    data class PublicStateDelta(val patch: ByteArray) : HostMessage
-    @Serializable
-    data class PrivateStateForPlayer(val target: PlayerId, val payload: ByteArray) : HostMessage
-    @Serializable
-    data class EventBroadcast(val payload: ByteArray) : HostMessage
-    @Serializable
-    data class EventDirect(val target: PlayerId, val payload: ByteArray) : HostMessage
-    @Serializable
-    data class TimerSync(val timerId: String, val deadlineEpochMs: Long) : HostMessage
-    @Serializable
-    data object EndSession : HostMessage
-
-    @Serializable
     data class SessionEnded(
         val header: SessionEnvelopeHeader,
         val reason: SessionEndReason,
@@ -376,26 +361,6 @@ sealed interface PeerMessage : RoomMessage {
         val startId: String,
     ) : PeerMessage
 
-    @Serializable
-    @Deprecated("Use AdmissionRequest; retained for protocol-0 compatibility only.")
-    data class JoinRequest(val displayName: String) : PeerMessage
-    /**
-     * Peer-submitted action.
-     *
-     * [sender] is **transport-authenticated**: the receiving transport
-     * overwrites it with the identity bound to the delivering session
-     * (`P2pKitRoomTransport` stamps the session's peer id; `InMemoryPeerRoom`
-     * stamps its own `selfPlayerId`) BEFORE the host bridge sees it. A peer
-     * therefore cannot forge another player's action by lying in this field —
-     * the value the host's `ActionAuthority.isAllowed` reads is always the real
-     * owner of the connection. (Whatever a peer writes here on send is ignored;
-     * the field is retained only as the carrier for the authenticated id.)
-     * See PROBLEMS_PARLOR.md → wu-ui-01 / NN-03.
-     */
-    @Serializable
-    data class ActionSubmit(val sender: PlayerId, val payload: ByteArray) : PeerMessage
-    @Serializable
-    data object Heartbeat : PeerMessage
     @Serializable
     data object LeaveNotice : PeerMessage
 }

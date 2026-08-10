@@ -5,6 +5,7 @@ import com.parlor.core.ids.PlayerId
 import com.parlor.core.ids.SessionId
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertFailsWith
 import kotlin.test.assertIs
 import kotlin.test.assertTrue
@@ -35,6 +36,32 @@ class RoomMessageCodecTest {
     fun `rejects oversized encoded input before decode`() {
         assertFailsWith<IllegalArgumentException> {
             codec.decode(ByteArray(MAX_ROOM_FRAME_BYTES + 1))
+        }
+    }
+
+    @Test
+    fun `obsolete pre-authoritative message variants are absent from the wire schema`() {
+        val sealedValueDescriptor = RoomMessage.serializer().descriptor.getElementDescriptor(1)
+        val registeredVariants = (0 until sealedValueDescriptor.elementsCount)
+            .map(sealedValueDescriptor::getElementName)
+            .joinToString(separator = "\n")
+
+        listOf(
+            "PublicStateSnapshot",
+            "PublicStateDelta",
+            "PrivateStateForPlayer",
+            "EventBroadcast",
+            "EventDirect",
+            "TimerSync",
+            "EndSession",
+            "JoinRequest",
+            "ActionSubmit",
+            "PeerMessage.Heartbeat",
+        ).forEach { obsoleteVariant ->
+            assertFalse(
+                obsoleteVariant in registeredVariants,
+                "$obsoleteVariant must not remain decodable as a silent protocol-4 no-op",
+            )
         }
     }
 

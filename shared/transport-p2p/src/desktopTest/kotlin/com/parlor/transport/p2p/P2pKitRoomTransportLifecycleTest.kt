@@ -581,7 +581,7 @@ class P2pKitRoomTransportLifecycleTest {
                 incomingExtraBufferCapacity = 0,
             )
             admit(room, kit, alice)
-            val heartbeat = P2pMessage.Binary(codec.encode(PeerMessage.Heartbeat))
+            val heartbeat = P2pMessage.Binary(codec.encode(testPeerHeartbeat()))
 
             val producer = async {
                 // One frame may already be executing inside the collector in
@@ -594,7 +594,7 @@ class P2pKitRoomTransportLifecycleTest {
             assertThat(producer.isCompleted).isFalse()
 
             assertThat(withTimeout(2_000) { room.incoming.first() })
-                .isEqualTo(PeerMessage.Heartbeat)
+                .isEqualTo(testPeerHeartbeat())
             withTimeout(2_000) { producer.await() }
             assertThat(alice.state.value).isEqualTo(ConnectionState.Connected)
         }
@@ -608,7 +608,7 @@ class P2pKitRoomTransportLifecycleTest {
             val bob = FakeP2pSession(peer("bob-pid", "Bob"))
             admit(room, kit, alice)
             admit(room, kit, bob)
-            val hostOnlyFrame = P2pMessage.Binary(codec.encode(HostMessage.EndSession))
+            val hostOnlyFrame = P2pMessage.Binary(codec.encode(testTerminalMessage()))
 
             repeat(P2pTrafficLimits.MAX_TRAFFIC_VIOLATIONS) {
                 alice.incomingFlow.emit(hostOnlyFrame)
@@ -1054,13 +1054,13 @@ class P2pKitRoomTransportLifecycleTest {
         admit(room, kit, alice)
 
         // Sanity: send succeeds while connected.
-        val before = room.send(SendTarget.Direct(PlayerId("alice-pid")), HostMessage.EndSession)
+        val before = room.send(SendTarget.Direct(PlayerId("alice-pid")), testTerminalMessage())
         assertThat(before).isInstanceOf(Result.Success::class)
 
         alice.stateFlow.value = ConnectionState.Closed
         awaitCondition { room.members.value.singleOrNull()?.connected == false }
 
-        val after = room.send(SendTarget.Direct(PlayerId("alice-pid")), HostMessage.EndSession)
+        val after = room.send(SendTarget.Direct(PlayerId("alice-pid")), testTerminalMessage())
         assertThat(after).isInstanceOf(Result.Failure::class)
         assertThat((after as Result.Failure).error).isEqualTo(NetError.NotConnected)
     }
@@ -1097,7 +1097,7 @@ class P2pKitRoomTransportLifecycleTest {
             scope = testScope,
             codec = codec,
         )
-        val applicationMessage = HostMessage.PublicStateDelta(byteArrayOf(1))
+        val applicationMessage = testHostHeartbeat()
         val frame = P2pMessage.Binary(codec.encode(applicationMessage))
 
         val producer = async {
@@ -1111,12 +1111,7 @@ class P2pKitRoomTransportLifecycleTest {
         assertThat(producer.isCompleted).isFalse()
 
         val received = withTimeout(2_000) { room.incoming.first() }
-        assertThat(received).isInstanceOf(HostMessage.PublicStateDelta::class)
-        assertThat(
-            (received as HostMessage.PublicStateDelta).patch.contentEquals(
-                applicationMessage.patch,
-            ),
-        ).isTrue()
+        assertThat(received).isEqualTo(applicationMessage)
         withTimeout(2_000) { producer.await() }
         assertThat(session.state.value).isEqualTo(ConnectionState.Connected)
         room.leave()
@@ -1135,7 +1130,7 @@ class P2pKitRoomTransportLifecycleTest {
             scope = testScope,
             codec = codec,
         )
-        val wrongDirection = P2pMessage.Binary(codec.encode(PeerMessage.Heartbeat))
+        val wrongDirection = P2pMessage.Binary(codec.encode(testPeerHeartbeat()))
 
         repeat(P2pTrafficLimits.MAX_TRAFFIC_VIOLATIONS) {
             session.incomingFlow.emit(wrongDirection)
@@ -1450,7 +1445,7 @@ class P2pKitRoomTransportLifecycleTest {
         repeat(10) { yield() }
 
         assertThat(resumeRequests).isEmpty()
-        assertThat(room.sendToHost(PeerMessage.Heartbeat))
+        assertThat(room.sendToHost(testPeerHeartbeat()))
             .isEqualTo(Result.Failure(NetError.NotConnected))
         room.leave()
     }
@@ -1498,7 +1493,7 @@ class P2pKitRoomTransportLifecycleTest {
             assertThat(kit.stopCalls).isEqualTo(0)
 
             // A second terminal frame and duplicate leave are both idempotent.
-            session.incomingFlow.emit(P2pMessage.Binary(codec.encode(HostMessage.EndSession)))
+            session.incomingFlow.emit(P2pMessage.Binary(codec.encode(testTerminalMessage())))
             assertThat(withTimeoutOrNull(100L) { room.incoming.first() }).isEqualTo(null)
             room.leave()
             room.leave()
@@ -1746,17 +1741,17 @@ class P2pKitRoomTransportLifecycleTest {
         assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(generationTwo))
 
         // The replaced collector is generation-bound and cannot revoke G2.
-        firstSession.incomingFlow.emit(P2pMessage.Binary(codec.encode(HostMessage.EndSession)))
+        firstSession.incomingFlow.emit(P2pMessage.Binary(codec.encode(testTerminalMessage())))
         repeat(5) { yield() }
         assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(generationTwo))
 
         // The active replacement collector is bound to G2, so its terminal
         // frame revokes G2 before the frame is exposed to game/UI code.
         replacementSession.incomingFlow.emit(
-            P2pMessage.Binary(codec.encode(HostMessage.EndSession)),
+            P2pMessage.Binary(codec.encode(testTerminalMessage())),
         )
         assertThat(withTimeout(2_000L) { room.incoming.first() })
-            .isEqualTo(HostMessage.EndSession)
+            .isEqualTo(testTerminalMessage())
         assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(null))
 
         eventCollector.cancel()
@@ -1798,10 +1793,10 @@ class P2pKitRoomTransportLifecycleTest {
             store.commit(rotatedCredential.offerId, rotatedCredential.generation)
 
             firstSession.incomingFlow.emit(
-                P2pMessage.Binary(codec.encode(HostMessage.EndSession)),
+                P2pMessage.Binary(codec.encode(testTerminalMessage())),
             )
             assertThat(withTimeout(2_000L) { terminal.await() })
-                .isEqualTo(HostMessage.EndSession)
+                .isEqualTo(testTerminalMessage())
             assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(null))
 
             // Model the exact post-connector race: Success is already in hand,
@@ -1818,7 +1813,7 @@ class P2pKitRoomTransportLifecycleTest {
             assertThat(unadoptedSession.closeCalls).isEqualTo(1)
             assertThat(unadoptedSession.state.value).isEqualTo(ConnectionState.Closed)
             assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(null))
-            assertThat(room.sendToHost(PeerMessage.Heartbeat))
+            assertThat(room.sendToHost(testPeerHeartbeat()))
                 .isEqualTo(Result.Failure(NetError.NotConnected))
 
             room.leave()
@@ -1954,9 +1949,9 @@ class P2pKitRoomTransportLifecycleTest {
                 credentialStore = store,
             )
 
-            session.incomingFlow.emit(P2pMessage.Binary(codec.encode(HostMessage.EndSession)))
+            session.incomingFlow.emit(P2pMessage.Binary(codec.encode(testTerminalMessage())))
             assertThat(withTimeout(2_000L) { room.incoming.first() })
-                .isEqualTo(HostMessage.EndSession)
+                .isEqualTo(testTerminalMessage())
 
             assertThat(
                 diagnostics.snapshot().any {
@@ -2072,13 +2067,13 @@ class P2pKitRoomTransportLifecycleTest {
         yield()
 
         // While Connected: send succeeds.
-        val before = room.sendToHost(PeerMessage.Heartbeat)
+        val before = room.sendToHost(testPeerHeartbeat())
         assertThat(before).isInstanceOf(Result.Success::class)
 
         session.stateFlow.value = ConnectionState.Closed
         yield(); yield()
 
-        val after = room.sendToHost(PeerMessage.Heartbeat)
+        val after = room.sendToHost(testPeerHeartbeat())
         assertThat(after).isInstanceOf(Result.Failure::class)
         assertThat((after as Result.Failure).error).isEqualTo(NetError.NotConnected)
     }
@@ -2497,7 +2492,7 @@ class P2pKitRoomTransportLifecycleTest {
                         ),
                     )
                     is PeerMessage.ResumeReady -> replacementSession.incomingFlow.emit(
-                        P2pMessage.Binary(codec.encode(HostMessage.EndSession)),
+                        P2pMessage.Binary(codec.encode(testTerminalMessage())),
                     )
                     else -> Unit
                 }
@@ -2527,7 +2522,7 @@ class P2pKitRoomTransportLifecycleTest {
             assertThat(resumeRequests.single().generation).isEqualTo(1L)
             assertThat(relaunchedKit.lastExpectedFingerprint).isEqualTo(TEST_PEER_FINGERPRINT)
             assertThat(room.rejoinToken).isEqualTo(null)
-            assertThat(room.incoming.first()).isEqualTo(HostMessage.EndSession)
+            assertThat(room.incoming.first()).isEqualTo(testTerminalMessage())
 
             room.leave()
             assertThat(relaunchedTransport.resumableSession())
@@ -3493,9 +3488,8 @@ class P2pKitRoomTransportLifecycleTest {
         session.sent.clear()
 
         val result = room.sendToHost(
-            PeerMessage.ActionSubmit(
-                sender = PlayerId("forged"),
-                payload = ByteArray(P2pTrafficLimits.MAX_PEER_TO_HOST_FRAME_BYTES),
+            testClientCommand(
+                ByteArray(P2pTrafficLimits.MAX_PEER_TO_HOST_FRAME_BYTES),
             ),
         )
 
@@ -3515,7 +3509,7 @@ class P2pKitRoomTransportLifecycleTest {
         val room = newHostRoom(kit)
         yield()
 
-        val result = room.send(SendTarget.Broadcast, HostMessage.EndSession)
+        val result = room.send(SendTarget.Broadcast, testTerminalMessage())
 
         assertThat(result).isInstanceOf(Result.Failure::class)
         assertThat((result as Result.Failure).error).isEqualTo(NetError.NotConnected)
@@ -3533,7 +3527,7 @@ class P2pKitRoomTransportLifecycleTest {
         healthy.sent.clear()
         failing.sendHandler = { error("injected Alice send failure") }
 
-        val result = room.send(SendTarget.Broadcast, HostMessage.EndSession)
+        val result = room.send(SendTarget.Broadcast, testTerminalMessage())
 
         assertThat(result).isInstanceOf(Result.Failure::class)
         assertThat((result as Result.Failure).error)
@@ -3542,7 +3536,7 @@ class P2pKitRoomTransportLifecycleTest {
             healthy.sent
                 .filterIsInstance<P2pMessage.Binary>()
                 .map { codec.decode(it.bytes) },
-        ).containsExactly(HostMessage.EndSession)
+        ).containsExactly(testTerminalMessage())
         room.leave()
     }
 
@@ -3555,7 +3549,7 @@ class P2pKitRoomTransportLifecycleTest {
         alice.sendHandler = { throw CancellationException("cancel host send") }
 
         assertFailsWith<CancellationException> {
-            room.send(SendTarget.Direct(PlayerId("alice-pid")), HostMessage.EndSession)
+            room.send(SendTarget.Direct(PlayerId("alice-pid")), testTerminalMessage())
         }
     }
 
@@ -3700,7 +3694,7 @@ class P2pKitRoomTransportLifecycleTest {
         admit(hostRoom, hostKit, alice)
         alice.sendHandler = { throw AssertionError("fatal host send") }
         assertFailsWith<AssertionError> {
-            hostRoom.send(SendTarget.Direct(PlayerId("alice-pid")), HostMessage.EndSession)
+            hostRoom.send(SendTarget.Direct(PlayerId("alice-pid")), testTerminalMessage())
         }
         alice.sendHandler = null
         hostKit.stopHandler = { throw AssertionError("fatal host cleanup") }
@@ -4086,6 +4080,7 @@ internal class FakeP2pSession(
 
     override val state: StateFlow<ConnectionState> = stateFlow.asStateFlow()
     override val incoming: SharedFlow<P2pMessage> = incomingFlow.asSharedFlow()
+    @Suppress("OVERRIDE_DEPRECATION")
     override val incomingFiles: SharedFlow<P2pFileOffer> = incomingFilesFlow.asSharedFlow()
 
     override suspend fun send(message: P2pMessage) {
@@ -4167,6 +4162,7 @@ internal class FakeP2pSession(
             else -> Unit
         }
     }
+    @Suppress("OVERRIDE_DEPRECATION")
     override suspend fun sendFile(
         name: String,
         sizeBytes: Long,
@@ -4184,3 +4180,56 @@ internal class FakeP2pSession(
 private val TEST_PEER_FINGERPRINT = PeerFingerprint(
     "p2f1-zlmerarbaugm753v5mvipavkkhwxbvlu3cpx4unzvuvov7zu7dkq",
 )
+
+private fun testEnvelopeHeader(
+    sequence: Long,
+    messageId: String,
+): SessionEnvelopeHeader = SessionEnvelopeHeader(
+    protocol = ProtocolVersion(),
+    sessionId = SessionId("transport-test-session"),
+    gameId = GameId("transport-test-game"),
+    gameVersion = 1,
+    messageId = messageId,
+    sequence = sequence,
+)
+
+private fun testPeerHeartbeat(
+    actor: PlayerId = PlayerId("alice-pid"),
+): PeerMessage.SessionHeartbeat = PeerMessage.SessionHeartbeat(
+    header = testEnvelopeHeader(
+        sequence = 0L,
+        messageId = "peer-heartbeat-000000000001",
+    ),
+    actor = actor,
+    lastAppliedRevision = 0L,
+)
+
+private fun testHostHeartbeat(): HostMessage.Heartbeat = HostMessage.Heartbeat(
+    header = testEnvelopeHeader(
+        sequence = 1L,
+        messageId = "host-heartbeat-000000000001",
+    ),
+    authoritativeRevision = 1L,
+)
+
+private fun testTerminalMessage(): HostMessage.SessionEnded = HostMessage.SessionEnded(
+    header = testEnvelopeHeader(
+        sequence = 2L,
+        messageId = "host-terminal-0000000000001",
+    ),
+    reason = SessionEndReason.Cancelled,
+    finalRevision = 1L,
+)
+
+private fun testClientCommand(payload: ByteArray): PeerMessage.ClientCommand =
+    PeerMessage.ClientCommand(
+        header = testEnvelopeHeader(
+            sequence = 0L,
+            messageId = "oversized-command-0000000001",
+        ),
+        actor = PlayerId("forged"),
+        commandId = "oversized-command-0000000001",
+        clientSequence = 1L,
+        expectedRevision = 0L,
+        payload = payload,
+    )

@@ -16,12 +16,9 @@ import kotlinx.serialization.json.jsonPrimitive
  * the host then decodes back to a typed `WhodunitAction` and feeds it to the
  * same reducer that pass-and-play uses.
  *
- * The codec is intentionally JSON for now — easy to inspect on the wire,
- * easy to evolve via kotlinx-serialization's `@SerialName` / `@JsonNames`
- * facilities, and tied to the same `Json` config the snapshot codec and
- * room-protocol codec use so there's only one schema to reason about.
- * Phase 8+ may swap in a binary format (CBOR) once the protocol is stable;
- * the function surface here will not change.
+ * The action schema intentionally remains strict JSON inside the bounded CBOR
+ * room envelope. Stable serial names provide explicit compatibility while
+ * malformed, unknown, or oversized commands fail closed.
  */
 object WhodunitActionCodec {
 

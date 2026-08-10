@@ -225,12 +225,9 @@ class MafiaPeerActionAuthorityTest {
     }
 
     /**
-     * wu-ui-01 / NN-03 regression: a peer FORGES `ActionSubmit.sender` to the
-     * victim's id (so sender == by, which would sail through the authority gate
-     * if the host trusted the body field). The transport stamps the
-     * authenticated sender (the imposter's own bound id), so the gate sees
-     * sender=imposter != by=victim and rejects. Fails before the fix
-     * (forgery accepted), passes after.
+     * A modified peer forges `ClientCommand.actor` to the victim's id. The
+     * transport overwrites it with the connection-bound imposter identity, so
+     * the authority gate sees actor=imposter != by=victim and rejects it.
      */
     @Test
     fun peer_cannot_forge_sender_to_impersonate_another_player() = runTest {

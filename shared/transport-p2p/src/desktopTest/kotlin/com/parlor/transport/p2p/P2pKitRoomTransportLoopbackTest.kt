@@ -5,10 +5,15 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotNull
 import assertk.assertions.isTrue
+import com.parlor.core.ids.GameId
 import com.parlor.core.ids.PlayerId
+import com.parlor.core.ids.SessionId
 import com.parlor.core.result.Result
 import com.parlor.networking.protocol.HostMessage
 import com.parlor.networking.protocol.PeerMessage
+import com.parlor.networking.protocol.ProtocolVersion
+import com.parlor.networking.protocol.SessionEnvelopeHeader
+import com.parlor.networking.protocol.SessionEndReason
 import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.RoomInfo
 import com.parlor.networking.room.SendTarget
@@ -41,9 +46,8 @@ import kotlin.time.Duration.Companion.seconds
  * stand up in one JVM process, one hosts and one joins via LAN/loopback,
  * and the host↔peer protocol round-trips successfully.
  *
- * This is the "smallest first commit that lets us test host/join/message
- * sync" — it does not wire P2pKit into the app's production DI yet, but
- * proves the adapter is functionally correct on the JVM target.
+ * P2pKit is wired into the production mobile dependency graph; this JVM test
+ * independently exercises the same adapter boundary with a real LAN kit.
  *
  * Discovery scope:
  *  - The `host_*` test runs in CI/locally. It verifies the adapter brings
@@ -176,22 +180,25 @@ class P2pKitRoomTransportLoopbackTest {
             hostRoom.members.first { it.isNotEmpty() }.first().playerId
         }
 
-        // Peer → Host: send a JoinRequest, host receives it.
+        // Peer → Host: send a current gameplay heartbeat; the host observes
+        // the authenticated connection identity rather than the forged body.
         val hostInbox = async {
             withTimeout(10.seconds) { hostRoom.incoming.first() }
         }
-        peerRoom.sendToHost(PeerMessage.JoinRequest("peer-alice"))
+        val peerHeartbeat = loopbackPeerHeartbeat(PlayerId("forged"))
+        peerRoom.sendToHost(peerHeartbeat)
         val received = hostInbox.await()
-        assertThat(received).isInstanceOf(PeerMessage.JoinRequest::class)
-        assertThat((received as PeerMessage.JoinRequest).displayName).isEqualTo("peer-alice")
+        assertThat(received).isInstanceOf(PeerMessage.SessionHeartbeat::class)
+        assertThat((received as PeerMessage.SessionHeartbeat).actor).isEqualTo(joinedPlayerId)
+        assertThat(received.header).isEqualTo(peerHeartbeat.header)
 
-        // Host → Peer (direct): send a fake EndSession, peer receives it.
+        // Host → Peer (direct): send the current terminal envelope.
         val peerInbox = async {
             withTimeout(10.seconds) { peerRoom.incoming.first() }
         }
-        hostRoom.send(SendTarget.Direct(joinedPlayerId), HostMessage.EndSession)
+        hostRoom.send(SendTarget.Direct(joinedPlayerId), loopbackTerminal())
         val hostMsg = peerInbox.await()
-        assertThat(hostMsg).isInstanceOf(HostMessage.EndSession::class)
+        assertThat(hostMsg).isInstanceOf(HostMessage.SessionEnded::class)
     }
 
     @Test
@@ -226,21 +233,44 @@ class P2pKitRoomTransportLoopbackTest {
             hostRoom.members.first { it.size >= 2 }
         }
 
-        // Broadcast EndSession; both peers receive it.
+        // Broadcast a current terminal frame; both peers receive it.
         val peer1Inbox = async {
             withTimeout(10.seconds) { peer1Room.incoming.first() }
         }
         val peer2Inbox = async {
             withTimeout(10.seconds) { peer2Room.incoming.first() }
         }
-        hostRoom.send(SendTarget.Broadcast, HostMessage.EndSession)
-        assertThat(peer1Inbox.await()).isInstanceOf(HostMessage.EndSession::class)
-        assertThat(peer2Inbox.await()).isInstanceOf(HostMessage.EndSession::class)
+        hostRoom.send(SendTarget.Broadcast, loopbackTerminal())
+        assertThat(peer1Inbox.await()).isInstanceOf(HostMessage.SessionEnded::class)
+        assertThat(peer2Inbox.await()).isInstanceOf(HostMessage.SessionEnded::class)
     }
 
     private fun randomTag(): String =
         (1..6).map { ('a'..'z').random() }.joinToString("")
 }
+
+private fun loopbackHeader(sequence: Long, messageId: String): SessionEnvelopeHeader =
+    SessionEnvelopeHeader(
+        protocol = ProtocolVersion(),
+        sessionId = SessionId("loopback-test-session"),
+        gameId = GameId("loopback-test-game"),
+        gameVersion = 1,
+        messageId = messageId,
+        sequence = sequence,
+    )
+
+private fun loopbackPeerHeartbeat(actor: PlayerId): PeerMessage.SessionHeartbeat =
+    PeerMessage.SessionHeartbeat(
+        header = loopbackHeader(0L, "loopback-peer-heartbeat-0001"),
+        actor = actor,
+        lastAppliedRevision = 0L,
+    )
+
+private fun loopbackTerminal(): HostMessage.SessionEnded = HostMessage.SessionEnded(
+    header = loopbackHeader(1L, "loopback-host-terminal-00001"),
+    reason = SessionEndReason.Cancelled,
+    finalRevision = 0L,
+)
 
 private class LoopbackIdentityStore : JvmSecureIdentityStore {
     private val values = mutableMapOf<String, ByteArray>()

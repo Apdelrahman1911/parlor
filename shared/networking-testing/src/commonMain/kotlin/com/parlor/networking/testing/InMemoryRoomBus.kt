@@ -129,6 +129,5 @@ private fun PeerMessage.withAuthenticatedActor(playerId: PlayerId): PeerMessage 
     is PeerMessage.CommandOutcomeRequest -> copy(actor = playerId)
     is PeerMessage.SessionStartReady -> copy(actor = playerId)
     is PeerMessage.SessionStartCommitAck -> copy(actor = playerId)
-    is PeerMessage.ActionSubmit -> copy(sender = playerId)
     else -> this
 }

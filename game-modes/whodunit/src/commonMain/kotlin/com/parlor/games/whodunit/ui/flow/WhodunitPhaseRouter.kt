@@ -420,7 +420,7 @@ private fun PeerPhaseScreens(
 
         is WhodunitPhase.Reveal -> {
             if (verdict == null) {
-                // Peer is waiting for the host's next PublicStateSnapshot that
+                // Peer is waiting for the host's next atomic PlayerSnapshot that
                 // carries the verdict. Show a loading state rather than guess.
                 LoadingScreen(modifier)
             } else {

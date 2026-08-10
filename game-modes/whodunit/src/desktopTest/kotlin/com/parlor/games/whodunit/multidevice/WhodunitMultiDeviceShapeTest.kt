@@ -57,11 +57,9 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import kotlin.test.Test
 
 /**
- * Phase 7 — multi-device shape contract for Whodunit.
- *
- * Promotes the prior round-robin smoke test into a real contract: drives an
+ * Projection-distribution contract for Whodunit. It drives an
  * actual Whodunit playthrough on a host session, ships every public state
- * emission through [InMemoryRoomBus] as `HostMessage.PublicStateSnapshot`,
+ * emission through [InMemoryRoomBus] in a current player-snapshot envelope,
  * and asserts the peer-side projection equals the host's public projection
  * at every step. The host is canonical; the peer is a passive mirror.
  *
@@ -78,10 +76,9 @@ import kotlin.test.Test
  *    the peer eventually re-converges once delivery resumes.
  *
  * What this test deliberately does **not** do:
- *  - Serialize peer→host actions over the wire. Actions remain unsigned at
- *    this phase; the test driver submits them directly to the host. Real
- *    transports add action serialization Post-MVP.
- *  - Implement Bluetooth / LAN / WebRTC — Phase 7 is contract-only.
+ *  - Exercise peer→host commands; the authoritative bridge suites own actor,
+ *    sequence, revision, duplicate, and acknowledgement coverage.
+ *  - Exercise P2pKit LAN discovery or physical network behavior.
  */
 @OptIn(ExperimentalResourceApi::class, ExperimentalCoroutinesApi::class)
 class WhodunitMultiDeviceShapeTest {

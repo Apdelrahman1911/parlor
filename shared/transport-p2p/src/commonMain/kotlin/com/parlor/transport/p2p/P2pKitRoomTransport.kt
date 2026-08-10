@@ -867,7 +867,12 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
         data class Failed(val error: NetError) : AdmissionOutcome
     }
 
-    @Suppress("LongMethod") // Ordered credential offer/confirm/commit handshake with fail-closed cleanup.
+    @Suppress(
+        "LongMethod",
+        // Intentional one-way compatibility: a protocol-0 acceptance receives
+        // an explicit IncompatibleProtocol result instead of timing out.
+        "DEPRECATION",
+    )
     private suspend fun awaitAdmission(
         session: P2pSession,
         hostPeer: Peer,
@@ -1545,7 +1550,6 @@ private fun P2pDiagnostics.recordCommandResult(
 
 private fun PeerMessage.hasValidPeerPayloadBounds(): Boolean = when (this) {
     is PeerMessage.ClientCommand -> payload.size <= MAX_COMMAND_PAYLOAD_BYTES
-    is PeerMessage.ActionSubmit -> payload.size <= MAX_COMMAND_PAYLOAD_BYTES
     else -> true
 }
 
@@ -1869,13 +1873,12 @@ internal class HostP2pRoom(
                     )
                     return@collect
                 }
-                // wu-ui-01 / NN-03: the actor identity is the AUTHENTICATED
-                // session peer id, never a peer-authored actor/sender field.
+                // The actor identity is the AUTHENTICATED session peer id,
+                // never a peer-authored actor field.
                 // Overwrite the body field so the authority gate downstream can
                 // only ever see who actually owns this connection — a peer can no
                 // longer forge another player's vote/action by lying in the body.
                 val decoded = when (rawDecoded) {
-                    is PeerMessage.ActionSubmit -> rawDecoded.copy(sender = playerId)
                     is PeerMessage.AdmissionRequest -> rawDecoded.copy(actor = playerId)
                     is PeerMessage.AdmissionConfirmed -> rawDecoded.copy(actor = playerId)
                     is PeerMessage.AdmissionCommitAck -> rawDecoded.copy(actor = playerId)
@@ -3958,13 +3961,20 @@ internal class PeerP2pRoom(
                 )
                 return@collect
             }
-            if (decoded is HostMessage.SessionEnded || decoded == HostMessage.EndSession) {
+            if (decoded is HostMessage.SessionEnded) {
                 if (!acceptAuthenticatedTerminal(session, credentialBinding)) {
                     return@collect
                 }
             }
+            if (decoded is HostMessage.AdmissionAccepted) {
+                enforceTrafficDecision(
+                    trafficGuard.malformedFrame(nowMillis()),
+                    session,
+                    P2pDiagnosticReason.INCOMPATIBLE_PROTOCOL,
+                )
+                return@collect
+            }
             when (decoded) {
-                is HostMessage.AdmissionAccepted,
                 is HostMessage.AdmissionOffered,
                 is HostMessage.AdmissionPending,
                 is HostMessage.AdmissionCommitted,

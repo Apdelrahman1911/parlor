@@ -1,11 +1,15 @@
 package com.parlor.games.whodunit.multidevice
 
 import com.parlor.core.ids.CharacterId
+import com.parlor.core.ids.GameId
 import com.parlor.core.ids.PlayerId
+import com.parlor.core.ids.SessionId
 import com.parlor.games.whodunit.domain.action.WhodunitAction
 import com.parlor.games.whodunit.domain.event.WhodunitEvent
 import com.parlor.games.whodunit.domain.state.WhodunitState
 import com.parlor.networking.protocol.HostMessage
+import com.parlor.networking.protocol.ProtocolVersion
+import com.parlor.networking.protocol.SessionEnvelopeHeader
 import com.parlor.networking.room.SendTarget
 import com.parlor.networking.testing.InMemoryRoomBus
 import com.parlor.session.passandplay.PassAndPlaySessionController
@@ -19,15 +23,15 @@ import kotlinx.serialization.json.Json
 
 /**
  * Test-only host simulator. Wraps a real `PassAndPlaySessionController` and
- * — on every public-state emission — encodes the projection and ships it as
- * a [HostMessage.PublicStateSnapshot] to every registered peer through the
- * shared [InMemoryRoomBus].
+ * — on every public-state emission — encodes the projection into the public
+ * half of a current [HostMessage.PlayerSnapshot] and ships it to every
+ * registered peer through the shared [InMemoryRoomBus].
  *
  * The fixture intentionally does **not** wire peer-to-host action submission
  * through the bus: actions are submitted directly to the host session in
- * tests. Phase 7's scope is the *contract* (state propagation + redaction +
- * reliability), not a wire format for actions. When real transports land
- * Post-MVP they'll need to serialize actions too; that's outside this phase.
+ * tests. This fixture covers projection propagation and redaction only; the
+ * authoritative coordinator/bridge suites cover command authentication,
+ * revisions, acknowledgements, and player-private payload installation.
  */
 class WhodunitHostSimulator(
     val session: PassAndPlaySessionController<WhodunitState, WhodunitAction, WhodunitEvent>,
@@ -45,6 +49,7 @@ class WhodunitHostSimulator(
     /** Per-emission counter — useful for "drop the Nth snapshot" tests. */
     var emissionCount: Int = 0
         private set
+    private var revision: Long = 0L
 
     private val collector: Job = scope.launch {
         session.publicState.collect { projection ->
@@ -53,7 +58,7 @@ class WhodunitHostSimulator(
             val payload = json
                 .encodeToString(WhodunitState.serializer(), projection.state)
                 .encodeToByteArray()
-            bus.fromHost(SendTarget.Broadcast, HostMessage.PublicStateSnapshot(payload))
+            bus.fromHost(SendTarget.Broadcast, snapshot(payload))
         }
     }
 
@@ -66,7 +71,24 @@ class WhodunitHostSimulator(
         val payload = json
             .encodeToString(WhodunitState.serializer(), state)
             .encodeToByteArray()
-        bus.fromHost(SendTarget.Broadcast, HostMessage.PublicStateSnapshot(payload))
+        bus.fromHost(SendTarget.Broadcast, snapshot(payload))
+    }
+
+    private fun snapshot(payload: ByteArray): HostMessage.PlayerSnapshot {
+        val nextRevision = revision++
+        return HostMessage.PlayerSnapshot(
+            header = SessionEnvelopeHeader(
+                protocol = ProtocolVersion(),
+                sessionId = SessionId("whodunit-projection-fixture"),
+                gameId = GameId("whodunit"),
+                gameVersion = 1,
+                messageId = "fixture-snapshot-${nextRevision.toString().padStart(16, '0')}",
+                sequence = nextRevision,
+            ),
+            revision = nextRevision,
+            publicPayload = payload,
+            privatePayload = byteArrayOf(),
+        )
     }
 
     fun close() {
@@ -76,7 +98,7 @@ class WhodunitHostSimulator(
 
 /**
  * Test-only peer simulator. Listens to its bus inbox, decodes incoming
- * `PublicStateSnapshot` payloads, and exposes the result as a [StateFlow]
+ * [HostMessage.PlayerSnapshot.publicPayload] values, and exposes the result as a [StateFlow]
  * that mirrors the host's *public projection*.
  *
  * `state` is null until the first snapshot arrives. The test asserts that
@@ -99,10 +121,10 @@ class WhodunitPeerSimulator(
         bus.registerPeer(playerId)
         scope.launch {
             bus.peerMessagesIn(playerId).collect { msg ->
-                if (msg is HostMessage.PublicStateSnapshot) {
+                if (msg is HostMessage.PlayerSnapshot) {
                     _state.value = json.decodeFromString(
                         WhodunitState.serializer(),
-                        msg.payload.decodeToString(),
+                        msg.publicPayload.decodeToString(),
                     )
                     snapshotsReceived++
                 }
