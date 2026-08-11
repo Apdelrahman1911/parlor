@@ -582,9 +582,21 @@ class MafiaSnapshotRecoveryTest {
                 },
             ),
         )
+        val duplicatePlayers = valid.players.toMutableList().also {
+            it[1] = it[1].copy(displayName = it[0].displayName)
+        }
+        val duplicateNames = valid.copy(
+            players = duplicatePlayers,
+            public = valid.public.copy(
+                roster = valid.public.roster.toMutableList().also {
+                    it[1] = it[1].copy(displayName = it[0].displayName)
+                },
+            ),
+        )
 
         assertFalse(reorderedRoster.isValidRecoveryState())
         assertFalse(unnormalizedName.isValidRecoveryState())
+        assertFalse(duplicateNames.isValidRecoveryState())
     }
 
     @Test

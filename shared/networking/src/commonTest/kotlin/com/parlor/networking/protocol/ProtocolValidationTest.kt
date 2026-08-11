@@ -30,6 +30,16 @@ class ProtocolValidationTest {
             ).validateFor(session),
         )
         assertEquals(
+            ProtocolValidation.IncompatibleProtocol,
+            header(
+                protocol = ProtocolVersion(
+                    PARLOR_PROTOCOL_MAJOR,
+                    PARLOR_PROTOCOL_MINOR - 1,
+                ),
+            ).validateFor(session),
+            "protocol 4.0 must not decode the required 4.1 host-identity fields",
+        )
+        assertEquals(
             ProtocolValidation.WrongGame,
             header(gameId = GameId("other-game")).validateFor(session),
         )
@@ -152,6 +162,14 @@ class ProtocolValidationTest {
         assertEquals(
             ProtocolValidation.InvalidSessionStart,
             offer.copy(players = offer.players + offer.players.last()).validateFor(session),
+        )
+        assertEquals(
+            ProtocolValidation.InvalidSessionStart,
+            offer.copy(
+                players = offer.players.mapIndexed { index, player ->
+                    if (index == 1) player.copy(displayName = "Host") else player
+                },
+            ).validateFor(session),
         )
         assertEquals(
             ProtocolValidation.InvalidSessionStart,

@@ -30,6 +30,22 @@ class MafiaPeerSnapshotValidatorTest {
         )
         assertTrue(MafiaPeerSnapshotValidator.isValid(publicState, validPrivate, self))
 
+        val duplicatePlayers = publicState.players.toMutableList().also {
+            it[1] = it[1].copy(displayName = it[0].displayName)
+        }
+        val duplicateNames = publicState.copy(
+            players = duplicatePlayers,
+            public = publicState.public.copy(
+                roster = publicState.public.roster.toMutableList().also {
+                    it[1] = it[1].copy(displayName = it[0].displayName)
+                },
+            ),
+        )
+        assertFalse(
+            MafiaPeerSnapshotValidator.isValid(duplicateNames, validPrivate, self),
+            "a privacy-safe peer projection still requires distinct roster labels",
+        )
+
         assertFalse(
             MafiaPeerSnapshotValidator.isValid(
                 publicState.copy(

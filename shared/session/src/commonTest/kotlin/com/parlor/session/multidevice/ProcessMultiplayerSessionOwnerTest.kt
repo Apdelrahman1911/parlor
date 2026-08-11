@@ -765,7 +765,7 @@ private class FakeRoom(
     override val info = MutableStateFlow(
         RoomInfo(
             code = "123456",
-            displayName = "Room",
+            hostDisplayName = "Room",
             hostPlayerId = hostId,
             status = if (isHost) RoomInfo.Status.Hosting else RoomInfo.Status.Joined,
         ),

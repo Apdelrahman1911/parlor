@@ -25,7 +25,9 @@ object MafiaSessionRules {
         if (players.withIndex().any { (expectedSeat, player) -> player.seat != expectedSeat }) {
             return false
         }
-        if (players.any { player -> !isValidDisplayName(player.displayName) }) return false
+        if (!RoomInputPolicy.areValidDistinctDisplayNames(players.map(Player::displayName))) {
+            return false
+        }
         return true
     }
 
@@ -34,8 +36,4 @@ object MafiaSessionRules {
             "Invalid Mafia Classic session configuration"
         }
     }
-
-    private fun isValidDisplayName(displayName: String): Boolean =
-        displayName == RoomInputPolicy.normalizeDisplayName(displayName) &&
-            RoomInputPolicy.isValidDisplayName(displayName)
 }

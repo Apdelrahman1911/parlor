@@ -33,11 +33,7 @@ object WhodunitRules {
         if (players.size !in supportedCounts) return false
         if (players.map { it.id }.toSet().size != players.size) return false
         if (players.any { it.seat < 0 }) return false
-        if (players.any { player ->
-                player.displayName != RoomInputPolicy.normalizeDisplayName(player.displayName) ||
-                    !RoomInputPolicy.isValidDisplayName(player.displayName)
-            }
-        ) {
+        if (!RoomInputPolicy.areValidDistinctDisplayNames(players.map(Player::displayName))) {
             return false
         }
         if (players.withIndex().any { (seat, player) -> player.seat != seat }) return false

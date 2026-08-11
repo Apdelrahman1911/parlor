@@ -149,9 +149,9 @@ fun HostMessage.SessionStarting.validateFor(expected: SessionProtocol): Protocol
             ProtocolValidation.InvalidSessionStart
         players.map { it.id }.distinct().size != players.size ||
             players.map { it.seat } != players.indices.toList() ||
+            !RoomInputPolicy.areValidDistinctDisplayNames(players.map { it.displayName }) ||
             players.any {
                 it.id.raw.length !in 1..MAX_START_TEXT_LENGTH ||
-                !RoomInputPolicy.isValidDisplayName(it.displayName) ||
                     it.seat < 0
             } -> ProtocolValidation.InvalidSessionStart
         (caseVersion == null) != (caseDigest == null) ->

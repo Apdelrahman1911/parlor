@@ -98,6 +98,24 @@ class MafiaSessionRulesTest {
         assertTrue(MafiaSessionRules.isValidRoster(international))
     }
 
+    @Test
+    fun exact_duplicate_display_names_are_rejected_at_the_authoritative_boundary() {
+        val duplicateNames = players(5).toMutableList().also {
+            it[1] = it[1].copy(displayName = it[0].displayName)
+        }
+
+        assertFalse(MafiaSessionRules.isValidRoster(duplicateNames))
+        assertFailsWith<IllegalArgumentException> {
+            definition.createInitialState(config(duplicateNames))
+        }
+
+        val caseVariants = players(5).toMutableList().also {
+            it[0] = it[0].copy(displayName = "Alice")
+            it[1] = it[1].copy(displayName = "alice")
+        }
+        assertTrue(MafiaSessionRules.isValidRoster(caseVariants))
+    }
+
     private fun config(players: List<Player>) = SessionConfig(
         sessionId = SessionId("mafia-session-rules"),
         caseId = CaseId("default"),

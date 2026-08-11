@@ -153,7 +153,7 @@ fun MafiaHostLobbyFlow(
                 check(mode == MultiplayerOpenMode.Host)
                 transport.host(
                     HostConfig(
-                        roomDisplayName = hostName,
+                        hostDisplayName = hostName,
                         maxRemotePlayers = MafiaSettings.MAX_PLAYERS - 1,
                         gameProtocol = HostedGameProtocol(
                             gameId = MafiaIds.GameId,

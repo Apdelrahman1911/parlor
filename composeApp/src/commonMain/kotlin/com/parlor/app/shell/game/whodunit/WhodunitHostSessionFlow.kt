@@ -193,7 +193,7 @@ fun WhodunitHostSessionFlow(
                 check(mode == MultiplayerOpenMode.Host)
                 transport.host(
                     HostConfig(
-                        roomDisplayName = hostName,
+                        hostDisplayName = hostName,
                         maxRemotePlayers = capacity.last - 1,
                         gameProtocol = HostedGameProtocol(
                             gameId = WhodunitIds.GameId,

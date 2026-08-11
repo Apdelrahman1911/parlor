@@ -76,8 +76,7 @@ fun MafiaPlayerEntryScreen(
                 label = stringResource(Res.string.player_entry_continue),
                 contentDescription = stringResource(Res.string.player_entry_continue_description),
                 onClick = { onConfirm(normalizedNames) },
-                enabled = normalizedNames.all(RoomInputPolicy::isValidDisplayName) &&
-                    normalizedNames.toSet().size == normalizedNames.size,
+                enabled = RoomInputPolicy.areValidDistinctDisplayNames(normalizedNames),
                 modifier = Modifier.fillMaxWidth(),
             )
         }

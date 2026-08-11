@@ -48,4 +48,14 @@ class RoomInputPolicyTest {
             RoomInputPolicy.sanitizeDisplayNameInput("Ali\uD83Cce\uDFB2"),
         )
     }
+
+    @Test
+    fun display_name_rosters_require_valid_canonical_exactly_distinct_names() {
+        assertTrue(RoomInputPolicy.areValidDistinctDisplayNames(listOf("Alice", "Bob")))
+        assertTrue(RoomInputPolicy.areValidDistinctDisplayNames(listOf("Alice", "alice")))
+
+        assertFalse(RoomInputPolicy.areValidDistinctDisplayNames(listOf("Alice", "Alice")))
+        assertFalse(RoomInputPolicy.areValidDistinctDisplayNames(listOf("Alice", " Alice ")))
+        assertFalse(RoomInputPolicy.areValidDistinctDisplayNames(listOf("Alice", "   ")))
+    }
 }

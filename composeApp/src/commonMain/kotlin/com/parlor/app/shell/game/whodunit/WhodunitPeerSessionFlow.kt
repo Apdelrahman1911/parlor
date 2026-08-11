@@ -479,7 +479,7 @@ private fun PeerWaitingForHostStart(
                 Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s)) {
                     Text(
                         text = stringResource(Res.string.peer_room_header_format)
-                            .replace("%1\$s", info.displayName)
+                            .replace("%1\$s", info.hostDisplayName)
                             .replace("%2\$s", peerName),
                         style = ParlorTheme.typography.displayMedium,
                         color = ParlorTheme.colors.textPrimary,

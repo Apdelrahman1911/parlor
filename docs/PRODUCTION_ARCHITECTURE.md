@@ -50,10 +50,12 @@ admission, reconnect, ordering, or a P2pKit instance.
 The host is the sole authority. Peers never run a reducer to predict canonical
 state.
 
-Runtime protocol: `4.0`.
+Runtime protocol: `4.1`.
 
-Protocol 4.0 makes game entry an acknowledged, idempotent barrier rather than
-a one-shot notification:
+Protocol 4.0 introduced the acknowledged, idempotent game-entry barrier;
+protocol 4.1 retains that barrier and additionally carries the canonical host
+display name in admission/resume offers and reports duplicate display names
+explicitly:
 
 ```mermaid
 sequenceDiagram
@@ -100,7 +102,7 @@ sequenceDiagram
     PC->>P: install only monotonic authoritative revision
 ```
 
-Protocol compatibility is strict and exact: a 4.0 binary interoperates only
+Protocol compatibility is strict and exact: a 4.1 binary interoperates only
 with the same major and minor schema. The cross-game envelope carries protocol
 version, session ID, game ID, game
 version, message ID, and sequence metadata. Commands add a random command ID,
@@ -111,6 +113,11 @@ metadata as a closed failure rather than attempting to decode it as game data.
 Each peer has at most one mutation command in flight. A stale or rejected
 non-idempotent game action is never automatically replayed; the peer installs
 the authoritative snapshot and the player may submit a newly validated action.
+
+Admission treats the host name and every pending, connected, or resumable
+logical seat name as one exact, canonical display-label namespace. A conflict
+is rejected atomically with `DisplayNameInUse`; case variants remain distinct
+labels, and authenticated `PlayerId` values—not names—remain the authority key.
 
 Snapshots contain one public projection plus only the receiving player's
 private slice, captured from one immutable host state. Host-only state is never

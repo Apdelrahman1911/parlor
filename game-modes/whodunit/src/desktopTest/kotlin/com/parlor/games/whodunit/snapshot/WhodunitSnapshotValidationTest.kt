@@ -143,6 +143,19 @@ class WhodunitSnapshotValidationTest {
     }
 
     @Test
+    fun exactDuplicateRosterNamesAreRejectedBySnapshotRecovery() {
+        val duplicatePlayers = assigned.players.toMutableList().also {
+            it[1] = it[1].copy(displayName = it[0].displayName)
+        }
+        assertDecodeRejected(
+            assigned.copy(
+                players = duplicatePlayers,
+                public = assigned.public.copy(playersAtTable = duplicatePlayers),
+            ),
+        )
+    }
+
+    @Test
     fun graceExpiryRevealRoundTripsAndIsValidForPeerInstallation() {
         val missingPlayer = players.last().id
         val disconnected = WhodunitReducer.reduce(

@@ -474,7 +474,7 @@ class MafiaPeerActionAuthorityTest {
         private val _info = MutableStateFlow(
             RoomInfo(
                 code = "test",
-                displayName = "Test Host",
+                hostDisplayName = "Test Host",
                 hostPlayerId = hostId,
                 status = RoomInfo.Status.Hosting,
             ),

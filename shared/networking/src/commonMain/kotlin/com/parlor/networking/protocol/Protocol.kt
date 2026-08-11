@@ -17,12 +17,14 @@ import kotlinx.serialization.Serializable
 @Serializable
 sealed interface RoomMessage
 
-// v4 replaces the one-shot game-start notification with an acknowledged,
+// v4.0 replaced the one-shot game-start notification with an acknowledged,
 // idempotent offer -> ready -> commit -> commit-ack barrier. A v3 peer could
 // enter gameplay after seeing an unacknowledged SessionStarting frame and lose
-// the first authoritative snapshot, so the wire formats must not interoperate.
+// the first authoritative snapshot. v4.1 makes host display identity explicit
+// and adds an actionable duplicate-name admission result. Exact compatibility
+// keeps either schema from decoding the other's required fields or enum values.
 const val PARLOR_PROTOCOL_MAJOR: Int = 4
-const val PARLOR_PROTOCOL_MINOR: Int = 0
+const val PARLOR_PROTOCOL_MINOR: Int = 1
 const val MAX_COMMAND_PAYLOAD_BYTES: Int = 32 * 1024
 const val MAX_SNAPSHOT_PAYLOAD_BYTES: Int = 256 * 1024
 const val MAX_CONTROL_PAYLOAD_BYTES: Int = 8 * 1024
@@ -66,6 +68,7 @@ enum class AdmissionRejection {
     InvalidCredential,
     ExpiredCredential,
     AlreadyConnected,
+    DisplayNameInUse,
 }
 
 /** One generation of a device-protected resumable membership capability. */
@@ -126,7 +129,10 @@ sealed interface HostMessage : RoomMessage {
 
     /** Initial host approval; the peer must durably stage [offer] before confirming. */
     @Serializable
-    data class AdmissionOffered(val offer: ResumableCredentialOffer) : HostMessage
+    data class AdmissionOffered(
+        val offer: ResumableCredentialOffer,
+        val hostDisplayName: String,
+    ) : HostMessage
 
     /** Valid room request is waiting for an explicit host decision. */
     @Serializable
@@ -142,7 +148,10 @@ sealed interface HostMessage : RoomMessage {
 
     /** Rotated credential offered after a valid pinned resume request. */
     @Serializable
-    data class ResumeOffered(val offer: ResumableCredentialOffer) : HostMessage
+    data class ResumeOffered(
+        val offer: ResumableCredentialOffer,
+        val hostDisplayName: String,
+    ) : HostMessage
 
     /** Resume membership/session replacement committed on the host. */
     @Serializable

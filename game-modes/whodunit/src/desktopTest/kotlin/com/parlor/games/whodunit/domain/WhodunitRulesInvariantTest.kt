@@ -165,6 +165,47 @@ class WhodunitRulesInvariantTest {
     }
 
     @Test
+    fun exactDuplicateDisplayNamesAreRejectedAtTheAuthoritativeBoundary() {
+        val duplicateNames = players(4).toMutableList().also {
+            it[1] = it[1].copy(displayName = it[0].displayName)
+        }
+
+        assertFalse(
+            WhodunitRules.isValidRoster(WhodunitIds.ClassicVoteModeId, duplicateNames),
+        )
+        assertFailsWith<IllegalArgumentException> {
+            definition.createInitialState(
+                config(WhodunitIds.ClassicVoteModeId, duplicateNames, seed = 1L),
+            )
+        }
+
+        val assigned = assignedState(WhodunitIds.ClassicVoteModeId, 4, seed = 7L)
+        val publicProjection = WhodunitProjectionPolicy.toPublic(assigned).state
+        val duplicateProjectedPlayers = publicProjection.players.toMutableList().also {
+            it[1] = it[1].copy(displayName = it[0].displayName)
+        }
+        assertFalse(
+            WhodunitStateValidator.isValidPeerProjection(
+                publicState = publicProjection.copy(
+                    players = duplicateProjectedPlayers,
+                    public = publicProjection.public.copy(
+                        playersAtTable = duplicateProjectedPlayers,
+                    ),
+                ),
+                ownPrivate = assigned.privatePerPlayer.getValue(assigned.players.first().id),
+                selfPlayerId = assigned.players.first().id,
+            ),
+            "a privacy-safe peer projection still requires distinct roster labels",
+        )
+
+        val caseVariants = players(4).toMutableList().also {
+            it[0] = it[0].copy(displayName = "Alice")
+            it[1] = it[1].copy(displayName = "alice")
+        }
+        assertTrue(WhodunitRules.isValidRoster(WhodunitIds.ClassicVoteModeId, caseVariants))
+    }
+
+    @Test
     fun privacyRerollChangesKillerAndEveryPreviouslyViewedDossier() {
         for (count in 4..8) {
             for (seed in 0L..100L) {

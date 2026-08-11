@@ -80,10 +80,11 @@ class RoomMessageCodecTest {
             gameVersion = 1,
         )
         val frames: List<RoomMessage> = listOf(
-            HostMessage.AdmissionOffered(offer),
+            HostMessage.AdmissionOffered(offer, "Host"),
             HostMessage.AdmissionPending(offer.playerId),
             HostMessage.AdmissionCommitted(offer.playerId, offer.offerId, offer.generation),
-            HostMessage.ResumeOffered(offer),
+            HostMessage.AdmissionRejected(AdmissionRejection.DisplayNameInUse),
+            HostMessage.ResumeOffered(offer, "Host"),
             HostMessage.ResumeCommitted(offer.playerId, offer.offerId, offer.generation),
             PeerMessage.AdmissionConfirmed(offer.playerId, offer.offerId, offer.generation),
             PeerMessage.AdmissionCommitAck(offer.playerId, offer.offerId, offer.generation),

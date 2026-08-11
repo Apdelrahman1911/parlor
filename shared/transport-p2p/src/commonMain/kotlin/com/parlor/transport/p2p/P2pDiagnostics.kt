@@ -67,6 +67,7 @@ internal enum class P2pDiagnosticReason {
     SESSION_STARTED,
     INCOMPATIBLE_PROTOCOL,
     UNAUTHORIZED,
+    NAME_IN_USE,
     RATE_LIMIT,
     PAYLOAD_LIMIT,
     WRONG_DIRECTION,

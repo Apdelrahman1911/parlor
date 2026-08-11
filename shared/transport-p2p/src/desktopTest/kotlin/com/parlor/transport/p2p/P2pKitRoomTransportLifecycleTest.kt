@@ -257,6 +257,78 @@ class P2pKitRoomTransportLifecycleTest {
     }
 
     @Test
+    fun host_atomically_reserves_exact_display_names_across_host_pending_and_member_seats() =
+        runBlocking {
+            val kit = FakeP2pKit(P2pPeerId("host-pid"))
+            val room = newHostRoom(kit)
+
+            val hostCollision = FakeP2pSession(peer("host-collision", "Parlor Room"))
+            emitAdmissionRequest(kit, hostCollision)
+            awaitCondition { hostCollision.admissionRejections().isNotEmpty() }
+            assertThat(hostCollision.admissionRejections())
+                .containsExactly(AdmissionRejection.DisplayNameInUse)
+            assertThat(room.pendingAdmissions.value).isEmpty()
+
+            val alice = FakeP2pSession(peer("alice-pid", "Alice"))
+            requestAdmission(room, kit, alice)
+            val pendingCollision = FakeP2pSession(peer("alice-copy-pid", "Alice"))
+            emitAdmissionRequest(kit, pendingCollision)
+            awaitCondition { pendingCollision.admissionRejections().isNotEmpty() }
+            assertThat(pendingCollision.admissionRejections())
+                .containsExactly(AdmissionRejection.DisplayNameInUse)
+            assertThat(room.pendingAdmissions.value.map { it.playerId })
+                .containsExactly(PlayerId("alice-pid"))
+
+            assertThat(room.approveAdmission(PlayerId("alice-pid")))
+                .isInstanceOf(Result.Success::class)
+            awaitCondition { room.members.value.singleOrNull()?.connected == true }
+
+            val memberCollision = FakeP2pSession(peer("alice-copy-2-pid", "Alice"))
+            emitAdmissionRequest(kit, memberCollision)
+            awaitCondition { memberCollision.admissionRejections().isNotEmpty() }
+            assertThat(memberCollision.admissionRejections())
+                .containsExactly(AdmissionRejection.DisplayNameInUse)
+
+            alice.stateFlow.value = ConnectionState.Closed
+            awaitCondition { room.members.value.singleOrNull()?.connected == false }
+            val disconnectedCollision = FakeP2pSession(
+                peer("alice-copy-3-pid", "Alice"),
+            )
+            emitAdmissionRequest(kit, disconnectedCollision)
+            awaitCondition { disconnectedCollision.admissionRejections().isNotEmpty() }
+            assertThat(disconnectedCollision.admissionRejections())
+                .containsExactly(AdmissionRejection.DisplayNameInUse)
+
+            val caseVariant = FakeP2pSession(peer("lower-alice-pid", "alice"))
+            requestAdmission(room, kit, caseVariant)
+            assertThat(room.pendingAdmissions.value.map { it.playerId })
+                .containsExactly(PlayerId("lower-alice-pid"))
+        }
+
+    @Test
+    fun simultaneous_same_name_requests_create_only_one_pending_seat() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("host-pid"))
+        val room = newHostRoom(kit)
+        val first = FakeP2pSession(peer("first-pid", "Same Name"))
+        val second = FakeP2pSession(peer("second-pid", "Same Name"))
+
+        attachSession(kit, first)
+        attachSession(kit, second)
+        val firstRequest = testScope.async { sendAdmissionRequest(first) }
+        val secondRequest = testScope.async { sendAdmissionRequest(second) }
+        firstRequest.await()
+        secondRequest.await()
+        awaitCondition {
+            room.pendingAdmissions.value.size == 1 &&
+                first.admissionRejections().size + second.admissionRejections().size == 1
+        }
+
+        assertThat(room.pendingAdmissions.value.single().displayName).isEqualTo("Same Name")
+        assertThat(first.admissionRejections() + second.admissionRejections())
+            .containsExactly(AdmissionRejection.DisplayNameInUse)
+    }
+
+    @Test
     fun failed_acceptance_delivery_rolls_back_the_seat_without_a_ghost_member() = runBlocking {
         val kit = FakeP2pKit(P2pPeerId("host-pid"))
         val room = newHostRoom(kit, maxRemotePlayers = 1)
@@ -1213,6 +1285,7 @@ class P2pKitRoomTransportLifecycleTest {
                         session = replacementSession,
                         hostPeer = hostPeer,
                         credential = rotatedCredential,
+                        hostDisplayName = hostPeer.name,
                     ),
                 )
             },
@@ -1270,6 +1343,7 @@ class P2pKitRoomTransportLifecycleTest {
                         session = replacementSession,
                         hostPeer = hostPeer,
                         credential = rotatedCredential,
+                        hostDisplayName = hostPeer.name,
                     ),
                 )
             },
@@ -1330,6 +1404,7 @@ class P2pKitRoomTransportLifecycleTest {
                                 session = replacementSession,
                                 hostPeer = hostPeer,
                                 credential = credential.copy(generation = 2L),
+                                hostDisplayName = hostPeer.name,
                             ),
                         )
                     }
@@ -1747,6 +1822,7 @@ class P2pKitRoomTransportLifecycleTest {
                         replacementSession,
                         hostPeer,
                         generationTwo,
+                        hostPeer.name,
                     ),
                 )
             },
@@ -1826,6 +1902,7 @@ class P2pKitRoomTransportLifecycleTest {
                         unadoptedSession,
                         hostPeer,
                         rotatedCredential,
+                        hostPeer.name,
                     ),
                 ),
             ).isEqualTo(ResumeAdoptionOutcome.Terminal)
@@ -1874,7 +1951,12 @@ class P2pKitRoomTransportLifecycleTest {
 
         assertThat(
             room.adoptResumedConnection(
-                ResumedPeerConnection(unadoptedSession, hostPeer, generationTwo),
+                ResumedPeerConnection(
+                    unadoptedSession,
+                    hostPeer,
+                    generationTwo,
+                    hostPeer.name,
+                ),
             ),
         ).isEqualTo(ResumeAdoptionOutcome.Terminal)
         assertThat(unadoptedSession.closeCalls).isEqualTo(1)
@@ -1918,6 +2000,7 @@ class P2pKitRoomTransportLifecycleTest {
                                 replacementSession,
                                 hostPeer,
                                 rotatedCredential,
+                                hostPeer.name,
                             ),
                         )
                     } else {
@@ -2246,7 +2329,7 @@ class P2pKitRoomTransportLifecycleTest {
             transport.join("ABCDE", "Alice"),
             transport.join("ABC0DE", "Alice"),
             transport.join("ABCDEF", "Alice\u202EAdmin"),
-            transport.host(HostConfig(roomDisplayName = "Host\nAdmin")),
+            transport.host(HostConfig(hostDisplayName = "Host\nAdmin")),
         ).forEach { result ->
             assertThat(result).isEqualTo(Result.Failure(NetError.InvalidInput))
         }
@@ -2401,7 +2484,9 @@ class P2pKitRoomTransportLifecycleTest {
                 ?.let { codec.decode(it.bytes) }
             when (request) {
                 is PeerMessage.AdmissionRequest -> fakeSession.incomingFlow.emit(
-                    P2pMessage.Binary(codec.encode(HostMessage.AdmissionOffered(offer))),
+                    P2pMessage.Binary(
+                        codec.encode(HostMessage.AdmissionOffered(offer, "Host Alice")),
+                    ),
                 )
                 is PeerMessage.AdmissionConfirmed -> fakeSession.incomingFlow.emit(
                     P2pMessage.Binary(
@@ -2423,6 +2508,9 @@ class P2pKitRoomTransportLifecycleTest {
         val result = transport.join("ABCDEF", "Alice")
 
         assertThat(result).isInstanceOf(Result.Success::class)
+        val joinedRoom = (result as Result.Success).data
+        assertThat(joinedRoom.info.value.hostDisplayName).isEqualTo("Host Alice")
+        assertThat(joinedRoom.members.value.single().displayName).isEqualTo("Host Alice")
         // And connect() actually ran (proven by the session being the
         // one we configured — the default handler would have thrown).
         assertThat(fakeSession.state.value).isEqualTo(ConnectionState.Connected)
@@ -2446,7 +2534,11 @@ class P2pKitRoomTransportLifecycleTest {
                         ?.let { codec.decode(it.bytes) }
                 ) {
                     is PeerMessage.AdmissionRequest -> initialSession.incomingFlow.emit(
-                        P2pMessage.Binary(codec.encode(HostMessage.AdmissionOffered(initialOffer))),
+                        P2pMessage.Binary(
+                            codec.encode(
+                                HostMessage.AdmissionOffered(initialOffer, "Host Alice"),
+                            ),
+                        ),
                     )
                     is PeerMessage.AdmissionConfirmed -> initialSession.incomingFlow.emit(
                         P2pMessage.Binary(
@@ -2496,7 +2588,11 @@ class P2pKitRoomTransportLifecycleTest {
                     is PeerMessage.ResumeRequested -> {
                         resumeRequests += request
                         replacementSession.incomingFlow.emit(
-                            P2pMessage.Binary(codec.encode(HostMessage.ResumeOffered(rotatedOffer))),
+                            P2pMessage.Binary(
+                                codec.encode(
+                                    HostMessage.ResumeOffered(rotatedOffer, "Host Alice"),
+                                ),
+                            ),
                         )
                     }
                     is PeerMessage.ResumeConfirmed -> replacementSession.incomingFlow.emit(
@@ -2536,6 +2632,8 @@ class P2pKitRoomTransportLifecycleTest {
             val resumed = relaunchedTransport.resumeLastSession()
             assertThat(resumed).isInstanceOf(Result.Success::class)
             val room = (resumed as Result.Success).data
+            assertThat(room.info.value.hostDisplayName).isEqualTo("Host Alice")
+            assertThat(room.members.value.single().displayName).isEqualTo("Host Alice")
             assertThat(resumeRequests).hasSize(1)
             assertThat(resumeRequests.single().secret).isEqualTo(initialOffer.secret)
             assertThat(resumeRequests.single().generation).isEqualTo(1L)
@@ -2598,7 +2696,11 @@ class P2pKitRoomTransportLifecycleTest {
                     is PeerMessage.ResumeRequested -> {
                         requests += request
                         session.incomingFlow.emit(
-                            P2pMessage.Binary(codec.encode(HostMessage.ResumeOffered(rotatedOffer))),
+                            P2pMessage.Binary(
+                                codec.encode(
+                                    HostMessage.ResumeOffered(rotatedOffer, "Host Alice"),
+                                ),
+                            ),
                         )
                     }
                     is PeerMessage.ResumeConfirmed -> session.incomingFlow.emit(
@@ -2963,6 +3065,93 @@ class P2pKitRoomTransportLifecycleTest {
     }
 
     @Test
+    fun join_surfaces_display_name_conflict_and_cleans_up() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("self-pid"))
+        val hostPeer = peer(
+            id = "live-host-pid",
+            name = "${P2pKitRoomTransport.P2P_ROOM_PREFIX}Live Host",
+        )
+        val fakeSession = FakeP2pSession(hostPeer)
+        fakeSession.sendHandler = { message ->
+            val request = (message as? P2pMessage.Binary)?.let { codec.decode(it.bytes) }
+            if (request is PeerMessage.AdmissionRequest) {
+                fakeSession.incomingFlow.emit(
+                    P2pMessage.Binary(
+                        codec.encode(
+                            HostMessage.AdmissionRejected(
+                                AdmissionRejection.DisplayNameInUse,
+                            ),
+                        ),
+                    ),
+                )
+            }
+        }
+        kit.connectHandler = { fakeSession }
+        kit.peersFlow.value = listOf(hostPeer)
+        val transport = P2pKitRoomTransport(
+            appId = AppId("com.parlor.test"),
+            deviceName = "self-device",
+            scope = testScope,
+            kitFactory = object : P2pKitFactory {
+                override suspend fun createKit(appId: AppId, deviceName: String): P2pKit = kit
+            },
+            joinTimeoutMs = 2_000L,
+        )
+
+        assertThat(transport.join("ABCDEF", "Alice"))
+            .isEqualTo(Result.Failure(NetError.DisplayNameInUse))
+        assertThat(transport.localNetworkAccess.value)
+            .isEqualTo(LocalNetworkAccess.Operational)
+        assertThat(kit.stopCalls).isEqualTo(1)
+    }
+
+    @Test
+    fun join_rejects_a_noncanonical_host_display_identity_before_storing_membership() =
+        runBlocking {
+            val storage = testSecureStorage()
+            val kit = FakeP2pKit(P2pPeerId("self-pid"))
+            val hostPeer = peer(
+                id = "live-host-pid",
+                name = "${P2pKitRoomTransport.P2P_ROOM_PREFIX}Transport Label",
+            )
+            val offer = testCredentialOffer(PlayerId("self-pid"), hostPeer.id.value)
+            val session = FakeP2pSession(hostPeer).apply {
+                sendHandler = { message ->
+                    val request = (message as? P2pMessage.Binary)?.let { codec.decode(it.bytes) }
+                    if (request is PeerMessage.AdmissionRequest) {
+                        incomingFlow.emit(
+                            P2pMessage.Binary(
+                                codec.encode(
+                                    HostMessage.AdmissionOffered(
+                                        offer,
+                                        " Host Alice ",
+                                    ),
+                                ),
+                            ),
+                        )
+                    }
+                }
+            }
+            kit.connectHandler = { session }
+            kit.peersFlow.value = listOf(hostPeer)
+            val transport = P2pKitRoomTransport(
+                appId = AppId("com.parlor.test"),
+                deviceName = "self-device",
+                scope = testScope,
+                kitFactory = object : P2pKitFactory {
+                    override suspend fun createKit(appId: AppId, deviceName: String): P2pKit = kit
+                },
+                secureStorage = storage,
+                joinTimeoutMs = 2_000L,
+            )
+
+            assertThat(transport.join("ABCDEF", "Alice"))
+                .isEqualTo(Result.Failure(NetError.Unauthorized))
+            assertThat(transport.resumableSession()).isEqualTo(Result.Success(null))
+            assertThat(kit.stopCalls).isEqualTo(1)
+        }
+
+    @Test
     fun wrong_room_does_not_end_search_before_a_late_correct_candidate_appears() = runBlocking {
         val kit = FakeP2pKit(P2pPeerId("self-pid"))
         val wrongPeer = peer(
@@ -2993,7 +3182,9 @@ class P2pKitRoomTransportLifecycleTest {
         correctSession.sendHandler = { message ->
             when ((message as? P2pMessage.Binary)?.let { codec.decode(it.bytes) }) {
                 is PeerMessage.AdmissionRequest -> correctSession.incomingFlow.emit(
-                    P2pMessage.Binary(codec.encode(HostMessage.AdmissionOffered(offer))),
+                    P2pMessage.Binary(
+                        codec.encode(HostMessage.AdmissionOffered(offer, "Host Alice")),
+                    ),
                 )
                 is PeerMessage.AdmissionConfirmed -> correctSession.incomingFlow.emit(
                     P2pMessage.Binary(
@@ -3044,7 +3235,9 @@ class P2pKitRoomTransportLifecycleTest {
         session.sendHandler = { message ->
             when ((message as? P2pMessage.Binary)?.let { codec.decode(it.bytes) }) {
                 is PeerMessage.AdmissionRequest -> session.incomingFlow.emit(
-                    P2pMessage.Binary(codec.encode(HostMessage.AdmissionOffered(offer))),
+                    P2pMessage.Binary(
+                        codec.encode(HostMessage.AdmissionOffered(offer, "Host Alice")),
+                    ),
                 )
                 is PeerMessage.AdmissionConfirmed -> session.incomingFlow.emit(
                     P2pMessage.Binary(
@@ -3134,7 +3327,9 @@ class P2pKitRoomTransportLifecycleTest {
         val premature = withTimeoutOrNull(250L) { joining.await() }
         assertThat(premature).isEqualTo(null)
         session.incomingFlow.emit(
-            P2pMessage.Binary(codec.encode(HostMessage.AdmissionOffered(offer))),
+            P2pMessage.Binary(
+                codec.encode(HostMessage.AdmissionOffered(offer, "Host Alice")),
+            ),
         )
 
         assertThat(withTimeout(2_000) { joining.await() }).isInstanceOf(Result.Success::class)
@@ -3182,12 +3377,15 @@ class P2pKitRoomTransportLifecycleTest {
                             codec.encode(
                                 HostMessage.AdmissionOffered(
                                     offer.copy(playerId = PlayerId("other-player")),
+                                    "Host Alice",
                                 ),
                             ),
                         ),
                     )
                     session.incomingFlow.emit(
-                        P2pMessage.Binary(codec.encode(HostMessage.AdmissionOffered(offer))),
+                        P2pMessage.Binary(
+                            codec.encode(HostMessage.AdmissionOffered(offer, "Host Alice")),
+                        ),
                     )
                 }
                 is PeerMessage.AdmissionConfirmed -> {
@@ -3198,7 +3396,9 @@ class P2pKitRoomTransportLifecycleTest {
                         P2pMessage.Binary(codec.encode(HostMessage.AdmissionPending(playerId))),
                     )
                     session.incomingFlow.emit(
-                        P2pMessage.Binary(codec.encode(HostMessage.AdmissionOffered(offer))),
+                        P2pMessage.Binary(
+                            codec.encode(HostMessage.AdmissionOffered(offer, "Host Alice")),
+                        ),
                     )
                     session.incomingFlow.emit(
                         P2pMessage.Binary(
@@ -3324,7 +3524,7 @@ class P2pKitRoomTransportLifecycleTest {
             val room = HostP2pRoom(
                 kit = kit,
                 roomCode = "ABCDEF",
-                roomDisplayName = "Parlor Room",
+                hostDisplayName = "Parlor Room",
                 hostPlayerId = PlayerId(kit.localPeerId.value),
                 maxRemotePlayers = 1,
                 scope = this,
@@ -3857,6 +4057,44 @@ class P2pKitRoomTransportLifecycleTest {
 
     // -------------------------------------------------------------- Helpers ----
 
+    /**
+     * Direct room-unit tests do not run the admission wire handshake. This
+     * test-only overload supplies the fake peer label explicitly; shipping
+     * construction has no fallback and must pass the validated protocol value.
+     */
+    @Suppress("FunctionNaming", "LongParameterList")
+    private fun PeerP2pRoom(
+        kit: P2pKit,
+        session: P2pSession,
+        hostPeer: Peer,
+        roomCode: String,
+        scope: CoroutineScope,
+        codec: RoomMessageCodec,
+        diagnostics: P2pDiagnostics = NoOpP2pDiagnostics,
+        initialCredential: ResumableSessionCredential? = null,
+        credentialStore: ResumableCredentialStore? = null,
+        resumeConnector: (
+            suspend (ResumableSessionCredential) ->
+                Result<ResumedPeerConnection, ResumeConnectionFailure>
+        )? = null,
+        onClosed: suspend () -> Unit = {},
+        appResumeGraceMs: Long = P2pKitRoomTransport.APP_RESUME_GRACE_MS,
+    ): PeerP2pRoom = PeerP2pRoom(
+        kit = kit,
+        session = session,
+        hostPeer = hostPeer,
+        roomCode = roomCode,
+        scope = scope,
+        codec = codec,
+        diagnostics = diagnostics,
+        initialCredential = initialCredential,
+        credentialStore = credentialStore,
+        resumeConnector = resumeConnector,
+        onClosed = onClosed,
+        appResumeGraceMs = appResumeGraceMs,
+        hostDisplayName = hostPeer.name,
+    )
+
     private fun newHostRoom(
         kit: FakeP2pKit,
         maxRemotePlayers: Int = 17,
@@ -3864,7 +4102,7 @@ class P2pKitRoomTransportLifecycleTest {
     ): HostP2pRoom = HostP2pRoom(
         kit = kit,
         roomCode = "ABCDEF",
-        roomDisplayName = "Parlor Room",
+        hostDisplayName = "Parlor Room",
         hostPlayerId = PlayerId(kit.localPeerId.value),
         maxRemotePlayers = maxRemotePlayers,
         scope = testScope,
@@ -3877,8 +4115,28 @@ class P2pKitRoomTransportLifecycleTest {
         kit: FakeP2pKit,
         session: FakeP2pSession,
     ) {
+        emitAdmissionRequest(kit, session)
+        awaitCondition {
+            room.pendingAdmissions.value.any {
+                it.playerId == PlayerId(session.peer.id.value)
+            }
+        }
+    }
+
+    private suspend fun emitAdmissionRequest(
+        kit: FakeP2pKit,
+        session: FakeP2pSession,
+    ) {
+        attachSession(kit, session)
+        sendAdmissionRequest(session)
+    }
+
+    private suspend fun attachSession(kit: FakeP2pKit, session: FakeP2pSession) {
         kit.incomingSessionsFlow.emit(session)
         yield()
+    }
+
+    private suspend fun sendAdmissionRequest(session: FakeP2pSession) {
         session.incomingFlow.emit(
             P2pMessage.Binary(
                 codec.encode(
@@ -3891,11 +4149,6 @@ class P2pKitRoomTransportLifecycleTest {
                 ),
             ),
         )
-        awaitCondition {
-            room.pendingAdmissions.value.any {
-                it.playerId == PlayerId(session.peer.id.value)
-            }
-        }
     }
 
     private suspend fun admit(

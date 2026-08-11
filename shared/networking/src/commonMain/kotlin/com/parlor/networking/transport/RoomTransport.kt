@@ -108,7 +108,8 @@ data class TransportCapability(
 )
 
 data class HostConfig(
-    val roomDisplayName: String,
+    /** Canonical player-facing name of the authoritative host. */
+    val hostDisplayName: String,
     val visible: Boolean = true,
     /** Product seat limit excluding the host; enforced atomically by the transport. */
     val maxRemotePlayers: Int = 17,

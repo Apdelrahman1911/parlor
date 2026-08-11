@@ -44,6 +44,7 @@ fun PlayerEntryScreen(
     val names = remember(playerCount) {
         mutableStateListOf<String>().apply { repeat(playerCount) { add("") } }
     }
+    val normalizedNames = names.map(RoomInputPolicy::normalizeDisplayName)
 
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
         Column(
@@ -80,9 +81,9 @@ fun PlayerEntryScreen(
                 label = stringResource(Res.string.setup_player_entry_confirm),
                 contentDescription = stringResource(Res.string.setup_player_entry_confirm_description),
                 onClick = {
-                    onConfirm(names.map(RoomInputPolicy::normalizeDisplayName))
+                    onConfirm(normalizedNames)
                 },
-                enabled = names.all(RoomInputPolicy::isValidDisplayName),
+                enabled = RoomInputPolicy.areValidDistinctDisplayNames(normalizedNames),
                 modifier = Modifier.fillMaxWidth(),
             )
         }

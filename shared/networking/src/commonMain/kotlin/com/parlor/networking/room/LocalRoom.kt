@@ -180,7 +180,8 @@ sealed interface SendTarget {
 
 data class RoomInfo(
     val code: String,
-    val displayName: String,
+    /** Canonical player-facing name of the authoritative host. */
+    val hostDisplayName: String,
     val hostPlayerId: PlayerId,
     val status: Status,
 ) {
@@ -212,6 +213,7 @@ sealed interface NetError {
     data object RateLimited : NetError
     data object RejoinExpired : NetError
     data object AlreadyConnected : NetError
+    data object DisplayNameInUse : NetError
     data object SecureStorageUnavailable : NetError
     data object InvalidInput : NetError
     /** A mutating command is already awaiting an authoritative outcome. */

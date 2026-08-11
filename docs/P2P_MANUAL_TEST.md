@@ -73,10 +73,10 @@ separate 60-second human-approval state.
 
 ### Wire and authority
 
-Runtime protocol: `4.0`.
+Runtime protocol: `4.1`.
 
 Parlor serializes `RoomMessage` as strict CBOR inside `P2pMessage.Binary`.
-Protocol compatibility is exact: a 4.0 binary fails closed when paired with a
+Protocol compatibility is exact: a 4.1 binary fails closed when paired with a
 different major or minor schema. Admission is transactional:
 
 ```text
@@ -92,7 +92,14 @@ ResumeRequested -> ResumeOffered -> ResumeConfirmed -> ResumeCommitted
 -> ResumeReady -> ResumeCommitAck
 ```
 
-Starting gameplay is a separate reliable protocol-4.0 transaction:
+`AdmissionOffered` and `ResumeOffered` carry the canonical host display name.
+Exact duplicate player names are rejected with `DisplayNameInUse` while the
+host, a pending request, or a connected/disconnected resumable seat reserves
+that name. Case variants are distinct labels; all authorization remains bound
+to authenticated player IDs.
+
+Starting gameplay uses the reliable protocol-4.x transaction introduced in
+4.0 and retained by 4.1:
 
 ```text
 SessionStarting(startId) -> SessionStartReady(startId)

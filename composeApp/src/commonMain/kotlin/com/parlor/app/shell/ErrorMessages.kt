@@ -9,6 +9,7 @@ import com.parlor.app.resources.data_error_not_found
 import com.parlor.app.resources.data_error_permission_denied
 import com.parlor.app.resources.data_error_unknown
 import com.parlor.app.resources.net_error_not_connected
+import com.parlor.app.resources.net_error_name_in_use
 import com.parlor.app.resources.net_error_timeout
 import com.parlor.app.resources.net_error_transport
 import com.parlor.app.resources.net_error_unauthorized
@@ -57,6 +58,7 @@ fun netErrorMessage(error: NetError): String = stringResource(
         is NetError.CommandInFlight,
         is NetError.SessionSuspended,
         is NetError.TransportFailure -> Res.string.net_error_transport
+        is NetError.DisplayNameInUse -> Res.string.net_error_name_in_use
         is NetError.Unauthorized,
         is NetError.InvalidInput -> Res.string.net_error_unauthorized
     },

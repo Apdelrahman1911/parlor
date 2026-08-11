@@ -29,6 +29,19 @@ object RoomInputPolicy {
             normalized.none(::isUnsafeDisplayCharacter)
     }
 
+    /**
+     * Authoritative roster boundary for display labels.
+     *
+     * Names are compared after the only supported normalization ([String.trim])
+     * and must already be canonical. Equality is intentionally exact and
+     * case-sensitive: display names are presentation labels, while transport-
+     * authenticated [com.parlor.core.ids.PlayerId] values remain identities.
+     */
+    fun areValidDistinctDisplayNames(names: List<String>): Boolean =
+        names.all { name ->
+            name == normalizeDisplayName(name) && isValidDisplayName(name)
+        } && names.toSet().size == names.size
+
     /** UI convenience only; [isValidDisplayName] remains authoritative. */
     fun sanitizeDisplayNameInput(input: String): String = buildString {
         var index = 0

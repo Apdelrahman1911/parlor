@@ -284,8 +284,8 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
     )
 
     override suspend fun host(config: HostConfig): Result<LocalRoom, NetError> {
-        val roomDisplayName = RoomInputPolicy.normalizeDisplayName(config.roomDisplayName)
-        if (!RoomInputPolicy.isValidDisplayName(roomDisplayName)) {
+        val hostDisplayName = RoomInputPolicy.normalizeDisplayName(config.hostDisplayName)
+        if (!RoomInputPolicy.isValidDisplayName(hostDisplayName)) {
             return Result.Failure(NetError.InvalidInput)
         }
         _localNetworkAccess.value = LocalNetworkAccess.Attempting
@@ -317,7 +317,7 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
                 room = HostP2pRoom(
                     kit = kit,
                     roomCode = roomCode,
-                    roomDisplayName = roomDisplayName,
+                    hostDisplayName = hostDisplayName,
                     hostPlayerId = PlayerId(kit.localPeerId.value),
                     maxRemotePlayers = config.maxRemotePlayers,
                     gameProtocol = config.gameProtocol,
@@ -552,6 +552,7 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
                             codec = codec,
                             diagnostics = diagnostics,
                             onClosed = { roomClosed(lifecycleRegistrationId) },
+                            hostDisplayName = admission.hostDisplayName,
                         )
                         if (!peerRoom.finishInitialAdmissionHandoff(admission.credential)) {
                             peerRoom.abandonFailedResume()
@@ -788,6 +789,7 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
                         credentialStore = credentialStore,
                         resumeConnector = { next -> resumeConnectionDetailed(kit, next) },
                         onClosed = { roomClosed(lifecycleRegistrationId) },
+                        hostDisplayName = resumed.data.hostDisplayName,
                     )
                     if (!room.finishInitialResumeHandoff(resumed.data)) {
                         room.abandonFailedResume()
@@ -863,7 +865,10 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
     }
 
     private sealed interface AdmissionOutcome {
-        data class Accepted(val credential: ResumableSessionCredential) : AdmissionOutcome
+        data class Accepted(
+            val credential: ResumableSessionCredential,
+            val hostDisplayName: String,
+        ) : AdmissionOutcome
         data class Rejected(val reason: AdmissionRejection) : AdmissionOutcome
         data class TransientFailure(val error: NetError) : AdmissionOutcome
         data class Failed(val error: NetError) : AdmissionOutcome
@@ -960,6 +965,12 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
                 is HostMessage.AdmissionAccepted ->
                     AdmissionOutcome.Rejected(AdmissionRejection.IncompatibleProtocol)
                 is HostMessage.AdmissionOffered -> {
+                    val hostDisplayName = decision.hostDisplayName
+                    if (!hostDisplayName.isCanonicalDisplayName()) {
+                        return@coroutineScope AdmissionOutcome.Rejected(
+                            AdmissionRejection.InvalidCredential,
+                        )
+                    }
                     val credential = decision.offer.toStoredCredentialOrNull(
                         session = session,
                         hostPeer = hostPeer,
@@ -988,9 +999,7 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
                         accepts = { response ->
                             when (response) {
                                 is HostMessage.AdmissionCommitted ->
-                                    response.playerId == selfPlayerId &&
-                                        response.offerId == credential.offerId &&
-                                        response.generation == credential.generation
+                                    response.matches(selfPlayerId, credential)
                                 // The rejection has no correlation fields in the
                                 // current wire schema, but is terminal and is
                                 // followed by closure of this physical session.
@@ -1008,11 +1017,7 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
                             AdmissionOutcome.Rejected(committed.reason)
                         }
                         is HostMessage.AdmissionCommitted -> {
-                            if (
-                                committed.playerId != selfPlayerId ||
-                                committed.offerId != credential.offerId ||
-                                committed.generation != credential.generation
-                            ) {
+                            if (!committed.matches(selfPlayerId, credential)) {
                                 credentialStore.discardPending(credential.offerId)
                                 AdmissionOutcome.Rejected(AdmissionRejection.InvalidCredential)
                             } else if (
@@ -1023,7 +1028,7 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
                             ) {
                                 AdmissionOutcome.Failed(NetError.SecureStorageUnavailable)
                             } else {
-                                AdmissionOutcome.Accepted(credential)
+                                AdmissionOutcome.Accepted(credential, hostDisplayName)
                             }
                         }
                         else -> AdmissionOutcome.Rejected(AdmissionRejection.InvalidCredential)
@@ -1233,8 +1238,13 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
             if (first is HostMessage.AdmissionRejected) {
                 return@coroutineScope Result.Failure(first.reason.toNetError())
             }
-            val offer = (first as? HostMessage.ResumeOffered)?.offer
+            val resumeOffer = first as? HostMessage.ResumeOffered
                 ?: return@coroutineScope Result.Failure(NetError.Unauthorized)
+            val hostDisplayName = resumeOffer.hostDisplayName
+            if (!hostDisplayName.isCanonicalDisplayName()) {
+                return@coroutineScope Result.Failure(NetError.Unauthorized)
+            }
+            val offer = resumeOffer.offer
             val rotated = offer.toRotatedCredentialOrNull(session, hostPeer, credential)
                 ?: return@coroutineScope Result.Failure(NetError.Unauthorized)
             stagedOfferId = rotated.offerId
@@ -1283,7 +1293,14 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
                         Result.Failure(NetError.SecureStorageUnavailable)
                     } else {
                         committedCredential = true
-                        Result.Success(ResumedPeerConnection(session, hostPeer, rotated))
+                        Result.Success(
+                            ResumedPeerConnection(
+                                session,
+                                hostPeer,
+                                rotated,
+                                hostDisplayName,
+                            ),
+                        )
                     }
                 }
                 else -> Result.Failure(NetError.Unauthorized)
@@ -1467,6 +1484,18 @@ private fun Throwable.rethrowIfCancellation() {
     if (this is CancellationException) throw this
 }
 
+private fun String.isCanonicalDisplayName(): Boolean =
+    this == RoomInputPolicy.normalizeDisplayName(this) &&
+        RoomInputPolicy.isValidDisplayName(this)
+
+private fun HostMessage.AdmissionCommitted.matches(
+    playerId: PlayerId,
+    credential: ResumableSessionCredential,
+): Boolean =
+    this.playerId == playerId &&
+        offerId == credential.offerId &&
+        generation == credential.generation
+
 private fun P2pDiagnostics.event(
     name: P2pDiagnosticEventName,
     role: P2pDiagnosticRole = P2pDiagnosticRole.NONE,
@@ -1498,6 +1527,7 @@ private fun NetError.toDiagnosticReason(): P2pDiagnosticReason = when (this) {
     NetError.InvalidInput -> P2pDiagnosticReason.UNAUTHORIZED
     NetError.RateLimited -> P2pDiagnosticReason.RATE_LIMIT
     NetError.PayloadTooLarge -> P2pDiagnosticReason.PAYLOAD_LIMIT
+    NetError.DisplayNameInUse -> P2pDiagnosticReason.NAME_IN_USE
     NetError.NotConnected,
     NetError.Timeout,
     NetError.HostDeclined,
@@ -1515,6 +1545,7 @@ private fun AdmissionRejection.toDiagnosticReason(): P2pDiagnosticReason = when 
     AdmissionRejection.SessionStarted -> P2pDiagnosticReason.SESSION_STARTED
     AdmissionRejection.IncompatibleProtocol -> P2pDiagnosticReason.INCOMPATIBLE_PROTOCOL
     AdmissionRejection.RateLimited -> P2pDiagnosticReason.RATE_LIMIT
+    AdmissionRejection.DisplayNameInUse -> P2pDiagnosticReason.NAME_IN_USE
     AdmissionRejection.HostDeclined,
     AdmissionRejection.InvalidRequest,
     AdmissionRejection.InvalidCredential,
@@ -1614,6 +1645,7 @@ private fun AdmissionRejection.toNetError(): NetError = when (this) {
     AdmissionRejection.InvalidCredential -> NetError.Unauthorized
     AdmissionRejection.ExpiredCredential -> NetError.RejoinExpired
     AdmissionRejection.AlreadyConnected -> NetError.AlreadyConnected
+    AdmissionRejection.DisplayNameInUse -> NetError.DisplayNameInUse
 }
 
 private fun DiscoveryFinalError.toNetError(): NetError = when (this) {
@@ -1628,7 +1660,7 @@ private fun DiscoveryFinalError.toNetError(): NetError = when (this) {
 internal class HostP2pRoom(
     private val kit: P2pKit,
     private val roomCode: String,
-    roomDisplayName: String,
+    private val hostDisplayName: String,
     private val hostPlayerId: PlayerId,
     private val maxRemotePlayers: Int,
     private val gameProtocol: HostedGameProtocol? = null,
@@ -1652,7 +1684,7 @@ internal class HostP2pRoom(
     private val _info = MutableStateFlow(
         RoomInfo(
             code = roomCode,
-            displayName = roomDisplayName,
+            hostDisplayName = hostDisplayName,
             hostPlayerId = hostPlayerId,
             status = RoomInfo.Status.Hosting,
         ),
@@ -2179,6 +2211,8 @@ internal class HostP2pRoom(
                     PendingAdmission(playerId, displayName, isRejoin = isKnownPlayer),
                     emitEvent = false,
                 )
+                isDisplayNameReservedByAnotherSeat(playerId, displayName) ->
+                    AdmissionRequestResult.Rejected(AdmissionRejection.DisplayNameInUse)
                 existing != null || pendingByPlayer.size >= pendingAdmissionLimit() ->
                     AdmissionRequestResult.Rejected(AdmissionRejection.RateLimited)
                 else -> {
@@ -2225,6 +2259,19 @@ internal class HostP2pRoom(
             }
         }
     }
+
+    /** Must be called while [stateMutex] is held. */
+    private fun isDisplayNameReservedByAnotherSeat(
+        playerId: PlayerId,
+        displayName: String,
+    ): Boolean =
+        displayName == hostDisplayName ||
+            membersByPlayer.any { (memberId, member) ->
+                memberId != playerId && member.displayName == displayName
+            } ||
+            pendingByPlayer.any { (pendingId, pending) ->
+                pendingId != playerId && pending.displayName == displayName
+            }
 
     private suspend fun handleCredentialConfirmation(
         playerId: PlayerId,
@@ -2398,7 +2445,10 @@ internal class HostP2pRoom(
     ) {
         val transaction = prepared.transaction
         try {
-            sendRaw(session, HostMessage.ResumeOffered(transaction.offer))
+            sendRaw(
+                session,
+                HostMessage.ResumeOffered(transaction.offer, hostDisplayName),
+            )
             val confirmed = withTimeoutOrNull(P2pKitRoomTransport.ADMISSION_CONFIRM_TIMEOUT_MS) {
                 transaction.confirmation.await()
                 true
@@ -2838,7 +2888,10 @@ internal class HostP2pRoom(
         )
 
         try {
-            sendRaw(session, HostMessage.AdmissionOffered(transaction.offer))
+            sendRaw(
+                session,
+                HostMessage.AdmissionOffered(transaction.offer, hostDisplayName),
+            )
         } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
             withContext(NonCancellable) {
                 rollbackAdmission(playerId, session)
@@ -3450,6 +3503,7 @@ internal data class ResumedPeerConnection(
     val session: P2pSession,
     val hostPeer: Peer,
     val credential: ResumableSessionCredential,
+    val hostDisplayName: String,
 )
 
 internal data class ResumeConnectionFailure(
@@ -3493,6 +3547,7 @@ internal class PeerP2pRoom(
     )? = null,
     private val onClosed: suspend () -> Unit = {},
     private val appResumeGraceMs: Long = P2pKitRoomTransport.APP_RESUME_GRACE_MS,
+    hostDisplayName: String,
 ) : LocalRoom, AppLifecycleAwareRoom {
 
     override val selfPlayerId: PlayerId = PlayerId(kit.localPeerId.value)
@@ -3500,7 +3555,7 @@ internal class PeerP2pRoom(
     private val _info = MutableStateFlow(
         RoomInfo(
             code = roomCode,
-            displayName = hostPeer.name,
+            hostDisplayName = hostDisplayName,
             hostPlayerId = PlayerId(hostPeer.id.value),
             status = RoomInfo.Status.Joined,
         ),
@@ -3509,7 +3564,7 @@ internal class PeerP2pRoom(
         listOf(
             RoomMember(
                 playerId = PlayerId(hostPeer.id.value),
-                displayName = hostPeer.name,
+                displayName = hostDisplayName,
                 connected = true,
             ),
         ),

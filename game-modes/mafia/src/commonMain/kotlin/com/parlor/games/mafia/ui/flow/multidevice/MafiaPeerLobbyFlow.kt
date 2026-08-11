@@ -422,7 +422,11 @@ private fun MafiaPeerWaitingForStart(
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s)) {
                     Text(
-                        text = stringResource(Res.string.md_peer_room_format, info.displayName, peerName),
+                        text = stringResource(
+                            Res.string.md_peer_room_format,
+                            info.hostDisplayName,
+                            peerName,
+                        ),
                         style = ParlorTheme.typography.displayMedium,
                         color = ParlorTheme.colors.textPrimary,
                     )
