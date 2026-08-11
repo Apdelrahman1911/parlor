@@ -402,4 +402,28 @@ class FullGameDriveTest {
 
         session.close()
     }
+
+    @Test
+    fun replay_always_assigns_a_new_killer() = runTest {
+        val payload = loadCase()
+        val players = fourPlayers()
+
+        repeat(128) { sample ->
+            val seed = sample.toLong()
+            val (session, _) = buildSession(
+                payload,
+                WhodunitIds.ClassicVoteModeId,
+                players,
+                seed,
+            )
+            session.submit(WhodunitAction.AssignRoles(seed))
+            val before = hostState(session)
+            session.submit(WhodunitAction.EndGameEarly(withReveal = false))
+            session.submit(WhodunitAction.BeginReplay)
+            val after = hostState(session)
+
+            assertThat(after.hostOnly.killerId == before.hostOnly.killerId).isEqualTo(false)
+            session.close()
+        }
+    }
 }

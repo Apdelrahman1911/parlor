@@ -148,6 +148,7 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
         players: List<Player>,
         characters: List<Character>,
         seed: Long,
+        excludedKillerId: PlayerId? = null,
     ): RoleAssignment? {
         if (players.isEmpty() || players.size > characters.size) return null
         if (characters.map { it.id }.toSet().size != characters.size) return null
@@ -156,8 +157,10 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
         val seatToCharacter = players.zip(picked).associate { (player, character) ->
             player.id to CharacterId(character.id)
         }
+        val eligibleKillers = players.filterNot { it.id == excludedKillerId }
+        if (eligibleKillers.isEmpty()) return null
         return RoleAssignment(
-            killerId = random.pick(players).id,
+            killerId = random.pick(eligibleKillers).id,
             seatToCharacter = seatToCharacter,
         )
     }
@@ -969,6 +972,15 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
             return Reduction(state)
         }
         val newSeed = state.hostOnly.randomSeed * REMATCH_SEED_MULTIPLIER + REMATCH_SEED_INCREMENT
+        val previousKiller = state.hostOnly.killerId.takeIf { previous ->
+            state.players.any { it.id == previous }
+        }
+        val assignment = createRoleAssignment(
+            players = state.players,
+            characters = ctx.payload.characters,
+            seed = newSeed,
+            excludedKillerId = previousKiller,
+        ) ?: return Reduction(state)
         val fresh = state.copy(
             public = state.public.copy(
                 eliminatedPlayers = emptyList(),
@@ -996,7 +1008,20 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
             ),
             phase = WhodunitPhase.Setup,
         )
-        return assignRoles(fresh, newSeed, ctx)
+        val assigned = applyRoleAssignment(
+            state = fresh,
+            assignment = assignment,
+            seed = newSeed,
+            characters = ctx.payload.characters,
+        ) ?: return Reduction(state)
+        val introState = assigned.copy(phase = WhodunitPhase.PublicIntro)
+        return Reduction(
+            introState,
+            listOf(
+                WhodunitEvent.RolesAssigned,
+                WhodunitEvent.PhaseEntered(WhodunitPhase.PublicIntro),
+            ),
+        )
     }
 
     // ====================================================================== Safety (P6) ==
