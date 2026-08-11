@@ -4,6 +4,11 @@ This directory contains mechanically reproducible evidence for the independent
 review that began at baseline
 `9cd4040a81c4f2f8fe6f5f161dabcd5351682c02`.
 
+`INDEPENDENT_REVIEW_FINDINGS.md` records every confirmed independent finding,
+its root cause, affected code boundary, dedicated regression evidence, exact
+fix commit, and closure status. It also maps every remediation commit so no
+quickly fixed defect disappears from the review history.
+
 `INDEPENDENT_REVIEW_INVENTORY.csv` enumerates every tracked item plus the review
 generator/report themselves. Each row records its module, source set,
 classification, production reachability, primary consumers, review status,
