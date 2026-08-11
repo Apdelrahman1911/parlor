@@ -14,7 +14,7 @@ internal actual fun platformSha256(input: ByteArray): ByteArray {
     input.usePinned { inputPinned ->
         output.usePinned { outputPinned ->
             CC_SHA256(
-                inputPinned.addressOf(0),
+                if (input.isEmpty()) null else inputPinned.addressOf(0),
                 input.size.convert(),
                 outputPinned.addressOf(0).reinterpret(),
             )

@@ -13,6 +13,14 @@ class SecureHashesTest {
     }
 
     @Test
+    fun sha256_supports_the_standard_empty_input_vector() {
+        assertThat(SecureHashes.sha256(ByteArray(0)).toHex()).isEqualTo(
+            "e3b0c44298fc1c149afbf4c8996fb924" +
+                "27ae41e4649b934ca495991b7852b855",
+        )
+    }
+
+    @Test
     fun constant_time_comparison_handles_equal_unequal_and_different_lengths() {
         assertThat(SecureHashes.constantTimeEquals(byteArrayOf(1, 2), byteArrayOf(1, 2)))
             .isEqualTo(true)
