@@ -3,6 +3,15 @@
 rootProject.name = "parlor"
 
 pluginManagement {
+    val parlorR8Version = providers.gradleProperty("parlor.android.r8.version").get()
+    buildscript {
+        repositories {
+            google()
+        }
+        dependencies {
+            classpath("com.android.tools:r8:$parlorR8Version")
+        }
+    }
     includeBuild("build-logic")
     repositories {
         google()

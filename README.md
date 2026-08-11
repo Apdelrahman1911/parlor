@@ -31,7 +31,7 @@ The current architecture and release contracts are documented in:
 - JDK 21
 - Android SDK 36 (`minSdk = 26`, `targetSdk = 36`)
 - Xcode 16 or newer for Apple builds (minimum iOS 16)
-- P2pKit 0.7.0-rc2 from Maven Central
+- P2pKit 0.7.0-rc3 from Maven Central
 
 The checked-in Gradle 8.13 wrapper is the build entry point.
 
@@ -41,8 +41,8 @@ Production and local builds resolve the pinned P2pKit modules directly from
 Maven Central:
 
 ```kotlin
-io.github.apdelrahman1911:p2p-core:0.7.0-rc2
-io.github.apdelrahman1911:p2p-transport-lan:0.7.0-rc2
+io.github.apdelrahman1911:p2p-core:0.7.0-rc3
+io.github.apdelrahman1911:p2p-transport-lan:0.7.0-rc3
 ```
 
 The build does not use `mavenLocal()`, a sibling checkout, or a repository

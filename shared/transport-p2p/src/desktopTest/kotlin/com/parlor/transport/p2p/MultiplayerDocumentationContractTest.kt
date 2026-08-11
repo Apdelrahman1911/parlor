@@ -18,6 +18,11 @@ import kotlin.test.assertTrue
 class MultiplayerDocumentationContractTest {
 
     private val repositoryRoot: File by lazy(::locateRepositoryRoot)
+    private val p2pKitVersion: String by lazy {
+        val match = Regex("(?m)^p2pkit = \"([^\"]+)\"$")
+            .find(read("gradle/libs.versions.toml"))
+        assertNotNull(match, "The version catalog must declare p2pkit").groupValues[1]
+    }
 
     @Test
     fun operational_docs_track_runtime_protocol_and_reliable_start_contract() {
@@ -83,7 +88,7 @@ class MultiplayerDocumentationContractTest {
             "Tapping **Leave** is final",
             "process death preserves",
             "`MAN-00` is **N/A",
-            "P2pKit 0.7.0-rc2",
+            "P2pKit $p2pKitVersion",
         ).forEach { required ->
             assertTrue(
                 runbook.contains(required),

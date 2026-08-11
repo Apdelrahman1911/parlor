@@ -10,7 +10,7 @@ physical row. Record every unexecuted row as **UNVERIFIED**.
 
 - Shipping clients: Android 8.0/API 26 or newer and iOS 16 or newer.
 - Shipping topology: devices reachable on the same local IP network.
-- Transport: P2pKit 0.7.0-rc2 LAN discovery plus authenticated encrypted TCP.
+- Transport: P2pKit 0.7.0-rc3 LAN discovery plus authenticated encrypted TCP.
 - Room entry: the peer types the six-character admission code shown by the
   host. The code is proved only inside the encrypted session and is not in the
   advertisement.

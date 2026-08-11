@@ -13,7 +13,7 @@ is an admission action, not a direct network endpoint. The current
 LAN advertisements, connects through P2pKit, and then proves the code inside
 the authenticated encrypted session.
 
-P2pKit 0.7.0-rc2 has an experimental, fingerprint-pinned manual-peer API, but
+P2pKit 0.7.0-rc3 has an experimental, fingerprint-pinned manual-peer API, but
 it is available only when an appropriate provisioning implementation is
 registered. Parlor depends on `p2p-core` and `p2p-transport-lan`; it does not
 depend on the Android or Desktop provisioning sidecars, and its Apple factory

@@ -1,10 +1,12 @@
 # P2P remediation implementation and evidence status
 
-Document status: current implementation ledger as of 2026-08-09.
+Document status: implementation-history ledger updated 2026-08-11. Production
+source and executable verification are authoritative; this ledger is not proof
+that a finding remains closed on a later commit.
 
-This file records what is implemented on
-`codex/parlor-fr-remediation`, what automated evidence exists, and what
-still requires release or physical-device evidence. It is deliberately
+This file records the preserved remediation history, what automated evidence
+was collected at its checkpoints, and what still requires release or
+physical-device evidence. It is deliberately
 stricter than a feature checklist: **implemented does not mean production
 verified**.
 
@@ -19,31 +21,31 @@ The protected remediation baseline for the current FR review is
 `dff3fcb317fdb89e310db70eb2c44643672c8c6b` remain reachable and unchanged.
 The current FR remediation commits are separate recoverable commits above that
 baseline.
+The independent production-review branch is based at
+`9cd4040a81c4f2f8fe6f5f161dabcd5351682c02`; its findings and verification are
+not replaced by the older closure labels below.
 
 ## Executive status
 
 - The P2P architecture now has explicit host authority, bounded traffic,
   transactional admission/resume, deterministic lifecycle and discovery
   state, truthful Local Network UX, and privacy-safe diagnostics.
-- The current FR remediation has completed root-cause fixes for FR-01 through
-  FR-21 in separate recoverable commits above the protected baseline. An
-  independent post-closure review reopened incomplete registry, content,
-  outbox, static-analysis, and lint assumptions as FR-16 through FR-20 rather
-  than treating the previous status text as proof. Focused
-  regression suites and the enforced static-analysis/lint gates pass for the
-  latest phase boundaries; the exact final aggregate is rerun after the last
-  documentation and source changes.
+- The earlier FR remediation recorded root-cause fixes for FR-01 through FR-21
+  in separate recoverable commits. The current independent review revalidates
+  those claims from code and tests and has found additional game, session,
+  platform, UI, build, and documentation work. Earlier CLOSED labels are
+  historical evidence, not inherited verdicts.
 - No physical-device row in `P2P_MANUAL_TEST.md` is implied by automated
   evidence. Cross-platform, hotspot, process-death, permission-recovery,
   sustained-session, and signed-artifact behavior remain **UNVERIFIED** until
   dated receipts exist for the exact release SHA.
 - Raw-IP/manual endpoint connection is intentionally unsupported for the first
   release under accepted ADR-0002. `MAN-00` is **N/A**, not PASS.
-- The code-review verdict is a closure candidate for **READY FOR
-  PHYSICAL-DEVICE VALIDATION**; it becomes final only if the exact-HEAD matrix
-  and clean-worktree check after this commit pass. The production-readiness
-  verdict remains **NOT READY FOR RELEASE** until physical, signed-artifact,
-  accessibility, privacy, legal, and store gates pass.
+- The current code-review verdict is **NOT READY FOR PHYSICAL-DEVICE
+  VALIDATION** while the independent repository-wide review and its automatable
+  remediation remain open. The production-readiness verdict is also **NOT READY
+  FOR RELEASE** until physical, signed-artifact, accessibility, privacy, legal,
+  and store gates pass.
 
 The finding-by-finding root-cause register is
 [`FR_REMEDIATION_FINDINGS.md`](FR_REMEDIATION_FINDINGS.md). “Implemented” in
@@ -139,7 +141,7 @@ remediation boundary.
 
 | Gate | Current disposition | Final acceptance evidence |
 |---|---|---|
-| Maven Central provenance | PASS for checksum enforcement: exact 0.7.0-rc2 Android/JVM/iOS artifacts match current Maven Central SHA-256 values and are pinned in strict Gradle verification; no sibling build, `mavenLocal()`, or provisioning sidecar resolves. POMs declare Apache-2.0 and GitHub SCM; two AAR signatures validate against fingerprint `273D 83EA EDCC 24BA 90CA 4E78 6FD7 A2F6 DE03 19E7`. | `P2PKIT_MAVEN_PROVENANCE.md`, dependency graphs, strict build, and checksum contract are present. Publisher fingerprint approval, final SBOM/transitive license review, and third-party notices remain external gates. |
+| Maven Central provenance | PASS for checksum enforcement: exact 0.7.0-rc3 Android/JVM/iOS artifacts match current Maven Central SHA-256 values and are pinned in strict Gradle verification; no sibling build, `mavenLocal()`, or provisioning sidecar resolves. POMs declare Apache-2.0 and GitHub SCM; two AAR signatures validate against fingerprint `273D 83EA EDCC 24BA 90CA 4E78 6FD7 A2F6 DE03 19E7`. The upstream annotated rc3 tag is not cryptographically signed, so the receipt does not claim tag-to-binary reproducibility. | `P2PKIT_MAVEN_PROVENANCE.md`, dependency graphs, strict build, and checksum contract are present. Publisher fingerprint approval, final SBOM/transitive license review, reproducible upstream build evidence, and third-party notices remain external gates. |
 | Android/JVM/common compilation | PASS at `a5e7a0d`: strict aggregate includes release Kotlin compilation, lint, R8/AAB packaging, Desktop/common, Android debug/release unit variants, and P2P adapter tests. | Repeat on the exact final signed-release SHA and archive full logs/reports. |
 | Apple compilation/linkage | PASS at `a5e7a0d`: release frameworks link serially for `iosArm64`, `iosSimulatorArm64`, and `iosX64`; executable simulator tests pass where tests exist. x64 test execution is skipped by the existing Apple-Silicon host policy, not counted as a runtime pass. | Repeat linkage on the final signed-release SHA; physical arm64 runtime remains a device gate. |
 | Manifest/plist | PASS for source and unsigned merged output: Android min 26/target 36 with only four base LAN permissions, cleartext and backup disabled; `plutil` accepts the plist with Local Network usage and `_p2pkit2._tcp`, without Bluetooth wording. | Archive the signed merged manifest/app plist and repeat platform inspection. |

@@ -42,6 +42,7 @@ tasks.named("desktopTest") {
         rootProject.file("iosApp/iosApp.xcodeproj/project.pbxproj"),
         rootProject.file("whodunit-game-design.md"),
         rootProject.file("settings.gradle.kts"),
+        rootProject.file("gradle.properties"),
         rootProject.fileTree(".") {
             include("**/build.gradle.kts")
             exclude("**/build/**")

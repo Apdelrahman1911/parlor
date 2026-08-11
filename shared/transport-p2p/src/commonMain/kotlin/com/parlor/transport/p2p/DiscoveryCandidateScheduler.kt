@@ -204,7 +204,7 @@ internal class DiscoveryCandidateScheduler(
             DiscoveryAttemptResult.WrongRoom -> {
                 sawWrongRoom = true
                 state.transientFailuresInBurst = 0
-                // P2pKit rc2 does not expose a Bonjour service-incarnation id.
+                // P2pKit's public peer model does not expose a Bonjour service-incarnation id.
                 // Re-probing after a long cooldown is therefore the only way to
                 // observe a host that recreated a different room under the same
                 // stable PeerId/name without first disappearing from the list.

@@ -1,6 +1,6 @@
 # Production architecture
 
-This document describes the implemented production target as of 2026-08-09.
+This document describes the implemented production target as of 2026-08-11.
 Android and iOS are shipping targets. Desktop exists for development and
 deterministic tests.
 
@@ -14,7 +14,7 @@ flowchart TD
     Session[Host-authoritative session coordinator]
     Protocol[Versioned transport-independent protocol]
     Adapter[P2pKit room adapter]
-    Kit[P2pKit 0.7.0-rc2 LAN discovery and authenticated encrypted TCP]
+    Kit[P2pKit 0.7.0-rc3 LAN discovery and authenticated encrypted TCP]
     W[Whodunit module]
     M[Mafia module]
 

@@ -772,7 +772,7 @@ class HostAuthoritativeSessionCoordinator(
         } catch (cancelled: CancellationException) {
             throw cancelled
         } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
-            Unit
+            // The session is already failed; terminal notification is best effort.
         }
     }
 

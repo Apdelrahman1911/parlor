@@ -6,7 +6,7 @@ harness and is not shipped by this runbook.
 ## 1. Open the release candidate
 
 1. Create the release branch from the approved commit. Record the Parlor commit,
-   resolved P2pKit 0.7.0-rc2 coordinates/checksums, and upstream release-tag
+   resolved P2pKit 0.7.0-rc3 coordinates/checksums, and upstream release-tag
    provenance. A sibling P2pKit checkout is not the executed dependency.
 2. Confirm the worktree is clean and the diff contains no generated caches,
    credentials, signing assets, local repository paths, or debug-only
@@ -14,8 +14,8 @@ harness and is not shipped by this runbook.
 3. Set Android `versionCode`/`versionName` and iOS
    `CURRENT_PROJECT_VERSION`/`MARKETING_VERSION`. Record the protocol major,
    game protocol versions, content versions, and P2pKit coordinate.
-4. Resolve `io.github.apdelrahman1911:p2p-core:0.7.0-rc2` and
-   `io.github.apdelrahman1911:p2p-transport-lan:0.7.0-rc2` from Maven Central.
+4. Resolve `io.github.apdelrahman1911:p2p-core:0.7.0-rc3` and
+   `io.github.apdelrahman1911:p2p-transport-lan:0.7.0-rc3` from Maven Central.
    Do not use `mavenLocal()`, a sibling checkout, or a repository override.
 5. Confirm strict dependency verification succeeds without
    `--write-verification-metadata`. Compare P2pKit against

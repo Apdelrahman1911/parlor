@@ -20,6 +20,25 @@ class AndroidReleaseLintContractTest {
     private val repositoryRoot: File by lazy(::locateRepositoryRoot)
 
     @Test
+    fun kotlin_metadata_analyzers_are_explicitly_pinned_and_enforced() {
+        val catalog = read("gradle/libs.versions.toml")
+        val properties = read("gradle.properties")
+        val settings = read("settings.gradle.kts")
+
+        assertContains(catalog, "kotlin = \"2.4.10\"")
+        assertContains(properties, "android.experimental.lint.version=9.1.1")
+        assertContains(properties, "parlor.android.r8.version=9.1.41")
+        assertContains(
+            settings,
+            "providers.gradleProperty(\"parlor.android.r8.version\").get()",
+        )
+        assertContains(
+            settings,
+            "classpath(\"com.android.tools:r8:${'$'}parlorR8Version\")",
+        )
+    }
+
+    @Test
     fun production_gate_executes_the_triaged_release_lint_verifier() {
         val rootBuild = read("build.gradle.kts")
         val appBuild = read("composeApp/build.gradle.kts")
@@ -37,12 +56,12 @@ class AndroidReleaseLintContractTest {
             .map(String::trim)
             .filter { line -> line.isNotEmpty() && !line.startsWith('#') }
             .toList()
-        assertEquals(42, accepted.size)
+        assertEquals(40, accepted.size)
         assertEquals(
             mapOf(
                 "AndroidGradlePluginVersion" to 4,
                 "GradleDependency" to 2,
-                "NewerVersionAvailable" to 35,
+                "NewerVersionAvailable" to 33,
                 "OldTargetApi" to 1,
             ),
             accepted.groupingBy { line -> line.substringBefore('|') }.eachCount(),
@@ -52,7 +71,7 @@ class AndroidReleaseLintContractTest {
         assertContains(catalog, "androidx-activity-compose")
         assertContains(appBuild, "implementation(libs.androidx.activity.compose)")
         assertContains(triage, "reported 59 warnings")
-        assertContains(triage, "reports 42 warnings")
+        assertContains(triage, "reports 40 warnings")
     }
 
     @Test
