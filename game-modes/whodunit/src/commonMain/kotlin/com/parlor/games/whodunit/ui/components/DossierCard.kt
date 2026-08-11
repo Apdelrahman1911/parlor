@@ -242,8 +242,6 @@ private fun KillerOnlySections(
     val methodLabel = stringResource(Res.string.dossier_killer_method_label)
     val timelineLabel = stringResource(Res.string.dossier_killer_timeline_label)
     val deflectionLabel = stringResource(Res.string.dossier_killer_deflection_label)
-    val timelineRowFormat = stringResource(Res.string.dossier_killer_timeline_row_format)
-
     val guilty = character.guiltyBrief
 
     Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m)) {
@@ -255,9 +253,11 @@ private fun KillerOnlySections(
                 EyebrowLabel(text = timelineLabel)
                 guilty.timeline.forEach { entry ->
                     Text(
-                        text = timelineRowFormat
-                            .replace("%1\$s", entry.time)
-                            .replace("%2\$s", entry.action),
+                        text = stringResource(
+                            Res.string.dossier_killer_timeline_row_format,
+                            entry.time,
+                            entry.action,
+                        ),
                         style = ParlorTheme.typography.bodyLarge,
                         color = ParlorTheme.colors.textPrimary,
                     )
@@ -265,10 +265,13 @@ private fun KillerOnlySections(
             }
         }
         if (deflectionTargets.isNotEmpty()) {
-            val unknownFormat = stringResource(Res.string.dossier_killer_deflection_unknown_format)
             val byId = allCharacters.associateBy { it.id }
-            val names = deflectionTargets.map { id ->
-                byId[id.raw]?.displayName ?: unknownFormat.replace("%1\$s", id.raw)
+            val names = mutableListOf<String>()
+            for (id in deflectionTargets) {
+                names += byId[id.raw]?.displayName ?: stringResource(
+                    Res.string.dossier_killer_deflection_unknown_format,
+                    id.raw,
+                )
             }
             LabeledLine(deflectionLabel, names.joinToString(separator = " · "))
         }

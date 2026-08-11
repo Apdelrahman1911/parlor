@@ -112,8 +112,8 @@ fun WhodunitCasePickerScreen(
                     CandleFlame(size = ParlorTheme.iconSize.xl)
                 }
                 is Result.Failure -> EmptyState(
-                    title = stringResource(Res.string.library_load_error_format).replace(
-                        "%1\$s",
+                    title = stringResource(
+                        Res.string.library_load_error_format,
                         dataErrorMessage(state.error),
                     ),
                     modifier = Modifier.weight(1f),
@@ -151,12 +151,12 @@ fun WhodunitCasePickerScreen(
 @Composable
 private fun CaseRow(summary: CaseSummary, onClick: () -> Unit) {
     val colors = ParlorTheme.colors
-    val playersText = stringResource(Res.string.case_picker_players_format).replace(
-        "%1\$s",
+    val playersText = stringResource(
+        Res.string.case_picker_players_format,
         "${summary.supportedPlayerCounts.min}–${summary.supportedPlayerCounts.max}",
     )
-    val modesText = stringResource(Res.string.case_picker_modes_format).replace(
-        "%1\$s",
+    val modesText = stringResource(
+        Res.string.case_picker_modes_format,
         localizedModeNames(summary.supportedModes),
     )
     Box(

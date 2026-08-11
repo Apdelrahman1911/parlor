@@ -422,7 +422,7 @@ private fun HostLobbyContent(
                         modifier = Modifier.fillMaxWidth(),
                     )
                     Text(
-                        text = stringResource(Res.string.host_hosting_as_format).replace("%1\$s", hostName),
+                        text = stringResource(Res.string.host_hosting_as_format, hostName),
                         style = ParlorTheme.typography.bodyMedium,
                         color = ParlorTheme.colors.textTertiary,
                         textAlign = TextAlign.Center,
@@ -542,8 +542,7 @@ private fun HostLobbyContent(
                     supportedPlayerCounts.last.toString(),
                 )
             else ->
-            stringResource(Res.string.host_start_with_players_format)
-                .replace("%1\$s", playerCount.toString())
+                stringResource(Res.string.host_start_with_players_format, playerCount)
         }
         StickyActionBar(modifier = Modifier.align(Alignment.BottomCenter)) {
             ParlorButton(

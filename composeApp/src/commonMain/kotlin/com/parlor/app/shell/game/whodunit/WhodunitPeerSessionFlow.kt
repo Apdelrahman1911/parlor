@@ -439,7 +439,7 @@ private fun PeerConnectingState(
                 text = if (resuming) {
                     stringResource(Res.string.party_reconnecting_overlay_title)
                 } else {
-                    stringResource(Res.string.peer_connecting_format).replace("%1\$s", code)
+                    stringResource(Res.string.peer_connecting_format, code)
                 },
                 style = ParlorTheme.typography.displayMedium,
                 color = ParlorTheme.colors.textPrimary,
@@ -484,9 +484,11 @@ private fun PeerWaitingForHostStart(
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s)) {
                     Text(
-                        text = stringResource(Res.string.peer_room_header_format)
-                            .replace("%1\$s", info.hostDisplayName)
-                            .replace("%2\$s", peerName),
+                        text = stringResource(
+                            Res.string.peer_room_header_format,
+                            info.hostDisplayName,
+                            peerName,
+                        ),
                         style = ParlorTheme.typography.displayMedium,
                         color = ParlorTheme.colors.textPrimary,
                     )
@@ -496,8 +498,7 @@ private fun PeerWaitingForHostStart(
                         color = ParlorTheme.colors.textSecondary,
                     )
                     Text(
-                        text = stringResource(Res.string.peer_room_code_label_format)
-                            .replace("%1\$s", info.code),
+                        text = stringResource(Res.string.peer_room_code_label_format, info.code),
                         style = ParlorTheme.typography.bodyMedium,
                         color = ParlorTheme.colors.textTertiary,
                     )

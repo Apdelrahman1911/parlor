@@ -193,6 +193,18 @@ class ProductionUiAccessibilityContractTest {
     }
 
     @Test
+    fun localized_format_resources_use_the_platform_formatter() {
+        productionKotlinFiles().forEach { sourceFile ->
+            val source = sourceFile.readText()
+            assertFalse(
+                Regex("""\.replace\(\"%[0-9]+\\\$[sd]\"""").containsMatchIn(source),
+                "Manual format replacement bypasses localization in " +
+                    sourceFile.relativeTo(root).path,
+            )
+        }
+    }
+
+    @Test
     fun every_custom_click_or_selection_surface_declares_an_accessibility_role() {
         productionKotlinFiles().forEach { sourceFile ->
             val source = sourceFile.readText()
