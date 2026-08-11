@@ -276,16 +276,20 @@ internal object WhodunitStateValidator {
                 null -> charactersById.keys
             }
             require(possibleKillerCharacters.any { killerCharacterId ->
+                var drawnClueIds = emptySet<ClueId>()
                 state.public.revealedClues.all { revealed ->
-                    possibleCluesForRound(
+                    val reachable = WhodunitCluePolicy.eligibleCandidates(
                         case = payload,
                         killerCharacterId = killerCharacterId,
-                        modeId = state.public.modeId.raw,
+                        modeId = state.public.modeId,
                         playerCount = state.players.size,
                         roundIndex = revealed.roundIndex,
+                        drawnClueIds = drawnClueIds,
                     ).any { clue ->
                         clue.id == revealed.id.raw && clue.text == revealed.text
                     }
+                    drawnClueIds = drawnClueIds + revealed.id
+                    reachable
                 }
             }) { "Revealed clue history is not possible for the loaded case" }
         }
@@ -316,38 +320,6 @@ internal object WhodunitStateValidator {
                         (privateState.characterId == killerCharacterId),
                 ) { "Projected verdict conflicts with the receiving player's private role" }
             }
-        }
-    }
-
-    private fun possibleCluesForRound(
-        case: WhodunitCase,
-        killerCharacterId: CharacterId,
-        modeId: String,
-        playerCount: Int,
-        roundIndex: Int,
-    ): List<com.parlor.games.whodunit.content.Clue> {
-        val pools = case.cluePools
-        val killerId = killerCharacterId.raw
-        val lastRound = WhodunitRules.maximumRoundCount(
-            com.parlor.core.ids.ModeId(modeId),
-            playerCount,
-        )?.let { roundIndex >= it } ?: return emptyList()
-        val candidates = when {
-            lastRound ->
-                pools.finalStrong[killerId].orEmpty() +
-                    pools.killerPointing[killerId].orEmpty() +
-                    pools.contradiction[killerId].orEmpty() +
-                    pools.redHerring[killerId].orEmpty() +
-                    pools.publicUniversal
-            roundIndex == 1 ->
-                pools.publicUniversal + pools.killerPointing[killerId].orEmpty()
-            else ->
-                pools.killerPointing[killerId].orEmpty() +
-                    pools.contradiction[killerId].orEmpty() +
-                    pools.redHerring[killerId].orEmpty()
-        }
-        return candidates.filter { clue ->
-            clue.appliesToModes?.let { modeId in it } != false
         }
     }
 

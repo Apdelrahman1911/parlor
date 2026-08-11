@@ -885,6 +885,53 @@ class WhodunitSnapshotValidationTest {
     }
 
     @Test
+    fun peerCaseBoundaryRejectsFinalFallbackWhilePreferredEvidenceIsAvailable() {
+        val canonical = classicStateWithFinalClue()
+        val case = validatedCase()
+        val killerId = canonical.hostOnly.killerId
+        val killerCharacterId = canonical.hostOnly.killerCharacterId.raw
+        val priorClueIds = canonical.public.revealedClues.dropLast(1).map { it.id }.toSet()
+        val pools = case.payload.cluePools
+        val forgedFallback = (
+            pools.killerPointing[killerCharacterId].orEmpty() +
+                pools.contradiction[killerCharacterId].orEmpty() +
+                pools.redHerring[killerCharacterId].orEmpty() +
+                pools.publicUniversal
+            ).first { ClueId(it.id) !in priorClueIds }
+        val publicProjection = WhodunitProjectionPolicy.toPublic(canonical).state
+        val ownPrivate = canonical.privatePerPlayer.getValue(killerId)
+
+        assertTrue(
+            WhodunitStateValidator.isValidPeerProjectionForCase(
+                publicState = publicProjection,
+                ownPrivate = ownPrivate,
+                selfPlayerId = killerId,
+                case = case,
+            ),
+        )
+
+        val forgedProjection = publicProjection.copy(
+            public = publicProjection.public.copy(
+                revealedClues = publicProjection.public.revealedClues.dropLast(1) +
+                    RevealedClue(
+                        id = ClueId(forgedFallback.id),
+                        text = forgedFallback.text,
+                        roundIndex = canonical.public.currentRound,
+                    ),
+            ),
+        )
+        assertFalse(
+            WhodunitStateValidator.isValidPeerProjectionForCase(
+                publicState = forgedProjection,
+                ownPrivate = ownPrivate,
+                selfPlayerId = killerId,
+                case = case,
+            ),
+            "a final-round fallback is unreachable while undrawn finalStrong evidence exists",
+        )
+    }
+
+    @Test
     fun oversizedSnapshotIsRejectedBeforeJsonParsing() {
         assertFailsWith<IllegalArgumentException> {
             codec.decode(ByteArray(256 * 1024 + 1) { ' '.code.toByte() })
@@ -926,6 +973,39 @@ class WhodunitSnapshotValidationTest {
             ),
             hostOnly = assigned.hostOnly.copy(drawnClueIds = clues.map { it.id }.toSet()),
         )
+    }
+
+    private fun classicStateWithFinalClue(): WhodunitState {
+        val context = reducerContext()
+        fun step(state: WhodunitState, action: WhodunitAction): WhodunitState =
+            WhodunitReducer.reduce(state, action, context).newState
+
+        var state = assigned
+        players.forEach { player ->
+            state = step(state, WhodunitAction.AcknowledgeIntro(player.id))
+        }
+        state = step(state, WhodunitAction.AdvanceFromIntro)
+        repeat(3) { index ->
+            state = step(state, WhodunitAction.AdvanceBriefingCard(index + 1))
+        }
+        players.forEach { player ->
+            state = step(state, WhodunitAction.AcknowledgeBriefing(player.id))
+        }
+        state = step(state, WhodunitAction.AdvanceBriefingCard(4))
+        val generation = state.public.roleAssignmentGeneration
+        players.forEach { player ->
+            state = step(state, WhodunitAction.StartCharacterReveal(player.id, generation))
+            state = step(state, WhodunitAction.CompleteCharacterReveal(player.id, generation))
+        }
+        state = step(state, WhodunitAction.AdvanceFromCharacterReveal)
+        repeat(3) { roundIndex ->
+            state = step(state, WhodunitAction.RevealNextClue)
+            if (roundIndex < 2) {
+                state = step(state, WhodunitAction.StartDiscussionTimer(180))
+                state = step(state, WhodunitAction.AdvanceFromDiscussion)
+            }
+        }
+        return state
     }
 
     private fun reducerContext() = WhodunitReducerContext(
