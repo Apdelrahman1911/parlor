@@ -11,12 +11,13 @@ import com.parlor.games.whodunit.domain.state.WhodunitPrivate
 import com.parlor.games.whodunit.domain.state.WhodunitState
 
 /**
- * Strips state per viewer per ARCHITECTURE.md §7.
+ * Strips canonical state into the exact public or per-player view permitted
+ * at the multiplayer and UI boundaries.
  *
  * - `toPublic`: clears `privatePerPlayer` AND `hostOnly`. Also scrubs
- *   vote targets from `voteState.castSoFar` while voting is in progress
- *   (Wave 9H — voters are public, targets are not, until the tally
- *   resolves the vote into [VoteState.Resolved] / [VoteState.Tied]).
+ *   vote targets from `voteState.castSoFar` while voting is in progress;
+ *   voters are public, targets are not, until tally resolution produces
+ *   [VoteState.Resolved] or [VoteState.Tied].
  * - `toPlayer(id)`: clears `hostOnly`; keeps only `privatePerPlayer[id]`.
  *   Also applies the same vote-target redaction.
  * - `toHost`: full state.

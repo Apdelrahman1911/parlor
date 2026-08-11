@@ -14,8 +14,8 @@ import kotlinx.serialization.json.Json
  * — one source of truth, no per-platform duplication. The reader lambda is
  * injected so this class stays unit-testable.
  *
- * Per ARCHITECTURE.md §8: the bundled case is *not* an inline data class; the
- * JSON flows through the same validator as any remote case.
+ * A bundled case is not an inline data class: its JSON flows through the same
+ * strict envelope and game-specific validator as any future remote case.
  */
 class BundledWhodunitCases(
     /** Case ids whose JSON files exist under `composeResources/files/cases/`. */

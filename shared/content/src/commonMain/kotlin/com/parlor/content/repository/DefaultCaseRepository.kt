@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.serialization.json.Json
 
 /**
- * Orchestrates cache + remote + bundled per ARCHITECTURE.md §8.3:
+ * Orchestrates cache, optional remote, and bundled sources:
  *  - Serve a previously validated cache entry when available.
  *  - Otherwise try Remote → put in Cache → return.
  *  - Treat corrupt or unavailable sources independently and fall back to the

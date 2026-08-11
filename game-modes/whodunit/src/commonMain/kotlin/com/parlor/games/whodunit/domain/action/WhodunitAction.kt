@@ -5,8 +5,9 @@ import com.parlor.engine.action.GameAction
 import kotlinx.serialization.Serializable
 
 /**
- * Whodunit's full sealed input vocabulary. Phase 4 supplied the lifecycle and
- * reveal actions; Phase 5 adds round/vote/reveal/replay; Phase 6 adds safety.
+ * Whodunit's complete shipping input vocabulary. Every action is explicitly
+ * authorized and reduced; unsupported legacy structured actions are not part
+ * of this sealed contract.
  *
  * Annotated `@Serializable` so peer→host action submissions can ride the
  * `PeerMessage.ClientCommand(payload: ByteArray)` wire (see
@@ -37,7 +38,7 @@ sealed interface WhodunitAction : GameAction {
         val roleAssignmentGeneration: Long,
     ) : WhodunitAction
 
-    // --- Party Play readiness (Wave 9H) ---
+    // --- Multiplayer readiness ---
     /** Peer signals they've read the case intro. SelfActor. */
     @Serializable data class AcknowledgeIntro(val playerId: PlayerId) : WhodunitAction
     /** Peer signals they're ready to start after the briefing. SelfActor. */
@@ -49,7 +50,7 @@ sealed interface WhodunitAction : GameAction {
      */
     @Serializable data object AdvanceFromCharacterReveal : WhodunitAction
 
-    // --- Party Play connection rules (Wave 9H) ---
+    // --- Multiplayer connection rules ---
     /** Host bridge submits when it detects a peer drop. HostOnly. */
     @Serializable data class MarkPlayerDisconnected(val playerId: PlayerId) : WhodunitAction
     /** Host bridge submits when a disconnected peer rejoins within the grace period. HostOnly. */
@@ -61,7 +62,7 @@ sealed interface WhodunitAction : GameAction {
      * roster. HostOnly.
      */
     @Serializable data class ContinueWithoutPlayer(val playerId: PlayerId) : WhodunitAction
-    // --- Rounds (Phase 5) ---
+    // --- Rounds ---
     @Serializable data object RevealNextClue : WhodunitAction
     @Serializable data class StartDiscussionTimer(val seconds: Int) : WhodunitAction
     @Serializable data object PauseDiscussionTimer : WhodunitAction
@@ -70,7 +71,7 @@ sealed interface WhodunitAction : GameAction {
     @Serializable data object TimerExpired : WhodunitAction
     @Serializable data object AdvanceFromDiscussion : WhodunitAction
 
-    // --- Voting (Phase 5) ---
+    // --- Voting ---
     @Serializable data object OpenVote : WhodunitAction
     @Serializable data class CastVote(val voter: PlayerId, val target: PlayerId) : WhodunitAction
     @Serializable data class AbstainVote(val voter: PlayerId) : WhodunitAction
@@ -88,7 +89,7 @@ sealed interface WhodunitAction : GameAction {
     @Serializable data object AcknowledgeReveal : WhodunitAction
     @Serializable data object BeginReplay : WhodunitAction
 
-    // --- Safety (Phase 6) ---
+    // --- Safety and recovery ---
     @Serializable data object Pause : WhodunitAction
     @Serializable data object Resume : WhodunitAction
     @Serializable data class EndGameEarly(val withReveal: Boolean) : WhodunitAction

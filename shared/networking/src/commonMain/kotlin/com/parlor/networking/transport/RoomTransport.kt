@@ -51,9 +51,9 @@ interface RoomTransport {
 
     /**
      * Stream of rooms currently visible to this transport. Transports that
-     * don't support discovery (in-memory stub, P2pKit before it has its
-     * `peers` flow wired through) emit an empty list once and complete;
-     * the controller will fall back to manual code entry.
+     * don't support discovery emit an empty list once and complete. A UI may
+     * still collect a human room code, but the transport remains responsible
+     * for locating the endpoint; this is not a raw-IP/manual-endpoint fallback.
      *
      * The default no-op keeps existing transports source-compatible — only
      * transports that actually expose discovery override this.

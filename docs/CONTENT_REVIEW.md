@@ -1,64 +1,73 @@
-# *The Last Dinner* — Final Content Review
+# Bundled Whodunit content review
 
-> Phase 8 acceptance bar. Run this checklist on `content/last-dinner.draft.json`
-> before the case is approved for production publishing.
+Document status: current release checklist for creative/manual review. Kotlin
+models, validators, reducers, and tests are the executable source of truth for
+structural and gameplay compatibility; this checklist does not override them.
 
-## 1. Voice and tone
+Apply this checklist to every JSON file in:
 
-- [ ] Public intro reads aloud in **under one minute** at conversational pace.
-- [ ] No technical jargon. No legal terminology unless dramatically warranted.
-- [ ] No gore. No explicit violence. Murder happens off-screen.
-- [ ] Cozy noir throughout — Knives Out, not true crime.
-- [ ] Italicized narration used sparingly and consistently.
+`game-modes/whodunit/src/commonMain/composeResources/files/cases/`
 
-## 2. Character parity
+The current bundle contains seven cases: `last-dinner`, `iskenderia-corniche`,
+`jasmine-ring`, `khan-el-khalili`, `layla-halabi`, `saidi-inheritance`, and
+`zamalek-ramadan`. The resource registry and automated content tests must fail
+if this set and the declared identifiers drift.
 
-- [ ] Each character has a **strong, specific** motive readable in one line.
-- [ ] Each character has a **distinct** private secret (not "I had a fight with the victim").
-- [ ] Each character's innocent alibi is **true but uncomfortable** — they have to lie or omit to protect themselves.
-- [ ] No character is obviously the killer from their dossier alone.
-- [ ] No character is obviously *not* the killer from their dossier alone.
-- [ ] Public motive line and private secret line are roughly equal in dramatic weight across all six characters.
+## Automated structural gate
 
-## 3. Guilty-brief consistency
+Before creative sign-off, run:
 
-- [ ] Every guilty brief has a **method** that uses the household medication + pantry route (consistent bedrock).
-- [ ] Every guilty brief has a **timeline** that fits the 8:30–9:30 p.m. window.
-- [ ] Every guilty brief has a **fabricated alibi** that contradicts at least one bedrock fact only when challenged.
-- [ ] Every guilty brief has a **panic move** that doesn't immediately concede guilt.
-- [ ] **Deflection targets** are non-self and not the same character every time.
+```text
+./gradlew :game-modes:whodunit:desktopTest \
+  --tests '*BundledCaseLoadingTest*' \
+  --tests '*WhodunitContentIdentityTest*' \
+  --tests '*WhodunitPayloadHardeningTest*' \
+  --tests '*ArabicCaseValidationTest*' \
+  --dependency-verification=strict --rerun-tasks --no-daemon
+```
 
-## 4. Clue pools
+The release-wide content gate must also pass through `productionCheck`. The
+automated checks cover strict JSON decoding, schema/app/game compatibility,
+safe and unique IDs, exact resource identity, supported modes/player counts,
+bounded text and collection sizes, character/brief completeness, reveal-map
+identity, clue-pool uniqueness and reachability, mode-specific evidence,
+round-config support, and removal of placeholder author metadata.
 
-- [ ] At least 3 killer-pointing clues per killer.
-- [ ] At least 1 contradiction clue per killer.
-- [ ] At least 2 final-strong clue variants per killer.
-- [ ] Red-herring targets distribute fairly across the cast (no innocent is always the herring).
-- [ ] No clue uses pronouns that could ambiguously reference multiple characters.
-- [ ] Every clue is **falsifiable in discussion** — a player can respond, contextualize, or deny.
+An automated PASS does not prove prose quality or game balance.
 
-## 5. Reveal narratives
+## Manual review per case and language
 
-- [ ] Each reveal narrative is 5–8 sentences and reads like a short story, not exposition.
-- [ ] The narrative names the killer's method, motive, and signature flourish.
-- [ ] The narrative does NOT spoil any innocent character's secret.
-- [ ] The narrative concludes with a satisfying line (the "stage villain bow").
+- [ ] Title, subtitle, public intro, and all player-visible prose are final—not
+  draft, test, placeholder, machine-instruction, or internal notes.
+- [ ] The declared language matches the prose and renders correctly in its
+  locale and direction.
+- [ ] Every character has a distinct motive, secret, relationship, innocent
+  brief, guilty brief, timeline, and playable goal.
+- [ ] No dossier makes a character trivially guilty or impossible to accuse
+  before discussion.
+- [ ] Every possible killer has a coherent method, timeline, fake alibi,
+  deflection target, panic move, evidence trail, contradiction, final clue,
+  and reveal narrative.
+- [ ] Clue text is understandable aloud, attributable to the intended person
+  or object, and does not use ambiguous references.
+- [ ] Red herrings distribute suspicion fairly and do not contradict bedrock
+  facts or accidentally prove another killer.
+- [ ] Classic and Elimination modes both have sufficient evidence through
+  their maximum legal round trace.
+- [ ] Reveal narratives explain method, motive, and evidence without leaking
+  unrelated private secrets.
+- [ ] No content contains unverifiable author attribution, personal data,
+  unsafe external URL, store promise, or unsupported feature claim.
+- [ ] English and Arabic text was reviewed by a fluent human for tone,
+  grammar, cultural context, and RTL presentation.
 
-## 6. Replay variety
+## Playtest and release evidence
 
-- [ ] Playing this case as Eleanor-killer, James-killer, and Clara-killer feels like **three different stories**.
-- [ ] The red herring shifts noticeably depending on who is guilty.
-- [ ] The final clue is mechanically different (different object, different witness, different inference) across killer variants.
+For each case, record the app SHA/build, case ID/version/digest, language, mode,
+player count, assigned killer, result, duration, rule dispute, confusing clue,
+stuck transition, and reviewer notes. Exercise every possible killer across
+both modes over the release playtest campaign; a single successful game is not
+balance evidence.
 
-## 7. Schema and validation
-
-- [ ] `PHASE_0_VALIDATION.md` re-run against this version: ✅ all checks.
-- [ ] `WhodunitPayloadValidator` passes on this content with no warnings.
-- [ ] Player Count screen renders 4–6 (case cap) regardless of display strategy.
-
-## 8. Sign-off
-
-- [ ] Creative editor: __________________________
-- [ ] Game designer:  __________________________
-- [ ] Tech lead:       __________________________
-- [ ] Date:            __________________________
+Release sign-off requires named product/content owners and a dated receipt.
+Those names belong in the release record, not as invented JSON metadata.

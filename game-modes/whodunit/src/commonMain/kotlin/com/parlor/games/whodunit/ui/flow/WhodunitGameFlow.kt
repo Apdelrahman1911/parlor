@@ -207,8 +207,8 @@ import org.koin.core.qualifier.named
  * screens by observing `session.publicState`. UI events submit real
  * [WhodunitAction]s; the reducer drives phase transitions.
  *
- * Phase 6.2: when [resumeSessionId] is non-null, the flow looks up the
- * persisted snapshot, decodes its payload to a [WhodunitState], skips the
+ * When [resumeSessionId] is non-null, the flow looks up the persisted
+ * snapshot, validates and decodes its payload to a [WhodunitState], skips the
  * pre-session setup screens, and boots the controller at the saved phase. A
  * missing or corrupt snapshot drops back to the library — never to a half-
  * configured fresh game.
@@ -1236,7 +1236,7 @@ fun WhodunitMultiplayerPeerFlow(
     onBackToLibrary: () -> Unit,
     modifier: Modifier = Modifier,
     /**
-     * Wave 9H-8: PeerSessionFlow uses these to drive the
+     * PeerSessionFlow uses these callbacks to drive the
      * [com.parlor.designsystem.components.ReconnectingOverlay] and
      * [com.parlor.designsystem.components.OfflineBanner] at the screen
      * root. The peer bridge synthesises HostLost / SelfOffline via

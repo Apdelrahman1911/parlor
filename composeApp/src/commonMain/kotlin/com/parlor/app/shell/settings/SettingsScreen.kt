@@ -64,8 +64,8 @@ import org.koin.compose.koinInject
  * place because `App.kt` collects the same [SettingsStore] flows and wires
  * them to [ParlorTheme] + `ProvideAppLanguage`.
  *
- * Per Phase 8 polish bar: the screen is small, polished, and inherits the
- * cozy-noir tokens. No bespoke colors.
+ * The screen inherits shared theme tokens and introduces no bespoke colors,
+ * while accepted mutations outlive this screen's composition.
  */
 @Composable
 fun SettingsScreen(

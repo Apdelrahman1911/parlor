@@ -4,8 +4,7 @@ import com.parlor.core.ids.PlayerId
 import com.parlor.engine.phase.GamePhase
 
 /**
- * Three-bucket state container — the engine's enforcement of the privacy
- * model from ARCHITECTURE.md §7.
+ * Three-bucket state container used to enforce the engine privacy model.
  *
  * - `public` is visible to every viewer.
  * - `privatePerPlayer[playerId]` is visible only to the owning player.

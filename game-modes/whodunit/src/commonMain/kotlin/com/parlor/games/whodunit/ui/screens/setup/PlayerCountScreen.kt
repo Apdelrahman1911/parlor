@@ -37,10 +37,9 @@ import com.parlor.games.whodunit.resources.setup_player_count_headline
 import org.jetbrains.compose.resources.stringResource
 
 /**
- * Player Count — renders the module's full range. Per ARCHITECTURE.md §1.5,
- * the display strategy (show-and-disable vs hide-unsupported) is a product
- * decision. Default is **hide-unsupported** for the launch UX of *The Last
- * Dinner* (cleaner; only 4–6 are shown).
+ * Player-count selection intersects the module and selected-case ranges.
+ * The default hides unsupported values; callers may instead render the full
+ * module range with unsupported counts disabled.
  */
 @Composable
 fun PlayerCountScreen(

@@ -74,9 +74,9 @@ object WhodunitActionAuthority {
      *  1. HostOnly actions: only the host may submit.
      *  2. SelfActor actions: only the named actor may submit.
      *  3. SelfActor actions with an actor in [droppedPlayers]: rejected.
-     *     A dropped player is a spectator — their stale or queued actions
-     *     cannot mutate game state regardless of the sender identity. This
-     *     is the load-bearing "dropped spectator enforcement" rule.
+     *     A dropped player is a non-acting participant; stale or queued
+     *     actions cannot mutate game state regardless of sender identity.
+     *     This is the load-bearing dropped-seat enforcement rule.
      *
      * [droppedPlayers] defaults to `emptySet()` for backwards compatibility
      * with call sites that don't yet pass the dropped set. The host bridge

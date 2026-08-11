@@ -7,8 +7,8 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             api(project(":shared:core"))
-            // Content needs the engine's GameRegistry / GameDefinition to validate
-            // envelopes against installed modules (ARCHITECTURE.md §3.2).
+            // Content validates envelopes against the installed game registry
+            // and each resolved GameDefinition.
             implementation(project(":shared:engine"))
             implementation(libs.ktor.client.core)
         }

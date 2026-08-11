@@ -196,6 +196,10 @@ class MultiplayerDocumentationContractTest {
     fun historical_documents_warn_before_preserving_old_behavior() {
         val historicalDocuments = listOf(
             "ARCHITECTURE.md",
+            "docs/DESIGN_TOKENS.md",
+            "docs/FR_REMEDIATION_FINDINGS.md",
+            "docs/MOCK_BACKEND.md",
+            "docs/MOTION_DOWNGRADE.md",
             "docs/APP_PLAN.md",
             "docs/P2P_REMEDIATION_PLAN.md",
             "docs/PARLOR_P2P_SMOKE_TEST.md",
@@ -212,6 +216,82 @@ class MultiplayerDocumentationContractTest {
                 "$path must identify itself as historical/superseded before old details",
             )
         }
+    }
+
+    @Test
+    fun current_authoring_and_accessibility_docs_name_executable_owners() {
+        val schema = read("docs/CONTENT_SCHEMA.md")
+        listOf(
+            "Document status: current authoring guide.",
+            "Production Kotlin types, validators,",
+            "`signature`",
+            "Must be absent",
+            "`structuredAction = NONE`",
+            "current seven bundled",
+        ).forEach { marker ->
+            assertTrue(marker in schema, "CONTENT_SCHEMA.md is missing: $marker")
+        }
+        assertFalse("source of truth for the content validator (Phase 3)" in schema)
+
+        val review = read("docs/CONTENT_REVIEW.md")
+        listOf(
+            "Document status: current release checklist",
+            "composeResources/files/cases/",
+            "BundledCaseLoadingTest",
+            "WhodunitContentIdentityTest",
+            "WhodunitPayloadHardeningTest",
+        ).forEach { marker ->
+            assertTrue(marker in review, "CONTENT_REVIEW.md is missing: $marker")
+        }
+        assertFalse("content/last-dinner.draft.json" in review)
+
+        val mock = read("docs/MOCK_BACKEND.md")
+        assertTrue("historical filename retained" in mock)
+        assertTrue("OfflineRemoteCaseDataSource" in mock)
+        assertTrue("`MockEngine` appears only in" in mock)
+
+        val motion = read("docs/MOTION_DOWNGRADE.md")
+        assertTrue("historical filename retained" in motion)
+        assertTrue("no `MotionCapabilityProbe`" in motion)
+        assertTrue("rememberSystemReducedMotion()" in motion)
+
+        val accessibility = read("docs/ACCESSIBILITY_AUDIT.md")
+        assertTrue("current external release gate" in accessibility)
+        assertTrue("physical-device receipts" in accessibility)
+        assertTrue("must not be converted to PASS from a" in accessibility)
+        assertTrue("simulator, screenshot, compile, or static test" in accessibility)
+    }
+
+    @Test
+    fun production_source_comments_do_not_claim_historical_delivery_phases() {
+        val productionFiles = repositoryRoot.walkTopDown()
+            .filter(File::isFile)
+            .filter { file -> file.extension == "kt" || file.extension == "kts" }
+            .filter { file ->
+                val path = file.relativeTo(repositoryRoot).invariantSeparatorsPath
+                Regex("/src/(common|android|ios|desktop)Main/").containsMatchIn("/$path") ||
+                    path.endsWith("build.gradle.kts")
+            }
+            .toList()
+
+        assertTrue(productionFiles.isNotEmpty(), "No production sources found")
+        val obsolete = productionFiles.flatMap { file ->
+            file.readLines().mapIndexedNotNull { index, line ->
+                if (
+                    Regex("\\bPhase [0-9]").containsMatchIn(line) ||
+                    Regex("\\bWave [0-9]").containsMatchIn(line)
+                ) {
+                    "${file.relativeTo(repositoryRoot).invariantSeparatorsPath}:${index + 1}:$line"
+                } else {
+                    null
+                }
+            }
+        }
+        assertTrue(
+            obsolete.isEmpty(),
+            "Production source still presents historical delivery labels as current:\n" +
+                obsolete.joinToString("\n"),
+        )
     }
 
     @Test

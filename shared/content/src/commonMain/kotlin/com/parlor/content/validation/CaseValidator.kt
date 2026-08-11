@@ -7,8 +7,9 @@ import com.parlor.core.result.Result
 import com.parlor.core.result.ValidationError
 
 /**
- * Strict, ordered validator per docs/CONTENT_SCHEMA.md §2.3. Phase 3 wires
- * in the concrete envelope rules; this is the contract.
+ * Strict, ordered validation boundary for every content source. Production
+ * Kotlin models, validators, and tests own the executable contract; the
+ * content-schema document explains that contract for authors.
  *
  * Per-module payload validation is delegated to [PayloadValidator] — the
  * envelope validator calls it once envelope rules pass.

@@ -41,8 +41,8 @@ val coreModule: Module = module {
             processScope = get(qualifier = named("multiplayerSession")),
         )
     }
-    // Strict JSON for content validation: unknown fields in case payloads must
-    // fail validation rather than be silently dropped (ARCHITECTURE.md §8.4).
+    // Strict JSON for content validation: unknown fields in case payloads fail
+    // validation rather than being silently dropped.
     single<Json> {
         Json {
             ignoreUnknownKeys = false

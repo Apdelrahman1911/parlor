@@ -11,10 +11,8 @@ import com.parlor.designsystem.theme.ParlorTheme
 /**
  * Loading indicator — editorial direction.
  *
- * Originally a Canvas-drawn flickering candle flame (cozy-noir Wave 6E).
- * Replaced by a thin coral circular progress for the modern dark
- * editorial direction. The public API of the composable is preserved
- * so existing callers keep compiling.
+ * Thin themed circular progress indicator. The historical name remains as a
+ * source-compatible component API for existing callers.
  */
 @Composable
 fun CandleFlame(

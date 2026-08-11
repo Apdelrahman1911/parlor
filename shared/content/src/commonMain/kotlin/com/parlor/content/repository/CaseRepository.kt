@@ -10,8 +10,8 @@ import com.parlor.core.result.Result
 import kotlinx.coroutines.flow.Flow
 
 /**
- * Facade over the content delivery pipeline. Hides cache + remote + bundled
- * coordination behind one interface (per ARCHITECTURE.md §8.3).
+ * Facade over the content delivery pipeline. It keeps cache, optional remote,
+ * and bundled-source coordination behind one validated interface.
  */
 interface CaseRepository {
     suspend fun listCases(gameId: GameId): Result<List<CaseSummary>, DataError>

@@ -55,7 +55,11 @@ data class SessionEnvelopeHeader(
     val messageId: String,
     /** Host message sequence. Peer messages use zero; commands have clientSequence. */
     val sequence: Long,
-    /** Rejects delayed frames from a replaced physical connection. */
+    /**
+     * Logical wire epoch for a session protocol instance. The current schema
+     * keeps this stable at one; stale physical callbacks are rejected by the
+     * room/session ownership generation rather than by rotating this field.
+     */
     val connectionEpoch: Long = 1L,
 )
 

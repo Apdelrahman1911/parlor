@@ -11,10 +11,10 @@ import com.parlor.core.result.Result
  * device-bound protection mechanism. Plaintext fallback is test/development
  * behavior only and must never be selected silently.
  *
- * Used by Phase 6 for snapshot encryption keys, session secrets, and any
- * other host-only persisted material. Snapshot files currently use dedicated
- * platform key management directly because their atomic file replacement and
- * key lifecycle are one platform concern.
+ * Used for snapshot encryption keys, resumable-session material, and other
+ * host-only persisted values. Snapshot files use dedicated platform key
+ * management because atomic replacement and key lifecycle are one platform
+ * concern.
  */
 interface SecureStorage {
     suspend fun put(key: String, value: ByteArray): EmptyResult<DataError>

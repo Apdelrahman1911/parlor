@@ -11,7 +11,8 @@ import com.parlor.games.mafia.domain.state.MafiaPrivate
 import com.parlor.games.mafia.domain.state.MafiaState
 
 /**
- * Strips state per viewer per ARCHITECTURE.md §7.
+ * Strips canonical state into the exact public or per-player view permitted
+ * at the multiplayer and UI boundaries.
  *
  *  - `toPublic`: clears `privatePerPlayer` AND `hostOnly`. Living-player
  *    roles in `public.roster` are already `null` by construction (the

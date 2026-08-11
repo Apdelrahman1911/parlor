@@ -42,9 +42,8 @@ interface LocalRoom {
 
     /**
      * Connection-lifecycle events. Implementations that don't surface
-     * peer-state transitions return an empty flow — bridges still detect
-     * `HostLost` via snapshot-silence timeouts. Wave 9H-5 added this
-     * flow; pre-9H transports may default to [emptyPeerEvents].
+     * peer-state transitions return an empty flow; bridges still detect
+     * `HostLost` through snapshot-silence timeouts.
      */
     val peerEvents: SharedFlow<PeerEvent>
         get() = emptyPeerEvents

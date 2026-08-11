@@ -22,7 +22,7 @@ import org.koin.dsl.module
  *    docs/CONTENT_SCHEMA.md §3.5.
  *  - `BundledFallbackCaseDataSource` — bundled case JSON via Compose
  *    Multiplatform shared resources (`composeResources/files/cases/`). No
- *    qualifier; the repository consumes a single bundled source for MVP.
+ *    qualifier is needed because the repository consumes one bundled source.
  */
 @OptIn(ExperimentalResourceApi::class)
 val whodunitModule = module {

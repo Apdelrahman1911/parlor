@@ -44,7 +44,7 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
             return Reduction(state)
         }
         return when (action) {
-            // Lifecycle / reveal (Phase 4)
+            // Lifecycle / reveal
             is WhodunitAction.AssignRoles -> assignRoles(state, action.seed, wctx)
             WhodunitAction.AdvanceFromIntro -> advanceFromIntro(state)
             is WhodunitAction.AdvanceBriefingCard -> advanceBriefingCard(state, action.index)
@@ -58,17 +58,17 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
                 action.playerId,
                 action.roleAssignmentGeneration,
             )
-            // Party Play readiness (Wave 9H)
+            // Multiplayer readiness
             is WhodunitAction.AcknowledgeIntro -> acknowledgeIntro(state, action.playerId)
             is WhodunitAction.AcknowledgeBriefing -> acknowledgeBriefing(state, action.playerId)
             WhodunitAction.AdvanceFromCharacterReveal -> advanceFromCharacterReveal(state)
 
-            // Party Play connection rules (Wave 9H)
+            // Multiplayer connection rules
             is WhodunitAction.MarkPlayerDisconnected -> markPlayerDisconnected(state, action.playerId)
             is WhodunitAction.MarkPlayerReconnected -> markPlayerReconnected(state, action.playerId)
             is WhodunitAction.ContinueWithoutPlayer -> continueWithoutPlayer(state, action.playerId)
 
-            // Rounds (Phase 5)
+            // Rounds
             WhodunitAction.RevealNextClue -> revealNextClue(state, wctx)
             is WhodunitAction.StartDiscussionTimer -> startDiscussionTimer(
                 state,
@@ -81,7 +81,7 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
             WhodunitAction.TimerExpired -> timerExpired(state)
             WhodunitAction.AdvanceFromDiscussion -> advanceFromDiscussion(state)
 
-            // Voting (Phase 5)
+            // Voting
             WhodunitAction.OpenVote -> openVote(state)
             is WhodunitAction.CastVote -> castVote(state, action.voter, action.target)
             is WhodunitAction.AbstainVote -> abstainVote(state, action.voter, refused = false)
@@ -91,7 +91,7 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
             WhodunitAction.AcknowledgeReveal -> acknowledgeReveal(state)
             WhodunitAction.BeginReplay -> beginReplay(state, wctx)
 
-            // Safety (Phase 6)
+            // Safety and recovery
             WhodunitAction.Pause -> pauseSession(state)
             WhodunitAction.Resume -> resumeSession(state)
             is WhodunitAction.EndGameEarly -> endGameEarly(state, action.withReveal)
@@ -99,7 +99,7 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
         }
     }
 
-    // ============================================================ Setup / Reveal (Phase 4) ==
+    // ============================================================ Setup / Reveal ==
 
     private fun assignRoles(
         state: WhodunitState,
@@ -407,8 +407,8 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
     }
 
     /**
-     * Wave 9H: CompleteCharacterReveal is repurposed as the per-player
-     * "I'm done viewing my role" signal — it locks the dossier and adds
+     * CompleteCharacterReveal is the per-player "I'm done viewing my role"
+     * signal: it locks the dossier and adds
      * the player to `rolesViewed`. It NO LONGER auto-advances the phase.
      * The host explicitly fires `AdvanceFromCharacterReveal` when all
      * active-roster players have confirmed.
@@ -626,8 +626,8 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
         if (!validEntry) return Reduction(state)
 
         val tableIds = state.public.playersAtTable.map { it.id }
-        // Active roster excludes dropped players (Wave 9H-2 — host has
-        // explicitly chosen to continue without them).
+        // Active roster excludes players the host explicitly dropped after
+        // recovery failed.
         val active = tableIds - state.public.droppedPlayers
         val survivors = active - state.public.eliminatedPlayers.toSet()
         val ballot = if (isElimination) survivors else active

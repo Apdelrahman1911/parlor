@@ -17,13 +17,13 @@ sealed interface WhodunitEvent : GameEvent {
     data class PrivateRevealRequested(val playerId: PlayerId) : WhodunitEvent
     data object PrivacyConcernRaised : WhodunitEvent
 
-    // Rounds (Phase 5)
+    // Rounds
     data class ClueRevealed(val clueId: ClueId, val text: String, val roundIndex: Int) : WhodunitEvent
     data class TimerStarted(val seconds: Int) : WhodunitEvent
     data class TimerWarning(val remainingSeconds: Int) : WhodunitEvent
     data object TimerExhausted : WhodunitEvent
 
-    // Voting (Phase 5)
+    // Voting
     data object VoteOpened : WhodunitEvent
     data class VoteCast(val voter: PlayerId, val target: PlayerId) : WhodunitEvent
     /** A voter declined to vote via the *refuse* button (player protest). */
@@ -38,7 +38,7 @@ sealed interface WhodunitEvent : GameEvent {
     data class WinnerDecided(val winner: Verdict) : WhodunitEvent
     data object RevealNarrativePlaying : WhodunitEvent
 
-    // Safety (Phase 6)
+    // Safety and recovery
     data object PauseEngaged : WhodunitEvent
     data object PauseLifted : WhodunitEvent
     data class RerolledAt(val phaseId: String) : WhodunitEvent

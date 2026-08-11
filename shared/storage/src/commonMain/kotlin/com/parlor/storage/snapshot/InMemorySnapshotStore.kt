@@ -10,9 +10,9 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
 /**
- * Dev/test in-memory snapshot store. Phase 6 production wires this behind a
- * platform-specific encrypted-file backing via expect/actual; the interface
- * is stable so call sites don't change.
+ * Development/test in-memory snapshot store. Shipping mobile composition uses
+ * platform-specific protected file storage; the interface remains identical
+ * so deterministic tests exercise the same callers.
  */
 class InMemorySnapshotStore : SnapshotStore {
     private val mutex = Mutex()

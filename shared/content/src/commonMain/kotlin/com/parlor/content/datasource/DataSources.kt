@@ -9,13 +9,13 @@ import com.parlor.core.result.NetworkError
 import com.parlor.core.result.Result
 
 /**
- * Three sources of cases, layered by the repository:
- * 1. Remote — the (mock or real) backend.
- * 2. Cache — local persisted copy.
- * 3. Bundled — the offline-safety fallback shipped inside the app.
+ * Three source roles layered by the repository:
+ * 1. Remote — optional network content; explicitly unavailable in this release.
+ * 2. Cache — a local process-lifetime optimization.
+ * 3. Bundled — the authoritative shipping content inside the app.
  *
- * Per ARCHITECTURE.md §8: even the bundled fallback flows through the
- * validator before use. There is no "trusted" data path.
+ * Every source, including bundled resources, flows through the validator
+ * before use. There is no validation bypass for trusted-looking data.
  */
 interface RemoteCaseDataSource {
     suspend fun listCases(gameId: GameId): Result<List<CaseSummary>, NetworkError>

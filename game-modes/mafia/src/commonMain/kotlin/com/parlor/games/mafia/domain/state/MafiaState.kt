@@ -8,9 +8,9 @@ import com.parlor.games.mafia.domain.settings.MafiaSettings
 import kotlinx.serialization.Serializable
 
 /**
- * Mafia full state — three buckets per ARCHITECTURE.md §7. The reducer only
- * mutates buckets it has authority to mutate; [com.parlor.games.mafia.domain.projection.MafiaProjectionPolicy]
- * strips the appropriate buckets per viewer.
+ * Mafia canonical state is divided into public, per-player-private, and
+ * host-only buckets. The projection policy strips the appropriate buckets for
+ * each viewer before state crosses a trust boundary.
  *
  * Privacy is enforced HERE, not in the UI. Living-player roles never appear
  * in [MafiaPublic]; Mafia coordination and Detective results never appear

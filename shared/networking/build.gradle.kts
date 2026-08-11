@@ -7,9 +7,8 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             api(project(":shared:core"))
-            // Phase 8: the protocol's SessionStarting message references
-            // com.parlor.engine.state.Player so the same engine type carries
-            // through host -> peer setup.
+            // SessionStarting carries com.parlor.engine.state.Player so the
+            // same canonical type crosses the host-to-peer setup boundary.
             api(project(":shared:engine"))
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.serialization.cbor)

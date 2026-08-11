@@ -53,7 +53,7 @@ internal object MafiaObservableStateValidator {
             state.public.disconnectedPlayers.all { disconnected ->
                 state.public.roster.single { it.playerId == disconnected }.alive
             },
-        ) { "Eliminated Mafia spectator is tracked as gameplay-disconnected" }
+        ) { "Eliminated Mafia participant is tracked as gameplay-disconnected" }
         require(
             state.phase == MafiaPhase.PostGame || state.public.droppedPlayers.isEmpty(),
         ) { "Active Mafia state contains a permanently dropped player" }

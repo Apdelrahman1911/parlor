@@ -830,9 +830,9 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent> {
         // job is scheduled for a completed game.
         if (state.phase == MafiaPhase.PostGame) return Reduction(state)
         if (id !in state.players.map { it.id }) return Reduction(state)
-        // Eliminated players are spectators. Their transport may reconnect and
-        // receive snapshots, but their absence cannot freeze or terminate the
-        // authoritative game still being played by living seats.
+        // Eliminated players may reconnect to observe public state, but their
+        // absence cannot freeze or terminate the authoritative game still
+        // being played by living seats; this is not a spectator role.
         if (!isActiveAlive(state, id)) return Reduction(state)
         if (id in state.public.disconnectedPlayers) return Reduction(state)
         return Reduction(

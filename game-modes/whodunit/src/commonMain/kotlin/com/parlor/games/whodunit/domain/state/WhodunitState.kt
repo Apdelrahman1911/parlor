@@ -12,9 +12,9 @@ import com.parlor.games.whodunit.domain.phase.WhodunitPhase
 import kotlinx.serialization.Serializable
 
 /**
- * Whodunit's full state. Three buckets per ARCHITECTURE.md §7. The reducer
- * only mutates buckets it has the authority to mutate; the projection policy
- * strips the appropriate buckets per viewer.
+ * Whodunit canonical state is divided into public, per-player-private, and
+ * host-only buckets. The projection policy strips the appropriate buckets for
+ * each viewer before state crosses a trust boundary.
  */
 @Serializable
 data class WhodunitState(
@@ -128,7 +128,7 @@ data class RevealedClue(
     val roundIndex: Int,
 )
 
-// VoteState lives in its own file (Phase 5 elaboration).
+// VoteState lives in its own file to keep phase-specific invariants localized.
 
 @Serializable
 data class PublicTimerState(

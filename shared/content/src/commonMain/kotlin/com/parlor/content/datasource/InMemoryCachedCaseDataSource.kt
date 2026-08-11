@@ -8,9 +8,9 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
 /**
- * MVP cache implementation — in-memory, lost on process restart. Phase 6
- * upgrades this to disk-backed (SQLDelight or platform key-value) without
- * changing the call sites.
+ * In-memory case cache, intentionally lost on process restart. Shipping
+ * content is bundled, so a restart safely repopulates this cache through the
+ * validated bundled source rather than relying on it for persistence.
  */
 class InMemoryCachedCaseDataSource : CachedCaseDataSource {
     private val mutex = Mutex()

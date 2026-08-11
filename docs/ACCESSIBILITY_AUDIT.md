@@ -1,70 +1,103 @@
-# Parlor — Accessibility Audit Checklist
+# Accessibility qualification checklist
 
-> Phase 8 acceptance bar. Every checked item is validated on real devices, not just emulators.
+Document status: current external release gate. Source, resource, layout, and
+semantics tests provide pre-device evidence; only dated TalkBack/VoiceOver and
+physical-device receipts may complete this checklist.
 
-## 1. Type and contrast
+## Automated evidence that must be green first
 
-- [ ] Body text ≥ 16 sp throughout.
-- [ ] Dossier text ≥ 18 sp throughout.
-- [ ] Headings ≥ 28 sp.
-- [ ] Text-on-surface contrast meets WCAG AA (4.5:1 minimum normal, 3:1 large).
-- [ ] Ember-on-surface contrast verified for any non-decorative use of `accent.ember`.
-- [ ] No reliance on color alone — every state has a text or icon cue.
+- `ProductionUiAccessibilityContractTest`: minimum custom touch targets,
+  headings/live-region conventions, sensitive semantics, and known screen
+  contracts.
+- `LocalizationResourceContractTest`: exact English/Arabic key parity and no
+  missing production strings.
+- Whodunit and Mafia responsive-layout suites: supported compact layouts do not
+  use known unbounded structures.
+- content and projection tests: one player's hidden role/private action never
+  enters another player's UI model or accessibility tree.
+- `productionCheck`: Android lint, resource packaging, release compilation,
+  static analysis, and all registered UI contract tests.
 
-## 2. Touch targets
+Automation does not prove spoken order, clipping at device font scales,
+contrast on a physical display, gesture usability, or assistive-technology
+quality.
 
-- [ ] Every interactive element ≥ 48 dp × 48 dp.
-- [ ] No two adjacent interactive elements within 8 dp of each other (avoids mis-taps).
+## Physical matrix prerequisites
 
-## 3. Gestures
+Record app SHA/build, signed/debug origin, device model, OS version, language,
+display size, font/display scale, light/dark appearance, reduced-motion state,
+screen reader/version, game/mode, and host/peer role. Test both Android and iOS
+with English LTR and Arabic RTL.
 
-- [ ] **Wax-seal hold-to-reveal** has a tap-confirmation fallback (always; surfaced more prominently when `reduceMotion = true`).
-- [ ] No gesture that requires multi-touch (single-finger interactions only).
-- [ ] No gesture that requires precise timing other than the wax-seal hold (which has the explicit fallback).
-- [ ] No gesture that requires a swipe direction the user cannot reverse.
+## Text, contrast, and layout
 
-## 4. Motion
+- [ ] Normal and large text meet the approved WCAG contrast target on every
+  used background, including disabled, error, warning, success, and selected
+  states.
+- [ ] No state relies only on color, motion, or sound.
+- [ ] System font scaling through the platform-supported release target causes
+  no clipped controls, hidden actions, overlapping text, or unreachable scroll
+  content.
+- [ ] Portrait, landscape where supported, small phone, large phone, and tablet
+  layouts retain correct reading and focus order.
+- [ ] Arabic mirrors direction where appropriate without mirroring semantic
+  media or changing number/room-code meaning.
 
-- [ ] System-level "Reduce Motion" preference is read and honored.
-- [ ] Cinematic reveals collapse to dignified cross-dissolves under reduced motion.
-- [ ] Candle flicker on backdrop is disabled under reduced motion.
-- [ ] No motion that lasts > 800 ms without a "skip" or "tap to continue" affordance.
-- [ ] No flashing > 3 Hz (seizure safety).
+## Touch and motor access
 
-## 5. Screen readers
+- [ ] Every actionable target is at least the platform/repository minimum and
+  has sufficient separation for reliable activation.
+- [ ] Double taps or rapid repeated activation cannot submit an authoritative
+  action twice.
+- [ ] Wax-seal hold-to-reveal has a clear tap-confirmation fallback and both
+  paths expose the same private information only to the intended player.
+- [ ] All game and recovery flows can be completed with one pointer and without
+  precise directional gestures.
+- [ ] Back, Leave, retry, Settings recovery, and destructive confirmations are
+  reachable without time-critical gestures.
 
-- [ ] Every `ParlorButton` carries a `contentDescription`.
-- [ ] Every clickable surface (cards, list rows, custom gestures) carries a `contentDescription`.
-- [ ] Headings are marked as headings.
-- [ ] Live regions (timer ribbon, vote results) announce updates without spamming.
-- [ ] Decorative-only elements are marked `clearAndSetSemantics` or excluded from a11y tree.
+## Motion
 
-## 6. Layout adaptability
+- [ ] Android and iOS system reduced-motion settings are detected on launch and
+  after the supported app lifecycle transition.
+- [ ] The in-app reduced-motion preference persists and cannot override an
+  active system request for less motion.
+- [ ] Reveal, progress, transition, and reconnect UI remain understandable with
+  reduced motion enabled.
+- [ ] No flashing or rapidly oscillating visual exceeds the approved seizure
+  safety threshold.
 
-- [ ] App supports system font scaling up to 200% without clipping or layout collapse.
-- [ ] App handles portrait, landscape, and split-screen on tablets/Desktop.
-- [ ] Reading order matches visual order under right-to-left locales.
+Parlor does not implement automatic GPU/FPS motion tiers; do not test or claim
+that historical proposal as a shipping feature.
 
-## 7. Internationalization
+## TalkBack and VoiceOver
 
-- [ ] All chrome strings flow through `UiText` and a single resolver.
-- [ ] Case prose flows through validated content; no inline literals.
-- [ ] Text containers tolerate ~+40% length expansion (German/French translation slack).
+- [ ] Every screen announces one useful title/heading and an understandable
+  current state.
+- [ ] Controls expose concise names, roles, values, selected/disabled state,
+  and destructive consequences without redundant speech.
+- [ ] Dynamic timers, command results, disconnect/reconnect state, vote result,
+  and terminal result are announced at useful frequency without repeated spam.
+- [ ] Focus does not jump behind dialogs, overlays, reconnect UI, private-role
+  covers, or navigation transitions.
+- [ ] Reading order matches visual order in English and Arabic.
+- [ ] Decorative graphics are absent from the semantics tree.
+- [ ] A private role, target, dossier, vote target, or other hidden data is not
+  announced from a covered/background screen, screen preview, or another
+  player's projection.
 
-## 8. Sound
+## End-to-end completion
 
-- [x] No sound-only signal exists: the current release contains no audio playback.
-- [ ] If sound is introduced, pair every cue with a visual beat, respect system
-  audio policy, and expose a setting backed by real behavior.
+- [ ] A TalkBack user completes Whodunit local and multiplayer flows, including
+  setup, role reveal, rounds, voting, result, replay, Leave, and recovery.
+- [ ] A VoiceOver user completes the same Whodunit flows.
+- [ ] TalkBack and VoiceOver users complete Mafia setup, role reveal, every
+  role-specific night action, discussion, voting, result, replay, Leave, and
+  recovery.
+- [ ] A low-vision user completes both games at large text/display scale.
+- [ ] A motor-accessibility tester completes both games using the reduced-motion
+  and tap-fallback paths.
 
-## 9. Cognitive load
-
-- [ ] No screen requires reading > 200 words of UI prose at once (case prose is exempt — it is the content).
-- [ ] Every cinematic transition has a "tap to continue" affordance (no auto-advance for narrative beats).
-- [ ] Time pressure is always soft (chime, not buzz) except in Elimination Mode revote.
-
-## 10. Sign-off
-
-- [ ] An external user with low vision completes a full game.
-- [ ] An external user using TalkBack / VoiceOver completes a full game.
-- [ ] An external user with motor-control sensitivity completes a full game with hold-to-reveal disabled.
+Each failed row is a release finding with reproduction steps and evidence. An
+unchecked row remains an external gate; it must not be converted to PASS from a
+simulator, screenshot, compile, or static test.

@@ -47,8 +47,8 @@ import com.parlor.games.whodunit.ui.components.CandlelitCover
 import org.jetbrains.compose.resources.stringResource
 
 /**
- * Vote ballot. [onRefuse] is Phase 6.3's *refuse-to-vote* affordance — tally-
- * equivalent to abstain but UI-distinct so players who actively decline to
+ * Vote ballot. [onRefuse] is the explicit refuse-to-vote affordance: tally-
+ * equivalent to abstain but UI-distinct, so players who actively decline to
  * participate aren't conflated with players who simply have no opinion.
  */
 @Composable

@@ -1,9 +1,11 @@
-# Parlor — Design Tokens
+# Parlor — historical design-token proposal
 
-> The base visual token reference that drives the Parlor design system and
-> Whodunit's `CozyNoirTheme` overlay. The sound direction in §9 is explicitly
-> reserved design work, not shipping behavior. Current production behavior is
-> documented in `PRODUCTION_ARCHITECTURE.md` and implemented by the source.
+Document status: historical visual-design reference. It preserves the original
+Cozy Noir direction, but names, values, motion effects, automatic performance
+tiers, and future overlays below are not current shipping contracts. The
+production implementations under `shared/design-system/src/commonMain` and
+their tests/resources are authoritative. The sound section is reserved design
+work, not shipping behavior.
 
 ---
 
@@ -67,7 +69,8 @@
 - `accent.ember` on `surface.elevated` → 4.6:1 (AA, large text only).
 - `text.onAccent` on `accent.ember` → 5.1:1 (AA, normal text).
 
-Every text/surface pairing in the design system is validated against WCAG AA at minimum at build time.
+These are design targets, not proof of current device contrast. Automated UI
+contracts and the physical accessibility matrix provide release evidence.
 
 ---
 
@@ -164,7 +167,8 @@ Shadow color: `#000000`. Warm rim color: `accent.ember`.
 | `blur.medium` | 16 dp | Pause overlay backdrop blur. |
 | `blur.dramatic` | 32 dp | Cover screens behind reveal motion. |
 
-Note: blur effects degrade gracefully on Desktop/low-end platforms via the motion downgrade tier.
+Note: Parlor honors reduced-motion preference paths. It does not ship an
+automatic device-performance motion tier.
 
 ---
 
@@ -218,13 +222,9 @@ The atmosphere behind every Whodunit screen. Five layers, bottom-to-top:
 4. **Vignette** (hero screens only) — radial inset from edges, inner transparent, outer `#000000` at 0.45 alpha.
 5. **Candle flicker** (default-on; disabled by `reduceMotion`) — sinusoidal brightness pulse on the bloom layer, ±5% amplitude, `motion.duration.ember` cycle.
 
-A **performance downgrade tier** for low-end devices:
-
-- Replace `grain` and `vignette` with a single pre-rendered raster.
-- Reduce bloom blur to a single radial pass.
-- Disable flicker.
-
-Devices opt into the downgrade tier via a runtime capability flag (Desktop integrated GPUs especially; tier picked at app start).
+The proposed automatic low-end performance tier was not implemented. Current
+motion reduction is the system/in-app Boolean policy described in
+`MOTION_DOWNGRADE.md`'s current-status section.
 
 ---
 
@@ -293,10 +293,11 @@ Each overlay maps the same token *names* to different *values*. Component code d
 ## 12. What this spec does NOT include
 
 - Specific cover-art compositions (out of scope; case-by-case asset work).
-- Per-screen layout grids (defined per-screen in Phase 4–5 implementation).
-- Icon set (TBD; Phase 1 picks an icon library — currently leaning toward Material Symbols Outlined with custom Whodunit accents).
-- App icon and store assets (Phase 8).
+- Per-screen layout behavior, which is implemented by each shipping screen.
+- The current icon/resource set and Android launcher assets.
+- Final store artwork and screenshots, which remain distribution gates.
 
 ---
 
-*Token spec version 1.0 — Phase 0 lock. The CozyNoirTheme above is the source of truth for Whodunit's Phase 4–5 implementation. Subsequent edits version this file alongside `:shared:design-system` releases.*
+*Historical token proposal version 1.0. Current code and verified resources are
+the source of truth.*

@@ -1,6 +1,10 @@
 # Production-review remediation register
 
-Document status: current code-review evidence ledger.
+Document status: historical remediation ledger for the review that began at
+`37a249676fd8d6de109800cd136352bdd55e32ee`. It preserves traceability for that
+branch, but its CLOSED rows and readiness language are not current-HEAD
+evidence. The independent review must derive its verdict from source inspection,
+the mechanically complete inventory, and exact-final-HEAD verification.
 
 The protected remediation baseline is `37a249676fd8d6de109800cd136352bdd55e32ee`.
 Work is isolated on `codex/parlor-fr-remediation`; the pre-remediation
@@ -345,5 +349,5 @@ git status --short --branch
 Apple simulator execution is reported only where the host can execute it;
 `iosX64` linkage is not a runtime pass on Apple Silicon. Signed artifacts,
 physical LAN/hotspot behavior, app-store review, accessibility, privacy, legal,
-and compliance remain external gates even after the code-review verdict becomes
-`READY FOR PHYSICAL-DEVICE VALIDATION`.
+and compliance remain external gates. The historical verdict below must not be
+used as the current independent-review verdict.

@@ -79,7 +79,7 @@ class MafiaHostRoomBridge(
     private val closeMutex = Mutex()
     private val graceJobs = mutableMapOf<PlayerId, Job>()
     private val rejoinJobs = mutableMapOf<PlayerId, Job>()
-    /** Transport-offline seats, including eliminated spectators. */
+    /** Transport-offline seats, including eliminated non-acting participants. */
     private val offlinePlayers = mutableSetOf<PlayerId>()
     private var terminated = false
     private var closed = false
