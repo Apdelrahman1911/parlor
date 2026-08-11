@@ -635,6 +635,34 @@ class MafiaSnapshotRecoveryTest {
         }
     }
 
+    @Test
+    fun eliminated_spectator_cannot_be_restored_as_gameplay_disconnected() {
+        var valid = votingState(SessionId("mafia-dead-disconnected"))
+        val target = valid.hostOnly.fullRoleMap.entries.first { it.value.team == Team.Town }.key
+        requireNotNull(valid.public.activeVote).ballot.forEach { voter ->
+            valid = MafiaReducer.reduce(
+                valid,
+                if (voter == target) {
+                    MafiaAction.AbstainVote(voter)
+                } else {
+                    MafiaAction.CastVote(voter, target)
+                },
+                reducerContext(),
+            ).newState
+        }
+        valid = MafiaReducer.reduce(valid, MafiaAction.CloseVote, reducerContext()).newState
+        assertTrue(valid.public.roster.single { it.playerId == target }.alive.not())
+        assertTrue(valid.isValidRecoveryState())
+
+        val impossible = valid.copy(
+            public = valid.public.copy(disconnectedPlayers = setOf(target)),
+        )
+        assertFalse(
+            impossible.isValidRecoveryState(),
+            "an eliminated spectator can reconnect but cannot freeze a living game",
+        )
+    }
+
     private fun config(
         sessionId: SessionId,
         roster: List<Player> = players,

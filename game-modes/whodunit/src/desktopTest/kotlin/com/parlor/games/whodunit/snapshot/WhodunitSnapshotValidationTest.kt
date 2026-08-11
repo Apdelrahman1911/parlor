@@ -524,6 +524,20 @@ class WhodunitSnapshotValidationTest {
     }
 
     @Test
+    fun eliminatedAudienceCannotBeRestoredAsGameplayDisconnected() {
+        val (valid, eliminated) = eliminationAudienceState()
+        WhodunitStateValidator.requireValid(valid)
+
+        val impossible = valid.copy(
+            public = valid.public.copy(
+                disconnectedPlayers = setOf(eliminated),
+                paused = true,
+            ),
+        )
+        assertDecodeRejected(impossible)
+    }
+
+    @Test
     fun revealedCluesMustBeOrderedAndWithinCurrentRound() {
         val outOfOrder = assigned.copy(
             phase = WhodunitPhase.Round(3),
@@ -796,8 +810,64 @@ class WhodunitSnapshotValidationTest {
         ).newState
     }
 
-    private fun case(): WhodunitCase {
-        val characters = (1..4).map { index -> character("c$index") }
+    private fun eliminationAudienceState(): Pair<WhodunitState, PlayerId> {
+        val roster = (0 until 5).map { index ->
+            Player(PlayerId("e${index + 1}"), "Elimination ${index + 1}", index)
+        }
+        val payload = case(characterCount = 5)
+        val context = WhodunitReducerContext(
+            clock = FakeClock(Instant.fromEpochMilliseconds(0)),
+            random = RandomSource.seeded(17L),
+            case = validatedWhodunitCaseForTest(payload, caseId = "snapshot-elimination"),
+        )
+        fun step(state: WhodunitState, action: WhodunitAction): WhodunitState =
+            WhodunitReducer.reduce(state, action, context).newState
+
+        var state = WhodunitDefinition(json).createInitialState(
+            SessionConfig(
+                sessionId = SessionId("snapshot-elimination"),
+                caseId = CaseId("snapshot-elimination"),
+                modeId = WhodunitIds.EliminationModeId,
+                players = roster,
+                randomSeed = 17L,
+            ),
+        )
+        state = step(state, WhodunitAction.AssignRoles(17L))
+        roster.forEach { state = step(state, WhodunitAction.AcknowledgeIntro(it.id)) }
+        state = step(state, WhodunitAction.AdvanceFromIntro)
+        roster.forEach { state = step(state, WhodunitAction.AcknowledgeBriefing(it.id)) }
+        for (index in 1..4) state = step(state, WhodunitAction.AdvanceBriefingCard(index))
+        roster.forEach { player ->
+            val generation = state.public.roleAssignmentGeneration
+            state = step(state, WhodunitAction.StartCharacterReveal(player.id, generation))
+            state = step(state, WhodunitAction.CompleteCharacterReveal(player.id, generation))
+        }
+        state = step(state, WhodunitAction.AdvanceFromCharacterReveal)
+        state = step(state, WhodunitAction.RevealNextClue)
+        state = step(state, WhodunitAction.StartDiscussionTimer(180))
+        state = step(state, WhodunitAction.AdvanceFromDiscussion)
+
+        val killer = state.hostOnly.killerId
+        val innocent = roster.first { it.id != killer }.id
+        val ballot = (state.public.voteState as VoteState.Collecting).ballotPlayerIds
+        ballot.forEach { voter ->
+            state = step(
+                state,
+                if (voter == innocent) {
+                    WhodunitAction.AbstainVote(voter)
+                } else {
+                    WhodunitAction.CastVote(voter, innocent)
+                },
+            )
+        }
+        state = step(state, WhodunitAction.CloseVote)
+        state = step(state, WhodunitAction.AcknowledgeRevealCard)
+        check(innocent in state.public.eliminatedPlayers)
+        return state to innocent
+    }
+
+    private fun case(characterCount: Int = 4): WhodunitCase {
+        val characters = (1..characterCount).map { index -> character("c$index") }
         return WhodunitCase(
             publicIntro = "Intro",
             bedrockClues = listOf("Bedrock"),

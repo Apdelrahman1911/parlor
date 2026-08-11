@@ -486,6 +486,41 @@ class MafiaReducerEdgeCasesTest {
         assertThat(ended.public.disconnectedPlayers).isEmpty()
     }
 
+    @Test
+    fun eliminated_spectator_disconnect_does_not_enter_gameplay_recovery() {
+        val (announcement, eliminated) = nightAnnouncementWithDeath()
+
+        val after = MafiaReducer.reduce(
+            announcement,
+            MafiaAction.MarkPlayerDisconnected(eliminated),
+            ctx(),
+        )
+
+        assertThat(after.newState).isEqualTo(announcement)
+        assertThat(after.events).isEmpty()
+    }
+
+    @Test
+    fun eliminated_players_cannot_acknowledge_living_player_announcements() {
+        val (nightAnnouncement, nightVictim) = nightAnnouncementWithDeath()
+        val nightAck = MafiaReducer.reduce(
+            nightAnnouncement,
+            MafiaAction.AcknowledgeNightAnnouncement(nightVictim),
+            ctx(),
+        )
+        assertThat(nightAck.newState).isEqualTo(nightAnnouncement)
+        assertThat(nightAck.events).isEmpty()
+
+        val (voteAnnouncement, voteVictim) = voteAnnouncementWithElimination()
+        val voteAck = MafiaReducer.reduce(
+            voteAnnouncement,
+            MafiaAction.AcknowledgeVoteAnnouncement(voteVictim),
+            ctx(),
+        )
+        assertThat(voteAck.newState).isEqualTo(voteAnnouncement)
+        assertThat(voteAck.events).isEmpty()
+    }
+
     // -------------------------------------------------------------------- Detective result delivery
 
     @Test
@@ -579,5 +614,42 @@ class MafiaReducerEdgeCasesTest {
             state = MafiaReducer.reduce(state, action, ctx(seed)).newState
         }
         return state
+    }
+
+    private fun nightAnnouncementWithDeath(seed: Long = 42L): Pair<MafiaState, PlayerId> {
+        var state = atNight(7, seed)
+        val target = state.privatePerPlayer.entries
+            .first { it.value.role != Role.Mafia }
+            .key
+        val mafia = state.privatePerPlayer.filterValues { it.role == Role.Mafia }.keys
+        for (id in mafia) {
+            state = MafiaReducer.reduce(
+                state,
+                MafiaAction.SubmitMafiaKillVote(id, target),
+                ctx(seed),
+            ).newState
+        }
+        state = submitUnsubmittedNightActions(state, seed)
+        state = MafiaReducer.reduce(state, MafiaAction.ResolveNight, ctx(seed)).newState
+        check(state.phase is MafiaPhase.NightAnnouncement)
+        check(state.public.roster.single { it.playerId == target }.alive.not())
+        return state to target
+    }
+
+    private fun voteAnnouncementWithElimination(seed: Long = 42L): Pair<MafiaState, PlayerId> {
+        var state = atVoting(7, seed)
+        val activeVote = requireNotNull(state.public.activeVote)
+        val target = activeVote.candidates.last()
+        for (voter in activeVote.ballot) {
+            state = if (voter == target) {
+                MafiaReducer.reduce(state, MafiaAction.AbstainVote(voter), ctx(seed)).newState
+            } else {
+                MafiaReducer.reduce(state, MafiaAction.CastVote(voter, target), ctx(seed)).newState
+            }
+        }
+        state = MafiaReducer.reduce(state, MafiaAction.CloseVote, ctx(seed)).newState
+        check(state.phase is MafiaPhase.VoteAnnouncement)
+        check(state.public.roster.single { it.playerId == target }.alive.not())
+        return state to target
     }
 }

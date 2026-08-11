@@ -182,7 +182,7 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
     private fun ackNight(state: MafiaState, by: PlayerId): Reduction<MafiaState, MafiaEvent> {
         if (state.phase !is MafiaPhase.NightAnnouncement) return Reduction(state)
         val priv = state.privatePerPlayer[by] ?: return Reduction(state)
-        if (by in state.public.droppedPlayers) return Reduction(state)
+        if (!isActiveAlive(state, by)) return Reduction(state)
         if (priv.nightAcknowledged) return Reduction(state)
         return Reduction(
             state.copy(
@@ -208,7 +208,7 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
     private fun ackVote(state: MafiaState, by: PlayerId): Reduction<MafiaState, MafiaEvent> {
         if (state.phase !is MafiaPhase.VoteAnnouncement) return Reduction(state)
         val priv = state.privatePerPlayer[by] ?: return Reduction(state)
-        if (by in state.public.droppedPlayers) return Reduction(state)
+        if (!isActiveAlive(state, by)) return Reduction(state)
         if (priv.voteAcknowledged) return Reduction(state)
         return Reduction(
             state.copy(
@@ -802,6 +802,10 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
         // job is scheduled for a completed game.
         if (state.phase == MafiaPhase.PostGame) return Reduction(state)
         if (id !in state.players.map { it.id }) return Reduction(state)
+        // Eliminated players are spectators. Their transport may reconnect and
+        // receive snapshots, but their absence cannot freeze or terminate the
+        // authoritative game still being played by living seats.
+        if (!isActiveAlive(state, id)) return Reduction(state)
         if (id in state.public.disconnectedPlayers) return Reduction(state)
         return Reduction(
             state.copy(public = state.public.copy(

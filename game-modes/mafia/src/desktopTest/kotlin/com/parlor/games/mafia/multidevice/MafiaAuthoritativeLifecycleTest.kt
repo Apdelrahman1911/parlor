@@ -21,6 +21,7 @@ import com.parlor.games.mafia.domain.action.MafiaAction
 import com.parlor.games.mafia.domain.event.MafiaEvent
 import com.parlor.games.mafia.domain.phase.MafiaPhase
 import com.parlor.games.mafia.domain.state.MafiaState
+import com.parlor.games.mafia.domain.state.Role
 import com.parlor.games.mafia.ui.flow.multidevice.MafiaHostRoomBridge
 import com.parlor.games.mafia.ui.flow.multidevice.MafiaPeerRoomBridge
 import com.parlor.networking.protocol.CommandStatus
@@ -441,6 +442,36 @@ class MafiaAuthoritativeLifecycleTest {
         fixture.close()
     }
 
+    @Test
+    fun eliminated_spectator_disconnect_neither_blocks_game_nor_expires_the_session() = runTest {
+        val fixture = fixture(TestScope(UnconfinedTestDispatcher(testScheduler)))
+        val eliminated = eliminateRemotePlayerAtNight(fixture)
+        val beforeDisconnect = fixture.session.hostState.value.state
+        val snapshotsBefore = fixture.hostRoom.sent.count {
+            it.first == SendTarget.Direct(eliminated) && it.second is HostMessage.PlayerSnapshot
+        }
+
+        fixture.bus.emitPeerLeft(eliminated, "Eliminated")
+        runCurrent()
+
+        assertThat(fixture.session.hostState.value.state).isEqualTo(beforeDisconnect)
+        assertThat(eliminated in beforeDisconnect.public.disconnectedPlayers).isFalse()
+        advanceTimeBy(201L)
+        runCurrent()
+        assertThat(fixture.session.hostState.value.state).isEqualTo(beforeDisconnect)
+        assertThat(fixture.hostRoom.retiredMembers).isEqualTo(emptyList())
+
+        // Transport recovery still replays the committed session and delivers
+        // an authoritative snapshot to the spectator without a gameplay pause.
+        fixture.bus.emitPeerReconnected(eliminated, "Eliminated")
+        runCurrent()
+        val snapshotsAfter = fixture.hostRoom.sent.count {
+            it.first == SendTarget.Direct(eliminated) && it.second is HostMessage.PlayerSnapshot
+        }
+        assertThat(snapshotsAfter > snapshotsBefore).isTrue()
+        fixture.close()
+    }
+
     private suspend fun fixture(
         scope: TestScope,
         reconcileRoomTopology: Boolean = false,
@@ -537,6 +568,38 @@ class MafiaAuthoritativeLifecycleTest {
         }
         runCurrent()
         return startId
+    }
+
+    private suspend fun eliminateRemotePlayerAtNight(fixture: Fixture): PlayerId {
+        for (player in players) {
+            fixture.bridge.submitHostAction(MafiaAction.AcknowledgeRoleViewed(player.id))
+        }
+        fixture.bridge.submitHostAction(MafiaAction.AdvanceFromRoleAssignment)
+        var state = fixture.session.hostState.value.state
+        val target = state.privatePerPlayer.entries.first { (id, private) ->
+            id != host && private.role != Role.Mafia
+        }.key
+        val alive = state.public.roster.filter { it.alive }.map { it.playerId }
+        for (id in alive) {
+            val private = state.privatePerPlayer.getValue(id)
+            val other = alive.firstOrNull { it != id }
+            val action = when (private.role) {
+                Role.Mafia -> MafiaAction.SubmitMafiaKillVote(id, target)
+                Role.Doctor -> MafiaAction.SubmitDoctorProtect(id, null)
+                Role.Detective -> MafiaAction.SubmitDetectiveInspect(id, other)
+                Role.Civilian -> MafiaAction.SubmitCivilianSuspicion(id, other)
+            }
+            fixture.bridge.submitHostAction(action)
+            state = fixture.session.hostState.value.state
+            if (state.privatePerPlayer[id]?.pendingDetectiveResult != null) {
+                fixture.bridge.submitHostAction(MafiaAction.AcknowledgeDetectiveResult(id))
+            }
+        }
+        fixture.bridge.submitHostAction(MafiaAction.ResolveNight)
+        state = fixture.session.hostState.value.state
+        check(state.phase is MafiaPhase.NightAnnouncement)
+        check(state.public.roster.single { it.playerId == target }.alive.not())
+        return target
     }
 
     private data class Fixture(

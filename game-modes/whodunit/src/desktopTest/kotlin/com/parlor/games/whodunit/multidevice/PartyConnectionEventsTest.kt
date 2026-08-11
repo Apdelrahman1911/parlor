@@ -28,6 +28,7 @@ import com.parlor.games.whodunit.domain.state.WhodunitState
 import com.parlor.games.whodunit.resources.Res
 import com.parlor.games.whodunit.ackBriefingForAll
 import com.parlor.games.whodunit.ackIntroForAll
+import com.parlor.games.whodunit.accuseWithAllOtherVoters
 import com.parlor.games.whodunit.revealRolesAndAdvance
 import com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostRoomBridge
 import com.parlor.networking.protocol.CommandStatus
@@ -120,6 +121,53 @@ class PartyConnectionEventsTest {
         bridge.close()
 
         assertThat(bus.peerEventSubscriberCount).isEqualTo(0)
+    }
+
+    @Test
+    fun eliminated_audience_disconnect_neither_pauses_nor_expires_the_case() = runTest {
+        val scope = TestScope(UnconfinedTestDispatcher(testScheduler))
+        val bus = InMemoryRoomBus()
+        val eliminationPlayers = players + Player(PlayerId("eve"), "Eve", seat = 4)
+        eliminationPlayers.forEach { bus.registerPeer(it.id) }
+        val session = scope.buildHostSession(
+            payload = loadCase(),
+            modeId = WhodunitIds.EliminationModeId,
+            roster = eliminationPlayers,
+        )
+        val eliminated = advanceToEliminatedAudience(session, eliminationPlayers)
+        val room = PartyEventsHostRoom(bus, hostId)
+        val bridge = WhodunitHostRoomBridge(
+            session,
+            room,
+            eliminationPlayers,
+            scope,
+            json,
+            rejoinGraceMs = 200L,
+            heartbeatIntervalMs = 0L,
+            requireStartHandshake = false,
+        )
+        runCurrent()
+        val beforeDisconnect = session.hostState.value.state
+        val snapshotsBefore = room.sent.count {
+            it.first == SendTarget.Direct(eliminated) && it.second is HostMessage.PlayerSnapshot
+        }
+
+        bus.emitPeerLeft(eliminated, "Eliminated")
+        runCurrent()
+        assertThat(session.hostState.value.state).isEqualTo(beforeDisconnect)
+        assertThat(beforeDisconnect.public.paused).isFalse()
+        advanceTimeBy(201L)
+        runCurrent()
+        assertThat(session.hostState.value.state).isEqualTo(beforeDisconnect)
+        assertThat(room.retiredMembers).isEqualTo(emptyList())
+
+        bus.emitPeerReconnected(eliminated, "Eliminated")
+        runCurrent()
+        val snapshotsAfter = room.sent.count {
+            it.first == SendTarget.Direct(eliminated) && it.second is HostMessage.PlayerSnapshot
+        }
+        assertThat(snapshotsAfter > snapshotsBefore).isTrue()
+        bridge.close()
     }
 
     @Test
@@ -696,6 +744,8 @@ class PartyConnectionEventsTest {
 
     private fun TestScope.buildHostSession(
         payload: WhodunitCase,
+        modeId: com.parlor.core.ids.ModeId = WhodunitIds.ClassicVoteModeId,
+        roster: List<Player> = players,
     ): PassAndPlaySessionController<WhodunitState, WhodunitAction, WhodunitEvent> {
         val sessionScope = kotlinx.coroutines.CoroutineScope(UnconfinedTestDispatcher(testScheduler))
         val session = PassAndPlaySessionController(
@@ -703,8 +753,8 @@ class PartyConnectionEventsTest {
             config = SessionConfig(
                 sessionId = SessionId("conn-events"),
                 caseId = CaseId("last-dinner"),
-                modeId = WhodunitIds.ClassicVoteModeId,
-                players = players,
+                modeId = modeId,
+                players = roster,
                 randomSeed = 42L,
             ),
             reducerContext = WhodunitReducerContext(
@@ -717,6 +767,30 @@ class PartyConnectionEventsTest {
         // Drive past Setup into PublicIntro so the state has assigned roles.
         kotlinx.coroutines.runBlocking { session.submit(WhodunitAction.AssignRoles(42L)) }
         return session
+    }
+
+    private suspend fun advanceToEliminatedAudience(
+        session: PassAndPlaySessionController<WhodunitState, WhodunitAction, WhodunitEvent>,
+        roster: List<Player>,
+    ): PlayerId {
+        session.ackIntroForAll(roster)
+        session.submit(WhodunitAction.AdvanceFromIntro)
+        session.ackBriefingForAll(roster)
+        for (index in 1..4) session.submit(WhodunitAction.AdvanceBriefingCard(index))
+        session.revealRolesAndAdvance(roster)
+        session.submit(WhodunitAction.RevealNextClue)
+        session.submit(WhodunitAction.StartDiscussionTimer(180))
+        session.submit(WhodunitAction.AdvanceFromDiscussion)
+        val state = session.hostState.value.state
+        val killer = state.hostOnly.killerId
+        val innocent = roster.first { it.id != killer && it.id != hostId }.id
+        val ballot = (state.public.voteState as com.parlor.games.whodunit.domain.state.VoteState.Collecting)
+            .ballotPlayerIds
+        session.accuseWithAllOtherVoters(ballot, innocent)
+        session.submit(WhodunitAction.CloseVote)
+        session.submit(WhodunitAction.AcknowledgeRevealCard)
+        check(innocent in session.hostState.value.state.public.eliminatedPlayers)
+        return innocent
     }
 
     private suspend fun advanceToTimedRound(

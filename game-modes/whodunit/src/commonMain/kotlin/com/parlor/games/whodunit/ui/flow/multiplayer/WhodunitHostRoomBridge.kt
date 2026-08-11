@@ -76,9 +76,13 @@ class WhodunitHostRoomBridge(
     private val privateSerializer = WhodunitPrivate.serializer()
     private val remotePlayers = players.map(Player::id).toSet() - room.selfPlayerId
     private val lifecycleMutex = Mutex()
+    /** Serializes topology callbacks with grace expiry and completed rejoins. */
+    private val recoveryTransitionMutex = Mutex()
     private val closeMutex = Mutex()
     private val graceJobs = mutableMapOf<PlayerId, Job>()
     private val rejoinJobs = mutableMapOf<PlayerId, Job>()
+    /** Transport-offline seats, including eliminated audience members. */
+    private val offlinePlayers = mutableSetOf<PlayerId>()
     private var terminated = false
     private var closed = false
     private var pausedByAppLifecycle = false
@@ -193,6 +197,7 @@ class WhodunitHostRoomBridge(
                 (graceJobs.values + rejoinJobs.values).also {
                     graceJobs.clear()
                     rejoinJobs.clear()
+                    offlinePlayers.clear()
                 }
             }
         } ?: return
@@ -216,7 +221,7 @@ class WhodunitHostRoomBridge(
             )
         } ?: return false
         jobsToCancel.forEach { it.cancelAndJoin() }
-        val changed = retireAndContinue(playerId)
+        val changed = recoveryTransitionMutex.withLock { retireAndContinue(playerId) }
         if (changed) resumeLifecyclePauseIfPossible()
         return changed
     }
@@ -229,6 +234,7 @@ class WhodunitHostRoomBridge(
             (graceJobs.values + rejoinJobs.values).also {
                 graceJobs.clear()
                 rejoinJobs.clear()
+                offlinePlayers.clear()
             }
         }
         jobsToCancel.forEach { it.cancelAndJoin() }
@@ -304,34 +310,49 @@ class WhodunitHostRoomBridge(
         remotePlayers.forEach { playerId ->
             val public = controller.currentState().public
             if (playerId in public.droppedPlayers) return@forEach
-            val markedDisconnected = playerId in public.disconnectedPlayers
+            val transportOffline = lifecycleMutex.withLock { playerId in offlinePlayers }
             when {
-                playerId !in connected && !markedDisconnected -> handlePeerLeft(playerId)
-                playerId in connected && markedDisconnected -> handlePeerReconnected(playerId)
+                playerId !in connected && !transportOffline -> handlePeerLeft(playerId)
+                playerId in connected && transportOffline -> handlePeerReconnected(playerId)
             }
         }
     }
 
-    private suspend fun handlePeerLeft(playerId: PlayerId) {
-        if (playerId !in remotePlayers) return
-        if (lifecycleMutex.withLock { terminated }) return
-        applyLifecycleAction(WhodunitAction.MarkPlayerDisconnected(playerId))
-        val interruptedRejoin = lifecycleMutex.withLock { rejoinJobs.remove(playerId) }
+    private suspend fun handlePeerLeft(playerId: PlayerId) = recoveryTransitionMutex.withLock {
+        if (playerId !in remotePlayers) return@withLock
+        var interruptedRejoin: Job? = null
+        val accepted = lifecycleMutex.withLock {
+            if (terminated) {
+                false
+            } else {
+                offlinePlayers += playerId
+                interruptedRejoin = rejoinJobs.remove(playerId)
+                true
+            }
+        }
+        if (!accepted) return@withLock
         interruptedRejoin?.cancel()
-        if (controller.currentState().phase != WhodunitPhase.PostGame) {
+
+        applyLifecycleAction(WhodunitAction.MarkPlayerDisconnected(playerId))
+        val state = controller.currentState()
+        if (
+            playerId in state.public.disconnectedPlayers &&
+            state.phase != WhodunitPhase.PostGame
+        ) {
             scheduleGraceExpiry(playerId)
         }
     }
 
-    private suspend fun handlePeerReconnected(playerId: PlayerId) {
-        if (
-            playerId !in remotePlayers ||
-            playerId !in controller.currentState().public.disconnectedPlayers
-        ) {
-            return
+    private suspend fun handlePeerReconnected(playerId: PlayerId) =
+        recoveryTransitionMutex.withLock {
+            if (playerId !in remotePlayers) return@withLock
+            val mayRejoin = lifecycleMutex.withLock {
+                !terminated &&
+                    playerId in offlinePlayers &&
+                    rejoinJobs[playerId] == null
+            }
+            if (mayRejoin) scheduleRejoin(playerId)
         }
-        scheduleRejoin(playerId)
-    }
 
     private suspend fun scheduleGraceExpiry(playerId: PlayerId) {
         lateinit var graceJob: Job
@@ -350,24 +371,25 @@ class WhodunitHostRoomBridge(
         if (installed) graceJob.start() else graceJob.cancel()
     }
 
-    private suspend fun expireGrace(playerId: PlayerId, graceJob: Job) {
-        var rejoinToCancel: Job? = null
-        val ownsDeadline = lifecycleMutex.withLock {
-            if (terminated || graceJobs[playerId] !== graceJob) {
-                false
-            } else {
-                graceJobs.remove(playerId)
-                rejoinToCancel = rejoinJobs.remove(playerId)
-                true
+    private suspend fun expireGrace(playerId: PlayerId, graceJob: Job) =
+        recoveryTransitionMutex.withLock {
+            var rejoinToCancel: Job? = null
+            val ownsDeadline = lifecycleMutex.withLock {
+                if (terminated || graceJobs[playerId] !== graceJob) {
+                    false
+                } else {
+                    graceJobs.remove(playerId)
+                    rejoinToCancel = rejoinJobs.remove(playerId)
+                    true
+                }
+            }
+            if (!ownsDeadline) return@withLock
+            rejoinToCancel?.cancel()
+            if (playerId in controller.currentState().public.disconnectedPlayers) {
+                val changed = retireAndContinue(playerId)
+                if (changed) resumeLifecyclePauseIfPossible()
             }
         }
-        if (!ownsDeadline) return
-        rejoinToCancel?.cancel()
-        if (playerId in controller.currentState().public.disconnectedPlayers) {
-            val changed = retireAndContinue(playerId)
-            if (changed) resumeLifecyclePauseIfPossible()
-        }
-    }
 
     private suspend fun scheduleRejoin(playerId: PlayerId) {
         lateinit var rejoinJob: Job
@@ -398,22 +420,48 @@ class WhodunitHostRoomBridge(
         if (installed) rejoinJob.start() else rejoinJob.cancel()
     }
 
-    private suspend fun completeRejoin(playerId: PlayerId, rejoinJob: Job) {
-        var graceToCancel: Job? = null
-        val ownsSeat = lifecycleMutex.withLock {
-            if (terminated || rejoinJobs[playerId] !== rejoinJob) {
-                false
-            } else {
-                graceToCancel = graceJobs.remove(playerId)
-                graceToCancel != null
+    private suspend fun completeRejoin(playerId: PlayerId, rejoinJob: Job) =
+        recoveryTransitionMutex.withLock {
+            val ownsAttempt = lifecycleMutex.withLock {
+                !terminated &&
+                    rejoinJobs[playerId] === rejoinJob &&
+                    playerId in offlinePlayers
             }
+            if (!ownsAttempt) return@withLock
+
+            val wasGameplayDisconnected =
+                playerId in controller.currentState().public.disconnectedPlayers
+            val changed = if (wasGameplayDisconnected) {
+                applyLifecycleAction(WhodunitAction.MarkPlayerReconnected(playerId))
+            } else {
+                false
+            }
+            if (
+                wasGameplayDisconnected &&
+                playerId in controller.currentState().public.disconnectedPlayers
+            ) {
+                return@withLock
+            }
+
+            var graceToCancel: Job? = null
+            val completed = lifecycleMutex.withLock {
+                if (
+                    terminated ||
+                    rejoinJobs[playerId] !== rejoinJob ||
+                    playerId !in offlinePlayers
+                ) {
+                    false
+                } else {
+                    offlinePlayers.remove(playerId)
+                    graceToCancel = graceJobs.remove(playerId)
+                    true
+                }
+            }
+            if (!completed) return@withLock
+            graceToCancel?.cancel()
+            if (!changed) coordinator.publishState(incrementRevision = false)
+            resumeLifecyclePauseIfPossible()
         }
-        if (!ownsSeat) return
-        graceToCancel?.cancel()
-        val changed = applyLifecycleAction(WhodunitAction.MarkPlayerReconnected(playerId))
-        if (!changed) coordinator.publishState(incrementRevision = false)
-        resumeLifecyclePauseIfPossible()
-    }
 
     /**
      * Active can be emitted before a disconnected seat completes the start
@@ -481,7 +529,9 @@ class WhodunitHostRoomBridge(
             terminate(SessionEndReason.Cancelled)
             return false
         }
-        return mutation == HostMutationResult.Applied
+        val applied = mutation == HostMutationResult.Applied
+        if (applied) lifecycleMutex.withLock { offlinePlayers.remove(playerId) }
+        return applied
     }
 
     companion object {

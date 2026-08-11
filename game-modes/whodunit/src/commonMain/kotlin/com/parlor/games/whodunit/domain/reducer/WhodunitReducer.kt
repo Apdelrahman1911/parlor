@@ -294,6 +294,9 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
         // permanent overlay because no gameplay recovery remains to perform.
         if (state.phase == WhodunitPhase.PostGame) return Reduction(state)
         if (playerId !in state.players.map { it.id }) return Reduction(state)
+        // Elimination-mode casualties are audience members. Losing an audience
+        // transport must not pause or end the case for surviving players.
+        if (playerId in state.public.eliminatedPlayers) return Reduction(state)
         if (playerId in state.public.disconnectedPlayers) return Reduction(state)
         val activeGame = state.phase != WhodunitPhase.Setup &&
             state.phase != WhodunitPhase.Reveal &&

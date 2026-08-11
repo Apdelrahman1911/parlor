@@ -268,6 +268,18 @@ class WhodunitReducerProductionGuardsTest {
             .isEqualTo(KillerWinCause.SurvivedToFinalTwo)
     }
 
+    @Test
+    fun eliminated_audience_disconnect_does_not_pause_or_end_the_case() {
+        val eliminated = players.last().id
+        val active = roundState(modeId = WhodunitIds.EliminationModeId).let { state ->
+            state.copy(
+                public = state.public.copy(eliminatedPlayers = listOf(eliminated)),
+            )
+        }
+
+        assertNoOp(active, WhodunitAction.MarkPlayerDisconnected(eliminated))
+    }
+
     private fun reduce(
         state: WhodunitState,
         action: WhodunitAction,

@@ -640,14 +640,7 @@ internal object WhodunitStateValidator {
         val public = state.public
         val clueCount = public.revealedClues.size
 
-        require(public.disconnectedPlayers.intersect(public.droppedPlayers).isEmpty()) {
-            "A player is both disconnected and permanently dropped"
-        }
-        require(
-            state.phase == WhodunitPhase.Reveal ||
-                state.phase == WhodunitPhase.PostGame ||
-                public.droppedPlayers.isEmpty(),
-        ) { "Active Whodunit state contains a permanently dropped player" }
+        validateConnectionShape(state)
         require(
             state.public.modeId == WhodunitIds.EliminationModeId ||
                 public.eliminatedPlayers.isEmpty(),
@@ -668,22 +661,6 @@ internal object WhodunitStateValidator {
                 public.briefingCardIndex == 0
             },
         ) { "Briefing card index disagrees with the phase" }
-
-        val phaseCanPause = when (state.phase) {
-            WhodunitPhase.Setup,
-            WhodunitPhase.Reveal,
-            WhodunitPhase.PostGame -> false
-            else -> true
-        }
-        require(phaseCanPause || !public.paused) { "Terminal or setup state is paused" }
-        if (public.disconnectedPlayers.isNotEmpty() && phaseCanPause) {
-            require(public.paused) { "Active disconnected state is not paused" }
-        }
-        if (state.phase == WhodunitPhase.PostGame) {
-            require(public.disconnectedPlayers.isEmpty()) {
-                "Post-game state still tracks disconnected players"
-            }
-        }
 
         fun requirePreRoundShape() {
             require(
@@ -768,6 +745,37 @@ internal object WhodunitStateValidator {
                     clueCount == public.currentRound ||
                         (public.currentRound > 0 && clueCount == public.currentRound - 1),
                 ) { "Terminal clue history is not reachable" }
+            }
+        }
+    }
+
+    private fun validateConnectionShape(state: WhodunitState) {
+        val public = state.public
+        require(public.disconnectedPlayers.intersect(public.droppedPlayers).isEmpty()) {
+            "A player is both disconnected and permanently dropped"
+        }
+        require(public.disconnectedPlayers.none(public.eliminatedPlayers::contains)) {
+            "An eliminated Whodunit audience member is gameplay-disconnected"
+        }
+        require(
+            state.phase == WhodunitPhase.Reveal ||
+                state.phase == WhodunitPhase.PostGame ||
+                public.droppedPlayers.isEmpty(),
+        ) { "Active Whodunit state contains a permanently dropped player" }
+
+        val phaseCanPause = when (state.phase) {
+            WhodunitPhase.Setup,
+            WhodunitPhase.Reveal,
+            WhodunitPhase.PostGame -> false
+            else -> true
+        }
+        require(phaseCanPause || !public.paused) { "Terminal or setup state is paused" }
+        if (public.disconnectedPlayers.isNotEmpty() && phaseCanPause) {
+            require(public.paused) { "Active disconnected state is not paused" }
+        }
+        if (state.phase == WhodunitPhase.PostGame) {
+            require(public.disconnectedPlayers.isEmpty()) {
+                "Post-game state still tracks disconnected players"
             }
         }
     }
