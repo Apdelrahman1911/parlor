@@ -645,6 +645,11 @@ internal object WhodunitStateValidator {
             state.public.modeId == WhodunitIds.EliminationModeId ||
                 public.eliminatedPlayers.isEmpty(),
         ) { "Classic mode contains eliminated players" }
+        if (state.public.modeId == WhodunitIds.EliminationModeId) {
+            require(public.eliminatedPlayers.size <= public.currentRound) {
+                "Elimination history exceeds completed rounds"
+            }
+        }
         require(state.phase == WhodunitPhase.PublicIntro || public.introAcknowledged.isEmpty()) {
             "Intro readiness survived outside the intro phase"
         }
@@ -700,7 +705,7 @@ internal object WhodunitStateValidator {
                             clueCount == phase.index &&
                                 public.timer == null &&
                                 !vote.wasKiller &&
-                                vote.accusedPlayerId in public.eliminatedPlayers,
+                                vote.accusedPlayerId == public.eliminatedPlayers.lastOrNull(),
                         ) { "Elimination result cannot be acknowledged from this round state" }
                         is VoteState.Tied,
                         is VoteState.NoResolution -> throw IllegalArgumentException(
@@ -784,6 +789,12 @@ internal object WhodunitStateValidator {
         val public = state.public
         val terminal = state.phase == WhodunitPhase.Reveal || state.phase == WhodunitPhase.PostGame
         require(terminal || public.verdict == null) { "A non-terminal phase carries a verdict" }
+        if (public.modeId == WhodunitIds.EliminationModeId) {
+            require(
+                state.hostOnly.killerId !in public.eliminatedPlayers ||
+                    (terminal && public.verdict is Verdict.PlayersWin),
+            ) { "The killer is eliminated outside an elimination-mode player victory" }
+        }
         if (state.phase == WhodunitPhase.Reveal) {
             require(public.verdict != null) { "Reveal phase has no verdict" }
         }
@@ -815,6 +826,14 @@ internal object WhodunitStateValidator {
         require(verdictKillerCharacterId == state.hostOnly.killerCharacterId.raw) {
             "Verdict names a different killer character"
         }
+        validateCanonicalVerdict(state, verdict)
+    }
+
+    private fun validateCanonicalVerdict(
+        state: WhodunitState,
+        verdict: Verdict,
+    ) {
+        val public = state.public
         when (verdict) {
             is Verdict.PlayersWin -> {
                 val resolved = public.voteState as? VoteState.Resolved
@@ -822,21 +841,46 @@ internal object WhodunitStateValidator {
                 require(
                     resolved.wasKiller && resolved.accusedPlayerId == state.hostOnly.killerId,
                 ) { "Players-win verdict did not identify the killer" }
-            }
-            is Verdict.KillerWins -> when (verdict.cause) {
-                KillerWinCause.InnocentAccused -> {
-                    val resolved = public.voteState as? VoteState.Resolved
-                        ?: throw IllegalArgumentException("Innocent-accused verdict has no vote")
-                    require(!resolved.wasKiller) { "Innocent-accused verdict resolved the killer" }
+                if (public.modeId == WhodunitIds.EliminationModeId) {
+                    require(public.eliminatedPlayers.lastOrNull() == state.hostOnly.killerId) {
+                        "Elimination-mode player victory did not eliminate the killer last"
+                    }
                 }
-                KillerWinCause.TieUnresolved,
-                KillerWinCause.SurvivedToFinalTwo -> require(
-                    public.voteState == VoteState.Resolved(state.hostOnly.killerId, true),
-                ) { "Killer survival verdict has an inconsistent result" }
-                KillerWinCause.GameEndedEarly -> require(
-                    public.voteState == VoteState.NoResolution(EARLY_END_REASON),
-                ) { "Early-end verdict has an inconsistent result" }
             }
+            is Verdict.KillerWins -> validateCanonicalKillerWin(state, verdict.cause)
+        }
+    }
+
+    private fun validateCanonicalKillerWin(
+        state: WhodunitState,
+        cause: KillerWinCause,
+    ) {
+        val public = state.public
+        when (cause) {
+            KillerWinCause.InnocentAccused -> {
+                val resolved = public.voteState as? VoteState.Resolved
+                    ?: throw IllegalArgumentException("Innocent-accused verdict has no vote")
+                require(
+                    public.modeId == WhodunitIds.ClassicVoteModeId &&
+                        !resolved.wasKiller,
+                ) { "Innocent-accused verdict is inconsistent with the game mode or vote" }
+            }
+            KillerWinCause.TieUnresolved -> require(
+                public.voteState == VoteState.Resolved(state.hostOnly.killerId, true),
+            ) { "Unresolved-tie verdict has an inconsistent result" }
+            KillerWinCause.SurvivedToFinalTwo -> {
+                val resolved = public.voteState as? VoteState.Resolved
+                    ?: throw IllegalArgumentException("Final-two verdict has no resolved vote")
+                require(
+                    public.modeId == WhodunitIds.EliminationModeId &&
+                        !resolved.wasKiller &&
+                        resolved.accusedPlayerId == public.eliminatedPlayers.lastOrNull() &&
+                        public.eliminatedPlayers.size == state.players.size - FINAL_TWO_PLAYERS,
+                ) { "Final-two verdict does not follow the last innocent elimination" }
+            }
+            KillerWinCause.GameEndedEarly -> require(
+                public.voteState == VoteState.NoResolution(EARLY_END_REASON),
+            ) { "Early-end verdict has an inconsistent result" }
         }
     }
 
@@ -899,7 +943,15 @@ internal object WhodunitStateValidator {
         selfPlayerId: com.parlor.core.ids.PlayerId,
     ) {
         val private = ownPrivate ?: return
-        val resolved = state.public.voteState as? VoteState.Resolved ?: return
+        val resolved = state.public.voteState as? VoteState.Resolved
+        if (private.role == PlayerRole.Killer && selfPlayerId in state.public.eliminatedPlayers) {
+            require(
+                state.public.verdict is Verdict.PlayersWin &&
+                    resolved?.wasKiller == true &&
+                    resolved.accusedPlayerId == selfPlayerId,
+            ) { "Projected elimination history contradicts the receiving killer's dossier" }
+        }
+        if (resolved == null) return
         if (resolved.accusedPlayerId == selfPlayerId) {
             require(resolved.wasKiller == (private.role == PlayerRole.Killer)) {
                 "Projected vote result contradicts the receiving player's role"
@@ -949,17 +1001,35 @@ internal object WhodunitStateValidator {
             ) { "Projected verdict contradicts the receiving player's dossier" }
         }
         when (verdict) {
-            is Verdict.PlayersWin -> require(
-                (public.voteState as? VoteState.Resolved)?.wasKiller == true,
-            ) { "Projected players-win verdict lacks a killer vote" }
+            is Verdict.PlayersWin -> {
+                val resolved = public.voteState as? VoteState.Resolved
+                    ?: throw IllegalArgumentException("Projected players-win verdict has no vote")
+                require(resolved.wasKiller) {
+                    "Projected players-win verdict lacks a killer vote"
+                }
+                if (public.modeId == WhodunitIds.EliminationModeId) {
+                    require(public.eliminatedPlayers.lastOrNull() == resolved.accusedPlayerId) {
+                        "Projected elimination-mode victory did not eliminate the killer last"
+                    }
+                }
+            }
             is Verdict.KillerWins -> when (verdict.cause) {
                 KillerWinCause.InnocentAccused -> require(
-                    (public.voteState as? VoteState.Resolved)?.wasKiller == false,
-                ) { "Projected innocent-accused verdict lacks an innocent vote" }
-                KillerWinCause.TieUnresolved,
-                KillerWinCause.SurvivedToFinalTwo,
-                -> require((public.voteState as? VoteState.Resolved)?.wasKiller == true) {
-                    "Projected killer-survival verdict has an invalid result"
+                    public.modeId == WhodunitIds.ClassicVoteModeId &&
+                        (public.voteState as? VoteState.Resolved)?.wasKiller == false,
+                ) { "Projected innocent-accused verdict is inconsistent with its mode or vote" }
+                KillerWinCause.TieUnresolved -> require(
+                    (public.voteState as? VoteState.Resolved)?.wasKiller == true,
+                ) { "Projected unresolved-tie verdict has an invalid result" }
+                KillerWinCause.SurvivedToFinalTwo -> {
+                    val resolved = public.voteState as? VoteState.Resolved
+                        ?: throw IllegalArgumentException("Projected final-two verdict has no vote")
+                    require(
+                        public.modeId == WhodunitIds.EliminationModeId &&
+                            !resolved.wasKiller &&
+                            resolved.accusedPlayerId == public.eliminatedPlayers.lastOrNull() &&
+                            public.eliminatedPlayers.size == state.players.size - FINAL_TWO_PLAYERS,
+                    ) { "Projected final-two verdict does not follow the last innocent elimination" }
                 }
                 KillerWinCause.GameEndedEarly -> require(
                     public.voteState == VoteState.NoResolution(EARLY_END_REASON),
@@ -991,14 +1061,24 @@ internal object WhodunitStateValidator {
                 "Classic verdict was reached before the final round"
             }
         }
-        if (
-            verdict is Verdict.KillerWins &&
-            verdict.cause == KillerWinCause.SurvivedToFinalTwo
-        ) {
-            require(state.public.modeId == WhodunitIds.EliminationModeId) {
-                "Final-two verdict exists outside elimination mode"
+        if (verdict is Verdict.KillerWins && verdict.cause.requiresLastAuthoredRound()) {
+            val maximumRounds = requireNotNull(
+                WhodunitRules.maximumRoundCount(
+                    state.public.modeId,
+                    state.public.playersAtTable.size,
+                ),
+            ) { "Vote-derived verdict has no round policy" }
+            require(state.public.currentRound == maximumRounds) {
+                "Killer-survival verdict was reached before the final round"
             }
         }
+    }
+
+    private fun KillerWinCause.requiresLastAuthoredRound(): Boolean = when (this) {
+        KillerWinCause.TieUnresolved,
+        KillerWinCause.SurvivedToFinalTwo -> true
+        KillerWinCause.InnocentAccused,
+        KillerWinCause.GameEndedEarly -> false
     }
 
     private fun requireExactUnassignedTerminalShape(state: WhodunitState) {
@@ -1025,5 +1105,6 @@ internal object WhodunitStateValidator {
     private const val REDACTED_ID = "redacted"
     private const val MAX_REASON_LENGTH = 128
     private const val BRIEFING_CARD_COUNT = 4
+    private const val FINAL_TWO_PLAYERS = 2
     private const val EARLY_END_REASON = "game-ended-early"
 }

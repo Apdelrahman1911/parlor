@@ -19,6 +19,7 @@ import com.parlor.games.whodunit.content.InnocentBrief
 import com.parlor.games.whodunit.content.TimelineEntry
 import com.parlor.games.whodunit.content.WhodunitCase
 import com.parlor.games.whodunit.domain.action.WhodunitAction
+import com.parlor.games.whodunit.domain.event.KillerWinCause
 import com.parlor.games.whodunit.domain.event.Verdict
 import com.parlor.games.whodunit.domain.phase.WhodunitPhase
 import com.parlor.games.whodunit.domain.projection.WhodunitProjectionPolicy
@@ -33,6 +34,7 @@ import com.parlor.games.whodunit.domain.state.WhodunitState
 import com.parlor.games.whodunit.domain.state.WhodunitStateValidator
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertFails
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
@@ -185,6 +187,149 @@ class WhodunitSnapshotValidationTest {
                 ownPrivate = ownPrivate,
                 selfPlayerId = receivingPlayer,
                 case = validatedCase(),
+            ),
+        )
+    }
+
+    @Test
+    fun reducerGeneratedEliminationFinalTwoRoundTripsAndIsValidForPeerInstallation() {
+        val terminal = eliminationStateAfterInnocentEliminations(3)
+        val verdict = terminal.public.verdict as Verdict.KillerWins
+        val resolved = terminal.public.voteState as VoteState.Resolved
+        val survivors = terminal.players.map { it.id }
+            .filterNot(terminal.public.eliminatedPlayers::contains)
+
+        assertEquals(WhodunitPhase.Reveal, terminal.phase)
+        assertEquals(KillerWinCause.SurvivedToFinalTwo, verdict.cause)
+        assertEquals(2, survivors.size)
+        assertEquals(terminal.public.eliminatedPlayers.last(), resolved.accusedPlayerId)
+        assertEquals(false, resolved.wasKiller)
+        WhodunitStateValidator.requireValid(terminal)
+        assertEquals(terminal, codec.decode(codec.encode(terminal)))
+
+        val receivingPlayer = survivors.first()
+        val publicProjection = WhodunitProjectionPolicy.toPublic(terminal).state
+        val ownPrivate = WhodunitProjectionPolicy
+            .toPlayer(terminal, receivingPlayer)
+            .state
+            .privatePerPlayer[receivingPlayer]
+        assertTrue(
+            WhodunitStateValidator.isValidPeerProjectionForCase(
+                publicState = publicProjection,
+                ownPrivate = ownPrivate,
+                selfPlayerId = receivingPlayer,
+                case = validatedCase(
+                    caseId = "snapshot-elimination",
+                    characterCount = 5,
+                ),
+            ),
+        )
+    }
+
+    @Test
+    fun eliminationTerminalOutcomesRejectReducerImpossibleHistories() {
+        val finalTwo = eliminationStateAfterInnocentEliminations(3)
+        val killerId = finalTwo.hostOnly.killerId
+        val killerCharacterId = finalTwo.hostOnly.killerCharacterId.raw
+
+        assertDecodeRejected(
+            finalTwo.copy(
+                public = finalTwo.public.copy(
+                    voteState = VoteState.Resolved(killerId, wasKiller = true),
+                ),
+            ),
+        )
+        assertDecodeRejected(
+            finalTwo.copy(
+                public = finalTwo.public.copy(
+                    verdict = Verdict.KillerWins(
+                        killerCharacterId,
+                        KillerWinCause.InnocentAccused,
+                    ),
+                ),
+            ),
+        )
+        assertDecodeRejected(
+            finalTwo.copy(
+                public = finalTwo.public.copy(
+                    verdict = Verdict.PlayersWin(killerCharacterId),
+                    voteState = VoteState.Resolved(killerId, wasKiller = true),
+                ),
+            ),
+        )
+
+        val firstElimination = eliminationStateAfterInnocentEliminations(1)
+        val nextRound = WhodunitReducer.reduce(
+            firstElimination,
+            WhodunitAction.AcknowledgeRevealCard,
+            eliminationReducerContext(),
+        ).newState
+        val withSecondClue = WhodunitReducer.reduce(
+            nextRound,
+            WhodunitAction.RevealNextClue,
+            eliminationReducerContext(),
+        ).newState
+        assertDecodeRejected(
+            withSecondClue.copy(
+                phase = WhodunitPhase.Reveal,
+                public = withSecondClue.public.copy(
+                    voteState = VoteState.Resolved(killerId, wasKiller = true),
+                    verdict = Verdict.KillerWins(killerCharacterId, KillerWinCause.TieUnresolved),
+                ),
+            ),
+        )
+    }
+
+    @Test
+    fun eliminationProgressCannotOutrunRoundsOrEliminateTheKillerBeforeTerminalVictory() {
+        val firstElimination = eliminationStateAfterInnocentEliminations(1)
+        val nextRound = WhodunitReducer.reduce(
+            firstElimination,
+            WhodunitAction.AcknowledgeRevealCard,
+            eliminationReducerContext(),
+        ).newState
+        val additionalInnocents = nextRound.players.map { it.id }
+            .filterNot { it == nextRound.hostOnly.killerId }
+            .filterNot(nextRound.public.eliminatedPlayers::contains)
+            .take(2)
+
+        assertDecodeRejected(
+            nextRound.copy(
+                public = nextRound.public.copy(
+                    eliminatedPlayers = nextRound.public.eliminatedPlayers + additionalInnocents,
+                ),
+            ),
+        )
+        assertDecodeRejected(
+            nextRound.copy(
+                public = nextRound.public.copy(
+                    eliminatedPlayers = nextRound.public.eliminatedPlayers + nextRound.hostOnly.killerId,
+                ),
+            ),
+        )
+    }
+
+    @Test
+    fun peerFinalTwoProjectionRejectsAKnownKillerInTheEliminationHistory() {
+        val terminal = eliminationStateAfterInnocentEliminations(3)
+        val killerId = terminal.hostOnly.killerId
+        val forgedEliminations = terminal.public.eliminatedPlayers.toMutableList().also {
+            it[0] = killerId
+        }
+        val forgedPublic = WhodunitProjectionPolicy.toPublic(terminal).state.copy(
+            public = terminal.public.copy(eliminatedPlayers = forgedEliminations),
+        )
+        val killerPrivate = terminal.privatePerPlayer.getValue(killerId)
+
+        assertFalse(
+            WhodunitStateValidator.isValidPeerProjectionForCase(
+                publicState = forgedPublic,
+                ownPrivate = killerPrivate,
+                selfPlayerId = killerId,
+                case = validatedCase(
+                    caseId = "snapshot-elimination",
+                    characterCount = 5,
+                ),
             ),
         )
     }
@@ -789,8 +934,10 @@ class WhodunitSnapshotValidationTest {
         case = validatedWhodunitCaseForTest(case(), caseId = "snapshot-case"),
     )
 
-    private fun validatedCase(caseId: String = "snapshot-case") =
-        validatedWhodunitCaseForTest(case(), caseId = caseId)
+    private fun validatedCase(
+        caseId: String = "snapshot-case",
+        characterCount: Int = 4,
+    ) = validatedWhodunitCaseForTest(case(characterCount), caseId = caseId)
 
     private fun assignedState(): WhodunitState {
         val definition = WhodunitDefinition(json)
@@ -811,15 +958,21 @@ class WhodunitSnapshotValidationTest {
     }
 
     private fun eliminationAudienceState(): Pair<WhodunitState, PlayerId> {
+        val resolved = eliminationStateAfterInnocentEliminations(1)
+        val eliminated = resolved.public.eliminatedPlayers.single()
+        val advanced = WhodunitReducer.reduce(
+            resolved,
+            WhodunitAction.AcknowledgeRevealCard,
+            eliminationReducerContext(),
+        ).newState
+        return advanced to eliminated
+    }
+
+    private fun eliminationStateAfterInnocentEliminations(count: Int): WhodunitState {
         val roster = (0 until 5).map { index ->
             Player(PlayerId("e${index + 1}"), "Elimination ${index + 1}", index)
         }
-        val payload = case(characterCount = 5)
-        val context = WhodunitReducerContext(
-            clock = FakeClock(Instant.fromEpochMilliseconds(0)),
-            random = RandomSource.seeded(17L),
-            case = validatedWhodunitCaseForTest(payload, caseId = "snapshot-elimination"),
-        )
+        val context = eliminationReducerContext()
         fun step(state: WhodunitState, action: WhodunitAction): WhodunitState =
             WhodunitReducer.reduce(state, action, context).newState
 
@@ -843,28 +996,43 @@ class WhodunitSnapshotValidationTest {
             state = step(state, WhodunitAction.CompleteCharacterReveal(player.id, generation))
         }
         state = step(state, WhodunitAction.AdvanceFromCharacterReveal)
-        state = step(state, WhodunitAction.RevealNextClue)
-        state = step(state, WhodunitAction.StartDiscussionTimer(180))
-        state = step(state, WhodunitAction.AdvanceFromDiscussion)
 
-        val killer = state.hostOnly.killerId
-        val innocent = roster.first { it.id != killer }.id
-        val ballot = (state.public.voteState as VoteState.Collecting).ballotPlayerIds
-        ballot.forEach { voter ->
-            state = step(
-                state,
-                if (voter == innocent) {
-                    WhodunitAction.AbstainVote(voter)
-                } else {
-                    WhodunitAction.CastVote(voter, innocent)
-                },
-            )
+        repeat(count) { index ->
+            state = step(state, WhodunitAction.RevealNextClue)
+            state = step(state, WhodunitAction.StartDiscussionTimer(180))
+            state = step(state, WhodunitAction.AdvanceFromDiscussion)
+
+            val innocent = roster.first { player ->
+                player.id != state.hostOnly.killerId &&
+                    player.id !in state.public.eliminatedPlayers
+            }.id
+            val ballot = (state.public.voteState as VoteState.Collecting).ballotPlayerIds
+            ballot.forEach { voter ->
+                state = step(
+                    state,
+                    if (voter == innocent) {
+                        WhodunitAction.AbstainVote(voter)
+                    } else {
+                        WhodunitAction.CastVote(voter, innocent)
+                    },
+                )
+            }
+            state = step(state, WhodunitAction.CloseVote)
+            if (index < count - 1) {
+                state = step(state, WhodunitAction.AcknowledgeRevealCard)
+            }
         }
-        state = step(state, WhodunitAction.CloseVote)
-        state = step(state, WhodunitAction.AcknowledgeRevealCard)
-        check(innocent in state.public.eliminatedPlayers)
-        return state to innocent
+        return state
     }
+
+    private fun eliminationReducerContext() = WhodunitReducerContext(
+        clock = FakeClock(Instant.fromEpochMilliseconds(0)),
+        random = RandomSource.seeded(17L),
+        case = validatedWhodunitCaseForTest(
+            case(characterCount = 5),
+            caseId = "snapshot-elimination",
+        ),
+    )
 
     private fun case(characterCount: Int = 4): WhodunitCase {
         val characters = (1..characterCount).map { index -> character("c$index") }
