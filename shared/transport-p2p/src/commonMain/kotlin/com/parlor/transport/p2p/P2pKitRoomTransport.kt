@@ -179,40 +179,21 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
         data class Foregrounded(val atEpochMillis: Long) : AppLifecycleEvent
     }
 
-    private data class ActiveLifecycleRoom(
-        val registrationId: String,
-        val room: AppLifecycleAwareRoom,
-    )
-
     private val lifecycleEvents = Channel<AppLifecycleEvent>(
         capacity = APP_LIFECYCLE_EVENT_CAPACITY,
         onBufferOverflow = BufferOverflow.DROP_OLDEST,
     )
-    private val activeLifecycleMutex = Mutex()
-    private var activeLifecycleRoom: ActiveLifecycleRoom? = null
-    private var appIsBackgrounded: Boolean = false
-    private var lastBackgroundedAt: Long? = null
+    private val lifecycleRooms = AppLifecycleRoomCoordinator()
 
     init {
         scope.launch {
             for (event in lifecycleEvents) {
                 try {
                     when (event) {
-                        is AppLifecycleEvent.Backgrounded -> {
-                            val room = activeLifecycleMutex.withLock {
-                                appIsBackgrounded = true
-                                lastBackgroundedAt = event.atEpochMillis
-                                activeLifecycleRoom?.room
-                            }
-                            room?.appBackgrounded(event.atEpochMillis)
-                        }
-                        is AppLifecycleEvent.Foregrounded -> {
-                            val room = activeLifecycleMutex.withLock {
-                                appIsBackgrounded = false
-                                activeLifecycleRoom?.room
-                            }
-                            room?.appForegrounded(event.atEpochMillis)
-                        }
+                        is AppLifecycleEvent.Backgrounded ->
+                            lifecycleRooms.backgrounded(event.atEpochMillis)
+                        is AppLifecycleEvent.Foregrounded ->
+                            lifecycleRooms.foregrounded(event.atEpochMillis)
                     }
                 } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
                     failure.rethrowIfCancellation()
@@ -236,26 +217,14 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
     private suspend fun registerLifecycleRoom(
         registrationId: String,
         room: AppLifecycleAwareRoom,
-    ) {
-        val backgroundedAt = activeLifecycleMutex.withLock {
-            activeLifecycleRoom = ActiveLifecycleRoom(registrationId, room)
-            lastBackgroundedAt.takeIf { appIsBackgrounded }
-        }
-        if (backgroundedAt != null) {
-            room.appBackgrounded(backgroundedAt)
-        }
-    }
+    ) = lifecycleRooms.register(registrationId, room)
 
     private suspend fun roomClosed(registrationId: String) {
         // Ownership teardown is terminal state, not a best-effort lifecycle
         // hint. It must never share the DROP_OLDEST signal queue above: a
         // foreground/background burst could otherwise evict this removal and
         // retain a closed room until another room happened to register.
-        activeLifecycleMutex.withLock {
-            if (activeLifecycleRoom?.registrationId == registrationId) {
-                activeLifecycleRoom = null
-            }
-        }
+        lifecycleRooms.roomClosed(registrationId)
     }
 
     private fun recordLocalNetworkFailure(failure: Throwable) {
