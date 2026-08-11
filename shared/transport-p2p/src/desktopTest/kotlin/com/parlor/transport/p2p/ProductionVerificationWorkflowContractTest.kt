@@ -209,10 +209,83 @@ class ProductionVerificationWorkflowContractTest {
         assertFalse("CURRENT_PROJECT_VERSION = 1;" in xcodeProject)
     }
 
+    @Test
+    fun every_version_catalog_alias_has_a_real_build_consumer() {
+        val catalog = read("gradle/libs.versions.toml")
+        val bundledLibraries = catalogSectionAssignments(catalog, "bundles")
+            .flatMap { assignment ->
+                Regex("\"([^\"]+)\"").findAll(assignment.substringAfter('='))
+                    .map { match -> match.groupValues[1] }
+                    .toList()
+            }
+            .toSet()
+        val buildScripts = repositoryRoot.walkTopDown()
+            .filter { file ->
+                file.isFile &&
+                    file.name.endsWith(".gradle.kts") &&
+                    file.invariantSeparatorsPath.let { path ->
+                        "/build/" !in path && "/.gradle/" !in path
+                    }
+            }
+            .joinToString(separator = "\n", transform = File::readText)
+
+        mapOf(
+            "libraries" to "libs.",
+            "plugins" to "libs.plugins.",
+            "bundles" to "libs.bundles.",
+        ).forEach { (section, accessorPrefix) ->
+            val missing = catalogAliases(catalog, section).filterNot { alias ->
+                val accessor = accessorPrefix + alias.replace('-', '.')
+                accessor in buildScripts || section == "libraries" && alias in bundledLibraries
+            }
+            assertTrue(
+                missing.isEmpty(),
+                "Unused [$section] aliases must be removed from the release catalog: $missing",
+            )
+        }
+
+        val referencedVersions = Regex("version\\.ref\\s*=\\s*\"([^\"]+)\"")
+            .findAll(catalog)
+            .map { match -> match.groupValues[1] }
+            .toSet()
+        val missingVersions = catalogAliases(catalog, "versions").filterNot { alias ->
+            alias in referencedVersions ||
+                "libs.versions.${alias.replace('-', '.')}" in buildScripts ||
+                "\"$alias\"" in buildScripts
+        }
+        assertTrue(
+            missingVersions.isEmpty(),
+            "Unused [versions] aliases must be removed from the release catalog: $missingVersions",
+        )
+    }
+
     private fun read(relativePath: String): String {
         val file = File(repositoryRoot, relativePath)
         assertTrue(file.isFile, "Missing release contract file: ${file.absolutePath}")
         return file.readText()
+    }
+
+    private fun catalogAliases(catalog: String, wantedSection: String): List<String> {
+        return catalogSectionAssignments(catalog, wantedSection).map { assignment ->
+            assignment.substringBefore('=').trim()
+        }
+    }
+
+    private fun catalogSectionAssignments(
+        catalog: String,
+        wantedSection: String,
+    ): List<String> {
+        var section = ""
+        return buildList {
+            catalog.lineSequence().forEach { rawLine ->
+                val line = rawLine.substringBefore('#').trim()
+                if (line.startsWith('[') && line.endsWith(']')) {
+                    section = line.removeSurrounding("[", "]")
+                } else if (section == wantedSection && '=' in line) {
+                    add(line)
+                }
+            }
+        }
     }
 
     private fun locateRepositoryRoot(): File {

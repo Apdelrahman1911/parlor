@@ -29,7 +29,7 @@ kotlin {
             implementation(libs.turbine)
             implementation(libs.assertk)
             implementation(libs.koin.test)
-            implementation(libs.bundles.ktor.common)
+            implementation(libs.bundles.ktor.json.client)
             implementation(libs.ktor.client.mock)
             // Multiplayer shape tests use protocol types and the isolated
             // in-process room fixture without exposing either as app-shell API.

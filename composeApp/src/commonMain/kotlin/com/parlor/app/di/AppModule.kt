@@ -21,9 +21,9 @@ import org.koin.dsl.module
  * Root Koin assembly for the Parlor shell. Each game module contributes its
  * own Koin module via the list below.
  *
- * Platform-specific actuals (HttpClient engine, SnapshotStore backing, sound
- * implementation) are provided by their respective androidMain / iosMain /
- * desktopMain Koin modules.
+ * Platform-specific actuals (snapshot/settings/credential backing and P2P kit
+ * bootstrap) are provided by their respective Android, iOS, and Desktop Koin
+ * modules.
  *
  * Persistent settings and snapshot files are bound by
  * [platformStorageModule].
