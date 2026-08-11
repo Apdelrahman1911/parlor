@@ -84,6 +84,13 @@ internal class MafiaHostRuntime(
 
     init {
         scope.launch {
+            driveMafiaHostProgression(
+                states = checkNotNull(session.canonicalState),
+                lifecycle = room.lifecycle,
+                submit = { action -> session.submit(action) },
+            )
+        }
+        scope.launch {
             val result = try {
                 bridge.announceStart(
                     caseId = "default",

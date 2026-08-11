@@ -21,8 +21,15 @@ import com.parlor.games.mafia.domain.reducer.MafiaReducer
 import com.parlor.games.mafia.domain.state.MafiaState
 import com.parlor.games.mafia.domain.state.Role
 import com.parlor.games.mafia.ui.flow.multidevice.canAcknowledgeAnnouncement
+import com.parlor.games.mafia.ui.flow.multidevice.driveMafiaHostProgression
 import com.parlor.games.mafia.ui.flow.multidevice.nextHostAdvance
+import com.parlor.networking.room.RoomLifecycleState
 import kotlin.time.Instant
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.runCurrent
+import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
 import kotlin.test.Test
 
@@ -221,6 +228,53 @@ class MafiaMultiDeviceProgressionTest {
 
         state = step(state, MafiaAction.MarkPlayerReconnected(missing), c)
         assertThat(nextHostAdvance(state)).isEqualTo(MafiaAction.AdvanceFromRoleAssignment)
+    }
+
+    @Test
+    @OptIn(ExperimentalCoroutinesApi::class)
+    fun retained_host_driver_reoffers_the_same_ready_advance_after_foregrounding() = runTest {
+        val seed = 97531L
+        val c = ctx(seed)
+        var readyState = step(initialState(5, seed), MafiaAction.StartGame, c)
+        for (player in readyState.players) {
+            readyState = step(
+                readyState,
+                MafiaAction.AcknowledgeRoleViewed(player.id),
+                c,
+            )
+        }
+        val states = MutableStateFlow(readyState)
+        val lifecycle = MutableStateFlow<RoomLifecycleState>(
+            RoomLifecycleState.Suspended(resumeDeadlineEpochMillis = 120_000L),
+        )
+        val offered = mutableListOf<MafiaAction>()
+
+        backgroundScope.launch {
+            driveMafiaHostProgression(states, lifecycle) { action ->
+                offered += action
+            }
+        }
+        runCurrent()
+        assertThat(offered).isEqualTo(emptyList())
+
+        lifecycle.value = RoomLifecycleState.Active
+        runCurrent()
+        assertThat(offered).isEqualTo(listOf(MafiaAction.AdvanceFromRoleAssignment))
+
+        // The canonical state is deliberately unchanged, matching the race in
+        // which suspension rejects the queued host mutation. A new Active
+        // generation must replay that same ready state instead of waiting for
+        // an unrelated reducer mutation to change a UI effect key.
+        lifecycle.value = RoomLifecycleState.Suspended(240_000L)
+        runCurrent()
+        lifecycle.value = RoomLifecycleState.Active
+        runCurrent()
+        assertThat(offered).isEqualTo(
+            listOf(
+                MafiaAction.AdvanceFromRoleAssignment,
+                MafiaAction.AdvanceFromRoleAssignment,
+            ),
+        )
     }
 
     @Test

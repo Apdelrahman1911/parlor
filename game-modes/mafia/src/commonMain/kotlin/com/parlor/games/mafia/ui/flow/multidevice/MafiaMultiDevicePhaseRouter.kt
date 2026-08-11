@@ -10,7 +10,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -119,18 +118,6 @@ internal fun MafiaMultiDevicePhaseRouter(
         val selfPrivate = state.privatePerPlayer[selfPlayerId]
         val selfSlot = state.public.roster.firstOrNull { it.playerId == selfPlayerId }
 
-        // The host is the sole authority for the gated phase advances. Peers
-        // ack from their own devices but cannot submit the advance (the
-        // authority gate rejects it), and PartyAwareSession only auto-fills
-        // acks in LOCAL play — so in multi-device nothing drove
-        // AdvanceFromRoleAssignment / ResolveNight / OpenDiscussion / CloseVote /
-        // AdvanceFromVoteAnnouncement and the game deadlocked at the very first
-        // transition. The host drives them here once each readiness gate holds.
-        // See PROBLEMS_PARLOR.md → mafia-ui-001 (advance-trigger half).
-        if (isHost) {
-            HostPhaseProgressionDriver(state = state, session = session)
-        }
-
         when (phase) {
             MafiaPhase.Setup -> SetupSegment(
                 state = state,
@@ -208,94 +195,6 @@ internal fun MafiaMultiDevicePhaseRouter(
                 modifier = Modifier.fillMaxSize(),
             )
         }
-    }
-}
-
-// ==================================================================== Host progression ==
-
-/**
- * Host-only driver for the gated phase advances. In multi-device the host owns
- * every advance; peers only ack from their own devices, so without this the
- * game deadlocked at RoleAssignment (and every later gate). Each advance is
- * submitted once its readiness gate holds; the reducer re-checks the same gate
- * and no-ops if not yet ready, so an early/duplicate fire is harmless. This
- * mirrors the pass-and-play router's `LaunchedEffect` auto-fires — there
- * `PartyAwareSession` auto-fills the acks; here the real acks arrive over the
- * wire and these effects re-evaluate as each lands.
- *
- * `ResolveNight` is included so a host who has been eliminated can still resolve
- * the night — the manual Resolve button lives only in the alive-host branch, so
- * a dead host would otherwise be stuck forever (the night-resolution deadlock).
- */
-@Composable
-private fun HostPhaseProgressionDriver(
-    state: MafiaState,
-    session: SessionController<MafiaState, MafiaAction, MafiaEvent>,
-) {
-    val advance = nextHostAdvance(state)
-    // Key on (phase, advance) so the effect re-evaluates as acks land: it stays
-    // dormant while `advance` is null and fires once the gate flips it non-null,
-    // and re-fires on a genuinely new phase (e.g. Night round 1 → round 2).
-    LaunchedEffect(state.phase, advance) {
-        if (advance != null) session.submit(advance)
-    }
-}
-
-/**
- * Pure decision for [HostPhaseProgressionDriver]: the gated host advance that is
- * ready to submit for [state] in multi-device, or `null` when none is (gate not
- * yet satisfied, or the phase has no auto-advance — Setup/Discussion/PostGame).
- * Extracted so the multi-device progression gating is unit-testable without a
- * Compose harness. The reducer remains the canonical gate; this only decides
- * *when the host offers* the advance.
- */
-internal fun nextHostAdvance(state: MafiaState): MafiaAction? {
-    // The bridge deliberately rejects every gameplay mutation while a seat is
-    // transiently disconnected. Returning null here is equally important: it
-    // changes the LaunchedEffect key to null and lets the same ready advance be
-    // offered again when the seat reconnects. Without this state transition an
-    // advance rejected during the outage was never retried after recovery.
-    if (state.public.disconnectedPlayers.isNotEmpty()) return null
-    val active = state.players.map { it.id }.filterNot { it in state.public.droppedPlayers }
-    val aliveActive = active.filter { id ->
-        state.public.roster.firstOrNull { it.playerId == id }?.alive == true
-    }
-    return when (state.phase) {
-        MafiaPhase.RoleAssignment ->
-            MafiaAction.AdvanceFromRoleAssignment.takeIf {
-                active.isNotEmpty() &&
-                    active.all { state.privatePerPlayer[it]?.roleAcknowledged == true }
-            }
-        is MafiaPhase.Night ->
-            MafiaAction.ResolveNight.takeIf {
-                aliveActive.isNotEmpty() &&
-                    aliveActive.all { id ->
-                        val private = state.privatePerPlayer[id]
-                        private?.nightChoiceSubmitted == true &&
-                            (
-                                private.pendingDetectiveResult == null ||
-                                    private.detectiveResultAcknowledged
-                            )
-                    }
-            }
-        is MafiaPhase.NightAnnouncement ->
-            MafiaAction.OpenDiscussion.takeIf {
-                aliveActive.isNotEmpty() &&
-                    aliveActive.all { state.privatePerPlayer[it]?.nightAcknowledged == true }
-            }
-        is MafiaPhase.Voting -> {
-            val vote = state.public.activeVote
-            MafiaAction.CloseVote.takeIf {
-                vote != null && vote.ballot.isNotEmpty() &&
-                    vote.ballot.all { it in vote.castSoFar.keys || it in vote.abstained }
-            }
-        }
-        is MafiaPhase.VoteAnnouncement ->
-            MafiaAction.AdvanceFromVoteAnnouncement.takeIf {
-                aliveActive.isNotEmpty() &&
-                    aliveActive.all { state.privatePerPlayer[it]?.voteAcknowledged == true }
-            }
-        else -> null
     }
 }
 
