@@ -3536,6 +3536,12 @@ internal enum class ResumeAdoptionOutcome {
     Terminal,
 }
 
+/** Ownership captured before one potentially slow credential-resume attempt. */
+private data class ResumeAttemptOwnership(
+    val deadline: Long,
+    val expectedSession: P2pSession,
+)
+
 // ============================================================================ Peer room ==
 
 internal class PeerP2pRoom(
@@ -3679,7 +3685,11 @@ internal class PeerP2pRoom(
     private suspend fun resumeAfterForeground(deadline: Long) {
         val session = sessionMutex.withLock { activeSession }
         if (session.state.value == ConnectionState.Connected) {
-            restoreActiveRoom(emitEvent = true)
+            restoreActiveRoom(
+                emitEvent = true,
+                expectedDeadline = deadline,
+                expectedSession = session,
+            )
             return
         }
         val connector = resumeConnector ?: return
@@ -3694,10 +3704,19 @@ internal class PeerP2pRoom(
                                 ?.resumeDeadlineEpochMillis == deadline
                     }
                 ) {
+                    val expectedSession = sessionMutex.withLock { activeSession }
                     when (val resumed = connector(candidate)) {
                         is Result.Success -> {
                             candidate = resumed.data.credential
-                            when (adoptResumedConnection(resumed.data)) {
+                            when (
+                                adoptResumedConnection(
+                                    resumed = resumed.data,
+                                    ownership = ResumeAttemptOwnership(
+                                        deadline = deadline,
+                                        expectedSession = expectedSession,
+                                    ),
+                                )
+                            ) {
                                 ResumeAdoptionOutcome.Ready,
                                 ResumeAdoptionOutcome.Terminal -> return@launch
                                 ResumeAdoptionOutcome.Retry -> Unit
@@ -3747,13 +3766,22 @@ internal class PeerP2pRoom(
      */
     internal suspend fun adoptResumedConnection(
         resumed: ResumedPeerConnection,
+    ): ResumeAdoptionOutcome = adoptResumedConnection(resumed, ownership = null)
+
+    private suspend fun adoptResumedConnection(
+        resumed: ResumedPeerConnection,
+        ownership: ResumeAttemptOwnership?,
     ): ResumeAdoptionOutcome {
         var adopted = false
         return try {
-            when (replaceSession(resumed)) {
+            when (replaceSession(resumed, ownership)) {
                 SessionReplacementOutcome.Ready -> {
                     adopted = true
-                    restoreActiveRoom(emitEvent = true)
+                    restoreActiveRoom(
+                        emitEvent = true,
+                        expectedDeadline = ownership?.deadline,
+                        expectedSession = resumed.session,
+                    )
                     ResumeAdoptionOutcome.Ready
                 }
                 SessionReplacementOutcome.AdoptedHandoffFailed -> {
@@ -3773,10 +3801,21 @@ internal class PeerP2pRoom(
 
     private suspend fun replaceSession(
         resumed: ResumedPeerConnection,
+        ownership: ResumeAttemptOwnership?,
     ): SessionReplacementOutcome {
         val old = lifecycleMutex.withLock {
             if (left || terminalByHost) return SessionReplacementOutcome.NotAdopted
             sessionMutex.withLock {
+                if (
+                    ownership != null &&
+                    (
+                        activeSession !== ownership.expectedSession ||
+                            (_lifecycle.value as? RoomLifecycleState.Resuming)
+                                ?.resumeDeadlineEpochMillis != ownership.deadline
+                    )
+                ) {
+                    return SessionReplacementOutcome.NotAdopted
+                }
                 val previous = Triple(activeSession, collectorJob, stateJob)
                 activeSession = resumed.session
                 activeCredential.value = resumed.credential
@@ -3920,11 +3959,25 @@ internal class PeerP2pRoom(
         return true
     }
 
-    private suspend fun restoreActiveRoom(emitEvent: Boolean) {
-        val restored = lifecycleMutex.withLock {
-            if (left || terminalByHost || _lifecycle.value == RoomLifecycleState.Expired) {
-                false
-            } else {
+    private suspend fun restoreActiveRoom(
+        emitEvent: Boolean,
+        expectedDeadline: Long? = null,
+        expectedSession: P2pSession? = null,
+    ): Boolean {
+        val restored = lifecycleMutex.withLock lifecycleLock@{
+            if (left || terminalByHost) return@lifecycleLock false
+            sessionMutex.withLock sessionLock@{
+                if (expectedSession != null && activeSession !== expectedSession) {
+                    return@sessionLock false
+                }
+                val current = _lifecycle.value
+                val lifecycleMatches = if (expectedDeadline == null) {
+                    current == RoomLifecycleState.Active || current is RoomLifecycleState.Resuming
+                } else {
+                    (current as? RoomLifecycleState.Resuming)
+                        ?.resumeDeadlineEpochMillis == expectedDeadline
+                }
+                if (!lifecycleMatches) return@sessionLock false
                 lifecycleExpiryJob?.cancel()
                 lifecycleExpiryJob = null
                 _lifecycle.value = RoomLifecycleState.Active
@@ -3941,6 +3994,7 @@ internal class PeerP2pRoom(
             _info.value = _info.value.copy(status = RoomInfo.Status.Joined)
             if (emitEvent) _peerEvents.emit(PeerEvent.HostRestored)
         }
+        return restored
     }
 
     private suspend fun scheduleLifecycleExpiry(deadline: Long, delayMs: Long) {
@@ -4221,42 +4275,34 @@ internal class PeerP2pRoom(
                 ConnectionState.Reconnecting -> {
                     if (!hostLost) {
                         hostLost = true
-                        markHostConnected(false)
-                        _info.value = _info.value.copy(status = RoomInfo.Status.Lost)
-                        diagnostics.event(
-                            P2pDiagnosticEventName.CONNECTION_CLOSED,
-                            P2pDiagnosticRole.PEER,
-                            reason = P2pDiagnosticReason.DISCONNECTED,
-                        )
-                        _peerEvents.tryEmit(PeerEvent.HostLost)
+                        markHostLostIfActive(session)
                     }
                 }
                 ConnectionState.Connected -> {
                     if (hostLost) {
                         hostLost = false
-                        restoreActiveRoom(emitEvent = false)
-                        diagnostics.event(
-                            P2pDiagnosticEventName.CONNECTION_SECURE,
-                            P2pDiagnosticRole.PEER,
-                            P2pDiagnosticResult.SUCCESS,
-                        )
-                        _peerEvents.tryEmit(PeerEvent.HostRestored)
+                        if (
+                            restoreActiveRoom(
+                                emitEvent = false,
+                                expectedSession = session,
+                            )
+                        ) {
+                            diagnostics.event(
+                                P2pDiagnosticEventName.CONNECTION_SECURE,
+                                P2pDiagnosticRole.PEER,
+                                P2pDiagnosticResult.SUCCESS,
+                            )
+                            _peerEvents.tryEmit(PeerEvent.HostRestored)
+                        }
                     }
                 }
                 ConnectionState.Failed,
                 ConnectionState.Closed -> {
                     if (!hostLost) {
                         hostLost = true
-                        markHostConnected(false)
-                        _info.value = _info.value.copy(status = RoomInfo.Status.Lost)
-                        diagnostics.event(
-                            P2pDiagnosticEventName.CONNECTION_CLOSED,
-                            P2pDiagnosticRole.PEER,
-                            reason = P2pDiagnosticReason.DISCONNECTED,
-                        )
-                        _peerEvents.tryEmit(PeerEvent.HostLost)
+                        markHostLostIfActive(session)
                     }
-                    beginForegroundResume()
+                    beginForegroundResume(session)
                 }
                 ConnectionState.Idle,
                 ConnectionState.Connecting,
@@ -4266,19 +4312,43 @@ internal class PeerP2pRoom(
         }
     }
 
+    private suspend fun markHostLostIfActive(session: P2pSession): Boolean {
+        val marked = lifecycleMutex.withLock lifecycleLock@{
+            if (left || terminalByHost) return@lifecycleLock false
+            sessionMutex.withLock sessionLock@{
+                if (activeSession !== session) return@sessionLock false
+                markHostConnected(false)
+                _info.value = _info.value.copy(status = RoomInfo.Status.Lost)
+                true
+            }
+        }
+        if (marked) {
+            diagnostics.event(
+                P2pDiagnosticEventName.CONNECTION_CLOSED,
+                P2pDiagnosticRole.PEER,
+                reason = P2pDiagnosticReason.DISCONNECTED,
+            )
+            _peerEvents.tryEmit(PeerEvent.HostLost)
+        }
+        return marked
+    }
+
     /** Starts credential-based logical resume after a terminal foreground drop. */
-    private suspend fun beginForegroundResume() {
+    private suspend fun beginForegroundResume(expectedSession: P2pSession) {
         val now = nowMillis()
-        val deadline = lifecycleMutex.withLock {
-            if (left || terminalByHost) return@withLock null
-            when (val current = _lifecycle.value) {
-                RoomLifecycleState.Active -> (now + appResumeGraceMs).also { resumeDeadline ->
-                    _lifecycle.value = RoomLifecycleState.Resuming(resumeDeadline)
+        val deadline = lifecycleMutex.withLock lifecycleLock@{
+            if (left || terminalByHost) return@lifecycleLock null
+            sessionMutex.withLock sessionLock@{
+                if (activeSession !== expectedSession) return@sessionLock null
+                when (val current = _lifecycle.value) {
+                    RoomLifecycleState.Active -> (now + appResumeGraceMs).also { resumeDeadline ->
+                        _lifecycle.value = RoomLifecycleState.Resuming(resumeDeadline)
+                    }
+                    is RoomLifecycleState.Resuming -> current.resumeDeadlineEpochMillis
+                    is RoomLifecycleState.Suspended,
+                    RoomLifecycleState.Expired,
+                    RoomLifecycleState.Closed -> null
                 }
-                is RoomLifecycleState.Resuming -> current.resumeDeadlineEpochMillis
-                is RoomLifecycleState.Suspended,
-                RoomLifecycleState.Expired,
-                RoomLifecycleState.Closed -> null
             }
         } ?: return
         scheduleLifecycleExpiry(deadline, (deadline - now).coerceAtLeast(0L))

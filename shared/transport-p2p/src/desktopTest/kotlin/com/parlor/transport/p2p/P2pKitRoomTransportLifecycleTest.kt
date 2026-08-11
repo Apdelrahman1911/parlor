@@ -3706,6 +3706,92 @@ class P2pKitRoomTransportLifecycleTest {
     }
 
     @Test
+    fun peer_transport_recovery_while_backgrounded_does_not_reactivate_logical_room() =
+        runBlocking {
+            val kit = FakeP2pKit(P2pPeerId("peer-pid"))
+            val hostPeer = peer("host-pid", "Host Device")
+            val session = FakeP2pSession(hostPeer)
+            val room = PeerP2pRoom(
+                kit = kit,
+                session = session,
+                hostPeer = hostPeer,
+                roomCode = "ABCDEF",
+                scope = testScope,
+                codec = codec,
+            )
+
+            room.appBackgrounded(1_000L)
+            session.stateFlow.value = ConnectionState.Reconnecting
+            awaitCondition { room.info.value.status == RoomInfo.Status.Lost }
+
+            session.stateFlow.value = ConnectionState.Connected
+            repeat(5) { yield() }
+
+            assertThat(room.lifecycle.value)
+                .isEqualTo(RoomLifecycleState.Suspended(121_000L))
+            assertThat(room.info.value.status).isEqualTo(RoomInfo.Status.Lost)
+            assertThat(room.members.value.single().connected).isFalse()
+
+            room.appForegrounded(2_000L)
+            awaitCondition { room.lifecycle.value == RoomLifecycleState.Active }
+            assertThat(room.info.value.status).isEqualTo(RoomInfo.Status.Joined)
+            assertThat(room.members.value.single().connected).isTrue()
+            room.leave()
+        }
+
+    @Test
+    fun completed_resume_connector_cannot_replace_a_session_that_recovered_first() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("peer-pid"))
+        val hostPeer = peer("host-pid", "Host Device")
+        val originalSession = FakeP2pSession(hostPeer)
+        val staleReplacement = FakeP2pSession(hostPeer)
+        val initialCredential = resumableCredential(generation = 1L)
+        val rotatedCredential = resumableCredential(generation = 2L)
+        val connectorEntered = CompletableDeferred<Unit>()
+        val releaseConnector = CompletableDeferred<Unit>()
+        val room = PeerP2pRoom(
+            kit = kit,
+            session = originalSession,
+            hostPeer = hostPeer,
+            roomCode = initialCredential.roomCode,
+            scope = testScope,
+            codec = codec,
+            initialCredential = initialCredential,
+            resumeConnector = {
+                connectorEntered.complete(Unit)
+                releaseConnector.await()
+                Result.Success(
+                    ResumedPeerConnection(
+                        session = staleReplacement,
+                        hostPeer = hostPeer,
+                        credential = rotatedCredential,
+                        hostDisplayName = hostPeer.name,
+                    ),
+                )
+            },
+        )
+
+        room.appBackgrounded(1_000L)
+        originalSession.stateFlow.value = ConnectionState.Reconnecting
+        awaitCondition { room.info.value.status == RoomInfo.Status.Lost }
+        room.appForegrounded(2_000L)
+        connectorEntered.await()
+        assertThat(room.lifecycle.value)
+            .isEqualTo(RoomLifecycleState.Resuming(121_000L))
+
+        originalSession.stateFlow.value = ConnectionState.Connected
+        awaitCondition { room.lifecycle.value == RoomLifecycleState.Active }
+        releaseConnector.complete(Unit)
+        awaitCondition { staleReplacement.closeCalls == 1 }
+
+        assertThat(originalSession.closeCalls).isEqualTo(0)
+        assertThat(staleReplacement.sent).isEmpty()
+        assertThat(room.sendToHost(testPeerHeartbeat())).isEqualTo(Result.Success(Unit))
+        assertThat(originalSession.sent.last()).isInstanceOf(P2pMessage.Binary::class)
+        room.leave()
+    }
+
+    @Test
     fun lifecycle_grace_expiry_is_terminal_and_stops_the_kit_once() = runBlocking {
         val kit = FakeP2pKit(P2pPeerId("peer-pid"))
         val hostPeer = peer("host-pid", "Host Device")

@@ -53,6 +53,8 @@ class PeerConnectionTracker(
 
     private var hostLossJob: Job? = null
     private var hostLossGeneration = 0L
+    /** Once the grace deadline commits, restoration belongs to a new session only. */
+    private var hostLossExpired = false
     private var closed = false
 
     init {
@@ -81,7 +83,7 @@ class PeerConnectionTracker(
             if (closed) return
             when (event) {
                 PeerEvent.HostLost -> {
-                    if (!_state.value.hostLost) {
+                    if (!hostLossExpired && !_state.value.hostLost) {
                         _state.value = _state.value.copy(hostLost = true)
                         emitted += PeerEvent.HostLost
                         val generation = ++hostLossGeneration
@@ -89,16 +91,22 @@ class PeerConnectionTracker(
                         hostLossJob = trackerScope.launch {
                             delay(hostLostTimeoutMs)
                             val expired = mutex.withLock {
-                                !closed &&
+                                val ownsDeadline = !closed &&
+                                    !hostLossExpired &&
                                     generation == hostLossGeneration &&
                                     _state.value.hostLost
+                                if (ownsDeadline) {
+                                    hostLossExpired = true
+                                    hostLossJob = null
+                                }
+                                ownsDeadline
                             }
                             if (expired) onHostLossExpired()
                         }
                     }
                 }
                 PeerEvent.HostRestored -> {
-                    if (_state.value.hostLost) {
+                    if (!hostLossExpired && _state.value.hostLost) {
                         _state.value = _state.value.copy(hostLost = false)
                         emitted += PeerEvent.HostRestored
                         hostLossGeneration++

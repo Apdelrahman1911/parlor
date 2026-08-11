@@ -158,4 +158,28 @@ class PeerConnectionTrackerTest {
         assertTrue(callbackCompleted)
         assertTrue(close.isCompleted)
     }
+
+    @Test
+    fun `host restoration cannot reverse a host-loss expiry that already committed`() = runTest {
+        val callbackEntered = CompletableDeferred<Unit>()
+        val releaseCallback = CompletableDeferred<Unit>()
+        val tracker = PeerConnectionTracker(this, 100L) {
+            callbackEntered.complete(Unit)
+            withContext(NonCancellable) { releaseCallback.await() }
+        }
+
+        tracker.handle(PeerEvent.HostLost)
+        advanceTimeBy(100L)
+        runCurrent()
+        assertTrue(callbackEntered.isCompleted)
+
+        // Once expiry owns the deadline, a delayed transport-restored edge
+        // cannot revive the logical room while terminal handling is underway.
+        tracker.handle(PeerEvent.HostRestored)
+        val hostLostAfterRestore = tracker.state.value.hostLost
+
+        releaseCallback.complete(Unit)
+        tracker.close()
+        assertTrue(hostLostAfterRestore)
+    }
 }
