@@ -29,6 +29,7 @@ class ProductionVerificationWorkflowContractTest {
             "unzip -t",
             "base/manifest/AndroidManifest.xml",
             "base/dex/classes.dex",
+            "intermediates/merged_manifests/release/processReleaseManifest/AndroidManifest.xml",
             "sha256sum",
         ).forEach { required ->
             assertContains(
@@ -46,6 +47,7 @@ class ProductionVerificationWorkflowContractTest {
             ":composeApp:compileReleaseKotlinAndroid",
             ":composeApp:lintRelease",
             ":composeApp:verifyReleaseLintWarnings",
+            ":composeApp:verifyMergedReleaseManifest",
             ":composeApp:minifyReleaseWithR8",
             ":composeApp:bundleRelease",
         ).forEach { task ->
@@ -90,6 +92,27 @@ class ProductionVerificationWorkflowContractTest {
         val productionGate = rootBuild.substringAfter("tasks.register(\"productionCheck\")")
             .substringBefore("subprojects")
         assertContains(productionGate, "productionStaticAnalysis")
+
+        val appBuild = read("composeApp/build.gradle.kts")
+        assertContains(
+            appBuild,
+            "intermediates/merged_manifests/release/processReleaseManifest/AndroidManifest.xml",
+        )
+        val mergedManifestGate = appBuild.substringAfter("val verifyMergedReleaseManifest")
+            .substringBefore("val verifyReleaseSigning")
+        listOf(
+            "processReleaseManifest",
+            "actualPermissions == expectedPermissions",
+            "allowBackup",
+            "usesCleartextTraffic",
+            "debuggable",
+            "testOnly",
+            "exportedComponents == expectedExportedComponents",
+        ).forEach { contract -> assertContains(mergedManifestGate, contract) }
+        assertFalse(
+            "find composeApp/build/intermediates" in workflow,
+            "CI must never select an arbitrary debug/release merged manifest",
+        )
 
         listOf(
             "**/build/reports/detekt/",

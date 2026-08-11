@@ -40,6 +40,7 @@ val productionAndroidCheck = tasks.register("productionAndroidCheck") {
         ":composeApp:bundleRelease",
         ":composeApp:lintRelease",
         ":composeApp:verifyReleaseLintWarnings",
+        ":composeApp:verifyMergedReleaseManifest",
     )
 }
 

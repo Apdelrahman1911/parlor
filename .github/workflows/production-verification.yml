@@ -64,10 +64,8 @@ jobs:
           unzip -t "$aab"
           unzip -l "$aab" | grep -Fq 'base/manifest/AndroidManifest.xml'
           unzip -l "$aab" | grep -Fq 'base/dex/classes.dex'
-          manifest="$(find composeApp/build/intermediates -type f -path '*merged_manifest*/*/AndroidManifest.xml' -print -quit)"
+          manifest="composeApp/build/intermediates/merged_manifests/release/processReleaseManifest/AndroidManifest.xml"
           test -s "$manifest"
-          grep -Fq '<manifest' "$manifest"
-          grep -Fq 'android.permission.INTERNET' "$manifest"
           sha256sum "$aab" | tee build/ci-evidence/android-aab.sha256
           cp "$manifest" build/ci-evidence/merged-release-manifest.xml
 

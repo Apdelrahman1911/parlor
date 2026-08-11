@@ -319,6 +319,98 @@ val verifyReleaseLintWarnings by tasks.registering {
     }
 }
 
+val mergedReleaseManifest = layout.buildDirectory.file(
+    "intermediates/merged_manifests/release/processReleaseManifest/AndroidManifest.xml",
+)
+val verifyMergedReleaseManifest by tasks.registering {
+    group = "verification"
+    description = "Verifies the final merged release manifest against Parlor's mobile security policy."
+    dependsOn("processReleaseManifest")
+    inputs.file(mergedReleaseManifest)
+
+    doLast {
+        val manifest = inputs.files.singleFile
+        check(manifest.isFile && manifest.length() > 0L) {
+            "Missing merged release manifest: ${manifest.absolutePath}"
+        }
+
+        val androidNamespace = "http://schemas.android.com/apk/res/android"
+        val factory = javax.xml.parsers.DocumentBuilderFactory.newInstance().apply {
+            isNamespaceAware = true
+            setFeature("http://apache.org/xml/features/disallow-doctype-decl", true)
+            setFeature("http://xml.org/sax/features/external-general-entities", false)
+            setFeature("http://xml.org/sax/features/external-parameter-entities", false)
+        }
+        val document = factory.newDocumentBuilder().parse(manifest)
+        val manifestElement = document.documentElement
+        check(manifestElement.tagName == "manifest") { "Release artifact has no <manifest> root" }
+        check(manifestElement.getAttribute("package") == "com.parlor.app") {
+            "Unexpected release application ID: ${manifestElement.getAttribute("package")}"
+        }
+
+        val expectedPermissions = setOf(
+            "android.permission.INTERNET",
+            "android.permission.ACCESS_NETWORK_STATE",
+            "android.permission.ACCESS_WIFI_STATE",
+            "android.permission.CHANGE_WIFI_MULTICAST_STATE",
+            "com.parlor.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION",
+        )
+        val permissionNodes = document.getElementsByTagName("uses-permission")
+        val actualPermissions = buildSet {
+            for (index in 0 until permissionNodes.length) {
+                val element = permissionNodes.item(index) as org.w3c.dom.Element
+                add(element.getAttributeNS(androidNamespace, "name"))
+            }
+        }
+        check(actualPermissions == expectedPermissions) {
+            "Merged release permissions changed. Expected $expectedPermissions, found $actualPermissions"
+        }
+
+        val application = checkNotNull(
+            document.getElementsByTagName("application").item(0) as? org.w3c.dom.Element,
+        ) { "Merged release manifest has no <application>" }
+        check(application.getAttributeNS(androidNamespace, "allowBackup") == "false") {
+            "Release application must disable Android backup"
+        }
+        check(application.getAttributeNS(androidNamespace, "usesCleartextTraffic") == "false") {
+            "Release application must reject cleartext network traffic"
+        }
+        check(application.getAttributeNS(androidNamespace, "debuggable") != "true") {
+            "Release application must not be debuggable"
+        }
+        check(application.getAttributeNS(androidNamespace, "testOnly") != "true") {
+            "Release application must not be test-only"
+        }
+
+        val exportedComponents = buildSet {
+            listOf("activity", "activity-alias", "service", "receiver", "provider")
+                .forEach { tagName ->
+                    val nodes = document.getElementsByTagName(tagName)
+                    for (index in 0 until nodes.length) {
+                        val element = nodes.item(index) as org.w3c.dom.Element
+                        if (element.getAttributeNS(androidNamespace, "exported") == "true") {
+                            add(
+                                listOf(
+                                    tagName,
+                                    element.getAttributeNS(androidNamespace, "name"),
+                                    element.getAttributeNS(androidNamespace, "permission"),
+                                ).joinToString("|"),
+                            )
+                        }
+                    }
+                }
+        }
+        val expectedExportedComponents = setOf(
+            "activity|com.parlor.app.MainActivity|",
+            "receiver|androidx.profileinstaller.ProfileInstallReceiver|android.permission.DUMP",
+        )
+        check(exportedComponents == expectedExportedComponents) {
+            "Merged release exported components changed. " +
+                "Expected $expectedExportedComponents, found $exportedComponents"
+        }
+    }
+}
+
 val verifyReleaseSigning by tasks.registering {
     group = "verification"
     description = "Fails unless store-release Android signing is configured externally."
