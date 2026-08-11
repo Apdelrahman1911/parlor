@@ -17,12 +17,14 @@ import com.parlor.networking.protocol.SessionEndReason
 import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.NetError
 import com.parlor.networking.room.RoomInfo
+import com.parlor.networking.room.RoomLifecycleState
 import com.parlor.networking.room.RoomMember
 import com.parlor.networking.room.SendTarget
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -648,6 +650,77 @@ class ProcessMultiplayerSessionOwnerTest {
         assertThat(relaunchedOwner.state.value).isEqualTo(ProcessMultiplayerState.Idle)
     }
 
+    @Test
+    fun peerLifecycleExpiryReleasesRuntimeAndLeavesAnExplicitTerminalOwnerState() = runTest {
+        val owner = ProcessMultiplayerSessionOwner(backgroundScope)
+        val route = peerRoute()
+        val room = FakeRoom(isHost = false)
+        val session = (owner.acquire(route) { Result.Success(room) } as Result.Success).data
+        val runtime = FakeRuntime("peer-runtime")
+        session.getOrCreateRuntime(runtime.runtimeKind) { runtime }
+
+        room.lifecycleState.value = RoomLifecycleState.Expired
+        runCurrent()
+
+        val failed = owner.state.value as ProcessMultiplayerState.Failed
+        assertThat(failed.route).isEqualTo(route)
+        assertThat(failed.error).isEqualTo(NetError.RejoinExpired)
+        assertThat(failed.retryMode).isEqualTo(MultiplayerOpenMode.Resume)
+        assertThat(runtime.closed).isTrue()
+    }
+
+    @Test
+    fun finalLeaveWaitsForSessionChildrenToFinishCancellationCleanup() = runTest {
+        val owner = ProcessMultiplayerSessionOwner(backgroundScope)
+        val room = FakeRoom(isHost = true)
+        val session = (
+            owner.acquire(hostRoute(), 1L) { Result.Success(room) } as Result.Success
+        ).data
+        val cleanupStarted = CompletableDeferred<Unit>()
+        val allowCleanup = CompletableDeferred<Unit>()
+        val child = session.scope.launch {
+            try {
+                awaitCancellation()
+            } finally {
+                cleanupStarted.complete(Unit)
+                withContext(NonCancellable) { allowCleanup.await() }
+            }
+        }
+        runCurrent()
+
+        val leaving = async { owner.finalLeave(session, SessionEndReason.Cancelled) }
+        cleanupStarted.await()
+        runCurrent()
+
+        val completedBeforeCleanup = leaving.isCompleted
+        allowCleanup.complete(Unit)
+        assertThat(leaving.await()).isEqualTo(Result.Success(Unit))
+        assertThat(completedBeforeCleanup).isFalse()
+        assertThat(child.isCompleted).isTrue()
+    }
+
+    @Test
+    fun staleExpiredLifecycleCannotReplaceANewerActiveSession() = runTest {
+        val owner = ProcessMultiplayerSessionOwner(backgroundScope)
+        val firstRoom = FakeRoom(isHost = false)
+        val first = (owner.acquire(peerRoute()) { Result.Success(firstRoom) } as Result.Success).data
+        assertThat(owner.finalLeave(first, SessionEndReason.Cancelled)).isEqualTo(Result.Success(Unit))
+
+        val newerRoute = MultiplayerSessionRoute.peer(
+            gameId = GameId("mafia"),
+            displayName = "Peer",
+            roomCode = "B23456",
+        )
+        val newer = (
+            owner.acquire(newerRoute) { Result.Success(FakeRoom(isHost = false)) } as Result.Success
+        ).data
+        firstRoom.lifecycleState.value = RoomLifecycleState.Expired
+        advanceUntilIdle()
+
+        assertThat((owner.state.value as ProcessMultiplayerState.Active).session)
+            .isSameInstanceAs(newer)
+    }
+
     private fun hostRoute(): MultiplayerSessionRoute = MultiplayerSessionRoute.host(
         gameId = GameId("whodunit"),
         displayName = "Host",
@@ -698,6 +771,8 @@ private class FakeRoom(
         ),
     )
     override val members = MutableStateFlow<List<RoomMember>>(emptyList())
+    val lifecycleState = MutableStateFlow<RoomLifecycleState>(RoomLifecycleState.Active)
+    override val lifecycle = lifecycleState
     override val incoming: Flow<RoomMessage> = emptyFlow()
     override val selfPlayerId: PlayerId = if (isHost) hostId else PlayerId("peer")
 

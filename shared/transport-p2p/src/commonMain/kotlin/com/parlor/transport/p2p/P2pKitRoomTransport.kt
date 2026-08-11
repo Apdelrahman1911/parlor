@@ -3918,6 +3918,7 @@ internal class PeerP2pRoom(
             leave(
                 sendNotice = false,
                 invalidationReason = P2pDiagnosticReason.LIFECYCLE,
+                invalidationScope = CredentialInvalidationScope.LogicalMembership,
             )
         }
     }
@@ -4046,9 +4047,9 @@ internal class PeerP2pRoom(
 
     /**
      * Invalidates the ownership scope selected by the lifecycle transaction.
-     * Authenticated terminal/final Leave revokes the logical membership,
-     * including a just-committed rotation; expiry and stale cleanup retain
-     * exact-generation behavior.
+     * Authenticated terminal/final Leave and lifecycle expiry revoke the
+     * logical membership, including a just-committed rotation. Only stale
+     * non-terminal cleanup retains exact-generation behavior.
      */
     private suspend fun invalidateCredentialForRoom(
         credentialBinding: ResumableSessionCredential?,

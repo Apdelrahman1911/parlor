@@ -266,8 +266,10 @@ internal class ResumableCredentialStore(
      * credential for another room/membership is preserved even if its player,
      * host, and room-code fields happen to match.
      *
-     * Callers must be the room that currently owns [credential]. Other cleanup
-     * paths use [invalidateOwned] so delayed work cannot revoke a live rotation.
+     * Callers must be the room that currently owns [credential]. Authenticated
+     * terminal frames, explicit final Leave, and the winning lifecycle-expiry
+     * transaction use this scope; delayed non-terminal cleanup continues to
+     * use [invalidateOwned] so it cannot revoke a live rotation.
      */
     suspend fun invalidateMembershipOwned(
         credential: ResumableSessionCredential,

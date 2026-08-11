@@ -62,6 +62,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runCurrent
@@ -98,6 +99,28 @@ class PartyConnectionEventsTest {
         Player(bob, "Bob", seat = 2),
         Player(carol, "Carol", seat = 3),
     )
+
+    @Test
+    fun close_waits_for_room_event_collector_cleanup() = runTest {
+        val scope = TestScope(StandardTestDispatcher(testScheduler))
+        val bus = InMemoryRoomBus()
+        val session = buildHostSession(loadCase())
+        val bridge = WhodunitHostRoomBridge(
+            session,
+            PartyEventsHostRoom(bus, hostId),
+            players,
+            scope,
+            json,
+            heartbeatIntervalMs = 0L,
+            requireStartHandshake = false,
+        )
+        runCurrent()
+        assertThat(bus.peerEventSubscriberCount).isEqualTo(1)
+
+        bridge.close()
+
+        assertThat(bus.peerEventSubscriberCount).isEqualTo(0)
+    }
 
     @Test
     fun peer_left_event_marks_player_disconnected() = runTest {

@@ -6,6 +6,7 @@ import com.parlor.networking.protocol.SessionEndReason
 import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.NetError
 import com.parlor.networking.room.RoomInputPolicy
+import com.parlor.networking.room.RoomLifecycleState
 import com.parlor.networking.room.RoomMember
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CompletableDeferred
@@ -17,13 +18,16 @@ import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
 
 /** The device's authority role in one process-owned multiplayer session. */
 enum class MultiplayerSessionRole {
@@ -217,7 +221,7 @@ class ProcessMultiplayerSession internal constructor(
     val route: MultiplayerSessionRoute,
     val room: LocalRoom,
     val hostSeed: Long?,
-    parentScope: CoroutineScope,
+    private val parentScope: CoroutineScope,
 ) {
     private val sessionJob = SupervisorJob(parentScope.coroutineContext[Job])
     val scope: CoroutineScope = CoroutineScope(parentScope.coroutineContext + sessionJob)
@@ -233,6 +237,25 @@ class ProcessMultiplayerSession internal constructor(
     private val _runtime = MutableStateFlow<RetainedMultiplayerRuntime?>(null)
     val runtime: StateFlow<RetainedMultiplayerRuntime?> = _runtime.asStateFlow()
     private var released = false
+    private var lifecycleWatcher: Job? = null
+
+    /**
+     * Watches this exact physical room generation. The watcher is a sibling of
+     * [sessionJob], so expiry can cancel and join all game children without a
+     * child waiting on its own parent. The owner still checks session identity
+     * before changing process state, making a delayed callback harmless after
+     * a replacement session has been installed.
+     */
+    internal suspend fun watchForLifecycleExpiry(onExpired: suspend () -> Unit) {
+        val watcher = retainedMutex.withLock {
+            if (released || lifecycleWatcher != null) return
+            parentScope.launch(start = CoroutineStart.LAZY) {
+                room.lifecycle.first { it == RoomLifecycleState.Expired }
+                onExpired()
+            }.also { lifecycleWatcher = it }
+        }
+        watcher.start()
+    }
 
     /** Admission closure is process-owned and exactly-once, even across UI cancellation. */
     suspend fun freezeAdmissions(): Result<List<RoomMember>, NetError> {
@@ -336,21 +359,43 @@ class ProcessMultiplayerSession internal constructor(
     }
 
     internal suspend fun closeRuntimeAndScope(): Result<Unit, NetError> {
-        val installed = retainedMutex.withLock {
+        val resources = retainedMutex.withLock {
+            if (released) return Result.Success(Unit)
             released = true
-            _runtime.value
+            val captured = Pair(_runtime.value, lifecycleWatcher)
+            _runtime.value = null
+            _checkpoint.value = null
+            lifecycleWatcher = null
+            captured
         }
         var failure: NetError? = null
+        var cancellation: CancellationException? = null
         try {
-            installed?.close()
+            resources.first?.close()
         } catch (cancelled: CancellationException) {
-            throw cancelled
+            cancellation = cancelled
         } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
             failure = NetError.TransportFailure("runtime close failed")
-        } finally {
-            sessionJob.cancel()
         }
+        val callerJob = currentCoroutineContext()[Job]
+        val joined = withContext(NonCancellable) {
+            if (resources.second !== callerJob) resources.second?.cancel()
+            sessionJob.cancel()
+            withTimeoutOrNull(SESSION_CHILD_JOIN_TIMEOUT_MS) {
+                if (resources.second !== callerJob) resources.second?.join()
+                sessionJob.join()
+                true
+            } ?: false
+        }
+        if (!joined && failure == null) {
+            failure = NetError.TransportFailure("session cleanup timed out")
+        }
+        cancellation?.let { throw it }
         return failure?.let { Result.Failure(it) } ?: Result.Success(Unit)
+    }
+
+    private companion object {
+        const val SESSION_CHILD_JOIN_TIMEOUT_MS: Long = 5_000L
     }
 }
 
@@ -834,6 +879,9 @@ class ProcessMultiplayerSessionOwner(
                                     parentScope = processScope,
                                 )
                                 _state.value = ProcessMultiplayerState.Active(session)
+                                session.watchForLifecycleExpiry {
+                                    handleLifecycleExpiry(session)
+                                }
                                 completion.complete(Result.Success(session))
                             }
 
@@ -904,6 +952,50 @@ class ProcessMultiplayerSessionOwner(
                 Result.Failure(NetError.TransportFailure("orphan room close failed"))
             }
         }
+
+    /** Claims and terminates only the exact active room that emitted expiry. */
+    private suspend fun handleLifecycleExpiry(session: ProcessMultiplayerSession) {
+        val attempt = mutex.withLock {
+            val active = (_state.value as? ProcessMultiplayerState.Active)?.session
+            if (active !== session || closing != null) return
+            val completion = CompletableDeferred<Result<Unit, NetError>>()
+            ClosingAttempt(
+                route = session.route,
+                session = session,
+                finalExit = false,
+                completion = completion,
+            ).also { claimed ->
+                closing = claimed
+                _state.value = ProcessMultiplayerState.Closing(session.route)
+            }
+        }
+        var cancellation: CancellationException? = null
+        val released = try {
+            session.closeRuntimeAndScope()
+        } catch (cancelled: CancellationException) {
+            cancellation = cancelled
+            Result.Failure(NetError.SessionSuspended)
+        }
+        withContext(NonCancellable) {
+            mutex.withLock {
+                if (closing === attempt) {
+                    closing = null
+                    retainedRetryRoom = null
+                    _state.value = ProcessMultiplayerState.Failed(
+                        route = session.route,
+                        error = (released as? Result.Failure)?.error ?: NetError.RejoinExpired,
+                        retryMode = MultiplayerOpenMode.Resume,
+                    )
+                }
+            }
+            if (cancellation == null) {
+                attempt.completion.complete(released)
+            } else {
+                attempt.completion.cancel(cancellation)
+            }
+        }
+        cancellation?.let { throw it }
+    }
 
     private class OpeningAttempt(
         val route: MultiplayerSessionRoute,

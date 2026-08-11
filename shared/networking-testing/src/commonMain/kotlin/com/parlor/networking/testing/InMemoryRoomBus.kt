@@ -36,6 +36,8 @@ class InMemoryRoomBus {
     )
 
     val peerEvents: SharedFlow<PeerEvent> = _peerEvents.asSharedFlow()
+    val peerEventSubscriberCount: Int
+        get() = _peerEvents.subscriptionCount.value
     val hostMessagesIn: Flow<PeerMessage> = hostInbox.consumeAsFlow()
 
     fun registerPeer(id: PlayerId) {

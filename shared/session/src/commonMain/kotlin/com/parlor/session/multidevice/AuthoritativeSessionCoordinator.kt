@@ -199,6 +199,8 @@ class HostAuthoritativeSessionCoordinator(
         )
     }
     private val jobs = mutableListOf<Job>()
+    private val closeMutex = Mutex()
+    private var closed = false
 
     init {
         require(startSendTimeoutMs > 0L) { "startSendTimeoutMs must be positive" }
@@ -434,19 +436,22 @@ class HostAuthoritativeSessionCoordinator(
         completion.await()
     }
 
-    fun close() {
-        // Close producers first, cancel the item currently executing, then
-        // complete everything that never reached the worker. Cancelling jobs
-        // before closing/draining left queued HostMutation/End callers waiting
-        // forever.
+    suspend fun close() = closeMutex.withLock {
+        if (closed) return@withLock
+        closed = true
+        // Seal producers first and resolve every queued waiter before joining
+        // children. Returning only after all outboxes/collectors have stopped
+        // prevents a retired session from publishing into its replacement.
         mailbox.close()
         _startState.value = HostSessionStartState.Failed
-        cancelStartAttempt(CancellationException("Host coordinator closed"))
-        cancelResendStartAttempts(CancellationException("Host coordinator closed"))
-        outboundByPlayer.values.forEach(BoundedPeerOutbox::close)
-        coordinatorJob.cancel(CancellationException("Host coordinator closed"))
+        val cancellation = CancellationException("Host coordinator closed")
+        cancelStartAttempt(cancellation)
+        cancelResendStartAttempts(cancellation)
+        outboundByPlayer.values.forEach { it.close() }
+        coordinatorJob.cancel(cancellation)
+        drainPendingWork(cancellation)
+        withContext(NonCancellable) { coordinatorJob.join() }
         jobs.clear()
-        drainPendingWork(CancellationException("Host coordinator closed"))
     }
 
     private fun drainPendingWork(cancelled: CancellationException) {

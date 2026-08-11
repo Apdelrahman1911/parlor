@@ -47,6 +47,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runCurrent
@@ -71,6 +72,19 @@ class MafiaAuthoritativeLifecycleTest {
         Player(PlayerId("carol"), "Carol", 3),
         Player(PlayerId("dave"), "Dave", 4),
     )
+
+    @Test
+    fun close_waits_for_host_and_peer_room_event_collectors() = runTest {
+        val fixture = fixture(
+            scope = TestScope(StandardTestDispatcher(testScheduler)),
+            startGame = false,
+        )
+        assertThat(fixture.bus.peerEventSubscriberCount > 0).isTrue()
+
+        fixture.close()
+
+        assertThat(fixture.bus.peerEventSubscriberCount).isEqualTo(0)
+    }
 
     @Test
     fun disconnect_pauses_commands_and_reconnect_cancels_expiry_then_resyncs() = runTest {

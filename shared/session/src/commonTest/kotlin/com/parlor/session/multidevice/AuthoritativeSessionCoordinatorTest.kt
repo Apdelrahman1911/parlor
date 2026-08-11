@@ -27,6 +27,7 @@ import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.collect
@@ -36,17 +37,21 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.withTimeout
+import kotlinx.coroutines.withContext
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertIs
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
@@ -57,6 +62,44 @@ class AuthoritativeSessionCoordinatorTest {
         gameId = GameId("fixture-game"),
         gameVersion = 1,
     )
+
+    @Test
+    fun `host close waits for inbound collector cancellation cleanup`() = runTest {
+        val cleanupStarted = CompletableDeferred<Unit>()
+        val allowCleanup = CompletableDeferred<Unit>()
+        val room = RecordingRoom(
+            isHost = true,
+            selfPlayerId = PlayerId("host"),
+            incomingOverride = flow {
+                try {
+                    awaitCancellation()
+                } finally {
+                    cleanupStarted.complete(Unit)
+                    withContext(NonCancellable) { allowCleanup.await() }
+                }
+            },
+        )
+        val coordinator = HostAuthoritativeSessionCoordinator(
+            room = room,
+            protocol = protocol,
+            remotePlayers = emptySet(),
+            scope = this,
+            applyCommand = { _, _ -> CommandApplication.InvalidAction },
+            snapshotFor = { PlayerSnapshotPayload(byteArrayOf(), byteArrayOf()) },
+            heartbeatIntervalMs = 0L,
+            requireStartHandshake = false,
+        )
+        runCurrent()
+
+        val closing = async { coordinator.close() }
+        cleanupStarted.await()
+        runCurrent()
+
+        val completedBeforeCleanup = closing.isCompleted
+        allowCleanup.complete(Unit)
+        closing.await()
+        assertFalse(completedBeforeCleanup)
+    }
 
     @Test
     fun `host applies once then rejects duplicate gap and stale revision deterministically`() = runTest {
@@ -1270,10 +1313,11 @@ private data class SentMessage(val target: SendTarget, val message: HostMessage)
 private class RecordingRoom(
     override val isHost: Boolean,
     override val selfPlayerId: PlayerId,
+    incomingOverride: Flow<RoomMessage>? = null,
 ) : LocalRoom {
     private val inbox = Channel<RoomMessage>(capacity = 64)
     private val events = MutableSharedFlow<PeerEvent>(extraBufferCapacity = 8)
-    override val incoming: Flow<RoomMessage> = inbox.receiveAsFlow()
+    override val incoming: Flow<RoomMessage> = incomingOverride ?: inbox.receiveAsFlow()
     override val peerEvents: SharedFlow<PeerEvent> = events.asSharedFlow()
     override val info = MutableStateFlow(
         RoomInfo("local", "Fixture", PlayerId("host"), RoomInfo.Status.Joined),

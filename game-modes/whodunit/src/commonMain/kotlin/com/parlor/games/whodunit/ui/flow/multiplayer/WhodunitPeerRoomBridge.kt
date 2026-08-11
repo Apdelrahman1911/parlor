@@ -25,10 +25,13 @@ import com.parlor.session.multidevice.ShadowSessionController
 import com.parlor.session.SubmissionReceipt
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.json.Json
 
 /**
@@ -53,6 +56,8 @@ class WhodunitPeerRoomBridge(
     },
     private val hostLostTimeoutMs: Long = HOST_REJOIN_GRACE_MS,
 ) {
+    private val closeMutex = Mutex()
+    private var closed = false
     private val _hostDisconnected = MutableSharedFlow<Unit>(replay = 1)
     val hostDisconnected: SharedFlow<Unit> = _hostDisconnected.asSharedFlow()
 
@@ -105,9 +110,11 @@ class WhodunitPeerRoomBridge(
         coordinator.acknowledgeCommandOutcome(commandId)
     }
 
-    suspend fun close() {
+    suspend fun close() = closeMutex.withLock {
+        if (closed) return@withLock
+        closed = true
         connectionTracker.close()
-        connectionJob.cancel()
+        connectionJob.cancelAndJoin()
         coordinator.close()
     }
 

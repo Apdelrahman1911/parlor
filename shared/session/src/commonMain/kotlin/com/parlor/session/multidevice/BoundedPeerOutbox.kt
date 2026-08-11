@@ -12,11 +12,14 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withTimeoutOrNull
+import kotlinx.coroutines.withContext
 import kotlin.concurrent.atomics.AtomicReference
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
 
@@ -174,7 +177,7 @@ internal class BoundedPeerOutbox(
         return completion.await()
     }
 
-    fun close() {
+    suspend fun close() {
         // Publication and closure share one atomic lifecycle. Therefore close
         // either wins before publication (the publisher fails closed) or sees
         // the exact terminal transaction it must cancel; there is no gap in
@@ -186,7 +189,9 @@ internal class BoundedPeerOutbox(
             )
         }
         wakeUp.close()
-        worker.cancel(CancellationException("Peer outbox closed"))
+        withContext(NonCancellable) {
+            worker.cancelAndJoin()
+        }
     }
 
     private fun takeNextLocked(): NextFrame? {

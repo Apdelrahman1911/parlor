@@ -31,6 +31,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
@@ -73,9 +74,11 @@ class MafiaHostRoomBridge(
     private val privateSerializer = MafiaPrivate.serializer()
     private val remotePlayers = players.map(Player::id).toSet() - room.selfPlayerId
     private val lifecycleMutex = Mutex()
+    private val closeMutex = Mutex()
     private val graceJobs = mutableMapOf<PlayerId, Job>()
     private val rejoinJobs = mutableMapOf<PlayerId, Job>()
     private var terminated = false
+    private var closed = false
     private val bridgeJob = SupervisorJob(scope.coroutineContext[Job])
     private val bridgeScope = CoroutineScope(scope.coroutineContext + bridgeJob)
 
@@ -152,7 +155,7 @@ class MafiaHostRoomBridge(
                 }
             }
         } ?: return
-        jobsToCancel.forEach(Job::cancel)
+        jobsToCancel.forEach { it.cancelAndJoin() }
         coordinator.end(reason)
     }
 
@@ -170,13 +173,23 @@ class MafiaHostRoomBridge(
                 rejoinJobs.remove(playerId),
             )
         } ?: return false
-        jobsToCancel.forEach(Job::cancel)
+        jobsToCancel.forEach { it.cancelAndJoin() }
         return retireAndContinue(playerId)
     }
 
-    fun close() {
-        bridgeJob.cancel()
+    suspend fun close() = closeMutex.withLock {
+        if (closed) return@withLock
+        closed = true
+        val jobsToCancel = lifecycleMutex.withLock {
+            terminated = true
+            (graceJobs.values + rejoinJobs.values).also {
+                graceJobs.clear()
+                rejoinJobs.clear()
+            }
+        }
+        jobsToCancel.forEach { it.cancelAndJoin() }
         coordinator.close()
+        bridgeJob.cancelAndJoin()
     }
 
     private suspend fun applyRemoteCommand(

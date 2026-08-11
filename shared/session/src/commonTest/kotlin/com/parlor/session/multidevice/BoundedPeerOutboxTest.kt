@@ -20,6 +20,7 @@ import com.parlor.networking.room.RoomInfo
 import com.parlor.networking.room.RoomMember
 import com.parlor.networking.room.SendTarget
 import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.channels.Channel
@@ -29,6 +30,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.withContext
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -53,6 +55,35 @@ class BoundedPeerOutboxTest {
                 MAX_ROOM_FRAME_BYTES * 2,
             BoundedPeerOutbox.MAX_OUTBOUND_BYTES_PER_PEER,
         )
+    }
+
+    @Test
+    fun `close waits for the in-flight sender cancellation cleanup`() = runTest {
+        val room = TargetBlockingRoom(
+            blockedPlayer = peer,
+            neverRelease = true,
+            blockCancellationCleanup = true,
+        )
+        val outbox = BoundedPeerOutbox(peer, room, this, sendTimeoutMs = 10_000L)
+        assertTrue(
+            outbox.enqueue(
+                HostMessage.Heartbeat(
+                    header = header("heartbeat-close-0001", 1L),
+                    authoritativeRevision = 0L,
+                ),
+            ),
+        )
+        runCurrent()
+        room.blockEntered.await()
+
+        val closing = async { outbox.close() }
+        room.cleanupEntered.await()
+        runCurrent()
+
+        val completedBeforeCleanup = closing.isCompleted
+        room.releaseCleanup.complete(Unit)
+        closing.await()
+        assertFalse(completedBeforeCleanup)
     }
 
     @Test
@@ -266,6 +297,7 @@ private class TargetBlockingRoom(
     private val blockedPlayer: PlayerId,
     private val neverRelease: Boolean = false,
     private val sendFailure: Exception? = null,
+    private val blockCancellationCleanup: Boolean = false,
 ) : LocalRoom {
     private val inbox = Channel<RoomMessage>(capacity = 8)
     override val incoming: Flow<RoomMessage> = inbox.receiveAsFlow()
@@ -279,6 +311,8 @@ private class TargetBlockingRoom(
     val sent = mutableListOf<OutboundAttempt>()
     val blockEntered = CompletableDeferred<Unit>()
     val releaseBlocked = CompletableDeferred<Unit>()
+    val cleanupEntered = CompletableDeferred<Unit>()
+    val releaseCleanup = CompletableDeferred<Unit>()
 
     override suspend fun send(
         target: SendTarget,
@@ -288,7 +322,18 @@ private class TargetBlockingRoom(
         sendFailure?.let { throw it }
         if (target == SendTarget.Direct(blockedPlayer)) {
             blockEntered.complete(Unit)
-            if (neverRelease) awaitCancellation() else releaseBlocked.await()
+            if (neverRelease) {
+                try {
+                    awaitCancellation()
+                } finally {
+                    if (blockCancellationCleanup) {
+                        cleanupEntered.complete(Unit)
+                        withContext(NonCancellable) { releaseCleanup.await() }
+                    }
+                }
+            } else {
+                releaseBlocked.await()
+            }
         }
         sent += OutboundAttempt(target, message)
         return Result.Success(Unit)

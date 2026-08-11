@@ -1387,7 +1387,7 @@ class P2pKitRoomTransportLifecycleTest {
         }
 
     @Test
-    fun foreground_permanent_rejection_cannot_erase_a_concurrently_rotated_generation() =
+    fun foreground_permanent_rejection_revokes_the_entire_rotated_membership() =
         runBlocking {
             val kit = FakeP2pKit(P2pPeerId("peer-pid"))
             val hostPeer = peer("host-pid", "Host Device")
@@ -1422,7 +1422,7 @@ class P2pKitRoomTransportLifecycleTest {
 
             awaitCondition { kit.stopCalls == 1 }
             assertThat(room.lifecycle.value).isEqualTo(RoomLifecycleState.Expired)
-            assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(generationTwo))
+            assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(null))
             assertThat(kit.stopCalls).isEqualTo(1)
         }
 
