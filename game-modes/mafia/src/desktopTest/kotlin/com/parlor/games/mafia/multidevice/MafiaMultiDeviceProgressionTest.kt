@@ -165,7 +165,7 @@ class MafiaMultiDeviceProgressionTest {
                 // CloseVote gate to fire.
                 val mafiaId = state.privatePerPlayer.entries
                     .first { (id, priv) -> priv.role == Role.Mafia && id in alive(state) }.key
-                for (voter in state.public.activeVote!!.ballot) {
+                for (voter in requireNotNull(state.public.activeVote).ballot) {
                     state = if (voter == mafiaId) {
                         step(state, MafiaAction.AbstainVote(voter), c)
                     } else {
@@ -302,7 +302,7 @@ class MafiaMultiDeviceProgressionTest {
         state = driveHostAdvances(state, c) // → Discussion
         if (state.phase is MafiaPhase.Discussion) {
             state = step(state, MafiaAction.OpenVote, c)
-            for (voter in state.public.activeVote!!.ballot) {
+            for (voter in requireNotNull(state.public.activeVote).ballot) {
                 state = step(state, MafiaAction.AbstainVote(voter), c)
             }
             state = driveHostAdvances(state, c) // CloseVote → VoteAnnouncement

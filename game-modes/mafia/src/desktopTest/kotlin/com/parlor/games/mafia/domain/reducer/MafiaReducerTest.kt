@@ -232,14 +232,14 @@ class MafiaReducerTest {
 
         val townPlayer = state.privatePerPlayer.entries.first { it.value.role != Role.Mafia }.key
         val target = state.privatePerPlayer.entries.first { it.value.role == Role.Mafia }.key
-        val before = state.privatePerPlayer[townPlayer]!!.pendingNightChoice
+        val before = state.privatePerPlayer.getValue(townPlayer).pendingNightChoice
         val after = MafiaReducer.reduce(
             state,
             MafiaAction.SubmitMafiaKillVote(by = townPlayer, target = target),
             ctx(),
         ).newState
         // Town player's pendingNightChoice unchanged.
-        assertThat(after.privatePerPlayer[townPlayer]!!.pendingNightChoice).isEqualTo(before)
+        assertThat(after.privatePerPlayer.getValue(townPlayer).pendingNightChoice).isEqualTo(before)
     }
 
     @Test
@@ -252,14 +252,14 @@ class MafiaReducerTest {
 
         val mafia = state.privatePerPlayer.entries.first { it.value.role == Role.Mafia }.key
         val target = state.privatePerPlayer.entries.first { it.value.role != Role.Mafia }.key
-        val before = state.privatePerPlayer[mafia]!!.pendingNightChoice
+        val before = state.privatePerPlayer.getValue(mafia).pendingNightChoice
         val after = MafiaReducer.reduce(
             state,
             MafiaAction.SubmitDoctorProtect(by = mafia, target = target),
             ctx(),
         ).newState
         // SubmitDoctorProtect by a Mafia is rejected → choice unchanged.
-        assertThat(after.privatePerPlayer[mafia]!!.pendingNightChoice).isEqualTo(before)
+        assertThat(after.privatePerPlayer.getValue(mafia).pendingNightChoice).isEqualTo(before)
     }
 
     @Test
@@ -305,7 +305,7 @@ class MafiaReducerTest {
         val voter = state.players.first().id
         val target = state.players.last().id
         state = MafiaReducer.reduce(state, MafiaAction.CastVote(voter, target), ctx()).newState
-        val active = state.public.activeVote!!
+        val active = requireNotNull(state.public.activeVote)
         assertThat(active.castSoFar[voter]).isEqualTo(target)
     }
 
@@ -318,7 +318,7 @@ class MafiaReducerTest {
         }
         state = MafiaReducer.reduce(state, MafiaAction.CloseVote, ctx()).newState
         assertThat(state.phase).isInstanceOf(MafiaPhase.VoteAnnouncement::class)
-        assertThat(state.public.lastVote!!.outcome)
+        assertThat(requireNotNull(state.public.lastVote).outcome)
             .isEqualTo(com.parlor.games.mafia.domain.state.VoteOutcome.AllAbstained)
     }
 
@@ -333,7 +333,7 @@ class MafiaReducerTest {
 
         val mafiaIds = state.privatePerPlayer.filterValues { it.role == Role.Mafia }.keys.toList()
         val town = state.privatePerPlayer.filterValues { it.role != Role.Mafia }.keys.toList()
-        if (mafiaIds.size < 2) return // preset may be 1 mafia; this test exercises the >=2 case
+        require(mafiaIds.size >= 2) { "The seven-player preset must contain two Mafia" }
 
         // First Mafia targets town[0], second Mafia targets town[1] → tied 1-1.
         state = MafiaReducer.reduce(state, MafiaAction.SubmitMafiaKillVote(mafiaIds[0], town[0]), ctx()).newState
@@ -345,7 +345,7 @@ class MafiaReducerTest {
         assertThat(night.mafiaCoordinationRound).isEqualTo(2)
         // Round-2 snapshot has previousRoundTally populated for anonymized display.
         val coord = state.privatePerPlayer.getValue(mafiaIds[0]).mafiaCoordination
-        assertThat(coord!!.previousRoundTally).isNotNull()
+        assertThat(requireNotNull(coord).previousRoundTally).isNotNull()
         assertThat(state.isValidRecoveryState()).isTrue()
         state.players.forEach { player ->
             val publicState = MafiaProjectionPolicy.toPublic(state).state
@@ -386,7 +386,7 @@ class MafiaReducerTest {
         }
         state = MafiaReducer.reduce(state, MafiaAction.AdvanceFromRoleAssignment, ctx()).newState
         val mafiaIds = state.privatePerPlayer.filterValues { it.role == Role.Mafia }.keys.toList()
-        if (mafiaIds.size < 2) return
+        require(mafiaIds.size >= 2) { "The seven-player preset must contain two Mafia" }
 
         val town = state.privatePerPlayer.filterValues { it.role != Role.Mafia }.keys.toList()
         // Round 1 tie:

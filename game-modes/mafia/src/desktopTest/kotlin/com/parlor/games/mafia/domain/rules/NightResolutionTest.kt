@@ -169,8 +169,9 @@ class NightResolutionTest {
         )
         val det = res.detectiveResult
         assertThat(det).isNotNull()
-        assertThat(det!!.first).isEqualTo(m1)
-        assertThat(det.second).isEqualTo(DetectiveSeesAs.Mafia)
+        val result = requireNotNull(det)
+        assertThat(result.first).isEqualTo(m1)
+        assertThat(result.second).isEqualTo(DetectiveSeesAs.Mafia)
     }
 
     @Test

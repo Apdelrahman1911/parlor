@@ -105,16 +105,16 @@ class MafiaReducerEdgeCasesTest {
     fun mafia_targeting_another_mafia_is_rejected_when_setting_disabled() {
         val state = atNight(7)
         val mafiaIds = state.privatePerPlayer.filterValues { it.role == Role.Mafia }.keys.toList()
-        if (mafiaIds.size < 2) return
+        require(mafiaIds.size >= 2) { "A seven-player game must contain two Mafia" }
         val a = mafiaIds[0]
         val b = mafiaIds[1]
         // Default settings: mafiaCanTargetMafia = false.
         assertThat(state.public.settings.mafiaCanTargetMafia).isFalse()
         val after = MafiaReducer.reduce(state, MafiaAction.SubmitMafiaKillVote(by = a, target = b), ctx()).newState
         // Submission rejected: pendingNightChoice unchanged (null), snapshot does not record b.
-        assertThat(after.privatePerPlayer[a]!!.pendingNightChoice).isNull()
-        val coord = after.privatePerPlayer[a]!!.mafiaCoordination
-        assertThat(coord!!.submissions[a]).isNull()
+        assertThat(after.privatePerPlayer.getValue(a).pendingNightChoice).isNull()
+        val coord = requireNotNull(after.privatePerPlayer.getValue(a).mafiaCoordination)
+        assertThat(coord.submissions[a]).isNull()
     }
 
     @Test
@@ -130,20 +130,22 @@ class MafiaReducerEdgeCasesTest {
         state = MafiaReducer.reduce(state, MafiaAction.AdvanceFromRoleAssignment, ctx()).newState
 
         val mafiaIds = state.privatePerPlayer.filterValues { it.role == Role.Mafia }.keys.toList()
-        if (mafiaIds.size < 2) return
+        require(mafiaIds.size >= 2) { "A seven-player game must contain two Mafia" }
         val a = mafiaIds[0]
         val b = mafiaIds[1]
         val after = MafiaReducer.reduce(state, MafiaAction.SubmitMafiaKillVote(by = a, target = b), ctx()).newState
-        assertThat(after.privatePerPlayer[a]!!.pendingNightChoice).isEqualTo(b)
+        assertThat(after.privatePerPlayer.getValue(a).pendingNightChoice).isEqualTo(b)
     }
 
     @Test
     fun doctor_self_protect_rejected_when_setting_disabled() {
         val state = atNight(7)
-        val doctor = state.privatePerPlayer.entries.firstOrNull { it.value.role == Role.Doctor }?.key ?: return
+        val doctor = requireNotNull(
+            state.privatePerPlayer.entries.firstOrNull { it.value.role == Role.Doctor }?.key,
+        )
         assertThat(state.public.settings.doctorCanSelfHeal).isFalse()
         val after = MafiaReducer.reduce(state, MafiaAction.SubmitDoctorProtect(by = doctor, target = doctor), ctx()).newState
-        assertThat(after.privatePerPlayer[doctor]!!.pendingNightChoice).isNull()
+        assertThat(after.privatePerPlayer.getValue(doctor).pendingNightChoice).isNull()
     }
 
     @Test
@@ -156,18 +158,22 @@ class MafiaReducerEdgeCasesTest {
             state = MafiaReducer.reduce(state, MafiaAction.AcknowledgeRoleViewed(p.id), ctx()).newState
         }
         state = MafiaReducer.reduce(state, MafiaAction.AdvanceFromRoleAssignment, ctx()).newState
-        val doctor = state.privatePerPlayer.entries.firstOrNull { it.value.role == Role.Doctor }?.key ?: return
+        val doctor = requireNotNull(
+            state.privatePerPlayer.entries.firstOrNull { it.value.role == Role.Doctor }?.key,
+        )
         val after = MafiaReducer.reduce(state, MafiaAction.SubmitDoctorProtect(by = doctor, target = doctor), ctx()).newState
-        assertThat(after.privatePerPlayer[doctor]!!.pendingNightChoice).isEqualTo(doctor)
+        assertThat(after.privatePerPlayer.getValue(doctor).pendingNightChoice).isEqualTo(doctor)
     }
 
     @Test
     fun detective_self_inspect_rejected_when_setting_disabled() {
         val state = atNight(7)
-        val detective = state.privatePerPlayer.entries.firstOrNull { it.value.role == Role.Detective }?.key ?: return
+        val detective = requireNotNull(
+            state.privatePerPlayer.entries.firstOrNull { it.value.role == Role.Detective }?.key,
+        )
         assertThat(state.public.settings.detectiveCanInspectSelf).isFalse()
         val after = MafiaReducer.reduce(state, MafiaAction.SubmitDetectiveInspect(by = detective, target = detective), ctx()).newState
-        assertThat(after.privatePerPlayer[detective]!!.pendingNightChoice).isNull()
+        assertThat(after.privatePerPlayer.getValue(detective).pendingNightChoice).isNull()
     }
 
     @Test
@@ -199,7 +205,7 @@ class MafiaReducerEdgeCasesTest {
 
         val result = state.privatePerPlayer.getValue(detective).pendingDetectiveResult
         assertThat(result).isNotNull()
-        assertThat(result!!.target).isEqualTo(mafia)
+        assertThat(requireNotNull(result).target).isEqualTo(mafia)
         assertThat(result.seesAs).isEqualTo(
             com.parlor.games.mafia.domain.state.DetectiveSeesAs.Mafia,
         )
@@ -242,7 +248,9 @@ class MafiaReducerEdgeCasesTest {
     @Test
     fun doctor_consecutive_target_is_rejected_at_submission_boundary() {
         var state = atNight(7)
-        val doctor = state.privatePerPlayer.entries.firstOrNull { it.value.role == Role.Doctor }?.key ?: return
+        val doctor = requireNotNull(
+            state.privatePerPlayer.entries.firstOrNull { it.value.role == Role.Doctor }?.key,
+        )
         val target = state.public.roster.first { it.playerId != doctor }.playerId
         val private = state.privatePerPlayer.getValue(doctor)
         state = state.copy(
@@ -267,7 +275,7 @@ class MafiaReducerEdgeCasesTest {
         var state = atVoting(7)
         // Mark a player as dropped → they're not in the ballot we just computed.
         // Actually, easier: artificially edit the activeVote to exclude a real player from ballot.
-        val activeVote = state.public.activeVote!!
+        val activeVote = requireNotNull(state.public.activeVote)
         val excluded = state.players.first().id
         state = state.copy(
             public = state.public.copy(
@@ -277,13 +285,13 @@ class MafiaReducerEdgeCasesTest {
         val target = state.players.last().id
         val after = MafiaReducer.reduce(state, MafiaAction.CastVote(by = excluded, target = target), ctx()).newState
         // Excluded voter's cast must NOT appear.
-        assertThat(after.public.activeVote!!.castSoFar[excluded]).isNull()
+        assertThat(requireNotNull(after.public.activeVote).castSoFar[excluded]).isNull()
     }
 
     @Test
     fun cast_vote_for_non_candidate_target_is_rejected() {
         var state = atVoting(7)
-        val activeVote = state.public.activeVote!!
+        val activeVote = requireNotNull(state.public.activeVote)
         // Remove one player from the candidate list, then try to vote for them.
         val nonCandidate = state.players.last().id
         state = state.copy(
@@ -293,7 +301,7 @@ class MafiaReducerEdgeCasesTest {
         )
         val voter = state.players.first().id
         val after = MafiaReducer.reduce(state, MafiaAction.CastVote(by = voter, target = nonCandidate), ctx()).newState
-        assertThat(after.public.activeVote!!.castSoFar[voter]).isNull()
+        assertThat(requireNotNull(after.public.activeVote).castSoFar[voter]).isNull()
     }
 
     @Test
@@ -302,7 +310,7 @@ class MafiaReducerEdgeCasesTest {
         assertThat(state.public.settings.allowSelfVote).isFalse()
         val voter = state.players.first().id
         val after = MafiaReducer.reduce(state, MafiaAction.CastVote(by = voter, target = voter), ctx()).newState
-        assertThat(after.public.activeVote!!.castSoFar[voter]).isNull()
+        assertThat(requireNotNull(after.public.activeVote).castSoFar[voter]).isNull()
     }
 
     @Test
@@ -330,7 +338,7 @@ class MafiaReducerEdgeCasesTest {
 
         val voter = state.players.first().id
         val after = MafiaReducer.reduce(state, MafiaAction.CastVote(by = voter, target = voter), ctx()).newState
-        assertThat(after.public.activeVote!!.castSoFar[voter]).isEqualTo(voter)
+        assertThat(requireNotNull(after.public.activeVote).castSoFar[voter]).isEqualTo(voter)
     }
 
     @Test
@@ -340,10 +348,10 @@ class MafiaReducerEdgeCasesTest {
         val target = state.players.last().id
         // First cast a real vote.
         state = MafiaReducer.reduce(state, MafiaAction.CastVote(by = voter, target = target), ctx()).newState
-        assertThat(state.public.activeVote!!.castSoFar[voter]).isEqualTo(target)
+        assertThat(requireNotNull(state.public.activeVote).castSoFar[voter]).isEqualTo(target)
         // A later abstain is a duplicate ballot command and must be ignored.
         state = MafiaReducer.reduce(state, MafiaAction.AbstainVote(voter), ctx()).newState
-        val v = state.public.activeVote!!
+        val v = requireNotNull(state.public.activeVote)
         assertThat(v.castSoFar[voter]).isEqualTo(target)
         assertThat(voter in v.abstained).isFalse()
     }
@@ -354,9 +362,9 @@ class MafiaReducerEdgeCasesTest {
         val voter = state.players.first().id
         val target = state.players.last().id
         state = MafiaReducer.reduce(state, MafiaAction.AbstainVote(voter), ctx()).newState
-        assertThat(voter in state.public.activeVote!!.abstained).isTrue()
+        assertThat(voter in requireNotNull(state.public.activeVote).abstained).isTrue()
         state = MafiaReducer.reduce(state, MafiaAction.CastVote(by = voter, target = target), ctx()).newState
-        val v = state.public.activeVote!!
+        val v = requireNotNull(state.public.activeVote)
         assertThat(voter in v.abstained).isTrue()
         assertThat(v.castSoFar[voter]).isNull()
     }
@@ -373,7 +381,7 @@ class MafiaReducerEdgeCasesTest {
         // Target abstains (cannot self-vote by default).
         state = MafiaReducer.reduce(state, MafiaAction.AbstainVote(target), ctx()).newState
         state = MafiaReducer.reduce(state, MafiaAction.CloseVote, ctx()).newState
-        val lastVote = state.public.lastVote!!
+        val lastVote = requireNotNull(state.public.lastVote)
         assertThat(lastVote.outcome).isEqualTo(VoteOutcome.Eliminated)
         assertThat(lastVote.eliminatedPlayerId).isEqualTo(target)
         // Tally pins the count we constructed.
@@ -383,7 +391,7 @@ class MafiaReducerEdgeCasesTest {
     @Test
     fun close_vote_is_noop_until_every_ballot_member_has_acted() {
         var state = atVoting(7)
-        val first = state.public.activeVote!!.ballot.first()
+        val first = requireNotNull(state.public.activeVote).ballot.first()
         state = MafiaReducer.reduce(state, MafiaAction.AbstainVote(first), ctx()).newState
 
         val attempt = MafiaReducer.reduce(state, MafiaAction.CloseVote, ctx())
@@ -533,8 +541,10 @@ class MafiaReducerEdgeCasesTest {
         }
         state = submitUnsubmittedNightActions(state)
         state = MafiaReducer.reduce(state, MafiaAction.ResolveNight, ctx()).newState
-        val detective = state.privatePerPlayer.entries.firstOrNull { it.value.role == Role.Detective }?.key ?: return
-        assertThat(state.privatePerPlayer[detective]!!.pendingDetectiveResult).isNull()
+        val detective = requireNotNull(
+            state.privatePerPlayer.entries.firstOrNull { it.value.role == Role.Detective }?.key,
+        )
+        assertThat(state.privatePerPlayer.getValue(detective).pendingDetectiveResult).isNull()
     }
 
     // -------------------------------------------------------------------- Mafia coordination cleanup
@@ -549,7 +559,7 @@ class MafiaReducerEdgeCasesTest {
             MafiaAction.SubmitMafiaKillVote(mafia.first(), state.privatePerPlayer.entries.first { it.value.role == Role.Civilian }.key),
             ctx(),
         ).newState
-        assertThat(state.privatePerPlayer[mafia.first()]!!.mafiaCoordination).isNotNull()
+        assertThat(state.privatePerPlayer.getValue(mafia.first()).mafiaCoordination).isNotNull()
         state = submitUnsubmittedNightActions(state)
         state = MafiaReducer.reduce(state, MafiaAction.ResolveNight, ctx()).newState
         // After resolution: every private's mafiaCoordination must be null.
@@ -587,7 +597,7 @@ class MafiaReducerEdgeCasesTest {
         for ((id, priv) in state.privatePerPlayer) {
             if (priv.role == Role.Mafia) {
                 assertThat(priv.mafiaCoordination).isNotNull()
-                assertThat(priv.mafiaCoordination!!.round).isEqualTo(1)
+                assertThat(requireNotNull(priv.mafiaCoordination).round).isEqualTo(1)
             } else {
                 assertThat(priv.mafiaCoordination).isNull()
             }
