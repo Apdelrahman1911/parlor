@@ -50,6 +50,20 @@ class DefaultCaseValidator(
             return Result.Failure(ValidationError.MalformedField("schemaVersion", "must be >= 1"))
         }
 
+        // The compatibility field exists in schema v1, but this release has no
+        // configured signing key or signature-verification algorithm. Treating
+        // a non-null value as trusted metadata would create a false integrity
+        // boundary for a future remote source. Fail closed until a versioned,
+        // key-pinned verifier is deliberately introduced.
+        if (envelope.signature != null) {
+            return Result.Failure(
+                ValidationError.MalformedField(
+                    path = "signature",
+                    reason = "unsupported by this app version",
+                ),
+            )
+        }
+
         // 3. Minimum app version.
         if (envelope.minimumAppVersion > installedAppVersion) {
             return Result.Failure(

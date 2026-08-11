@@ -95,4 +95,48 @@ class DefaultCaseValidatorBoundaryTest {
             ),
         )
     }
+
+    @Test
+    fun unverified_delivery_signature_is_rejected_instead_of_being_treated_as_trusted() {
+        val definition = RoundRobinAnnounceGame()
+        val envelope = CaseEnvelope(
+            schemaVersion = 1,
+            caseId = "signed-case",
+            title = "Signed Case",
+            version = SemVer(1, 0, 0),
+            minimumAppVersion = SemVer(1, 0, 0),
+            gameId = definition.id.raw,
+            supportedPlayerCounts = IntRangePair(3, 3),
+            supportedModes = listOf("round-robin"),
+            language = "en",
+            theme = "test",
+            estimatedDuration = IntRangePair(1, 1),
+            payload = JsonObject(emptyMap()),
+            signature = "not-a-verified-signature",
+        )
+        val validator = DefaultCaseValidator(
+            json = json,
+            knownSchemaVersion = 1,
+            installedAppVersion = SemVer(1, 0, 0),
+            gameRegistry = DefaultGameRegistry(listOf(definition)),
+        )
+        val payloadValidator = object : PayloadValidator<Unit> {
+            override val gameId: String = definition.id.raw
+            override fun validate(envelope: CaseEnvelope) = Result.Success(Unit)
+        }
+
+        assertThat(
+            validator.validate(
+                json.encodeToString(CaseEnvelope.serializer(), envelope),
+                payloadValidator,
+            ),
+        ).isEqualTo(
+            Result.Failure(
+                ValidationError.MalformedField(
+                    path = "signature",
+                    reason = "unsupported by this app version",
+                ),
+            ),
+        )
+    }
 }

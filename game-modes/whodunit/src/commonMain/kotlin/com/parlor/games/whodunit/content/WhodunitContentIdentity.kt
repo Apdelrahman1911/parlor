@@ -34,9 +34,10 @@ private fun String.isValidSemVer(): Boolean = try {
 /**
  * Produces a stable SHA-256 identity for gameplay-visible case content.
  * Object keys are recursively sorted so insignificant JSON key ordering does
- * not split a room. The delivery signature is excluded: it authenticates the
- * envelope source but is not game content and may differ between a bundled
- * fallback and an otherwise identical remote envelope.
+ * not split a room. The legacy delivery-signature field is excluded because
+ * it is not game content. Current validation rejects every non-null signature:
+ * this release does not claim signature verification without a versioned,
+ * key-pinned verifier.
  */
 fun CaseEnvelope.contentIdentity(): WhodunitContentIdentity {
     val unsignedEnvelope = copy(signature = null)
