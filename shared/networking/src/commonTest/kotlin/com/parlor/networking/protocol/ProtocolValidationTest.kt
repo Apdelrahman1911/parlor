@@ -263,6 +263,17 @@ class ProtocolValidationTest {
                 },
             ).validateFor(session),
         )
+        val p2pKitPeerId = "p2id2-" +
+            "abcdefghijklmnopqrstuvwxyz234567".repeat(2).take(52)
+        assertEquals(
+            ProtocolValidation.Valid,
+            offer.copy(
+                players = offer.players.mapIndexed { index, player ->
+                    if (index == 1) player.copy(id = PlayerId(p2pKitPeerId)) else player
+                },
+            ).validateFor(session),
+            "P2pKit 0.7.0-rc3 canonical peer identities must remain wire-compatible",
+        )
         val contentBound = offer.copy(
             caseVersion = "1.2.3",
             caseDigest = "a".repeat(64),
