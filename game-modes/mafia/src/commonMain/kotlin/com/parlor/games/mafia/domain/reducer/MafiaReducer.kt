@@ -862,6 +862,21 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent> {
         // client from dropping a currently connected seat.
         if (id !in state.public.disconnectedPlayers) return Reduction(state)
         if (id in state.public.droppedPlayers) return Reduction(state)
+        // Setup has no assigned roles or active gameplay membership to retain.
+        // Recording the expired seat as dropped used to create an unassigned
+        // PostGame shape that the canonical snapshot and peer validators quite
+        // correctly reject. Cancel the frozen session cleanly instead: the
+        // roster remains useful for result/navigation chrome, but there is no
+        // resumable disconnect or dropped-seat capability after termination.
+        if (state.phase == MafiaPhase.Setup) {
+            return Reduction(
+                finishGame(state, winner = null),
+                listOf(
+                    MafiaEvent.GameEnded,
+                    MafiaEvent.PhaseEntered(MafiaPhase.PostGame),
+                ),
+            )
+        }
         val activeVote = state.public.activeVote?.let { vote ->
             vote.copy(
                 candidates = vote.candidates - id,

@@ -440,7 +440,7 @@ class MafiaReducerTest {
     }
 
     @Test
-    fun continue_without_player_drops_only_a_currently_disconnected_seat() {
+    fun setup_grace_expiry_cancels_to_a_recoverable_unassigned_terminal_state() {
         val state = initialState(7)
         val p = state.players.first().id
         val disconnected = MafiaReducer.reduce(
@@ -448,13 +448,19 @@ class MafiaReducerTest {
             MafiaAction.MarkPlayerDisconnected(p),
             ctx(),
         ).newState
-        val dropped = MafiaReducer.reduce(
+        val ended = MafiaReducer.reduce(
             disconnected,
             MafiaAction.ContinueWithoutPlayer(p),
             ctx(),
         ).newState
-        assertThat(dropped.public.droppedPlayers.contains(p)).isTrue()
-        assertThat(dropped.phase).isEqualTo(MafiaPhase.PostGame)
+
+        assertThat(ended.phase).isEqualTo(MafiaPhase.PostGame)
+        assertThat(ended.public.disconnectedPlayers).isEmpty()
+        assertThat(ended.public.droppedPlayers).isEmpty()
+        assertThat(ended.public.winner).isNull()
+        assertThat(ended.privatePerPlayer).isEmpty()
+        assertThat(ended.hostOnly.fullRoleMap).isEmpty()
+        assertThat(ended.isValidRecoveryState()).isTrue()
     }
 
     @Test
