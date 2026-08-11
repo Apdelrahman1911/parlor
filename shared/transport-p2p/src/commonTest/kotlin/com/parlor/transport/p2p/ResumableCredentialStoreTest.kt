@@ -113,6 +113,46 @@ class ResumableCredentialStoreTest {
     }
 
     @Test
+    fun persisted_credentials_must_retain_canonical_room_and_display_name_boundaries() = runTest {
+        val invalidCredentials = listOf(
+            credential("offer-1", 1).copy(roomCode = "abc234"),
+            credential("offer-2", 1).copy(roomCode = "ABC20O"),
+            credential("offer-3", 1).copy(displayName = " Alice"),
+            credential("offer-4", 1).copy(displayName = "Alice\u202E"),
+        )
+
+        invalidCredentials.forEach { invalid ->
+            val record = buildJsonObject {
+                put("schemaVersion", JsonPrimitive(1))
+                put(
+                    "active",
+                    Json.encodeToJsonElement(
+                        ResumableSessionCredential.serializer(),
+                        invalid,
+                    ),
+                )
+                put("pending", JsonNull)
+            }
+            storage.put(
+                "p2p-resumable-session-v1",
+                record.toString().encodeToByteArray(),
+            )
+
+            assertThat(store.loadResumeCandidate()).isEqualTo(
+                Result.Failure(CredentialStoreError.Corrupted),
+            )
+        }
+    }
+
+    @Test
+    fun canonical_international_display_name_remains_resumable() = runTest {
+        val offered = credential("offer-1", 1).copy(displayName = "أليس 🌙")
+
+        assertThat(store.stage(offered)).isEqualTo(Result.Success(Unit))
+        assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(offered))
+    }
+
+    @Test
     fun malformed_utf8_record_is_rejected_without_replacement_decoding() = runTest {
         storage.put(
             "p2p-resumable-session-v1",

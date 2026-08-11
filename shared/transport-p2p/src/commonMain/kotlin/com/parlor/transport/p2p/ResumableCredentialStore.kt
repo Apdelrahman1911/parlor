@@ -1,6 +1,7 @@
 package com.parlor.transport.p2p
 
 import com.parlor.core.result.Result
+import com.parlor.networking.room.RoomInputPolicy
 import com.parlor.storage.secure.SecureStorage
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.sync.Mutex
@@ -45,8 +46,9 @@ internal data class ResumableSessionCredential(
         require(schemaVersion == CREDENTIAL_SCHEMA_VERSION)
         require(offerId.isSafeIdentifier())
         require(membershipId.isSafeIdentifier())
-        require(roomCode.length == ROOM_CODE_LENGTH && roomCode.all(Char::isLetterOrDigit))
-        require(displayName.isNotBlank() && displayName.length <= MAX_DISPLAY_NAME_LENGTH)
+        require(RoomInputPolicy.isValidRoomCode(roomCode))
+        require(displayName == RoomInputPolicy.normalizeDisplayName(displayName))
+        require(RoomInputPolicy.isValidDisplayName(displayName))
         require(playerId.isSafeIdentifier())
         require(hostPeerId.isSafeIdentifier())
         require(hostFingerprint.length == HOST_FINGERPRINT_LENGTH)
@@ -396,8 +398,6 @@ private fun ResumableSessionCredential.validOrNull(): ResumableSessionCredential
     }
 
 private const val CREDENTIAL_SCHEMA_VERSION = 1
-private const val ROOM_CODE_LENGTH = 6
-private const val MAX_DISPLAY_NAME_LENGTH = 32
 private const val SECRET_HEX_LENGTH = 64
 private const val HOST_FINGERPRINT_PREFIX = "p2f1-"
 private const val HOST_FINGERPRINT_LENGTH = 57
