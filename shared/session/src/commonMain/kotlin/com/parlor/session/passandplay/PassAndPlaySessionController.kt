@@ -1,6 +1,5 @@
 package com.parlor.session.passandplay
 
-import kotlin.concurrent.Volatile
 import com.parlor.core.ids.PlayerId
 import com.parlor.core.result.Result
 import com.parlor.engine.action.GameAction
@@ -100,7 +99,7 @@ class PassAndPlaySessionController<S : GameState, A : GameAction, E : GameEvent>
      */
     fun currentState(): S = state.value
 
-    @Volatile private var closed: Boolean = false
+    private var closed: Boolean = false
 
     override suspend fun submit(action: A): Result<SubmissionReceipt, SubmitError> {
         // Serialize ONLY the state mutation under the lock. Emitting events
@@ -125,6 +124,8 @@ class PassAndPlaySessionController<S : GameState, A : GameAction, E : GameEvent>
     }
 
     override suspend fun close() {
-        closed = true
+        // Linearize closure with canonical reducer commits. Once close returns,
+        // no in-flight or later submit can commit another state transition.
+        mutex.withLock { closed = true }
     }
 }
