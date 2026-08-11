@@ -14,6 +14,7 @@ import com.parlor.games.whodunit.domain.projection.WhodunitProjectionPolicy
 import com.parlor.games.whodunit.domain.state.WhodunitPrivate
 import com.parlor.games.whodunit.domain.state.WhodunitState
 import com.parlor.games.whodunit.domain.state.WhodunitStateValidator
+import com.parlor.networking.protocol.HostMessage
 import com.parlor.networking.protocol.SessionProtocol
 import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.NetError
@@ -55,6 +56,7 @@ class WhodunitPeerRoomBridge(
         encodeDefaults = true
     },
     private val hostLostTimeoutMs: Long = HOST_REJOIN_GRACE_MS,
+    private val acceptedStartOffer: HostMessage.SessionStarting? = null,
 ) {
     private val closeMutex = Mutex()
     private var closed = false
@@ -97,6 +99,7 @@ class WhodunitPeerRoomBridge(
         onSessionEnded = { _hostDisconnected.emit(Unit) },
         onProtocolViolation = { _hostDisconnected.emit(Unit) },
         acceptedStartId = protocol.startId,
+        acceptedStartOffer = acceptedStartOffer,
     )
 
     private val connectionJob = scope.launch {

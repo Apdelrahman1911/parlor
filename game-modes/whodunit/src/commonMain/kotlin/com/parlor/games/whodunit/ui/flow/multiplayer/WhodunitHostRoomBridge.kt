@@ -395,14 +395,24 @@ class WhodunitHostRoomBridge(
         lateinit var rejoinJob: Job
         rejoinJob = bridgeScope.launch(start = CoroutineStart.LAZY) {
             try {
-                val result = coordinator.resendStart(
-                    playerId = playerId,
-                    initialRetryMs = startRetryMs,
-                    maxRetryMs = startMaxRetryMs,
-                    readyDeadlineMs = startDeadlineMs,
-                    commitAckDeadlineMs = startDeadlineMs,
-                )
-                if (result is Result.Success) completeRejoin(playerId, rejoinJob)
+                while (ownsRejoinAttempt(playerId, rejoinJob)) {
+                    val result = coordinator.resendStart(
+                        playerId = playerId,
+                        initialRetryMs = startRetryMs,
+                        maxRetryMs = startMaxRetryMs,
+                        readyDeadlineMs = startDeadlineMs,
+                        commitAckDeadlineMs = startDeadlineMs,
+                    )
+                    if (result is Result.Success) {
+                        completeRejoin(playerId, rejoinJob)
+                        return@launch
+                    }
+                    // One bounded replay transaction may overlap a transient
+                    // packet-loss interval. Gameplay grace expiry and every
+                    // other topology/bridge terminal path remove or cancel this
+                    // exact owner, so a retry cannot outlive the offline seat.
+                    delay(startMaxRetryMs)
+                }
             } finally {
                 lifecycleMutex.withLock {
                     if (rejoinJobs[playerId] === rejoinJob) rejoinJobs.remove(playerId)
@@ -419,6 +429,13 @@ class WhodunitHostRoomBridge(
         }
         if (installed) rejoinJob.start() else rejoinJob.cancel()
     }
+
+    private suspend fun ownsRejoinAttempt(playerId: PlayerId, job: Job): Boolean =
+        lifecycleMutex.withLock {
+            !terminated &&
+                playerId in offlinePlayers &&
+                rejoinJobs[playerId] === job
+        }
 
     private suspend fun completeRejoin(playerId: PlayerId, rejoinJob: Job) =
         recoveryTransitionMutex.withLock {

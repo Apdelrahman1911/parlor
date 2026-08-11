@@ -65,6 +65,7 @@ import com.parlor.games.mafia.resources.md_network_retry
 import com.parlor.games.mafia.resources.md_network_retry_description
 import com.parlor.games.mafia.resources.setup_back
 import com.parlor.games.mafia.resources.setup_back_description
+import com.parlor.networking.protocol.HostMessage
 import com.parlor.networking.protocol.SessionProtocol
 import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.NetError
@@ -324,6 +325,7 @@ fun MafiaPeerLobbyFlow(
                                 selfPlayerId = current.selfPlayerId,
                                 seed = start.seed,
                                 protocol = start.protocol,
+                                acceptedStartOffer = start.offer,
                                 ownedSession = checkNotNull(ownedSession),
                                 onBackToHome = finalBackToHome,
                                 modifier = Modifier.fillMaxSize(),
@@ -581,6 +583,7 @@ private suspend fun runMafiaStartHandshake(
                 players = offer.players,
                 seed = offer.sessionNonce,
                 protocol = started.data.protocol,
+                offer = offer,
             ),
         )
     }
@@ -593,4 +596,5 @@ private data class SessionStartingFromHost(
     val players: List<Player>,
     val seed: Long,
     val protocol: SessionProtocol,
+    val offer: HostMessage.SessionStarting,
 )

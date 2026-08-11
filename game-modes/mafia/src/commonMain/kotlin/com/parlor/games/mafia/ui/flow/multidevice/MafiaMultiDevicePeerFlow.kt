@@ -17,6 +17,7 @@ import com.parlor.games.mafia.resources.md_peer_reconnecting_leave
 import com.parlor.games.mafia.resources.md_peer_reconnecting_leave_description
 import com.parlor.games.mafia.resources.md_peer_initial_snapshot_failed
 import com.parlor.games.mafia.resources.md_peer_initial_snapshot_loading
+import com.parlor.networking.protocol.HostMessage
 import com.parlor.networking.protocol.SessionProtocol
 import com.parlor.designsystem.components.ReconnectingOverlay
 import com.parlor.designsystem.components.LocalParlorToastState
@@ -62,6 +63,7 @@ fun MafiaMultiDevicePeerFlow(
     selfPlayerId: PlayerId,
     seed: Long,
     protocol: SessionProtocol,
+    acceptedStartOffer: HostMessage.SessionStarting,
     ownedSession: ProcessMultiplayerSession,
     onBackToHome: () -> Unit,
     modifier: Modifier = Modifier,
@@ -81,6 +83,7 @@ fun MafiaMultiDevicePeerFlow(
                 seed = seed,
                 room = ownedSession.room,
                 protocol = protocol,
+                acceptedStartOffer = acceptedStartOffer,
                 scope = runtimeScope,
             )
         }

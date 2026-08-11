@@ -288,6 +288,78 @@ class PartyConnectionEventsTest {
     }
 
     @Test
+    fun retained_peer_completes_rejoin_start_replay_without_a_second_lobby_collector() = runTest {
+        val scope = TestScope(UnconfinedTestDispatcher(testScheduler))
+        val bus = InMemoryRoomBus()
+        listOf(alice, bob, carol).forEach(bus::registerPeer)
+        val payload = loadCase()
+        val session = buildHostSession(payload)
+        val room = PartyEventsHostRoom(bus, hostId)
+        val bridge = WhodunitHostRoomBridge(
+            session,
+            room,
+            players,
+            scope,
+            json,
+            rejoinGraceMs = 500L,
+            heartbeatIntervalMs = 0L,
+            startRetryMs = 10L,
+            startMaxRetryMs = 10L,
+            startDeadlineMs = 30L,
+            requireStartHandshake = true,
+        )
+        val startId = completeStartHandshake(bridge, room, bus)
+        val acceptedOffer = room.sent
+            .mapNotNull { it.second as? HostMessage.SessionStarting }
+            .first()
+        val peerBridge = com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitPeerRoomBridge(
+            room = InMemoryPeerRoom(bus, alice, "Alice", hostId),
+            selfPlayerId = alice,
+            initialPublic = session.publicState.value.state,
+            case = validatedWhodunitCaseForTest(payload, caseId = "last-dinner"),
+            scope = scope,
+            protocol = bridge.protocol.copy(startId = startId),
+            acceptedStartOffer = acceptedOffer,
+            json = json,
+        )
+        runCurrent()
+        room.sent.clear()
+
+        bus.emitPeerLeft(alice, "Alice")
+        runCurrent()
+        assertThat(session.hostState.value.state.public.disconnectedPlayers).contains(alice)
+
+        room.dropStartOffers = true
+        bus.emitPeerReconnected(alice, "Alice")
+        runCurrent()
+        advanceTimeBy(31L)
+        runCurrent()
+        assertThat(session.hostState.value.state.public.disconnectedPlayers).contains(alice)
+
+        room.dropStartOffers = false
+        advanceTimeBy(11L)
+        runCurrent()
+
+        assertThat(session.hostState.value.state.public.disconnectedPlayers)
+            .doesNotContain(alice)
+        assertThat(
+            room.sent.any {
+                it.first == SendTarget.Direct(alice) &&
+                    it.second is HostMessage.SessionStarting
+            },
+        ).isTrue()
+        assertThat(
+            room.sent.any {
+                it.first == SendTarget.Direct(alice) &&
+                    it.second is HostMessage.SessionStartCommitted
+            },
+        ).isTrue()
+
+        peerBridge.close()
+        bridge.close()
+    }
+
+    @Test
     fun failed_reconnect_cannot_cancel_or_outlive_grace_expiry() = runTest {
         val scope = TestScope(UnconfinedTestDispatcher(testScheduler))
         val bus = InMemoryRoomBus()
@@ -869,6 +941,7 @@ private class PartyEventsHostRoom(
     val retiredMembers = mutableListOf<PlayerId>()
     var retirementError: NetError? = null
     var terminalSendGate: CompletableDeferred<Unit>? = null
+    var dropStartOffers: Boolean = false
     private val _info = MutableStateFlow(
         RoomInfo(
             code = "test",
@@ -892,9 +965,15 @@ private class PartyEventsHostRoom(
         _members.value = members
     }
 
-    override suspend fun send(target: SendTarget, message: HostMessage): com.parlor.core.result.Result<Unit, NetError> {
+    override suspend fun send(
+        target: SendTarget,
+        message: HostMessage,
+    ): com.parlor.core.result.Result<Unit, NetError> {
         sent += target to message
         if (message is HostMessage.SessionEnded) terminalSendGate?.await()
+        if (dropStartOffers && message is HostMessage.SessionStarting) {
+            return com.parlor.core.result.Result.Success(Unit)
+        }
         bus.fromHost(target, message)
         return com.parlor.core.result.Result.Success(Unit)
     }

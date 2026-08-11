@@ -4,6 +4,7 @@ import com.parlor.core.ids.GameId
 import com.parlor.core.ids.PlayerId
 import com.parlor.core.ids.SessionId
 import com.parlor.core.result.Result
+import com.parlor.engine.state.Player
 import com.parlor.networking.protocol.CommandStatus
 import com.parlor.networking.protocol.HostMessage
 import com.parlor.networking.protocol.PeerMessage
@@ -617,6 +618,96 @@ class AuthoritativeSessionCoordinatorTest {
         }
         assertEquals(sequences.sorted(), sequences)
         assertEquals(sequences.size, sequences.distinct().size)
+    }
+
+    @Test
+    fun `retained peer acknowledges the stable start offer replay after reconnect`() = runTest {
+        val room = RecordingRoom(isHost = false, selfPlayerId = peerId)
+        val startId = "accepted-start-000000000000001"
+        val startedProtocol = protocol.copy(startId = startId)
+        val offer = HostMessage.SessionStarting(
+            startId = startId,
+            caseId = "fixture-case",
+            modeId = "classic",
+            players = listOf(
+                Player(PlayerId("host"), "Host", 0),
+                Player(peerId, "Peer", 1),
+            ),
+            sessionNonce = 7L,
+            header = SessionEnvelopeHeader(
+                protocol = startedProtocol.protocol,
+                sessionId = startedProtocol.sessionId,
+                gameId = startedProtocol.gameId,
+                gameVersion = startedProtocol.gameVersion,
+                messageId = startId,
+                sequence = 0L,
+                connectionEpoch = startedProtocol.connectionEpoch,
+            ),
+        )
+        val coordinator = PeerAuthoritativeSessionCoordinator(
+            room = room,
+            protocol = startedProtocol,
+            selfPlayerId = peerId,
+            scope = this,
+            onSnapshot = { _, _ -> true },
+            acceptedStartOffer = offer,
+        )
+
+        room.receive(offer)
+        runCurrent()
+
+        assertTrue(
+            room.sentToHost.any { message ->
+                message is PeerMessage.SessionStartReady && message.startId == startId
+            },
+        )
+        coordinator.close()
+    }
+
+    @Test
+    fun `retained peer rejects a mutated start replay under the accepted start id`() = runTest {
+        val room = RecordingRoom(isHost = false, selfPlayerId = peerId)
+        val startId = "accepted-start-000000000000001"
+        val startedProtocol = protocol.copy(startId = startId)
+        val offer = HostMessage.SessionStarting(
+            startId = startId,
+            caseId = "fixture-case",
+            modeId = "classic",
+            players = listOf(
+                Player(PlayerId("host"), "Host", 0),
+                Player(peerId, "Peer", 1),
+            ),
+            sessionNonce = 7L,
+            header = SessionEnvelopeHeader(
+                protocol = startedProtocol.protocol,
+                sessionId = startedProtocol.sessionId,
+                gameId = startedProtocol.gameId,
+                gameVersion = startedProtocol.gameVersion,
+                messageId = startId,
+                sequence = 0L,
+                connectionEpoch = startedProtocol.connectionEpoch,
+            ),
+        )
+        val violations = mutableListOf<ProtocolValidation>()
+        val coordinator = PeerAuthoritativeSessionCoordinator(
+            room = room,
+            protocol = startedProtocol,
+            selfPlayerId = peerId,
+            scope = this,
+            onSnapshot = { _, _ -> true },
+            onProtocolViolation = { violations += it },
+            acceptedStartOffer = offer,
+        )
+
+        room.receive(offer.copy(modeId = "mutated-mode"))
+        runCurrent()
+
+        assertEquals(
+            listOf<ProtocolValidation>(ProtocolValidation.InvalidSessionStart),
+            violations,
+        )
+        assertTrue(room.sentToHost.none { it is PeerMessage.SessionStartReady })
+        coordinator.close()
     }
 
     @Test

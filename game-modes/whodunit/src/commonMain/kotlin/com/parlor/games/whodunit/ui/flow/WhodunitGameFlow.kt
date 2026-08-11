@@ -174,6 +174,7 @@ import com.parlor.games.whodunit.ui.flow.multiplayer.WHODUNIT_PEER_RUNTIME_KIND
 import com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostRuntime
 import com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitPeerRuntime
 import com.parlor.networking.protocol.SessionEndReason
+import com.parlor.networking.protocol.HostMessage
 import com.parlor.networking.protocol.SessionProtocol
 import com.parlor.networking.protocol.CommandStatus
 import com.parlor.networking.room.NetError
@@ -1230,6 +1231,7 @@ fun WhodunitMultiplayerPeerFlow(
     selfPlayerId: PlayerId,
     seed: Long,
     protocol: SessionProtocol,
+    acceptedStartOffer: HostMessage.SessionStarting,
     ownedSession: ProcessMultiplayerSession,
     onBackToLibrary: () -> Unit,
     modifier: Modifier = Modifier,
@@ -1259,6 +1261,7 @@ fun WhodunitMultiplayerPeerFlow(
                 seed = seed,
                 room = ownedSession.room,
                 protocol = protocol,
+                acceptedStartOffer = acceptedStartOffer,
                 scope = runtimeScope,
             )
         }

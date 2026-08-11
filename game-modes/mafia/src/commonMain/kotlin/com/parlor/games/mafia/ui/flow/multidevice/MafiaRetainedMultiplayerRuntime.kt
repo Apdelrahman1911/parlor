@@ -16,6 +16,7 @@ import com.parlor.games.mafia.domain.action.MafiaAction
 import com.parlor.games.mafia.domain.event.MafiaEvent
 import com.parlor.games.mafia.domain.party.MafiaReadinessGate
 import com.parlor.games.mafia.domain.state.MafiaState
+import com.parlor.networking.protocol.HostMessage
 import com.parlor.networking.protocol.SessionEndReason
 import com.parlor.networking.protocol.SessionProtocol
 import com.parlor.networking.room.LocalRoom
@@ -128,6 +129,7 @@ internal class MafiaPeerRuntime(
     seed: Long,
     room: LocalRoom,
     protocol: SessionProtocol,
+    acceptedStartOffer: HostMessage.SessionStarting,
     val scope: CoroutineScope,
 ) : RetainedMultiplayerRuntime {
     override val runtimeKind: String = MAFIA_PEER_RUNTIME_KIND
@@ -147,6 +149,7 @@ internal class MafiaPeerRuntime(
         initialPublic = initialState,
         scope = scope,
         protocol = protocol,
+        acceptedStartOffer = acceptedStartOffer,
     )
     val playMode = PlayMode.MultiDevice(selfPlayerId = selfPlayerId, isHost = false)
     val session: SessionController<MafiaState, MafiaAction, MafiaEvent> =

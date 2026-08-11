@@ -77,6 +77,7 @@ import com.parlor.games.whodunit.content.matches
 import com.parlor.games.whodunit.domain.rules.WhodunitRules
 import com.parlor.games.whodunit.ui.flow.WhodunitMultiplayerPeerFlow
 import com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostRoomBridge
+import com.parlor.networking.protocol.HostMessage
 import com.parlor.networking.protocol.SessionProtocol
 import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.NetError
@@ -408,6 +409,7 @@ private fun PeerSessionWithCase(
         selfPlayerId = selfId,
         seed = start.seed,
         protocol = start.protocol,
+        acceptedStartOffer = start.offer,
         ownedSession = ownedSession,
         onBackToLibrary = onBackToLibrary,
         modifier = modifier,
@@ -686,6 +688,7 @@ private suspend fun runWhodunitStartHandshake(
                         players = offer.players,
                         seed = offer.sessionNonce,
                         protocol = started.data.protocol,
+                        offer = offer,
                     ),
                 )
             }
@@ -706,4 +709,5 @@ private data class SessionStartingFromHost(
     val players: List<Player>,
     val seed: Long,
     val protocol: SessionProtocol,
+    val offer: HostMessage.SessionStarting,
 )

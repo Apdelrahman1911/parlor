@@ -1335,6 +1335,13 @@ class PeerAuthoritativeSessionCoordinator(
     private val outcomeInitialRetryMs: Long = DEFAULT_OUTCOME_INITIAL_RETRY_MS,
     private val outcomeMaxRetryMs: Long = DEFAULT_OUTCOME_MAX_RETRY_MS,
     private val outcomeDeadlineMs: Long = DEFAULT_OUTCOME_DEADLINE_MS,
+    /**
+     * Exact immutable offer accepted by the peer-lobby barrier. Retained game
+     * runtimes use it to answer a host's rejoin replay without accepting a
+     * mutated case, roster, mode, or content identity under the same start id.
+     * Appended to preserve positional source compatibility for timing knobs.
+     */
+    private val acceptedStartOffer: HostMessage.SessionStarting? = null,
 ) {
     private val requiresInitialSnapshot = acceptedStartId != null
     private val _revision = MutableStateFlow(if (requiresInitialSnapshot) -1L else 0L)
@@ -1394,6 +1401,15 @@ class PeerAuthoritativeSessionCoordinator(
         require(outcomeDeadlineMs > outcomeInitialRetryMs) {
             "outcomeDeadlineMs must exceed outcomeInitialRetryMs"
         }
+        require(
+            acceptedStartOffer == null ||
+                (
+                    acceptedStartId == acceptedStartOffer.startId &&
+                        acceptedStartOffer.validateFor(protocol) == ProtocolValidation.Valid
+                    )
+        ) {
+            "acceptedStartOffer must be the valid offer identified by acceptedStartId"
+        }
         jobs += peerScope.launch(start = CoroutineStart.UNDISPATCHED) {
             room.incoming.collect { message ->
                 when (message) {
@@ -1401,6 +1417,7 @@ class PeerAuthoritativeSessionCoordinator(
                     is HostMessage.CommandResult -> acceptResult(message)
                     is HostMessage.Heartbeat -> acceptHeartbeat(message)
                     is HostMessage.SessionEnded -> acceptSessionEnded(message)
+                    is HostMessage.SessionStarting -> acknowledgeDuplicateStartOffer(message)
                     is HostMessage.SessionStartCommitted -> acknowledgeDuplicateStartCommit(message)
                     else -> Unit
                 }
@@ -1720,14 +1737,43 @@ class PeerAuthoritativeSessionCoordinator(
         onSessionEnded(ended)
     }
 
+    private suspend fun acknowledgeDuplicateStartOffer(replayed: HostMessage.SessionStarting) {
+        val accepted = acceptedStartOffer ?: return
+        val validation = replayed.validateFor(protocol)
+        if (validation != ProtocolValidation.Valid) {
+            onProtocolViolation(validation)
+            return
+        }
+        if (replayed != accepted) {
+            onProtocolViolation(ProtocolValidation.InvalidSessionStart)
+            return
+        }
+        try {
+            sendPeerFrame(
+                PeerMessage.SessionStartReady(
+                    header = peerStartHeader(protocol, idGenerator()),
+                    actor = selfPlayerId,
+                    startId = accepted.startId,
+                ),
+            )
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
+            // Best effort: the host retries the stable immutable offer.
+        }
+    }
+
     private suspend fun acknowledgeDuplicateStartCommit(
         committed: HostMessage.SessionStartCommitted,
     ) {
         val startId = acceptedStartId ?: return
-        if (
-            committed.startId != startId ||
-            committed.validateFor(protocol) != ProtocolValidation.Valid
-        ) {
+        val validation = committed.validateFor(protocol)
+        if (validation != ProtocolValidation.Valid) {
+            onProtocolViolation(validation)
+            return
+        }
+        if (committed.startId != startId) {
+            onProtocolViolation(ProtocolValidation.InvalidSessionStart)
             return
         }
         try {

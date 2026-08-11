@@ -19,6 +19,7 @@ import com.parlor.games.whodunit.domain.event.WhodunitEvent
 import com.parlor.games.whodunit.domain.party.WhodunitReadinessGate
 import com.parlor.games.whodunit.domain.reducer.WhodunitReducerContext
 import com.parlor.games.whodunit.domain.state.WhodunitState
+import com.parlor.networking.protocol.HostMessage
 import com.parlor.networking.protocol.SessionEndReason
 import com.parlor.networking.protocol.SessionProtocol
 import com.parlor.networking.room.LocalRoom
@@ -142,6 +143,7 @@ internal class WhodunitPeerRuntime(
     seed: Long,
     room: LocalRoom,
     protocol: SessionProtocol,
+    acceptedStartOffer: HostMessage.SessionStarting,
     scope: CoroutineScope,
 ) : RetainedMultiplayerRuntime {
     override val runtimeKind: String = WHODUNIT_PEER_RUNTIME_KIND
@@ -163,6 +165,7 @@ internal class WhodunitPeerRuntime(
         case = case,
         scope = scope,
         protocol = protocol,
+        acceptedStartOffer = acceptedStartOffer,
     )
     val playMode = PlayMode.MultiDevice(selfPlayerId = selfPlayerId, isHost = false)
     val session: SessionController<WhodunitState, WhodunitAction, WhodunitEvent> =

@@ -12,6 +12,7 @@ import com.parlor.games.mafia.domain.projection.MafiaProjectionPolicy
 import com.parlor.games.mafia.domain.state.MafiaPrivate
 import com.parlor.games.mafia.domain.state.MafiaPeerSnapshotValidator
 import com.parlor.games.mafia.domain.state.MafiaState
+import com.parlor.networking.protocol.HostMessage
 import com.parlor.networking.protocol.SessionProtocol
 import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.NetError
@@ -45,6 +46,7 @@ class MafiaPeerRoomBridge(
         encodeDefaults = true
     },
     private val hostLostTimeoutMs: Long = HOST_REJOIN_GRACE_MS,
+    private val acceptedStartOffer: HostMessage.SessionStarting? = null,
 ) {
     private val closeMutex = Mutex()
     private var closed = false
@@ -85,6 +87,7 @@ class MafiaPeerRoomBridge(
         onSessionEnded = { _hostDisconnected.emit(Unit) },
         onProtocolViolation = { _hostDisconnected.emit(Unit) },
         acceptedStartId = protocol.startId,
+        acceptedStartOffer = acceptedStartOffer,
     )
 
     private val connectionJob = scope.launch {
