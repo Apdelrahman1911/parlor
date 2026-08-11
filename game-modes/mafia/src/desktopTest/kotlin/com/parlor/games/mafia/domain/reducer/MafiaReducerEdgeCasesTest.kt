@@ -420,9 +420,13 @@ class MafiaReducerEdgeCasesTest {
     fun continue_without_player_during_active_game_ends_and_reveals_every_role() {
         val state = atNight(7)
         val dropped = state.players.first().id
-
-        val ended = MafiaReducer.reduce(
+        val disconnected = MafiaReducer.reduce(
             state,
+            MafiaAction.MarkPlayerDisconnected(dropped),
+            ctx(),
+        ).newState
+        val ended = MafiaReducer.reduce(
+            disconnected,
             MafiaAction.ContinueWithoutPlayer(dropped),
             ctx(),
         ).newState

@@ -8,11 +8,16 @@ import com.parlor.games.mafia.MafiaDefinition
 import com.parlor.games.mafia.MafiaIds
 import com.parlor.games.mafia.domain.phase.MafiaPhase
 import com.parlor.games.mafia.domain.rules.WinCheck
+import com.parlor.games.mafia.domain.settings.MafiaKillTie
+import com.parlor.games.mafia.domain.state.MafiaCoordinationSnapshot
 import com.parlor.games.mafia.domain.state.MafiaHostOnly
 import com.parlor.games.mafia.domain.state.MafiaObservableStateValidator
+import com.parlor.games.mafia.domain.state.MafiaPrivate
 import com.parlor.games.mafia.domain.state.MafiaState
+import com.parlor.games.mafia.domain.state.NightResolutionRecord
 import com.parlor.games.mafia.domain.state.Role
 import com.parlor.games.mafia.domain.state.Team
+import com.parlor.games.mafia.domain.state.VoteRoundRecord
 import com.parlor.games.mafia.domain.state.detectiveSeesAs
 import com.parlor.games.mafia.domain.state.team
 import com.parlor.storage.snapshot.SnapshotStore
@@ -120,6 +125,7 @@ internal fun MafiaState.isValidRecoveryState(): Boolean {
                 (private.lastSuspicion != null && role != Role.Civilian) ||
                 (private.lastSuspicion == playerId) ||
                 private.pendingNightChoice?.let { it !in playerIdSet } == true ||
+                (private.pendingNightChoice != null && !private.nightChoiceSubmitted) ||
                 private.pendingDetectiveResult?.let {
                     it.target !in playerIdSet ||
                         it.day !in 1..public.day ||
@@ -133,6 +139,7 @@ internal fun MafiaState.isValidRecoveryState(): Boolean {
     if (!hasValidPrivateActionState()) return false
     if (!hasValidMafiaCoordination(mafiaIds)) return false
     if (!hasValidRoleVisibility()) return false
+    if (!hasValidResolutionHistory()) return false
     if (
         phase == MafiaPhase.PostGame && privatePerPlayer.values.any { private ->
             private.mafiaCoordination != null ||
@@ -150,13 +157,11 @@ internal fun MafiaState.isValidRecoveryState(): Boolean {
         return false
     }
     if (public.winner != null && phase != MafiaPhase.PostGame) return false
-    if (public.winner == Team.Mafia && hostOnly.fullRoleMap.values.none { it.team == Team.Mafia }) {
-        return false
-    }
-    if (public.winner != null) {
-        val alive = public.roster.filter { it.alive }.map { it.playerId }.toSet()
-        if (WinCheck.evaluate(alive, hostOnly.fullRoleMap) != public.winner) return false
-    }
+    val activeAlive = public.roster
+        .filter { it.alive && it.playerId !in public.droppedPlayers }
+        .map { it.playerId }
+        .toSet()
+    if (WinCheck.evaluate(activeAlive, hostOnly.fullRoleMap) != public.winner) return false
     return true
 }
 
@@ -176,6 +181,18 @@ private fun MafiaState.hasValidPrivateActionState(): Boolean {
         .toSet()
     val night = phase as? MafiaPhase.Night
     return privatePerPlayer.all { (playerId, private) ->
+        if (phase == MafiaPhase.RoleAssignment && private.hasGameplayProgress()) {
+            return@all false
+        }
+        if (night?.day == 1 && private.previousDoctorProtect != null) return@all false
+        if (
+            night?.day == 1 &&
+            private.role == Role.Civilian &&
+            private.lastSuspicion != null &&
+            !private.nightChoiceSubmitted
+        ) {
+            return@all false
+        }
         if (private.detectiveResultAcknowledged && private.role != Role.Detective) return@all false
         if (private.lastSuspicion == playerId) return@all false
         if (private.nightChoiceSubmitted && (night == null || playerId !in activeAlive)) {
@@ -234,7 +251,6 @@ private fun MafiaState.hasValidPrivateActionState(): Boolean {
     }
 }
 
-@Suppress("ComplexCondition") // One atomic consistency check over the shared coordination projection.
 private fun MafiaState.hasValidMafiaCoordination(
     mafiaIds: Set<com.parlor.core.ids.PlayerId>,
 ): Boolean {
@@ -243,8 +259,11 @@ private fun MafiaState.hasValidMafiaCoordination(
         is MafiaPhase.Night -> current.mafiaCoordinationRound
         else -> null
     }
-    val aliveIds = public.roster.filter { it.alive }.map { it.playerId }.toSet()
-    val expectedOwners = if (expectedRound == null) emptySet() else mafiaIds.intersect(aliveIds)
+    val activeAliveIds = public.roster
+        .filter { it.alive && it.playerId !in public.droppedPlayers }
+        .map { it.playerId }
+        .toSet()
+    val expectedOwners = if (expectedRound == null) emptySet() else mafiaIds.intersect(activeAliveIds)
     val snapshots = privatePerPlayer
         .mapNotNull { (playerId, private) ->
             private.mafiaCoordination?.let { playerId to it }
@@ -253,41 +272,245 @@ private fun MafiaState.hasValidMafiaCoordination(
     if (snapshots.keys != expectedOwners) return false
     if (snapshots.isEmpty()) return expectedOwners.isEmpty()
     val canonical = snapshots.values.first()
-    if (
-        canonical.round != expectedRound ||
-        snapshots.values.any { it != canonical } ||
-        !expectedOwners.containsAll(canonical.submissions.keys) ||
-        !aliveIds.containsAll(canonical.submissions.values) ||
-        canonical.previousRoundTally?.any { (id, count) -> id !in aliveIds || count <= 0 } == true ||
-        (canonical.round == 1 && canonical.previousRoundTally != null) ||
-        (canonical.round == 2 && !canonical.previousRoundTally.hasTiedLead()) ||
-        canonical.submissions.any { (by, target) ->
-            by == target ||
-                (!public.settings.mafiaCanTargetMafia && hostOnly.fullRoleMap[target] == Role.Mafia)
-        }
-    ) {
-        return false
-    }
-    expectedOwners.forEach { mafiaId ->
+    if (canonical.round != expectedRound || snapshots.values.any { it != canonical }) return false
+    if (!canonical.hasValidCoordinationTargets(expectedOwners, activeAliveIds)) return false
+    if (!hasValidCoordinationRound(canonical, expectedOwners, mafiaIds, activeAliveIds)) return false
+    if (!hasValidMafiaSubmissionTargets(canonical)) return false
+    return expectedOwners.all { mafiaId ->
         val private = privatePerPlayer.getValue(mafiaId)
         val submittedTarget = canonical.submissions[mafiaId]
-        if (
-            if (private.nightChoiceSubmitted && private.pendingNightChoice != null) {
-                submittedTarget != private.pendingNightChoice
-            } else {
-                submittedTarget != null
-            }
-        ) {
-            return false
+        if (private.nightChoiceSubmitted && private.pendingNightChoice != null) {
+            submittedTarget == private.pendingNightChoice
+        } else {
+            submittedTarget == null
         }
     }
-    return true
+}
+
+private fun MafiaPrivate.hasGameplayProgress(): Boolean =
+    pendingDetectiveResult != null ||
+        lastSuspicion != null ||
+        previousDoctorProtect != null ||
+        pendingNightChoice != null ||
+        nightAcknowledged ||
+        voteAcknowledged ||
+        detectiveResultAcknowledged ||
+        nightChoiceSubmitted
+
+private fun MafiaCoordinationSnapshot.hasValidCoordinationTargets(
+    expectedOwners: Set<com.parlor.core.ids.PlayerId>,
+    activeAliveIds: Set<com.parlor.core.ids.PlayerId>,
+): Boolean =
+    expectedOwners.containsAll(submissions.keys) &&
+        activeAliveIds.containsAll(submissions.values) &&
+        previousRoundTally?.all { (id, count) -> id in activeAliveIds && count > 0 } != false &&
+        (round != 1 || previousRoundTally == null)
+
+private fun MafiaState.hasValidCoordinationRound(
+    coordination: MafiaCoordinationSnapshot,
+    expectedOwners: Set<com.parlor.core.ids.PlayerId>,
+    mafiaIds: Set<com.parlor.core.ids.PlayerId>,
+    activeAliveIds: Set<com.parlor.core.ids.PlayerId>,
+): Boolean {
+    if (coordination.round != 2) return true
+    val previousTally = coordination.previousRoundTally.orEmpty()
+    if (phase !is MafiaPhase.Night) return false
+    if (public.settings.mafiaKillTieBehavior != MafiaKillTie.REVOTE) return false
+    if (!coordination.previousRoundTally.hasTiedLead()) return false
+    if (previousTally.values.sumOf { it.toLong() } > expectedOwners.size.toLong()) return false
+    if (!public.settings.mafiaCanTargetMafia && previousTally.keys.any(mafiaIds::contains)) return false
+    return privatePerPlayer.none { (playerId, private) ->
+        playerId in activeAliveIds && private.team == Team.Town && !private.nightChoiceSubmitted
+    }
+}
+
+private fun MafiaState.hasValidMafiaSubmissionTargets(
+    coordination: MafiaCoordinationSnapshot,
+): Boolean = coordination.submissions.none { (by, target) ->
+    by == target ||
+        (!public.settings.mafiaCanTargetMafia && hostOnly.fullRoleMap[target] == Role.Mafia)
 }
 
 private fun Map<com.parlor.core.ids.PlayerId, Int>?.hasTiedLead(): Boolean {
     val tally = this ?: return false
     val maximum = tally.values.maxOrNull() ?: return false
     return tally.values.count { it == maximum } >= 2
+}
+
+/**
+ * The host audit records are reducer output, not a migration surface. Recovery
+ * therefore validates their retained suffix against public announcements,
+ * roles, mortality, and the exact order in which a legal day can resolve.
+ */
+@Suppress("CyclomaticComplexMethod", "LongMethod") // Deliberate fail-closed reducer reachability checks.
+private fun MafiaState.hasValidResolutionHistory(): Boolean {
+    val nights = hostOnly.nightLog
+    val votes = hostOnly.voteLog
+    val latestNightDay = public.lastNight?.day
+    val latestVoteDay = public.lastVote?.day
+    if (!nights.hasExpectedNightDays(latestNightDay)) return false
+    if (!votes.hasExpectedVoteDays(latestVoteDay)) return false
+
+    val latestNight = nights.lastOrNull()
+    val nightAnnouncement = public.lastNight
+    if ((latestNight == null) != (nightAnnouncement == null)) return false
+    if (latestNight != null && nightAnnouncement != null) {
+        if (
+            latestNight.day != nightAnnouncement.day ||
+            latestNight.killedPlayerId != nightAnnouncement.killedPlayerId ||
+            nightAnnouncement.wasSaved != (
+                latestNight.mafiaTarget != null &&
+                    latestNight.mafiaTarget == latestNight.doctorProtect
+                )
+        ) {
+            return false
+        }
+    }
+
+    val latestVote = votes.lastOrNull()
+    val voteAnnouncement = public.lastVote
+    if ((latestVote == null) != (voteAnnouncement == null)) return false
+    if (latestVote != null && voteAnnouncement != null) {
+        if (
+            latestVote.day != voteAnnouncement.day ||
+            latestVote.tally != voteAnnouncement.tally ||
+            latestVote.eliminatedPlayerId != voteAnnouncement.eliminatedPlayerId
+        ) {
+            return false
+        }
+    }
+
+    val playerIds = players.map { it.id }.toSet()
+    val recordedDeaths = buildList {
+        nights.mapNotNullTo(this) { it.killedPlayerId }
+        votes.mapNotNullTo(this) { it.eliminatedPlayerId }
+    }
+    if (recordedDeaths.distinct().size != recordedDeaths.size) return false
+    val recordedDeathSet = recordedDeaths.toSet()
+    val currentDead = public.roster.filterNot { it.alive }.map { it.playerId }.toSet()
+    if (!currentDead.containsAll(recordedDeathSet)) return false
+
+    val completeHistory =
+        (latestNightDay ?: 0) <= MafiaHostOnly.MAX_SERIALIZED_LOG_ENTRIES &&
+            (latestVoteDay ?: 0) <= MafiaHostOnly.MAX_SERIALIZED_LOG_ENTRIES
+    if (completeHistory && currentDead != recordedDeathSet) return false
+
+    // Deaths outside a capped suffix happened before the first retained event.
+    var alive = playerIds - (currentDead - recordedDeathSet)
+    var winnerReached = WinCheck.evaluate(alive, hostOnly.fullRoleMap) != null
+    var previousDoctorProtect: com.parlor.core.ids.PlayerId? = null
+    var hasPreviousDoctorRecord = false
+    val days = (nights.map { it.day } + votes.map { it.day }).distinct().sorted()
+    for (day in days) {
+        nights.firstOrNull { it.day == day }?.let { record ->
+            if (winnerReached) return false
+            if (!isValidNightRecord(record, alive, previousDoctorProtect, hasPreviousDoctorRecord)) {
+                return false
+            }
+            previousDoctorProtect = record.doctorProtect
+            hasPreviousDoctorRecord = true
+            record.killedPlayerId?.let { alive -= it }
+            winnerReached = WinCheck.evaluate(alive, hostOnly.fullRoleMap) != null
+        }
+        votes.firstOrNull { it.day == day }?.let { record ->
+            if (winnerReached) return false
+            if (!isValidVoteRecord(record, alive)) return false
+            record.eliminatedPlayerId?.let { alive -= it }
+            winnerReached = WinCheck.evaluate(alive, hostOnly.fullRoleMap) != null
+        }
+    }
+    val currentAlive = public.roster.filter { it.alive }.map { it.playerId }.toSet()
+    return alive == currentAlive
+}
+
+private fun List<NightResolutionRecord>.hasExpectedNightDays(latestDay: Int?): Boolean =
+    hasExpectedRetainedDays(latestDay) { it.day }
+
+private fun List<VoteRoundRecord>.hasExpectedVoteDays(latestDay: Int?): Boolean =
+    hasExpectedRetainedDays(latestDay) { it.day }
+
+private inline fun <T> List<T>.hasExpectedRetainedDays(
+    latestDay: Int?,
+    dayOf: (T) -> Int,
+): Boolean {
+    if (latestDay == null) return isEmpty()
+    if (latestDay < 1) return false
+    val expectedSize = minOf(latestDay, MafiaHostOnly.MAX_SERIALIZED_LOG_ENTRIES)
+    if (size != expectedSize) return false
+    val firstDay = latestDay - expectedSize + 1
+    return withIndex().all { (index, record) -> dayOf(record) == firstDay + index }
+}
+
+@Suppress("CyclomaticComplexMethod", "ComplexCondition") // One reducer-produced night record boundary.
+private fun MafiaState.isValidNightRecord(
+    record: NightResolutionRecord,
+    alive: Set<com.parlor.core.ids.PlayerId>,
+    previousDoctorProtect: com.parlor.core.ids.PlayerId?,
+    hasPreviousDoctorRecord: Boolean,
+): Boolean {
+    val roles = hostOnly.fullRoleMap
+    val mafiaTarget = record.mafiaTarget
+    if (mafiaTarget != null) {
+        if (mafiaTarget !in alive) return false
+        if (!public.settings.mafiaCanTargetMafia && roles[mafiaTarget] == Role.Mafia) return false
+    }
+    if (record.mafiaTargetTied) {
+        if (alive.count { roles[it] == Role.Mafia } < 2) return false
+        when (public.settings.mafiaKillTieBehavior) {
+            MafiaKillTie.NO_KILL -> if (mafiaTarget != null) return false
+            MafiaKillTie.REVOTE,
+            MafiaKillTie.RANDOM_TIED,
+            -> if (mafiaTarget == null) return false
+        }
+    }
+
+    val doctorId = roles.entries.singleOrNull { it.value == Role.Doctor }?.key
+    record.doctorProtect?.let { target ->
+        if (doctorId == null || doctorId !in alive || target !in alive) return false
+        if (!public.settings.doctorCanSelfHeal && target == doctorId) return false
+        if (
+            hasPreviousDoctorRecord &&
+            !public.settings.doctorCanProtectSamePlayerConsecutively &&
+            target == previousDoctorProtect
+        ) {
+            return false
+        }
+    }
+
+    val detectiveId = roles.entries.singleOrNull { it.value == Role.Detective }?.key
+    record.detectiveInspect?.let { target ->
+        if (detectiveId == null || detectiveId !in alive || target !in alive) return false
+        if (!public.settings.detectiveCanInspectSelf && target == detectiveId) return false
+    }
+    val expectedDetectiveResult = record.detectiveInspect?.let { roles[it]?.detectiveSeesAs() }
+    if (record.detectiveResult != expectedDetectiveResult) return false
+
+    val expectedKilled = mafiaTarget?.takeUnless { it == record.doctorProtect }
+    return record.killedPlayerId == expectedKilled
+}
+
+private fun MafiaState.isValidVoteRecord(
+    record: VoteRoundRecord,
+    alive: Set<com.parlor.core.ids.PlayerId>,
+): Boolean {
+    if (record.revoteRound !in 0..public.settings.maxRevotes) return false
+    if (record.tally.any { (target, count) -> target !in alive || count <= 0 }) return false
+    if (record.tally.values.sumOf(Int::toLong) > alive.size.toLong()) return false
+
+    val maximum = record.tally.values.maxOrNull()
+    val leaders = if (maximum == null) emptySet() else record.tally.filterValues { it == maximum }.keys
+    val eliminated = record.eliminatedPlayerId
+    if (eliminated != null) {
+        return eliminated in alive && leaders.size == 1 && leaders.single() == eliminated
+    }
+    if (record.tally.isEmpty()) return true
+    if (leaders.size < 2) return false
+    return when (public.settings.voteTieBehavior) {
+        com.parlor.games.mafia.domain.settings.TieBehavior.SKIP_ELIMINATION -> record.revoteRound == 0
+        com.parlor.games.mafia.domain.settings.TieBehavior.REVOTE_ALL,
+        com.parlor.games.mafia.domain.settings.TieBehavior.REVOTE_TIED_ONLY,
+        -> record.revoteRound == public.settings.maxRevotes
+    }
 }
 
 private fun MafiaState.hasValidRoleVisibility(): Boolean = public.roster.all { slot ->

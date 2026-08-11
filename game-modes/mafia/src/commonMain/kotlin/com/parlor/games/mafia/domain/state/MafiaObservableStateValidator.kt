@@ -27,6 +27,10 @@ internal object MafiaObservableStateValidator {
         require(state.public.settings.validate(players.size) is MafiaSettingsValidation.Valid) {
             "Invalid Mafia settings"
         }
+        require(
+            state.hostOnly.nightLog.size <= MafiaHostOnly.MAX_SERIALIZED_LOG_ENTRIES &&
+                state.hostOnly.voteLog.size <= MafiaHostOnly.MAX_SERIALIZED_LOG_ENTRIES,
+        ) { "Mafia host history exceeds its serialized retention bound" }
 
         val playerIds = players.map { it.id }
         val playerIdSet = playerIds.toSet()
@@ -77,7 +81,7 @@ internal object MafiaObservableStateValidator {
             require(announcement.tally.all { (id, count) -> id in playerIds && count > 0 }) {
                 "Vote announcement contains an invalid tally"
             }
-            require(announcement.tally.values.sum() <= playerIds.size) {
+            require(announcement.tally.values.sumOf { it.toLong() } <= playerIds.size.toLong()) {
                 "Vote announcement contains more votes than players"
             }
             require(announcement.eliminatedPlayerId == null || announcement.eliminatedPlayerId in playerIds) {
@@ -263,6 +267,19 @@ internal object MafiaObservableStateValidator {
                 require(public.disconnectedPlayers.isEmpty()) {
                     "Post-game Mafia state contains disconnected players"
                 }
+                if (public.roster.all { it.revealedRole != null }) {
+                    val lastNightDay = public.lastNight?.day ?: 0
+                    val lastVoteDay = public.lastVote?.day ?: 0
+                    require(
+                        if (public.day == 0) {
+                            lastNightDay == 0 && lastVoteDay == 0
+                        } else {
+                            lastNightDay in (public.day - 1)..public.day &&
+                                lastVoteDay in (public.day - 1)..public.day &&
+                                lastVoteDay <= lastNightDay
+                        },
+                    ) { "Post-game Mafia day is not reachable from its latest resolutions" }
+                }
             }
         }
     }
@@ -290,17 +307,15 @@ internal object MafiaObservableStateValidator {
                         roles.count { it == Role.Doctor } == configured.doctor &&
                         roles.count { it == Role.Civilian } == configured.civilians(roles.size),
                 ) { "Terminal Mafia role reveal differs from settings" }
-                state.public.winner?.let { winner ->
-                    val rolesByPlayer = state.public.roster.associate { slot ->
-                        slot.playerId to requireNotNull(slot.revealedRole)
-                    }
-                    val activeAlive = state.public.roster
-                        .filter { it.alive && it.playerId !in state.public.droppedPlayers }
-                        .map { it.playerId }
-                        .toSet()
-                    require(WinCheck.evaluate(activeAlive, rolesByPlayer) == winner) {
-                        "Terminal Mafia winner differs from the public role reveal"
-                    }
+                val rolesByPlayer = state.public.roster.associate { slot ->
+                    slot.playerId to requireNotNull(slot.revealedRole)
+                }
+                val activeAlive = state.public.roster
+                    .filter { it.alive && it.playerId !in state.public.droppedPlayers }
+                    .map { it.playerId }
+                    .toSet()
+                require(WinCheck.evaluate(activeAlive, rolesByPlayer) == state.public.winner) {
+                    "Terminal Mafia winner differs from the public role reveal"
                 }
             }
             return

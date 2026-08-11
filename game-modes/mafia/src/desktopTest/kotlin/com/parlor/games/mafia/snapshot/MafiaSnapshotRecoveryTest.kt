@@ -20,10 +20,14 @@ import com.parlor.games.mafia.MafiaIds
 import com.parlor.games.mafia.domain.action.MafiaAction
 import com.parlor.games.mafia.domain.phase.MafiaPhase
 import com.parlor.games.mafia.domain.reducer.MafiaReducer
+import com.parlor.games.mafia.domain.settings.MafiaKillTie
 import com.parlor.games.mafia.domain.settings.TieBehavior
 import com.parlor.games.mafia.domain.state.DetectiveSeesAs
+import com.parlor.games.mafia.domain.state.MafiaCoordinationSnapshot
 import com.parlor.games.mafia.domain.state.MafiaState
 import com.parlor.games.mafia.domain.state.Role
+import com.parlor.games.mafia.domain.state.Team
+import com.parlor.games.mafia.domain.state.team
 import com.parlor.storage.snapshot.InMemorySnapshotStore
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.test.runTest
@@ -179,7 +183,7 @@ class MafiaSnapshotRecoveryTest {
                 })),
         )
         val store = InMemorySnapshotStore()
-        store.save(snapshot(sessionId, corrupted))
+        store.save(snapshot(sessionId, corrupted, encodeThroughValidatedCodec = false))
 
         val result = loadMafiaResumedSession(store, definition, sessionId)
 
@@ -226,6 +230,226 @@ class MafiaSnapshotRecoveryTest {
                     (nonDetectiveId to nonDetective.copy(detectiveResultAcknowledged = true)),
             ).isValidRecoveryState(),
             "a non-Detective cannot carry inspection acknowledgement state",
+        )
+    }
+
+    @Test
+    fun pending_night_target_requires_the_reducer_submission_flag() {
+        val state = nightState(SessionId("mafia-pending-without-submission"))
+        val mafiaId = state.privatePerPlayer.entries.single { it.value.role == Role.Mafia }.key
+        val target = state.hostOnly.fullRoleMap.entries.first { it.value.team == Team.Town }.key
+        val mafiaPrivate = state.privatePerPlayer.getValue(mafiaId)
+        val impossible = state.copy(
+            privatePerPlayer = state.privatePerPlayer +
+                (mafiaId to mafiaPrivate.copy(
+                    pendingNightChoice = target,
+                    nightChoiceSubmitted = false,
+                )),
+        )
+
+        assertFalse(
+            impossible.isValidRecoveryState(),
+            "the reducer never stores a non-null target without committing the submission flag",
+        )
+    }
+
+    @Test
+    fun terminal_winner_must_exactly_match_the_revealed_alive_roles() {
+        val naturallyCompleted = townWinState(SessionId("mafia-terminal-winner"))
+        assertThat(naturallyCompleted.public.winner).isEqualTo(Team.Town)
+        assertTrue(naturallyCompleted.isValidRecoveryState())
+
+        assertFalse(
+            naturallyCompleted.copy(
+                public = naturallyCompleted.public.copy(winner = null),
+            ).isValidRecoveryState(),
+            "a natural win cannot be restored as an unexplained winner-less terminal state",
+        )
+
+        val earlyEnd = MafiaReducer.reduce(
+            nightState(SessionId("mafia-early-end")),
+            MafiaAction.EndGame,
+            reducerContext(),
+        ).newState
+        assertThat(earlyEnd.public.winner).isEqualTo(null)
+        assertTrue(earlyEnd.isValidRecoveryState(), "an explicit early end before parity remains valid")
+    }
+
+    @Test
+    fun non_terminal_state_cannot_already_satisfy_a_win_condition() {
+        val state = nightState(SessionId("mafia-active-after-win"))
+        val roles = state.hostOnly.fullRoleMap
+        val mafiaId = roles.entries.single { it.value == Role.Mafia }.key
+        val survivingTown = roles.entries.first { it.value.team == Team.Town }.key
+        val impossible = state.copy(
+            public = state.public.copy(
+                roster = state.public.roster.map { slot ->
+                    val survives = slot.playerId == mafiaId || slot.playerId == survivingTown
+                    slot.copy(
+                        alive = survives,
+                        revealedRole = if (survives) null else roles.getValue(slot.playerId),
+                    )
+                },
+            ),
+        )
+
+        assertFalse(
+            impossible.isValidRecoveryState(),
+            "Mafia parity is terminal and cannot be restored into Night",
+        )
+    }
+
+    @Test
+    fun round_two_mafia_coordination_requires_revote_rules_and_reachable_round_one_history() {
+        val valid = mafiaRevoteState(SessionId("mafia-coordination-round-two"))
+        assertTrue(valid.isValidRecoveryState())
+
+        val wrongTiePolicy = valid.copy(
+            public = valid.public.copy(
+                settings = valid.public.settings.copy(mafiaKillTieBehavior = MafiaKillTie.RANDOM_TIED),
+            ),
+        )
+        assertFalse(wrongTiePolicy.isValidRecoveryState(), "RANDOM_TIED cannot open a second round")
+
+        val townTargets = valid.hostOnly.fullRoleMap.entries
+            .filter { it.value.team == Team.Town }
+            .take(2)
+            .map { it.key }
+        val impossibleTally = mapOf(townTargets[0] to 2, townTargets[1] to 2)
+        assertFalse(
+            valid.withCoordination { it.copy(previousRoundTally = impossibleTally) }
+                .isValidRecoveryState(),
+            "two living Mafia cannot have cast four first-round votes",
+        )
+
+        val townId = valid.privatePerPlayer.entries.first { it.value.team == Team.Town }.key
+        val townPrivate = valid.privatePerPlayer.getValue(townId)
+        assertTrue(townPrivate.nightChoiceSubmitted)
+        assertFalse(
+            valid.copy(
+                privatePerPlayer = valid.privatePerPlayer +
+                    (townId to townPrivate.copy(nightChoiceSubmitted = false)),
+            ).isValidRecoveryState(),
+            "round two opens only after every active Town night action was already submitted",
+        )
+    }
+
+    @Test
+    fun public_announcements_must_match_the_authoritative_resolution_log() {
+        val valid = votingState(SessionId("mafia-announcement-log"))
+        assertTrue(valid.isValidRecoveryState())
+        val announcement = requireNotNull(valid.public.lastNight)
+
+        assertFalse(
+            valid.copy(
+                public = valid.public.copy(lastNight = announcement.copy(wasSaved = true)),
+            ).isValidRecoveryState(),
+            "a no-target night cannot be rewritten as a Doctor save",
+        )
+    }
+
+    @Test
+    fun authoritative_resolution_history_must_be_complete_and_reducer_valid() {
+        val afterNight = votingState(SessionId("mafia-resolution-history"))
+        assertTrue(afterNight.isValidRecoveryState())
+        assertFalse(
+            afterNight.copy(
+                hostOnly = afterNight.hostOnly.copy(nightLog = emptyList()),
+            ).isValidRecoveryState(),
+            "a public night announcement cannot survive without its authoritative record",
+        )
+
+        val nightRecord = afterNight.hostOnly.nightLog.single()
+        val target = afterNight.players.first().id
+        val actualResult = afterNight.hostOnly.fullRoleMap.getValue(target).let { role ->
+            if (role == Role.Mafia) DetectiveSeesAs.Mafia else DetectiveSeesAs.Town
+        }
+        val forgedResult = if (actualResult == DetectiveSeesAs.Mafia) {
+            DetectiveSeesAs.Town
+        } else {
+            DetectiveSeesAs.Mafia
+        }
+        assertFalse(
+            afterNight.copy(
+                hostOnly = afterNight.hostOnly.copy(
+                    nightLog = listOf(
+                        nightRecord.copy(
+                            detectiveInspect = target,
+                            detectiveResult = forgedResult,
+                        ),
+                    ),
+                ),
+            ).isValidRecoveryState(),
+            "the authoritative Detective result must agree with the assigned target role",
+        )
+
+        val afterVote = townWinState(SessionId("mafia-vote-history"))
+        val voteRecord = afterVote.hostOnly.voteLog.single()
+        assertFalse(
+            afterVote.copy(
+                hostOnly = afterVote.hostOnly.copy(
+                    voteLog = listOf(
+                        voteRecord.copy(revoteRound = afterVote.public.settings.maxRevotes + 1),
+                    ),
+                ),
+            ).isValidRecoveryState(),
+            "an authoritative vote record cannot exceed the configured revote limit",
+        )
+    }
+
+    @Test
+    fun pregame_and_first_night_private_history_must_be_reducer_reachable() {
+        val roster = (0 until 6).map { seat ->
+            Player(PlayerId("h${seat + 1}"), "History ${seat + 1}", seat)
+        }
+        val initial = definition.createInitialState(config(SessionId("mafia-private-history"), roster))
+        val roleAssignment = MafiaReducer.reduce(
+            initial,
+            MafiaAction.StartGame,
+            reducerContext(),
+        ).newState
+        val doctorId = roleAssignment.privatePerPlayer.entries.single { it.value.role == Role.Doctor }.key
+        val civilianId = roleAssignment.privatePerPlayer.entries.first { it.value.role == Role.Civilian }.key
+        val target = roster.first { it.id != doctorId && it.id != civilianId }.id
+
+        assertFalse(
+            roleAssignment.copy(
+                privatePerPlayer = roleAssignment.privatePerPlayer +
+                    (doctorId to roleAssignment.privatePerPlayer.getValue(doctorId).copy(
+                        previousDoctorProtect = target,
+                    )),
+            ).isValidRecoveryState(),
+            "RoleAssignment cannot contain protection history",
+        )
+        assertFalse(
+            roleAssignment.copy(
+                privatePerPlayer = roleAssignment.privatePerPlayer +
+                    (civilianId to roleAssignment.privatePerPlayer.getValue(civilianId).copy(
+                        lastSuspicion = target,
+                    )),
+            ).isValidRecoveryState(),
+            "RoleAssignment cannot contain a Civilian action",
+        )
+
+        val firstNight = nightState(SessionId("mafia-first-night-history"), roster)
+        assertFalse(
+            firstNight.copy(
+                privatePerPlayer = firstNight.privatePerPlayer +
+                    (doctorId to firstNight.privatePerPlayer.getValue(doctorId).copy(
+                        previousDoctorProtect = target,
+                    )),
+            ).isValidRecoveryState(),
+            "Night one has no previous Doctor target",
+        )
+        assertFalse(
+            firstNight.copy(
+                privatePerPlayer = firstNight.privatePerPlayer +
+                    (civilianId to firstNight.privatePerPlayer.getValue(civilianId).copy(
+                        lastSuspicion = target,
+                        nightChoiceSubmitted = false,
+                    )),
+            ).isValidRecoveryState(),
+            "a first-night suspicion must come from a committed action",
         )
     }
 
@@ -399,11 +623,14 @@ class MafiaSnapshotRecoveryTest {
         }
     }
 
-    private fun config(sessionId: SessionId) = SessionConfig(
+    private fun config(
+        sessionId: SessionId,
+        roster: List<Player> = players,
+    ) = SessionConfig(
         sessionId = sessionId,
         caseId = CaseId("default"),
         modeId = MafiaIds.ClassicModeId,
-        players = players,
+        players = roster,
         randomSeed = 42L,
     )
 
@@ -412,10 +639,13 @@ class MafiaSnapshotRecoveryTest {
         random = RandomSource.seeded(42L),
     )
 
-    private fun nightState(sessionId: SessionId): com.parlor.games.mafia.domain.state.MafiaState {
-        var state = definition.createInitialState(config(sessionId))
+    private fun nightState(
+        sessionId: SessionId,
+        roster: List<Player> = players,
+    ): com.parlor.games.mafia.domain.state.MafiaState {
+        var state = definition.createInitialState(config(sessionId, roster))
         state = MafiaReducer.reduce(state, MafiaAction.StartGame, reducerContext()).newState
-        players.forEach { player ->
+        roster.forEach { player ->
             state = MafiaReducer.reduce(
                 state,
                 MafiaAction.AcknowledgeRoleViewed(player.id),
@@ -428,6 +658,68 @@ class MafiaSnapshotRecoveryTest {
             reducerContext(),
         ).newState
     }
+
+    private fun mafiaRevoteState(sessionId: SessionId): MafiaState {
+        val roster = (0 until 7).map { seat ->
+            Player(PlayerId("r${seat + 1}"), "Revote ${seat + 1}", seat)
+        }
+        var state = nightState(sessionId, roster)
+        val mafiaIds = state.hostOnly.fullRoleMap.entries
+            .filter { it.value == Role.Mafia }
+            .map { it.key }
+        val townTargets = state.hostOnly.fullRoleMap.entries
+            .filter { it.value.team == Team.Town }
+            .take(2)
+            .map { it.key }
+        mafiaIds.forEachIndexed { index, mafiaId ->
+            state = MafiaReducer.reduce(
+                state,
+                MafiaAction.SubmitMafiaKillVote(mafiaId, townTargets[index]),
+                reducerContext(),
+            ).newState
+        }
+        state.players.forEach { player ->
+            val private = state.privatePerPlayer.getValue(player.id)
+            if (private.nightChoiceSubmitted) return@forEach
+            val action = when (private.role) {
+                Role.Mafia -> MafiaAction.SubmitMafiaKillVote(player.id, null)
+                Role.Doctor -> MafiaAction.SubmitDoctorProtect(player.id, null)
+                Role.Detective -> MafiaAction.SubmitDetectiveInspect(player.id, null)
+                Role.Civilian -> MafiaAction.SubmitCivilianSuspicion(player.id, null)
+            }
+            state = MafiaReducer.reduce(state, action, reducerContext()).newState
+        }
+        return MafiaReducer.reduce(state, MafiaAction.ResolveNight, reducerContext()).newState.also {
+            check(it.phase == MafiaPhase.Night(day = 1, mafiaCoordinationRound = 2))
+        }
+    }
+
+    private fun townWinState(sessionId: SessionId): MafiaState {
+        var state = votingState(sessionId)
+        val mafiaId = state.hostOnly.fullRoleMap.entries.single { it.value == Role.Mafia }.key
+        requireNotNull(state.public.activeVote).ballot.forEach { voter ->
+            state = MafiaReducer.reduce(
+                state,
+                if (voter == mafiaId) {
+                    MafiaAction.AbstainVote(voter)
+                } else {
+                    MafiaAction.CastVote(voter, mafiaId)
+                },
+                reducerContext(),
+            ).newState
+        }
+        return MafiaReducer.reduce(state, MafiaAction.CloseVote, reducerContext()).newState.also {
+            check(it.phase == MafiaPhase.PostGame)
+        }
+    }
+
+    private fun MafiaState.withCoordination(
+        transform: (MafiaCoordinationSnapshot) -> MafiaCoordinationSnapshot,
+    ): MafiaState = copy(
+        privatePerPlayer = privatePerPlayer.mapValues { (_, private) ->
+            private.copy(mafiaCoordination = private.mafiaCoordination?.let(transform))
+        },
+    )
 
     private fun votingState(sessionId: SessionId): com.parlor.games.mafia.domain.state.MafiaState {
         var state = nightState(sessionId)

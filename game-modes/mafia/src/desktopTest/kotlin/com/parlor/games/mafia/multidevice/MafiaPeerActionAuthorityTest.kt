@@ -309,6 +309,7 @@ class MafiaPeerActionAuthorityTest {
             val detectiveId = state.privatePerPlayer.entries
                 .first { it.value.role == Role.Detective }.key
             // Drop the detective via the host-side action (HostOnly).
+            f.session.submit(MafiaAction.MarkPlayerDisconnected(detectiveId))
             f.session.submit(MafiaAction.ContinueWithoutPlayer(detectiveId))
             scope.runCurrent()
             val droppedNow = f.session.hostState.value.state.public.droppedPlayers

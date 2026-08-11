@@ -824,6 +824,11 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
     private fun continueWithout(state: MafiaState, id: PlayerId): Reduction<MafiaState, MafiaEvent> {
         if (state.phase == MafiaPhase.PostGame) return Reduction(state)
         if (id !in state.players.map { it.id }) return Reduction(state)
+        // This action represents expiry (or an explicit host decision during)
+        // an existing disconnect grace transaction. Requiring the canonical
+        // disconnect marker prevents a duplicated/stale timer or modified host
+        // client from dropping a currently connected seat.
+        if (id !in state.public.disconnectedPlayers) return Reduction(state)
         if (id in state.public.droppedPlayers) return Reduction(state)
         val activeVote = state.public.activeVote?.let { vote ->
             vote.copy(

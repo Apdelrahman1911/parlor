@@ -2,6 +2,7 @@ package com.parlor.games.mafia.domain.state
 
 import com.parlor.core.ids.PlayerId
 import com.parlor.games.mafia.domain.phase.MafiaPhase
+import com.parlor.games.mafia.domain.settings.MafiaKillTie
 
 /** Validates one redacted host snapshot before a peer installs it. */
 internal object MafiaPeerSnapshotValidator {
@@ -98,6 +99,19 @@ internal object MafiaPeerSnapshotValidator {
             activeAlive = activeAlive,
         )
 
+        if (publicState.phase == MafiaPhase.RoleAssignment) {
+            require(
+                ownPrivate.pendingDetectiveResult == null &&
+                    ownPrivate.lastSuspicion == null &&
+                    ownPrivate.previousDoctorProtect == null &&
+                    ownPrivate.pendingNightChoice == null &&
+                    !ownPrivate.nightAcknowledged &&
+                    !ownPrivate.voteAcknowledged &&
+                    !ownPrivate.detectiveResultAcknowledged &&
+                    !ownPrivate.nightChoiceSubmitted,
+            ) { "Mafia role assignment contains gameplay progress" }
+        }
+
         require(publicState.phase == MafiaPhase.RoleAssignment || !ownPrivate.roleAcknowledged) {
             "Mafia role acknowledgement survived its phase"
         }
@@ -111,6 +125,16 @@ internal object MafiaPeerSnapshotValidator {
             publicState.phase is MafiaPhase.Night ||
                 (!ownPrivate.nightChoiceSubmitted && ownPrivate.pendingNightChoice == null),
         ) { "Mafia night action survived outside Night" }
+        val currentNight = publicState.phase as? MafiaPhase.Night
+        if (
+            currentNight?.mafiaCoordinationRound == 2 &&
+            ownPrivate.team == Team.Town &&
+            selfPlayerId in activeAlive
+        ) {
+            require(ownPrivate.nightChoiceSubmitted) {
+                "Town night action was cleared while opening the Mafia-only revote"
+            }
+        }
 
         val coordination = ownPrivate.mafiaCoordination
         if (coordination != null) {
@@ -121,7 +145,8 @@ internal object MafiaPeerSnapshotValidator {
                 else -> null
             }
             require(coordination.round == expectedRound) { "Mafia coordination round is stale" }
-            require((ownPrivate.knownTeammates + selfPlayerId).containsAll(coordination.submissions.keys)) {
+            val knownMafia = (ownPrivate.knownTeammates + selfPlayerId).intersect(activeAlive)
+            require(knownMafia.containsAll(coordination.submissions.keys)) {
                 "Mafia coordination contains a non-Mafia submitter"
             }
             require(activeAlive.containsAll(coordination.submissions.values)) {
@@ -140,7 +165,15 @@ internal object MafiaPeerSnapshotValidator {
                 if (coordination.round == 1) {
                     coordination.previousRoundTally == null
                 } else {
-                    coordination.previousRoundTally.hasTiedLead()
+                    publicState.phase is MafiaPhase.Night &&
+                        publicState.public.settings.mafiaKillTieBehavior == MafiaKillTie.REVOTE &&
+                        coordination.previousRoundTally.hasTiedLead() &&
+                        coordination.previousRoundTally.orEmpty().values.sumOf { it.toLong() } <=
+                        knownMafia.size.toLong() &&
+                        (
+                            publicState.public.settings.mafiaCanTargetMafia ||
+                                coordination.previousRoundTally.orEmpty().keys.none(knownMafia::contains)
+                        )
                 },
             ) { "Mafia coordination history does not match its round" }
             if (publicState.phase is MafiaPhase.Night) {
@@ -188,6 +221,15 @@ internal object MafiaPeerSnapshotValidator {
         activeAlive: Set<PlayerId>,
     ) {
         val night = state.phase as? MafiaPhase.Night
+        require(night?.day != 1 || private.previousDoctorProtect == null) {
+            "First Mafia night contains prior Doctor history"
+        }
+        require(
+            night?.day != 1 ||
+                private.role != Role.Civilian ||
+                private.lastSuspicion == null ||
+                private.nightChoiceSubmitted,
+        ) { "First-night Civilian suspicion is not marked submitted" }
         if (private.nightChoiceSubmitted) {
             require(night != null && selfPlayerId in activeAlive) {
                 "Ineligible Mafia peer has a submitted night action"

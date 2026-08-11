@@ -405,6 +405,7 @@ class MafiaPeerPrivateTargetGateTest {
             role = Role.Civilian,
             team = Team.Town,
             lastSuspicion = frank,
+            nightChoiceSubmitted = true,
         )
         bus.fromHost(
             SendTarget.Direct(alice),

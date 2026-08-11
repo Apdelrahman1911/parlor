@@ -26,12 +26,6 @@ data class MafiaState(
     override val players: List<Player>,
 ) : GameState
 
-/** Applies host-only retention policy at persistence/transport boundaries. */
-internal fun MafiaState.withBoundedHostLogs(): MafiaState {
-    val bounded = hostOnly.withBoundedLogs()
-    return if (bounded === hostOnly) this else copy(hostOnly = bounded)
-}
-
 @Serializable
 data class MafiaPublic(
     val settings: MafiaSettings,
@@ -199,19 +193,6 @@ data class MafiaHostOnly(
 
     internal fun recordVote(record: VoteRoundRecord): MafiaHostOnly =
         copy(voteLog = voteLog.appendBounded(record))
-
-    /** Normalizes restored pre-bound snapshots before they are retained or re-encoded. */
-    internal fun withBoundedLogs(): MafiaHostOnly {
-        if (
-            nightLog.size <= MAX_SERIALIZED_LOG_ENTRIES &&
-            voteLog.size <= MAX_SERIALIZED_LOG_ENTRIES
-        ) {
-            return this
-        }
-        val boundedNight = nightLog.takeLast(MAX_SERIALIZED_LOG_ENTRIES)
-        val boundedVote = voteLog.takeLast(MAX_SERIALIZED_LOG_ENTRIES)
-        return copy(nightLog = boundedNight, voteLog = boundedVote)
-    }
 
     private fun <T> List<T>.appendBounded(value: T): List<T> {
         val existing = this

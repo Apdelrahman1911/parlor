@@ -3,7 +3,7 @@ package com.parlor.games.mafia.snapshot
 import com.parlor.engine.snapshot.SnapshotCodec
 import com.parlor.games.mafia.domain.state.MafiaObservableStateValidator
 import com.parlor.games.mafia.domain.state.MafiaState
-import com.parlor.games.mafia.domain.state.withBoundedHostLogs
+import com.parlor.networking.protocol.MAX_SNAPSHOT_PAYLOAD_BYTES
 import kotlinx.serialization.json.Json
 
 /**
@@ -26,18 +26,30 @@ class MafiaSnapshotCodec(
     }
 
     override fun encode(state: MafiaState): ByteArray {
-        val bounded = state.withBoundedHostLogs()
-        MafiaObservableStateValidator.requireValid(bounded)
+        MafiaObservableStateValidator.requireValid(state)
+        require(state.isValidRecoveryState()) { "Mafia snapshot state is not reducer-reachable" }
         return strictJson
-            .encodeToString(MafiaState.serializer(), bounded)
+            .encodeToString(MafiaState.serializer(), state)
             .encodeToByteArray()
+            .also(::requireValidPayloadSize)
     }
 
     override fun decode(payload: ByteArray): MafiaState {
+        requireValidPayloadSize(payload)
         val decoded = strictJson
             .decodeFromString(MafiaState.serializer(), payload.decodeToString(throwOnInvalidSequence = true))
-            .withBoundedHostLogs()
+        val canonical = strictJson
+            .encodeToString(MafiaState.serializer(), decoded)
+            .encodeToByteArray()
+        require(payload.contentEquals(canonical)) { "Mafia snapshot payload is not canonical" }
         MafiaObservableStateValidator.requireValid(decoded)
+        require(decoded.isValidRecoveryState()) { "Mafia snapshot state is not reducer-reachable" }
         return decoded
+    }
+
+    private fun requireValidPayloadSize(payload: ByteArray) {
+        require(payload.size <= MAX_SNAPSHOT_PAYLOAD_BYTES) {
+            "Mafia snapshot exceeds $MAX_SNAPSHOT_PAYLOAD_BYTES bytes"
+        }
     }
 }

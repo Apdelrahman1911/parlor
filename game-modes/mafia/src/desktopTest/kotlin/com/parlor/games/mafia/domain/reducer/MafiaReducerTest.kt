@@ -1,6 +1,7 @@
 package com.parlor.games.mafia.domain.reducer
 
 import assertk.assertThat
+import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
 import assertk.assertions.isFalse
 import assertk.assertions.isInstanceOf
@@ -374,12 +375,36 @@ class MafiaReducerTest {
     }
 
     @Test
-    fun continue_without_player_drops_them() {
+    fun continue_without_player_drops_only_a_currently_disconnected_seat() {
         val state = initialState(7)
         val p = state.players.first().id
-        val dropped = MafiaReducer.reduce(state, MafiaAction.ContinueWithoutPlayer(p), ctx()).newState
+        val disconnected = MafiaReducer.reduce(
+            state,
+            MafiaAction.MarkPlayerDisconnected(p),
+            ctx(),
+        ).newState
+        val dropped = MafiaReducer.reduce(
+            disconnected,
+            MafiaAction.ContinueWithoutPlayer(p),
+            ctx(),
+        ).newState
         assertThat(dropped.public.droppedPlayers.contains(p)).isTrue()
         assertThat(dropped.phase).isEqualTo(MafiaPhase.PostGame)
+    }
+
+    @Test
+    fun continue_without_player_rejects_a_connected_seat() {
+        val state = initialState(7)
+        val p = state.players.first().id
+
+        val result = MafiaReducer.reduce(
+            state,
+            MafiaAction.ContinueWithoutPlayer(p),
+            ctx(),
+        )
+
+        assertThat(result.newState).isEqualTo(state)
+        assertThat(result.events).isEmpty()
     }
 
     @Test
