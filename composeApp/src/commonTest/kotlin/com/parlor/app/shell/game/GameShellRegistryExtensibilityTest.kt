@@ -42,6 +42,14 @@ class GameShellRegistryExtensibilityTest {
     private val router = GameShellRouter(registry)
 
     @Test
+    fun shell_back_requests_are_monotonic_nonnegative_events() {
+        assertEquals(GameShellBackRequest(1L), GameShellBackRequest.Initial.next())
+        assertEquals(GameShellBackRequest(2L), GameShellBackRequest(1L).next())
+        assertEquals(GameShellBackRequest(1L), GameShellBackRequest(Long.MAX_VALUE).next())
+        assertFailsWith<IllegalArgumentException> { GameShellBackRequest(-1L) }
+    }
+
+    @Test
     fun third_game_registers_in_catalog_and_exposes_shell_contract() {
         val entry = assertNotNull(
             registry.catalog.singleOrNull { it.gameId == fixtureDefinition.id },
@@ -213,6 +221,7 @@ class GameShellRegistryExtensibilityTest {
             override fun Content(
                 launch: GameShellLaunch,
                 onExit: () -> Unit,
+                backRequest: GameShellBackRequest,
                 modifier: Modifier,
             ) = Unit
         }
@@ -267,7 +276,12 @@ private class FixtureBinding(
     )
 
     @Composable
-    override fun Content(launch: GameShellLaunch, onExit: () -> Unit, modifier: Modifier) = Unit
+    override fun Content(
+        launch: GameShellLaunch,
+        onExit: () -> Unit,
+        backRequest: GameShellBackRequest,
+        modifier: Modifier,
+    ) = Unit
 }
 
 private class ExistingDefinition(

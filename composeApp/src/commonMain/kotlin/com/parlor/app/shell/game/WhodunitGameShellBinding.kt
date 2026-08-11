@@ -1,12 +1,12 @@
 package com.parlor.app.shell.game
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import com.parlor.app.PlatformBackHandler
 import com.parlor.app.permissions.rememberP2pPermissionGate
 import com.parlor.app.resources.Res
 import com.parlor.app.resources.home_whodunit_open
@@ -65,6 +65,7 @@ internal class WhodunitGameShellBinding(
     override fun Content(
         launch: GameShellLaunch,
         onExit: () -> Unit,
+        backRequest: GameShellBackRequest,
         modifier: Modifier,
     ) {
         require(launch.gameId == definition.id) { "Whodunit binding received another game" }
@@ -72,6 +73,7 @@ internal class WhodunitGameShellBinding(
             launch = launch,
             capabilities = capabilities,
             onExit = onExit,
+            backRequest = backRequest,
             modifier = modifier,
         )
     }
@@ -100,6 +102,7 @@ private fun WhodunitShellContent(
     launch: GameShellLaunch,
     capabilities: GameShellCapabilities,
     onExit: () -> Unit,
+    backRequest: GameShellBackRequest,
     modifier: Modifier,
 ) {
     val caseRepository: CaseRepository = koinInject()
@@ -111,6 +114,7 @@ private fun WhodunitShellContent(
     val restoredRoute = (launch as? GameShellLaunch.RestoreOwnedMultiplayer)?.route
 
     var screen by remember(launch) { mutableStateOf(launch.initialWhodunitScreen()) }
+    var activeBackRequestId by remember(launch) { mutableStateOf(0L) }
     var localCaseId by remember(launch) { mutableStateOf(DEFAULT_CASE_ID) }
     var localPlayMode: PlayMode by remember(launch) { mutableStateOf(PlayMode.PassAndPlay) }
     val resumeSessionId = (launch as? GameShellLaunch.ResumeLocal)?.sessionId
@@ -160,16 +164,18 @@ private fun WhodunitShellContent(
         )
     }
 
-    PlatformBackHandler(enabled = true) {
-        when (screen) {
-            WhodunitShellScreen.LocalCasePicker -> screen = WhodunitShellScreen.Setup
-            WhodunitShellScreen.HostMode -> screen = WhodunitShellScreen.HostCasePicker
-            WhodunitShellScreen.LocalGame,
-            WhodunitShellScreen.HostLobby,
-            WhodunitShellScreen.PeerLobby,
-            WhodunitShellScreen.ResumePeer,
-            -> Unit
-            else -> onExit()
+    LaunchedEffect(backRequest.id) {
+        if (backRequest.id > 0L) {
+            when (screen) {
+                WhodunitShellScreen.LocalCasePicker -> screen = WhodunitShellScreen.Setup
+                WhodunitShellScreen.HostMode -> screen = WhodunitShellScreen.HostCasePicker
+                WhodunitShellScreen.LocalGame,
+                WhodunitShellScreen.HostLobby,
+                WhodunitShellScreen.PeerLobby,
+                WhodunitShellScreen.ResumePeer,
+                -> activeBackRequestId = backRequest.id
+                else -> onExit()
+            }
         }
     }
 
@@ -207,6 +213,7 @@ private fun WhodunitShellContent(
             resumeSessionId = resumeSessionId,
             caseId = localCaseId,
             playMode = localPlayMode,
+            backRequestId = activeBackRequestId,
         )
 
         WhodunitShellScreen.HostPermission -> P2pPermissionRoute(
@@ -255,6 +262,7 @@ private fun WhodunitShellContent(
                     hostName = hostName,
                     onBackToLibrary = onExit,
                     onOpenNetworkSettings = openNetworkSettings,
+                    backRequestId = activeBackRequestId,
                     modifier = modifier,
                 )
             }
@@ -296,6 +304,7 @@ private fun WhodunitShellContent(
                     peerName = peerName,
                     onBackToLibrary = onExit,
                     onOpenNetworkSettings = openNetworkSettings,
+                    backRequestId = activeBackRequestId,
                     modifier = modifier,
                 )
             }
@@ -314,6 +323,7 @@ private fun WhodunitShellContent(
             resumeExistingSession = true,
             onBackToLibrary = onExit,
             onOpenNetworkSettings = openNetworkSettings,
+            backRequestId = activeBackRequestId,
             modifier = modifier,
         )
     }

@@ -4,11 +4,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,6 +35,11 @@ import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorButtonVariant
 import com.parlor.designsystem.components.ParlorCard
 import com.parlor.designsystem.components.ReconnectingOverlay
+import com.parlor.designsystem.components.SessionExitAffordance
+import com.parlor.designsystem.components.SessionExitBackAction
+import com.parlor.designsystem.components.SessionExitConfirmation
+import com.parlor.designsystem.components.SessionExitKind
+import com.parlor.designsystem.components.sessionExitBackAction
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.engine.state.Player
 import com.parlor.games.mafia.MafiaIds
@@ -94,6 +102,7 @@ fun MafiaPeerLobbyFlow(
     resumeExistingSession: Boolean = false,
     onBackToHome: () -> Unit,
     onOpenNetworkSettings: (() -> Unit)? = null,
+    backRequestId: Long = 0L,
     modifier: Modifier = Modifier,
 ) {
     val sessionOwner: ProcessMultiplayerSessionOwner = koinInject()
@@ -119,6 +128,7 @@ fun MafiaPeerLobbyFlow(
     var joinAttempt by remember { mutableStateOf(0) }
     var finalLeaveInFlight by remember { mutableStateOf(false) }
     var retryInFlight by remember { mutableStateOf(false) }
+    var leaveConfirmationOpen by remember(route) { mutableStateOf(false) }
     val flowScope = rememberCoroutineScope()
 
     var hostLost by remember { mutableStateOf(false) }
@@ -216,6 +226,7 @@ fun MafiaPeerLobbyFlow(
                     is Result.Failure -> {
                         joinError = discarded.error
                         finalLeaveInFlight = false
+                        leaveConfirmationOpen = false
                     }
                 }
             }
@@ -224,6 +235,19 @@ fun MafiaPeerLobbyFlow(
 
     val current = ownedSession?.room
     val start = sessionStart
+    var gameStarted by remember(route) { mutableStateOf(false) }
+    LaunchedEffect(start) {
+        if (start != null) gameStarted = true
+    }
+    val gameIsActive = gameStarted || start != null
+    LaunchedEffect(backRequestId) {
+        if (backRequestId > 0L && !finalLeaveInFlight) {
+            when (sessionExitBackAction(SessionExitKind.Peer, gameIsActive)) {
+                SessionExitBackAction.Confirm -> leaveConfirmationOpen = true
+                SessionExitBackAction.ExitImmediately -> finalBackToHome()
+            }
+        }
+    }
     val localNetworkAccess by transport.localNetworkAccess.collectAsState()
     val checkpointFailure = startCheckpointState as? MafiaStartCheckpointState.Failed
     val retryConnection: () -> Unit = retry@{
@@ -244,66 +268,88 @@ fun MafiaPeerLobbyFlow(
         }
     }
 
-    Box(modifier = modifier.fillMaxSize()) {
-        Column(modifier = Modifier.fillMaxSize()) {
-            if (selfOffline) {
-                OfflineBanner(label = stringResource(Res.string.md_peer_offline_banner))
-            }
-            Box(modifier = Modifier.fillMaxSize()) {
-                when {
-                    joinError != null ||
-                        checkpointFailure != null ||
-                        ownerError != null ||
-                        acquireError != null -> MafiaPeerErrorState(
-                        title = stringResource(Res.string.md_peer_error_title),
-                        detail = stringResource(Res.string.md_peer_error_detail),
-                        showNetworkRecovery = localNetworkAccess.needsRecoveryGuidance,
-                        onRetry = retryConnection.takeIf { joinError == null },
-                        onOpenNetworkSettings = onOpenNetworkSettings.takeIf {
-                            localNetworkAccess.needsRecoveryGuidance
-                        },
-                        onBack = finalBackToHome,
-                        actionsEnabled = !finalLeaveInFlight && !retryInFlight,
-                        backInFlight = finalLeaveInFlight,
-                        retryInFlight = retryInFlight,
-                        modifier = Modifier.fillMaxSize(),
-                    )
-                    current == null -> MafiaPeerConnectingState(
-                        code = code,
-                        resuming = resumeExistingSession,
-                        onLeave = finalBackToHome,
-                        leaveEnabled = !finalLeaveInFlight,
-                        leaveInFlight = finalLeaveInFlight,
-                        modifier = Modifier.fillMaxSize(),
-                    )
-                    start == null -> MafiaPeerWaitingForStart(
-                        room = current,
-                        peerName = peerName,
-                        onLeave = finalBackToHome,
-                        modifier = Modifier.fillMaxSize(),
-                    )
-                    else -> MafiaMultiDevicePeerFlow(
-                        players = start.players,
-                        selfPlayerId = current.selfPlayerId,
-                        seed = start.seed,
-                        protocol = start.protocol,
-                        ownedSession = checkNotNull(ownedSession),
-                        onBackToHome = finalBackToHome,
-                        modifier = Modifier.fillMaxSize(),
-                        onHostLostChanged = { hostLost = it },
-                        onSelfOfflineChanged = { selfOffline = it },
-                    )
+    if (leaveConfirmationOpen) {
+        SessionExitConfirmation(
+            kind = SessionExitKind.Peer,
+            onStay = { leaveConfirmationOpen = false },
+            onExit = finalBackToHome,
+            exitInFlight = finalLeaveInFlight,
+            destructive = true,
+            modifier = modifier,
+        )
+    } else {
+        Box(modifier = modifier.fillMaxSize()) {
+            Column(modifier = Modifier.fillMaxSize()) {
+                if (selfOffline) {
+                    OfflineBanner(label = stringResource(Res.string.md_peer_offline_banner))
+                }
+                Box(modifier = Modifier.fillMaxSize()) {
+                    when {
+                        joinError != null ||
+                            checkpointFailure != null ||
+                            ownerError != null ||
+                            acquireError != null -> MafiaPeerErrorState(
+                            title = stringResource(Res.string.md_peer_error_title),
+                            detail = stringResource(Res.string.md_peer_error_detail),
+                            showNetworkRecovery = localNetworkAccess.needsRecoveryGuidance,
+                            onRetry = retryConnection.takeIf { joinError == null },
+                            onOpenNetworkSettings = onOpenNetworkSettings.takeIf {
+                                localNetworkAccess.needsRecoveryGuidance
+                            },
+                            onBack = finalBackToHome,
+                            actionsEnabled = !finalLeaveInFlight && !retryInFlight,
+                            backInFlight = finalLeaveInFlight,
+                            retryInFlight = retryInFlight,
+                            modifier = Modifier.fillMaxSize(),
+                        )
+                        current == null -> MafiaPeerConnectingState(
+                            code = code,
+                            resuming = resumeExistingSession,
+                            onLeave = finalBackToHome,
+                            leaveEnabled = !finalLeaveInFlight,
+                            leaveInFlight = finalLeaveInFlight,
+                            modifier = Modifier.fillMaxSize(),
+                        )
+                        start == null -> MafiaPeerWaitingForStart(
+                            room = current,
+                            peerName = peerName,
+                            onLeave = finalBackToHome,
+                            modifier = Modifier.fillMaxSize(),
+                        )
+                        else -> MafiaMultiDevicePeerFlow(
+                            players = start.players,
+                            selfPlayerId = current.selfPlayerId,
+                            seed = start.seed,
+                            protocol = start.protocol,
+                            ownedSession = checkNotNull(ownedSession),
+                            onBackToHome = finalBackToHome,
+                            modifier = Modifier.fillMaxSize(),
+                            onHostLostChanged = { hostLost = it },
+                            onSelfOfflineChanged = { selfOffline = it },
+                        )
+                    }
                 }
             }
-        }
-        if (hostLost) {
-            ReconnectingOverlay(
-                title = stringResource(Res.string.md_peer_reconnecting),
-                leaveLabel = stringResource(Res.string.md_peer_reconnecting_leave),
-                leaveContentDescription = stringResource(Res.string.md_peer_reconnecting_leave_description),
-                onLeave = finalBackToHome,
-                modifier = Modifier.fillMaxSize(),
-            )
+            if (gameIsActive && !hostLost) {
+                SessionExitAffordance(
+                    onClick = { leaveConfirmationOpen = true },
+                    modifier = Modifier
+                        .align(Alignment.TopStart)
+                        .windowInsetsPadding(WindowInsets.statusBars)
+                        .padding(ParlorTheme.spacing.m),
+                )
+            }
+            if (hostLost) {
+                ReconnectingOverlay(
+                    title = stringResource(Res.string.md_peer_reconnecting),
+                    leaveLabel = stringResource(Res.string.md_peer_reconnecting_leave),
+                    leaveContentDescription = stringResource(
+                        Res.string.md_peer_reconnecting_leave_description,
+                    ),
+                    onLeave = finalBackToHome,
+                    modifier = Modifier.fillMaxSize(),
+                )
+            }
         }
     }
 }

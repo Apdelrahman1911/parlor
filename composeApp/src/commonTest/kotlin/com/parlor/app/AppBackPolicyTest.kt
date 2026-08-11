@@ -17,9 +17,9 @@ class AppBackPolicyTest {
     }
 
     @Test
-    fun registered_game_content_owns_back_and_transactional_cleanup() {
+    fun registered_game_content_receives_back_and_owns_transactional_cleanup() {
         val game = AppScreen.Game(GameShellLaunch.New(GameId("fixture")))
 
-        assertEquals(AppBackAction.Consume, appBackAction(game))
+        assertEquals(AppBackAction.DelegateToGame, appBackAction(game))
     }
 }

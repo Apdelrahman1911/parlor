@@ -3,11 +3,14 @@ package com.parlor.games.mafia.ui.flow.passandplay
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -35,6 +38,9 @@ import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorButtonVariant
 import com.parlor.designsystem.components.ParlorCard
 import com.parlor.designsystem.components.ParlorToastSeverity
+import com.parlor.designsystem.components.SessionExitAffordance
+import com.parlor.designsystem.components.SessionExitConfirmation
+import com.parlor.designsystem.components.SessionExitKind
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.engine.reducer.DefaultReducerContext
 import com.parlor.engine.session.SessionConfig
@@ -100,6 +106,7 @@ import org.koin.compose.koinInject
 fun MafiaGameFlow(
     onBackToHome: () -> Unit,
     resumeSessionId: SessionId? = null,
+    backRequestId: Long = 0L,
     modifier: Modifier = Modifier,
 ) {
     val definition: MafiaDefinition = koinInject()
@@ -127,6 +134,18 @@ fun MafiaGameFlow(
 
     val selectedPlayerCount = pre.playerCount
     val enteredPlayers = pre.players
+    val hasActiveSession =
+        (resumeSessionId != null && resumeResult is Result.Success) || enteredPlayers != null
+    var activeBackRequestId by remember(resumeSessionId) { mutableStateOf(0L) }
+    LaunchedEffect(backRequestId) {
+        if (backRequestId > 0L) {
+            if (hasActiveSession) {
+                activeBackRequestId = backRequestId
+            } else {
+                onBackToHome()
+            }
+        }
+    }
     when {
         resumeSessionId != null && resumeResult == null -> MafiaLoadingScreen(modifier)
         resumeSessionId != null && resumeResult is Result.Failure -> MafiaRecoveryErrorScreen(
@@ -156,6 +175,7 @@ fun MafiaGameFlow(
                 onBackToHome = onBackToHome,
                 restoredState = resumed.state,
                 restoredSessionId = resumed.sessionId,
+                backRequestId = activeBackRequestId,
                 modifier = modifier,
             )
         }
@@ -183,6 +203,7 @@ fun MafiaGameFlow(
         else -> SessionDrivenFlow(
             players = enteredPlayers,
             onBackToHome = onBackToHome,
+            backRequestId = activeBackRequestId,
             modifier = modifier,
         )
     }
@@ -198,6 +219,7 @@ private data class PreSession(
 private fun SessionDrivenFlow(
     players: List<Player>,
     onBackToHome: () -> Unit,
+    backRequestId: Long,
     modifier: Modifier = Modifier,
     restoredState: MafiaState? = null,
     restoredSessionId: SessionId? = null,
@@ -278,6 +300,12 @@ private fun SessionDrivenFlow(
         }
     }
     var exitInFlight by remember(sessionConfig.sessionId) { mutableStateOf(false) }
+    var exitConfirmationOpen by remember(sessionConfig.sessionId) { mutableStateOf(false) }
+    LaunchedEffect(backRequestId) {
+        if (backRequestId > 0L && !exitInFlight) {
+            exitConfirmationOpen = true
+        }
+    }
     val exitAfterFlush: () -> Unit = {
         if (!exitInFlight) {
             exitInFlight = true
@@ -302,14 +330,34 @@ private fun SessionDrivenFlow(
     val hostProjection by authoritativeState.collectAsState()
     val state = hostProjection.state
 
-    Box(modifier = modifier.fillMaxSize()) {
-        MafiaPassAndPlayPhaseRouter(
-            state = state,
-            session = session,
-            scope = scope,
-            onBackToHome = exitAfterFlush,
-            modifier = Modifier.fillMaxSize(),
+    if (exitConfirmationOpen) {
+        SessionExitConfirmation(
+            kind = SessionExitKind.Local,
+            onStay = { exitConfirmationOpen = false },
+            onExit = exitAfterFlush,
+            exitInFlight = exitInFlight,
+            destructive = false,
+            modifier = modifier,
         )
+    } else {
+        Box(modifier = modifier.fillMaxSize()) {
+            MafiaPassAndPlayPhaseRouter(
+                state = state,
+                session = session,
+                scope = scope,
+                onBackToHome = exitAfterFlush,
+                modifier = Modifier.fillMaxSize(),
+            )
+            if (state.phase != MafiaPhase.PostGame) {
+                SessionExitAffordance(
+                    onClick = { exitConfirmationOpen = true },
+                    modifier = Modifier
+                        .align(Alignment.TopStart)
+                        .windowInsetsPadding(WindowInsets.statusBars)
+                        .padding(ParlorTheme.spacing.m),
+                )
+            }
+        }
     }
 }
 

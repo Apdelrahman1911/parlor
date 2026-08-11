@@ -9,6 +9,7 @@ import com.parlor.engine.definition.GameMetadata
 import com.parlor.session.PlayMode
 import com.parlor.session.multidevice.MultiplayerSessionRole
 import com.parlor.session.multidevice.MultiplayerSessionRoute
+import kotlin.jvm.JvmInline
 
 /** Player-facing ways a registered game can be entered from the app shell. */
 internal enum class GameEntryMode {
@@ -80,6 +81,27 @@ internal data class GameCatalogPresentation(
 )
 
 /**
+ * Monotonic shell event delivered to the currently registered game whenever
+ * the platform requests Back. The binding, not App.kt, owns any transactional
+ * save/leave confirmation. A new launch starts again at [Initial], so an old
+ * request can never be replayed into another game.
+ */
+@JvmInline
+internal value class GameShellBackRequest(val id: Long) {
+    init {
+        require(id >= 0L) { "Game-shell back request id must not be negative" }
+    }
+
+    fun next(): GameShellBackRequest = GameShellBackRequest(
+        if (id == Long.MAX_VALUE) 1L else id + 1L,
+    )
+
+    companion object {
+        val Initial = GameShellBackRequest(0L)
+    }
+}
+
+/**
  * A game launch is the only game-specific destination understood by App.kt.
  * The concrete binding owns all setup and in-game sub-navigation from here.
  */
@@ -120,6 +142,7 @@ internal interface GameShellBinding {
     fun Content(
         launch: GameShellLaunch,
         onExit: () -> Unit,
+        backRequest: GameShellBackRequest = GameShellBackRequest.Initial,
         modifier: Modifier = Modifier,
     )
 }

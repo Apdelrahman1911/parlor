@@ -6,13 +6,13 @@ import com.parlor.app.shell.game.GameShellLaunch
 internal enum class AppBackAction {
     AllowPlatformExit,
     NavigateHome,
-    Consume,
+    DelegateToGame,
 }
 
 internal fun appBackAction(screen: AppScreen): AppBackAction = when (screen) {
     AppScreen.Home -> AppBackAction.AllowPlatformExit
     AppScreen.Settings -> AppBackAction.NavigateHome
-    is AppScreen.Game -> AppBackAction.Consume
+    is AppScreen.Game -> AppBackAction.DelegateToGame
 }
 
 internal sealed interface AppScreen {

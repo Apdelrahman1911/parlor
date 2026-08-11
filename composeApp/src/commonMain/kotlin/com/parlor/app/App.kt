@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import com.parlor.app.resources.Res
 import com.parlor.app.resources.home_resume_open_failed
 import com.parlor.app.shell.game.GameShellLaunch
+import com.parlor.app.shell.game.GameShellBackRequest
 import com.parlor.app.shell.game.GameShellRegistry
 import com.parlor.app.shell.game.GameShellRouter
 import com.parlor.app.shell.home.HomeScreen
@@ -96,6 +97,10 @@ fun App() {
                 var hadOwnedMultiplayerRoute by remember {
                     mutableStateOf(ownedMultiplayerRoute != null)
                 }
+                val activeGameLaunch = (screen as? AppScreen.Game)?.launch
+                var gameBackRequest by remember(activeGameLaunch) {
+                    mutableStateOf(GameShellBackRequest.Initial)
+                }
 
                 val unfinishedSessions by produceState(
                     initialValue = emptyList<SessionId>(),
@@ -162,10 +167,11 @@ fun App() {
                 val backAction = appBackAction(screen)
                 PlatformBackHandler(enabled = backAction != AppBackAction.AllowPlatformExit) {
                     when (backAction) {
-                        AppBackAction.AllowPlatformExit,
-                        AppBackAction.Consume,
-                        -> Unit
+                        AppBackAction.AllowPlatformExit -> Unit
                         AppBackAction.NavigateHome -> backToHome()
+                        AppBackAction.DelegateToGame -> {
+                            gameBackRequest = gameBackRequest.next()
+                        }
                     }
                 }
 
@@ -269,6 +275,7 @@ fun App() {
                                     binding.Content(
                                         launch = current.launch,
                                         onExit = backToHome,
+                                        backRequest = gameBackRequest,
                                         modifier = Modifier.fillMaxSize(),
                                     )
                                 }

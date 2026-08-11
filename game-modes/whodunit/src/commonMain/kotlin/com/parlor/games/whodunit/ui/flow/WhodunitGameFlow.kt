@@ -48,6 +48,9 @@ import com.parlor.designsystem.components.ParlorButtonVariant
 import com.parlor.designsystem.components.ReconnectingOverlay
 import com.parlor.designsystem.components.LocalParlorToastState
 import com.parlor.designsystem.components.ParlorToastSeverity
+import com.parlor.designsystem.components.SessionExitAffordance
+import com.parlor.designsystem.components.SessionExitConfirmation
+import com.parlor.designsystem.components.SessionExitKind
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.engine.session.SessionConfig
 import com.parlor.engine.state.Player
@@ -212,6 +215,7 @@ fun WhodunitGameFlow(
     // are separate composables — see [WhodunitMultiplayerHostFlow] /
     // [WhodunitMultiplayerPeerFlow].
     playMode: PlayMode = PlayMode.PassAndPlay,
+    backRequestId: Long = 0L,
 ) {
     val repository: CaseRepository = koinInject()
     val payloadValidator: PayloadValidator<WhodunitCase> = koinInject(qualifier = named("whodunit"))
@@ -224,6 +228,7 @@ fun WhodunitGameFlow(
     var discardInFlight by remember(resumeSessionId) { mutableStateOf(false) }
 
     if (resumeSessionId == null && !WhodunitPlayModePolicy.supportsLocalEntry(playMode)) {
+        ExitOnBackRequest(backRequestId, onBackToLibrary)
         UnsupportedLocalPlayModeScreen(onBackToLibrary, modifier)
         return
     }
@@ -288,30 +293,39 @@ fun WhodunitGameFlow(
     }
 
     when {
-        resumeSessionId != null && resumeResult is Result.Failure -> RecoveryErrorScreen(
-            error = (resumeResult as Result.Failure).error,
-            onBack = onBackToLibrary,
-            onRetry = { recoveryAttempt++ },
-            onDiscard = discardResume,
-            actionsEnabled = !discardInFlight,
-            modifier = modifier,
-        )
-        caseResult == null -> LoadingScreen(modifier)
-        caseResult is Result.Failure -> if (resumeSessionId != null) {
+        resumeSessionId != null && resumeResult is Result.Failure -> {
+            ExitOnBackRequest(backRequestId, onBackToLibrary)
             RecoveryErrorScreen(
-                error = (caseResult as Result.Failure).error,
+                error = (resumeResult as Result.Failure).error,
                 onBack = onBackToLibrary,
                 onRetry = { recoveryAttempt++ },
                 onDiscard = discardResume,
                 actionsEnabled = !discardInFlight,
                 modifier = modifier,
             )
-        } else {
-            ErrorScreen(
-                error = (caseResult as Result.Failure).error,
-                onBack = onBackToLibrary,
-                modifier = modifier,
-            )
+        }
+        caseResult == null -> {
+            ExitOnBackRequest(backRequestId, onBackToLibrary)
+            LoadingScreen(modifier)
+        }
+        caseResult is Result.Failure -> {
+            ExitOnBackRequest(backRequestId, onBackToLibrary)
+            if (resumeSessionId != null) {
+                RecoveryErrorScreen(
+                    error = (caseResult as Result.Failure).error,
+                    onBack = onBackToLibrary,
+                    onRetry = { recoveryAttempt++ },
+                    onDiscard = discardResume,
+                    actionsEnabled = !discardInFlight,
+                    modifier = modifier,
+                )
+            } else {
+                ErrorScreen(
+                    error = (caseResult as Result.Failure).error,
+                    onBack = onBackToLibrary,
+                    modifier = modifier,
+                )
+            }
         }
         else -> {
             val case = (caseResult as Result.Success).data
@@ -330,9 +344,11 @@ fun WhodunitGameFlow(
                         onBackToLibrary = onBackToLibrary,
                         restoredState = resumed.state,
                         restoredSessionId = resumed.sessionId,
+                        backRequestId = backRequestId,
                         modifier = modifier,
                     )
                 } else {
+                    ExitOnBackRequest(backRequestId, onBackToLibrary)
                     UnsupportedLocalPlayModeScreen(onBackToLibrary, modifier)
                 }
             } else {
@@ -340,10 +356,18 @@ fun WhodunitGameFlow(
                     case = case,
                     playMode = playMode,
                     onBackToLibrary = onBackToLibrary,
+                    backRequestId = backRequestId,
                     modifier = modifier,
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun ExitOnBackRequest(backRequestId: Long, onExit: () -> Unit) {
+    LaunchedEffect(backRequestId) {
+        if (backRequestId > 0L) onExit()
     }
 }
 
@@ -635,12 +659,23 @@ private fun ConfiguredFlow(
     case: ValidatedCase<WhodunitCase>,
     playMode: PlayMode,
     onBackToLibrary: () -> Unit,
+    backRequestId: Long,
     modifier: Modifier = Modifier,
 ) {
     var pre by remember { mutableStateOf(PreSession()) }
     val selectedMode = pre.modeId
     val selectedPlayerCount = pre.playerCount
     val enteredPlayers = pre.players
+    var activeBackRequestId by remember(case.envelope.caseId) { mutableStateOf(0L) }
+    LaunchedEffect(backRequestId) {
+        if (backRequestId > 0L) {
+            if (enteredPlayers == null) {
+                onBackToLibrary()
+            } else {
+                activeBackRequestId = backRequestId
+            }
+        }
+    }
 
     when {
         selectedMode == null -> ModeSelectionScreen(
@@ -684,6 +719,7 @@ private fun ConfiguredFlow(
             players = enteredPlayers,
             playMode = playMode,
             onBackToLibrary = onBackToLibrary,
+            backRequestId = activeBackRequestId,
             modifier = modifier,
         )
     }
@@ -698,6 +734,7 @@ private fun SessionDrivenFlow(
     players: List<Player>,
     playMode: PlayMode,
     onBackToLibrary: () -> Unit,
+    backRequestId: Long,
     modifier: Modifier = Modifier,
     restoredState: WhodunitState? = null,
     restoredSessionId: SessionId? = null,
@@ -800,6 +837,12 @@ private fun SessionDrivenFlow(
     }
 
     var exitInFlight by remember(sessionConfig.sessionId) { mutableStateOf(false) }
+    var exitConfirmationOpen by remember(sessionConfig.sessionId) { mutableStateOf(false) }
+    LaunchedEffect(backRequestId) {
+        if (backRequestId > 0L && !exitInFlight) {
+            exitConfirmationOpen = true
+        }
+    }
     val requestExit: (discard: Boolean) -> Unit = { discard ->
         if (!exitInFlight) {
             exitInFlight = true
@@ -830,45 +873,62 @@ private fun SessionDrivenFlow(
         }
     }
 
-    Box(modifier = modifier.fillMaxSize()) {
-        HostPhaseRouter(
-            playMode = playMode,
-            phase = state.phase,
-            state = state,
-            case = case,
-            payload = payload,
-            session = session,
-            scope = scope,
-            onBackToLibrary = exitAfterFlush,
-            modifier = Modifier.fillMaxSize(),
+    if (exitConfirmationOpen) {
+        SessionExitConfirmation(
+            kind = SessionExitKind.Local,
+            onStay = { exitConfirmationOpen = false },
+            onExit = exitAfterFlush,
+            exitInFlight = exitInFlight,
+            destructive = false,
+            modifier = modifier,
         )
-
-        // Pause chrome — visible on every in-game screen except during the
-        // overlay itself. Tapping it submits the Pause action; the reducer
-        // flips public.paused, the snapshot writer fires on PauseEngaged.
-        if (!state.public.paused &&
-            state.phase is WhodunitPhase.Round &&
-            state.public.voteState !is VoteState.Collecting
-        ) {
-            PauseAffordance(
-                onPause = { scope.launch { session.submit(WhodunitAction.Pause) } },
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .windowInsetsPadding(WindowInsets.statusBars)
-                    .padding(ParlorTheme.spacing.m),
+    } else {
+        Box(modifier = modifier.fillMaxSize()) {
+            HostPhaseRouter(
+                playMode = playMode,
+                phase = state.phase,
+                state = state,
+                case = case,
+                payload = payload,
+                session = session,
+                scope = scope,
+                onBackToLibrary = exitAfterFlush,
+                modifier = Modifier.fillMaxSize(),
             )
-        }
 
-        if (state.public.paused) {
-            PauseOverlay(
-                onResume = { scope.launch { session.submit(WhodunitAction.Resume) } },
-                onResumeLater = {
-                    exitAfterFlush()
-                },
-                onEndNow = {
-                    requestExit(true)
-                },
-            )
+            // Pause chrome — visible on every in-game screen except during the
+            // overlay itself. Tapping it submits the Pause action; the reducer
+            // flips public.paused, the snapshot writer fires on PauseEngaged.
+            if (!state.public.paused &&
+                state.phase is WhodunitPhase.Round &&
+                state.public.voteState !is VoteState.Collecting
+            ) {
+                PauseAffordance(
+                    onPause = { scope.launch { session.submit(WhodunitAction.Pause) } },
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .windowInsetsPadding(WindowInsets.statusBars)
+                        .padding(ParlorTheme.spacing.m),
+                )
+            }
+
+            if (!state.public.paused && state.phase !is WhodunitPhase.PostGame) {
+                SessionExitAffordance(
+                    onClick = { exitConfirmationOpen = true },
+                    modifier = Modifier
+                        .align(Alignment.TopStart)
+                        .windowInsetsPadding(WindowInsets.statusBars)
+                        .padding(ParlorTheme.spacing.m),
+                )
+            }
+
+            if (state.public.paused) {
+                PauseOverlay(
+                    onResume = { scope.launch { session.submit(WhodunitAction.Resume) } },
+                    onResumeLater = { exitAfterFlush() },
+                    onEndNow = { requestExit(true) },
+                )
+            }
         }
     }
 }

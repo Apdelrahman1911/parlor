@@ -4,11 +4,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -67,7 +70,12 @@ import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorButtonVariant
 import com.parlor.designsystem.components.ParlorCard
+import com.parlor.designsystem.components.SessionExitAffordance
+import com.parlor.designsystem.components.SessionExitBackAction
+import com.parlor.designsystem.components.SessionExitConfirmation
+import com.parlor.designsystem.components.SessionExitKind
 import com.parlor.designsystem.components.StickyActionBar
+import com.parlor.designsystem.components.sessionExitBackAction
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.engine.state.Player
 import com.parlor.games.whodunit.content.WhodunitCase
@@ -111,6 +119,7 @@ fun WhodunitHostSessionFlow(
     hostName: String,
     onBackToLibrary: () -> Unit,
     onOpenNetworkSettings: (() -> Unit)? = null,
+    backRequestId: Long = 0L,
     modifier: Modifier = Modifier,
 ) {
     val repository: CaseRepository = koinInject()
@@ -137,21 +146,24 @@ fun WhodunitHostSessionFlow(
     var hostAttempt by remember { mutableStateOf(0) }
     var startBlocked by remember { mutableStateOf(false) }
     var leaveInFlight by remember(route) { mutableStateOf(false) }
+    var leaveConfirmationOpen by remember(route) { mutableStateOf(false) }
 
-    val leaveToLibrary: () -> Unit = {
+    val leaveToLibrary: (SessionEndReason) -> Unit = { reason ->
         if (!leaveInFlight) {
             leaveInFlight = true
             scope.launch {
-                when (val left = sessionOwner.leaveRoute(route, SessionEndReason.Cancelled)) {
+                when (val left = sessionOwner.leaveRoute(route, reason)) {
                     is Result.Success -> onBackToLibrary()
                     is Result.Failure -> {
                         acquireError = left.error
                         leaveInFlight = false
+                        leaveConfirmationOpen = false
                     }
                 }
             }
         }
     }
+    val cancelToLibrary: () -> Unit = { leaveToLibrary(SessionEndReason.Cancelled) }
 
     val caseResult by produceState<Result<ValidatedCase<WhodunitCase>, DataError>?>(
         initialValue = null,
@@ -211,86 +223,119 @@ fun WhodunitHostSessionFlow(
     val localNetworkAccess by transport.localNetworkAccess.collectAsState()
     val renderedHostError = ownerError ?: acquireError
     val current = ownedSession?.room
-    when {
-        renderedHostError != null -> HostErrorState(
-            error = netErrorMessage(renderedHostError),
-            onRetry = { hostAttempt++ },
-            onOpenNetworkSettings = onOpenNetworkSettings.takeIf {
-                localNetworkAccess.needsRecoveryGuidance
-            },
-            showNetworkRecovery = localNetworkAccess.needsRecoveryGuidance,
-            onBack = leaveToLibrary,
-            actionsEnabled = !leaveInFlight,
-            backInFlight = leaveInFlight,
-            modifier = modifier,
-        )
-        caseError != null -> HostErrorState(
-            dataErrorMessage(caseError),
-            onBack = leaveToLibrary,
-            actionsEnabled = !leaveInFlight,
-            backInFlight = leaveInFlight,
-            modifier = modifier,
-        )
-        case != null && supportedPlayerCounts == null -> HostErrorState(
-            dataErrorMessage(DataError.CorruptedData),
-            onBack = leaveToLibrary,
-            actionsEnabled = !leaveInFlight,
-            backInFlight = leaveInFlight,
-            modifier = modifier,
-        )
-        current == null || case == null -> HostLoadingState(
-            onLeave = leaveToLibrary,
-            leaveEnabled = !leaveInFlight,
-            leaveInFlight = leaveInFlight,
-            modifier = modifier,
-        )
-        frozenRoster == null -> HostLobbyContent(
-            room = current,
-            hostName = hostName,
-            supportedPlayerCounts = checkNotNull(supportedPlayerCounts),
-            modifier = modifier,
-            startBlocked = startBlocked,
-            onStart = {
-                scope.launch {
-                    val session = ownedSession
-                    when (val frozen = session.freezeAdmissions()) {
-                        is Result.Success -> {
-                            startBlocked = false
-                        }
-                        is Result.Failure -> {
-                            startBlocked = frozen.error == NetError.CommandInFlight
-                        }
-                    }
-                }
-            },
-            onLeave = leaveToLibrary,
-        )
-        else -> {
-            val roster = checkNotNull(frozenRoster)
-            val players = remember(roster, hostName, current) {
-                val hostPlayer = Player(
-                    id = current.info.value.hostPlayerId,
-                    displayName = hostName,
-                    seat = 0,
-                )
-                val peers = roster.mapIndexed { index, member ->
-                    Player(member.playerId, member.displayName, seat = index + 1)
-                }
-                listOf(hostPlayer) + peers
+    var gameStarted by remember(route) { mutableStateOf(false) }
+    LaunchedEffect(frozenRoster) {
+        if (frozenRoster != null) gameStarted = true
+    }
+    val gameIsActive = gameStarted || frozenRoster != null
+    LaunchedEffect(backRequestId) {
+        if (backRequestId > 0L && !leaveInFlight) {
+            when (sessionExitBackAction(SessionExitKind.Host, gameIsActive)) {
+                SessionExitBackAction.Confirm -> leaveConfirmationOpen = true
+                SessionExitBackAction.ExitImmediately -> cancelToLibrary()
             }
-            WhodunitMultiplayerHostFlow(
-                case = case,
-                modeId = modeId,
-                players = players,
-                ownedSession = checkNotNull(ownedSession),
-                sessionOwner = sessionOwner,
-                onBackToLibrary = onBackToLibrary,
-                onRetryStart = {
-                    startBlocked = false
-                    hostAttempt++
-                },
-                modifier = modifier,
-            )
+        }
+    }
+    if (leaveConfirmationOpen) {
+        SessionExitConfirmation(
+            kind = SessionExitKind.Host,
+            onStay = { leaveConfirmationOpen = false },
+            onExit = { leaveToLibrary(SessionEndReason.HostLeft) },
+            exitInFlight = leaveInFlight,
+            destructive = true,
+            modifier = modifier,
+        )
+    } else {
+        Box(modifier = modifier.fillMaxSize()) {
+            when {
+                renderedHostError != null -> HostErrorState(
+                    error = netErrorMessage(renderedHostError),
+                    onRetry = { hostAttempt++ },
+                    onOpenNetworkSettings = onOpenNetworkSettings.takeIf {
+                        localNetworkAccess.needsRecoveryGuidance
+                    },
+                    showNetworkRecovery = localNetworkAccess.needsRecoveryGuidance,
+                    onBack = cancelToLibrary,
+                    actionsEnabled = !leaveInFlight,
+                    backInFlight = leaveInFlight,
+                    modifier = Modifier.fillMaxSize(),
+                )
+                caseError != null -> HostErrorState(
+                    dataErrorMessage(caseError),
+                    onBack = cancelToLibrary,
+                    actionsEnabled = !leaveInFlight,
+                    backInFlight = leaveInFlight,
+                    modifier = Modifier.fillMaxSize(),
+                )
+                case != null && supportedPlayerCounts == null -> HostErrorState(
+                    dataErrorMessage(DataError.CorruptedData),
+                    onBack = cancelToLibrary,
+                    actionsEnabled = !leaveInFlight,
+                    backInFlight = leaveInFlight,
+                    modifier = Modifier.fillMaxSize(),
+                )
+                current == null || case == null -> HostLoadingState(
+                    onLeave = cancelToLibrary,
+                    leaveEnabled = !leaveInFlight,
+                    leaveInFlight = leaveInFlight,
+                    modifier = Modifier.fillMaxSize(),
+                )
+                frozenRoster == null -> HostLobbyContent(
+                    room = current,
+                    hostName = hostName,
+                    supportedPlayerCounts = checkNotNull(supportedPlayerCounts),
+                    modifier = Modifier.fillMaxSize(),
+                    startBlocked = startBlocked,
+                    onStart = {
+                        scope.launch {
+                            val session = ownedSession
+                            when (val frozen = session.freezeAdmissions()) {
+                                is Result.Success -> startBlocked = false
+                                is Result.Failure -> {
+                                    startBlocked = frozen.error == NetError.CommandInFlight
+                                }
+                            }
+                        }
+                    },
+                    onLeave = cancelToLibrary,
+                )
+                else -> {
+                    val roster = checkNotNull(frozenRoster)
+                    val players = remember(roster, hostName, current) {
+                        val hostPlayer = Player(
+                            id = current.info.value.hostPlayerId,
+                            displayName = hostName,
+                            seat = 0,
+                        )
+                        val peers = roster.mapIndexed { index, member ->
+                            Player(member.playerId, member.displayName, seat = index + 1)
+                        }
+                        listOf(hostPlayer) + peers
+                    }
+                    WhodunitMultiplayerHostFlow(
+                        case = case,
+                        modeId = modeId,
+                        players = players,
+                        ownedSession = checkNotNull(ownedSession),
+                        sessionOwner = sessionOwner,
+                        onBackToLibrary = onBackToLibrary,
+                        onRetryStart = {
+                            startBlocked = false
+                            hostAttempt++
+                        },
+                        modifier = Modifier.fillMaxSize(),
+                    )
+                }
+            }
+            if (gameIsActive) {
+                SessionExitAffordance(
+                    onClick = { leaveConfirmationOpen = true },
+                    modifier = Modifier
+                        .align(Alignment.TopStart)
+                        .windowInsetsPadding(WindowInsets.statusBars)
+                        .padding(ParlorTheme.spacing.m),
+                )
+            }
         }
     }
 }

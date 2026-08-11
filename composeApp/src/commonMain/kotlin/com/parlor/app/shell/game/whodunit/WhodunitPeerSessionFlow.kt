@@ -4,11 +4,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -60,6 +63,11 @@ import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorButtonVariant
 import com.parlor.designsystem.components.ParlorCard
+import com.parlor.designsystem.components.SessionExitAffordance
+import com.parlor.designsystem.components.SessionExitBackAction
+import com.parlor.designsystem.components.SessionExitConfirmation
+import com.parlor.designsystem.components.SessionExitKind
+import com.parlor.designsystem.components.sessionExitBackAction
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.engine.state.Player
 import com.parlor.games.whodunit.WhodunitIds
@@ -108,6 +116,7 @@ fun WhodunitPeerSessionFlow(
     resumeExistingSession: Boolean = false,
     onBackToLibrary: () -> Unit,
     onOpenNetworkSettings: (() -> Unit)? = null,
+    backRequestId: Long = 0L,
     modifier: Modifier = Modifier,
 ) {
     val repository: CaseRepository = koinInject()
@@ -139,6 +148,7 @@ fun WhodunitPeerSessionFlow(
     var joinAttempt by remember { mutableStateOf(0) }
     var finalLeaveInFlight by remember { mutableStateOf(false) }
     var retryInFlight by remember { mutableStateOf(false) }
+    var leaveConfirmationOpen by remember(route) { mutableStateOf(false) }
     val flowScope = rememberCoroutineScope()
 
     val checkpoint by produceState<RetainedMultiplayerCheckpoint?>(
@@ -234,6 +244,7 @@ fun WhodunitPeerSessionFlow(
                     is Result.Failure -> {
                         joinError = discarded.error
                         finalLeaveInFlight = false
+                        leaveConfirmationOpen = false
                     }
                 }
             }
@@ -242,6 +253,19 @@ fun WhodunitPeerSessionFlow(
 
     val current = ownedSession?.room
     val start = sessionStart
+    var gameStarted by remember(route) { mutableStateOf(false) }
+    LaunchedEffect(start) {
+        if (start != null) gameStarted = true
+    }
+    val gameIsActive = gameStarted || start != null
+    LaunchedEffect(backRequestId) {
+        if (backRequestId > 0L && !finalLeaveInFlight) {
+            when (sessionExitBackAction(SessionExitKind.Peer, gameIsActive)) {
+                SessionExitBackAction.Confirm -> leaveConfirmationOpen = true
+                SessionExitBackAction.ExitImmediately -> finalBackToLibrary()
+            }
+        }
+    }
 
     // The game-owned peer bridge exposes durable connection state through
     // these callbacks. Keeping presentation state at the shell root makes the
@@ -270,69 +294,91 @@ fun WhodunitPeerSessionFlow(
         }
     }
 
-    Box(modifier = modifier.fillMaxSize()) {
-        Column(modifier = Modifier.fillMaxSize()) {
-            if (selfOffline) {
-                OfflineBanner(label = stringResource(Res.string.party_offline_banner))
-            }
-            Box(modifier = Modifier.fillMaxSize()) {
-                when {
-                    renderedCaseError != null -> PeerErrorState(
-                        error = dataErrorMessage(renderedCaseError),
-                        onRetry = retryConnection.takeIf { joinError == null },
-                        onBack = finalBackToLibrary,
-                        actionsEnabled = !finalLeaveInFlight && !retryInFlight,
-                        backInFlight = finalLeaveInFlight,
-                        retryInFlight = retryInFlight,
-                        modifier = Modifier.fillMaxSize(),
-                    )
-                    renderedJoinError != null -> PeerErrorState(
-                        error = netErrorMessage(renderedJoinError),
-                        onRetry = retryConnection.takeIf { joinError == null },
-                        onOpenNetworkSettings = onOpenNetworkSettings.takeIf {
-                            localNetworkAccess.needsRecoveryGuidance
-                        },
-                        showNetworkRecovery = localNetworkAccess.needsRecoveryGuidance,
-                        onBack = finalBackToLibrary,
-                        actionsEnabled = !finalLeaveInFlight && !retryInFlight,
-                        backInFlight = finalLeaveInFlight,
-                        retryInFlight = retryInFlight,
-                        modifier = Modifier.fillMaxSize(),
-                    )
-                    current == null -> PeerConnectingState(
-                        code = code,
-                        resuming = resumeExistingSession,
-                        onLeave = finalBackToLibrary,
-                        leaveEnabled = !finalLeaveInFlight,
-                        leaveInFlight = finalLeaveInFlight,
-                        modifier = Modifier.fillMaxSize(),
-                    )
-                    start == null -> PeerWaitingForHostStart(
-                        current,
-                        peerName,
-                        modifier = Modifier.fillMaxSize(),
-                        onLeave = finalBackToLibrary,
-                    )
-                    else -> PeerSessionWithCase(
-                        room = current,
-                        ownedSession = checkNotNull(ownedSession),
-                        start = start,
-                        onBackToLibrary = finalBackToLibrary,
-                        modifier = Modifier.fillMaxSize(),
-                        onHostLostChanged = { hostLost = it },
-                        onSelfOfflineChanged = { selfOffline = it },
-                    )
+    if (leaveConfirmationOpen) {
+        SessionExitConfirmation(
+            kind = SessionExitKind.Peer,
+            onStay = { leaveConfirmationOpen = false },
+            onExit = finalBackToLibrary,
+            exitInFlight = finalLeaveInFlight,
+            destructive = true,
+            modifier = modifier,
+        )
+    } else {
+        Box(modifier = modifier.fillMaxSize()) {
+            Column(modifier = Modifier.fillMaxSize()) {
+                if (selfOffline) {
+                    OfflineBanner(label = stringResource(Res.string.party_offline_banner))
+                }
+                Box(modifier = Modifier.fillMaxSize()) {
+                    when {
+                        renderedCaseError != null -> PeerErrorState(
+                            error = dataErrorMessage(renderedCaseError),
+                            onRetry = retryConnection.takeIf { joinError == null },
+                            onBack = finalBackToLibrary,
+                            actionsEnabled = !finalLeaveInFlight && !retryInFlight,
+                            backInFlight = finalLeaveInFlight,
+                            retryInFlight = retryInFlight,
+                            modifier = Modifier.fillMaxSize(),
+                        )
+                        renderedJoinError != null -> PeerErrorState(
+                            error = netErrorMessage(renderedJoinError),
+                            onRetry = retryConnection.takeIf { joinError == null },
+                            onOpenNetworkSettings = onOpenNetworkSettings.takeIf {
+                                localNetworkAccess.needsRecoveryGuidance
+                            },
+                            showNetworkRecovery = localNetworkAccess.needsRecoveryGuidance,
+                            onBack = finalBackToLibrary,
+                            actionsEnabled = !finalLeaveInFlight && !retryInFlight,
+                            backInFlight = finalLeaveInFlight,
+                            retryInFlight = retryInFlight,
+                            modifier = Modifier.fillMaxSize(),
+                        )
+                        current == null -> PeerConnectingState(
+                            code = code,
+                            resuming = resumeExistingSession,
+                            onLeave = finalBackToLibrary,
+                            leaveEnabled = !finalLeaveInFlight,
+                            leaveInFlight = finalLeaveInFlight,
+                            modifier = Modifier.fillMaxSize(),
+                        )
+                        start == null -> PeerWaitingForHostStart(
+                            current,
+                            peerName,
+                            modifier = Modifier.fillMaxSize(),
+                            onLeave = finalBackToLibrary,
+                        )
+                        else -> PeerSessionWithCase(
+                            room = current,
+                            ownedSession = checkNotNull(ownedSession),
+                            start = start,
+                            onBackToLibrary = finalBackToLibrary,
+                            modifier = Modifier.fillMaxSize(),
+                            onHostLostChanged = { hostLost = it },
+                            onSelfOfflineChanged = { selfOffline = it },
+                        )
+                    }
                 }
             }
-        }
-        if (hostLost) {
-            ReconnectingOverlay(
-                title = stringResource(Res.string.party_reconnecting_overlay_title),
-                leaveLabel = stringResource(Res.string.party_reconnecting_overlay_leave),
-                leaveContentDescription = stringResource(Res.string.party_reconnecting_overlay_leave_description),
-                onLeave = finalBackToLibrary,
-                modifier = Modifier.fillMaxSize(),
-            )
+            if (gameIsActive && !hostLost) {
+                SessionExitAffordance(
+                    onClick = { leaveConfirmationOpen = true },
+                    modifier = Modifier
+                        .align(Alignment.TopStart)
+                        .windowInsetsPadding(WindowInsets.statusBars)
+                        .padding(ParlorTheme.spacing.m),
+                )
+            }
+            if (hostLost) {
+                ReconnectingOverlay(
+                    title = stringResource(Res.string.party_reconnecting_overlay_title),
+                    leaveLabel = stringResource(Res.string.party_reconnecting_overlay_leave),
+                    leaveContentDescription = stringResource(
+                        Res.string.party_reconnecting_overlay_leave_description,
+                    ),
+                    onLeave = finalBackToLibrary,
+                    modifier = Modifier.fillMaxSize(),
+                )
+            }
         }
     }
 }

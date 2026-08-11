@@ -1,12 +1,12 @@
 package com.parlor.app.shell.game
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import com.parlor.app.PlatformBackHandler
 import com.parlor.app.permissions.rememberP2pPermissionGate
 import com.parlor.app.resources.Res
 import com.parlor.app.resources.home_mafia_open
@@ -59,6 +59,7 @@ internal class MafiaGameShellBinding(
     override fun Content(
         launch: GameShellLaunch,
         onExit: () -> Unit,
+        backRequest: GameShellBackRequest,
         modifier: Modifier,
     ) {
         require(launch.gameId == definition.id) { "Mafia binding received another game" }
@@ -66,6 +67,7 @@ internal class MafiaGameShellBinding(
             launch = launch,
             capabilities = capabilities,
             onExit = onExit,
+            backRequest = backRequest,
             modifier = modifier,
         )
     }
@@ -91,6 +93,7 @@ private fun MafiaShellContent(
     launch: GameShellLaunch,
     capabilities: GameShellCapabilities,
     onExit: () -> Unit,
+    backRequest: GameShellBackRequest,
     modifier: Modifier,
 ) {
     val transport: RoomTransport = koinInject()
@@ -101,6 +104,7 @@ private fun MafiaShellContent(
     val restoredRoute = (launch as? GameShellLaunch.RestoreOwnedMultiplayer)?.route
 
     var screen by remember(launch) { mutableStateOf(launch.initialMafiaScreen()) }
+    var activeBackRequestId by remember(launch) { mutableStateOf(0L) }
     val resumeSessionId = (launch as? GameShellLaunch.ResumeLocal)?.sessionId
     var hostName by remember(launch) {
         mutableStateOf(
@@ -131,14 +135,16 @@ private fun MafiaShellContent(
         )
     }
 
-    PlatformBackHandler(enabled = true) {
-        when (screen) {
-            MafiaShellScreen.LocalGame,
-            MafiaShellScreen.HostLobby,
-            MafiaShellScreen.PeerLobby,
-            MafiaShellScreen.ResumePeer,
-            -> Unit
-            else -> onExit()
+    LaunchedEffect(backRequest.id) {
+        if (backRequest.id > 0L) {
+            when (screen) {
+                MafiaShellScreen.LocalGame,
+                MafiaShellScreen.HostLobby,
+                MafiaShellScreen.PeerLobby,
+                MafiaShellScreen.ResumePeer,
+                -> activeBackRequestId = backRequest.id
+                else -> onExit()
+            }
         }
     }
 
@@ -162,6 +168,7 @@ private fun MafiaShellContent(
         MafiaShellScreen.LocalGame -> MafiaGameFlow(
             onBackToHome = onExit,
             resumeSessionId = resumeSessionId,
+            backRequestId = activeBackRequestId,
             modifier = modifier,
         )
 
@@ -191,6 +198,7 @@ private fun MafiaShellContent(
                     hostName = hostName,
                     onBackToHome = onExit,
                     onOpenNetworkSettings = openNetworkSettings,
+                    backRequestId = activeBackRequestId,
                     modifier = modifier,
                 )
             }
@@ -232,6 +240,7 @@ private fun MafiaShellContent(
                     peerName = peerName,
                     onBackToHome = onExit,
                     onOpenNetworkSettings = openNetworkSettings,
+                    backRequestId = activeBackRequestId,
                     modifier = modifier,
                 )
             }
@@ -250,6 +259,7 @@ private fun MafiaShellContent(
             resumeExistingSession = true,
             onBackToHome = onExit,
             onOpenNetworkSettings = openNetworkSettings,
+            backRequestId = activeBackRequestId,
             modifier = modifier,
         )
     }

@@ -24,7 +24,11 @@ class GameShellRegistryCompositionTest {
     fun registered_fixture_content_is_composed_by_the_resolved_binding() = runTest {
         val definition = RoundRobinAnnounceGame()
         var renderedLaunch: GameShellLaunch? = null
-        val binding = RenderingFixtureBinding(definition) { renderedLaunch = it }
+        var renderedBackRequest: GameShellBackRequest? = null
+        val binding = RenderingFixtureBinding(definition) { launch, backRequest ->
+            renderedLaunch = launch
+            renderedBackRequest = backRequest
+        }
         val router = GameShellRouter(DefaultGameShellRegistry(listOf(binding)))
         val launch = assertNotNull(router.newGame(definition.id))
         val compositionContext = coroutineContext + ImmediateFrameClock
@@ -39,10 +43,12 @@ class GameShellRegistryCompositionTest {
                 assertNotNull(router.bindingFor(launch)).Content(
                     launch = launch,
                     onExit = {},
+                    backRequest = GameShellBackRequest(7L),
                 )
             }
             runCurrent()
             assertEquals(launch, renderedLaunch)
+            assertEquals(GameShellBackRequest(7L), renderedBackRequest)
         } finally {
             composition.dispose()
             recomposer.close()
@@ -53,7 +59,7 @@ class GameShellRegistryCompositionTest {
 
 private class RenderingFixtureBinding(
     override val definition: GameDefinition<*, *, *>,
-    private val onRendered: (GameShellLaunch) -> Unit,
+    private val onRendered: (GameShellLaunch, GameShellBackRequest) -> Unit,
 ) : GameShellBinding {
     override val capabilities = GameShellCapabilities(
         setOf(GameEntryMode.PassAndPlay, GameEntryMode.Host, GameEntryMode.Join),
@@ -77,9 +83,10 @@ private class RenderingFixtureBinding(
     override fun Content(
         launch: GameShellLaunch,
         onExit: () -> Unit,
+        backRequest: GameShellBackRequest,
         modifier: Modifier,
     ) {
-        SideEffect { onRendered(launch) }
+        SideEffect { onRendered(launch, backRequest) }
     }
 }
 

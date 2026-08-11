@@ -3,10 +3,13 @@ package com.parlor.games.mafia.ui.flow.multidevice
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,7 +31,12 @@ import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorButtonVariant
 import com.parlor.designsystem.components.ParlorCard
+import com.parlor.designsystem.components.SessionExitAffordance
+import com.parlor.designsystem.components.SessionExitBackAction
+import com.parlor.designsystem.components.SessionExitConfirmation
+import com.parlor.designsystem.components.SessionExitKind
 import com.parlor.designsystem.components.StickyActionBar
+import com.parlor.designsystem.components.sessionExitBackAction
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.engine.state.Player
 import com.parlor.games.mafia.MafiaIds
@@ -94,6 +102,7 @@ fun MafiaHostLobbyFlow(
     hostName: String,
     onBackToHome: () -> Unit,
     onOpenNetworkSettings: (() -> Unit)? = null,
+    backRequestId: Long = 0L,
     modifier: Modifier = Modifier,
 ) {
     val sessionOwner: ProcessMultiplayerSessionOwner = koinInject()
@@ -115,21 +124,24 @@ fun MafiaHostLobbyFlow(
     var hostAttempt by remember { mutableStateOf(0) }
     var startBlocked by remember { mutableStateOf(false) }
     var leaveInFlight by remember(route) { mutableStateOf(false) }
+    var leaveConfirmationOpen by remember(route) { mutableStateOf(false) }
 
-    val leaveToHome: () -> Unit = {
+    val leaveToHome: (SessionEndReason) -> Unit = { reason ->
         if (!leaveInFlight) {
             leaveInFlight = true
             scope.launch {
-                when (val left = sessionOwner.leaveRoute(route, SessionEndReason.Cancelled)) {
+                when (val left = sessionOwner.leaveRoute(route, reason)) {
                     is Result.Success -> onBackToHome()
                     is Result.Failure -> {
                         acquireError = left.error
                         leaveInFlight = false
+                        leaveConfirmationOpen = false
                     }
                 }
             }
         }
     }
+    val cancelToHome: () -> Unit = { leaveToHome(SessionEndReason.Cancelled) }
 
     LaunchedEffect(transport, route, hostAttempt) {
         acquireError = null
@@ -170,70 +182,103 @@ fun MafiaHostLobbyFlow(
 
     val current = ownedSession?.room
     val localNetworkAccess by transport.localNetworkAccess.collectAsState()
-    when {
-        ownerError != null || acquireError != null -> MafiaLobbyErrorState(
-            title = stringResource(Res.string.md_host_error_title),
-            detail = stringResource(Res.string.md_host_error_detail),
-            showNetworkRecovery = localNetworkAccess.needsRecoveryGuidance,
-            onRetry = { hostAttempt++ },
-            onOpenNetworkSettings = onOpenNetworkSettings.takeIf {
-                localNetworkAccess.needsRecoveryGuidance
-            },
-            onBack = leaveToHome,
-            actionsEnabled = !leaveInFlight,
-            backInFlight = leaveInFlight,
-            modifier = modifier,
-        )
-        current == null -> MafiaLobbyLoadingState(
-            label = stringResource(Res.string.md_host_opening_room),
-            onLeave = leaveToHome,
-            leaveEnabled = !leaveInFlight,
-            leaveInFlight = leaveInFlight,
-            modifier = modifier,
-        )
-        frozenRoster == null -> MafiaHostLobbyContent(
-            room = current,
-            hostName = hostName,
-            startBlocked = startBlocked,
-            onStart = {
-                scope.launch {
-                    when (val frozen = checkNotNull(ownedSession).freezeAdmissions()) {
-                        is Result.Success -> {
-                            startBlocked = false
-                        }
-                        is Result.Failure -> {
-                            startBlocked = frozen.error == NetError.CommandInFlight
-                        }
-                    }
-                }
-            },
-            onLeave = leaveToHome,
-            modifier = modifier,
-        )
-        else -> {
-            val roster = checkNotNull(frozenRoster)
-            val players = remember(roster, hostName, current) {
-                val hostPlayer = Player(
-                    id = current.info.value.hostPlayerId,
-                    displayName = hostName,
-                    seat = 0,
-                )
-                val peers = roster.mapIndexed { index, member ->
-                    Player(member.playerId, member.displayName, seat = index + 1)
-                }
-                listOf(hostPlayer) + peers
+    var gameStarted by remember(route) { mutableStateOf(false) }
+    LaunchedEffect(frozenRoster) {
+        if (frozenRoster != null) gameStarted = true
+    }
+    val gameIsActive = gameStarted || frozenRoster != null
+    LaunchedEffect(backRequestId) {
+        if (backRequestId > 0L && !leaveInFlight) {
+            when (sessionExitBackAction(SessionExitKind.Host, gameIsActive)) {
+                SessionExitBackAction.Confirm -> leaveConfirmationOpen = true
+                SessionExitBackAction.ExitImmediately -> cancelToHome()
             }
-            MafiaMultiDeviceHostFlow(
-                players = players,
-                ownedSession = checkNotNull(ownedSession),
-                sessionOwner = sessionOwner,
-                onBackToHome = onBackToHome,
-                onRetryStart = {
-                    startBlocked = false
-                    hostAttempt++
-                },
-                modifier = modifier,
-            )
+        }
+    }
+    if (leaveConfirmationOpen) {
+        SessionExitConfirmation(
+            kind = SessionExitKind.Host,
+            onStay = { leaveConfirmationOpen = false },
+            onExit = { leaveToHome(SessionEndReason.HostLeft) },
+            exitInFlight = leaveInFlight,
+            destructive = true,
+            modifier = modifier,
+        )
+    } else {
+        Box(modifier = modifier.fillMaxSize()) {
+            when {
+                ownerError != null || acquireError != null -> MafiaLobbyErrorState(
+                    title = stringResource(Res.string.md_host_error_title),
+                    detail = stringResource(Res.string.md_host_error_detail),
+                    showNetworkRecovery = localNetworkAccess.needsRecoveryGuidance,
+                    onRetry = { hostAttempt++ },
+                    onOpenNetworkSettings = onOpenNetworkSettings.takeIf {
+                        localNetworkAccess.needsRecoveryGuidance
+                    },
+                    onBack = cancelToHome,
+                    actionsEnabled = !leaveInFlight,
+                    backInFlight = leaveInFlight,
+                    modifier = Modifier.fillMaxSize(),
+                )
+                current == null -> MafiaLobbyLoadingState(
+                    label = stringResource(Res.string.md_host_opening_room),
+                    onLeave = cancelToHome,
+                    leaveEnabled = !leaveInFlight,
+                    leaveInFlight = leaveInFlight,
+                    modifier = Modifier.fillMaxSize(),
+                )
+                frozenRoster == null -> MafiaHostLobbyContent(
+                    room = current,
+                    hostName = hostName,
+                    startBlocked = startBlocked,
+                    onStart = {
+                        scope.launch {
+                            when (val frozen = checkNotNull(ownedSession).freezeAdmissions()) {
+                                is Result.Success -> startBlocked = false
+                                is Result.Failure -> {
+                                    startBlocked = frozen.error == NetError.CommandInFlight
+                                }
+                            }
+                        }
+                    },
+                    onLeave = cancelToHome,
+                    modifier = Modifier.fillMaxSize(),
+                )
+                else -> {
+                    val roster = checkNotNull(frozenRoster)
+                    val players = remember(roster, hostName, current) {
+                        val hostPlayer = Player(
+                            id = current.info.value.hostPlayerId,
+                            displayName = hostName,
+                            seat = 0,
+                        )
+                        val peers = roster.mapIndexed { index, member ->
+                            Player(member.playerId, member.displayName, seat = index + 1)
+                        }
+                        listOf(hostPlayer) + peers
+                    }
+                    MafiaMultiDeviceHostFlow(
+                        players = players,
+                        ownedSession = checkNotNull(ownedSession),
+                        sessionOwner = sessionOwner,
+                        onBackToHome = onBackToHome,
+                        onRetryStart = {
+                            startBlocked = false
+                            hostAttempt++
+                        },
+                        modifier = Modifier.fillMaxSize(),
+                    )
+                }
+            }
+            if (gameIsActive) {
+                SessionExitAffordance(
+                    onClick = { leaveConfirmationOpen = true },
+                    modifier = Modifier
+                        .align(Alignment.TopStart)
+                        .windowInsetsPadding(WindowInsets.statusBars)
+                        .padding(ParlorTheme.spacing.m),
+                )
+            }
         }
     }
 }
