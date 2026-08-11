@@ -223,7 +223,6 @@ private fun SetupCard(
 ) {
     ParlorCard(
         modifier = modifier.fillMaxWidth(),
-        elevation = ParlorTheme.elevation.dramatic,
         cornerRadius = ParlorTheme.radii.elevated,
         contentPadding = ParlorTheme.spacing.xl,
     ) {

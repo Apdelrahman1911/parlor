@@ -315,7 +315,6 @@ private fun MafiaHostLobbyContent(
 
                 ParlorCard(
                     modifier = Modifier.fillMaxWidth(),
-                    elevation = ParlorTheme.elevation.dramatic,
                     cornerRadius = ParlorTheme.radii.elevated,
                     contentPadding = ParlorTheme.spacing.l,
                     hero = true,

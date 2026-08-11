@@ -26,7 +26,9 @@ reported 59 warnings:
 | `UseTomlInstead` | 1 |
 
 The remediation removes all 20 correctness, packaging, resource, and catalog
-warnings. The current forced post-change run reports 40 warnings, all in the four
+warnings. Removing eleven unconsumed dependency declarations then removed the
+corresponding update advisories. The current accepted inventory contains 29
+warnings, all in the four
 explicitly reviewed advisory classes below:
 
 | Lint ID | Count | Disposition |
@@ -34,7 +36,7 @@ explicitly reviewed advisory classes below:
 | `OldTargetApi` | 1 | Target/compile SDK 36 is deliberately pinned for the current compatibility baseline. Store target-level compliance must be rechecked at release and can require a reviewed SDK migration. |
 | `AndroidGradlePluginVersion` | 4 | Gradle 8.13 and AGP 8.13.2 are a verified pair. Moving to Gradle 8.14.5 or AGP 9.3.1 is a separate compatibility migration, not a lint-only edit. |
 | `GradleDependency` | 2 | Lint 9.1.1 is the reviewed stable analyzer compatible with Kotlin 2.4 metadata; lint reports the unrelated 9.4.0 alpha preview. Activity Compose 1.9.3 remains pinned pending a lifecycle/source compatibility migration. |
-| `NewerVersionAvailable` | 33 | These are update notifications for pinned datetime, Compose, Koin, Ktor, SQLDelight, Konsist, Detekt, JUnit, and Turbine coordinates. They do not report a demonstrated correctness defect. Kotlin 2.4.10, serialization 1.11.0, and P2pKit 0.7.0-rc3 are current and no longer appear in this class. |
+| `NewerVersionAvailable` | 22 | These are update notifications for pinned datetime, Compose, Koin, Ktor, Konsist, Detekt, and Turbine coordinates. They do not report a demonstrated correctness defect. Kotlin 2.4.10, serialization 1.11.0, and P2pKit 0.7.0-rc3 are current and no longer appear in this class. |
 
 The remaining advisories are not permanent waivers. Dependency/security review
 and store policy can make a specific upgrade mandatory. Such an upgrade must

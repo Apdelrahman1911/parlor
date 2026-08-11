@@ -181,7 +181,6 @@ private fun SettingsSection(
 ) {
     ParlorCard(
         modifier = Modifier.fillMaxWidth(),
-        elevation = ParlorTheme.elevation.medium,
         cornerRadius = ParlorTheme.radii.elevated,
         contentPadding = ParlorTheme.spacing.l,
     ) {

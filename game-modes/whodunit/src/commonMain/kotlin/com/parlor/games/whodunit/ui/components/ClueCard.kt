@@ -28,7 +28,6 @@ fun ClueCard(
         modifier = modifier
             .fillMaxWidth()
             .padding(ParlorTheme.spacing.l),
-        elevation = ParlorTheme.elevation.dramatic,
         cornerRadius = ParlorTheme.radii.elevated,
         contentPadding = ParlorTheme.spacing.xxl,
         hero = true,

@@ -145,7 +145,6 @@ private fun ModeCard(
     val buttonDescription = stringResource(Res.string.setup_mode_choose_description_format, title)
     ParlorCard(
         modifier = modifier.fillMaxWidth(),
-        elevation = ParlorTheme.elevation.dramatic,
         cornerRadius = ParlorTheme.radii.elevated,
         contentPadding = ParlorTheme.spacing.xl,
     ) {

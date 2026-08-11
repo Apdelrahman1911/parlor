@@ -15,16 +15,12 @@ import com.parlor.designsystem.theme.ParlorTheme
  * vignette, no candle flicker. Type and content carry the visual
  * weight; the backdrop's job is to stay out of the way.
  *
- * The composable is retained as a screen-level wrapper so callers
- * don't need to change. `bloomIntensity` and `paperGrain` parameters
- * are accepted but ignored — kept on the signature for source
- * compatibility with prior call sites.
+ * The composable is retained as a screen-level wrapper so callers can apply
+ * the same edge-to-edge surface and system-bar insets consistently.
  */
 @Composable
 fun AmbientBackdrop(
     modifier: Modifier = Modifier,
-    @Suppress("UNUSED_PARAMETER") bloomIntensity: Float = 0.10f,
-    @Suppress("UNUSED_PARAMETER") paperGrain: Boolean = true,
     content: @Composable () -> Unit = {},
 ) {
     Box(

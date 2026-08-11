@@ -3,7 +3,7 @@ package com.parlor.games.mafia.domain.settings
 /**
  * Default presets by player count. Hosts can override every field — these are
  * starting points tuned for balance: roughly 1 Mafia per 3–4 town members,
- * Detective from 6+, Doctor from 7+. Civilians fill the remainder.
+ * Detective from 5+, Doctor from 6+. Civilians fill the remainder.
  */
 object MafiaSettingsPresets {
 

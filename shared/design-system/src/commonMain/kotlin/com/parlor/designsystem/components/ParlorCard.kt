@@ -12,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.Dp
 import com.parlor.designsystem.theme.ParlorTheme
-import com.parlor.designsystem.tokens.ElevationSpec
 
 /**
  * Card primitive — flat editorial. Single surface fill, hairline border,
@@ -24,13 +23,11 @@ import com.parlor.designsystem.tokens.ElevationSpec
  * `bordered = false` removes the rim. Useful when a card sits inside
  * another card.
  *
- * `elevation` is accepted for source compatibility but ignored — flat
- * editorial cards do not cast shadows.
+ * Flat editorial cards do not cast shadows.
  */
 @Composable
 fun ParlorCard(
     modifier: Modifier = Modifier,
-    @Suppress("UNUSED_PARAMETER") elevation: ElevationSpec = ParlorTheme.elevation.medium,
     cornerRadius: Dp = ParlorTheme.radii.card,
     contentPadding: Dp = ParlorTheme.spacing.xl,
     hero: Boolean = false,

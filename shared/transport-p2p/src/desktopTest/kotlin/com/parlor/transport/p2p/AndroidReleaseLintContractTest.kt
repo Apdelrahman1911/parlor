@@ -56,12 +56,12 @@ class AndroidReleaseLintContractTest {
             .map(String::trim)
             .filter { line -> line.isNotEmpty() && !line.startsWith('#') }
             .toList()
-        assertEquals(40, accepted.size)
+        assertEquals(29, accepted.size)
         assertEquals(
             mapOf(
                 "AndroidGradlePluginVersion" to 4,
                 "GradleDependency" to 2,
-                "NewerVersionAvailable" to 33,
+                "NewerVersionAvailable" to 22,
                 "OldTargetApi" to 1,
             ),
             accepted.groupingBy { line -> line.substringBefore('|') }.eachCount(),
@@ -71,7 +71,7 @@ class AndroidReleaseLintContractTest {
         assertContains(catalog, "androidx-activity-compose")
         assertContains(appBuild, "implementation(libs.androidx.activity.compose)")
         assertContains(triage, "reported 59 warnings")
-        assertContains(triage, "reports 40 warnings")
+        assertContains(triage, "contains 29")
     }
 
     @Test
@@ -162,8 +162,9 @@ class AndroidReleaseLintContractTest {
             "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorBottomTabBar.kt",
         )
         assertContains(tabs, ".heightIn(min = ParlorTheme.spacing.xxl)")
+        assertContains(tabs, ".selectableGroup()")
+        assertContains(tabs, "selected = selected")
         assertContains(tabs, "role = Role.Tab")
-        assertContains(tabs, "this.selected = selected")
 
         val home = read("composeApp/src/commonMain/kotlin/com/parlor/app/shell/home/HomeScreen.kt")
         assertContains(home, ".heightIn(min = ParlorTheme.spacing.xxl)")

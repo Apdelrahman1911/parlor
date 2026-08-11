@@ -100,7 +100,6 @@ fun PauseOverlay(
         ) {
             ParlorCard(
                 modifier = Modifier.fillMaxWidth(),
-                elevation = ParlorTheme.elevation.dramatic,
                 cornerRadius = ParlorTheme.radii.elevated,
                 contentPadding = ParlorTheme.spacing.xl,
             ) {
@@ -173,7 +172,6 @@ private fun EndGameConfirmDialog(
         ) {
             ParlorCard(
                 modifier = Modifier.fillMaxWidth(),
-                elevation = ParlorTheme.elevation.dramatic,
                 cornerRadius = ParlorTheme.radii.elevated,
                 contentPadding = ParlorTheme.spacing.xl,
             ) {

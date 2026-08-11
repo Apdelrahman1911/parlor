@@ -94,7 +94,6 @@ fun P2pPermissionRationaleScreen(
 
             ParlorCard(
                 modifier = Modifier.fillMaxWidth(),
-                elevation = ParlorTheme.elevation.high,
                 cornerRadius = ParlorTheme.radii.elevated,
                 contentPadding = ParlorTheme.spacing.xl,
                 hero = true,

@@ -374,11 +374,10 @@ private fun HostLobbyContent(
             EyebrowLabel(text = stringResource(Res.string.host_title))
 
             // Hero room-code card — the screen's signature moment. The
-            // indigo-tinted hero surface + dramatic elevation make the code
-            // unmistakable when the host turns the phone to a friend.
+            // indigo-tinted hero surface makes the code unmistakable when the
+            // host turns the phone to a friend.
             ParlorCard(
                 modifier = Modifier.fillMaxWidth(),
-                elevation = ParlorTheme.elevation.dramatic,
                 cornerRadius = ParlorTheme.radii.elevated,
                 contentPadding = ParlorTheme.spacing.l,
                 hero = true,

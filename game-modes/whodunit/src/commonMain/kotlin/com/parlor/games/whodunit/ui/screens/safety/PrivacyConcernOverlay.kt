@@ -108,7 +108,6 @@ internal fun PrivacyConcernDialog(
         ) {
             ParlorCard(
                 modifier = Modifier.fillMaxWidth(),
-                elevation = ParlorTheme.elevation.dramatic,
                 cornerRadius = ParlorTheme.radii.elevated,
                 contentPadding = ParlorTheme.spacing.xl,
             ) {

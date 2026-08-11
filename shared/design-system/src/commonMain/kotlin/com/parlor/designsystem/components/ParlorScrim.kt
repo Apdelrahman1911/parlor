@@ -13,13 +13,11 @@ import com.parlor.designsystem.theme.ParlorTheme
  * `overlayScrim` token so light and dark modes both get appropriate
  * dimming alpha.
  *
- * The `alpha` parameter is retained for backwards compatibility but
- * no longer used — callers got dimming that varied by overlay; the
- * editorial direction picks one value per palette via the token.
+ * The palette owns the dimming alpha so every overlay remains consistent in
+ * both light and dark themes.
  */
 @Composable
 fun ParlorScrim(
-    @Suppress("UNUSED_PARAMETER") alpha: Float = 0.75f,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit = {},
 ) {

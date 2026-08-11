@@ -422,7 +422,6 @@ private fun MafiaPeerWaitingForStart(
             EyebrowLabel(text = stringResource(Res.string.md_peer_eyebrow))
             ParlorCard(
                 modifier = Modifier.fillMaxWidth(),
-                elevation = ParlorTheme.elevation.dramatic,
                 cornerRadius = ParlorTheme.radii.elevated,
                 contentPadding = ParlorTheme.spacing.l,
                 hero = true,

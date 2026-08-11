@@ -107,7 +107,6 @@ fun DossierCard(
         modifier = modifier
             .fillMaxWidth()
             .padding(ParlorTheme.spacing.l),
-        elevation = ParlorTheme.elevation.dramatic,
         cornerRadius = ParlorTheme.radii.elevated,
         contentPadding = ParlorTheme.spacing.xl,
         hero = true,

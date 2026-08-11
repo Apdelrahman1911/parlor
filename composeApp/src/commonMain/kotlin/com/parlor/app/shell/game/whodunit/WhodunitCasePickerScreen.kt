@@ -34,6 +34,9 @@ import com.parlor.app.resources.case_picker_back_description
 import com.parlor.app.resources.case_picker_eyebrow
 import com.parlor.app.resources.case_picker_empty
 import com.parlor.app.resources.case_picker_modes_format
+import com.parlor.app.resources.case_picker_mode_classic
+import com.parlor.app.resources.case_picker_mode_elimination
+import com.parlor.app.resources.case_picker_mode_unknown
 import com.parlor.app.resources.case_picker_players_format
 import com.parlor.app.resources.case_picker_subtitle
 import com.parlor.app.resources.case_picker_title
@@ -154,7 +157,7 @@ private fun CaseRow(summary: CaseSummary, onClick: () -> Unit) {
     )
     val modesText = stringResource(Res.string.case_picker_modes_format).replace(
         "%1\$s",
-        summary.supportedModes.joinToString(", "),
+        localizedModeNames(summary.supportedModes),
     )
     Box(
         modifier = Modifier
@@ -198,6 +201,20 @@ private fun CaseRow(summary: CaseSummary, onClick: () -> Unit) {
                     color = colors.textTertiary,
                 )
             }
+        }
+    }
+}
+
+@Composable
+private fun localizedModeNames(modeIds: List<String>): String {
+    val classic = stringResource(Res.string.case_picker_mode_classic)
+    val elimination = stringResource(Res.string.case_picker_mode_elimination)
+    val unknown = stringResource(Res.string.case_picker_mode_unknown)
+    return modeIds.joinToString(", ") { modeId ->
+        when (modeId) {
+            WhodunitIds.ClassicVoteModeId.raw -> classic
+            WhodunitIds.EliminationModeId.raw -> elimination
+            else -> unknown
         }
     }
 }

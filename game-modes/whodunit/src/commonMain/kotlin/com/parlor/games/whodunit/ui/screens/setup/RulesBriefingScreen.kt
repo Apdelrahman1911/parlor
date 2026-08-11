@@ -78,7 +78,6 @@ fun RulesBriefingScreen(
 
             ParlorCard(
                 modifier = Modifier.fillMaxWidth(),
-                elevation = ParlorTheme.elevation.high,
                 cornerRadius = ParlorTheme.radii.elevated,
                 contentPadding = ParlorTheme.spacing.xxl,
             ) {
