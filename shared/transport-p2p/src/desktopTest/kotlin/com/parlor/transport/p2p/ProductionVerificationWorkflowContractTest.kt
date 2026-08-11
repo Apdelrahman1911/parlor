@@ -106,6 +106,11 @@ class ProductionVerificationWorkflowContractTest {
         val xcodeProject = read("iosApp/iosApp.xcodeproj/project.pbxproj")
 
         listOf(
+            "DEVELOPER_DIR: /Applications/Xcode_16.4.app/Contents/Developer",
+            "Xcode 16.4",
+            "Build version 16F6",
+            "xcrun --sdk iphoneos --show-sdk-version",
+            "xcrun --sdk iphonesimulator --show-sdk-version",
             "allTests",
             "productionAppleCheck",
             "--dependency-verification=strict",

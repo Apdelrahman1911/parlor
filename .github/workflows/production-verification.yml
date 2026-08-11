@@ -90,6 +90,11 @@ jobs:
     name: iOS tests, release frameworks, and Swift wrapper
     runs-on: macos-15
     timeout-minutes: 120
+    env:
+      # macos-15 installs this reviewed GA toolchain alongside newer Xcodes.
+      # Fail explicitly if the runner image removes or replaces it instead of
+      # silently qualifying a candidate with a different compiler/SDK.
+      DEVELOPER_DIR: /Applications/Xcode_16.4.app/Contents/Developer
 
     steps:
       - name: Check out source
@@ -110,7 +115,12 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p build/ci-evidence
+          test -x "$DEVELOPER_DIR/usr/bin/xcodebuild"
           xcodebuild -version | tee build/ci-evidence/xcode-version.txt
+          test "$(sed -n '1p' build/ci-evidence/xcode-version.txt)" = "Xcode 16.4"
+          test "$(sed -n '2p' build/ci-evidence/xcode-version.txt)" = "Build version 16F6"
+          xcrun --sdk iphoneos --show-sdk-version | tee build/ci-evidence/iphoneos-sdk.txt
+          xcrun --sdk iphonesimulator --show-sdk-version | tee build/ci-evidence/iphonesimulator-sdk.txt
           git rev-parse HEAD | tee build/ci-evidence/commit.txt
           test -z "$(git status --porcelain)"
 
