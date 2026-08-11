@@ -19,11 +19,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.parlor.app.resources.Res
 import com.parlor.app.resources.home_resume_open_failed
+import com.parlor.app.resources.local_resume_failure_discard_failed
 import com.parlor.app.shell.game.GameShellLaunch
 import com.parlor.app.shell.game.GameShellBackRequest
 import com.parlor.app.shell.game.GameShellRegistry
 import com.parlor.app.shell.game.GameShellRouter
 import com.parlor.app.shell.home.HomeScreen
+import com.parlor.app.shell.home.LocalResumeFailureScreen
 import com.parlor.app.shell.settings.SettingsScreen
 import com.parlor.core.ids.SessionId
 import com.parlor.core.result.Result
@@ -43,10 +45,6 @@ import com.parlor.session.multidevice.ProcessMultiplayerSessionOwner
 import com.parlor.session.multidevice.routeOrNull
 import com.parlor.storage.settings.SettingsStore
 import com.parlor.storage.snapshot.SnapshotStore
-import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.currentCoroutineContext
-import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -88,6 +86,9 @@ fun App() {
         ) {
             CompositionLocalProvider(LocalParlorToastState provides toastState) {
                 val resumeOpenFailedText = stringResource(Res.string.home_resume_open_failed)
+                val resumeDiscardFailedText = stringResource(
+                    Res.string.local_resume_failure_discard_failed,
+                )
                 val initialLaunch = remember(ownedMultiplayerRoute, gameShellRouter) {
                     ownedMultiplayerRoute?.let(gameShellRouter::restoreOwned)
                 }
@@ -96,8 +97,18 @@ fun App() {
                         initialLaunch?.let(AppScreen::Game) ?: AppScreen.Home,
                     )
                 }
-                var localResumeJob: Job? by remember { mutableStateOf(null) }
-                val localResumeGate = remember { LocalResumeRequestGate() }
+                val localResumeCoordinator = remember(
+                    appScope,
+                    snapshotStore,
+                    gameShellRouter,
+                ) {
+                    LocalResumeCoordinator(
+                        scope = appScope,
+                        store = snapshotStore,
+                        router = gameShellRouter,
+                    )
+                }
+                val localResumeBusy by localResumeCoordinator.busy.collectAsState()
                 var unfinishedRefreshKey by remember { mutableStateOf(0) }
                 var hadOwnedMultiplayerRoute by remember {
                     mutableStateOf(ownedMultiplayerRoute != null)
@@ -144,11 +155,17 @@ fun App() {
                 }
 
                 val backToHome: () -> Unit = {
-                    localResumeGate.invalidate()
-                    localResumeJob?.cancel()
-                    localResumeJob = null
+                    localResumeCoordinator.invalidate()
                     unfinishedRefreshKey++
                     screen = AppScreen.Home
+                }
+
+                val requestLocalResume: (SessionId) -> Unit = { sessionId ->
+                    localResumeCoordinator.request(
+                        sessionId = sessionId,
+                        currentScreen = { screen },
+                        navigate = { destination -> screen = destination },
+                    )
                 }
 
                 LaunchedEffect(ownedMultiplayerRoute) {
@@ -198,63 +215,21 @@ fun App() {
                             AppScreen.Home -> HomeScreen(
                                 games = gameShellRegistry.all,
                                 onGameSelected = { gameId ->
-                                    localResumeGate.invalidate()
-                                    localResumeJob?.cancel()
-                                    localResumeJob = null
+                                    localResumeCoordinator.invalidate()
                                     gameShellRouter.newGame(gameId)?.let { launch ->
                                         screen = AppScreen.Game(launch)
                                     }
                                 },
                                 onSettings = {
-                                    localResumeGate.invalidate()
-                                    localResumeJob?.cancel()
-                                    localResumeJob = null
+                                    localResumeCoordinator.invalidate()
                                     screen = AppScreen.Settings
                                 },
                                 modifier = Modifier.fillMaxSize(),
                                 unfinishedSessions = unfinishedSessions,
-                                onResume = { sessionId ->
-                                    localResumeJob?.cancel()
-                                    val requestGeneration = localResumeGate.begin()
-                                    val request = appScope.launch(start = CoroutineStart.LAZY) {
-                                        try {
-                                            when (
-                                                val destination = resolveLocalResumeDestination(
-                                                    store = snapshotStore,
-                                                    router = gameShellRouter,
-                                                    sessionId = sessionId,
-                                                )
-                                            ) {
-                                                is Result.Success -> if (
-                                                    localResumeGate.isCurrent(requestGeneration) &&
-                                                    screen == AppScreen.Home
-                                                ) {
-                                                    screen = AppScreen.Game(destination.data)
-                                                }
-                                                is Result.Failure -> if (
-                                                    localResumeGate.isCurrent(requestGeneration) &&
-                                                    screen == AppScreen.Home
-                                                ) {
-                                                    toastState.show(
-                                                        text = resumeOpenFailedText,
-                                                        severity = ParlorToastSeverity.Danger,
-                                                    )
-                                                }
-                                            }
-                                        } finally {
-                                            if (localResumeJob === currentCoroutineContext()[Job]) {
-                                                localResumeJob = null
-                                            }
-                                        }
-                                    }
-                                    localResumeJob = request
-                                    request.start()
-                                },
+                                onResume = requestLocalResume,
                                 hasResumableMultiplayer = resumableMultiplayer != null,
                                 onResumeMultiplayer = {
-                                    localResumeGate.invalidate()
-                                    localResumeJob?.cancel()
-                                    localResumeJob = null
+                                    localResumeCoordinator.invalidate()
                                     val info = resumableMultiplayer
                                     val launch = info?.let {
                                         gameShellRouter.resumeMultiplayer(
@@ -272,6 +247,29 @@ fun App() {
                                         screen = AppScreen.Game(launch)
                                     }
                                 },
+                            )
+
+                            is AppScreen.LocalResumeFailure -> LocalResumeFailureScreen(
+                                actionsEnabled = !localResumeBusy,
+                                onRetry = { requestLocalResume(current.sessionId) },
+                                onDiscard = {
+                                    localResumeCoordinator.discard(
+                                        sessionId = current.sessionId,
+                                        currentScreen = { screen },
+                                        onDiscarded = {
+                                            unfinishedRefreshKey++
+                                            screen = AppScreen.Home
+                                        },
+                                        onFailure = {
+                                            toastState.show(
+                                                text = resumeDiscardFailedText,
+                                                severity = ParlorToastSeverity.Danger,
+                                            )
+                                        },
+                                    )
+                                },
+                                onBack = backToHome,
+                                modifier = Modifier.fillMaxSize(),
                             )
 
                             is AppScreen.Game -> {

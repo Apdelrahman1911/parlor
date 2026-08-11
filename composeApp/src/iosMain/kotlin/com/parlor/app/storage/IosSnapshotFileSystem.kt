@@ -146,15 +146,20 @@ internal class IosSnapshotFileSystem(
 
     override suspend fun list(): List<String> = withContext(Dispatchers.Default) {
         // listUnfinished() runs on cold start, so upgrade old plaintext even
-        // if the user does not open its resume tile.
-        if (fileManager.fileExistsAtPath(legacyBasePath)) {
+        // if the user does not open its resume tile. Migrate independently so
+        // one damaged legacy record cannot hide every healthy saved game.
+        val legacyNames = if (fileManager.fileExistsAtPath(legacyBasePath)) {
             listDirectory(legacyBasePath)
                 .asSequence()
                 .filter(::isSafeSnapshotFileName)
                 .filter { it.endsWith(FileBackedSnapshotStore.SUFFIX) }
-                .forEach { readProtectedOrMigrate(it) }
+                .toList()
+        } else {
+            emptyList()
         }
-        listDirectory(basePath).filter(::isSafeSnapshotFileName)
+        migrateSnapshotRecordsIndependently(legacyNames, ::readProtectedOrMigrate)
+        val protectedNames = listDirectory(basePath).filter(::isSafeSnapshotFileName)
+        (legacyNames + protectedNames).distinct()
     }
 
     private fun readProtectedOrMigrate(name: String): ByteArray? {

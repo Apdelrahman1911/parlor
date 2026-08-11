@@ -77,8 +77,10 @@ class AndroidSnapshotFileSystem(private val context: Context) : SnapshotFileSyst
 
     override suspend fun list(): List<String> = withContext(Dispatchers.IO) {
         // listUnfinished() is called on cold start, so upgrades remove old
-        // plaintext even when the user never opens that resume tile.
-        legacyDir
+        // plaintext even when the user never opens that resume tile. Migrate
+        // records independently: a corrupt legacy save remains visible for
+        // explicit recovery instead of hiding every healthy save.
+        val legacyNames = legacyDir
             .takeIf(File::isDirectory)
             ?.listFiles()
             ?.asSequence()
@@ -86,9 +88,11 @@ class AndroidSnapshotFileSystem(private val context: Context) : SnapshotFileSyst
             ?.map(File::getName)
             ?.filter(::isSafeSnapshotFileName)
             ?.filter { it.endsWith(FileBackedSnapshotStore.SUFFIX) }
-            ?.forEach { readProtectedOrMigrate(it) }
+            ?.toList()
+            .orEmpty()
+        migrateSnapshotRecordsIndependently(legacyNames, ::readProtectedOrMigrate)
 
-        baseDir.listFiles()
+        val protectedNames = baseDir.listFiles()
             ?.asSequence()
             ?.filter(File::isFile)
             ?.map(File::getName)
@@ -96,6 +100,7 @@ class AndroidSnapshotFileSystem(private val context: Context) : SnapshotFileSyst
             ?.filterNot { it.endsWith(".tmp") }
             ?.toList()
             .orEmpty()
+        (legacyNames + protectedNames).distinct()
     }
 
     private fun readProtectedOrMigrate(name: String): ByteArray? {

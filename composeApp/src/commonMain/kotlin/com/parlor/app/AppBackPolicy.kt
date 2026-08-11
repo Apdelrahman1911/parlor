@@ -11,12 +11,15 @@ internal enum class AppBackAction {
 
 internal fun appBackAction(screen: AppScreen): AppBackAction = when (screen) {
     AppScreen.Home -> AppBackAction.AllowPlatformExit
-    AppScreen.Settings -> AppBackAction.NavigateHome
+    AppScreen.Settings,
+    is AppScreen.LocalResumeFailure,
+    -> AppBackAction.NavigateHome
     is AppScreen.Game -> AppBackAction.DelegateToGame
 }
 
 internal sealed interface AppScreen {
     data object Home : AppScreen
     data class Game(val launch: GameShellLaunch) : AppScreen
+    data class LocalResumeFailure(val sessionId: com.parlor.core.ids.SessionId) : AppScreen
     data object Settings : AppScreen
 }
