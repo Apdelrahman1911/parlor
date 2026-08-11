@@ -3634,6 +3634,34 @@ class P2pKitRoomTransportLifecycleTest {
     }
 
     @Test
+    fun host_foreground_activates_after_an_existing_peer_session_reconnects() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("host-pid"))
+        val room = newHostRoom(kit)
+        val alice = FakeP2pSession(peer("alice-pid", "Alice"))
+        admit(room, kit, alice)
+
+        room.appBackgrounded(1_000L)
+        assertThat(room.lifecycle.value)
+            .isEqualTo(RoomLifecycleState.Suspended(121_000L))
+        assertThat(room.members.value.single().connected).isFalse()
+
+        // P2pKit retains this authenticated session and reports its normal
+        // reconnect state progression. Foreground cannot mark the room active
+        // until the admitted seat is restored.
+        alice.stateFlow.value = ConnectionState.Reconnecting
+        yield()
+        room.appForegrounded(2_000L)
+        assertThat(room.lifecycle.value)
+            .isEqualTo(RoomLifecycleState.Resuming(121_000L))
+
+        alice.stateFlow.value = ConnectionState.Connected
+        awaitCondition { room.lifecycle.value == RoomLifecycleState.Active }
+        assertThat(room.members.value.single().connected).isTrue()
+
+        room.leave()
+    }
+
+    @Test
     fun repeated_background_notification_is_idempotent_and_does_not_extend_deadline() = runBlocking {
         val kit = FakeP2pKit(P2pPeerId("host-pid"))
         val room = newHostRoom(kit)

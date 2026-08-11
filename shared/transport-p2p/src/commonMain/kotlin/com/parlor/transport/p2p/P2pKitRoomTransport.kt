@@ -2098,6 +2098,13 @@ internal class HostP2pRoom(
                                 }
                             }
                             if (restored) {
+                                // Foregrounding marks every seat disconnected
+                                // before P2pKit performs its physical reconnects.
+                                // The initial foreground check therefore cannot
+                                // activate a non-empty room. Re-evaluate after
+                                // each existing session reaches Connected so the
+                                // last restored seat releases the room barrier.
+                                markActiveIfRestored()
                                 _peerEvents.emit(PeerEvent.PeerReconnected(playerId, displayName))
                             }
                         }
