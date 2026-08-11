@@ -156,13 +156,24 @@ class WhodunitPayloadHardeningTest {
     }
 
     @Test
-    fun everyBundledMysteryAdvertisesOnlyItsAuthoredSixCharacterRoster() = runTest {
-        BUNDLED_CASE_IDS.forEach { caseId ->
+    fun everyBundledMysteryMatchesTheShippingLanguageModeAndRosterContract() = runTest {
+        bundledWhodunitCaseIds.forEach { caseId ->
             val raw = Res.readBytes("files/cases/$caseId.json").decodeToString()
             val envelope = json.decodeFromString(CaseEnvelope.serializer(), raw)
             val validated = assertIs<Result.Success<WhodunitCase>>(validator.validate(envelope))
 
             val metadata = envelope.metadata?.jsonObject
+            assertEquals(caseId, envelope.caseId, caseId)
+            assertEquals(
+                if (caseId == "last-dinner") "en" else "ar",
+                envelope.language,
+                caseId,
+            )
+            assertEquals(
+                setOf("classic-vote", "elimination"),
+                envelope.supportedModes.toSet(),
+                caseId,
+            )
             assertFalse("authors" in (metadata?.keys ?: emptySet()), caseId)
             assertFalse(
                 metadata?.values?.any { value ->
@@ -192,15 +203,4 @@ class WhodunitPayloadHardeningTest {
         assertIs<Result.Failure<*>>(validator.validate(envelope))
     }
 
-    private companion object {
-        val BUNDLED_CASE_IDS = listOf(
-            "last-dinner",
-            "khan-el-khalili",
-            "layla-halabi",
-            "iskenderia-corniche",
-            "zamalek-ramadan",
-            "saidi-inheritance",
-            "jasmine-ring",
-        )
-    }
 }

@@ -6,6 +6,7 @@ import com.parlor.games.whodunit.WhodunitDefinition
 import com.parlor.games.whodunit.content.BundledWhodunitCases
 import com.parlor.games.whodunit.content.WhodunitCase
 import com.parlor.games.whodunit.content.WhodunitPayloadValidator
+import com.parlor.games.whodunit.content.bundledWhodunitCaseIds
 import com.parlor.games.whodunit.resources.Res
 import kotlinx.coroutines.CancellationException
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -33,15 +34,7 @@ val whodunitModule = module {
 
     single<BundledFallbackCaseDataSource> {
         BundledWhodunitCases(
-            knownCaseIds = listOf(
-                "last-dinner",
-                "layla-halabi",
-                "jasmine-ring",
-                "khan-el-khalili",
-                "iskenderia-corniche",
-                "zamalek-ramadan",
-                "saidi-inheritance",
-            ),
+            knownCaseIds = bundledWhodunitCaseIds,
             loadJson = { caseId ->
                 try {
                     Res.readBytes("files/cases/$caseId.json")

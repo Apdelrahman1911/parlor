@@ -26,10 +26,9 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import kotlin.test.Test
 
 /**
- * Validates the bundled Arabic cases (`layla-halabi`, `jasmine-ring`) through
- * the same envelope + payload validators as production, so a structural
- * problem in either Arabic JSON file surfaces at build time rather than at
- * the table.
+ * Deep localization regressions for the original `layla-halabi` and
+ * `jasmine-ring` cases. The full production catalog is validated separately
+ * by [WhodunitPayloadHardeningTest] and [CasePickerDiscoveryTest].
  *
  * The cases are intended for play-test with Arabic-speaking groups; the
  * validator does not care about language, but rule 11 (kebab-case ids) and
@@ -106,15 +105,13 @@ class ArabicCaseValidationTest {
     }
 
     @Test
-    fun both_arabic_cases_share_the_bundled_data_source_without_collisions() = runTest {
-        // The whodunit DI module registers all three cases under one
-        // BundledFallbackCaseDataSource. This mirrors that wiring exactly so a
-        // clue-id collision between the two Arabic cases (or with the
-        // English one) would fail here.
-        val bundled = buildBundled(listOf("last-dinner", "layla-halabi", "jasmine-ring"))
+    fun original_arabic_cases_share_the_full_bundled_data_source_without_collisions() = runTest {
+        // Exercise the original Arabic regression fixtures through the same
+        // complete case catalog wired by production DI.
+        val bundled = buildBundled(bundledWhodunitCaseIds)
         val summaries = bundled.availableCases()
         val ids = summaries.map { it.caseId }.toSet()
-        assertThat(ids).isEqualTo(setOf("last-dinner", "layla-halabi", "jasmine-ring"))
+        assertThat(ids).isEqualTo(bundledWhodunitCaseIds.toSet())
 
         // Validate each through the same payload validator to confirm none
         // step on the others. Rule 16 (clue-id global uniqueness) only fires

@@ -29,11 +29,13 @@ internal const val MAX_CASE_LIST_RESPONSE_BYTES: Int = 256 * 1024
 internal const val MAX_CASE_RESPONSE_BYTES: Int = 512 * 1024
 
 /**
- * Ktor-backed remote source. Dev builds inject an HttpClient with the
- * MockEngine pointed at static JSON in-repo; production injects a real engine
- * pointed at the case-management backend.
+ * Optional Ktor-backed remote source for a future HTTPS content service.
  *
- * Either way, this is the *only* content code path. No inline shortcut exists.
+ * The current shipping application deliberately binds
+ * [OfflineRemoteCaseDataSource]; this implementation is exercised by bounded
+ * adapter tests but is not reachable from production DI. Enabling it is a
+ * release-level decision requiring endpoint, trust, observability, and
+ * compatibility review.
  */
 class KtorRemoteCaseDataSource(
     private val client: HttpClient,

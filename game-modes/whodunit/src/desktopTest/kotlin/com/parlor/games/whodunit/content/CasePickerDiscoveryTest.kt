@@ -30,6 +30,7 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.utils.io.ByteReadChannel
+import java.io.File
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -41,9 +42,9 @@ import kotlin.test.Test
  * `CaseRepository.listCases(WhodunitIds.GameId)` path, so the UI never
  * silently hides a case that the build was supposed to ship.
  *
- * The DI-configured list is the source of truth and **changes break this
- * test on purpose** — adding a JSON to `composeResources/files/cases/`
- * without adding it to `knownCaseIds` is the failure mode this guards.
+ * The production catalog is the source of truth and **changes break this test
+ * on purpose**. A filesystem assertion below also proves that the catalog and
+ * packaged JSON resources are exactly the same set.
  */
 @OptIn(ExperimentalResourceApi::class)
 class CasePickerDiscoveryTest {
@@ -54,23 +55,9 @@ class CasePickerDiscoveryTest {
         encodeDefaults = true
     }
 
-    /**
-     * The same list the production Koin module wires (kept in sync manually —
-     * touch this list when `WhodunitDiModule.knownCaseIds` changes).
-     */
-    private val productionKnownCaseIds = listOf(
-        "last-dinner",
-        "layla-halabi",
-        "jasmine-ring",
-        "khan-el-khalili",
-        "iskenderia-corniche",
-        "zamalek-ramadan",
-        "saidi-inheritance",
-    )
-
     private fun buildRepository(remote: RemoteCaseDataSource? = null): DefaultCaseRepository {
         val bundled = BundledWhodunitCases(
-            knownCaseIds = productionKnownCaseIds,
+            knownCaseIds = bundledWhodunitCaseIds,
             loadJson = { caseId ->
                 runCatching {
                     Res.readBytes("files/cases/$caseId.json").decodeToString()
@@ -104,10 +91,10 @@ class CasePickerDiscoveryTest {
         assertThat(result).isInstanceOf(Result.Success::class)
         val summaries = (result as Result.Success).data
         val surfacedIds = summaries.map { it.caseId }
-        assertThat(surfacedIds).containsAtLeast(*productionKnownCaseIds.toTypedArray())
-        // Hard-fail if the list grows beyond known — that means a JSON was
-        // shipped without a knownCaseIds entry, or vice-versa.
-        assertThat(surfacedIds.toSet()).isEqualTo(productionKnownCaseIds.toSet())
+        assertThat(surfacedIds).containsAtLeast(*bundledWhodunitCaseIds.toTypedArray())
+        // Remote/cache behavior must never add an item outside the production
+        // catalog. Resource-to-catalog parity is asserted separately below.
+        assertThat(surfacedIds.toSet()).isEqualTo(bundledWhodunitCaseIds.toSet())
     }
 
     @Test
@@ -115,7 +102,7 @@ class CasePickerDiscoveryTest {
         val repo = buildRepository()
         val result = repo.listCases(WhodunitIds.GameId)
         val summaries = (result as Result.Success).data
-        assertThat(summaries).hasSize(productionKnownCaseIds.size)
+        assertThat(summaries).hasSize(bundledWhodunitCaseIds.size)
         for (summary in summaries) {
             assertThat(summary.gameId).isEqualTo(WhodunitIds.GameId.raw)
         }
@@ -181,6 +168,32 @@ class CasePickerDiscoveryTest {
 
         val result = buildRepository(maliciousRemote).listCases(WhodunitIds.GameId)
         val summaries = (result as Result.Success).data
-        assertThat(summaries.map { it.caseId }.toSet()).isEqualTo(productionKnownCaseIds.toSet())
+        assertThat(summaries.map { it.caseId }.toSet()).isEqualTo(bundledWhodunitCaseIds.toSet())
+    }
+
+    @Test
+    fun production_catalog_exactly_matches_packaged_case_resources() {
+        val caseDirectory = File(
+            findProjectRoot(),
+            "game-modes/whodunit/src/commonMain/composeResources/files/cases",
+        )
+        val resourceFiles = caseDirectory.listFiles()
+            .orEmpty()
+            .filter { file -> file.isFile }
+            .map { file -> file.name }
+            .toSet()
+        val expectedFiles = bundledWhodunitCaseIds.map { caseId -> "$caseId.json" }.toSet()
+
+        assertThat(resourceFiles).isEqualTo(expectedFiles)
+        assertThat(resourceFiles).hasSize(bundledWhodunitCaseIds.size)
+    }
+
+    private fun findProjectRoot(): File {
+        var directory = File(System.getProperty("user.dir") ?: ".").absoluteFile
+        repeat(8) {
+            if (File(directory, "settings.gradle.kts").isFile) return directory
+            directory = directory.parentFile ?: return@repeat
+        }
+        error("Could not locate project root")
     }
 }
