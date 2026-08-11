@@ -2549,6 +2549,103 @@ class P2pKitRoomTransportLifecycleTest {
         }
 
     @Test
+    fun process_recreation_prefers_a_pending_different_room_that_the_host_may_have_committed() =
+        runBlocking {
+            val secureStorage = testSecureStorage()
+            val now = kotlin.time.Clock.System.now().toEpochMilliseconds()
+            val oldCredential = resumableCredential(
+                generation = 1L,
+                offerId = "old-room-offer",
+                roomCode = "ABCDEF",
+                playerId = "old-player-pid",
+                hostPeerId = "old-host-pid",
+            ).copy(
+                issuedAtEpochMillis = now,
+                expiresAtEpochMillis = now + 86_400_000L,
+            )
+            val pendingNewRoom = resumableCredential(
+                generation = 1L,
+                offerId = "new-room-offer",
+                roomCode = "XYZ789",
+                playerId = "new-player-pid",
+                hostPeerId = "new-host-pid",
+            ).copy(
+                secret = "c".repeat(64),
+                issuedAtEpochMillis = now,
+                expiresAtEpochMillis = now + 86_400_000L,
+            )
+            val credentials = ResumableCredentialStore(secureStorage)
+            credentials.stage(oldCredential)
+            credentials.commit(oldCredential.offerId, oldCredential.generation)
+            credentials.stage(pendingNewRoom)
+
+            val hostPeer = peer(
+                id = pendingNewRoom.hostPeerId,
+                name = "${P2pKitRoomTransport.P2P_ROOM_PREFIX}New Host",
+            )
+            val session = FakeP2pSession(hostPeer)
+            val rotatedOffer = testCredentialOffer(
+                playerId = PlayerId(pendingNewRoom.playerId),
+                hostPeerId = pendingNewRoom.hostPeerId,
+                generation = 2L,
+            )
+            val requests = mutableListOf<PeerMessage.ResumeRequested>()
+            session.sendHandler = { message ->
+                when (
+                    val request = (message as? P2pMessage.Binary)
+                        ?.let { codec.decode(it.bytes) }
+                ) {
+                    is PeerMessage.ResumeRequested -> {
+                        requests += request
+                        session.incomingFlow.emit(
+                            P2pMessage.Binary(codec.encode(HostMessage.ResumeOffered(rotatedOffer))),
+                        )
+                    }
+                    is PeerMessage.ResumeConfirmed -> session.incomingFlow.emit(
+                        P2pMessage.Binary(
+                            codec.encode(
+                                HostMessage.ResumeCommitted(
+                                    rotatedOffer.playerId,
+                                    rotatedOffer.offerId,
+                                    rotatedOffer.generation,
+                                ),
+                            ),
+                        ),
+                    )
+                    is PeerMessage.ResumeReady -> Unit
+                    else -> Unit
+                }
+            }
+            val kit = FakeP2pKit(P2pPeerId(pendingNewRoom.playerId)).apply {
+                connectHandler = { candidate ->
+                    check(candidate.id.value == pendingNewRoom.hostPeerId)
+                    session
+                }
+                peersFlow.value = listOf(hostPeer)
+            }
+            val transport = P2pKitRoomTransport(
+                appId = AppId("com.parlor.test"),
+                deviceName = "ignored-after-resume",
+                scope = testScope,
+                kitFactory = object : P2pKitFactory {
+                    override suspend fun createKit(appId: AppId, deviceName: String): P2pKit = kit
+                },
+                secureStorage = secureStorage,
+                joinTimeoutMs = 2_000L,
+            )
+
+            val resumed = transport.resumeLastSession()
+
+            assertThat(resumed).isInstanceOf(Result.Success::class)
+            assertThat(requests).hasSize(1)
+            assertThat(requests.single().roomCode).isEqualTo(pendingNewRoom.roomCode)
+            assertThat(requests.single().secret).isEqualTo(pendingNewRoom.secret)
+            assertThat((credentials.loadResumeCandidate() as Result.Success).data?.membershipId)
+                .isEqualTo(pendingNewRoom.membershipId)
+            (resumed as Result.Success).data.leave()
+        }
+
+    @Test
     fun expired_process_credential_is_conditionally_invalidated_before_resume_is_offered() =
         runBlocking {
             val secureStorage = testSecureStorage()

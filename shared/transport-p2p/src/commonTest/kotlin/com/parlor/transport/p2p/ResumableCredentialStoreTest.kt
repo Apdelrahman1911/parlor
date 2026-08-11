@@ -52,6 +52,31 @@ class ResumableCredentialStoreTest {
     }
 
     @Test
+    fun unrelated_pending_admission_wins_crash_recovery_without_destroying_old_rollback() =
+        runTest {
+            val oldRoom = credential(offerId = "old-offer", generation = 1)
+            val newRoom = credential(
+                offerId = "new-offer",
+                generation = 1,
+                roomCode = "XYZ789",
+                playerId = "alice-new-room",
+                hostPeerId = "new-host",
+            )
+            store.stage(oldRoom)
+            store.commit(oldRoom.offerId, oldRoom.generation)
+
+            // A process can die after the new host commits this admission but
+            // before the peer receives AdmissionCommitted and commits locally.
+            store.stage(newRoom)
+            assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(newRoom))
+
+            // If the host never committed, exact pending rollback still makes
+            // the last confirmed room recoverable.
+            store.discardPending(newRoom.offerId)
+            assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(oldRoom))
+        }
+
+    @Test
     fun discarding_a_failed_rotation_restores_the_committed_generation() = runTest {
         val generationOne = credential(offerId = "offer-1", generation = 1)
         val generationTwo = credential(offerId = "offer-2", generation = 2)

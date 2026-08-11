@@ -145,7 +145,7 @@ internal class ResumableCredentialStore(
         mutex.withLock {
             when (val loaded = loadRecord()) {
                 is Result.Failure -> loaded
-                is Result.Success -> Result.Success(loaded.data?.active ?: loaded.data?.pending)
+                is Result.Success -> Result.Success(loaded.data?.resumeCandidate())
             }
         }
 
@@ -365,6 +365,26 @@ internal class ResumableCredentialStore(
         const val STORAGE_KEY = "p2p-resumable-session-v1"
         const val MAX_RECORD_BYTES = 8 * 1024
     }
+}
+
+/**
+ * Selects the only candidate whose recovery cannot strand a newly committed
+ * membership after process death.
+ *
+ * A pending rotation of the active membership is deliberately not preferred:
+ * the last locally committed generation remains the safe first attempt and a
+ * host rejection exposes the pending rotation on the next attempt. A pending
+ * admission for a different membership is preferred, because its host may
+ * already have committed the new seat. Resuming the unrelated old membership
+ * first could overwrite that pending capability and permanently ghost the new
+ * seat. Exact pending rollback still restores the old active credential when
+ * the new host did not commit.
+ */
+private fun StoredCredentialRecord.resumeCandidate(): ResumableSessionCredential? = when {
+    pending == null -> active
+    active == null -> pending
+    active.ownsSameMembershipAs(pending) -> active
+    else -> pending
 }
 
 /** Validation failures are corrupted input; VM/runtime failures remain fatal. */
