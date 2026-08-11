@@ -2,7 +2,6 @@ package com.parlor.app.shell.home
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -20,12 +19,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.style.TextAlign
 import com.parlor.app.resources.Res
-import com.parlor.app.resources.home_coming_soon_state
 import com.parlor.app.resources.home_continue_label
 import com.parlor.app.resources.home_eyebrow
-import com.parlor.app.resources.home_future_game_title
 import com.parlor.app.resources.home_games_label
 import com.parlor.app.resources.home_resume_tile_description
 import com.parlor.app.resources.home_resume_tile_subtitle
@@ -55,10 +51,9 @@ import org.jetbrains.compose.resources.stringResource
  *     SETTINGS text-link on the trailing edge.
  *  2. **Continue** (only when [unfinishedSessions] is non-empty). Tappable
  *     tiles that drop the user back into an in-progress investigation.
- *  3. **Games.** Hero cards supplied by every installed game binding,
- *     followed by dimmed "Coming soon" placeholders. Tapping a game card
- *     invokes [onGameSelected]; the parent routes to the game setup screen
- *     (Solo / Pass-and-Play / Host / Join).
+ *  3. **Games.** Hero cards supplied by every installed game binding. Tapping
+ *     a game card invokes [onGameSelected]; the parent routes to the game
+ *     setup screen (Solo / Pass-and-Play / Host / Join).
  *
  * Multiplayer (host/join) is **not** surfaced here anymore — it's a choice
  * the user makes *after* picking a game, alongside Solo and Pass-and-Play.
@@ -217,18 +212,6 @@ private fun GamesSection(
                 onOpen = { onGameSelected(game.definition.id) },
             )
         }
-        Row(horizontalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m)) {
-            ComingSoonTile(
-                title = "${stringResource(Res.string.home_future_game_title)} ${games.size + 1}",
-                state = stringResource(Res.string.home_coming_soon_state),
-                modifier = Modifier.weight(1f),
-            )
-            ComingSoonTile(
-                title = "${stringResource(Res.string.home_future_game_title)} ${games.size + 2}",
-                state = stringResource(Res.string.home_coming_soon_state),
-                modifier = Modifier.weight(1f),
-            )
-        }
     }
 }
 
@@ -266,37 +249,6 @@ private fun GameHeroCard(
                 onClick = onOpen,
                 modifier = Modifier.fillMaxWidth(),
             )
-        }
-    }
-}
-
-@Composable
-private fun ComingSoonTile(
-    title: String,
-    state: String,
-    modifier: Modifier = Modifier,
-) {
-    ParlorCard(
-        modifier = modifier,
-        cornerRadius = ParlorTheme.radii.card,
-        contentPadding = ParlorTheme.spacing.l,
-    ) {
-        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(
-                    text = title,
-                    style = ParlorTheme.typography.headingMedium,
-                    color = ParlorTheme.colors.textTertiary,
-                    textAlign = TextAlign.Center,
-                )
-                Spacer(modifier = Modifier.height(ParlorTheme.spacing.xs))
-                Text(
-                    text = state.uppercase(),
-                    style = ParlorTheme.typography.labelSmall,
-                    color = ParlorTheme.colors.textTertiary,
-                    textAlign = TextAlign.Center,
-                )
-            }
         }
     }
 }

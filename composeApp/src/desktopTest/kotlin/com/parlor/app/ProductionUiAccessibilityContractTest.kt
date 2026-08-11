@@ -78,6 +78,18 @@ class ProductionUiAccessibilityContractTest {
     }
 
     @Test
+    fun game_catalog_renders_only_registered_shipping_games() {
+        val home = read("composeApp/src/commonMain/kotlin/com/parlor/app/shell/home/HomeScreen.kt")
+        val english = read("composeApp/src/commonMain/composeResources/values/strings.xml")
+        val arabic = read("composeApp/src/commonMain/composeResources/values-ar/strings.xml")
+
+        assertContains(home, "for (game in games)")
+        assertFalse(home.contains("ComingSoonTile"))
+        assertFalse(english.contains("home_coming_soon_state"))
+        assertFalse(arabic.contains("home_coming_soon_state"))
+    }
+
+    @Test
     fun nullable_language_override_and_platform_motion_preference_reach_the_app_shell() {
         val app = read("composeApp/src/commonMain/kotlin/com/parlor/app/App.kt")
         val settings = read(
