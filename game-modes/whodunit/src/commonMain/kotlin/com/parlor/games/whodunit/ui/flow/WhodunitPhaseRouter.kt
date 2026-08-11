@@ -38,6 +38,8 @@ import com.parlor.games.whodunit.resources.peer_postgame_body
 import com.parlor.games.whodunit.resources.peer_postgame_title
 import com.parlor.games.whodunit.resources.peer_round_body
 import com.parlor.games.whodunit.resources.peer_round_title
+import com.parlor.games.whodunit.resources.peer_vote_waiting_body
+import com.parlor.games.whodunit.resources.peer_vote_waiting_title_format
 import com.parlor.games.whodunit.resources.peer_waiting_eyebrow
 import com.parlor.games.whodunit.resources.peer_waiting_for_host
 import com.parlor.games.whodunit.resources.round_default_alibis_tagline
@@ -439,7 +441,8 @@ private fun PeerPhaseScreens(
                     verdict = verdict,
                     killerDisplayName = killerDisplayName(verdict, payload),
                     revealNarrative = revealNarrativeFor(verdict, payload),
-                    onAcknowledge = { /* peer cannot acknowledge — host closes the reveal */ },
+                    onAcknowledge = null,
+                    waitingLabel = waitingHint,
                     modifier = modifier,
                 )
             }
@@ -1036,9 +1039,14 @@ private fun VoteSegment(
             return
         }
         is VoteTurnPresentation.WaitingForVoter -> {
-            VoteHandoffScreen(
-                nextVoterName = nextVoterName ?: nextVoterFallback,
-                onContinue = { /* only the named player's device may open this ballot */ },
+            PeerWaitingForHostScreen(
+                eyebrow = stringResource(Res.string.peer_waiting_eyebrow),
+                title = stringResource(
+                    Res.string.peer_vote_waiting_title_format,
+                    nextVoterName ?: nextVoterFallback,
+                ),
+                body = stringResource(Res.string.peer_vote_waiting_body),
+                waitingHint = stringResource(Res.string.peer_waiting_for_host),
                 modifier = modifier,
             )
             return

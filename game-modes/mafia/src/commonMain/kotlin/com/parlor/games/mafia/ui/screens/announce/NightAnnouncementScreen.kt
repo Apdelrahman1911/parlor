@@ -41,7 +41,8 @@ fun NightAnnouncementScreen(
     killedPlayerName: String?,
     revealedRole: Role?,
     wasSaved: Boolean,
-    onAcknowledged: () -> Unit,
+    onAcknowledged: (() -> Unit)?,
+    waitingLabel: String? = null,
     modifier: Modifier = Modifier,
 ) {
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
@@ -89,12 +90,23 @@ fun NightAnnouncementScreen(
                     }
                 }
             }
-            ParlorButton(
-                label = stringResource(Res.string.night_announcement_continue),
-                contentDescription = stringResource(Res.string.night_announcement_continue_description),
-                onClick = onAcknowledged,
-                modifier = Modifier.fillMaxWidth(),
-            )
+            if (onAcknowledged != null) {
+                ParlorButton(
+                    label = stringResource(Res.string.night_announcement_continue),
+                    contentDescription = stringResource(
+                        Res.string.night_announcement_continue_description,
+                    ),
+                    onClick = onAcknowledged,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            } else if (waitingLabel != null) {
+                Text(
+                    text = waitingLabel,
+                    style = ParlorTheme.typography.bodyMedium,
+                    color = ParlorTheme.colors.textSecondary,
+                    textAlign = TextAlign.Center,
+                )
+            }
         }
     }
 }

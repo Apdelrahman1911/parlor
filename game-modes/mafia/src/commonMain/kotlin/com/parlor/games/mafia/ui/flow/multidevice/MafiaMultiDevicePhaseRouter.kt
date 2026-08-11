@@ -159,6 +159,7 @@ internal fun MafiaMultiDevicePhaseRouter(
             is MafiaPhase.NightAnnouncement -> NightAnnouncementSegment(
                 day = phase.day,
                 state = state,
+                selfPlayerId = selfPlayerId,
                 priv = selfPrivate,
                 session = session,
                 scope = scope,
@@ -192,6 +193,7 @@ internal fun MafiaMultiDevicePhaseRouter(
             is MafiaPhase.VoteAnnouncement -> VoteAnnouncementSegment(
                 day = phase.day,
                 state = state,
+                selfPlayerId = selfPlayerId,
                 priv = selfPrivate,
                 session = session,
                 scope = scope,
@@ -489,16 +491,18 @@ private fun ResolveNightButton(
 private fun NightAnnouncementSegment(
     day: Int,
     state: MafiaState,
+    selfPlayerId: PlayerId,
     priv: MafiaPrivate?,
     session: SessionController<MafiaState, MafiaAction, MafiaEvent>,
     scope: CoroutineScope,
 ) {
+    val mayAcknowledge = canAcknowledgeAnnouncement(state, selfPlayerId)
     val announcement = state.public.lastNight
     val killedName = announcement?.killedPlayerId?.let { displayNameOf(state, it) }
     val killedSlot = announcement?.killedPlayerId?.let { id ->
         state.public.roster.firstOrNull { it.playerId == id }
     }
-    if (priv?.nightAcknowledged == true) {
+    if (mayAcknowledge && priv?.nightAcknowledged == true) {
         WaitingScreen(
             eyebrow = stringResource(Res.string.waiting_day_eyebrow_format, day),
             headline = stringResource(Res.string.waiting_role_others_headline),
@@ -511,11 +515,17 @@ private fun NightAnnouncementSegment(
         killedPlayerName = killedName,
         revealedRole = killedSlot?.revealedRole,
         wasSaved = announcement?.wasSaved == true,
-        onAcknowledged = {
-            val selfId = priv?.let { state.privatePerPlayer.entries.firstOrNull { e -> e.value === it }?.key }
-            if (selfId != null) {
-                scope.launch { session.submit(MafiaAction.AcknowledgeNightAnnouncement(selfId)) }
+        onAcknowledged = if (mayAcknowledge) {
+            {
+                scope.launch {
+                    session.submit(MafiaAction.AcknowledgeNightAnnouncement(selfPlayerId))
+                }
             }
+        } else null,
+        waitingLabel = if (mayAcknowledge) {
+            null
+        } else {
+            stringResource(Res.string.waiting_eliminated_body)
         },
         modifier = Modifier.fillMaxSize(),
     )
@@ -584,15 +594,17 @@ private fun VotingSegment(
 private fun VoteAnnouncementSegment(
     day: Int,
     state: MafiaState,
+    selfPlayerId: PlayerId,
     priv: MafiaPrivate?,
     session: SessionController<MafiaState, MafiaAction, MafiaEvent>,
     scope: CoroutineScope,
 ) {
+    val mayAcknowledge = canAcknowledgeAnnouncement(state, selfPlayerId)
     val announcement = state.public.lastVote
     val eliminatedSlot = announcement?.eliminatedPlayerId?.let { id ->
         state.public.roster.firstOrNull { it.playerId == id }
     }
-    if (priv?.voteAcknowledged == true) {
+    if (mayAcknowledge && priv?.voteAcknowledged == true) {
         WaitingScreen(
             eyebrow = stringResource(Res.string.waiting_day_eyebrow_format, day),
             headline = stringResource(Res.string.waiting_role_others_headline),
@@ -608,11 +620,17 @@ private fun VoteAnnouncementSegment(
         eliminatedName = eliminatedSlot?.displayName,
         eliminatedRole = eliminatedRoleLabel,
         outcomeLine = outcomeText,
-        onAcknowledged = {
-            val selfId = priv?.let { p -> state.privatePerPlayer.entries.firstOrNull { it.value === p }?.key }
-            if (selfId != null) {
-                scope.launch { session.submit(MafiaAction.AcknowledgeVoteAnnouncement(selfId)) }
+        onAcknowledged = if (mayAcknowledge) {
+            {
+                scope.launch {
+                    session.submit(MafiaAction.AcknowledgeVoteAnnouncement(selfPlayerId))
+                }
             }
+        } else null,
+        waitingLabel = if (mayAcknowledge) {
+            null
+        } else {
+            stringResource(Res.string.waiting_eliminated_body)
         },
         modifier = Modifier.fillMaxSize(),
     )
@@ -710,6 +728,12 @@ private fun outcomeLine(outcome: VoteOutcome): String = when (outcome) {
 internal fun displayNameOf(state: MafiaState, id: PlayerId): String? =
     state.public.roster.firstOrNull { it.playerId == id }?.displayName
         ?: state.players.firstOrNull { it.id == id }?.displayName
+
+/** Only living, active seats with their own private bucket can acknowledge. */
+internal fun canAcknowledgeAnnouncement(state: MafiaState, id: PlayerId): Boolean =
+    id in state.privatePerPlayer &&
+        id !in state.public.droppedPlayers &&
+        state.public.roster.firstOrNull { it.playerId == id }?.alive == true
 
 private fun finalRoles(state: MafiaState): List<Pair<String, Role>> {
     val map = state.hostOnly.fullRoleMap

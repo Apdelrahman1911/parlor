@@ -20,6 +20,7 @@ import com.parlor.games.mafia.domain.phase.MafiaPhase
 import com.parlor.games.mafia.domain.reducer.MafiaReducer
 import com.parlor.games.mafia.domain.state.MafiaState
 import com.parlor.games.mafia.domain.state.Role
+import com.parlor.games.mafia.ui.flow.multidevice.canAcknowledgeAnnouncement
 import com.parlor.games.mafia.ui.flow.multidevice.nextHostAdvance
 import kotlin.time.Instant
 import kotlinx.serialization.json.Json
@@ -263,5 +264,35 @@ class MafiaMultiDeviceProgressionTest {
             state = submitAllNightActions(state, c)
             assertThat(nextHostAdvance(state)).isEqualTo(MafiaAction.ResolveNight)
         }
+    }
+
+    @Test
+    fun announcement_controls_are_exposed_only_to_living_active_seats() {
+        val seed = 8642L
+        val c = ctx(seed)
+        var state = step(initialState(5, seed), MafiaAction.StartGame, c)
+        for (player in state.players) {
+            state = step(state, MafiaAction.AcknowledgeRoleViewed(player.id), c)
+        }
+        state = driveHostAdvances(state, c)
+        state = submitAllNightActions(state, c)
+        state = driveHostAdvances(state, c)
+
+        val eliminated = requireNotNull(
+            state.public.roster.firstOrNull { !it.alive }?.playerId,
+        )
+        val living = requireNotNull(
+            state.public.roster.firstOrNull { it.alive }?.playerId,
+        )
+
+        assertThat(canAcknowledgeAnnouncement(state, eliminated)).isEqualTo(false)
+        assertThat(canAcknowledgeAnnouncement(state, living)).isEqualTo(true)
+
+        val droppedLiving = state.copy(
+            public = state.public.copy(
+                droppedPlayers = state.public.droppedPlayers + living,
+            ),
+        )
+        assertThat(canAcknowledgeAnnouncement(droppedLiving, living)).isEqualTo(false)
     }
 }

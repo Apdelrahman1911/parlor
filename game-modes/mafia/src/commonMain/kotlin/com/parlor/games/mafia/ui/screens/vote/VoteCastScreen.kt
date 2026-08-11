@@ -82,7 +82,8 @@ fun VoteAnnouncementScreen(
     eliminatedName: String?,
     eliminatedRole: String?,
     outcomeLine: String,
-    onAcknowledged: () -> Unit,
+    onAcknowledged: (() -> Unit)?,
+    waitingLabel: String? = null,
     modifier: Modifier = Modifier,
 ) {
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
@@ -148,12 +149,23 @@ fun VoteAnnouncementScreen(
                 }
             }
 
-            ParlorButton(
-                label = stringResource(Res.string.vote_announcement_continue),
-                contentDescription = stringResource(Res.string.vote_announcement_continue_description),
-                onClick = onAcknowledged,
-                modifier = Modifier.fillMaxWidth(),
-            )
+            if (onAcknowledged != null) {
+                ParlorButton(
+                    label = stringResource(Res.string.vote_announcement_continue),
+                    contentDescription = stringResource(
+                        Res.string.vote_announcement_continue_description,
+                    ),
+                    onClick = onAcknowledged,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            } else if (waitingLabel != null) {
+                Text(
+                    text = waitingLabel,
+                    style = ParlorTheme.typography.bodyMedium,
+                    color = ParlorTheme.colors.textSecondary,
+                    textAlign = TextAlign.Center,
+                )
+            }
         }
     }
 }

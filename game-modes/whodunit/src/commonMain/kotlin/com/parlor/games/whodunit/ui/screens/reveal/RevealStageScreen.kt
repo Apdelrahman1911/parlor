@@ -68,7 +68,8 @@ fun RevealStageScreen(
     verdict: Verdict,
     killerDisplayName: String,
     revealNarrative: String,
-    onAcknowledge: () -> Unit,
+    onAcknowledge: (() -> Unit)?,
+    waitingLabel: String? = null,
     modifier: Modifier = Modifier,
 ) {
     val colors = ParlorTheme.colors
@@ -199,12 +200,22 @@ fun RevealStageScreen(
                     )
                 }
             }
-            ParlorButton(
-                label = stringResource(Res.string.reveal_stage_continue),
-                contentDescription = stringResource(Res.string.reveal_stage_continue_description),
-                onClick = onAcknowledge,
-                modifier = Modifier.fillMaxWidth(),
-            )
+            if (onAcknowledge != null) {
+                ParlorButton(
+                    label = stringResource(Res.string.reveal_stage_continue),
+                    contentDescription = stringResource(
+                        Res.string.reveal_stage_continue_description,
+                    ),
+                    onClick = onAcknowledge,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            } else if (waitingLabel != null) {
+                EyebrowLabel(
+                    text = waitingLabel,
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center,
+                )
+            }
         }
     }
 }

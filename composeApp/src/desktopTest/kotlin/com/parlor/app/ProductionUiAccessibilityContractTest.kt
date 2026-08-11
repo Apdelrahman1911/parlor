@@ -69,12 +69,25 @@ class ProductionUiAccessibilityContractTest {
     }
 
     @Test
-    fun passive_waiting_surface_does_not_publish_a_no_op_click_action() {
+    fun passive_waiting_surfaces_do_not_publish_no_op_click_actions() {
         val router = read(
             "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/" +
                 "ui/flow/WhodunitPhaseRouter.kt",
         )
         assertFalse(router.contains("onTap = {}"))
+        assertFalse(router.contains("peer cannot acknowledge"))
+        assertFalse(router.contains("only the named player's device"))
+        assertContains(router, "onAcknowledge = null")
+        assertContains(router, "is VoteTurnPresentation.WaitingForVoter -> {")
+        assertContains(router, "PeerWaitingForHostScreen(")
+
+        val mafiaRouter = read(
+            "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/" +
+                "multidevice/MafiaMultiDevicePhaseRouter.kt",
+        )
+        assertFalse(mafiaRouter.contains(".value ==="))
+        assertContains(mafiaRouter, "canAcknowledgeAnnouncement(state, selfPlayerId)")
+        assertContains(mafiaRouter, "onAcknowledged = if (mayAcknowledge)")
     }
 
     @Test
