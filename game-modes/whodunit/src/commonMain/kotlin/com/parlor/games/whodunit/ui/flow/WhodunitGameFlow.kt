@@ -41,6 +41,7 @@ import com.parlor.core.ids.ModeId
 import com.parlor.core.ids.PlayerId
 import com.parlor.core.ids.SessionId
 import com.parlor.core.random.RandomSource
+import com.parlor.core.random.SessionSeedSource
 import com.parlor.core.result.DataError
 import com.parlor.core.result.Result
 import com.parlor.core.time.Clock
@@ -754,13 +755,13 @@ private fun SessionDrivenFlow(
     val clock: Clock = koinInject()
     val definition: WhodunitDefinition = koinInject()
     val snapshotStore: SnapshotStore = koinInject()
-    val seedSource: RandomSource = koinInject()
+    val seedSource: SessionSeedSource = koinInject()
     val scope = rememberCoroutineScope()
 
     // Seed source: restored snapshot wins so the resumed random stream picks
     // up where it left off. Fresh sessions get a system-random seed.
     val seed = remember(case.envelope.caseId, modeId, players, restoredState, seedSource) {
-        restoredState?.hostOnly?.randomSeed ?: seedSource.nextLong()
+        restoredState?.hostOnly?.randomSeed ?: seedSource.nextSeed()
     }
 
     val sessionConfig = remember(case.envelope.caseId, modeId, players, seed, restoredSessionId) {

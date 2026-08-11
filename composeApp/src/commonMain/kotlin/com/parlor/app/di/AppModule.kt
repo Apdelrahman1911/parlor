@@ -3,11 +3,12 @@ package com.parlor.app.di
 import com.parlor.app.lifecycle.AppLifecycleCoordinator
 import com.parlor.app.p2p.p2pBootstrapModules
 import com.parlor.app.storage.platformStorageModule
-import com.parlor.core.random.RandomSource
+import com.parlor.core.random.SessionSeedSource
 import com.parlor.core.time.Clock
 import com.parlor.core.time.SystemClock
 import com.parlor.games.mafia.di.mafiaModule
 import com.parlor.games.whodunit.di.whodunitModule
+import com.parlor.networking.security.SecureIds
 import com.parlor.session.multidevice.ProcessMultiplayerSessionOwner
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -30,7 +31,7 @@ import org.koin.dsl.module
  */
 val coreModule: Module = module {
     single<Clock> { SystemClock }
-    single<RandomSource> { RandomSource.system() }
+    single<SessionSeedSource> { SecureSessionSeedSource }
     single { AppLifecycleCoordinator(get()) }
     single<CoroutineScope>(qualifier = named("multiplayerSession")) {
         CoroutineScope(Dispatchers.Default + SupervisorJob())
@@ -49,6 +50,11 @@ val coreModule: Module = module {
             encodeDefaults = true
         }
     }
+}
+
+/** Production-only entropy boundary for hidden-role and role-order fairness. */
+internal object SecureSessionSeedSource : SessionSeedSource {
+    override fun nextSeed(): Long = SecureIds.randomLong()
 }
 
 val allModules: List<Module> = listOf(

@@ -17,7 +17,6 @@ interface RandomSource {
 
     companion object {
         fun seeded(seed: Long): RandomSource = SeededRandomSource(seed)
-        fun system(): RandomSource = SeededRandomSource(Random.Default.nextLong())
     }
 }
 
