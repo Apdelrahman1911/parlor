@@ -162,7 +162,7 @@ internal class IosSecureKeyValueBacking(
                 CFDictionarySetValue(dictionary, kSecMatchLimit, kSecMatchLimitOne)
             }
             if (valueData != null) {
-                data = createData(valueData)
+                data = createKeychainData(valueData)
                 CFDictionarySetValue(dictionary, kSecValueData, data)
                 CFDictionarySetValue(
                     dictionary,
@@ -184,7 +184,7 @@ internal class IosSecureKeyValueBacking(
         block: (CFDictionaryRef) -> T,
     ): T {
         val dictionary = newDictionary()
-        val data = createData(value)
+        val data = createKeychainData(value)
         try {
             CFDictionarySetValue(dictionary, kSecValueData, data)
             CFDictionarySetValue(
@@ -211,15 +211,6 @@ internal class IosSecureKeyValueBacking(
         cStr = value,
         encoding = kCFStringEncodingUTF8,
     ) ?: error("Couldn't encode Keychain credential key")
-
-    private fun createData(bytes: ByteArray): CFDataRef =
-        bytes.usePinned { pinned ->
-            CFDataCreate(
-                allocator = kCFAllocatorDefault,
-                bytes = pinned.addressOf(0).reinterpret(),
-                length = bytes.size.toLong(),
-            )
-        } ?: error("Couldn't allocate Keychain credential data")
 
     private fun copyData(data: CFDataRef): ByteArray {
         val size = CFDataGetLength(data)
@@ -251,3 +242,21 @@ internal class IosSecureKeyValueBacking(
         const val MAX_VALUE_BYTES = 16 * 1024
     }
 }
+
+/** Creates a CFData without addressing element zero when the value is empty. */
+internal fun createKeychainData(bytes: ByteArray): CFDataRef =
+    if (bytes.isEmpty()) {
+        CFDataCreate(
+            allocator = kCFAllocatorDefault,
+            bytes = null,
+            length = 0,
+        )
+    } else {
+        bytes.usePinned { pinned ->
+            CFDataCreate(
+                allocator = kCFAllocatorDefault,
+                bytes = pinned.addressOf(0).reinterpret(),
+                length = bytes.size.toLong(),
+            )
+        }
+    } ?: error("Couldn't allocate Keychain credential data")

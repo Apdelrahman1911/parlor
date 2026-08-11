@@ -190,7 +190,12 @@ class AndroidSnapshotFileSystem(private val context: Context) : SnapshotFileSyst
             if (
                 version != FORMAT_VERSION ||
                 ivSize != GCM_IV_BYTES ||
-                protectedBytes.size <= offset + ivSize + GCM_TAG_BYTES
+                !hasCompleteGcmPayload(
+                    recordSize = protectedBytes.size,
+                    payloadOffset = offset,
+                    nonceBytes = ivSize,
+                    tagBytes = GCM_TAG_BYTES,
+                )
             ) {
                 throw SnapshotProtectionException()
             }
@@ -200,7 +205,12 @@ class AndroidSnapshotFileSystem(private val context: Context) : SnapshotFileSyst
             val cipher = Cipher.getInstance(TRANSFORMATION)
             cipher.init(Cipher.DECRYPT_MODE, snapshotKey(), GCMParameterSpec(GCM_TAG_BITS, iv))
             cipher.updateAAD(aad(name))
-            return cipher.doFinal(ciphertext)
+            return cipher.doFinal(ciphertext).also { plaintext ->
+                if (plaintext.size > MAX_PLAINTEXT_SNAPSHOT_BYTES) {
+                    plaintext.fill(0)
+                    throw SnapshotProtectionException()
+                }
+            }
         } catch (failure: AEADBadTagException) {
             throw SnapshotProtectionException(cause = failure)
         } catch (cancelled: CancellationException) {

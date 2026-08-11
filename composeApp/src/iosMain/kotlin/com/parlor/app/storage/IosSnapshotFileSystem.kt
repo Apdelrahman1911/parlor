@@ -37,14 +37,17 @@ import platform.Foundation.NSDataWritingAtomic
 import platform.Foundation.NSDataWritingFileProtectionComplete
 import platform.Foundation.NSDocumentDirectory
 import platform.Foundation.NSError
+import platform.Foundation.NSFileHandle
 import platform.Foundation.NSFileManager
 import platform.Foundation.NSFileProtectionComplete
 import platform.Foundation.NSFileProtectionKey
 import platform.Foundation.NSURL
 import platform.Foundation.NSURLIsExcludedFromBackupKey
 import platform.Foundation.NSUserDomainMask
+import platform.Foundation.closeFile
 import platform.Foundation.create
-import platform.Foundation.dataWithContentsOfFile
+import platform.Foundation.fileHandleForReadingAtPath
+import platform.Foundation.readDataOfLength
 import platform.Foundation.writeToFile
 import platform.Security.SecRandomCopyBytes
 import platform.Security.errSecSuccess
@@ -196,16 +199,7 @@ internal class IosSnapshotFileSystem(
     }
 
     private fun readBytes(path: String, maximumBytes: Int): ByteArray {
-        val data = memScoped {
-            val error = alloc<ObjCObjectVar<NSError?>>()
-            error.value = null
-            NSData.dataWithContentsOfFile(path, options = 0u, error = error.ptr)
-                ?: throw IllegalStateException("Couldn't read protected snapshot")
-        }
-        if (data.length > maximumBytes.toULong()) {
-            throw SnapshotProtectionException()
-        }
-        return data.toByteArray()
+        return readBoundedSnapshotBytes(path, maximumBytes)
     }
 
     private fun listDirectory(path: String): List<String> =
@@ -236,7 +230,7 @@ internal class IosSnapshotFileSystem(
         val macKey = keyMaterial.copyOfRange(AES_KEY_BYTES, IosSnapshotKeychain.KEY_BYTES)
         return try {
             val iv = secureRandomBytes(IV_BYTES)
-            val ciphertext = aesCbc(kCCEncrypt, encryptionKey, iv, plaintext)
+            val ciphertext = iosAesCbc(kCCEncrypt, encryptionKey, iv, plaintext)
             val header = header()
             val authenticated = header + name.encodeToByteArray() + iv + ciphertext
             val tag = hmacSha256(macKey, authenticated)
@@ -290,7 +284,12 @@ internal class IosSnapshotFileSystem(
                 } finally {
                     expectedTag.fill(0)
                 }
-                aesCbc(kCCDecrypt, encryptionKey, iv, ciphertext)
+                iosAesCbc(kCCDecrypt, encryptionKey, iv, ciphertext).also { plaintext ->
+                    if (plaintext.size > MAX_PLAINTEXT_SNAPSHOT_BYTES) {
+                        plaintext.fill(0)
+                        throw SnapshotProtectionException()
+                    }
+                }
             } finally {
                 encryptionKey.fill(0)
                 macKey.fill(0)
@@ -303,43 +302,6 @@ internal class IosSnapshotFileSystem(
         } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
             throw SnapshotProtectionException(cause = failure)
         }
-    }
-
-    private fun aesCbc(
-        operation: UInt,
-        key: ByteArray,
-        iv: ByteArray,
-        input: ByteArray,
-    ): ByteArray = memScoped {
-        val output = ByteArray(input.size + AES_BLOCK_BYTES)
-        val moved = alloc<ULongVar>()
-        moved.value = 0u
-        val status = key.usePinned { keyPinned ->
-            iv.usePinned { ivPinned ->
-                input.usePinned { inputPinned ->
-                    output.usePinned { outputPinned ->
-                        CCCrypt(
-                            op = operation,
-                            alg = kCCAlgorithmAES,
-                            options = kCCOptionPKCS7Padding,
-                            key = keyPinned.addressOf(0),
-                            keyLength = kCCKeySizeAES256.toULong(),
-                            iv = ivPinned.addressOf(0),
-                            dataIn = inputPinned.addressOf(0),
-                            dataInLength = input.size.toULong(),
-                            dataOut = outputPinned.addressOf(0),
-                            dataOutAvailable = output.size.toULong(),
-                            dataOutMoved = moved.ptr,
-                        )
-                    }
-                }
-            }
-        }
-        if (status != kCCSuccess) {
-            output.fill(0)
-            throw SnapshotProtectionException()
-        }
-        output.copyOf(moved.value.toInt()).also { output.fill(0) }
     }
 
     private fun hmacSha256(key: ByteArray, data: ByteArray): ByteArray =
@@ -421,6 +383,62 @@ internal class IosSnapshotFileSystem(
 
         val MAGIC: ByteArray = "PARSNAP".encodeToByteArray()
     }
+}
+
+/**
+ * Reads at most one byte beyond the accepted limit, so an oversized or
+ * attacker-modified file can never make Foundation allocate its full length
+ * before Parlor rejects it.
+ */
+internal fun readBoundedSnapshotBytes(path: String, maximumBytes: Int): ByteArray {
+    require(maximumBytes >= 0) { "Snapshot byte limit must be non-negative" }
+    val handle = NSFileHandle.fileHandleForReadingAtPath(path)
+        ?: throw IllegalStateException("Couldn't open protected snapshot")
+    val data = try {
+        handle.readDataOfLength(maximumBytes.toULong() + 1uL)
+    } finally {
+        handle.closeFile()
+    }
+    if (data.length > maximumBytes.toULong()) throw SnapshotProtectionException()
+    return data.toByteArray()
+}
+
+/** CommonCrypto wrapper that passes a null input pointer for an empty payload. */
+internal fun iosAesCbc(
+    operation: UInt,
+    key: ByteArray,
+    iv: ByteArray,
+    input: ByteArray,
+): ByteArray = memScoped {
+    val output = ByteArray(input.size + kCCBlockSizeAES128.toInt())
+    val moved = alloc<ULongVar>()
+    moved.value = 0u
+    val status = key.usePinned { keyPinned ->
+        iv.usePinned { ivPinned ->
+            input.usePinned { inputPinned ->
+                output.usePinned { outputPinned ->
+                    CCCrypt(
+                        op = operation,
+                        alg = kCCAlgorithmAES,
+                        options = kCCOptionPKCS7Padding,
+                        key = keyPinned.addressOf(0),
+                        keyLength = kCCKeySizeAES256.toULong(),
+                        iv = ivPinned.addressOf(0),
+                        dataIn = if (input.isEmpty()) null else inputPinned.addressOf(0),
+                        dataInLength = input.size.toULong(),
+                        dataOut = outputPinned.addressOf(0),
+                        dataOutAvailable = output.size.toULong(),
+                        dataOutMoved = moved.ptr,
+                    )
+                }
+            }
+        }
+    }
+    if (status != kCCSuccess) {
+        output.fill(0)
+        throw SnapshotProtectionException()
+    }
+    output.copyOf(moved.value.toInt()).also { output.fill(0) }
 }
 
 private fun constantTimeEquals(first: ByteArray, second: ByteArray): Boolean {

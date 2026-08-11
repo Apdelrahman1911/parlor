@@ -12,16 +12,31 @@ import kotlinx.coroutines.withContext
  * gameplay state, or secrets; the app manifest disables Android backup.
  */
 internal class AndroidSettingsKeyValueBacking(
-    context: Context,
+    private val preferences: SharedPreferences,
 ) : SettingsKeyValueBacking {
-    private val preferences: SharedPreferences =
-        context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE)
+    constructor(context: Context) : this(
+        context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE),
+    )
 
-    override fun readBoolean(key: String): Boolean? =
-        preferences.all[key] as? Boolean
+    override fun readBoolean(key: String): Boolean? {
+        if (!preferences.contains(key)) return null
+        return try {
+            preferences.getBoolean(key, false)
+        } catch (_: ClassCastException) {
+            // Corrupt or legacy values fail closed to the validated default.
+            null
+        }
+    }
 
-    override fun readString(key: String): String? =
-        preferences.all[key] as? String
+    override fun readString(key: String): String? {
+        if (!preferences.contains(key)) return null
+        return try {
+            preferences.getString(key, null)
+        } catch (_: ClassCastException) {
+            // Do not crash startup when an old build stored a different type.
+            null
+        }
+    }
 
     override suspend fun writeBoolean(key: String, value: Boolean) {
         persist(preferences.edit().putBoolean(key, value))

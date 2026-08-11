@@ -104,7 +104,14 @@ internal class AndroidSecureKeyValueBacking(
             require(protectedBytes[offset++] == FORMAT_VERSION)
             val nonceSize = protectedBytes[offset++].toInt() and UNSIGNED_BYTE_MASK
             require(nonceSize == GCM_NONCE_BYTES)
-            require(protectedBytes.size > offset + nonceSize + GCM_TAG_BYTES)
+            require(
+                hasCompleteGcmPayload(
+                    recordSize = protectedBytes.size,
+                    payloadOffset = offset,
+                    nonceBytes = nonceSize,
+                    tagBytes = GCM_TAG_BYTES,
+                ),
+            )
             val nonce = protectedBytes.copyOfRange(offset, offset + nonceSize)
             offset += nonceSize
             val ciphertext = protectedBytes.copyOfRange(offset, protectedBytes.size)
