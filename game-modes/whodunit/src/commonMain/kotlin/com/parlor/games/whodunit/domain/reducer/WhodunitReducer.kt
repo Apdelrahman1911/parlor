@@ -372,7 +372,12 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
                 missingSeat.copy(
                     phase = WhodunitPhase.PostGame,
                     public = missingSeat.public.copy(
-                        disconnectedPlayers = missingSeat.public.disconnectedPlayers - playerId,
+                        // The first expired seat completes the whole session.
+                        // Any other grace transaction is now gameplay-irrelevant,
+                        // so retaining its marker would create a validator-
+                        // impossible PostGame snapshot and a permanent recovery
+                        // overlay. Terminal state has no reconnect ownership.
+                        disconnectedPlayers = emptySet(),
                         paused = false,
                         timer = null,
                     ),

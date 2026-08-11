@@ -188,6 +188,29 @@ class ContinueWithoutPlayerTest {
     }
 
     @Test
+    fun first_grace_expiry_during_reveal_clears_every_concurrent_disconnect() = runTest {
+        val payload = loadCase()
+        val (session, _) = buildSession(payload, WhodunitIds.ClassicVoteModeId, players, seed = 33L)
+        session.submit(WhodunitAction.AssignRoles(seed = 33L))
+        session.submit(WhodunitAction.EndGameEarly(withReveal = true))
+        assertThat(phaseOf(session)).isEqualTo(WhodunitPhase.Reveal)
+
+        val firstMissing = players[2].id
+        val secondMissing = players[3].id
+        session.submit(WhodunitAction.MarkPlayerDisconnected(firstMissing))
+        session.submit(WhodunitAction.MarkPlayerDisconnected(secondMissing))
+        assertThat(stateOf(session).public.disconnectedPlayers)
+            .containsExactlyInAnyOrder(firstMissing, secondMissing)
+
+        session.submit(WhodunitAction.ContinueWithoutPlayer(firstMissing))
+
+        val terminal = stateOf(session)
+        assertThat(terminal.phase).isEqualTo(WhodunitPhase.PostGame)
+        assertThat(terminal.public.disconnectedPlayers).isEmpty()
+        assertThat(terminal.public.droppedPlayers).contains(firstMissing)
+    }
+
+    @Test
     fun post_game_disconnect_is_ignored_instead_of_creating_permanent_overlay_state() = runTest {
         val payload = loadCase()
         val (session, _) = buildSession(payload, WhodunitIds.ClassicVoteModeId, players, seed = 32L)
