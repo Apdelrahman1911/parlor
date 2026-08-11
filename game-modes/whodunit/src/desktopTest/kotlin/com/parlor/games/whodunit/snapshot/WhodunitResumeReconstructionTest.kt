@@ -463,10 +463,13 @@ class WhodunitResumeReconstructionTest {
 
         assertThat(validateResumedSessionForCase(exact, case)).isInstanceOf(Result.Success::class)
 
-        val wrongDigest = if (exact.contentIdentity!!.digest.first() == '0') '1' else '0'
+        val exactIdentity = requireNotNull(exact.contentIdentity) {
+            "Exact current-format snapshot must include a content identity"
+        }
+        val wrongDigest = if (exactIdentity.digest.first() == '0') '1' else '0'
         val mismatched = exact.copy(
-            contentIdentity = exact.contentIdentity.copy(
-                digest = wrongDigest + exact.contentIdentity.digest.drop(1),
+            contentIdentity = exactIdentity.copy(
+                digest = wrongDigest + exactIdentity.digest.drop(1),
             ),
         )
         assertThat(validateResumedSessionForCase(mismatched, case)).isEqualTo(

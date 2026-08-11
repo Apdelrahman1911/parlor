@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.parlor.storage.settings.SettingsKeyValueBacking
 import com.parlor.storage.settings.SettingsPersistenceException
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -13,6 +14,7 @@ import kotlinx.coroutines.withContext
  */
 internal class AndroidSettingsKeyValueBacking(
     private val preferences: SharedPreferences,
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : SettingsKeyValueBacking {
     constructor(context: Context) : this(
         context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE),
@@ -48,8 +50,9 @@ internal class AndroidSettingsKeyValueBacking(
         persist(editor)
     }
 
+    @Suppress("RedundantSuspendModifier") // withContext is a real suspension point; KMP Detekt false-positive.
     private suspend fun persist(editor: SharedPreferences.Editor) {
-        withContext(Dispatchers.IO) {
+        withContext(ioDispatcher) {
             if (!editor.commit()) {
                 throw SettingsPersistenceException("Couldn't persist app preference")
             }

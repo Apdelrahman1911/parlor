@@ -124,11 +124,11 @@ jobs:
           git rev-parse HEAD | tee build/ci-evidence/commit.txt
           test -z "$(git status --porcelain)"
 
-      - name: Run iOS simulator runtime tests and release linkage-only gates
+      - name: Run iOS simulator tests, Apple static analysis, and release linkage gates
         shell: bash
         run: |
           set -euo pipefail
-          echo "allTests includes executable simulator runtime tests; productionAppleCheck is linkage-only for iosArm64, iosSimulatorArm64, and iosX64."
+          echo "allTests includes executable simulator runtime tests; productionAppleCheck runs Apple type-aware static analysis and linkage-only checks for iosArm64, iosSimulatorArm64, and iosX64."
           ./gradlew allTests productionAppleCheck --dependency-verification=strict --no-daemon --stacktrace --console=plain
 
       - name: Validate iOS plist and privacy manifest

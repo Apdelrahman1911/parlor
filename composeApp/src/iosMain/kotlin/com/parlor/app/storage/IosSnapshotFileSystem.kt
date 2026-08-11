@@ -19,6 +19,7 @@ import kotlinx.cinterop.ptr
 import kotlinx.cinterop.usePinned
 import kotlinx.cinterop.value
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import platform.CoreCrypto.CCCrypt
@@ -66,6 +67,7 @@ import platform.posix.memcpy
 internal class IosSnapshotFileSystem(
     private val keychain: IosSnapshotKeychain = IosSnapshotKeychain(),
     private val fileManager: NSFileManager = NSFileManager.defaultManager,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.Default,
 ) : SnapshotFileSystem {
 
     private val basePath: String by lazy {
@@ -120,13 +122,13 @@ internal class IosSnapshotFileSystem(
         }
     }
 
-    override suspend fun read(name: String): ByteArray? = withContext(Dispatchers.Default) {
+    override suspend fun read(name: String): ByteArray? = withContext(dispatcher) {
         requireSafeSnapshotFileName(name)
         readProtectedOrMigrate(name)
     }
 
     override suspend fun write(name: String, bytes: ByteArray) {
-        withContext(Dispatchers.Default) {
+        withContext(dispatcher) {
             requireSafeSnapshotFileName(name)
             if (bytes.size > MAX_PLAINTEXT_SNAPSHOT_BYTES) {
                 throw SnapshotProtectionException()
@@ -136,7 +138,7 @@ internal class IosSnapshotFileSystem(
     }
 
     override suspend fun delete(name: String) {
-        withContext(Dispatchers.Default) {
+        withContext(dispatcher) {
             requireSafeSnapshotFileName(name)
             val path = filePath(name)
             deletePathIfPresent(path)
@@ -144,7 +146,7 @@ internal class IosSnapshotFileSystem(
         }
     }
 
-    override suspend fun list(): List<String> = withContext(Dispatchers.Default) {
+    override suspend fun list(): List<String> = withContext(dispatcher) {
         // listUnfinished() runs on cold start, so upgrade old plaintext even
         // if the user does not open its resume tile. Migrate independently so
         // one damaged legacy record cannot hide every healthy saved game.

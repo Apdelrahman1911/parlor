@@ -10,7 +10,6 @@ import dev.p2pkit.transport.lan.lan
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.withContext
 import org.koin.core.module.Module
 import org.koin.core.qualifier.named
@@ -49,7 +48,7 @@ private class IosP2pKitFactory(
 
 actual val p2pTransportModule: Module = module {
     single<CoroutineScope>(qualifier = named("p2pTransport")) {
-        CoroutineScope(Dispatchers.Default + SupervisorJob())
+        createP2pTransportScope()
     }
     single<P2pDiagnostics> {
         BoundedP2pDiagnostics(

@@ -155,6 +155,10 @@ class PauseRefuseLeaveTest {
     private fun stateOf(s: PassAndPlaySessionController<WhodunitState, WhodunitAction, WhodunitEvent>) =
         s.publicState.value.state
 
+    private fun timerOf(
+        session: PassAndPlaySessionController<WhodunitState, WhodunitAction, WhodunitEvent>,
+    ) = requireNotNull(stateOf(session).public.timer) { "Expected an active discussion timer" }
+
     private fun hostState(s: PassAndPlaySessionController<WhodunitState, WhodunitAction, WhodunitEvent>) =
         s.hostState.value.state
 
@@ -207,13 +211,13 @@ class PauseRefuseLeaveTest {
         val beforePause = stateOf(session)
         assertThat(beforePause.public.paused).isFalse()
         assertThat(beforePause.public.timer).isNotNull()
-        assertThat(beforePause.public.timer!!.paused).isFalse()
+        assertThat(requireNotNull(beforePause.public.timer).paused).isFalse()
 
         session.submit(WhodunitAction.Pause)
         val paused = stateOf(session)
         assertThat(paused.public.paused).isTrue()
         // Pausing the session also freezes the discussion timer.
-        assertThat(paused.public.timer!!.paused).isTrue()
+        assertThat(requireNotNull(paused.public.timer).paused).isTrue()
         session.close()
     }
 
@@ -228,7 +232,7 @@ class PauseRefuseLeaveTest {
 
         val resumed = stateOf(session)
         assertThat(resumed.public.paused).isFalse()
-        assertThat(resumed.public.timer!!.paused).isFalse()
+        assertThat(requireNotNull(resumed.public.timer).paused).isFalse()
         session.close()
     }
 
@@ -238,18 +242,18 @@ class PauseRefuseLeaveTest {
         val players = fourPlayers()
         val (session, _) = buildSession(payload, WhodunitIds.ClassicVoteModeId, players, seed = 3L)
         driveToFirstRoundTimer(session, players, 3L)
-        val before = stateOf(session).public.timer!!.remainingSeconds
+        val before = timerOf(session).remainingSeconds
 
         session.submit(WhodunitAction.Pause)
         // Try to advance the timer while paused.
         session.submit(WhodunitAction.TimerTicked(before - 30))
-        val afterTickWhilePaused = stateOf(session).public.timer!!.remainingSeconds
+        val afterTickWhilePaused = timerOf(session).remainingSeconds
         assertThat(afterTickWhilePaused).isEqualTo(before)
 
         // After resume, ticks are honoured again.
         session.submit(WhodunitAction.Resume)
         session.submit(WhodunitAction.TimerTicked(before - 30))
-        val afterTickWhileRunning = stateOf(session).public.timer!!.remainingSeconds
+        val afterTickWhileRunning = timerOf(session).remainingSeconds
         assertThat(afterTickWhileRunning).isEqualTo(before - 30)
         session.close()
     }
@@ -306,7 +310,7 @@ class PauseRefuseLeaveTest {
         // The resumed controller boots paused — UI will render the overlay.
         val bootState = resumed.hostState.value.state
         assertThat(bootState.public.paused).isTrue()
-        assertThat(bootState.public.timer!!.paused).isTrue()
+        assertThat(requireNotNull(bootState.public.timer).paused).isTrue()
         // Sanity: the in-game phase is preserved too.
         assertThat(bootState.phase).isInstanceOf(WhodunitPhase.Round::class)
         resumed.close()

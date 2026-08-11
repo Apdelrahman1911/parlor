@@ -121,7 +121,9 @@ class ArabicCaseValidationTest {
         // within a single case, but a case-id collision would explode here.
         val validator = WhodunitPayloadValidator(json)
         listOf("layla-halabi", "jasmine-ring").forEach { caseId ->
-            val envelope = bundled.loadBundled(CaseId(caseId))!!
+            val envelope = requireNotNull(bundled.loadBundled(CaseId(caseId))) {
+                "Bundled case $caseId must be discoverable"
+            }
             val result = validator.validate(envelope)
             assertThat(result, "validating $caseId").isInstanceOf(Result.Success::class)
         }

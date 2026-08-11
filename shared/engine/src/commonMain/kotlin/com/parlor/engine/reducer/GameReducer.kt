@@ -14,8 +14,8 @@ import com.parlor.engine.state.GameState
  * The reducer is verified pure by unit tests; violating this contract is a
  * correctness bug.
  */
-abstract class GameReducer<S : GameState, A : GameAction, E : GameEvent> {
-    abstract fun reduce(state: S, action: A, ctx: ReducerContext): Reduction<S, E>
+interface GameReducer<S : GameState, A : GameAction, E : GameEvent> {
+    fun reduce(state: S, action: A, ctx: ReducerContext): Reduction<S, E>
 }
 
 /**

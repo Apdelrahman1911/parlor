@@ -34,7 +34,7 @@ val coreModule: Module = module {
     single<SessionSeedSource> { SecureSessionSeedSource }
     single { AppLifecycleCoordinator(get()) }
     single<CoroutineScope>(qualifier = named("multiplayerSession")) {
-        CoroutineScope(Dispatchers.Default + SupervisorJob())
+        createMultiplayerSessionScope()
     }
     single {
         ProcessMultiplayerSessionOwner(
@@ -51,6 +51,10 @@ val coreModule: Module = module {
         }
     }
 }
+
+private fun createMultiplayerSessionScope(
+    dispatcher: kotlinx.coroutines.CoroutineDispatcher = Dispatchers.Default,
+): CoroutineScope = CoroutineScope(dispatcher + SupervisorJob())
 
 /** Production-only entropy boundary for hidden-role and role-order fairness. */
 internal object SecureSessionSeedSource : SessionSeedSource {

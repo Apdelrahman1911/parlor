@@ -40,14 +40,19 @@ data class SemVer(val major: Int, val minor: Int, val patch: Int) : Comparable<S
         fun parse(s: String): SemVer {
             val parts = s.trim().split(".")
             require(parts.size in 1..3) { "Invalid SemVer: '$s'" }
-            fun component(index: Int, name: String): Int {
-                if (index >= parts.size) return 0
-                val value = parts[index].toIntOrNull()
+            val names = listOf("major", "minor", "patch")
+            val values = parts.mapIndexed { index, component ->
+                val name = names[index]
+                val value = component.toIntOrNull()
                     ?: throw IllegalArgumentException("Invalid $name in SemVer '$s'")
                 require(value >= 0) { "Negative $name in SemVer '$s'" }
-                return value
+                value
             }
-            return SemVer(component(0, "major"), component(1, "minor"), component(2, "patch"))
+            return SemVer(
+                major = values[0],
+                minor = values.getOrElse(1) { 0 },
+                patch = values.getOrElse(2) { 0 },
+            )
         }
 
         val ZERO = SemVer(0, 0, 0)

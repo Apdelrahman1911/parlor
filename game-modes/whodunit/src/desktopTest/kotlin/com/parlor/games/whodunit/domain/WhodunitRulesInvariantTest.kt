@@ -264,7 +264,9 @@ class WhodunitRulesInvariantTest {
                     }
                     state = submitValid(state, WhodunitAction.AdvanceFromCharacterReveal)
 
-                    val rounds = WhodunitRules.maximumRoundCount(modeId, count)!!
+                    val rounds = requireNotNull(WhodunitRules.maximumRoundCount(modeId, count)) {
+                        "Supported mode $modeId with $count players must define a round count"
+                    }
                     val roundsToDrive = if (modeId == WhodunitIds.EliminationModeId) 1 else rounds
                     repeat(roundsToDrive) {
                         state = submitValid(state, WhodunitAction.RevealNextClue)

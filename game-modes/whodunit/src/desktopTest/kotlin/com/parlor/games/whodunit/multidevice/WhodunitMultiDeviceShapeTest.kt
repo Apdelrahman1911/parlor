@@ -167,9 +167,10 @@ class WhodunitMultiDeviceShapeTest {
     ) {
         val hostPublic = host.publicState.value.state
         peers.forEachIndexed { i, peer ->
-            val peerState = peer.state.value
-            assertThat(peerState, "peer[$i] state at $phaseHint").isNotNull()
-            assertThat(peerState!!, "peer[$i] mirrors host at $phaseHint").isEqualTo(hostPublic)
+            val peerState = requireNotNull(peer.state.value) {
+                "peer[$i] had no state at $phaseHint"
+            }
+            assertThat(peerState, "peer[$i] mirrors host at $phaseHint").isEqualTo(hostPublic)
             val violations = PeerStateRedactionAssertions.violations(peerState)
             assertThat(
                 violations,
@@ -297,9 +298,8 @@ class WhodunitMultiDeviceShapeTest {
         val phasesSeen = mutableListOf<String>()
         fun pin(phase: String) {
             phasesSeen += phase
-            val peerState = peer.state.value
-            assertThat(peerState, "peer state at $phase").isNotNull()
-            val violations = PeerStateRedactionAssertions.violations(peerState!!)
+            val peerState = requireNotNull(peer.state.value) { "Peer had no state at $phase" }
+            val violations = PeerStateRedactionAssertions.violations(peerState)
             assertThat(violations, "redaction at $phase").isEmpty()
         }
 
@@ -365,9 +365,8 @@ class WhodunitMultiDeviceShapeTest {
         host.submit(WhodunitAction.AdvanceFromCharacterReveal)
         host.submit(WhodunitAction.Pause)
 
-        val peerState = peer.state.value
-        assertThat(peerState).isNotNull()
-        assertThat(peerState!!.public.paused).isTrue()
+        val peerState = requireNotNull(peer.state.value) { "Peer had no paused-state snapshot" }
+        assertThat(peerState.public.paused).isTrue()
         assertThat(PeerStateRedactionAssertions.isFullyRedacted(peerState)).isTrue()
 
         hostSim.close()
@@ -424,9 +423,8 @@ class WhodunitMultiDeviceShapeTest {
         hostSim.dropPolicy = null
         host.submit(WhodunitAction.AdvanceBriefingCard(2))
 
-        val converged = peer.state.value
-        assertThat(converged).isNotNull()
-        assertThat(converged!!.public.briefingCardIndex).isEqualTo(2)
+        val converged = requireNotNull(peer.state.value) { "Peer never received the recovery snapshot" }
+        assertThat(converged.public.briefingCardIndex).isEqualTo(2)
         assertThat(converged).isEqualTo(stateOf(host))
         // The peer's snapshot count advanced by exactly one (it received the
         // post-drop snapshot, not the dropped one).
@@ -478,8 +476,8 @@ class WhodunitMultiDeviceShapeTest {
         host.submit(WhodunitAction.AdvanceBriefingCard(3))
 
         // Peer is still stuck at the pre-drop state.
-        val stuck = peer.state.value
-        assertThat(stuck!!.public.briefingCardIndex).isEqualTo(0)
+        val stuck = requireNotNull(peer.state.value) { "Peer lost its pre-drop state" }
+        assertThat(stuck.public.briefingCardIndex).isEqualTo(0)
 
         // Restore delivery and submit a new action. The host's snapshot now
         // reflects briefingCardIndex == 4 OR a phase transition into
@@ -489,7 +487,9 @@ class WhodunitMultiDeviceShapeTest {
         host.ackBriefingForAll(players)
         host.submit(WhodunitAction.AdvanceBriefingCard(4))
 
-        val convergedState = peer.state.value!!
+        val convergedState = requireNotNull(peer.state.value) {
+            "Peer never received the post-drop cumulative snapshot"
+        }
         assertThat(convergedState).isEqualTo(stateOf(host))
         // baseline + 4 acks + 1 advance = baseline + 5 snapshots delivered
         // after drop restoration. The Wave 9H readiness gating means each
@@ -523,7 +523,9 @@ class WhodunitMultiDeviceShapeTest {
         host.submit(WhodunitAction.AdvanceBriefingCard(1))
 
         // All three peers see identical mirror state.
-        val mirror = peers.map { it.state.value!! }
+        val mirror = peers.mapIndexed { index, peer ->
+            requireNotNull(peer.state.value) { "peer[$index] received no snapshot" }
+        }
         assertThat(mirror).containsExactly(*Array(3) { stateOf(host) })
 
         // Counts match — no peer was starved.

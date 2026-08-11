@@ -9,6 +9,7 @@ import com.parlor.storage.snapshot.SnapshotFileSystem
 import com.parlor.storage.snapshot.isSafeSnapshotFileName
 import com.parlor.storage.snapshot.requireSafeSnapshotFileName
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -33,7 +34,10 @@ import javax.crypto.spec.GCMParameterSpec
  * lives in `noBackupFilesDir`; this is defense in depth over the app's
  * `allowBackup=false` manifest policy.
  */
-class AndroidSnapshotFileSystem(private val context: Context) : SnapshotFileSystem {
+class AndroidSnapshotFileSystem(
+    private val context: Context,
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+) : SnapshotFileSystem {
 
     private val baseDir: File by lazy {
         File(context.noBackupFilesDir, DIRECTORY).also { directory ->
@@ -48,13 +52,13 @@ class AndroidSnapshotFileSystem(private val context: Context) : SnapshotFileSyst
     private val legacyDir: File
         get() = File(context.filesDir, DIRECTORY)
 
-    override suspend fun read(name: String): ByteArray? = withContext(Dispatchers.IO) {
+    override suspend fun read(name: String): ByteArray? = withContext(ioDispatcher) {
         requireSafeSnapshotFileName(name)
         readProtectedOrMigrate(name)
     }
 
     override suspend fun write(name: String, bytes: ByteArray) {
-        withContext(Dispatchers.IO) {
+        withContext(ioDispatcher) {
             requireSafeSnapshotFileName(name)
             if (bytes.size > MAX_PLAINTEXT_SNAPSHOT_BYTES) {
                 throw SnapshotProtectionException()
@@ -65,7 +69,7 @@ class AndroidSnapshotFileSystem(private val context: Context) : SnapshotFileSyst
     }
 
     override suspend fun delete(name: String) {
-        withContext(Dispatchers.IO) {
+        withContext(ioDispatcher) {
             requireSafeSnapshotFileName(name)
             val protected = File(baseDir, name)
             if (protected.exists() && !protected.delete()) {
@@ -75,7 +79,7 @@ class AndroidSnapshotFileSystem(private val context: Context) : SnapshotFileSyst
         }
     }
 
-    override suspend fun list(): List<String> = withContext(Dispatchers.IO) {
+    override suspend fun list(): List<String> = withContext(ioDispatcher) {
         // listUnfinished() is called on cold start, so upgrades remove old
         // plaintext even when the user never opens that resume tile. Migrate
         // records independently: a corrupt legacy save remains visible for

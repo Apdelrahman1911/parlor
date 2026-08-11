@@ -26,10 +26,11 @@ import dev.p2pkit.core.SecurityMode
 import dev.p2pkit.core.dsl.jvmSecureIdentityStore
 import dev.p2pkit.core.security.JvmSecureIdentityStore
 import dev.p2pkit.transport.lan.lan
+import java.util.concurrent.Executors
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
@@ -66,7 +67,8 @@ import kotlin.time.Duration.Companion.seconds
  */
 class P2pKitRoomTransportLoopbackTest {
 
-    private val testScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
+    private val testDispatcher = Executors.newCachedThreadPool().asCoroutineDispatcher()
+    private val testScope = CoroutineScope(testDispatcher + SupervisorJob())
     private val rooms: MutableList<LocalRoom> = mutableListOf()
     private val identityStore = LoopbackIdentityStore()
 
@@ -92,6 +94,7 @@ class P2pKitRoomTransportLoopbackTest {
             rooms.clear()
             testScope.coroutineContext[Job]?.cancel()
         }
+        testDispatcher.close()
     }
 
     @Test

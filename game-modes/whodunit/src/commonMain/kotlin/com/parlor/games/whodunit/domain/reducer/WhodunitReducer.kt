@@ -31,7 +31,7 @@ import com.parlor.games.whodunit.domain.state.WhodunitState
  * Pure reducer for Whodunit's lifecycle, gameplay, voting, reveal, replay, and
  * safety actions. Time, randomness, and content arrive via [WhodunitReducerContext].
  */
-object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEvent>() {
+object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEvent> {
 
     override fun reduce(
         state: WhodunitState,

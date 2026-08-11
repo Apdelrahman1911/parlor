@@ -111,6 +111,7 @@ class P2pKitRoomTransportLifecycleTest {
     // Unconfined so child coroutines start their `collect` blocks synchronously
     // — `kit.incomingSessions` is a SharedFlow with replay=0, and emissions made
     // before the production-side collector subscribes are otherwise lost.
+    @Suppress("InjectDispatcher") // Replay-zero fake emissions require eager test-only collection startup.
     private val testScope = CoroutineScope(SupervisorJob() + Dispatchers.Unconfined)
     private val codec = RoomMessageCodec()
 
@@ -4159,6 +4160,7 @@ class P2pKitRoomTransportLifecycleTest {
         sendAdmissionRequest(session)
     }
 
+    @Suppress("RedundantSuspendModifier") // SharedFlow.emit and yield are real test suspension points.
     private suspend fun attachSession(kit: FakeP2pKit, session: FakeP2pSession) {
         kit.incomingSessionsFlow.emit(session)
         yield()
@@ -4327,6 +4329,7 @@ class P2pKitRoomTransportLifecycleTest {
      * relying on coroutine-test schedulers (we deliberately use a real
      * dispatcher because the production code uses one).
      */
+    @Suppress("RedundantSuspendModifier") // withTimeout/yield are real test suspension points.
     private suspend fun awaitCondition(timeoutMs: Long = 2_000, block: () -> Boolean) {
         withTimeout(timeoutMs) {
             while (!block()) yield()

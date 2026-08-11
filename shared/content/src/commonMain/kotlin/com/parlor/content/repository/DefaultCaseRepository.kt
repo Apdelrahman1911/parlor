@@ -139,26 +139,28 @@ class DefaultCaseRepository(
         payloadValidator: PayloadValidator<TPayload>,
     ): Result<Unit, DataError> {
         val fetch = remote.fetchCase(CaseId(summary.caseId)).mapError { it.asDataError() }
-        val envelope = when (fetch) {
-            is Result.Success -> fetch.data
-            is Result.Failure -> return fetch
-        }
-        return when (
-            val validated = validate(
-                expectedId = CaseId(summary.caseId),
-                envelope = envelope,
-                payloadValidator = payloadValidator,
-            )
-        ) {
-            is Result.Failure -> validated
+        return when (fetch) {
+            is Result.Failure -> fetch
             is Result.Success -> {
-                val envelope = validated.data.envelope
-                if (envelope.toSummary() != summary.copy(coverArtUrl = null)) {
-                    return Result.Failure(DataError.CorruptedData)
+                when (
+                    val validated = validate(
+                        expectedId = CaseId(summary.caseId),
+                        envelope = fetch.data,
+                        payloadValidator = payloadValidator,
+                    )
+                ) {
+                    is Result.Failure -> validated
+                    is Result.Success -> {
+                        val validatedEnvelope = validated.data.envelope
+                        if (validatedEnvelope.toSummary() != summary.copy(coverArtUrl = null)) {
+                            Result.Failure(DataError.CorruptedData)
+                        } else {
+                            cache.put(validatedEnvelope)
+                            cacheUpdates.tryEmit(CaseUpdate.CaseRevised(summary))
+                            Result.Success(Unit)
+                        }
+                    }
                 }
-                cache.put(envelope)
-                cacheUpdates.tryEmit(CaseUpdate.CaseRevised(summary))
-                Result.Success(Unit)
             }
         }
     }

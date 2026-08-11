@@ -2,6 +2,7 @@ package com.parlor.app.storage
 
 import com.parlor.storage.settings.SettingsKeyValueBacking
 import com.parlor.storage.settings.SettingsPersistenceException
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.prefs.BackingStoreException
@@ -16,6 +17,7 @@ import java.util.prefs.Preferences
 internal class DesktopSettingsKeyValueBacking(
     private val preferences: Preferences =
         Preferences.userRoot().node("com/parlor/app/settings-v1"),
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : SettingsKeyValueBacking {
 
     override fun readBoolean(key: String): Boolean? =
@@ -34,8 +36,9 @@ internal class DesktopSettingsKeyValueBacking(
         }
     }
 
+    @Suppress("RedundantSuspendModifier") // withContext is a real suspension point; KMP Detekt false-positive.
     private suspend fun persist(change: () -> Unit) {
-        withContext(Dispatchers.IO) {
+        withContext(ioDispatcher) {
             try {
                 change()
                 preferences.flush()

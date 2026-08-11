@@ -47,7 +47,7 @@ import com.parlor.games.mafia.domain.state.team
  *   - PublicPlayerSlot.revealedRole is set only for an enabled death reveal
  *     during play; every role is deliberately revealed in PostGame.
  */
-object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
+object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent> {
 
     override fun reduce(
         state: MafiaState,

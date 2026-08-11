@@ -92,7 +92,7 @@ sealed interface RrEvent : GameEvent {
     data object SessionEnded : RrEvent
 }
 
-object RrReducer : GameReducer<RrState, RrAction, RrEvent>() {
+object RrReducer : GameReducer<RrState, RrAction, RrEvent> {
     override fun reduce(
         state: RrState,
         action: RrAction,

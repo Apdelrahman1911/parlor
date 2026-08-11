@@ -5,6 +5,7 @@ import com.parlor.storage.snapshot.SnapshotFileSystem
 import com.parlor.storage.snapshot.isSafeSnapshotFileName
 import com.parlor.storage.snapshot.requireSafeSnapshotFileName
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.FileOutputStream
@@ -39,13 +40,14 @@ import javax.crypto.spec.SecretKeySpec
 class DesktopSnapshotFileSystem(
     private val baseDir: Path = Path.of(System.getProperty("user.home"), ".parlor", "snapshots"),
     private val keyPath: Path = baseDir.resolveSibling(KEY_FILE_NAME),
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : SnapshotFileSystem {
 
     init {
         Files.createDirectories(baseDir)
     }
 
-    override suspend fun read(name: String): ByteArray? = withContext(Dispatchers.IO) {
+    override suspend fun read(name: String): ByteArray? = withContext(ioDispatcher) {
         requireSafeSnapshotFileName(name)
         val path = baseDir.resolve(name)
         if (!Files.exists(path)) return@withContext null
@@ -67,7 +69,7 @@ class DesktopSnapshotFileSystem(
     }
 
     override suspend fun write(name: String, bytes: ByteArray) {
-        withContext(Dispatchers.IO) {
+        withContext(ioDispatcher) {
             requireSafeSnapshotFileName(name)
             if (bytes.size > MAX_PLAINTEXT_SNAPSHOT_BYTES) {
                 throw SnapshotProtectionException()
@@ -78,13 +80,13 @@ class DesktopSnapshotFileSystem(
     }
 
     override suspend fun delete(name: String) {
-        withContext(Dispatchers.IO) {
+        withContext(ioDispatcher) {
             requireSafeSnapshotFileName(name)
             Files.deleteIfExists(baseDir.resolve(name))
         }
     }
 
-    override suspend fun list(): List<String> = withContext(Dispatchers.IO) {
+    override suspend fun list(): List<String> = withContext(ioDispatcher) {
         if (!Files.isDirectory(baseDir)) return@withContext emptyList()
         Files.list(baseDir).use { stream ->
             stream

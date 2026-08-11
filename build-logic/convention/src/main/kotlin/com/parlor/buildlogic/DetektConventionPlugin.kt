@@ -4,6 +4,7 @@ import io.gitlab.arturbosch.detekt.Detekt
 import io.gitlab.arturbosch.detekt.extensions.DetektExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.file.FileTreeElement
 
 /**
  * Repository-wide Detekt policy.
@@ -32,13 +33,27 @@ class DetektConventionPlugin : Plugin<Project> {
         }
 
         tasks.withType(Detekt::class.java).configureEach {
+            // Type-aware KMP tasks add compiler-generated Compose/resource
+            // sources outside the extension's authored `src` tree. Generated
+            // package names are controlled by upstream tooling, so analyse the
+            // generator inputs and production consumers, not build output.
+            exclude("**/build/generated/**", "**/generated/**")
+            val generatedRoot = layout.buildDirectory.get().asFile.toPath().normalize()
+            exclude { element: FileTreeElement ->
+                element.file.toPath().normalize().startsWith(generatedRoot)
+            }
             reports {
                 html.required.set(true)
+                html.outputLocation.set(layout.buildDirectory.file("reports/detekt/$name.html"))
                 sarif.required.set(true)
+                sarif.outputLocation.set(layout.buildDirectory.file("reports/detekt/$name.sarif"))
                 xml.required.set(true)
+                xml.outputLocation.set(layout.buildDirectory.file("reports/detekt/$name.xml"))
                 txt.required.set(false)
                 md.required.set(false)
             }
         }
+
+
     }
 }

@@ -20,10 +20,12 @@ import com.parlor.engine.testing.fakes.RrAction
 import com.parlor.engine.testing.fakes.RrEvent
 import com.parlor.engine.testing.fakes.RrState
 import java.util.concurrent.CountDownLatch
+import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.runBlocking
@@ -38,36 +40,38 @@ class PassAndPlaySessionControllerCloseRaceTest {
 
     @Test
     fun close_waits_for_the_active_commit_and_rejects_every_later_submit() = runBlocking {
-        val reducerEntered = CountDownLatch(1)
-        val releaseReducer = CountDownLatch(1)
-        val definition = BlockingDefinition(reducerEntered, releaseReducer)
-        val controllerScope = CoroutineScope(Dispatchers.Default)
-        val controller = PassAndPlaySessionController(
-            definition = definition,
-            config = config(),
-            reducerContext = DefaultReducerContext(
-                clock = FakeClock(Instant.fromEpochSeconds(1_700_000_000)),
-                random = RandomSource.seeded(42L),
-            ),
-            scope = controllerScope,
-        )
+        Executors.newFixedThreadPool(2).asCoroutineDispatcher().use { testDispatcher ->
+            val reducerEntered = CountDownLatch(1)
+            val releaseReducer = CountDownLatch(1)
+            val definition = BlockingDefinition(reducerEntered, releaseReducer)
+            val controllerScope = CoroutineScope(testDispatcher + SupervisorJob())
+            val controller = PassAndPlaySessionController(
+                definition = definition,
+                config = config(),
+                reducerContext = DefaultReducerContext(
+                    clock = FakeClock(Instant.fromEpochSeconds(1_700_000_000)),
+                    random = RandomSource.seeded(42L),
+                ),
+                scope = controllerScope,
+            )
 
-        val activeSubmit = async(Dispatchers.Default) {
-            controller.submit(RrAction.Announce(PlayerId("p1")))
+            val activeSubmit = async(testDispatcher) {
+                controller.submit(RrAction.Announce(PlayerId("p1")))
+            }
+            assertTrue(reducerEntered.await(5, TimeUnit.SECONDS), "Reducer did not enter")
+
+            val close = async(start = CoroutineStart.UNDISPATCHED) { controller.close() }
+            assertFalse(close.isCompleted, "close returned while a canonical commit was still active")
+
+            releaseReducer.countDown()
+            assertIs<Result.Success<*>>(activeSubmit.await())
+            close.await()
+
+            val afterClose = controller.submit(RrAction.Announce(PlayerId("p2")))
+            assertEquals(Result.Failure(SubmitError.SessionClosed), afterClose)
+            assertEquals(listOf(PlayerId("p1")), controller.currentState().announcedBy)
+            controllerScope.cancel()
         }
-        assertTrue(reducerEntered.await(5, TimeUnit.SECONDS), "Reducer did not enter")
-
-        val close = async(start = CoroutineStart.UNDISPATCHED) { controller.close() }
-        assertFalse(close.isCompleted, "close returned while a canonical commit was still active")
-
-        releaseReducer.countDown()
-        assertIs<Result.Success<*>>(activeSubmit.await())
-        close.await()
-
-        val afterClose = controller.submit(RrAction.Announce(PlayerId("p2")))
-        assertEquals(Result.Failure(SubmitError.SessionClosed), afterClose)
-        assertEquals(listOf(PlayerId("p1")), controller.currentState().announcedBy)
-        controllerScope.cancel()
     }
 
     private fun config() = SessionConfig(
@@ -86,7 +90,7 @@ private class BlockingDefinition(
     reducerEntered: CountDownLatch,
     releaseReducer: CountDownLatch,
 ) : GameDefinition<RrState, RrAction, RrEvent> by RoundRobinAnnounceGame() {
-    private val blockingReducer = object : GameReducer<RrState, RrAction, RrEvent>() {
+    private val blockingReducer = object : GameReducer<RrState, RrAction, RrEvent> {
         override fun reduce(
             state: RrState,
             action: RrAction,

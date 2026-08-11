@@ -55,18 +55,60 @@ val staticAnalysis = tasks.register("staticAnalysis") {
     dependsOn(gradle.includedBuild("build-logic").task(":convention:detekt"))
 }
 
+// Detekt's plain task provides complete source-file coverage, but it cannot run
+// rules that require the Kotlin compiler's type information for KMP source
+// sets. Keep explicit host families so CI executes the type-aware tasks on a
+// host that can resolve each platform. The subproject wiring below is based on
+// task registration, so a new KMP module joins these gates automatically.
+val hostTypeAwareDetektTasks = setOf(
+    "detektMetadataCommonMain",
+    "detektDesktopMain",
+    "detektDesktopTest",
+    "detektAndroidRelease",
+    "detektAndroidReleaseUnitTest",
+)
+val androidInstrumentedTypeAwareDetektTask = "detektAndroidDebugAndroidTest"
+val appleTypeAwareDetektTasks = setOf(
+    "detektMetadataNativeMain",
+    "detektMetadataAppleMain",
+    "detektMetadataIosMain",
+    "detektIosArm64Main",
+    "detektIosArm64Test",
+    "detektIosSimulatorArm64Main",
+    "detektIosSimulatorArm64Test",
+    "detektIosX64Main",
+    "detektIosX64Test",
+)
+
+val typeAwareStaticAnalysis = tasks.register("typeAwareStaticAnalysis") {
+    group = "verification"
+    description = "Runs type-aware Detekt for common metadata, desktop, and Android source sets."
+}
+
+val productionAppleStaticAnalysis = tasks.register("productionAppleStaticAnalysis") {
+    group = "verification"
+    description = "Runs type-aware Detekt for every supported iOS production/test target."
+}
+
+// Detekt exposes compiler-backed metadata tasks for hierarchical production
+// source sets, but not for commonTest/iosTest. The plain `detekt` task still
+// scans every authored test file; Kotlin compilation and the executable test
+// matrix provide their type/runtime validation. Leaf test tasks remain wired
+// so target-specific tests are analysed whenever such sources exist.
+
 // Stable release-facing name. Keep the shorter staticAnalysis task for local
 // use, while automation and release evidence can invoke an unambiguous gate.
 val productionStaticAnalysis = tasks.register("productionStaticAnalysis") {
     group = "verification"
     description = "Runs the complete repository-wide production static-analysis policy."
-    dependsOn(staticAnalysis)
+    dependsOn(staticAnalysis, typeAwareStaticAnalysis)
 }
 
 tasks.register("productionAppleCheck") {
     group = "verification"
-    description = "Links release frameworks for physical, Apple-silicon simulator, and Intel simulator iOS targets."
+    description = "Runs Apple type-aware analysis and links release frameworks for all supported iOS targets."
     dependsOn(
+        productionAppleStaticAnalysis,
         ":composeApp:linkReleaseFrameworkIosArm64",
         ":composeApp:linkReleaseFrameworkIosSimulatorArm64",
         ":composeApp:linkReleaseFrameworkIosX64",
@@ -94,6 +136,30 @@ subprojects {
     }
 
     pluginManager.withPlugin("org.jetbrains.kotlin.multiplatform") {
+        tasks.matching { it.name in hostTypeAwareDetektTasks }.all {
+            val sourceSetDetekt = this
+            rootProject.tasks.named("typeAwareStaticAnalysis").configure {
+                dependsOn(sourceSetDetekt)
+            }
+        }
+        val androidInstrumentedSources = fileTree("src") {
+            include("androidInstrumentedTest/**/*.kt", "androidTest/**/*.kt")
+        }
+        if (!androidInstrumentedSources.isEmpty) {
+            tasks.matching { it.name == androidInstrumentedTypeAwareDetektTask }.all {
+                val sourceSetDetekt = this
+                rootProject.tasks.named("typeAwareStaticAnalysis").configure {
+                    dependsOn(sourceSetDetekt)
+                }
+            }
+        }
+        tasks.matching { it.name in appleTypeAwareDetektTasks }.all {
+            val sourceSetDetekt = this
+            rootProject.tasks.named("productionAppleStaticAnalysis").configure {
+                dependsOn(sourceSetDetekt)
+            }
+        }
+
         // Some KMP application modules expose only desktopTest. Join the
         // aggregate when an allTests task is actually registered rather than
         // making configuration fail for those valid modules.

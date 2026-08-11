@@ -83,9 +83,10 @@ class BundledCaseLoadingTest {
         assertThat(summary.title).isEqualTo("The Last Dinner")
         assertThat(summary.gameId).isEqualTo(WhodunitIds.GameId.raw)
 
-        val envelope = bundled.loadBundled(CaseId("last-dinner"))
-        assertThat(envelope).isNotNull()
-        assertThat(envelope!!.caseId).isEqualTo("last-dinner")
+        val envelope = requireNotNull(bundled.loadBundled(CaseId("last-dinner"))) {
+            "last-dinner must be present in the bundled catalog"
+        }
+        assertThat(envelope.caseId).isEqualTo("last-dinner")
         assertThat(envelope.supportedModes).containsExactly("classic-vote", "elimination")
     }
 

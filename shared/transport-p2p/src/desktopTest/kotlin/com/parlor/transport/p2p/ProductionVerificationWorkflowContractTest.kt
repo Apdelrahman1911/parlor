@@ -58,11 +58,35 @@ class ProductionVerificationWorkflowContractTest {
 
         val staticGate = rootBuild.substringAfter("val productionStaticAnalysis")
             .substringBefore("tasks.register(\"productionAppleCheck\")")
-        assertContains(staticGate, "dependsOn(staticAnalysis)")
+        assertContains(staticGate, "dependsOn(staticAnalysis, typeAwareStaticAnalysis)")
         val repositoryStaticGate = rootBuild.substringAfter("val staticAnalysis")
             .substringBefore("val productionStaticAnalysis")
         assertContains(repositoryStaticGate, "includedBuild(\"build-logic\")")
         assertContains(repositoryStaticGate, "task(\":convention:detekt\")")
+        val detektConvention = read(
+            "build-logic/convention/src/main/kotlin/com/parlor/buildlogic/DetektConventionPlugin.kt",
+        )
+        listOf(
+            "reports/detekt/\$name.html",
+            "reports/detekt/\$name.sarif",
+            "reports/detekt/\$name.xml",
+            "element.file.toPath().normalize().startsWith(generatedRoot)",
+        ).forEach { contract -> assertContains(detektConvention, contract) }
+        assertFalse("baseline.setFrom" in detektConvention)
+        listOf(
+            "detektMetadataCommonMain",
+            "detektDesktopMain",
+            "detektDesktopTest",
+            "detektAndroidRelease",
+            "detektAndroidReleaseUnitTest",
+            "detektAndroidDebugAndroidTest",
+        ).forEach { task ->
+            assertContains(rootBuild, task, message = "Host type-aware analysis must retain $task")
+        }
+        assertContains(rootBuild, "tasks.named(\"typeAwareStaticAnalysis\")")
+        assertContains(rootBuild, "tasks.matching { it.name in hostTypeAwareDetektTasks }.all")
+        assertContains(rootBuild, "androidInstrumentedSources.isEmpty")
+        assertContains(rootBuild, "it.name == androidInstrumentedTypeAwareDetektTask")
         val productionGate = rootBuild.substringAfter("tasks.register(\"productionCheck\")")
             .substringBefore("subprojects")
         assertContains(productionGate, "productionStaticAnalysis")
@@ -113,6 +137,7 @@ class ProductionVerificationWorkflowContractTest {
             "xcrun --sdk iphonesimulator --show-sdk-version",
             "allTests",
             "productionAppleCheck",
+            "Apple type-aware static analysis",
             "--dependency-verification=strict",
             "xcodebuild",
             "-configuration Release",
@@ -138,6 +163,7 @@ class ProductionVerificationWorkflowContractTest {
         val appleGate = rootBuild.substringAfter("tasks.register(\"productionAppleCheck\")")
             .substringBefore("tasks.register(\"productionCheck\")")
         listOf(
+            "productionAppleStaticAnalysis",
             ":composeApp:linkReleaseFrameworkIosArm64",
             ":composeApp:linkReleaseFrameworkIosSimulatorArm64",
             ":composeApp:linkReleaseFrameworkIosX64",
@@ -148,6 +174,21 @@ class ProductionVerificationWorkflowContractTest {
                 message = "productionAppleCheck must retain $task",
             )
         }
+        listOf(
+            "detektMetadataNativeMain",
+            "detektMetadataAppleMain",
+            "detektMetadataIosMain",
+            "detektIosArm64Main",
+            "detektIosArm64Test",
+            "detektIosSimulatorArm64Main",
+            "detektIosSimulatorArm64Test",
+            "detektIosX64Main",
+            "detektIosX64Test",
+        ).forEach { task ->
+            assertContains(rootBuild, task, message = "Apple type-aware analysis must retain $task")
+        }
+        assertContains(rootBuild, "tasks.named(\"productionAppleStaticAnalysis\")")
+        assertContains(rootBuild, "tasks.matching { it.name in appleTypeAwareDetektTasks }.all")
     }
 
     @Test

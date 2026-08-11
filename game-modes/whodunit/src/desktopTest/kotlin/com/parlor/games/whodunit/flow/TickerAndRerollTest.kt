@@ -153,6 +153,10 @@ class TickerAndRerollTest {
     private fun stateOf(s: PassAndPlaySessionController<WhodunitState, WhodunitAction, WhodunitEvent>) =
         s.publicState.value.state
 
+    private fun timerOf(
+        session: PassAndPlaySessionController<WhodunitState, WhodunitAction, WhodunitEvent>,
+    ) = requireNotNull(stateOf(session).public.timer) { "Expected an active discussion timer" }
+
     private fun hostState(s: PassAndPlaySessionController<WhodunitState, WhodunitAction, WhodunitEvent>) =
         s.hostState.value.state
 
@@ -180,7 +184,7 @@ class TickerAndRerollTest {
         val players = fourPlayers()
         val (session, scope) = buildSession(payload, WhodunitIds.ClassicVoteModeId, players, seed = 1L)
         driveToFirstDiscussionTimer(session, players, 1L)
-        val timerId = stateOf(session).public.timer!!.timerId
+        val timerId = timerOf(session).timerId
 
         val tickerJob = scope.launch { runDiscussionTickerLoop(session, timerId) }
 
@@ -188,7 +192,7 @@ class TickerAndRerollTest {
         // moves from 180 → 175. The ticker must not double-tick when virtual
         // time advances in a single block.
         advanceTimeBy(5.seconds + 1.milliseconds); runCurrent()
-        assertThat(stateOf(session).public.timer!!.remainingSeconds).isEqualTo(175)
+        assertThat(timerOf(session).remainingSeconds).isEqualTo(175)
 
         tickerJob.cancelAndJoin()
         session.close()
@@ -200,25 +204,25 @@ class TickerAndRerollTest {
         val players = fourPlayers()
         val (session, scope) = buildSession(payload, WhodunitIds.ClassicVoteModeId, players, seed = 2L)
         driveToFirstDiscussionTimer(session, players, 2L)
-        val timerId = stateOf(session).public.timer!!.timerId
+        val timerId = timerOf(session).timerId
 
         val tickerJob = scope.launch { runDiscussionTickerLoop(session, timerId) }
 
         // Tick 3 seconds → 177.
         advanceTimeBy(3.seconds + 1.milliseconds); runCurrent()
-        assertThat(stateOf(session).public.timer!!.remainingSeconds).isEqualTo(177)
+        assertThat(timerOf(session).remainingSeconds).isEqualTo(177)
 
         // Pause: subsequent virtual-time advances should NOT tick the timer.
         // Pause must complete before we advance time, so we await the submit
         // via the unconfined dispatcher's synchronous semantics.
         session.submit(WhodunitAction.Pause)
         advanceTimeBy(10.seconds + 1.milliseconds); runCurrent()
-        assertThat(stateOf(session).public.timer!!.remainingSeconds).isEqualTo(177)
+        assertThat(timerOf(session).remainingSeconds).isEqualTo(177)
 
         // Resume: ticker resumes from 177 over the next 4 seconds.
         session.submit(WhodunitAction.Resume)
         advanceTimeBy(4.seconds + 1.milliseconds); runCurrent()
-        assertThat(stateOf(session).public.timer!!.remainingSeconds).isEqualTo(173)
+        assertThat(timerOf(session).remainingSeconds).isEqualTo(173)
 
         tickerJob.cancelAndJoin()
         session.close()
@@ -230,7 +234,7 @@ class TickerAndRerollTest {
         val players = fourPlayers()
         val (session, scope) = buildSession(payload, WhodunitIds.ClassicVoteModeId, players, seed = 3L)
         driveToFirstDiscussionTimer(session, players, 3L)
-        val timerId = stateOf(session).public.timer!!.timerId
+        val timerId = timerOf(session).timerId
 
         val events = mutableListOf<WhodunitEvent>()
         val collector = scope.launch { session.events.collect { events += it } }
@@ -278,7 +282,7 @@ class TickerAndRerollTest {
         val players = fourPlayers()
         val (session, scope) = buildSession(payload, WhodunitIds.ClassicVoteModeId, players, seed = 4L)
         driveToFirstDiscussionTimer(session, players, 4L)
-        val timerId = stateOf(session).public.timer!!.timerId
+        val timerId = timerOf(session).timerId
 
         // A single ticker — the production case.
         val onlyTicker: Job = scope.launch { runDiscussionTickerLoop(session, timerId) }
@@ -286,7 +290,7 @@ class TickerAndRerollTest {
         advanceTimeBy(5.seconds + 1.milliseconds); runCurrent()
         // After 5 virtual seconds, a single ticker has produced exactly 5
         // ticks. If a second ticker were running we'd see ~10.
-        assertThat(stateOf(session).public.timer!!.remainingSeconds).isEqualTo(175)
+        assertThat(timerOf(session).remainingSeconds).isEqualTo(175)
 
         onlyTicker.cancelAndJoin()
         session.close()
@@ -300,12 +304,12 @@ class TickerAndRerollTest {
         val players = fourPlayers()
         val (session, scope) = buildSession(payload, WhodunitIds.ClassicVoteModeId, players, seed = 5L)
         driveToFirstDiscussionTimer(session, players, 5L)
-        val firstTimerId = stateOf(session).public.timer!!.timerId
+        val firstTimerId = timerOf(session).timerId
 
         val tickerJob = scope.launch { runDiscussionTickerLoop(session, firstTimerId) }
 
         advanceTimeBy(2.seconds + 1.milliseconds); runCurrent()
-        assertThat(stateOf(session).public.timer!!.remainingSeconds).isEqualTo(178)
+        assertThat(timerOf(session).remainingSeconds).isEqualTo(178)
 
         // Advance to round 2; the timer becomes null.
         session.submit(WhodunitAction.AdvanceFromDiscussion)
