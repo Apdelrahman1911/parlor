@@ -53,10 +53,12 @@ import org.koin.compose.koinInject
  * through [GameShellRegistry]; setup, local play, hosting, joining and resume
  * sub-navigation belong to each registered [com.parlor.app.shell.game.GameShellBinding].
  */
+@Composable
+fun App() = App(koinInject<SettingsStore>())
+
 @Suppress("LongMethod") // Declarative root composition; stateful effects are separately tested.
 @Composable
-fun App() {
-    val settings: SettingsStore = koinInject()
+internal fun App(settings: SettingsStore) {
     val languageTag by settings.languageOverride.collectAsState(initial = null)
     val themeModeTag by settings.themeMode.collectAsState(initial = ThemeMode.Default.tag)
     val reducedMotion by settings.reducedMotion.collectAsState(initial = false)

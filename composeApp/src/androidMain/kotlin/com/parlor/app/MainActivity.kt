@@ -6,6 +6,13 @@ import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.lifecycle.lifecycleScope
+import com.parlor.storage.settings.SettingsStore
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.koin.android.ext.android.getKoin
 
 /**
  * The single Activity. Compose owns navigation; the system bars are drawn
@@ -25,8 +32,20 @@ class MainActivity : ComponentActivity() {
             window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
         }
         enableEdgeToEdge()
-        setContent {
-            App()
+        lifecycleScope.launch {
+            val settings = loadSettingsForFirstComposition {
+                getKoin().get<SettingsStore>()
+            }
+            setContent {
+                App(settings)
+            }
         }
     }
 }
+
+/** Keeps the first disk-backed preference load outside Android's UI dispatcher. */
+@Suppress("RedundantSuspendModifier") // withContext is the owned dispatcher hop under test.
+internal suspend fun loadSettingsForFirstComposition(
+    dispatcher: CoroutineDispatcher = Dispatchers.IO,
+    load: () -> SettingsStore,
+): SettingsStore = withContext(dispatcher) { load() }
