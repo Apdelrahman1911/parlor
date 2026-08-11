@@ -86,6 +86,10 @@ class ProductionUiAccessibilityContractTest {
                 "multidevice/MafiaMultiDevicePhaseRouter.kt",
         )
         assertFalse(mafiaRouter.contains(".value ==="))
+        assertFalse(
+            mafiaRouter.contains("MafiaAction.ResolveNight"),
+            "Multiplayer night resolution must remain owned by the retained host progression driver",
+        )
         assertContains(mafiaRouter, "canAcknowledgeAnnouncement(state, selfPlayerId)")
         assertContains(mafiaRouter, "onAcknowledged = if (mayAcknowledge)")
     }

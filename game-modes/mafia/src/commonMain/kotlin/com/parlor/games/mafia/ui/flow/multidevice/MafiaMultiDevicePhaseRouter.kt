@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -16,7 +15,6 @@ import androidx.compose.ui.text.style.TextAlign
 import com.parlor.core.ids.PlayerId
 import com.parlor.designsystem.backdrop.HeroBackdrop
 import com.parlor.designsystem.components.EyebrowLabel
-import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.engine.state.Player
 import com.parlor.games.mafia.domain.action.MafiaAction
@@ -28,8 +26,6 @@ import com.parlor.games.mafia.domain.state.PublicPlayerSlot
 import com.parlor.games.mafia.domain.state.Role
 import com.parlor.games.mafia.domain.state.VoteOutcome
 import com.parlor.games.mafia.resources.Res
-import com.parlor.games.mafia.resources.md_resolve_night
-import com.parlor.games.mafia.resources.md_resolve_night_description
 import com.parlor.games.mafia.resources.vote_outcome_all_abstained
 import com.parlor.games.mafia.resources.vote_outcome_eliminated
 import com.parlor.games.mafia.resources.vote_outcome_max_revotes
@@ -95,8 +91,8 @@ import org.jetbrains.compose.resources.stringResource
  *    handle that auto-fire on the host side).
  *  - Night → render the right action screen for self's role (Mafia kill,
  *    Doctor protect, Detective inspect, Civilian suspect, or Detective
- *    result if a pending result is present). Host explicit-advances via
- *    ResolveNight when everyone has submitted.
+ *    result if a pending result is present). The retained host progression
+ *    driver resolves the night only after every eligible player is ready.
  *  - NightAnnouncement / VoteAnnouncement → ack on tap.
  *  - Discussion → host can OpenVote.
  *  - Voting → render VoteCastScreen for self.
@@ -140,7 +136,6 @@ internal fun MafiaMultiDevicePhaseRouter(
                 self = self,
                 selfSlot = selfSlot,
                 priv = selfPrivate,
-                isHost = isHost,
                 session = session,
                 scope = scope,
             )
@@ -273,7 +268,6 @@ private fun NightSegment(
     self: Player?,
     selfSlot: PublicPlayerSlot?,
     priv: MafiaPrivate?,
-    isHost: Boolean,
     session: SessionController<MafiaState, MafiaAction, MafiaEvent>,
     scope: CoroutineScope,
 ) {
@@ -320,9 +314,6 @@ private fun NightSegment(
             eyebrow = stringResource(Res.string.waiting_night_eyebrow),
             headline = stringResource(Res.string.waiting_night_submitted_headline),
             body = stringResource(Res.string.waiting_night_submitted_body),
-            footer = if (isHost) {
-                { ResolveNightButton(session = session, scope = scope) }
-            } else null,
         )
         return
     }
@@ -370,19 +361,6 @@ private fun NightSegment(
             modifier = Modifier.fillMaxSize(),
         )
     }
-}
-
-@Composable
-private fun ResolveNightButton(
-    session: SessionController<MafiaState, MafiaAction, MafiaEvent>,
-    scope: CoroutineScope,
-) {
-    ParlorButton(
-        label = stringResource(Res.string.md_resolve_night),
-        contentDescription = stringResource(Res.string.md_resolve_night_description),
-        onClick = { scope.launch { session.submit(MafiaAction.ResolveNight) } },
-        modifier = Modifier.fillMaxWidth(),
-    )
 }
 
 // ===================================================================== Night announce ==
@@ -543,7 +521,6 @@ private fun WaitingScreen(
     eyebrow: String,
     headline: String,
     body: String? = null,
-    footer: (@Composable () -> Unit)? = null,
 ) {
     HeroBackdrop(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -572,7 +549,6 @@ private fun WaitingScreen(
                     textAlign = TextAlign.Center,
                 )
             }
-            if (footer != null) footer()
         }
     }
 }
