@@ -20,6 +20,11 @@ import com.parlor.games.mafia.domain.action.MafiaAction
 import com.parlor.games.mafia.domain.phase.MafiaPhase
 import com.parlor.games.mafia.domain.projection.MafiaProjectionPolicy
 import com.parlor.games.mafia.domain.reducer.MafiaReducer
+import com.parlor.games.mafia.domain.settings.MafiaKillTie
+import com.parlor.games.mafia.domain.settings.MafiaRoleCounts
+import com.parlor.games.mafia.domain.settings.MafiaSettings
+import com.parlor.games.mafia.domain.settings.MafiaSettingsValidation
+import com.parlor.games.mafia.domain.settings.TieBehavior
 import com.parlor.games.mafia.domain.state.MafiaPeerSnapshotValidator
 import com.parlor.games.mafia.domain.state.MafiaState
 import com.parlor.games.mafia.domain.state.Role
@@ -239,6 +244,87 @@ class FullGameDriveTest {
         assertThat(state.public.winner).isEqualTo(Team.Mafia)
     }
 
+    /**
+     * Model trace over the complete authoritative role-count surface. Targeted
+     * rule tests below this layer prove the individual policy branches; this
+     * test proves their representative combinations remain composable for
+     * every supported roster size and every role distribution accepted by
+     * [MafiaSettings.validate]. Each trace crosses both persistence and peer
+     * projection validators after every reducer transition.
+     */
+    @Test
+    fun every_supported_role_distribution_completes_a_valid_night_and_day_cycle() {
+        var trace = 0L
+        for (playerCount in MafiaSettings.MIN_PLAYERS..MafiaSettings.MAX_PLAYERS) {
+            for (mafiaCount in 1 until playerCount) {
+                for (detectiveCount in 0..MafiaSettings.MAX_DETECTIVES) {
+                    for (doctorCount in 0..MafiaSettings.MAX_DOCTORS) {
+                        val counts = MafiaRoleCounts(
+                            mafia = mafiaCount,
+                            detective = detectiveCount,
+                            doctor = doctorCount,
+                        )
+                        for (policy in supportedPolicySamples) {
+                            val settings = policy.copy(roleCounts = counts)
+                            if (settings.validate(playerCount) != MafiaSettingsValidation.Valid) continue
+
+                            trace += 1
+                            val seed = 100_000L + trace
+                            val c = ctx(seed)
+                            var state = initialState(playerCount, seed).also(::assertSnapshotBoundaries)
+                            state = step(state, MafiaAction.ApplySettings(settings), c)
+                            state = step(state, MafiaAction.StartGame, c)
+
+                            assertThat(state.hostOnly.fullRoleMap.values.count { it == Role.Mafia })
+                                .isEqualTo(mafiaCount)
+                            assertThat(state.hostOnly.fullRoleMap.values.count { it == Role.Detective })
+                                .isEqualTo(detectiveCount)
+                            assertThat(state.hostOnly.fullRoleMap.values.count { it == Role.Doctor })
+                                .isEqualTo(doctorCount)
+                            assertThat(state.hostOnly.fullRoleMap.values.count { it == Role.Civilian })
+                                .isEqualTo(counts.civilians(playerCount))
+
+                            for (player in state.players) {
+                                state = step(state, MafiaAction.AcknowledgeRoleViewed(player.id), c)
+                            }
+                            state = step(state, MafiaAction.AdvanceFromRoleAssignment, c)
+
+                            // Every role explicitly skips. An empty Mafia tally
+                            // is a legal no-kill night under every kill-tie policy.
+                            state = submitUnsubmittedNightActions(state, c)
+                            state = step(state, MafiaAction.ResolveNight, c)
+                            assertThat(state.phase).isEqualTo(MafiaPhase.NightAnnouncement(day = 1))
+
+                            for (playerId in alive(state)) {
+                                state = step(state, MafiaAction.AcknowledgeNightAnnouncement(playerId), c)
+                            }
+                            state = step(state, MafiaAction.OpenDiscussion, c)
+                            state = step(state, MafiaAction.OpenVote, c)
+                            for (voter in state.public.activeVote!!.ballot) {
+                                state = step(state, MafiaAction.AbstainVote(voter), c)
+                            }
+                            state = step(state, MafiaAction.CloseVote, c)
+                            assertThat(state.phase).isEqualTo(MafiaPhase.VoteAnnouncement(day = 1))
+                            assertThat(state.public.lastVote?.outcome)
+                                .isEqualTo(com.parlor.games.mafia.domain.state.VoteOutcome.AllAbstained)
+
+                            for (playerId in alive(state)) {
+                                state = step(state, MafiaAction.AcknowledgeVoteAnnouncement(playerId), c)
+                            }
+                            state = step(state, MafiaAction.AdvanceFromVoteAnnouncement, c)
+                            assertThat(state.phase).isEqualTo(
+                                MafiaPhase.Night(day = 2, mafiaCoordinationRound = 1),
+                            )
+                        }
+                    }
+                }
+            }
+        }
+        // Guard against a loop/filter regression silently turning the model
+        // exercise into a vacuous pass.
+        assertThat(trace).isEqualTo(648L)
+    }
+
     // -----------------------------------------------------------------
     // Helpers
     // -----------------------------------------------------------------
@@ -293,5 +379,37 @@ class FullGameDriveTest {
         return state.hostOnly.fullRoleMap.entries
             .firstOrNull { it.value != Role.Mafia && it.key in alive(state) }
             ?.key
+    }
+
+    private companion object {
+        val supportedPolicySamples = listOf(
+            MafiaSettings(
+                roleCounts = MafiaRoleCounts(mafia = 1, detective = 0, doctor = 0),
+            ),
+            MafiaSettings(
+                roleCounts = MafiaRoleCounts(mafia = 1, detective = 0, doctor = 0),
+                revealRoleOnDeath = false,
+                doctorCanSelfHeal = true,
+                doctorCanProtectSamePlayerConsecutively = true,
+                detectiveCanInspectSelf = true,
+                allowSelfVote = true,
+                mafiaCanTargetMafia = true,
+                voteTieBehavior = TieBehavior.REVOTE_ALL,
+                maxRevotes = MafiaSettings.MAX_REVOTES,
+                mafiaKillTieBehavior = MafiaKillTie.RANDOM_TIED,
+            ),
+            MafiaSettings(
+                roleCounts = MafiaRoleCounts(mafia = 1, detective = 0, doctor = 0),
+                revealRoleOnDeath = false,
+                doctorCanSelfHeal = false,
+                doctorCanProtectSamePlayerConsecutively = true,
+                detectiveCanInspectSelf = false,
+                allowSelfVote = true,
+                mafiaCanTargetMafia = false,
+                voteTieBehavior = TieBehavior.SKIP_ELIMINATION,
+                maxRevotes = 0,
+                mafiaKillTieBehavior = MafiaKillTie.NO_KILL,
+            ),
+        )
     }
 }
