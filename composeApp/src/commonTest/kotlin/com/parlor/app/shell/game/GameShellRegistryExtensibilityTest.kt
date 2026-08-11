@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import com.parlor.app.resolveLocalResumeDestination
 import com.parlor.app.shell.playmode.PlayModePickerAvailability
 import com.parlor.app.shell.playmode.toPlayModePickerAvailability
+import com.parlor.app.shell.playmode.toPlayModePickerModel
 import com.parlor.core.ids.CaseId
 import com.parlor.core.ids.GameId
 import com.parlor.core.ids.ModeId
@@ -199,6 +200,23 @@ class GameShellRegistryExtensibilityTest {
                 setOf(GameEntryMode.PassAndPlay, GameEntryMode.Join),
             ).toPlayModePickerAvailability(),
         )
+    }
+
+    @Test
+    fun picker_uses_each_registered_games_player_bounds_instead_of_shared_copy() {
+        val capabilities = GameShellCapabilities(setOf(GameEntryMode.PassAndPlay))
+
+        assertEquals(
+            5..16,
+            capabilities.toPlayModePickerModel(5..16).supportedPlayerCounts,
+        )
+        assertEquals(
+            4..8,
+            capabilities.toPlayModePickerModel(4..8).supportedPlayerCounts,
+        )
+        assertFailsWith<IllegalArgumentException> {
+            capabilities.toPlayModePickerModel(IntRange.EMPTY)
+        }
     }
 
     @Test

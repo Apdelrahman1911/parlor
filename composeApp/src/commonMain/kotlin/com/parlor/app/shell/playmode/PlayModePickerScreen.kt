@@ -55,11 +55,35 @@ internal data class PlayModePickerAvailability(
     val join: Boolean,
 )
 
+/**
+ * Registry-derived setup data rendered by the shared picker. Player bounds
+ * belong to the selected [com.parlor.engine.definition.GameDefinition]; they
+ * must never be duplicated in shell copy because each game has different
+ * limits.
+ */
+internal data class PlayModePickerModel(
+    val availability: PlayModePickerAvailability,
+    val supportedPlayerCounts: IntRange,
+) {
+    init {
+        require(!supportedPlayerCounts.isEmpty()) {
+            "Play-mode player bounds must not be empty"
+        }
+    }
+}
+
 internal fun GameShellCapabilities.toPlayModePickerAvailability() = PlayModePickerAvailability(
     solo = supports(GameEntryMode.Solo),
     passAndPlay = supports(GameEntryMode.PassAndPlay),
     host = supports(GameEntryMode.Host),
     join = supports(GameEntryMode.Join),
+)
+
+internal fun GameShellCapabilities.toPlayModePickerModel(
+    supportedPlayerCounts: IntRange,
+) = PlayModePickerModel(
+    availability = toPlayModePickerAvailability(),
+    supportedPlayerCounts = supportedPlayerCounts,
 )
 
 /**
@@ -92,8 +116,10 @@ internal fun PlayModePickerScreen(
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
     capabilities: GameShellCapabilities,
+    supportedPlayerCounts: IntRange,
 ) {
-    val availability = capabilities.toPlayModePickerAvailability()
+    val model = capabilities.toPlayModePickerModel(supportedPlayerCounts)
+    val availability = model.availability
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
@@ -129,7 +155,11 @@ internal fun PlayModePickerScreen(
             SetupCard(
                 title = stringResource(Res.string.playmode_passandplay_title),
                 body = stringResource(Res.string.playmode_passandplay_body),
-                meta = stringResource(Res.string.playmode_passandplay_meta),
+                meta = stringResource(
+                    Res.string.playmode_passandplay_meta,
+                    model.supportedPlayerCounts.first,
+                    model.supportedPlayerCounts.last,
+                ),
                 buttonLabel = stringResource(Res.string.playmode_passandplay_choose),
                 buttonDescription = stringResource(Res.string.playmode_passandplay_choose_description),
                 onClick = { onModeSelected(PlayMode.PassAndPlay) },

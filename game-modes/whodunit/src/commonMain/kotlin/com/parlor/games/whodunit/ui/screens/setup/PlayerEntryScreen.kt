@@ -24,9 +24,12 @@ import androidx.compose.ui.text.input.ImeAction
 import com.parlor.designsystem.backdrop.HeroBackdrop
 import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ParlorButton
+import com.parlor.designsystem.components.ParlorButtonVariant
 import com.parlor.designsystem.components.bringIntoViewOnFocus
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.whodunit.resources.Res
+import com.parlor.games.whodunit.resources.setup_back
+import com.parlor.games.whodunit.resources.setup_back_description
 import com.parlor.games.whodunit.resources.setup_player_entry_confirm
 import com.parlor.games.whodunit.resources.setup_player_entry_confirm_description
 import com.parlor.games.whodunit.resources.setup_player_entry_eyebrow
@@ -39,6 +42,7 @@ import org.jetbrains.compose.resources.stringResource
 fun PlayerEntryScreen(
     playerCount: Int,
     onConfirm: (List<String>) -> Unit,
+    onBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val names = remember(playerCount) {
@@ -84,6 +88,13 @@ fun PlayerEntryScreen(
                     onConfirm(normalizedNames)
                 },
                 enabled = RoomInputPolicy.areValidDistinctDisplayNames(normalizedNames),
+                modifier = Modifier.fillMaxWidth(),
+            )
+            ParlorButton(
+                label = stringResource(Res.string.setup_back),
+                contentDescription = stringResource(Res.string.setup_back_description),
+                onClick = onBack,
+                variant = ParlorButtonVariant.Ghost,
                 modifier = Modifier.fillMaxWidth(),
             )
         }

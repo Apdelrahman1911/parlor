@@ -686,6 +686,9 @@ private fun ConfiguredFlow(
     when {
         selectedMode == null -> ModeSelectionScreen(
             onModeSelected = { mode -> pre = pre.copy(modeId = mode) },
+            onBack = onBackToLibrary,
+            caseSupportedModes = case.envelope.supportedModes,
+            caseSupportedPlayerCounts = case.envelope.supportedPlayerCounts.toIntRange(),
             modifier = modifier,
         )
         selectedPlayerCount == null -> {
@@ -701,6 +704,7 @@ private fun ConfiguredFlow(
                 caseSupportedRange = effective,
                 displayStrategy = PlayerCountDisplayStrategy.HideUnsupported,
                 onCountSelected = { count -> pre = pre.copy(playerCount = count) },
+                onBack = { pre = pre.copy(modeId = null) },
                 modifier = modifier,
             )
         }
@@ -717,6 +721,7 @@ private fun ConfiguredFlow(
                     },
                 )
             },
+            onBack = { pre = pre.copy(playerCount = null) },
             modifier = modifier,
         )
         else -> SessionDrivenFlow(

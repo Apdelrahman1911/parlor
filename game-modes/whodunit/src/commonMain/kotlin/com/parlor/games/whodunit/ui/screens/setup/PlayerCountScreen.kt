@@ -25,8 +25,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.parlor.designsystem.backdrop.HeroBackdrop
 import com.parlor.designsystem.components.EyebrowLabel
+import com.parlor.designsystem.components.ParlorButton
+import com.parlor.designsystem.components.ParlorButtonVariant
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.whodunit.resources.Res
+import com.parlor.games.whodunit.resources.setup_back
+import com.parlor.games.whodunit.resources.setup_back_description
 import com.parlor.games.whodunit.resources.setup_player_count_case_cap_format
 import com.parlor.games.whodunit.resources.setup_player_count_eyebrow
 import com.parlor.games.whodunit.resources.setup_player_count_headline
@@ -44,6 +48,7 @@ fun PlayerCountScreen(
     caseSupportedRange: IntRange,
     displayStrategy: PlayerCountDisplayStrategy = PlayerCountDisplayStrategy.HideUnsupported,
     onCountSelected: (Int) -> Unit,
+    onBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val effectiveRange = when (displayStrategy) {
@@ -100,6 +105,14 @@ fun PlayerCountScreen(
                     textAlign = TextAlign.Center,
                 )
             }
+
+            ParlorButton(
+                label = stringResource(Res.string.setup_back),
+                contentDescription = stringResource(Res.string.setup_back_description),
+                onClick = onBack,
+                variant = ParlorButtonVariant.Ghost,
+                modifier = Modifier.fillMaxWidth(),
+            )
         }
     }
 }

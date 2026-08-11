@@ -72,6 +72,7 @@ internal class WhodunitGameShellBinding(
         WhodunitShellContent(
             launch = launch,
             capabilities = capabilities,
+            supportedPlayerCounts = definition.supportedPlayerCounts,
             onExit = onExit,
             backRequest = backRequest,
             modifier = modifier,
@@ -101,6 +102,7 @@ private enum class WhodunitShellScreen {
 private fun WhodunitShellContent(
     launch: GameShellLaunch,
     capabilities: GameShellCapabilities,
+    supportedPlayerCounts: IntRange,
     onExit: () -> Unit,
     backRequest: GameShellBackRequest,
     modifier: Modifier,
@@ -134,6 +136,8 @@ private fun WhodunitShellContent(
                 .orEmpty(),
         )
     }
+    var hostCaseModes by remember(launch) { mutableStateOf<List<String>>(emptyList()) }
+    var hostCasePlayerCounts by remember(launch) { mutableStateOf<IntRange?>(null) }
     var hostModeId by remember(launch) {
         mutableStateOf(
             restoredRoute
@@ -194,6 +198,7 @@ private fun WhodunitShellContent(
             onJoin = { screen = WhodunitShellScreen.JoinPermission },
             onBack = onExit,
             capabilities = capabilities,
+            supportedPlayerCounts = supportedPlayerCounts,
             modifier = modifier,
         )
 
@@ -237,19 +242,31 @@ private fun WhodunitShellContent(
             repository = caseRepository,
             onCasePicked = { summary ->
                 hostCaseId = summary.caseId
+                hostCaseModes = summary.supportedModes
+                hostCasePlayerCounts = summary.supportedPlayerCounts.toIntRange()
                 screen = WhodunitShellScreen.HostMode
             },
             onBack = onExit,
             modifier = modifier,
         )
 
-        WhodunitShellScreen.HostMode -> ModeSelectionScreen(
-            onModeSelected = { mode ->
-                hostModeId = mode
-                screen = WhodunitShellScreen.HostLobby
-            },
-            modifier = modifier,
-        )
+        WhodunitShellScreen.HostMode -> {
+            val casePlayerCounts = hostCasePlayerCounts
+            if (casePlayerCounts == null || hostCaseModes.isEmpty()) {
+                InvalidGameRouteFallback { screen = WhodunitShellScreen.HostCasePicker }
+            } else {
+                ModeSelectionScreen(
+                    onModeSelected = { mode ->
+                        hostModeId = mode
+                        screen = WhodunitShellScreen.HostLobby
+                    },
+                    onBack = { screen = WhodunitShellScreen.HostCasePicker },
+                    caseSupportedModes = hostCaseModes,
+                    caseSupportedPlayerCounts = casePlayerCounts,
+                    modifier = modifier,
+                )
+            }
+        }
 
         WhodunitShellScreen.HostLobby -> {
             if (hostCaseId.isBlank() || hostName.isBlank()) {

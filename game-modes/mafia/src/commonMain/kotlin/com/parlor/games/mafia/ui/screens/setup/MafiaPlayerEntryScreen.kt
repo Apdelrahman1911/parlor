@@ -24,6 +24,7 @@ import androidx.compose.ui.text.input.ImeAction
 import com.parlor.designsystem.backdrop.HeroBackdrop
 import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ParlorButton
+import com.parlor.designsystem.components.ParlorButtonVariant
 import com.parlor.designsystem.components.bringIntoViewOnFocus
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.mafia.resources.Res
@@ -32,6 +33,8 @@ import com.parlor.games.mafia.resources.player_entry_continue_description
 import com.parlor.games.mafia.resources.player_entry_field_format
 import com.parlor.games.mafia.resources.player_entry_headline
 import com.parlor.games.mafia.resources.setup_eyebrow
+import com.parlor.games.mafia.resources.setup_back
+import com.parlor.games.mafia.resources.setup_back_description
 import com.parlor.networking.room.RoomInputPolicy
 import org.jetbrains.compose.resources.stringResource
 
@@ -39,6 +42,7 @@ import org.jetbrains.compose.resources.stringResource
 fun MafiaPlayerEntryScreen(
     playerCount: Int,
     onConfirm: (List<String>) -> Unit,
+    onBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val names = remember(playerCount) {
@@ -77,6 +81,13 @@ fun MafiaPlayerEntryScreen(
                 contentDescription = stringResource(Res.string.player_entry_continue_description),
                 onClick = { onConfirm(normalizedNames) },
                 enabled = RoomInputPolicy.areValidDistinctDisplayNames(normalizedNames),
+                modifier = Modifier.fillMaxWidth(),
+            )
+            ParlorButton(
+                label = stringResource(Res.string.setup_back),
+                contentDescription = stringResource(Res.string.setup_back_description),
+                onClick = onBack,
+                variant = ParlorButtonVariant.Ghost,
                 modifier = Modifier.fillMaxWidth(),
             )
         }

@@ -66,6 +66,7 @@ internal class MafiaGameShellBinding(
         MafiaShellContent(
             launch = launch,
             capabilities = capabilities,
+            supportedPlayerCounts = definition.supportedPlayerCounts,
             onExit = onExit,
             backRequest = backRequest,
             modifier = modifier,
@@ -92,6 +93,7 @@ private enum class MafiaShellScreen {
 private fun MafiaShellContent(
     launch: GameShellLaunch,
     capabilities: GameShellCapabilities,
+    supportedPlayerCounts: IntRange,
     onExit: () -> Unit,
     backRequest: GameShellBackRequest,
     modifier: Modifier,
@@ -162,6 +164,7 @@ private fun MafiaShellContent(
             onJoin = { screen = MafiaShellScreen.JoinPermission },
             onBack = onExit,
             capabilities = capabilities,
+            supportedPlayerCounts = supportedPlayerCounts,
             modifier = modifier,
         )
 

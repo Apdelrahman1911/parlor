@@ -198,6 +198,7 @@ fun MafiaGameFlow(
                     },
                 )
             },
+            onBack = { pre = pre.copy(playerCount = null) },
             modifier = modifier,
         )
         else -> SessionDrivenFlow(
