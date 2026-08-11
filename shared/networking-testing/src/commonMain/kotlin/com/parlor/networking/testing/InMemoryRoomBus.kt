@@ -87,9 +87,10 @@ class InMemoryPeerRoom(
     override val selfPlayerId: PlayerId,
     @Suppress("UNUSED_PARAMETER") displayName: String,
     hostId: PlayerId,
+    initialStatus: RoomInfo.Status = RoomInfo.Status.Joined,
 ) : LocalRoom {
     private val _info = MutableStateFlow(
-        RoomInfo("local", "Parlor Room", hostId, RoomInfo.Status.Joined),
+        RoomInfo("local", "Parlor Room", hostId, initialStatus),
     )
     private val _members = MutableStateFlow<List<RoomMember>>(emptyList())
 

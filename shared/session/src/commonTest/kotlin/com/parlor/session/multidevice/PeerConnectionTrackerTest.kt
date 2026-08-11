@@ -1,11 +1,14 @@
 package com.parlor.session.multidevice
 
+import com.parlor.core.ids.PlayerId
 import com.parlor.networking.room.PeerEvent
+import com.parlor.networking.room.RoomInfo
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runCurrent
@@ -17,6 +20,36 @@ import kotlin.test.assertTrue
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class PeerConnectionTrackerTest {
+    @Test
+    fun `durable room status closes a lost event subscription gap`() = runTest {
+        val info = MutableStateFlow(
+            RoomInfo(
+                code = "ROOM42",
+                hostDisplayName = "Host",
+                hostPlayerId = PlayerId("host"),
+                status = RoomInfo.Status.Lost,
+            ),
+        )
+        var expired = false
+        val tracker = PeerConnectionTracker(
+            scope = this,
+            hostLostTimeoutMs = 100L,
+            roomInfo = info,
+            onHostLossExpired = { expired = true },
+        )
+        runCurrent()
+
+        assertTrue(tracker.state.value.hostLost)
+        info.value = info.value.copy(status = RoomInfo.Status.Joined)
+        runCurrent()
+        assertFalse(tracker.state.value.hostLost)
+
+        advanceTimeBy(101L)
+        runCurrent()
+        assertFalse(expired)
+        tracker.close()
+    }
+
     @Test
     fun `connection state remains observable without an event collector`() = runTest {
         val tracker = PeerConnectionTracker(this, 100L) {}

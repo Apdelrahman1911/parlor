@@ -20,6 +20,7 @@ import com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostRoomBridge
 import com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitPeerRoomBridge
 import com.parlor.networking.protocol.SessionProtocol
 import com.parlor.networking.room.PeerEvent
+import com.parlor.networking.room.RoomInfo
 import com.parlor.networking.testing.InMemoryPeerRoom
 import com.parlor.networking.testing.InMemoryRoomBus
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -132,6 +133,44 @@ class HostLostTimeoutTest {
         assertThat(ended).isFalse()
 
         eventCollector.cancel()
+        endCollector.cancel()
+        bridge.close()
+    }
+
+    @Test
+    fun bridge_created_after_host_loss_starts_grace_from_durable_room_state() = runTest {
+        val scope = TestScope(UnconfinedTestDispatcher(testScheduler))
+        val bus = InMemoryRoomBus()
+        bus.registerPeer(alice)
+        val room = InMemoryPeerRoom(
+            bus = bus,
+            selfPlayerId = alice,
+            displayName = "Alice",
+            hostId = hostId,
+            initialStatus = RoomInfo.Status.Lost,
+        )
+
+        // No HostLost edge is emitted: this models the host disappearing in
+        // the hand-off gap before the game bridge subscribed to peerEvents.
+        val bridge = WhodunitPeerRoomBridge(
+            room = room,
+            selfPlayerId = alice,
+            initialPublic = initialState,
+            case = whodunitPeerCaseForTest(),
+            scope = scope,
+            protocol = protocol,
+            hostLostTimeoutMs = 200L,
+        )
+        var ended = false
+        val endCollector = scope.launch { bridge.hostDisconnected.collect { ended = true } }
+        runCurrent()
+
+        assertThat(bridge.connectionState.value.hostLost).isTrue()
+        assertThat(ended).isFalse()
+        advanceTimeBy(201L)
+        runCurrent()
+        assertThat(ended).isTrue()
+
         endCollector.cancel()
         bridge.close()
     }

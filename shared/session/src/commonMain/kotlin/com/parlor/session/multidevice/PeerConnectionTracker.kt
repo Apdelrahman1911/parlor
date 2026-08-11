@@ -1,6 +1,7 @@
 package com.parlor.session.multidevice
 
 import com.parlor.networking.room.PeerEvent
+import com.parlor.networking.room.RoomInfo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
@@ -30,6 +31,7 @@ data class PeerConnectionState(
 class PeerConnectionTracker(
     scope: CoroutineScope,
     private val hostLostTimeoutMs: Long,
+    roomInfo: StateFlow<RoomInfo>? = null,
     private val onHostLossExpired: suspend () -> Unit,
 ) {
     /**
@@ -55,6 +57,22 @@ class PeerConnectionTracker(
 
     init {
         require(hostLostTimeoutMs > 0L) { "hostLostTimeoutMs must be positive" }
+        // PeerEvent is an edge stream and may have emitted before a game bridge
+        // is constructed (for example while content is loading after the start
+        // handshake). RoomInfo is durable, so reconcile it inside the same
+        // owned scope and reduce duplicate edge/state observations idempotently.
+        if (roomInfo != null) {
+            trackerScope.launch {
+                roomInfo.collect { info ->
+                    when (info.status) {
+                        RoomInfo.Status.Lost -> handle(PeerEvent.HostLost)
+                        RoomInfo.Status.Joined -> handle(PeerEvent.HostRestored)
+                        RoomInfo.Status.Idle,
+                        RoomInfo.Status.Hosting -> Unit
+                    }
+                }
+            }
+        }
     }
 
     suspend fun handle(event: PeerEvent) {

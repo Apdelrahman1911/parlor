@@ -64,6 +64,7 @@ class WhodunitPeerRoomBridge(
     private val connectionTracker = PeerConnectionTracker(
         scope = scope,
         hostLostTimeoutMs = hostLostTimeoutMs,
+        roomInfo = room.info,
         onHostLossExpired = { _hostDisconnected.emit(Unit) },
     )
     val connectionState = connectionTracker.state
