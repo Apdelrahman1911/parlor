@@ -18,6 +18,9 @@ sealed interface MafiaAction : GameAction {
     /** Host commits chosen settings before the game starts. */
     @Serializable data class ApplySettings(val settings: MafiaSettings) : MafiaAction
 
+    /** Host validates, commits settings, assigns roles, and starts atomically. */
+    @Serializable data class ConfigureAndStart(val settings: MafiaSettings) : MafiaAction
+
     /** Host begins the game — assigns roles, transitions to RoleAssignment. */
     @Serializable data object StartGame : MafiaAction
 

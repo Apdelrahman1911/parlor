@@ -140,6 +140,71 @@ class MafiaReducerTest {
     }
 
     @Test
+    fun configure_and_start_commits_rules_and_roles_in_one_transition() {
+        val state = initialState(7)
+        val chosen = state.public.settings.copy(
+            roleCounts = MafiaRoleCounts(mafia = 2, detective = 0, doctor = 1),
+            allowSelfVote = true,
+            voteTieBehavior = TieBehavior.SKIP_ELIMINATION,
+        )
+
+        val result = MafiaReducer.reduce(
+            state,
+            MafiaAction.ConfigureAndStart(chosen),
+            ctx(),
+        )
+
+        assertThat(result.newState.phase).isEqualTo(MafiaPhase.RoleAssignment)
+        assertThat(result.newState.public.settings).isEqualTo(chosen)
+        assertThat(result.newState.hostOnly.fullRoleMap.values.count { it == Role.Mafia })
+            .isEqualTo(2)
+        assertThat(result.newState.hostOnly.fullRoleMap.values.count { it == Role.Doctor })
+            .isEqualTo(1)
+        assertThat(result.newState.hostOnly.fullRoleMap.values.count { it == Role.Detective })
+            .isEqualTo(0)
+        assertThat(result.events.first()).isEqualTo(
+            com.parlor.games.mafia.domain.event.MafiaEvent.SettingsApplied,
+        )
+    }
+
+    @Test
+    fun configure_and_start_rejects_invalid_rules_without_starting_old_rules() {
+        val state = initialState(7)
+        val invalid = state.public.settings.copy(
+            roleCounts = MafiaRoleCounts(mafia = 6, detective = 0, doctor = 0),
+        )
+
+        val result = MafiaReducer.reduce(
+            state,
+            MafiaAction.ConfigureAndStart(invalid),
+            ctx(),
+        )
+
+        assertThat(result.newState).isEqualTo(state)
+        assertThat(result.events).isEmpty()
+    }
+
+    @Test
+    fun configure_and_start_is_idempotent_after_game_has_started() {
+        val state = MafiaReducer.reduce(
+            initialState(7),
+            MafiaAction.ConfigureAndStart(MafiaSettingsPresets.forPlayerCount(7)),
+            ctx(),
+        ).newState
+
+        val duplicate = MafiaReducer.reduce(
+            state,
+            MafiaAction.ConfigureAndStart(
+                MafiaSettingsPresets.forPlayerCount(7).copy(allowSelfVote = true),
+            ),
+            ctx(),
+        )
+
+        assertThat(duplicate.newState).isEqualTo(state)
+        assertThat(duplicate.events).isEmpty()
+    }
+
+    @Test
     fun advance_from_role_assignment_blocks_until_everyone_acks() {
         val state = MafiaReducer.reduce(initialState(7), MafiaAction.StartGame, ctx()).newState
         val attempt = MafiaReducer.reduce(state, MafiaAction.AdvanceFromRoleAssignment, ctx())

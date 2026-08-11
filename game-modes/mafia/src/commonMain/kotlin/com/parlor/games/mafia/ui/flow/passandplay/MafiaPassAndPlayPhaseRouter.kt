@@ -147,8 +147,7 @@ private fun SetupSegment(
         initialSettings = state.public.settings,
         onStart = { chosen ->
             scope.launch {
-                session.submit(MafiaAction.ApplySettings(chosen))
-                session.submit(MafiaAction.StartGame)
+                session.submit(MafiaAction.ConfigureAndStart(chosen))
             }
         },
         modifier = modifier,

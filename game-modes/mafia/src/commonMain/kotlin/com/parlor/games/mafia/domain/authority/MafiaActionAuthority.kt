@@ -32,6 +32,7 @@ object MafiaActionAuthority {
     fun classify(action: MafiaAction): AuthorityScope = when (action) {
         // Host-only lifecycle and announcements.
         is MafiaAction.ApplySettings,
+        is MafiaAction.ConfigureAndStart,
         MafiaAction.StartGame,
         MafiaAction.AdvanceFromRoleAssignment,
         MafiaAction.ResolveNight,

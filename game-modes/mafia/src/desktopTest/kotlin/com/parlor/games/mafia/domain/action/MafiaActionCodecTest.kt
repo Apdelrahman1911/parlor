@@ -59,6 +59,21 @@ class MafiaActionCodecTest {
     }
 
     @Test
+    fun atomic_configure_and_start_round_trips_with_nested_settings() {
+        val original = MafiaAction.ConfigureAndStart(
+            settings = MafiaSettings(
+                roleCounts = MafiaRoleCounts(mafia = 2, detective = 1, doctor = 1),
+                voteTieBehavior = TieBehavior.SKIP_ELIMINATION,
+                mafiaKillTieBehavior = MafiaKillTie.NO_KILL,
+                maxRevotes = 3,
+            ),
+        )
+
+        assertThat(MafiaActionCodec.decode(MafiaActionCodec.encode(original)))
+            .isEqualTo(original)
+    }
+
+    @Test
     fun mafia_kill_vote_round_trips_with_nullable_target() {
         val withTarget = MafiaAction.SubmitMafiaKillVote(by = p1, target = p2)
         val withoutTarget = MafiaAction.SubmitMafiaKillVote(by = p1, target = null)

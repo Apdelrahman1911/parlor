@@ -13,6 +13,7 @@ import com.parlor.games.mafia.domain.rules.RoleAssignment
 import com.parlor.games.mafia.domain.rules.VoteResolution
 import com.parlor.games.mafia.domain.rules.WinCheck
 import com.parlor.games.mafia.domain.settings.MafiaKillTie
+import com.parlor.games.mafia.domain.settings.MafiaSettings
 import com.parlor.games.mafia.domain.settings.MafiaSettingsValidation
 import com.parlor.games.mafia.domain.state.ActiveVote
 import com.parlor.games.mafia.domain.state.DetectiveResult
@@ -55,6 +56,7 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
     ): Reduction<MafiaState, MafiaEvent> = when (action) {
         // Setup
         is MafiaAction.ApplySettings -> applySettings(state, action)
+        is MafiaAction.ConfigureAndStart -> configureAndStart(state, action.settings)
         MafiaAction.StartGame -> startGame(state)
         MafiaAction.AdvanceFromRoleAssignment -> advanceFromRoleAssignment(state)
 
@@ -101,17 +103,41 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
         )
     }
 
-    private fun startGame(state: MafiaState): Reduction<MafiaState, MafiaEvent> {
+    private fun configureAndStart(
+        state: MafiaState,
+        settings: MafiaSettings,
+    ): Reduction<MafiaState, MafiaEvent> = startGame(
+        state = state,
+        settings = settings,
+        settingsWereApplied = true,
+    )
+
+    private fun startGame(state: MafiaState): Reduction<MafiaState, MafiaEvent> = startGame(
+        state = state,
+        settings = state.public.settings,
+        settingsWereApplied = false,
+    )
+
+    /**
+     * The setup commit is one reducer transition. Validation happens against
+     * [settings] before either settings or roles are installed, so a rejected
+     * configuration cannot fall through into a start using older settings.
+     */
+    private fun startGame(
+        state: MafiaState,
+        settings: MafiaSettings,
+        settingsWereApplied: Boolean,
+    ): Reduction<MafiaState, MafiaEvent> {
         if (state.phase != MafiaPhase.Setup) return Reduction(state)
         if (state.public.droppedPlayers.isNotEmpty()) return Reduction(state)
         val playerCount = state.players.size
-        if (state.public.settings.validate(playerCount) !is MafiaSettingsValidation.Valid) {
+        if (settings.validate(playerCount) !is MafiaSettingsValidation.Valid) {
             return Reduction(state)
         }
         val random = RandomSource.seeded(state.hostOnly.randomSeed)
         val assignment = RoleAssignment.assign(
             players = state.players,
-            counts = state.public.settings.roleCounts,
+            counts = settings.roleCounts,
             random = random,
         )
         val privatePerPlayer = state.players.associate { p ->
@@ -130,13 +156,15 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent>() {
             privatePerPlayer = privatePerPlayer,
             hostOnly = state.hostOnly.copy(fullRoleMap = assignment.roles),
             phase = nextPhase,
+            public = state.public.copy(settings = settings),
         )
         return Reduction(
             newState,
-            listOf(
-                MafiaEvent.RolesAssigned,
-                MafiaEvent.PhaseEntered(nextPhase),
-            ),
+            buildList {
+                if (settingsWereApplied) add(MafiaEvent.SettingsApplied)
+                add(MafiaEvent.RolesAssigned)
+                add(MafiaEvent.PhaseEntered(nextPhase))
+            },
         )
     }
 
