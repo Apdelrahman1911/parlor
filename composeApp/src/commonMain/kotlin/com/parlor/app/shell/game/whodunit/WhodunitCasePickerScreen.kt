@@ -64,9 +64,10 @@ import org.jetbrains.compose.resources.stringResource
  * investigation" → picker → game) and multi-device host flow (Home → "Host
  * a game" → name → picker → mode → lobby).
  *
- * No hardcoded case ids. Adding a new JSON to `composeResources/files/cases/`
- * plus a one-line entry in `WhodunitDiModule.knownCaseIds` makes that case
- * appear here without any UI code change.
+ * No case id is hardcoded in this UI. Adding a validated JSON resource and its
+ * matching entry to `bundledWhodunitCaseIds` in `BundledWhodunitCatalog.kt`
+ * makes it appear here without a picker change; a contract test keeps the
+ * catalog and packaged resources identical.
  *
  * The list is fully scrollable; the cards stretch full-width on phones and
  * the title typography scales with the card height — the same component

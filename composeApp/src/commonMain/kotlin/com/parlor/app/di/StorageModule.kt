@@ -7,15 +7,11 @@ import org.koin.core.module.Module
 import org.koin.dsl.module
 
 /**
- * Storage bindings (Phase 6.1).
+ * Shared snapshot-store binding.
  *
- *  - `SnapshotStore` → `FileBackedSnapshotStore(fs, json)` with `fs` provided
- *    by the per-platform `platformStorageModule()`.
- *  - Reuses the strict `Json` already bound in [coreModule] (Phase 3) so
- *    saved snapshots fail loudly if their shape drifts from the engine's.
- *
- * Phase 6.2 layers a `SnapshotEffectRunner` on top (already wired inline in
- * `WhodunitGameFlow` for now), plus the cold-start resume prompt.
+ * The platform module supplies the protected file-system implementation and
+ * [coreModule] supplies the strict [Json] instance. Game-owned snapshot codecs
+ * and writers validate and persist through this common [SnapshotStore].
  */
 val storageModule: Module = module {
     single<SnapshotStore> {

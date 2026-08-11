@@ -9,8 +9,8 @@ import kotlinx.coroutines.flow.asStateFlow
 
 /**
  * Desktop has no runtime permission gate for LAN discovery — the OS firewall
- * dialog (if any) is handled outside the app. Return a constant [Granted]
- * gate so the shared rationale UI short-circuits cleanly.
+ * dialog (if any) is handled outside the app. Return a constant
+ * [PermissionStatus.NotRequired] gate so the shared rationale UI short-circuits cleanly.
  */
 @Composable
 actual fun rememberP2pPermissionGate(

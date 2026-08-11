@@ -36,6 +36,7 @@ kotlin {
 tasks.named("desktopTest") {
     inputs.files(
         rootProject.file("README.md"),
+        rootProject.file("CLAUDE.md"),
         rootProject.file("ARCHITECTURE.md"),
         rootProject.file("build.gradle.kts"),
         rootProject.file(".github/workflows/production-verification.yml"),
@@ -54,6 +55,7 @@ tasks.named("desktopTest") {
             include("**/*.kt")
         },
         rootProject.file("gradle/libs.versions.toml"),
+        rootProject.file("gradle/wrapper/gradle-wrapper.properties"),
         rootProject.file("gradle/verification-metadata.xml"),
         rootProject.file("composeApp/src/androidMain/AndroidManifest.xml"),
         rootProject.file("composeApp/build.gradle.kts"),

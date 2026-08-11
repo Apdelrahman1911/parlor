@@ -100,8 +100,8 @@ import org.koin.compose.koinInject
  * and starts the game — runs **inside** the session at the Setup phase, so
  * the reducer is the source of truth for the chosen settings.
  *
- * No multi-device / peer entry here; Mafia M3 will add separate composables
- * for that, following the Whodunit split.
+ * Multi-device host and peer entry points live in the sibling `multidevice`
+ * package; this composable owns only local pass-and-play setup and recovery.
  */
 @Composable
 fun MafiaGameFlow(
@@ -324,8 +324,8 @@ private fun SessionDrivenFlow(
     // PaP is the canonical host — we render off the full state so the router
     // can read everyone's private slice (which Mafia is which, coordination
     // submissions, detective results) without going through privateStateFor
-    // for every cycle decision. Multi-device peers will use the public
-    // projection + their own privateStateFor in M3.
+    // for every cycle decision. Multi-device peers use the public projection
+    // plus only their own privateStateFor projection.
     val authoritativeState = requireNotNull(session.hostState) {
         "The local Mafia flow requires a host projection"
     }

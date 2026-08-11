@@ -13,8 +13,8 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 
 /**
- * The I/O boundary above the engine. Same contract for pass-and-play and
- * (future) multi-device: only how state is *distributed* and how actions are
+ * The I/O boundary above the engine. Same contract for local and multi-device
+ * sessions: only how state is *distributed* and how actions are
  * *submitted* differs.
  *
  * The reducer is identical across topologies; switching topologies is a

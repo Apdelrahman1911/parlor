@@ -32,8 +32,8 @@ import kotlinx.coroutines.flow.StateFlow
  * buttons just `submit(WhodunitAction.AdvanceFromIntro)` and it works
  * in every mode.
  *
- * Wraps any concrete controller — the pass-and-play implementation, a
- * future shadow controller, anything that satisfies [SessionController].
+ * Wraps any concrete controller — including pass-and-play and peer/shadow
+ * implementations — that satisfies [SessionController].
  */
 class PartyAwareSession<S : GameState, A : GameAction, E : GameEvent>(
     private val delegate: SessionController<S, A, E>,

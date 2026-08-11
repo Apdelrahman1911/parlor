@@ -1,122 +1,137 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file gives repository guidance to Claude Code and other contributors.
+Production source and executable tests are authoritative. Historical plans and
+audit ledgers are evidence only.
 
-## What this project is
+## Product and release scope
 
-Parlor is a party-games app built on Kotlin Multiplatform + Compose Multiplatform, targeting Android, iOS, and Desktop. **Whodunit** (case: *The Last Dinner*) is the first game module — Parlor is deliberately built as a multi-game platform, not a single-game app. The "platform vs. game module" split is load-bearing; do not collapse it.
+Parlor is a Kotlin Multiplatform + Compose Multiplatform party-game container.
+Android and iOS are shipping targets; Desktop is a development and deterministic
+test target. The release contains two game modules:
 
-Authoritative design docs (read these before non-trivial changes):
+- Whodunit, with bundled English/Arabic cases and Classic Vote / Elimination modes;
+- Mafia, with local and same-LAN multi-device play.
 
-- `ARCHITECTURE.md` — system architecture. Section numbers (e.g. §3.3, §7) are referenced from code comments and tests.
-- `whodunit-game-design.md` — game design source of truth for Whodunit rules, phases, content.
-- `docs/APP_PLAN.md` — phase-by-phase execution plan and MVP scope.
-- `docs/CONTENT_SCHEMA.md`, `docs/DESIGN_TOKENS.md`, `docs/IOS_SETUP.md`, `docs/MOCK_BACKEND.md` — supporting specs.
+Both games support local play and host-authoritative same-LAN multiplayer over
+P2pKit. Public-internet play, raw-IP/manual connection, spectators, and host
+migration are intentionally unsupported. Physical-device, signed-store,
+accessibility, privacy, legal, and operational evidence remain external release
+gates even when the automated build is green.
 
-## Toolchain & bootstrap
+Use these current documents before non-trivial changes:
 
-- **JDK 21** required (Java 21 source/target across all modules).
-- Android `compileSdk = 35`, `minSdk = 26`.
-- The Gradle wrapper jar is **not committed**. On a fresh clone, with system Gradle on `PATH`:
-  ```bash
-  gradle wrapper --gradle-version 8.11.1
-  ```
-  This materializes `gradle/wrapper/gradle-wrapper.jar`. All subsequent builds use `./gradlew`.
+- `docs/PRODUCTION_ARCHITECTURE.md`
+- `docs/RELEASE_GATES.md`
+- `docs/P2P_MANUAL_TEST.md`
+- `docs/HOW_TO_ADD_A_GAME.md`
+- accepted decisions under `docs/adr/`
 
-## Common commands
+`ARCHITECTURE.md`, `whodunit-game-design.md`, `docs/APP_PLAN.md`, and phase
+reports are explicitly historical and are not current behavior contracts.
+
+## Toolchain
+
+- JDK 21
+- checked-in Gradle 8.13 wrapper
+- Android `compileSdk = 36`, `targetSdk = 36`, `minSdk = 26`
+- minimum iOS 16
+- P2pKit 0.7.0-rc3, pinned in `gradle/libs.versions.toml` and strict dependency
+  verification metadata
+
+Always use `./gradlew`. Do not add `mavenLocal()`, a sibling P2pKit composite
+build, or an unverified repository override.
+
+## Verification entry points
 
 ```bash
-# Build / run
-./gradlew :composeApp:installDebug                # Android device or emulator
-./gradlew :composeApp:run                         # Desktop (JVM)
-./gradlew :composeApp:embedAndSignAppleFrameworkForXcode   # iOS framework (Xcode build-phase target)
-./gradlew :composeApp:linkDebugFrameworkIosSimulatorArm64  # iOS framework (CLI)
+# Local development
+./gradlew :composeApp:installDebug
+./gradlew :composeApp:run
 
-# Tests — run from JVM ("desktop") source set
-./gradlew test                                    # All JVM tests across all modules (includes Konsist architecture tests)
-./gradlew :shared:engine:allTests                 # Engine module only
-./gradlew :game-modes:whodunit:desktopTest        # Whodunit tests
-./gradlew :game-modes:whodunit:desktopTest --tests "com.parlor.games.whodunit.flow.FullGameDriveTest"  # Single test
+# Host-independent automated release gates
+./gradlew productionCheck allTests --dependency-verification=strict
+
+# Apple static analysis and release framework linkage (macOS)
+./gradlew productionAppleCheck --dependency-verification=strict
+
+# Protected signing gate; requires real release credentials
+./gradlew productionAndroidSigningCheck --no-configuration-cache
 ```
 
-iOS run is via Xcode (`iosApp/iosApp.xcodeproj`) or the Android Studio **iOS App** run configuration (`.run/iOS App.run.xml`), which calls `embedAndSignAppleFrameworkForXcode` as a pre-step.
+`productionCheck` includes Desktop/common tests, Android debug/release unit
+tests, release compilation, lint policy, R8/AAB creation, shell dispatch, and
+repository-wide static analysis. `productionAppleCheck` links the supported
+iOS release frameworks; linkage is not runtime validation. See
+`docs/RELEASE_GATES.md` for the exact current matrix and external gates.
 
-## Architecture invariants (enforced by tests — do not weaken)
+## Architecture invariants
 
-The dependency graph is one-way: `:composeApp → :shared:* → :game-modes:*` (and `:game-modes:*` depend on `:shared:*`, never the reverse). Two Konsist tests in `shared/engine/src/desktopTest` fail the build on violations:
+The dependency graph points inward toward pure shared contracts:
 
-- `PurityTest` — `:shared:engine` may import only Kotlin stdlib, `kotlinx.coroutines`, `kotlinx.serialization`, and `:shared:core`. **No Koin/Compose/Ktor/SQLDelight/platform APIs anywhere in the engine**, ever. Same purity rule applies to game-module `domain/` packages.
-- `NoWhodunitInEngineTest` — `:shared:engine` has zero references to any Whodunit term.
+- `:shared:core` contains common IDs, results, time, randomness, logging, and
+  versioning;
+- `:shared:engine` contains generic game/reducer/projection contracts and may
+  not import UI, DI, transport, storage, or a game module;
+- `:shared:networking` defines the versioned transport-independent wire and
+  room contracts;
+- `:shared:session` owns local controllers and host/peer authority semantics;
+- `:shared:transport-p2p` is the only module allowed to import P2pKit;
+- `:shared:storage` owns settings and protected snapshot storage;
+- `:shared:content` owns case envelopes, repository contracts, and validation;
+- `:game-modes:whodunit` and `:game-modes:mafia` own their rules, projections,
+  codecs, UI, and multiplayer bridges;
+- `:composeApp` owns catalog/shell/navigation composition, DI, and platform
+  entry points.
 
-Consequences when adding code:
+Game modules depend on shared contracts, never on P2pKit. Shared modules never
+depend on a shipping game module. The app shell composes both sides through
+`GameShellRegistry`. The non-shipping fixture in `:shared:engine-testing`
+proves the registration boundary without entering production catalogs.
 
-- New cross-cutting helper? It belongs in `:shared:core` (pure Kotlin) or `:shared:engine` (if engine-shaped). Never reach down from `:shared:*` into a game module.
-- Engine collaborators (clock, random, logger, timer service) enter the engine via constructor parameters. DI assembly happens at the app boundary (`composeApp/`), not inside `shared/engine`.
-- Game-module UI/DI lives in sibling packages (`ui/`, `presentation/`, `di/`), never inside `domain/`.
+Konsist tests in `:shared:engine:desktopTest` enforce engine purity and absence
+of Whodunit coupling. Detekt is applied repository-wide by the root build and
+is part of `productionCheck`; do not add blanket baselines or broad
+suppressions.
 
-## Privacy: three state buckets (ARCHITECTURE.md §7)
+## State, authority, and privacy
 
-All game state is split into three **typed** buckets, enforced at the engine level — not a UI convention:
+Reducers are pure and topology-agnostic. `SessionController` is the I/O
+boundary used by both local and multi-device flows. The host is the only
+canonical multiplayer reducer owner. A peer command must pass authenticated
+transport identity binding, protocol/session/game checks, sequence and command
+deduplication, expected-revision validation, actor authorization, and reducer
+validation before mutation.
 
-- `PublicState` — visible to everyone in the room.
-- `PrivatePlayerState` — only the owning player.
-- `HostOnlyState` — never leaves the host device (e.g. killer identity, killer variant seed).
+Game state is separated into public, per-player private, and host-only data.
+Peer snapshots contain a public projection plus exactly the receiving player's
+private projection. Never serialize a host projection, role map, room secret,
+rejoin credential, security key, or another player's private slice to a peer,
+log, error, preview, or accessibility label.
 
-Each `GameDefinition` ships a `ProjectionPolicy` that strips host-only fields from public projections and strips other players' private fields from per-player projections. Adding a new piece of private information is a **deliberate act**: declare it in the right bucket and update the projection policy. The type system prevents `HostOnlyState` from leaking into a `PublicProjection`.
+## Content and persistence
 
-## Topology boundary: `SessionController` (ARCHITECTURE.md §6)
+Production content is bundled and offline-only. Whodunit JSON resources live
+under `game-modes/whodunit/src/commonMain/composeResources/files/cases/` and
+are enumerated by `BundledWhodunitCatalog`; an executable contract keeps the
+resource set and catalog identical. Production uses
+`OfflineRemoteCaseDataSource`; Ktor `MockEngine` appears only in tests. Every
+case still passes the common envelope validator and the Whodunit payload
+validator before use.
 
-The reducer is **pure** and **topology-agnostic**. The I/O boundary is `SessionController`. Pass-and-play (the MVP topology) and future local-multiplayer share the same reducer and same UI — only the controller implementation differs. Privacy enforcement is UI ceremony in pass-and-play (cover screens, hold-to-reveal, hide-and-pass) and transport-level in multi-device (the host never sends another player's private state). If you find yourself branching reducer logic on topology, the design is wrong.
+Persisted game snapshots use authenticated, platform-protected storage and
+game-owned strict recovery validation. Multiplayer rejoin credentials use the
+platform secure-storage adapter and are distinct from local game snapshots.
+Do not normalize corrupt or reducer-impossible state into a different game.
 
-## P2P (multi-device) is a production dependency
+## Change discipline
 
-Multi-device support depends on P2pKit. Both P2pKit modules are pinned in the
-version catalog and resolved from Maven Central; keep the modules on the same
-version. `:shared:transport-p2p` is always included and is the only module that
-may import P2pKit. Do not add `mavenLocal()`, sibling-source auto-detection, or
-a build flag that silently produces a different pass-and-play-only app.
-
-**The pass-and-play code path must remain independent of P2P runtime APIs.**
-Game modules depend on transport-independent session/networking contracts and
-must never import P2pKit directly.
-
-## Player counts are declared, never hardcoded (ARCHITECTURE.md §1.4)
-
-The effective player range is the intersection of: engine absolute (`3..16`), `GameDefinition`, `GameMode`, and validated case content. *The Last Dinner* ships with 6 characters → plays 4–6 Classic / 5–6 Elimination. **No layer of the codebase may hardcode `6` as a player ceiling.** Future cases with larger character pools must work without engine/mode/shell changes.
-
-## Module map (where things live)
-
-```
-composeApp/                          # KMP+CMP app — shell, DI assembly, platform entry points
-  src/commonMain/.../app/            # App.kt, di/, shell/ (home/library/settings/multiplayer), permissions/, storage/
-  src/{android,ios,desktop}Main      # Platform launchers + expect/actual shims only
-
-shared/core                          # Pure Kotlin: Result, ids, clock, random, logger, UiText
-shared/engine                        # Pure Kotlin engine — contracts only. Konsist-enforced
-shared/engine-testing                # Test doubles for engine collaborators
-shared/design-system                 # Tokens, ParlorTheme, components, motion, AmbientBackdrop
-shared/session                       # SessionController contract + PassAndPlay impl
-shared/content                       # Case schema base, repository, validator, Ktor MockEngine wiring
-shared/networking                    # LocalRoom + transport contracts (interfaces)
-shared/storage                       # Snapshot persistence, settings, secure storage
-shared/navigation                    # Type-safe routes, NavGraphRegistry
-shared/transport-p2p                 # Required P2pKit adapter; sole P2pKit import boundary
-
-game-modes/whodunit                  # Whodunit module: domain/ (pure), ui/, snapshot/, di/, content/
-content/                             # Case JSON drafts (e.g., last-dinner.draft.json)
-
-build-logic/convention/              # Convention plugins: parlor.kmp.library,
-                                     # parlor.kmp.compose.library, parlor.detekt
-```
-
-`settings.gradle.kts` enables `TYPESAFE_PROJECT_ACCESSORS` — use `projects.shared.engine` style accessors in new build scripts.
-
-## Content path
-
-Cases are loaded as Compose Multiplatform resources from the Whodunit module (`game-modes/whodunit/src/commonMain/composeResources/files/cases/`), served in dev via Ktor's `MockEngine` (see `docs/MOCK_BACKEND.md`). **No case prose is generated by the reducer or hardcoded inline** — the reducer chooses *which* content to show, never *what it says*. Schema validation lives in `:shared:content` + the Whodunit-specific validator in the module.
-
-## Style & test stack
-
-- Kotlin official code style (`kotlin.code.style=official`).
-- Detekt is configured via the `parlor.detekt` convention plugin.
-- Tests run on `useJUnitPlatform()` (JUnit 5) — KMP tests live in `desktopTest` source sets (Konsist requires JVM source-tree access; only `desktopTest` runs the architecture checks).
+- Preserve unrelated and uncommitted work.
+- Add a regression test for each correctness defect where practical.
+- Preserve `CancellationException` across broad error boundaries.
+- Keep queues, payloads, retries, diagnostics, and ledgers explicitly bounded.
+- Do not add optimistic peer mutations or blindly retry non-idempotent actions.
+- Do not weaken tests, dependency verification, static analysis, lint policy,
+  privacy boundaries, or release gates to obtain a green build.
+- Keep implementation commits coherent and recoverable; never publish or sign
+  without explicit authorization.

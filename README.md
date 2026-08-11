@@ -3,7 +3,8 @@
 Parlor is a Kotlin Multiplatform party-game container for Android and iOS.
 It currently ships two game modules:
 
-- **Whodunit** — *The Last Dinner*, with Classic Vote and Elimination modes.
+- **Whodunit** — bundled English/Arabic cases, with Classic Vote and
+  Elimination modes.
 - **Mafia** — a host-authoritative social-deduction game.
 
 Both games support local play and same-LAN multi-device play through P2pKit.
@@ -97,8 +98,7 @@ parlor/
 │   ├── networking/               # Versioned transport-independent protocol
 │   ├── transport-p2p/            # The only P2pKit adapter
 │   ├── content/                  # Bundled offline content and validation
-│   ├── storage/                  # Settings and protected snapshots
-│   └── navigation/               # Module navigation descriptors
+│   └── storage/                  # Settings and protected snapshots
 └── docs/                         # Rules, ADRs, test matrices, release runbooks
 ```
 

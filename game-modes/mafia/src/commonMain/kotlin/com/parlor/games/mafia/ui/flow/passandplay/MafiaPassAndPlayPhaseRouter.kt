@@ -62,8 +62,8 @@ import org.jetbrains.compose.resources.stringResource
  * mandatory between any two consecutive private renderings — including
  * between Mafia members during the coordination pass.
  *
- * Multi-device flows will live in `ui/flow/multidevice/` and do not touch
- * this file.
+ * Multi-device flows live in `ui/flow/multidevice/` and do not use this
+ * host-private pass-and-play router.
  */
 @Composable
 internal fun MafiaPassAndPlayPhaseRouter(

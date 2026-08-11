@@ -71,9 +71,11 @@ import org.koin.compose.koinInject
  *    forwarding to the controller.
  *
  * The host UI itself renders against the canonical state — same
- * [MafiaMultiDevicePhaseRouter] peers use, but with `isHost = true` so
- * host-only chrome (Resolve night, Open vote, host's setup screen) is
- * surfaced. Privacy is structural: peers receive only their own slice
+ * [MafiaMultiDevicePhaseRouter] peers use, but with `isHost = true` so the
+ * host setup and discussion controls are surfaced. Gated phase progression,
+ * including night resolution and vote closure, is driven by the retained host
+ * runtime rather than by an optimistic UI button. Privacy is structural:
+ * peers receive only their own slice
  * because the bridge never produces another peer's slice for transmission.
  *
  * Pause is not implemented for Mafia in this version (no `paused` field in

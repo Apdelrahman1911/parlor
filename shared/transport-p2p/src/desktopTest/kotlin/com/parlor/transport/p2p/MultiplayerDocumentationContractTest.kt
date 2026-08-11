@@ -114,6 +114,44 @@ class MultiplayerDocumentationContractTest {
     }
 
     @Test
+    fun contributor_guidance_matches_the_current_build_and_module_graph() {
+        val catalog = read("gradle/libs.versions.toml")
+        fun version(key: String): String {
+            val match = Regex("(?m)^$key = \"([^\"]+)\"$").find(catalog)
+            return assertNotNull(match, "Missing version-catalog key: $key").groupValues[1]
+        }
+
+        val guidance = read("CLAUDE.md")
+        val readme = read("README.md")
+        val wrapper = read("gradle/wrapper/gradle-wrapper.properties")
+        val wrapperVersion = assertNotNull(
+            Regex("gradle-([^-]+)-bin\\.zip").find(wrapper),
+            "Gradle wrapper URL must identify the pinned distribution",
+        ).groupValues[1]
+
+        listOf(
+            "checked-in Gradle $wrapperVersion wrapper",
+            "compileSdk = ${version("android-compile-sdk")}",
+            "targetSdk = ${version("android-target-sdk")}",
+            "minSdk = ${version("android-min-sdk")}",
+            "P2pKit $p2pKitVersion",
+            "minimum iOS 16",
+            "Production uses\n`OfflineRemoteCaseDataSource`",
+        ).forEach { marker ->
+            assertTrue(marker in guidance, "CLAUDE.md is missing current build marker: $marker")
+        }
+
+        listOf(guidance, readme).forEach { currentGuide ->
+            assertFalse("shared/navigation" in currentGuide)
+            assertFalse("future local-multiplayer" in currentGuide)
+            assertFalse("Gradle 8.11.1" in currentGuide)
+            assertFalse("compileSdk = 35" in currentGuide)
+        }
+        assertTrue("Android and iOS are shipping targets" in guidance)
+        assertTrue("Desktop is a development and deterministic" in guidance)
+    }
+
+    @Test
     fun current_operational_docs_do_not_repeat_obsolete_positive_claims() {
         val canonicalDocuments = listOf(
             "README.md",
