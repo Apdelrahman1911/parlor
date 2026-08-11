@@ -25,10 +25,11 @@ import com.parlor.app.shell.game.GameShellBackRequest
 import com.parlor.app.shell.game.GameShellRegistry
 import com.parlor.app.shell.game.GameShellRouter
 import com.parlor.app.shell.home.HomeScreen
+import com.parlor.app.shell.home.HomeRecoveryAvailability
 import com.parlor.app.shell.home.LocalResumeFailureScreen
+import com.parlor.app.shell.home.resolveHomeRecoveryAvailability
 import com.parlor.app.shell.settings.SettingsScreen
 import com.parlor.core.ids.SessionId
-import com.parlor.core.result.Result
 import com.parlor.designsystem.components.LocalParlorToastState
 import com.parlor.designsystem.components.ParlorToastHost
 import com.parlor.designsystem.components.ParlorToastSeverity
@@ -39,7 +40,6 @@ import com.parlor.designsystem.motion.rememberSystemReducedMotion
 import com.parlor.designsystem.motion.shouldReduceMotion
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.designsystem.theme.ThemeMode
-import com.parlor.networking.transport.ResumableSessionInfo
 import com.parlor.networking.transport.RoomTransport
 import com.parlor.session.multidevice.ProcessMultiplayerSessionOwner
 import com.parlor.session.multidevice.routeOrNull
@@ -118,40 +118,26 @@ fun App() {
                     mutableStateOf(GameShellBackRequest.Initial)
                 }
 
-                val unfinishedSessions by produceState(
-                    initialValue = emptyList<SessionId>(),
+                val homeRecovery by produceState<HomeRecoveryAvailability>(
+                    initialValue = HomeRecoveryAvailability.Loading,
                     key1 = screen,
                     key2 = unfinishedRefreshKey,
                 ) {
-                    value = if (screen == AppScreen.Home) {
-                        when (val result = snapshotStore.listUnfinished()) {
-                            is Result.Success -> result.data
-                            is Result.Failure -> emptyList()
-                        }
-                    } else {
-                        value
-                    }
-                }
-
-                val resumableMultiplayer by produceState<ResumableSessionInfo?>(
-                    initialValue = null,
-                    key1 = screen,
-                    key2 = unfinishedRefreshKey,
-                ) {
-                    value = if (screen == AppScreen.Home) {
-                        when (val result = roomTransport.resumableSession()) {
-                            is Result.Success -> result.data?.takeIf { info ->
-                                gameShellRouter.resumeMultiplayer(
-                                    gameId = info.gameId,
-                                    gameVersion = info.gameVersion,
-                                    displayName = info.displayName,
-                                ) != null
-                            }
-                            is Result.Failure -> null
-                        }
-                    } else {
-                        value
-                    }
+                    if (screen != AppScreen.Home) return@produceState
+                    value = HomeRecoveryAvailability.Loading
+                    val localResult = snapshotStore.listUnfinished()
+                    val multiplayerResult = roomTransport.resumableSession()
+                    value = resolveHomeRecoveryAvailability(
+                        localResult = localResult,
+                        multiplayerResult = multiplayerResult,
+                        supportsMultiplayerResume = { info ->
+                            gameShellRouter.resumeMultiplayer(
+                                gameId = info.gameId,
+                                gameVersion = info.gameVersion,
+                                displayName = info.displayName,
+                            ) != null
+                        },
+                    )
                 }
 
                 val backToHome: () -> Unit = {
@@ -225,12 +211,24 @@ fun App() {
                                     screen = AppScreen.Settings
                                 },
                                 modifier = Modifier.fillMaxSize(),
-                                unfinishedSessions = unfinishedSessions,
+                                unfinishedSessions =
+                                    (homeRecovery as? HomeRecoveryAvailability.Ready)
+                                        ?.unfinishedSessions.orEmpty(),
                                 onResume = requestLocalResume,
-                                hasResumableMultiplayer = resumableMultiplayer != null,
+                                hasResumableMultiplayer =
+                                    (homeRecovery as? HomeRecoveryAvailability.Ready)
+                                        ?.resumableMultiplayer != null,
+                                recoveryLoading =
+                                    homeRecovery is HomeRecoveryAvailability.Loading,
+                                recoveryUnavailable =
+                                    (homeRecovery as? HomeRecoveryAvailability.Ready)
+                                        ?.hasUnavailableSource == true,
+                                onRetryRecovery = { unfinishedRefreshKey++ },
                                 onResumeMultiplayer = {
                                     localResumeCoordinator.invalidate()
-                                    val info = resumableMultiplayer
+                                    val info =
+                                        (homeRecovery as? HomeRecoveryAvailability.Ready)
+                                            ?.resumableMultiplayer
                                     val launch = info?.let {
                                         gameShellRouter.resumeMultiplayer(
                                             gameId = it.gameId,

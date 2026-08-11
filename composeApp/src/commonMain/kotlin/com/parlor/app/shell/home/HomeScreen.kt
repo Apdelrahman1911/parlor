@@ -17,12 +17,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
 import com.parlor.app.resources.Res
 import com.parlor.app.resources.home_continue_label
 import com.parlor.app.resources.home_eyebrow
 import com.parlor.app.resources.home_games_label
+import com.parlor.app.resources.home_recovery_checking
+import com.parlor.app.resources.home_recovery_retry
+import com.parlor.app.resources.home_recovery_retry_description
+import com.parlor.app.resources.home_recovery_unavailable_body
+import com.parlor.app.resources.home_recovery_unavailable_title
 import com.parlor.app.resources.home_resume_tile_description
 import com.parlor.app.resources.home_resume_tile_subtitle
 import com.parlor.app.resources.home_resume_tile_title
@@ -70,6 +77,9 @@ internal fun HomeScreen(
     onResume: (SessionId) -> Unit = {},
     hasResumableMultiplayer: Boolean = false,
     onResumeMultiplayer: () -> Unit = {},
+    recoveryLoading: Boolean = false,
+    recoveryUnavailable: Boolean = false,
+    onRetryRecovery: () -> Unit = {},
 ) {
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
         Column(
@@ -86,6 +96,11 @@ internal fun HomeScreen(
         ) {
             HomeTopBar(onSettings = onSettings)
 
+            when {
+                recoveryLoading -> RecoveryLoadingCard()
+                recoveryUnavailable -> RecoveryUnavailableCard(onRetryRecovery)
+            }
+
             if (unfinishedSessions.isNotEmpty() || hasResumableMultiplayer) {
                 ContinueSection(
                     sessions = unfinishedSessions,
@@ -98,6 +113,55 @@ internal fun HomeScreen(
             GamesSection(
                 games = games,
                 onGameSelected = onGameSelected,
+            )
+        }
+    }
+}
+
+@Composable
+private fun RecoveryLoadingCard() {
+    ParlorCard(
+        modifier = Modifier
+            .fillMaxWidth()
+            .semantics { liveRegion = LiveRegionMode.Polite },
+        cornerRadius = ParlorTheme.radii.card,
+        contentPadding = ParlorTheme.spacing.l,
+    ) {
+        Text(
+            text = stringResource(Res.string.home_recovery_checking),
+            style = ParlorTheme.typography.bodyMedium,
+            color = ParlorTheme.colors.textSecondary,
+        )
+    }
+}
+
+@Composable
+private fun RecoveryUnavailableCard(onRetry: () -> Unit) {
+    ParlorCard(
+        modifier = Modifier
+            .fillMaxWidth()
+            .semantics { liveRegion = LiveRegionMode.Polite },
+        cornerRadius = ParlorTheme.radii.card,
+        contentPadding = ParlorTheme.spacing.l,
+    ) {
+        Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m)) {
+            Text(
+                text = stringResource(Res.string.home_recovery_unavailable_title),
+                style = ParlorTheme.typography.headingLarge,
+                color = ParlorTheme.colors.textPrimary,
+            )
+            Text(
+                text = stringResource(Res.string.home_recovery_unavailable_body),
+                style = ParlorTheme.typography.bodyMedium,
+                color = ParlorTheme.colors.textSecondary,
+            )
+            ParlorButton(
+                label = stringResource(Res.string.home_recovery_retry),
+                contentDescription = stringResource(
+                    Res.string.home_recovery_retry_description,
+                ),
+                onClick = onRetry,
+                modifier = Modifier.fillMaxWidth(),
             )
         }
     }
