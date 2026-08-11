@@ -1,6 +1,7 @@
 package com.parlor.transport.p2p
 
 import dev.p2pkit.core.AppId
+import dev.p2pkit.core.BackgroundPolicy
 import dev.p2pkit.core.ExplicitSecurityRisk
 import dev.p2pkit.core.PeerAuthorizationPolicy
 import dev.p2pkit.core.P2pKit
@@ -45,6 +46,7 @@ private class JvmP2pKitFactory(
                     )
                 }
                 lifecycle {
+                    onBackground = BackgroundPolicy.CloseActiveSessions
                     reconnectPolicy = ReconnectPolicy.Enabled(
                         maxAttempts = 10,
                         retryDelayMillis = 3_000,

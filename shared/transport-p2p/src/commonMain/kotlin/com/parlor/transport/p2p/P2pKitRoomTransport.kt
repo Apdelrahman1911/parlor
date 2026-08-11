@@ -49,6 +49,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.BufferOverflow
@@ -1776,6 +1777,8 @@ internal class HostP2pRoom(
     // disconnected state forever.
     private val previouslySeenPlayerIds: MutableSet<PlayerId> = mutableSetOf()
     private val trackedSessions: MutableSet<P2pSession> = mutableSetOf()
+    /** Sessions explicitly retired by the close-on-background product policy. */
+    private val lifecycleRetiredSessions: MutableSet<P2pSession> = mutableSetOf()
     private val admissionAttemptLimiter = AdmissionAttemptLimiter(nowMillis())
 
     /** Session collectors/transactions are children of this room, not the app scope. */
@@ -1824,7 +1827,15 @@ internal class HostP2pRoom(
         val trackingDecision = stateMutex.withLock {
             when {
                 session in trackedSessions -> null
-                left || trackedSessions.size >= trackedSessionLimit() -> false
+                left ||
+                    when (_lifecycle.value) {
+                        RoomLifecycleState.Active,
+                        is RoomLifecycleState.Resuming -> false
+                        is RoomLifecycleState.Suspended,
+                        RoomLifecycleState.Expired,
+                        RoomLifecycleState.Closed -> true
+                    } ||
+                    trackedSessions.size >= trackedSessionLimit() -> false
                 else -> true.also { trackedSessions += session }
             }
         }
@@ -2087,6 +2098,7 @@ internal class HostP2pRoom(
                                 val current = membersByPlayer[playerId]
                                 if (
                                     sessionsByPlayer[playerId] === session &&
+                                    session !in lifecycleRetiredSessions &&
                                     current != null &&
                                     !current.connected
                                 ) {
@@ -2138,6 +2150,7 @@ internal class HostP2pRoom(
                                 publishPendingAdmissions()
                             }
                             trackedSessions.remove(session)
+                            lifecycleRetiredSessions.remove(session)
                             if (sessionsByPlayer[playerId] === session) {
                                 sessionsByPlayer.remove(playerId)
                                 membersByPlayer[playerId]?.let { current ->
@@ -2358,7 +2371,8 @@ internal class HostP2pRoom(
                 val currentSession = sessionsByPlayer[playerId]
                 val deadline = rejoinDeadlineByPlayer[playerId] ?: Long.MIN_VALUE
                 when {
-                    currentSession?.state?.value == ConnectionState.Connected ->
+                    currentSession?.state?.value == ConnectionState.Connected &&
+                        currentSession !in lifecycleRetiredSessions ->
                         ResumePreparation.Rejected(AdmissionRejection.AlreadyConnected)
                     playerId in admissionReservations || playerId in pendingByPlayer ||
                         pendingByPlayer.size >= pendingAdmissionLimit() ->
@@ -3173,7 +3187,13 @@ internal class HostP2pRoom(
     }
 
     override suspend fun appBackgrounded(atEpochMillis: Long) {
-        val expiry = stateMutex.withLock {
+        data class BackgroundTransition(
+            val deadline: Long,
+            val delayMs: Long,
+            val sessions: List<P2pSession>,
+        )
+
+        val transition = stateMutex.withLock {
             when (val current = _lifecycle.value) {
                 RoomLifecycleState.Active -> {
                     val deadline = atEpochMillis + appResumeGraceMs
@@ -3184,31 +3204,41 @@ internal class HostP2pRoom(
                         membersByPlayer[playerId] =
                             checkNotNull(membersByPlayer[playerId]).copy(connected = false)
                     }
+                    lifecycleRetiredSessions += trackedSessions
                     publishMembers()
-                    deadline to appResumeGraceMs
+                    BackgroundTransition(deadline, appResumeGraceMs, trackedSessions.toList())
                 }
                 is RoomLifecycleState.Resuming -> {
                     _lifecycle.value = RoomLifecycleState.Suspended(
                         current.resumeDeadlineEpochMillis,
                     )
-                    current.resumeDeadlineEpochMillis to
-                        (current.resumeDeadlineEpochMillis - atEpochMillis).coerceAtLeast(0L)
+                    membersByPlayer.keys.toList().forEach { playerId ->
+                        membersByPlayer[playerId] =
+                            checkNotNull(membersByPlayer[playerId]).copy(connected = false)
+                    }
+                    lifecycleRetiredSessions += trackedSessions
+                    publishMembers()
+                    BackgroundTransition(
+                        current.resumeDeadlineEpochMillis,
+                        (current.resumeDeadlineEpochMillis - atEpochMillis).coerceAtLeast(0L),
+                        trackedSessions.toList(),
+                    )
                 }
                 is RoomLifecycleState.Suspended,
                 RoomLifecycleState.Expired,
                 RoomLifecycleState.Closed -> null
             }
         }
-        if (expiry == null) return
+        if (transition == null) return
         diagnostics.event(
             P2pDiagnosticEventName.LIFECYCLE_SUSPENDED,
             P2pDiagnosticRole.HOST,
         )
-        if (expiry.second == 0L) {
-            expireLifecycle(expiry.first)
+        if (transition.delayMs == 0L) {
+            expireLifecycle(transition.deadline)
             return
         }
-        scheduleLifecycleExpiry(expiry.first, expiry.second)
+        scheduleLifecycleExpiry(transition.deadline, transition.delayMs)
         kit.notifyAppBackgrounded()
         try {
             // P2pKit's notification starts cleanup asynchronously. Await the
@@ -3222,6 +3252,17 @@ internal class HostP2pRoom(
                 P2pDiagnosticResult.FAILURE,
                 P2pDiagnosticReason.LIFECYCLE,
             )
+        }
+        // P2pKit's CloseActiveSessions policy launches cleanup asynchronously.
+        // Await an idempotent close for every room-owned session so a rapid
+        // foreground cannot reactivate a socket whose background close is
+        // still queued inside the kit.
+        coroutineScope {
+            transition.sessions.map { session ->
+                async {
+                    attemptCleanup(diagnostics, P2pDiagnosticRole.HOST) { session.close() }
+                }
+            }.awaitAll()
         }
     }
 
@@ -3464,6 +3505,7 @@ internal class HostP2pRoom(
                 sessionsByPlayer.clear()
                 pendingByPlayer.clear()
                 trackedSessions.clear()
+                lifecycleRetiredSessions.clear()
                 admissionReservations.clear()
                 membersByPlayer.clear()
                 previouslySeenPlayerIds.clear()
@@ -3610,33 +3652,50 @@ internal class PeerP2pRoom(
     private var resumeJob: Job? = null
     /** An authenticated host terminal frame permanently disables logical resume. */
     private var terminalByHost = false
+    /** The pre-background socket can never reactivate this logical room. */
+    private var lifecycleRetiredSession: P2pSession? = null
     private var activeSession: P2pSession = session
     private var collectorJob: Job = launchIncomingCollector(session, initialCredential)
     private var stateJob: Job = launchSessionStateCollector(session)
 
     override suspend fun appBackgrounded(atEpochMillis: Long) {
-        val expiry = lifecycleMutex.withLock {
+        data class BackgroundTransition(
+            val deadline: Long,
+            val delayMs: Long,
+            val session: P2pSession,
+        )
+
+        val transition = lifecycleMutex.withLock {
             when (val current = _lifecycle.value) {
                 RoomLifecycleState.Active -> {
                     val deadline = atEpochMillis + appResumeGraceMs
                     _lifecycle.value = RoomLifecycleState.Suspended(
                         deadline,
                     )
-                    deadline to appResumeGraceMs
+                    sessionMutex.withLock {
+                        lifecycleRetiredSession = activeSession
+                        BackgroundTransition(deadline, appResumeGraceMs, activeSession)
+                    }
                 }
                 is RoomLifecycleState.Resuming -> {
                     _lifecycle.value = RoomLifecycleState.Suspended(
                         current.resumeDeadlineEpochMillis,
                     )
-                    current.resumeDeadlineEpochMillis to
-                        (current.resumeDeadlineEpochMillis - atEpochMillis).coerceAtLeast(0L)
+                    sessionMutex.withLock {
+                        lifecycleRetiredSession = activeSession
+                        BackgroundTransition(
+                            current.resumeDeadlineEpochMillis,
+                            (current.resumeDeadlineEpochMillis - atEpochMillis).coerceAtLeast(0L),
+                            activeSession,
+                        )
+                    }
                 }
                 is RoomLifecycleState.Suspended,
                 RoomLifecycleState.Expired,
                 RoomLifecycleState.Closed -> null
             }
         }
-        if (expiry != null) {
+        if (transition != null) {
             diagnostics.event(
                 P2pDiagnosticEventName.LIFECYCLE_SUSPENDED,
                 P2pDiagnosticRole.PEER,
@@ -3645,12 +3704,16 @@ internal class PeerP2pRoom(
                 resumeJob.also { resumeJob = null }
             }
             interruptedResume?.cancelAndJoin()
-            if (expiry.second == 0L) {
-                expireLifecycle(expiry.first)
+            if (transition.delayMs == 0L) {
+                expireLifecycle(transition.deadline)
                 return
             }
-            scheduleLifecycleExpiry(expiry.first, expiry.second)
+            scheduleLifecycleExpiry(transition.deadline, transition.delayMs)
             kit.notifyAppBackgrounded()
+            // The kit's default policy closes sessions in a launched child.
+            // Complete the same idempotent close here before a foreground event
+            // is allowed to start logical recovery.
+            closeSessionSafely(transition.session)
             markHostConnected(false)
             _info.value = _info.value.copy(status = RoomInfo.Status.Lost)
         }
@@ -3683,8 +3746,12 @@ internal class PeerP2pRoom(
     }
 
     private suspend fun resumeAfterForeground(deadline: Long) {
-        val session = sessionMutex.withLock { activeSession }
-        if (session.state.value == ConnectionState.Connected) {
+        val (session, mayReuseSession) = lifecycleMutex.withLock {
+            sessionMutex.withLock {
+                activeSession to (activeSession !== lifecycleRetiredSession)
+            }
+        }
+        if (mayReuseSession && session.state.value == ConnectionState.Connected) {
             restoreActiveRoom(
                 emitEvent = true,
                 expectedDeadline = deadline,
@@ -3818,6 +3885,9 @@ internal class PeerP2pRoom(
                 }
                 val previous = Triple(activeSession, collectorJob, stateJob)
                 activeSession = resumed.session
+                if (lifecycleRetiredSession !== resumed.session) {
+                    lifecycleRetiredSession = null
+                }
                 activeCredential.value = resumed.credential
                 collectorJob = launchIncomingCollector(
                     resumed.session,
@@ -3846,6 +3916,7 @@ internal class PeerP2pRoom(
     }
 
     private suspend fun closeSessionSafely(session: P2pSession) {
+        if (session.state.value == ConnectionState.Closed) return
         try {
             session.close()
         } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
@@ -3968,6 +4039,9 @@ internal class PeerP2pRoom(
             if (left || terminalByHost) return@lifecycleLock false
             sessionMutex.withLock sessionLock@{
                 if (expectedSession != null && activeSession !== expectedSession) {
+                    return@sessionLock false
+                }
+                if (activeSession === lifecycleRetiredSession) {
                     return@sessionLock false
                 }
                 val current = _lifecycle.value
