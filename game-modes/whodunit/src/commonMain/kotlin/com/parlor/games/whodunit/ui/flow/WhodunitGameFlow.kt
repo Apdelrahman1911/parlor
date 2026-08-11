@@ -155,6 +155,7 @@ import com.parlor.games.whodunit.resources.peer_command_duplicate
 import com.parlor.games.whodunit.resources.peer_command_invalid
 import com.parlor.games.whodunit.resources.peer_command_session_error
 import com.parlor.games.whodunit.resources.peer_command_stale
+import com.parlor.games.whodunit.resources.peer_command_waiting
 import com.parlor.games.whodunit.resources.peer_initial_snapshot_failed
 import com.parlor.games.whodunit.resources.peer_initial_snapshot_loading
 import org.jetbrains.compose.resources.stringResource
@@ -1345,6 +1346,7 @@ fun WhodunitMultiplayerPeerFlow(
     val payload = runtime.case.payload
     val hasAuthoritativeSnapshot by bridge.hasAuthoritativeSnapshot.collectAsState()
     val initialSnapshotError by bridge.initialSnapshotError.collectAsState()
+    val commandProgress by bridge.commandProgress.collectAsState()
 
     when {
         !hasAuthoritativeSnapshot -> ReconnectingOverlay(
@@ -1359,6 +1361,13 @@ fun WhodunitMultiplayerPeerFlow(
             leaveContentDescription = stringResource(
                 Res.string.peer_leave_room_description,
             ),
+            onLeave = onBackToLibrary,
+            modifier = modifier.fillMaxSize(),
+        )
+        commandProgress !is PeerCommandProgress.Idle -> ReconnectingOverlay(
+            title = stringResource(Res.string.peer_command_waiting),
+            leaveLabel = stringResource(Res.string.peer_leave_room),
+            leaveContentDescription = stringResource(Res.string.peer_leave_room_description),
             onLeave = onBackToLibrary,
             modifier = modifier.fillMaxSize(),
         )

@@ -1360,6 +1360,8 @@ class PeerAuthoritativeSessionCoordinator(
     val commandProgress: StateFlow<PeerCommandProgress> = _commandProgress.asStateFlow()
 
     private val pending = linkedMapOf<String, PeerMessage.ClientCommand>()
+    /** UI acknowledgement waiting for the result's authoritative snapshot. */
+    private var acknowledgedResolvedCommandId: String? = null
     private var nextClientSequence = 1L
     private var lastInstalledSnapshotRevision = -1L
     private var terminalAccepted = false
@@ -1432,7 +1434,7 @@ class PeerAuthoritativeSessionCoordinator(
                 return@submit Result.Failure(NetError.PayloadTooLarge)
             }
             val command = stateMutex.withLock {
-                if (pending.isNotEmpty()) {
+                if (pending.isNotEmpty() || _commandProgress.value !is PeerCommandProgress.Idle) {
                     return@submit Result.Failure(NetError.CommandInFlight)
                 }
                 val commandId = idGenerator()
@@ -1494,7 +1496,12 @@ class PeerAuthoritativeSessionCoordinator(
         stateMutex.withLock {
             val resolved = _commandProgress.value as? PeerCommandProgress.Resolved
             if (resolved?.outcome?.commandId == commandId) {
-                _commandProgress.value = PeerCommandProgress.Idle
+                if (resolved.outcome.authoritativeRevision > _revision.value) {
+                    acknowledgedResolvedCommandId = commandId
+                } else {
+                    acknowledgedResolvedCommandId = null
+                    _commandProgress.value = PeerCommandProgress.Idle
+                }
             }
         }
     }
@@ -1544,6 +1551,7 @@ class PeerAuthoritativeSessionCoordinator(
                 closed = true
                 pending.values.forEach { it.payload.fill(0) }
                 pending.clear()
+                acknowledgedResolvedCommandId = null
                 _commandProgress.value = PeerCommandProgress.Idle
             }
         }
@@ -1595,6 +1603,15 @@ class PeerAuthoritativeSessionCoordinator(
             _revision.value = snapshot.revision
             _hasAuthoritativeSnapshot.value = true
             _initialSnapshotError.value = null
+            val resolved = _commandProgress.value as? PeerCommandProgress.Resolved
+            if (
+                resolved != null &&
+                acknowledgedResolvedCommandId == resolved.outcome.commandId &&
+                resolved.outcome.authoritativeRevision <= snapshot.revision
+            ) {
+                acknowledgedResolvedCommandId = null
+                _commandProgress.value = PeerCommandProgress.Idle
+            }
         }
         restartTimedOutOutcomeReconciliationIfNeeded()
     }
@@ -1616,6 +1633,7 @@ class PeerAuthoritativeSessionCoordinator(
             } else {
                 nextClientSequence = result.nextExpectedClientSequence
                 pending.remove(result.commandId)?.payload?.fill(0)
+                acknowledgedResolvedCommandId = null
                 _commandProgress.value = PeerCommandProgress.Resolved(
                     PeerCommandOutcome(
                         commandId = result.commandId,
@@ -1632,7 +1650,8 @@ class PeerAuthoritativeSessionCoordinator(
         _results.tryEmit(result)
         if (
             result.status == CommandStatus.SequenceGap ||
-            result.status == CommandStatus.StaleRevision
+            result.status == CommandStatus.StaleRevision ||
+            result.authoritativeRevision > _revision.value
         ) {
             requestSnapshot()
         }

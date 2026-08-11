@@ -40,6 +40,7 @@ import com.parlor.networking.room.RoomMember
 import com.parlor.networking.room.SendTarget
 import com.parlor.networking.testing.InMemoryPeerRoom
 import com.parlor.networking.testing.InMemoryRoomBus
+import com.parlor.session.multidevice.PeerCommandProgress
 import com.parlor.session.passandplay.PassAndPlaySessionController
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
@@ -159,8 +160,7 @@ class MultiDevicePartyPlayContractTest {
         // -- Authority case 1: HostOnly from peer is rejected.
         val phaseBefore = hostSession.publicState.value.state.phase
         // Alice attempts to advance from intro — host-only. Bridge must drop.
-        aliceBridge.controller.submit(WhodunitAction.AdvanceFromIntro)
-        runCurrent()
+        submitPeer(aliceBridge, WhodunitAction.AdvanceFromIntro)
         val phaseAfter = hostSession.publicState.value.state.phase
         assertThat(phaseAfter == phaseBefore).isTrue()  // unchanged
 
@@ -199,20 +199,20 @@ class MultiDevicePartyPlayContractTest {
 
         // Alice authoritatively unlocks first. Bob's attempt to complete that
         // unlocked dossier must still fail solely on actor binding.
-        aliceBridge.controller.submit(
+        submitPeer(
+            aliceBridge,
             WhodunitAction.StartCharacterReveal(alice, assignmentGeneration),
         )
-        runCurrent()
         assertThat(
             hostSession.hostState.value.state.privatePerPlayer
                 .getValue(alice)
                 .dossierUnlocked,
         ).isTrue()
         val phaseBeforeImpersonation = hostSession.publicState.value.state.phase
-        bobBridge.controller.submit(
+        submitPeer(
+            bobBridge,
             WhodunitAction.CompleteCharacterReveal(alice, assignmentGeneration),
         )
-        runCurrent()
         val phaseAfterImpersonation = hostSession.publicState.value.state.phase
         assertThat(phaseBeforeImpersonation == phaseAfterImpersonation).isTrue()
         assertThat(alice in hostSession.publicState.value.state.public.rolesViewed).isEqualTo(false)
@@ -228,10 +228,10 @@ class MultiDevicePartyPlayContractTest {
         // here is: the canonical state mutates in response to alice's
         // correctly-attested action.
         val rolesViewedBefore = hostSession.publicState.value.state.public.rolesViewed
-        aliceBridge.controller.submit(
+        submitPeer(
+            aliceBridge,
             WhodunitAction.CompleteCharacterReveal(alice, assignmentGeneration),
         )
-        runCurrent()
         val rolesViewedAfter = hostSession.publicState.value.state.public.rolesViewed
         assertThat(alice in rolesViewedAfter).isTrue()
         assertThat(rolesViewedAfter != rolesViewedBefore).isTrue()
@@ -244,19 +244,19 @@ class MultiDevicePartyPlayContractTest {
         val replacementGeneration =
             hostSession.publicState.value.state.public.roleAssignmentGeneration
         assertThat(replacementGeneration).isEqualTo(assignmentGeneration + 1L)
-        aliceBridge.controller.submit(
+        submitPeer(
+            aliceBridge,
             WhodunitAction.StartCharacterReveal(alice, assignmentGeneration),
         )
-        runCurrent()
         assertThat(
             hostSession.hostState.value.state.privatePerPlayer
                 .getValue(alice)
                 .dossierUnlocked,
         ).isEqualTo(false)
-        aliceBridge.controller.submit(
+        submitPeer(
+            aliceBridge,
             WhodunitAction.StartCharacterReveal(alice, replacementGeneration),
         )
-        runCurrent()
         assertThat(
             hostSession.hostState.value.state.privatePerPlayer
                 .getValue(alice)
@@ -339,9 +339,9 @@ class MultiDevicePartyPlayContractTest {
         for (player in players) {
             // Each peer submits via the wire so authority + bridge are exercised.
             when (player.id) {
-                alice -> aliceBridge.controller.submit(WhodunitAction.AcknowledgeIntro(player.id))
-                bob -> bobBridge.controller.submit(WhodunitAction.AcknowledgeIntro(player.id))
-                carol -> carolBridge.controller.submit(WhodunitAction.AcknowledgeIntro(player.id))
+                alice -> submitPeer(aliceBridge, WhodunitAction.AcknowledgeIntro(player.id))
+                bob -> submitPeer(bobBridge, WhodunitAction.AcknowledgeIntro(player.id))
+                carol -> submitPeer(carolBridge, WhodunitAction.AcknowledgeIntro(player.id))
                 else -> submitHost(
                     hostSession,
                     hostBridge,
@@ -362,13 +362,16 @@ class MultiDevicePartyPlayContractTest {
             if (safety == 3) {
                 for (player in players) {
                     when (player.id) {
-                        alice -> aliceBridge.controller.submit(
+                        alice -> submitPeer(
+                            aliceBridge,
                             WhodunitAction.AcknowledgeBriefing(player.id),
                         )
-                        bob -> bobBridge.controller.submit(
+                        bob -> submitPeer(
+                            bobBridge,
                             WhodunitAction.AcknowledgeBriefing(player.id),
                         )
-                        carol -> carolBridge.controller.submit(
+                        carol -> submitPeer(
+                            carolBridge,
                             WhodunitAction.AcknowledgeBriefing(player.id),
                         )
                         else -> submitHost(
@@ -393,29 +396,32 @@ class MultiDevicePartyPlayContractTest {
         for (player in players) {
             when (player.id) {
                 alice -> {
-                    aliceBridge.controller.submit(
+                    submitPeer(
+                        aliceBridge,
                         WhodunitAction.StartCharacterReveal(player.id, assignmentGeneration),
                     )
-                    runCurrent()
-                    aliceBridge.controller.submit(
+                    submitPeer(
+                        aliceBridge,
                         WhodunitAction.CompleteCharacterReveal(player.id, assignmentGeneration),
                     )
                 }
                 bob -> {
-                    bobBridge.controller.submit(
+                    submitPeer(
+                        bobBridge,
                         WhodunitAction.StartCharacterReveal(player.id, assignmentGeneration),
                     )
-                    runCurrent()
-                    bobBridge.controller.submit(
+                    submitPeer(
+                        bobBridge,
                         WhodunitAction.CompleteCharacterReveal(player.id, assignmentGeneration),
                     )
                 }
                 carol -> {
-                    carolBridge.controller.submit(
+                    submitPeer(
+                        carolBridge,
                         WhodunitAction.StartCharacterReveal(player.id, assignmentGeneration),
                     )
-                    runCurrent()
-                    carolBridge.controller.submit(
+                    submitPeer(
+                        carolBridge,
                         WhodunitAction.CompleteCharacterReveal(player.id, assignmentGeneration),
                     )
                 }
@@ -540,6 +546,20 @@ class MultiDevicePartyPlayContractTest {
         action: WhodunitAction,
     ) {
         bridge.submitHostAction(action)
+    }
+
+    /** Mirrors the production peer UI's durable result acknowledgement. */
+    private suspend fun TestScope.submitPeer(
+        bridge: WhodunitPeerRoomBridge,
+        action: WhodunitAction,
+    ) {
+        assertThat(bridge.controller.submit(action)).isInstanceOf<Result.Success<*>>()
+        runCurrent()
+        val resolved = bridge.commandProgress.value as? PeerCommandProgress.Resolved
+        if (resolved != null) {
+            bridge.acknowledgeCommandOutcome(resolved.outcome.commandId)
+            runCurrent()
+        }
     }
 
     private suspend fun loadCase(): ValidatedCase<WhodunitCase> {

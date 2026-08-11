@@ -794,6 +794,51 @@ class AuthoritativeSessionCoordinatorTest {
     }
 
     @Test
+    fun `applied result remains in flight until its authoritative snapshot is installed`() = runTest {
+        val room = RecordingRoom(isHost = false, selfPlayerId = peerId)
+        var id = 0
+        val coordinator = PeerAuthoritativeSessionCoordinator(
+            room = room,
+            protocol = protocol,
+            selfPlayerId = peerId,
+            scope = this,
+            onSnapshot = { _, _ -> true },
+            idGenerator = { "peer-command-${(++id).toString().padStart(16, '0')}" },
+        )
+        val receipt = assertIs<Result.Success<PeerCommandReceipt>>(
+            coordinator.submit(byteArrayOf(1)),
+        ).data
+        room.receive(
+            HostMessage.CommandResult(
+                header = header(sequence = 1L),
+                commandId = receipt.commandId,
+                status = CommandStatus.Applied,
+                authoritativeRevision = 1L,
+                nextExpectedClientSequence = 2L,
+            ),
+        )
+        runCurrent()
+
+        coordinator.acknowledgeCommandOutcome(receipt.commandId)
+
+        assertIs<PeerCommandProgress.Resolved>(coordinator.commandProgress.value)
+        assertEquals(
+            NetError.CommandInFlight,
+            assertIs<Result.Failure<NetError>>(
+                coordinator.submit(byteArrayOf(2)),
+            ).error,
+        )
+        assertTrue(room.sentToHost.any { it is PeerMessage.SnapshotRequest })
+
+        room.receive(snapshot(revision = 1L, sequence = 2L, public = 1, private = 2))
+        runCurrent()
+
+        assertEquals(PeerCommandProgress.Idle, coordinator.commandProgress.value)
+        assertIs<Result.Success<PeerCommandReceipt>>(coordinator.submit(byteArrayOf(3)))
+        coordinator.close()
+    }
+
+    @Test
     fun `slow compatibility result observer cannot block authoritative inbound frames`() = runTest {
         val room = RecordingRoom(isHost = false, selfPlayerId = peerId)
         var id = 0
@@ -835,9 +880,21 @@ class AuthoritativeSessionCoordinatorTest {
             )
             assertEquals(receipt.commandId, resolved.outcome.commandId)
             coordinator.acknowledgeCommandOutcome(receipt.commandId)
+            if (index > 0) {
+                room.receive(
+                    snapshot(
+                        revision = index.toLong(),
+                        sequence = index.toLong() + 10L,
+                        public = 1,
+                        private = 2,
+                    ),
+                )
+                runCurrent()
+            }
+            assertEquals(PeerCommandProgress.Idle, coordinator.commandProgress.value)
         }
         observerEntered.await()
-        room.receive(snapshot(revision = 3L, sequence = 4L, public = 1, private = 2))
+        room.receive(snapshot(revision = 3L, sequence = 20L, public = 1, private = 2))
         runCurrent()
 
         assertEquals(3L, installedRevision)
@@ -1127,7 +1184,7 @@ class AuthoritativeSessionCoordinatorTest {
     }
 
     @Test
-    fun `unknown command outcome releases in flight command and reuses host sequence`() = runTest {
+    fun `acknowledged unknown outcome releases command and reuses host sequence`() = runTest {
         val room = RecordingRoom(isHost = false, selfPlayerId = peerId)
         var id = 0
         val coordinator = PeerAuthoritativeSessionCoordinator(
@@ -1151,6 +1208,8 @@ class AuthoritativeSessionCoordinatorTest {
             ),
         )
         advanceUntilIdle()
+        val resolved = assertIs<PeerCommandProgress.Resolved>(coordinator.commandProgress.value)
+        coordinator.acknowledgeCommandOutcome(resolved.outcome.commandId)
 
         val second = coordinator.submit(byteArrayOf(2))
         assertTrue(second is Result.Success)

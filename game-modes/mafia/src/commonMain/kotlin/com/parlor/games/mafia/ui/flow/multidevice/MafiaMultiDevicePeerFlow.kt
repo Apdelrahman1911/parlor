@@ -25,6 +25,7 @@ import com.parlor.games.mafia.resources.peer_command_duplicate
 import com.parlor.games.mafia.resources.peer_command_invalid
 import com.parlor.games.mafia.resources.peer_command_session_error
 import com.parlor.games.mafia.resources.peer_command_stale
+import com.parlor.games.mafia.resources.peer_command_waiting
 import com.parlor.networking.protocol.CommandStatus
 import com.parlor.session.multidevice.PeerCommandProgress
 import com.parlor.session.multidevice.PeerCommandDelivery
@@ -165,6 +166,7 @@ fun MafiaMultiDevicePeerFlow(
     val state = playerProjection.state
     val hasAuthoritativeSnapshot by bridge.hasAuthoritativeSnapshot.collectAsState()
     val initialSnapshotError by bridge.initialSnapshotError.collectAsState()
+    val commandProgress by bridge.commandProgress.collectAsState()
 
     if (!hasAuthoritativeSnapshot || state.public.disconnectedPlayers.isNotEmpty()) {
         ReconnectingOverlay(
@@ -179,6 +181,16 @@ fun MafiaMultiDevicePeerFlow(
             } else {
                 stringResource(Res.string.md_peer_reconnecting)
             },
+            leaveLabel = stringResource(Res.string.md_peer_reconnecting_leave),
+            leaveContentDescription = stringResource(
+                Res.string.md_peer_reconnecting_leave_description,
+            ),
+            onLeave = onBackToHome,
+            modifier = modifier.fillMaxSize(),
+        )
+    } else if (commandProgress !is PeerCommandProgress.Idle) {
+        ReconnectingOverlay(
+            title = stringResource(Res.string.peer_command_waiting),
             leaveLabel = stringResource(Res.string.md_peer_reconnecting_leave),
             leaveContentDescription = stringResource(
                 Res.string.md_peer_reconnecting_leave_description,

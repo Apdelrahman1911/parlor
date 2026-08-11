@@ -23,6 +23,7 @@ import com.parlor.games.mafia.domain.phase.MafiaPhase
 import com.parlor.games.mafia.domain.state.MafiaState
 import com.parlor.games.mafia.ui.flow.multidevice.MafiaHostRoomBridge
 import com.parlor.games.mafia.ui.flow.multidevice.MafiaPeerRoomBridge
+import com.parlor.networking.protocol.CommandStatus
 import com.parlor.networking.protocol.HostMessage
 import com.parlor.networking.protocol.PeerMessage
 import com.parlor.networking.protocol.RoomMessage
@@ -37,6 +38,7 @@ import com.parlor.networking.room.RoomMember
 import com.parlor.networking.room.SendTarget
 import com.parlor.networking.testing.InMemoryPeerRoom
 import com.parlor.networking.testing.InMemoryRoomBus
+import com.parlor.session.multidevice.PeerCommandProgress
 import com.parlor.session.passandplay.PassAndPlaySessionController
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.CompletableDeferred
@@ -105,6 +107,9 @@ class MafiaAuthoritativeLifecycleTest {
         assertThat(
             fixture.session.hostState.value.state.privatePerPlayer[alice]?.roleAcknowledged == true,
         ).isFalse()
+        val rejected = fixture.peerBridge.commandProgress.value as PeerCommandProgress.Resolved
+        assertThat(rejected.outcome.status).isEqualTo(CommandStatus.InvalidAction)
+        fixture.peerBridge.acknowledgeCommandOutcome(rejected.outcome.commandId)
 
         advanceTimeBy(100)
         fixture.bus.emitPeerReconnected(alice, "Alice")
