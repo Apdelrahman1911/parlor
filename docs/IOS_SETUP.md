@@ -190,11 +190,23 @@ targets on non-Mac hosts.
 # End-to-end build via Xcode:
 xcodebuild -project iosApp/iosApp.xcodeproj \
            -scheme iosApp \
-           -configuration Debug \
+           -configuration Release \
            -sdk iphonesimulator \
-           -destination 'platform=iOS Simulator,name=iPhone 16 Pro' \
+           -destination 'generic/platform=iOS Simulator' \
+           -derivedDataPath build/xcode-derived-data \
+           ARCHS=arm64 \
+           ONLY_ACTIVE_ARCH=YES \
+           CODE_SIGNING_ALLOWED=NO \
+           CODE_SIGNING_REQUIRED=NO \
            build
 ```
+
+The unsigned Swift Release-wrapper qualification is deliberately one simulator
+architecture. `productionAppleCheck` separately links the supported
+`iosSimulatorArm64`, `iosX64`, and device `iosArm64` frameworks. Keep
+`ARCHS=arm64` and `ONLY_ACTIVE_ARCH=YES` on the generic wrapper command so
+Xcode drives one matching Kotlin framework into the app; a compiler/linkage
+result is still not a physical-device runtime result.
 
 The first iOS link on a fresh Mac downloads the Kotlin/Native toolchain
 (`~/.konan/`); budget ~5 minutes once.

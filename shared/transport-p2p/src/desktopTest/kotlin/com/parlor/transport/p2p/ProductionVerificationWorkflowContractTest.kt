@@ -183,6 +183,46 @@ class ProductionVerificationWorkflowContractTest {
             message = "The Xcode shell phase must enforce strict dependency verification",
         )
 
+        val swiftReleaseMarker = "- name: Build unsigned Swift Release wrapper"
+        val appleEvidenceMarker = "- name: Upload Apple verification evidence"
+        assertContains(workflow, swiftReleaseMarker)
+        assertContains(workflow, appleEvidenceMarker)
+        val swiftReleaseStep = workflow
+            .substringAfter(swiftReleaseMarker)
+            .substringBefore(appleEvidenceMarker)
+        listOf(
+            "ARCHS=arm64",
+            "ONLY_ACTIVE_ARCH=YES",
+        ).forEach { required ->
+            assertContains(
+                swiftReleaseStep,
+                required,
+                message = "The unsigned Swift Release wrapper must remain a deterministic single-architecture build: $required",
+            )
+        }
+
+        listOf(
+            "docs/IOS_SETUP.md",
+            "docs/RELEASE_RUNBOOK.md",
+        ).forEach { path ->
+            val releaseInstructions = read(path)
+            assertContains(
+                releaseInstructions,
+                "-configuration Release",
+                message = "$path must document the Release wrapper build",
+            )
+            assertContains(
+                releaseInstructions,
+                "ARCHS=arm64",
+                message = "$path must document the qualified wrapper architecture",
+            )
+            assertContains(
+                releaseInstructions,
+                "ONLY_ACTIVE_ARCH=YES",
+                message = "$path must document the qualified wrapper architecture policy",
+            )
+        }
+
         val appleGate = rootBuild.substringAfter("tasks.register(\"productionAppleCheck\")")
             .substringBefore("tasks.register(\"productionCheck\")")
         listOf(

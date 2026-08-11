@@ -38,7 +38,24 @@ On macOS with the release Xcode toolchain:
 
 ```bash
 ./gradlew productionAppleCheck --no-daemon --stacktrace --console=plain
+
+xcodebuild \
+  -project iosApp/iosApp.xcodeproj \
+  -scheme iosApp \
+  -configuration Release \
+  -sdk iphonesimulator \
+  -destination 'generic/platform=iOS Simulator' \
+  -derivedDataPath build/xcode-derived-data \
+  ARCHS=arm64 \
+  ONLY_ACTIVE_ARCH=YES \
+  CODE_SIGNING_ALLOWED=NO \
+  CODE_SIGNING_REQUIRED=NO \
+  build
 ```
+
+The unsigned Swift wrapper is qualified as a deterministic arm64 simulator
+artifact. `productionAppleCheck` independently links `iosSimulatorArm64`,
+`iosX64`, and device `iosArm64`; linkage is not runtime validation.
 
 Archive:
 
