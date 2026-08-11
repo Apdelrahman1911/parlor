@@ -705,12 +705,13 @@ private fun SessionDrivenFlow(
     val clock: Clock = koinInject()
     val definition: WhodunitDefinition = koinInject()
     val snapshotStore: SnapshotStore = koinInject()
+    val seedSource: RandomSource = koinInject()
     val scope = rememberCoroutineScope()
 
     // Seed source: restored snapshot wins so the resumed random stream picks
     // up where it left off. Fresh sessions get a system-random seed.
-    val seed = remember(case.envelope.caseId, modeId, players, restoredState) {
-        restoredState?.hostOnly?.randomSeed ?: RandomSource.system().nextLong()
+    val seed = remember(case.envelope.caseId, modeId, players, restoredState, seedSource) {
+        restoredState?.hostOnly?.randomSeed ?: seedSource.nextLong()
     }
 
     val sessionConfig = remember(case.envelope.caseId, modeId, players, seed, restoredSessionId) {

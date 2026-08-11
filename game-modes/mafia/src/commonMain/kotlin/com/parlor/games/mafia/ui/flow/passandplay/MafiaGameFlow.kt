@@ -205,10 +205,11 @@ private fun SessionDrivenFlow(
     val clock: Clock = koinInject()
     val definition: MafiaDefinition = koinInject()
     val snapshotStore: SnapshotStore = koinInject()
+    val seedSource: RandomSource = koinInject()
     val scope = rememberCoroutineScope()
 
-    val seed = remember(players, restoredState) {
-        restoredState?.hostOnly?.randomSeed ?: RandomSource.system().nextLong()
+    val seed = remember(players, restoredState, seedSource) {
+        restoredState?.hostOnly?.randomSeed ?: seedSource.nextLong()
     }
 
     val sessionConfig = remember(players, seed, restoredSessionId) {
