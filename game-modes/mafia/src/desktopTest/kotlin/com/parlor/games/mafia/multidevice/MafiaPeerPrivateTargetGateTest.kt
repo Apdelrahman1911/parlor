@@ -151,6 +151,7 @@ class MafiaPeerPrivateTargetGateTest {
             HostMessage.PlayerSnapshot(
                 header = header(1),
                 revision = 1,
+                nextExpectedClientSequence = 1L,
                 publicPayload = json.encodeToString(
                     MafiaState.serializer(),
                     canonicalSecretState(),
@@ -197,6 +198,7 @@ class MafiaPeerPrivateTargetGateTest {
             HostMessage.PlayerSnapshot(
                 header = header(1),
                 revision = 1,
+                nextExpectedClientSequence = 1L,
                 publicPayload = json.encodeToString(
                     MafiaState.serializer(),
                     emptyPublic(),
@@ -216,6 +218,7 @@ class MafiaPeerPrivateTargetGateTest {
             HostMessage.PlayerSnapshot(
                 header = header(2),
                 revision = 2,
+                nextExpectedClientSequence = 1L,
                 publicPayload = json.encodeToString(
                     MafiaState.serializer(),
                     impossible,
@@ -297,6 +300,7 @@ class MafiaPeerPrivateTargetGateTest {
             HostMessage.PlayerSnapshot(
                 header = header(2),
                 revision = 2,
+                nextExpectedClientSequence = 1L,
                 publicPayload = byteArrayOf('{'.code.toByte(), 0xC3.toByte(), '}'.code.toByte()),
                 privatePayload = json.encodeToString(MafiaPrivate.serializer(), own).encodeToByteArray(),
             ),
@@ -375,6 +379,7 @@ class MafiaPeerPrivateTargetGateTest {
             HostMessage.PlayerSnapshot(
                 header = header(1, gameId = GameId("foreign-game")),
                 revision = 1,
+                nextExpectedClientSequence = 1L,
                 publicPayload = json.encodeToString(MafiaState.serializer(), emptyPublic()).encodeToByteArray(),
                 privatePayload = json.encodeToString(MafiaPrivate.serializer(), foreign).encodeToByteArray(),
             ),
@@ -412,6 +417,7 @@ class MafiaPeerPrivateTargetGateTest {
             HostMessage.PlayerSnapshot(
                 header = header(1),
                 revision = 1,
+                nextExpectedClientSequence = 1L,
                 publicPayload = json.encodeToString(MafiaState.serializer(), emptyPublic()).encodeToByteArray(),
                 privatePayload = json.encodeToString(MafiaPrivate.serializer(), own).encodeToByteArray(),
             ),
@@ -433,6 +439,7 @@ class MafiaPeerPrivateTargetGateTest {
     ) = HostMessage.PlayerSnapshot(
         header = header(sequence),
         revision = revision,
+        nextExpectedClientSequence = 1L,
         publicPayload = json.encodeToString(MafiaState.serializer(), state).encodeToByteArray(),
         privatePayload = json.encodeToString(MafiaPrivate.serializer(), ownPrivate).encodeToByteArray(),
     )

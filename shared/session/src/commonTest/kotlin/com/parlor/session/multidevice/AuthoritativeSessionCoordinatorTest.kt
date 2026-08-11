@@ -151,6 +151,70 @@ class AuthoritativeSessionCoordinatorTest {
     }
 
     @Test
+    fun `fresh peer runtime resumes the host command sequence from its authoritative snapshot`() = runTest {
+        val hostRoom = RecordingRoom(isHost = true, selfPlayerId = PlayerId("host"))
+        var applied = 0
+        var hostMessage = 0
+        val host = HostAuthoritativeSessionCoordinator(
+            room = hostRoom,
+            protocol = protocol,
+            remotePlayers = setOf(peerId),
+            scope = this,
+            applyCommand = { _, _ ->
+                applied += 1
+                CommandApplication.Applied
+            },
+            snapshotFor = { PlayerSnapshotPayload(byteArrayOf(applied.toByte()), byteArrayOf()) },
+            heartbeatIntervalMs = 0L,
+            requireStartHandshake = false,
+            idGenerator = { "host-message-${(++hostMessage).toString().padStart(16, '0')}" },
+        )
+
+        hostRoom.receive(command(id = COMMAND_ONE, clientSequence = 1L, expectedRevision = 0L))
+        advanceUntilIdle()
+        hostRoom.receive(command(id = COMMAND_TWO, clientSequence = 2L, expectedRevision = 1L))
+        advanceUntilIdle()
+        assertEquals(2, applied)
+
+        hostRoom.sent.clear()
+        host.publishState(incrementRevision = false)
+        advanceUntilIdle()
+        val resumeSnapshot = hostRoom.sent
+            .mapNotNull { it.message as? HostMessage.PlayerSnapshot }
+            .single()
+
+        val resumedRoom = RecordingRoom(isHost = false, selfPlayerId = peerId)
+        val resumedPeer = PeerAuthoritativeSessionCoordinator(
+            room = resumedRoom,
+            protocol = protocol,
+            selfPlayerId = peerId,
+            scope = this,
+            onSnapshot = { _, _ -> true },
+            idGenerator = { COMMAND_AFTER_RESUME },
+        )
+        resumedRoom.receive(resumeSnapshot)
+        advanceUntilIdle()
+
+        assertIs<Result.Success<PeerCommandReceipt>>(resumedPeer.submit(byteArrayOf(1)))
+        val resumedCommand = resumedRoom.sentToHost
+            .filterIsInstance<PeerMessage.ClientCommand>()
+            .single()
+
+        hostRoom.sent.clear()
+        hostRoom.receive(resumedCommand)
+        advanceUntilIdle()
+
+        assertEquals(3L, resumedCommand.clientSequence)
+        assertEquals(3, applied)
+        assertEquals(
+            CommandStatus.Applied,
+            hostRoom.sent.mapNotNull { (it.message as? HostMessage.CommandResult)?.status }.single(),
+        )
+        resumedPeer.close()
+        host.close()
+    }
+
+    @Test
     fun `host mutation and peer command share one authoritative order`() = runTest {
         val room = RecordingRoom(isHost = true, selfPlayerId = PlayerId("host"))
         var domainValue = 0
@@ -1343,6 +1407,7 @@ class AuthoritativeSessionCoordinatorTest {
     ) = HostMessage.PlayerSnapshot(
         header = header(sequence = sequence),
         revision = revision,
+        nextExpectedClientSequence = 1L,
         publicPayload = byteArrayOf(public),
         privatePayload = byteArrayOf(private),
     )
@@ -1362,8 +1427,10 @@ class AuthoritativeSessionCoordinatorTest {
 
     private companion object {
         const val COMMAND_ONE = "command-00000000000000000000001"
+        const val COMMAND_TWO = "command-00000000000000000000002"
         const val COMMAND_GAP = "command-00000000000000000000003"
         const val COMMAND_STALE = "command-00000000000000000000002"
+        const val COMMAND_AFTER_RESUME = "command-after-resume-0000000001"
     }
 }
 

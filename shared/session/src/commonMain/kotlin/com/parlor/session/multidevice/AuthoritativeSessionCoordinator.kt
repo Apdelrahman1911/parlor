@@ -1175,6 +1175,7 @@ class HostAuthoritativeSessionCoordinator(
         val message = HostMessage.PlayerSnapshot(
             header = nextHeader(),
             revision = _revision.value,
+            nextExpectedClientSequence = nextClientSequence[playerId] ?: 1L,
             publicPayload = snapshot.publicPayload,
             privatePayload = snapshot.privatePayload,
         )
@@ -1601,6 +1602,7 @@ class PeerAuthoritativeSessionCoordinator(
             rememberHostMessage(snapshot.header.messageId)
             lastInstalledSnapshotRevision = snapshot.revision
             _revision.value = snapshot.revision
+            nextClientSequence = snapshot.nextExpectedClientSequence
             _hasAuthoritativeSnapshot.value = true
             _initialSnapshotError.value = null
             val resolved = _commandProgress.value as? PeerCommandProgress.Resolved

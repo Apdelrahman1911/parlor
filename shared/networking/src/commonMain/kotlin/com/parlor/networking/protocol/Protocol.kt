@@ -21,10 +21,13 @@ sealed interface RoomMessage
 // idempotent offer -> ready -> commit -> commit-ack barrier. A v3 peer could
 // enter gameplay after seeing an unacknowledged SessionStarting frame and lose
 // the first authoritative snapshot. v4.1 makes host display identity explicit
-// and adds an actionable duplicate-name admission result. Exact compatibility
-// keeps either schema from decoding the other's required fields or enum values.
+// and adds an actionable duplicate-name admission result. v4.2 carries the
+// host's next expected client-command sequence in every player snapshot so a
+// recreated peer runtime can resume without sacrificing its first action to a
+// false duplicate rejection. Exact compatibility keeps any of these schemas
+// from decoding another version's required fields or enum values.
 const val PARLOR_PROTOCOL_MAJOR: Int = 4
-const val PARLOR_PROTOCOL_MINOR: Int = 1
+const val PARLOR_PROTOCOL_MINOR: Int = 2
 const val MAX_COMMAND_PAYLOAD_BYTES: Int = 32 * 1024
 const val MAX_SNAPSHOT_PAYLOAD_BYTES: Int = 256 * 1024
 const val MAX_CONTROL_PAYLOAD_BYTES: Int = 8 * 1024
@@ -169,6 +172,8 @@ sealed interface HostMessage : RoomMessage {
     data class PlayerSnapshot(
         val header: SessionEnvelopeHeader,
         val revision: Long,
+        /** The next command sequence the host will accept from this snapshot's recipient. */
+        val nextExpectedClientSequence: Long,
         val publicPayload: ByteArray,
         val privatePayload: ByteArray,
     ) : HostMessage

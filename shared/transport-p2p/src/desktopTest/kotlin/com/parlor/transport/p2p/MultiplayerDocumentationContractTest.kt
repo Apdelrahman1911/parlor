@@ -65,6 +65,22 @@ class MultiplayerDocumentationContractTest {
             }
         }
 
+        val resumedSequenceContract = listOf(
+            "PlayerSnapshot",
+            "nextExpectedClientSequence",
+            "atomically",
+            "resumed peer",
+        )
+        currentDocuments.forEach { path ->
+            val text = read(path).replace(Regex("\\s+"), " ")
+            resumedSequenceContract.forEach { required ->
+                assertTrue(
+                    text.contains(required),
+                    "$path must document protocol-$runtimeVersion resume sequencing: $required",
+                )
+            }
+        }
+
         val historicalBanner = read("ARCHITECTURE.md")
             .take(1_000)
             .replace(">", "")

@@ -10,7 +10,13 @@ physical-device evidence. It is deliberately
 stricter than a feature checklist: **implemented does not mean production
 verified**.
 
-Runtime protocol: `4.1`.
+Runtime protocol: `4.2`.
+
+Protocol 4.2 retains the reliable 4.0 start barrier and 4.1 canonical-host-name
+contract. Every `PlayerSnapshot` carries `nextExpectedClientSequence`, which a
+newly created or resumed peer installs atomically with validated state before
+submitting another command. This removes the prior false duplicate rejection
+on the first action after process-runtime recreation.
 
 The recoverable pre-remediation baseline is commit
 `8186f7d70786057b791bd5c1aa80ca868835ec37`. Every remediation commit is on
@@ -147,7 +153,7 @@ remediation boundary.
 | Manifest/plist | PASS for source and unsigned merged output: Android min 26/target 36 with only four base LAN permissions, cleartext and backup disabled; `plutil` accepts the plist with Local Network usage and `_p2pkit2._tcp`, without Bluetooth wording. | Archive the signed merged manifest/app plist and repeat platform inspection. |
 | Encryption/authenticated identity | Parlor relies on P2pKit authenticated-v2 encrypted sessions and pins the authenticated host fingerprint for resume. It does not claim account identity or an internet trust anchor. | P2pKit artifact/API provenance, adapter tests, and physical authenticated connection/rejoin receipts; residual first-contact threat documented. |
 | Host authority/actor binding | Implemented at transport and coordinator boundaries. | Modified-client actor-spoof tests, both game authority tests, and physical private-state/command results. |
-| Version/order/duplicate/snapshot | Strict protocol 4.1, reliable offer/Ready/commit/commit-ack game start, explicit host identity/name-conflict admission semantics, and monotonic authoritative revisions implemented. | Codec/start-barrier compatibility fixtures, fault injection, coordinator/adapter tests, and physical simultaneous-action evidence. |
+| Version/order/duplicate/snapshot | Strict protocol 4.2, reliable offer/Ready/commit/commit-ack game start, explicit host identity/name-conflict admission semantics, monotonic authoritative revisions, and snapshot-carried resumed command sequence implemented. | Codec/start-barrier compatibility fixtures, fresh-runtime rejoin sequence regression, fault injection, coordinator/adapter tests, and physical simultaneous-action evidence. |
 | Admission/capacity/backpressure | Implemented and bounded in code. | Deterministic race/flood suites plus physical last-seat, disconnect, sustained, and repeated-session rows. |
 | Direct-connect decision | Unsupported under ADR-0002. | Capability remains false, docs remain aligned, and manual row remains N/A. |
 | Android-to-Android | UNVERIFIED for the release SHA. | PHY-01 and applicable recovery/hotspot/signed rows. |

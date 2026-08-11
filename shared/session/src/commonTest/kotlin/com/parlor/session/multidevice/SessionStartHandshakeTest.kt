@@ -941,6 +941,7 @@ class SessionStartHandshakeTest {
             HostMessage.PlayerSnapshot(
                 header = header("snapshot-01234567890123456789", sequence = 3L),
                 revision = 0L,
+                nextExpectedClientSequence = 1L,
                 publicPayload = byteArrayOf(1),
                 privatePayload = byteArrayOf(2),
             ),
@@ -1046,6 +1047,7 @@ class SessionStartHandshakeTest {
             HostMessage.PlayerSnapshot(
                 header = header("snapshot-01234567890123456789", sequence = 2L),
                 revision = 0L,
+                nextExpectedClientSequence = 1L,
                 publicPayload = byteArrayOf(1),
                 privatePayload = byteArrayOf(2),
             ),

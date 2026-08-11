@@ -20,6 +20,7 @@ class RoomMessageCodecTest {
         val message = HostMessage.PlayerSnapshot(
             header = header(),
             revision = 1,
+            nextExpectedClientSequence = 7L,
             publicPayload = payload,
             privatePayload = byteArrayOf(),
         )
@@ -28,6 +29,7 @@ class RoomMessageCodecTest {
         val decoded = assertIs<HostMessage.PlayerSnapshot>(codec.decode(encoded))
 
         assertTrue(encoded.size <= MAX_ROOM_FRAME_BYTES)
+        assertTrue(decoded.nextExpectedClientSequence == 7L)
         assertContentEquals(payload, decoded.publicPayload)
         assertContentEquals(byteArrayOf(), decoded.privatePayload)
     }

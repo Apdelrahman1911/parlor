@@ -50,12 +50,13 @@ admission, reconnect, ordering, or a P2pKit instance.
 The host is the sole authority. Peers never run a reducer to predict canonical
 state.
 
-Runtime protocol: `4.1`.
+Runtime protocol: `4.2`.
 
 Protocol 4.0 introduced the acknowledged, idempotent game-entry barrier;
-protocol 4.1 retains that barrier and additionally carries the canonical host
-display name in admission/resume offers and reports duplicate display names
-explicitly:
+protocol 4.1 added the canonical host display name and explicit duplicate-name
+admission result. Protocol 4.2 retains both contracts and adds the host's next
+expected client-command sequence to each player snapshot so a resumed peer
+runtime can reclaim the retained logical seat without a false duplicate command:
 
 ```mermaid
 sequenceDiagram
@@ -102,7 +103,7 @@ sequenceDiagram
     PC->>P: install only monotonic authoritative revision
 ```
 
-Protocol compatibility is strict and exact: a 4.1 binary interoperates only
+Protocol compatibility is strict and exact: a 4.2 binary interoperates only
 with the same major and minor schema. The cross-game envelope carries protocol
 version, session ID, game ID, game
 version, message ID, and sequence metadata. Commands add a random command ID,
@@ -113,6 +114,10 @@ metadata as a closed failure rather than attempting to decode it as game data.
 Each peer has at most one mutation command in flight. A stale or rejected
 non-idempotent game action is never automatically replayed; the peer installs
 the authoritative snapshot and the player may submit a newly validated action.
+Every `PlayerSnapshot` carries `nextExpectedClientSequence`; the peer installs
+it atomically with the validated public/private projection before accepting a
+new command. This also makes process-recreated resume independent of an initial
+intentional rejection as a sequence-resynchronization mechanism.
 
 Admission treats the host name and every pending, connected, or resumable
 logical seat name as one exact, canonical display-label namespace. A conflict

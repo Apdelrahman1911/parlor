@@ -37,7 +37,7 @@ class ProtocolValidationTest {
                     PARLOR_PROTOCOL_MINOR - 1,
                 ),
             ).validateFor(session),
-            "protocol 4.0 must not decode the required 4.1 host-identity fields",
+            "older protocol minors must not decode newer required wire fields",
         )
         assertEquals(
             ProtocolValidation.WrongGame,
@@ -114,10 +114,15 @@ class ProtocolValidationTest {
         val snapshot = HostMessage.PlayerSnapshot(
             header = header(sequence = 8),
             revision = 8,
+            nextExpectedClientSequence = 3L,
             publicPayload = ByteArray(MAX_SNAPSHOT_PAYLOAD_BYTES / 2),
             privatePayload = ByteArray(MAX_SNAPSHOT_PAYLOAD_BYTES / 2),
         )
         assertEquals(ProtocolValidation.Valid, snapshot.validateFor(session))
+        assertEquals(
+            ProtocolValidation.InvalidSequence,
+            snapshot.copy(nextExpectedClientSequence = 0L).validateFor(session),
+        )
         assertEquals(
             ProtocolValidation.SnapshotPayloadTooLarge,
             snapshot.copy(privatePayload = ByteArray(MAX_SNAPSHOT_PAYLOAD_BYTES / 2 + 1))

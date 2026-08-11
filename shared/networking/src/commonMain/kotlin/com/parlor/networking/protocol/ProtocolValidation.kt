@@ -101,6 +101,7 @@ fun HostMessage.PlayerSnapshot.validateFor(expected: SessionProtocol): ProtocolV
     if (headerResult != ProtocolValidation.Valid) return headerResult
     return when {
         revision < 0L -> ProtocolValidation.InvalidRevision
+        nextExpectedClientSequence <= 0L -> ProtocolValidation.InvalidSequence
         publicPayload.size.toLong() + privatePayload.size.toLong() >
             MAX_SNAPSHOT_PAYLOAD_BYTES.toLong() ->
             ProtocolValidation.SnapshotPayloadTooLarge

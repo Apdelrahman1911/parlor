@@ -86,6 +86,7 @@ class WhodunitHostSimulator(
                 sequence = nextRevision,
             ),
             revision = nextRevision,
+            nextExpectedClientSequence = 1L,
             publicPayload = payload,
             privatePayload = byteArrayOf(),
         )

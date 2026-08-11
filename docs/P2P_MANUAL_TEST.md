@@ -73,10 +73,10 @@ separate 60-second human-approval state.
 
 ### Wire and authority
 
-Runtime protocol: `4.1`.
+Runtime protocol: `4.2`.
 
 Parlor serializes `RoomMessage` as strict CBOR inside `P2pMessage.Binary`.
-Protocol compatibility is exact: a 4.1 binary fails closed when paired with a
+Protocol compatibility is exact: a 4.2 binary fails closed when paired with a
 different major or minor schema. Admission is transactional:
 
 ```text
@@ -99,7 +99,7 @@ that name. Case variants are distinct labels; all authorization remains bound
 to authenticated player IDs.
 
 Starting gameplay uses the reliable protocol-4.x transaction introduced in
-4.0 and retained by 4.1:
+4.0 and retained by 4.2:
 
 ```text
 SessionStarting(startId) -> SessionStartReady(startId)
@@ -133,6 +133,10 @@ and are followed by player-specific `PlayerSnapshot` messages. The host stamps
 the actor from the authenticated P2pKit session. Client-supplied actor IDs are
 never trusted. Duplicate command IDs are idempotent; stale revisions and
 sequence gaps are rejected and trigger snapshot revalidation, not blind replay.
+Every `PlayerSnapshot` carries `nextExpectedClientSequence`; a newly created or
+resumed peer installs that value atomically with the snapshot before enabling
+the next command. This protocol-4.2 field prevents a retained host from treating
+the resumed peer's first legitimate action as a duplicate.
 
 Legacy `JoinRequest`, `ActionSubmit`, split public/private snapshots, and JSON
 examples are not the shipping protocol and must not be used for validation.

@@ -150,6 +150,7 @@ class WhodunitPeerProjectionBoundaryTest {
             HostMessage.PlayerSnapshot(
                 header = header(1),
                 revision = 1,
+                nextExpectedClientSequence = 1L,
                 publicPayload = json.encodeToString(
                     WhodunitState.serializer(),
                     canonicalSecretState(),
@@ -266,6 +267,7 @@ class WhodunitPeerProjectionBoundaryTest {
             HostMessage.PlayerSnapshot(
                 header = header(2),
                 revision = 2,
+                nextExpectedClientSequence = 1L,
                 publicPayload = byteArrayOf('{'.code.toByte(), 0xC3.toByte(), '}'.code.toByte()),
                 privatePayload = json.encodeToString(
                     WhodunitPrivate.serializer(),
@@ -396,6 +398,7 @@ class WhodunitPeerProjectionBoundaryTest {
     ): HostMessage.PlayerSnapshot = HostMessage.PlayerSnapshot(
         header = header(sequence),
         revision = revision,
+        nextExpectedClientSequence = 1L,
         publicPayload = json.encodeToString(
             WhodunitState.serializer(),
             WhodunitProjectionPolicy.toPublic(state).state,

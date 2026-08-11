@@ -271,6 +271,7 @@ class BoundedPeerOutboxTest {
     private fun snapshot(revision: Long) = HostMessage.PlayerSnapshot(
         header = header("snapshot-${revision.toString().padStart(16, '0')}", revision + 1L),
         revision = revision,
+        nextExpectedClientSequence = 1L,
         publicPayload = byteArrayOf(revision.toByte()),
         privatePayload = byteArrayOf(),
     )
