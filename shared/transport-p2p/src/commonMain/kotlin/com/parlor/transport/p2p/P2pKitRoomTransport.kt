@@ -1801,7 +1801,7 @@ internal class HostP2pRoom(
     private var left = false
 
     init {
-        sessionScope.launch {
+        sessionScope.launch(start = CoroutineStart.UNDISPATCHED) {
             kit.incomingSessions.collect { session ->
                 handleIncomingSession(session)
             }
@@ -1866,7 +1866,7 @@ internal class HostP2pRoom(
             }
         }
 
-        val incomingJob = sessionScope.launch {
+        val incomingJob = sessionScope.launch(start = CoroutineStart.UNDISPATCHED) {
             session.incoming.collect { msg ->
                 if (msg !is P2pMessage.Binary) {
                     enforceTrafficDecision(
@@ -4042,7 +4042,7 @@ internal class PeerP2pRoom(
     private fun launchIncomingCollector(
         session: P2pSession,
         credentialBinding: ResumableSessionCredential?,
-    ): Job = scope.launch {
+    ): Job = scope.launch(start = CoroutineStart.UNDISPATCHED) {
         val trafficGuard = InboundTrafficGuard(
             maxFrameBytes = P2pTrafficLimits.MAX_HOST_TO_PEER_FRAME_BYTES,
             nowMillis = nowMillis(),

@@ -123,6 +123,73 @@ class P2pKitRoomTransportLifecycleTest {
     // ---------------------------------------------------------------- Host ----
 
     @Test
+    @OptIn(ExperimentalCoroutinesApi::class)
+    fun transport_arms_the_host_session_acceptor_before_advertising() = runTest {
+        val kit = FakeP2pKit(P2pPeerId("host-pid"))
+        var subscribersAtAdvertising = -1
+        kit.startAdvertisingHandler = {
+            subscribersAtAdvertising = kit.incomingSessionsFlow.subscriptionCount.value
+        }
+        val transport = P2pKitRoomTransport(
+            appId = AppId("com.parlor.test"),
+            deviceName = "host-device",
+            scope = backgroundScope,
+            kitFactory = object : P2pKitFactory {
+                override suspend fun createKit(appId: AppId, deviceName: String): P2pKit = kit
+            },
+        )
+
+        val hosted = transport.host(HostConfig("Host"))
+
+        assertThat(hosted).isInstanceOf(Result.Success::class)
+        assertThat(subscribersAtAdvertising).isEqualTo(1)
+        (hosted as Result.Success).data.leave()
+    }
+
+    @Test
+    @OptIn(ExperimentalCoroutinesApi::class)
+    fun host_arms_a_new_sessions_inbound_collector_before_accepting_another_session() = runTest {
+        val alice = FakeP2pSession(peer("alice-pid", "Alice"))
+        val incomingSessions = MutableSharedFlow<P2pSession>(replay = 1)
+        incomingSessions.emit(alice)
+        val kit = FakeP2pKit(P2pPeerId("host-pid"), incomingSessions)
+
+        val room = HostP2pRoom(
+            kit = kit,
+            roomCode = "ABCDEF",
+            hostDisplayName = "Host",
+            hostPlayerId = PlayerId("host-pid"),
+            maxRemotePlayers = 4,
+            scope = backgroundScope,
+            codec = codec,
+        )
+
+        assertThat(alice.incomingFlow.subscriptionCount.value).isEqualTo(1)
+        room.leave()
+    }
+
+    @Test
+    @OptIn(ExperimentalCoroutinesApi::class)
+    fun peer_arms_its_host_message_collector_before_room_construction_returns() = runTest {
+        val host = peer("host-pid", "Host")
+        val kit = FakeP2pKit(P2pPeerId("peer-pid"))
+        val session = FakeP2pSession(host)
+
+        val room = PeerP2pRoom(
+            kit = kit,
+            session = session,
+            hostPeer = host,
+            roomCode = "ABCDEF",
+            scope = backgroundScope,
+            codec = codec,
+            hostDisplayName = "Host",
+        )
+
+        assertThat(session.incomingFlow.subscriptionCount.value).isEqualTo(1)
+        room.leave()
+    }
+
+    @Test
     fun host_emits_peer_joined_and_updates_members_when_session_arrives() = runBlocking {
         val kit = FakeP2pKit(P2pPeerId("host-pid"))
         val room = newHostRoom(kit)
@@ -4453,6 +4520,7 @@ internal class RecordingP2pDiagnostics : P2pDiagnostics {
 
 internal class FakeP2pKit(
     override val localPeerId: P2pPeerId,
+    incomingSessionsOverride: SharedFlow<P2pSession>? = null,
 ) : P2pKit {
     val incomingSessionsFlow = MutableSharedFlow<P2pSession>(extraBufferCapacity = 16)
     // Mutable backing for peers — tests push entries here to simulate
@@ -4479,6 +4547,7 @@ internal class FakeP2pKit(
     var connectHandler: (suspend (Peer) -> P2pSession)? = null
     var lastExpectedFingerprint: PeerFingerprint? = null
     var startHandler: (suspend () -> Unit)? = null
+    var startAdvertisingHandler: (suspend () -> Unit)? = null
     var startDiscoveryHandler: (suspend () -> Unit)? = null
     var stopHandler: (suspend () -> Unit)? = null
 
@@ -4489,7 +4558,8 @@ internal class FakeP2pKit(
     override fun parsePeerPairingQr(value: String): PeerFingerprint? = null
     override val state: StateFlow<P2pState> = MutableStateFlow(P2pState.Running)
     override val peers: StateFlow<List<Peer>> = peersFlow.asStateFlow()
-    override val incomingSessions: SharedFlow<P2pSession> = incomingSessionsFlow.asSharedFlow()
+    override val incomingSessions: SharedFlow<P2pSession> =
+        incomingSessionsOverride ?: incomingSessionsFlow.asSharedFlow()
     override val sessions: StateFlow<List<P2pSession>> = MutableStateFlow(emptyList())
     override val networkPathStatus: StateFlow<NetworkPathStatus> =
         MutableStateFlow(NetworkPathStatus.Unknown)
@@ -4508,6 +4578,7 @@ internal class FakeP2pKit(
     override suspend fun startAdvertising() {
         callLog += "startAdvertising"
         startAdvertisingCalls += 1
+        startAdvertisingHandler?.invoke()
     }
     override suspend fun stopAdvertising() {
         callLog += "stopAdvertising"
