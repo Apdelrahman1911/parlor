@@ -33,8 +33,10 @@ import com.parlor.app.resources.host_cancel
 import com.parlor.app.resources.host_error_title
 import com.parlor.app.resources.host_start_description
 import com.parlor.app.resources.host_start_blocked
+import com.parlor.app.resources.host_start_failed
 import com.parlor.app.resources.host_start_with_players_format
 import com.parlor.app.resources.host_cancel_description
+import com.parlor.app.resources.host_admission_failed
 import com.parlor.app.resources.host_approve
 import com.parlor.app.resources.host_approve_description
 import com.parlor.app.resources.host_decline
@@ -62,14 +64,17 @@ import com.parlor.content.validation.PayloadValidator
 import com.parlor.content.validation.ValidatedCase
 import com.parlor.core.ids.CaseId
 import com.parlor.core.ids.ModeId
+import com.parlor.core.ids.PlayerId
 import com.parlor.core.result.DataError
 import com.parlor.core.result.Result
 import com.parlor.designsystem.backdrop.HeroBackdrop
 import com.parlor.designsystem.components.CandleFlame
 import com.parlor.designsystem.components.EyebrowLabel
+import com.parlor.designsystem.components.LocalParlorToastState
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorButtonVariant
 import com.parlor.designsystem.components.ParlorCard
+import com.parlor.designsystem.components.ParlorToastSeverity
 import com.parlor.designsystem.components.SessionExitAffordance
 import com.parlor.designsystem.components.SessionExitBackAction
 import com.parlor.designsystem.components.SessionExitConfirmation
@@ -126,6 +131,9 @@ fun WhodunitHostSessionFlow(
     val payloadValidator: PayloadValidator<WhodunitCase> = koinInject(qualifier = named("whodunit"))
     val sessionOwner: ProcessMultiplayerSessionOwner = koinInject()
     val scope = rememberCoroutineScope()
+    val toastState = LocalParlorToastState.current
+    val startBlockedText = stringResource(Res.string.host_start_blocked)
+    val startFailedText = stringResource(Res.string.host_start_failed)
 
     val route = remember(caseId, modeId, hostName) {
         MultiplayerSessionRoute.host(
@@ -144,7 +152,7 @@ fun WhodunitHostSessionFlow(
         ?.error
     var acquireError by remember(route) { mutableStateOf<NetError?>(null) }
     var hostAttempt by remember { mutableStateOf(0) }
-    var startBlocked by remember { mutableStateOf(false) }
+    var startInFlight by remember(route) { mutableStateOf(false) }
     var leaveInFlight by remember(route) { mutableStateOf(false) }
     var leaveConfirmationOpen by remember(route) { mutableStateOf(false) }
 
@@ -203,7 +211,7 @@ fun WhodunitHostSessionFlow(
                 )
             }
         ) {
-            is Result.Success -> startBlocked = false
+            is Result.Success -> startInFlight = false
             is Result.Failure -> acquireError = result.error
         }
     }
@@ -285,14 +293,30 @@ fun WhodunitHostSessionFlow(
                     hostName = hostName,
                     supportedPlayerCounts = checkNotNull(supportedPlayerCounts),
                     modifier = Modifier.fillMaxSize(),
-                    startBlocked = startBlocked,
+                    startInFlight = startInFlight,
                     onStart = {
-                        scope.launch {
-                            val session = ownedSession
-                            when (val frozen = session.freezeAdmissions()) {
-                                is Result.Success -> startBlocked = false
-                                is Result.Failure -> {
-                                    startBlocked = frozen.error == NetError.CommandInFlight
+                        if (!startInFlight) {
+                            startInFlight = true
+                            scope.launch {
+                                val session = ownedSession
+                                when (val frozen = session.freezeAdmissions()) {
+                                    is Result.Success -> Unit
+                                    is Result.Failure -> {
+                                        val blocked = frozen.error == NetError.CommandInFlight
+                                        toastState.show(
+                                            text = if (blocked) {
+                                                startBlockedText
+                                            } else {
+                                                startFailedText
+                                            },
+                                            severity = if (blocked) {
+                                                ParlorToastSeverity.Warning
+                                            } else {
+                                                ParlorToastSeverity.Danger
+                                            },
+                                        )
+                                        startInFlight = false
+                                    }
                                 }
                             }
                         }
@@ -320,7 +344,7 @@ fun WhodunitHostSessionFlow(
                         sessionOwner = sessionOwner,
                         onBackToLibrary = onBackToLibrary,
                         onRetryStart = {
-                            startBlocked = false
+                            startInFlight = false
                             hostAttempt++
                         },
                         modifier = Modifier.fillMaxSize(),
@@ -346,7 +370,7 @@ private fun HostLobbyContent(
     room: LocalRoom,
     hostName: String,
     supportedPlayerCounts: IntRange,
-    startBlocked: Boolean,
+    startInFlight: Boolean,
     onStart: () -> Unit,
     onLeave: () -> Unit,
     modifier: Modifier = Modifier,
@@ -356,6 +380,9 @@ private fun HostLobbyContent(
     val pendingAdmissions by room.pendingAdmissions.collectAsState()
     val connectedMembers = members.filter(RoomMember::connected)
     val scope = rememberCoroutineScope()
+    val toastState = LocalParlorToastState.current
+    val admissionFailedText = stringResource(Res.string.host_admission_failed)
+    var admissionsInFlight by remember(room) { mutableStateOf(emptySet<PlayerId>()) }
 
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
         Box(modifier = Modifier.fillMaxSize()) {
@@ -449,9 +476,22 @@ private fun HostLobbyContent(
                                     admission.displayName,
                                 ),
                                 onClick = {
-                                    scope.launch { room.approveAdmission(admission.playerId) }
+                                    if (admission.playerId !in admissionsInFlight) {
+                                        admissionsInFlight += admission.playerId
+                                        scope.launch {
+                                            val approved = room.approveAdmission(admission.playerId)
+                                            if (approved is Result.Failure) {
+                                                toastState.show(
+                                                    admissionFailedText,
+                                                    ParlorToastSeverity.Danger,
+                                                )
+                                            }
+                                            admissionsInFlight -= admission.playerId
+                                        }
+                                    }
                                 },
                                 modifier = Modifier.fillMaxWidth(),
+                                enabled = admission.playerId !in admissionsInFlight,
                             )
                             ParlorButton(
                                 label = stringResource(Res.string.host_decline),
@@ -460,24 +500,29 @@ private fun HostLobbyContent(
                                     admission.displayName,
                                 ),
                                 onClick = {
-                                    scope.launch { room.rejectAdmission(admission.playerId) }
+                                    if (admission.playerId !in admissionsInFlight) {
+                                        admissionsInFlight += admission.playerId
+                                        scope.launch {
+                                            val rejected = room.rejectAdmission(admission.playerId)
+                                            if (rejected is Result.Failure) {
+                                                toastState.show(
+                                                    admissionFailedText,
+                                                    ParlorToastSeverity.Danger,
+                                                )
+                                            }
+                                            admissionsInFlight -= admission.playerId
+                                        }
+                                    }
                                 },
                                 modifier = Modifier.fillMaxWidth(),
                                 variant = ParlorButtonVariant.Secondary,
+                                enabled = admission.playerId !in admissionsInFlight,
                             )
                         }
                     }
                 }
             }
 
-        }
-
-        if (startBlocked) {
-            Text(
-                text = stringResource(Res.string.host_start_blocked),
-                style = ParlorTheme.typography.bodyMedium,
-                color = ParlorTheme.colors.semanticDanger,
-            )
         }
 
         val playerCount = connectedMembers.size + 1
@@ -506,7 +551,7 @@ private fun HostLobbyContent(
                 contentDescription = stringResource(Res.string.host_start_description),
                 onClick = onStart,
                 modifier = Modifier.fillMaxWidth(),
-                enabled = canStart,
+                enabled = canStart && !startInFlight,
             )
             ParlorButton(
                 label = stringResource(Res.string.host_cancel),

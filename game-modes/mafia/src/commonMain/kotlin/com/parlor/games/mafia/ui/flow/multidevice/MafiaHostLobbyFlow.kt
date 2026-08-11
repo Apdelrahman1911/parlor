@@ -24,13 +24,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import com.parlor.core.ids.PlayerId
 import com.parlor.core.result.Result
 import com.parlor.designsystem.backdrop.HeroBackdrop
 import com.parlor.designsystem.components.CandleFlame
 import com.parlor.designsystem.components.EyebrowLabel
+import com.parlor.designsystem.components.LocalParlorToastState
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorButtonVariant
 import com.parlor.designsystem.components.ParlorCard
+import com.parlor.designsystem.components.ParlorToastSeverity
 import com.parlor.designsystem.components.SessionExitAffordance
 import com.parlor.designsystem.components.SessionExitBackAction
 import com.parlor.designsystem.components.SessionExitConfirmation
@@ -44,6 +47,7 @@ import com.parlor.games.mafia.domain.settings.MafiaSettings
 import com.parlor.games.mafia.resources.Res
 import com.parlor.games.mafia.resources.md_host_cancel
 import com.parlor.games.mafia.resources.md_host_cancel_description
+import com.parlor.games.mafia.resources.md_host_admission_failed
 import com.parlor.games.mafia.resources.md_host_approve
 import com.parlor.games.mafia.resources.md_host_approve_description
 import com.parlor.games.mafia.resources.md_host_decline
@@ -63,6 +67,7 @@ import com.parlor.games.mafia.resources.md_host_start_blocked
 import com.parlor.games.mafia.resources.md_host_start_need_more
 import com.parlor.games.mafia.resources.md_host_start_pending
 import com.parlor.games.mafia.resources.md_host_start_too_many
+import com.parlor.games.mafia.resources.md_host_start_failed
 import com.parlor.games.mafia.resources.md_host_start_with_format
 import com.parlor.games.mafia.resources.md_host_waiting_for_players
 import com.parlor.games.mafia.resources.md_network_open_settings
@@ -107,6 +112,9 @@ fun MafiaHostLobbyFlow(
 ) {
     val sessionOwner: ProcessMultiplayerSessionOwner = koinInject()
     val scope = rememberCoroutineScope()
+    val toastState = LocalParlorToastState.current
+    val startBlockedText = stringResource(Res.string.md_host_start_blocked)
+    val startFailedText = stringResource(Res.string.md_host_start_failed)
     val route = remember(hostName) {
         MultiplayerSessionRoute.host(
             gameId = MafiaIds.GameId,
@@ -122,7 +130,7 @@ fun MafiaHostLobbyFlow(
         ?.error
     var acquireError by remember(route) { mutableStateOf<NetError?>(null) }
     var hostAttempt by remember { mutableStateOf(0) }
-    var startBlocked by remember { mutableStateOf(false) }
+    var startInFlight by remember(route) { mutableStateOf(false) }
     var leaveInFlight by remember(route) { mutableStateOf(false) }
     var leaveConfirmationOpen by remember(route) { mutableStateOf(false) }
 
@@ -163,7 +171,7 @@ fun MafiaHostLobbyFlow(
                 )
             }
         ) {
-            is Result.Success -> startBlocked = false
+            is Result.Success -> startInFlight = false
             is Result.Failure -> acquireError = result.error
         }
     }
@@ -230,13 +238,31 @@ fun MafiaHostLobbyFlow(
                 frozenRoster == null -> MafiaHostLobbyContent(
                     room = current,
                     hostName = hostName,
-                    startBlocked = startBlocked,
+                    startInFlight = startInFlight,
                     onStart = {
-                        scope.launch {
-                            when (val frozen = checkNotNull(ownedSession).freezeAdmissions()) {
-                                is Result.Success -> startBlocked = false
-                                is Result.Failure -> {
-                                    startBlocked = frozen.error == NetError.CommandInFlight
+                        if (!startInFlight) {
+                            startInFlight = true
+                            scope.launch {
+                                when (
+                                    val frozen = checkNotNull(ownedSession).freezeAdmissions()
+                                ) {
+                                    is Result.Success -> Unit
+                                    is Result.Failure -> {
+                                        val blocked = frozen.error == NetError.CommandInFlight
+                                        toastState.show(
+                                            text = if (blocked) {
+                                                startBlockedText
+                                            } else {
+                                                startFailedText
+                                            },
+                                            severity = if (blocked) {
+                                                ParlorToastSeverity.Warning
+                                            } else {
+                                                ParlorToastSeverity.Danger
+                                            },
+                                        )
+                                        startInFlight = false
+                                    }
                                 }
                             }
                         }
@@ -263,7 +289,7 @@ fun MafiaHostLobbyFlow(
                         sessionOwner = sessionOwner,
                         onBackToHome = onBackToHome,
                         onRetryStart = {
-                            startBlocked = false
+                            startInFlight = false
                             hostAttempt++
                         },
                         modifier = Modifier.fillMaxSize(),
@@ -287,7 +313,7 @@ fun MafiaHostLobbyFlow(
 private fun MafiaHostLobbyContent(
     room: LocalRoom,
     hostName: String,
-    startBlocked: Boolean,
+    startInFlight: Boolean,
     onStart: () -> Unit,
     onLeave: () -> Unit,
     modifier: Modifier = Modifier,
@@ -297,6 +323,9 @@ private fun MafiaHostLobbyContent(
     val pendingAdmissions by room.pendingAdmissions.collectAsState()
     val connectedMembers = members.filter(RoomMember::connected)
     val scope = rememberCoroutineScope()
+    val toastState = LocalParlorToastState.current
+    val admissionFailedText = stringResource(Res.string.md_host_admission_failed)
+    var admissionsInFlight by remember(room) { mutableStateOf(emptySet<PlayerId>()) }
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
         Box(modifier = Modifier.fillMaxSize()) {
             Column(
@@ -383,11 +412,24 @@ private fun MafiaHostLobbyContent(
                                         admission.displayName,
                                     ),
                                     onClick = {
-                                        scope.launch {
-                                            room.approveAdmission(admission.playerId)
+                                        if (admission.playerId !in admissionsInFlight) {
+                                            admissionsInFlight += admission.playerId
+                                            scope.launch {
+                                                val approved = room.approveAdmission(
+                                                    admission.playerId,
+                                                )
+                                                if (approved is Result.Failure) {
+                                                    toastState.show(
+                                                        admissionFailedText,
+                                                        ParlorToastSeverity.Danger,
+                                                    )
+                                                }
+                                                admissionsInFlight -= admission.playerId
+                                            }
                                         }
                                     },
                                     modifier = Modifier.fillMaxWidth(),
+                                    enabled = admission.playerId !in admissionsInFlight,
                                 )
                                 ParlorButton(
                                     label = stringResource(Res.string.md_host_decline),
@@ -396,25 +438,30 @@ private fun MafiaHostLobbyContent(
                                         admission.displayName,
                                     ),
                                     onClick = {
-                                        scope.launch {
-                                            room.rejectAdmission(admission.playerId)
+                                        if (admission.playerId !in admissionsInFlight) {
+                                            admissionsInFlight += admission.playerId
+                                            scope.launch {
+                                                val rejected = room.rejectAdmission(
+                                                    admission.playerId,
+                                                )
+                                                if (rejected is Result.Failure) {
+                                                    toastState.show(
+                                                        admissionFailedText,
+                                                        ParlorToastSeverity.Danger,
+                                                    )
+                                                }
+                                                admissionsInFlight -= admission.playerId
+                                            }
                                         }
                                     },
                                     modifier = Modifier.fillMaxWidth(),
                                     variant = ParlorButtonVariant.Secondary,
+                                    enabled = admission.playerId !in admissionsInFlight,
                                 )
                             }
                         }
                     }
                 }
-            }
-
-            if (startBlocked) {
-                Text(
-                    text = stringResource(Res.string.md_host_start_blocked),
-                    style = ParlorTheme.typography.bodyMedium,
-                    color = ParlorTheme.colors.semanticDanger,
-                )
             }
 
             val playerCount = connectedMembers.size + 1
@@ -439,7 +486,7 @@ private fun MafiaHostLobbyContent(
                     contentDescription = stringResource(Res.string.md_host_start_description),
                     onClick = onStart,
                     modifier = Modifier.fillMaxWidth(),
-                    enabled = canStart,
+                    enabled = canStart && !startInFlight,
                 )
                 ParlorButton(
                     label = stringResource(Res.string.md_host_cancel),
