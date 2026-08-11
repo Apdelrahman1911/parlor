@@ -7,7 +7,6 @@ plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.android.library) apply false
     alias(libs.plugins.kotlin.multiplatform) apply false
-    alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.kotlin.serialization) apply false
     alias(libs.plugins.compose.multiplatform) apply false
     alias(libs.plugins.compose.compiler) apply false
@@ -53,7 +52,8 @@ val productionAndroidSigningCheck = tasks.register("productionAndroidSigningChec
 
 val staticAnalysis = tasks.register("staticAnalysis") {
     group = "verification"
-    description = "Runs Detekt over every Kotlin source set in every production subproject."
+    description = "Runs Detekt over application modules and the included convention-plugin build."
+    dependsOn(gradle.includedBuild("build-logic").task(":convention:detekt"))
 }
 
 // Stable release-facing name. Keep the shorter staticAnalysis task for local

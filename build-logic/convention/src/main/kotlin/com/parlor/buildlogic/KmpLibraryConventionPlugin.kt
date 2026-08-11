@@ -1,12 +1,13 @@
 package com.parlor.buildlogic
 
+import com.android.build.api.dsl.LibraryExtension
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.api.tasks.testing.Test
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import com.android.build.api.dsl.LibraryExtension
 
 /**
  * Convention plugin for Kotlin Multiplatform library modules under :shared and :game-modes.
@@ -18,6 +19,8 @@ import com.android.build.api.dsl.LibraryExtension
  */
 class KmpLibraryConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) = with(target) {
+        val compileSdkVersion = requiredIntVersion("android-compile-sdk")
+        val minimumSdkVersion = requiredIntVersion("android-min-sdk")
         pluginManager.apply("org.jetbrains.kotlin.multiplatform")
         pluginManager.apply("com.android.library")
 
@@ -44,9 +47,9 @@ class KmpLibraryConventionPlugin : Plugin<Project> {
 
         extensions.configure(LibraryExtension::class.java) {
             namespace = "com.parlor.${project.name.replace("-", ".")}"
-            compileSdk = 36
+            compileSdk = compileSdkVersion
             defaultConfig {
-                minSdk = 26
+                minSdk = minimumSdkVersion
             }
             compileOptions {
                 sourceCompatibility = JavaVersion.VERSION_21
@@ -59,3 +62,11 @@ class KmpLibraryConventionPlugin : Plugin<Project> {
         }
     }
 }
+
+private fun Project.requiredIntVersion(alias: String): Int =
+    extensions.getByType(VersionCatalogsExtension::class.java)
+        .named("libs")
+        .findVersion(alias)
+        .orElseThrow { IllegalStateException("Missing version-catalog entry '$alias'") }
+        .requiredVersion
+        .toInt()

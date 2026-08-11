@@ -1,5 +1,6 @@
 package com.parlor.app.di
 
+import com.parlor.app.build.PARLOR_VERSION_NAME
 import com.parlor.content.datasource.BundledFallbackCaseDataSource
 import com.parlor.content.datasource.CachedCaseDataSource
 import com.parlor.content.datasource.InMemoryCachedCaseDataSource
@@ -79,8 +80,8 @@ val contentModule: Module = module {
     }
 }
 
-/** Phase 8 reads this from BuildConfig; constant for now. */
-private val INSTALLED_APP_VERSION: SemVer = SemVer(1, 0, 0)
+/** Generated from the same version source used by Android, iOS, and Desktop packaging. */
+private val INSTALLED_APP_VERSION: SemVer = SemVer.parse(PARLOR_VERSION_NAME)
 
 /** The schema this app build understands. Bumping this requires app code changes. */
 private const val SUPPORTED_SCHEMA_VERSION: Int = 1

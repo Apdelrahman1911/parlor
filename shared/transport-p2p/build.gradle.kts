@@ -66,6 +66,8 @@ tasks.named("desktopTest") {
         rootProject.file("composeApp/src/androidMain/res/xml/backup_rules.xml"),
         rootProject.file("composeApp/src/androidMain/res/xml/data_extraction_rules.xml"),
         rootProject.file("iosApp/iosApp/Info.plist"),
+        rootProject.file("iosApp/Configuration/Config.xcconfig"),
+        rootProject.file("config/parlor-version.xcconfig"),
         rootProject.fileTree("docs") {
             include("**/*.md")
         },

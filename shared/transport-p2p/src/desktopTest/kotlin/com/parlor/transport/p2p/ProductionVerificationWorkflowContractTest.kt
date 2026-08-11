@@ -59,6 +59,10 @@ class ProductionVerificationWorkflowContractTest {
         val staticGate = rootBuild.substringAfter("val productionStaticAnalysis")
             .substringBefore("tasks.register(\"productionAppleCheck\")")
         assertContains(staticGate, "dependsOn(staticAnalysis)")
+        val repositoryStaticGate = rootBuild.substringAfter("val staticAnalysis")
+            .substringBefore("val productionStaticAnalysis")
+        assertContains(repositoryStaticGate, "includedBuild(\"build-logic\")")
+        assertContains(repositoryStaticGate, "task(\":convention:detekt\")")
         val productionGate = rootBuild.substringAfter("tasks.register(\"productionCheck\")")
             .substringBefore("subprojects")
         assertContains(productionGate, "productionStaticAnalysis")
@@ -176,6 +180,28 @@ class ProductionVerificationWorkflowContractTest {
             assertContains(metadata, "artifact name=\"$artifact\"")
             assertContains(metadata, "sha256 value=\"$sha256\"")
         }
+    }
+
+    @Test
+    fun one_version_source_drives_android_desktop_ios_and_runtime_compatibility() {
+        val versionConfig = read("config/parlor-version.xcconfig")
+        val composeBuild = read("composeApp/build.gradle.kts")
+        val contentModule = read("composeApp/src/commonMain/kotlin/com/parlor/app/di/ContentModule.kt")
+        val xcodeConfig = read("iosApp/Configuration/Config.xcconfig")
+        val xcodeProject = read("iosApp/iosApp.xcodeproj/project.pbxproj")
+
+        assertContains(versionConfig, "PARLOR_VERSION_NAME = 1.0.0")
+        assertContains(versionConfig, "PARLOR_BUILD_NUMBER = 1")
+        assertContains(composeBuild, "versionCode = parlorBuildNumber")
+        assertContains(composeBuild, "versionName = parlorVersionName")
+        assertContains(composeBuild, "packageVersion = parlorVersionName")
+        assertContains(composeBuild, "kotlin.srcDir(generateParlorVersion)")
+        assertContains(contentModule, "SemVer.parse(PARLOR_VERSION_NAME)")
+        assertContains(xcodeConfig, "../../config/parlor-version.xcconfig")
+        assertContains(xcodeProject, "CURRENT_PROJECT_VERSION = \"$(PARLOR_BUILD_NUMBER)\"")
+        assertContains(xcodeProject, "MARKETING_VERSION = \"$(PARLOR_VERSION_NAME)\"")
+        assertFalse("MARKETING_VERSION = 1.0.0" in xcodeProject)
+        assertFalse("CURRENT_PROJECT_VERSION = 1;" in xcodeProject)
     }
 
     private fun read(relativePath: String): String {

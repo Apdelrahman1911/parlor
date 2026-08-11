@@ -8,6 +8,57 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
+val parlorVersionFile = rootProject.layout.projectDirectory.file("config/parlor-version.xcconfig")
+val parlorVersionValues = providers.fileContents(parlorVersionFile).asText.map { content ->
+    content.lineSequence()
+        .map(String::trim)
+        .filter { line -> line.isNotEmpty() && !line.startsWith("//") }
+        .associate { line ->
+            val assignment = line.split('=', limit = 2)
+            check(assignment.size == 2) { "Invalid Parlor version assignment: $line" }
+            assignment[0].trim() to assignment[1].trim()
+        }
+}.get()
+val parlorVersionName = requireNotNull(parlorVersionValues["PARLOR_VERSION_NAME"]) {
+    "PARLOR_VERSION_NAME is missing from ${parlorVersionFile.asFile}"
+}.also { version ->
+    require(Regex("[0-9]+\\.[0-9]+\\.[0-9]+").matches(version)) {
+        "PARLOR_VERSION_NAME must be a three-component semantic version"
+    }
+}
+val parlorBuildNumber = requireNotNull(parlorVersionValues["PARLOR_BUILD_NUMBER"]) {
+    "PARLOR_BUILD_NUMBER is missing from ${parlorVersionFile.asFile}"
+}.toInt().also { buildNumber ->
+    require(buildNumber > 0) { "PARLOR_BUILD_NUMBER must be positive" }
+}
+val generatedParlorVersionDirectory = layout.buildDirectory.dir(
+    "generated/parlorVersion/commonMain/kotlin",
+)
+val generateParlorVersion by tasks.registering {
+    description = "Generates the common runtime version from the package-version source of truth."
+    inputs.file(parlorVersionFile)
+    inputs.property("versionName", parlorVersionName)
+    inputs.property("buildNumber", parlorBuildNumber)
+    outputs.dir(generatedParlorVersionDirectory)
+    doLast {
+        val versionName = inputs.properties.getValue("versionName") as String
+        val buildNumber = inputs.properties.getValue("buildNumber") as Int
+        val output = File(
+            outputs.files.singleFile,
+            "com/parlor/app/build/ParlorBuildVersion.kt",
+        )
+        output.parentFile.mkdirs()
+        output.writeText(
+            """
+            package com.parlor.app.build
+
+            internal const val PARLOR_VERSION_NAME: String = "$versionName"
+            internal const val PARLOR_BUILD_NUMBER: Int = $buildNumber
+            """.trimIndent() + "\n",
+        )
+    }
+}
+
 // Unlike the shared/game library modules, the Android application cannot use
 // `parlor.kmp.library`, whose convention selects JUnit 5. Apply the same test
 // runtime policy here so common tests use the repository's verified JUnit 5
@@ -58,6 +109,7 @@ kotlin {
 
     sourceSets {
         commonMain {
+            kotlin.srcDir(generateParlorVersion)
             dependencies {
                 // Shared layers
                 implementation(project(":shared:core"))
@@ -131,8 +183,8 @@ android {
         applicationId = "com.parlor.app"
         minSdk = libs.versions.android.min.sdk.get().toInt()
         targetSdk = libs.versions.android.target.sdk.get().toInt()
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = parlorBuildNumber
+        versionName = parlorVersionName
     }
 
     signingConfigs {
@@ -354,7 +406,7 @@ compose.desktop {
                 org.jetbrains.compose.desktop.application.dsl.TargetFormat.Deb,
             )
             packageName = "Parlor"
-            packageVersion = "1.0.0"
+            packageVersion = parlorVersionName
         }
     }
 }

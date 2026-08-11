@@ -105,8 +105,8 @@ shared/transport-p2p                 # Required P2pKit adapter; sole P2pKit impo
 game-modes/whodunit                  # Whodunit module: domain/ (pure), ui/, snapshot/, di/, content/
 content/                             # Case JSON drafts (e.g., last-dinner.draft.json)
 
-build-logic/convention/              # Precompiled plugins: parlor.kmp.library, parlor.kmp.compose.library,
-                                     #                     parlor.android.app, parlor.detekt
+build-logic/convention/              # Convention plugins: parlor.kmp.library,
+                                     # parlor.kmp.compose.library, parlor.detekt
 ```
 
 `settings.gradle.kts` enables `TYPESAFE_PROJECT_ACCESSORS` — use `projects.shared.engine` style accessors in new build scripts.

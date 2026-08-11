@@ -1,5 +1,6 @@
 plugins {
     `kotlin-dsl`
+    alias(libs.plugins.detekt)
 }
 
 group = "com.parlor.buildlogic"
@@ -8,6 +9,30 @@ group = "com.parlor.buildlogic"
 java {
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(21))
+    }
+}
+
+detekt {
+    buildUponDefaultConfig = true
+    allRules = false
+    parallel = true
+    basePath = rootProject.projectDir.parentFile.absolutePath
+    config.setFrom(rootProject.file("../config/detekt/detekt.yml"))
+    source.setFrom(
+        fileTree("src") {
+            include("**/*.kt")
+            exclude("**/generated/**")
+        },
+    )
+}
+
+tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
+    reports {
+        html.required.set(true)
+        sarif.required.set(true)
+        xml.required.set(true)
+        txt.required.set(false)
+        md.required.set(false)
     }
 }
 
@@ -28,10 +53,6 @@ gradlePlugin {
         register("kmpComposeLibrary") {
             id = "parlor.kmp.compose.library"
             implementationClass = "com.parlor.buildlogic.KmpComposeLibraryConventionPlugin"
-        }
-        register("androidApp") {
-            id = "parlor.android.app"
-            implementationClass = "com.parlor.buildlogic.AndroidAppConventionPlugin"
         }
         register("detektBase") {
             id = "parlor.detekt"
