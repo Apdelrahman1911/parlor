@@ -23,6 +23,8 @@ sealed interface ProtocolValidation {
     data object WrongSession : ProtocolValidation
     data object WrongGame : ProtocolValidation
     data object IncompatibleGameVersion : ProtocolValidation
+    /** A session/game/entity identifier is not safe canonical wire text. */
+    data object InvalidSessionIdentity : ProtocolValidation
     data object InvalidMessageId : ProtocolValidation
     data object InvalidSequence : ProtocolValidation
     data object WrongConnectionEpoch : ProtocolValidation
@@ -36,6 +38,8 @@ sealed interface ProtocolValidation {
 
 fun SessionEnvelopeHeader.validateFor(expected: SessionProtocol): ProtocolValidation = when {
     !protocol.isCompatibleWith(expected.protocol) -> ProtocolValidation.IncompatibleProtocol
+    !sessionId.raw.isValidWireEntityId() || !gameId.raw.isValidWireEntityId() ->
+        ProtocolValidation.InvalidSessionIdentity
     sessionId != expected.sessionId -> ProtocolValidation.WrongSession
     gameId != expected.gameId -> ProtocolValidation.WrongGame
     gameVersion != expected.gameVersion -> ProtocolValidation.IncompatibleGameVersion
@@ -142,8 +146,7 @@ fun HostMessage.SessionStarting.validateFor(expected: SessionProtocol): Protocol
         startId != header.messageId || !startId.isValidOpaqueId() ->
             ProtocolValidation.InvalidMessageId
         header.sequence != 0L -> ProtocolValidation.InvalidSequence
-        caseId.length !in 1..MAX_START_TEXT_LENGTH ||
-            modeId.length !in 1..MAX_START_TEXT_LENGTH ->
+        !caseId.isValidWireEntityId() || !modeId.isValidWireEntityId() ->
             ProtocolValidation.InvalidSessionStart
         players.size !in MIN_START_PLAYERS..MAX_START_PLAYERS ->
             ProtocolValidation.InvalidSessionStart
@@ -151,7 +154,7 @@ fun HostMessage.SessionStarting.validateFor(expected: SessionProtocol): Protocol
             players.map { it.seat } != players.indices.toList() ||
             !RoomInputPolicy.areValidDistinctDisplayNames(players.map { it.displayName }) ||
             players.any {
-                it.id.raw.length !in 1..MAX_START_TEXT_LENGTH ||
+                !it.id.raw.isValidWireEntityId() ||
                     it.seat < 0
             } -> ProtocolValidation.InvalidSessionStart
         (caseVersion == null) != (caseDigest == null) ->
@@ -197,7 +200,23 @@ private fun validateSessionStartAcknowledgement(
 }
 
 private fun String.isValidOpaqueId(): Boolean =
-    length in 16..128 && all { it.isLetterOrDigit() || it == '-' || it == '_' }
+    length in 16..128 && all(::isWireIdCharacter)
+
+/**
+ * Identifiers may reach persistence keys, equality gates, fallback UI labels,
+ * and accessibility output. Keep them to a small canonical ASCII alphabet so
+ * an authenticated-but-modified peer/host cannot inject path separators,
+ * control characters, or bidirectional formatting into those boundaries.
+ */
+private fun String.isValidWireEntityId(): Boolean =
+    length in 1..MAX_START_TEXT_LENGTH && all(::isWireIdCharacter)
+
+private fun isWireIdCharacter(character: Char): Boolean =
+    character in 'a'..'z' ||
+        character in 'A'..'Z' ||
+        character in '0'..'9' ||
+        character == '-' ||
+        character == '_'
 
 private fun String.isValidCaseVersion(): Boolean {
     if (length > MAX_CASE_VERSION_LENGTH) return false

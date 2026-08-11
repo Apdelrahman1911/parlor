@@ -54,6 +54,29 @@ class ProtocolValidationTest {
     }
 
     @Test
+    fun `rejects unsafe wire identities even when an initial peer trusts the supplied session`() {
+        listOf(
+            "session\nspoof",
+            "session\u202Espoof",
+            "session/../../spoof",
+            "s".repeat(129),
+        ).forEach { unsafeSessionId ->
+            val supplied = session.copy(sessionId = SessionId(unsafeSessionId))
+            assertEquals(
+                ProtocolValidation.InvalidSessionIdentity,
+                header(sessionId = supplied.sessionId).validateFor(supplied),
+                "unsafe session id: ${unsafeSessionId.encodeToByteArray().contentToString()}",
+            )
+        }
+
+        val unsafeGame = session.copy(gameId = GameId("game\nspoof"))
+        assertEquals(
+            ProtocolValidation.InvalidSessionIdentity,
+            header(gameId = unsafeGame.gameId).validateFor(unsafeGame),
+        )
+    }
+
+    @Test
     fun `enforces command identifiers sequence revision and payload cap`() {
         val valid = PeerMessage.ClientCommand(
             header = header(),
@@ -75,6 +98,14 @@ class ProtocolValidationTest {
         assertEquals(
             ProtocolValidation.InvalidMessageId,
             valid.copy(commandId = "different-command-id").validateFor(session),
+        )
+        assertEquals(
+            ProtocolValidation.InvalidMessageId,
+            valid.copy(
+                commandId = "رسالة-0123456789abcdef",
+                header = valid.header.copy(messageId = "رسالة-0123456789abcdef"),
+            ).validateFor(session),
+            "opaque correlation identifiers use canonical ASCII",
         )
     }
 
@@ -183,6 +214,31 @@ class ProtocolValidationTest {
             ProtocolValidation.InvalidSessionStart,
             offer.copy(players = offer.players.reversed()).validateFor(session),
         )
+        listOf("case/path", "case\nspoof", "case\u202Espoof", "c".repeat(129)).forEach {
+            assertEquals(
+                ProtocolValidation.InvalidSessionStart,
+                offer.copy(caseId = it).validateFor(session),
+                "unsafe case id: ${it.encodeToByteArray().contentToString()}",
+            )
+        }
+        listOf("mode/path", "mode\nspoof", "mode\u202Espoof", "m".repeat(129)).forEach {
+            assertEquals(
+                ProtocolValidation.InvalidSessionStart,
+                offer.copy(modeId = it).validateFor(session),
+                "unsafe mode id: ${it.encodeToByteArray().contentToString()}",
+            )
+        }
+        listOf("peer/path", "peer\nspoof", "peer\u202Espoof", "p".repeat(129)).forEach {
+            assertEquals(
+                ProtocolValidation.InvalidSessionStart,
+                offer.copy(
+                    players = offer.players.mapIndexed { index, player ->
+                        if (index == 1) player.copy(id = PlayerId(it)) else player
+                    },
+                ).validateFor(session),
+                "unsafe player id: ${it.encodeToByteArray().contentToString()}",
+            )
+        }
         listOf(
             "   ",
             "Alice\nAdmin",
