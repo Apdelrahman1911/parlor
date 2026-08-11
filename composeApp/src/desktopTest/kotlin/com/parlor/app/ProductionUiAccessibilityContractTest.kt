@@ -203,6 +203,40 @@ class ProductionUiAccessibilityContractTest {
         }
     }
 
+    @Test
+    fun fullscreen_text_surfaces_keep_actions_reachable_with_large_text() {
+        val expectedScrollContainers = mapOf(
+            "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/" +
+                "components/MafiaCover.kt" to 2,
+            "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/" +
+                "screens/announce/NightAnnouncementScreen.kt" to 1,
+            "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/" +
+                "screens/handoff/MafiaHandoffScreens.kt" to 2,
+            "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/" +
+                "screens/night/DetectiveInspectScreen.kt" to 1,
+            "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/" +
+                "multidevice/MafiaMultiDevicePhaseRouter.kt" to 1,
+            "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/" +
+                "components/CandlelitCover.kt" to 2,
+            "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/" +
+                "screens/reveal/CharacterRevealScreens.kt" to 2,
+            "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/" +
+                "screens/safety/PauseOverlay.kt" to 2,
+            "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/" +
+                "screens/safety/PrivacyConcernOverlay.kt" to 1,
+            "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/" +
+                "ReconnectingOverlay.kt" to 1,
+        )
+
+        expectedScrollContainers.forEach { (path, expectedMinimum) ->
+            val actual = Regex("\\.verticalScroll\\(").findAll(read(path)).count()
+            assertTrue(
+                actual >= expectedMinimum,
+                "$path exposes $actual scroll containers; expected at least $expectedMinimum",
+            )
+        }
+    }
+
     private fun read(path: String): String = File(root, path).readText()
 
     private fun productionKotlinFiles(): Sequence<File> = sequenceOf(
