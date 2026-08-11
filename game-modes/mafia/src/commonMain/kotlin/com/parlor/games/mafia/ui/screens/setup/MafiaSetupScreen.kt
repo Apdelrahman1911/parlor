@@ -9,8 +9,11 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
@@ -33,10 +36,12 @@ import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorButtonVariant
 import com.parlor.designsystem.components.ParlorCard
 import com.parlor.designsystem.theme.ParlorTheme
+import com.parlor.games.mafia.domain.settings.MafiaKillTie
 import com.parlor.games.mafia.domain.settings.MafiaRoleCounts
 import com.parlor.games.mafia.domain.settings.MafiaSettings
 import com.parlor.games.mafia.domain.settings.MafiaSettingsError
 import com.parlor.games.mafia.domain.settings.MafiaSettingsValidation
+import com.parlor.games.mafia.domain.settings.TieBehavior
 import com.parlor.games.mafia.resources.Res
 import com.parlor.games.mafia.resources.role_civilian
 import com.parlor.games.mafia.resources.role_detective
@@ -56,6 +61,11 @@ import com.parlor.games.mafia.resources.settings_error_player_count_above_maximu
 import com.parlor.games.mafia.resources.settings_error_player_count_below_minimum_format
 import com.parlor.games.mafia.resources.settings_error_timers_not_supported
 import com.parlor.games.mafia.resources.settings_player_count_format
+import com.parlor.games.mafia.resources.settings_kill_tie_card
+import com.parlor.games.mafia.resources.settings_kill_tie_no_kill
+import com.parlor.games.mafia.resources.settings_kill_tie_random
+import com.parlor.games.mafia.resources.settings_kill_tie_revote
+import com.parlor.games.mafia.resources.settings_max_revotes
 import com.parlor.games.mafia.resources.settings_role_count_decrement_description_format
 import com.parlor.games.mafia.resources.settings_role_count_decrement_label
 import com.parlor.games.mafia.resources.settings_role_count_increment_description_format
@@ -66,18 +76,26 @@ import com.parlor.games.mafia.resources.settings_start_description
 import com.parlor.games.mafia.resources.settings_title
 import com.parlor.games.mafia.resources.settings_toggle_allow_self_vote
 import com.parlor.games.mafia.resources.settings_toggle_doctor_self_heal
+import com.parlor.games.mafia.resources.settings_toggle_doctor_repeat
+import com.parlor.games.mafia.resources.settings_toggle_detective_self_inspect
 import com.parlor.games.mafia.resources.settings_toggle_mafia_target_mafia
 import com.parlor.games.mafia.resources.settings_toggle_reveal_role
 import com.parlor.games.mafia.resources.settings_validation_card_title
+import com.parlor.games.mafia.resources.settings_vote_tie_all
+import com.parlor.games.mafia.resources.settings_vote_tie_card
+import com.parlor.games.mafia.resources.settings_vote_tie_skip
+import com.parlor.games.mafia.resources.settings_vote_tie_tied_only
 import com.parlor.games.mafia.resources.setup_eyebrow
 import org.jetbrains.compose.resources.stringResource
 
 /**
- * Host-only setup screen. Role counts are editable via +/− steppers (Mafia,
- * Detective, Doctor); Civilians are derived from the remainder. Steppers only
- * guard the impossible cases (negative counts; Mafia below 1). Anything else
- * that makes [MafiaSettings.validate] return Invalid renders inline and
- * disables Start. Submitting fires [onStart] — the flow then dispatches
+ * Host-only setup screen for every shipping rule in [MafiaSettings]. Role
+ * counts are editable via +/− steppers (Mafia, Detective, Doctor); Civilians
+ * are derived from the remainder. Steppers only guard impossible local input
+ * while [MafiaSettings.validate] remains the authoritative gate and disables
+ * Start for invalid combinations. The three timer fields are retained only
+ * for compatibility and are intentionally not exposed until timed phase
+ * transitions exist. Submitting fires [onStart] — the flow then dispatches
  * `ApplySettings` followed by `StartGame`, after which this screen no longer
  * renders (the phase moves off Setup), so the settings are structurally
  * locked.
@@ -89,25 +107,11 @@ fun MafiaSetupScreen(
     onStart: (MafiaSettings) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var mafiaCount by remember { mutableStateOf(initialSettings.roleCounts.mafia) }
-    var detectiveCount by remember { mutableStateOf(initialSettings.roleCounts.detective) }
-    var doctorCount by remember { mutableStateOf(initialSettings.roleCounts.doctor) }
-    var revealRoleOnDeath by remember { mutableStateOf(initialSettings.revealRoleOnDeath) }
-    var doctorCanSelfHeal by remember { mutableStateOf(initialSettings.doctorCanSelfHeal) }
-    var allowSelfVote by remember { mutableStateOf(initialSettings.allowSelfVote) }
-    var mafiaCanTargetMafia by remember { mutableStateOf(initialSettings.mafiaCanTargetMafia) }
+    var draft by remember(initialSettings) {
+        mutableStateOf(MafiaSetupDraft.from(initialSettings))
+    }
 
-    val settings = initialSettings.copy(
-        roleCounts = MafiaRoleCounts(
-            mafia = mafiaCount,
-            detective = detectiveCount,
-            doctor = doctorCount,
-        ),
-        revealRoleOnDeath = revealRoleOnDeath,
-        doctorCanSelfHeal = doctorCanSelfHeal,
-        allowSelfVote = allowSelfVote,
-        mafiaCanTargetMafia = mafiaCanTargetMafia,
-    )
+    val settings = draft.applyTo(initialSettings)
     val validation = settings.validate(playerCount)
     val canStart = validation is MafiaSettingsValidation.Valid
 
@@ -135,10 +139,16 @@ fun MafiaSetupScreen(
 
             RoleCountsEditorCard(
                 playerCount = playerCount,
-                roleCounts = settings.roleCounts,
-                onMafiaChange = { mafiaCount = it },
-                onDetectiveChange = { detectiveCount = it },
-                onDoctorChange = { doctorCount = it },
+                roleCounts = draft.roleCounts,
+                onMafiaChange = { count ->
+                    draft = draft.copy(roleCounts = draft.roleCounts.copy(mafia = count))
+                },
+                onDetectiveChange = { count ->
+                    draft = draft.copy(roleCounts = draft.roleCounts.copy(detective = count))
+                },
+                onDoctorChange = { count ->
+                    draft = draft.copy(roleCounts = draft.roleCounts.copy(doctor = count))
+                },
             )
 
             if (validation is MafiaSettingsValidation.Invalid) {
@@ -147,23 +157,62 @@ fun MafiaSetupScreen(
 
             ToggleRow(
                 label = stringResource(Res.string.settings_toggle_reveal_role),
-                checked = revealRoleOnDeath,
-                onCheckedChange = { revealRoleOnDeath = it },
+                checked = draft.revealRoleOnDeath,
+                onCheckedChange = { draft = draft.copy(revealRoleOnDeath = it) },
             )
             ToggleRow(
                 label = stringResource(Res.string.settings_toggle_doctor_self_heal),
-                checked = doctorCanSelfHeal,
-                onCheckedChange = { doctorCanSelfHeal = it },
+                checked = draft.doctorCanSelfHeal,
+                onCheckedChange = { draft = draft.copy(doctorCanSelfHeal = it) },
+            )
+            ToggleRow(
+                label = stringResource(Res.string.settings_toggle_doctor_repeat),
+                checked = draft.doctorCanProtectSamePlayerConsecutively,
+                onCheckedChange = {
+                    draft = draft.copy(doctorCanProtectSamePlayerConsecutively = it)
+                },
+            )
+            ToggleRow(
+                label = stringResource(Res.string.settings_toggle_detective_self_inspect),
+                checked = draft.detectiveCanInspectSelf,
+                onCheckedChange = { draft = draft.copy(detectiveCanInspectSelf = it) },
             )
             ToggleRow(
                 label = stringResource(Res.string.settings_toggle_allow_self_vote),
-                checked = allowSelfVote,
-                onCheckedChange = { allowSelfVote = it },
+                checked = draft.allowSelfVote,
+                onCheckedChange = { draft = draft.copy(allowSelfVote = it) },
             )
             ToggleRow(
                 label = stringResource(Res.string.settings_toggle_mafia_target_mafia),
-                checked = mafiaCanTargetMafia,
-                onCheckedChange = { mafiaCanTargetMafia = it },
+                checked = draft.mafiaCanTargetMafia,
+                onCheckedChange = { draft = draft.copy(mafiaCanTargetMafia = it) },
+            )
+
+            RuleChoiceCard(
+                title = stringResource(Res.string.settings_vote_tie_card),
+                options = mafiaSetupVoteTieOptions,
+                selected = draft.voteTieBehavior,
+                label = { voteTieLabel(it) },
+                onSelected = { draft = draft.copy(voteTieBehavior = it) },
+            )
+
+            ParlorCard(modifier = Modifier.fillMaxWidth()) {
+                RoleCountStepperRow(
+                    name = stringResource(Res.string.settings_max_revotes),
+                    count = draft.maxRevotes,
+                    onDecrement = { draft = draft.copy(maxRevotes = draft.maxRevotes - 1) },
+                    onIncrement = { draft = draft.copy(maxRevotes = draft.maxRevotes + 1) },
+                    decEnabled = draft.maxRevotes > 0,
+                    incEnabled = draft.maxRevotes < MafiaSettings.MAX_REVOTES,
+                )
+            }
+
+            RuleChoiceCard(
+                title = stringResource(Res.string.settings_kill_tie_card),
+                options = mafiaSetupKillTieOptions,
+                selected = draft.mafiaKillTieBehavior,
+                label = { killTieLabel(it) },
+                onSelected = { draft = draft.copy(mafiaKillTieBehavior = it) },
             )
 
             ParlorButton(
@@ -175,6 +224,62 @@ fun MafiaSetupScreen(
             )
         }
     }
+}
+
+@Composable
+private fun <T> RuleChoiceCard(
+    title: String,
+    options: List<T>,
+    selected: T,
+    label: @Composable (T) -> String,
+    onSelected: (T) -> Unit,
+) {
+    ParlorCard(modifier = Modifier.fillMaxWidth()) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .selectableGroup(),
+            verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.xs),
+        ) {
+            EyebrowLabel(text = title, accent = false)
+            options.forEach { option ->
+                val optionLabel = label(option)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .selectable(
+                            selected = option == selected,
+                            role = Role.RadioButton,
+                            onClick = { onSelected(option) },
+                        )
+                        .padding(vertical = ParlorTheme.spacing.s),
+                    horizontalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    RadioButton(selected = option == selected, onClick = null)
+                    Text(
+                        text = optionLabel,
+                        style = ParlorTheme.typography.bodyLarge,
+                        color = ParlorTheme.colors.textPrimary,
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun voteTieLabel(value: TieBehavior): String = when (value) {
+    TieBehavior.REVOTE_TIED_ONLY -> stringResource(Res.string.settings_vote_tie_tied_only)
+    TieBehavior.REVOTE_ALL -> stringResource(Res.string.settings_vote_tie_all)
+    TieBehavior.SKIP_ELIMINATION -> stringResource(Res.string.settings_vote_tie_skip)
+}
+
+@Composable
+private fun killTieLabel(value: MafiaKillTie): String = when (value) {
+    MafiaKillTie.REVOTE -> stringResource(Res.string.settings_kill_tie_revote)
+    MafiaKillTie.RANDOM_TIED -> stringResource(Res.string.settings_kill_tie_random)
+    MafiaKillTie.NO_KILL -> stringResource(Res.string.settings_kill_tie_no_kill)
 }
 
 @Composable
