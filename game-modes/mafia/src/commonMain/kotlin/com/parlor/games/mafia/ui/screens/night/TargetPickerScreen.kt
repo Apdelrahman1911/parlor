@@ -2,7 +2,6 @@ package com.parlor.games.mafia.ui.screens.night
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import com.parlor.core.ids.PlayerId
 import com.parlor.designsystem.backdrop.HeroBackdrop
@@ -53,7 +55,9 @@ fun TargetPickerScreen(
     skipLabel: String,
     footer: @Composable (() -> Unit)? = null,
 ) {
-    var selected: PlayerId? by remember { mutableStateOf(null) }
+    val selectableTargetIds = targets.filter(PickableTarget::enabled).map(PickableTarget::id)
+    var selected: PlayerId? by remember(selectableTargetIds) { mutableStateOf(null) }
+    val validSelection = validTargetSelection(selected, targets)
 
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
         Column(
@@ -80,19 +84,26 @@ fun TargetPickerScreen(
 
             footer?.invoke()
 
-            targets.forEach { target ->
-                TargetRow(
-                    target = target,
-                    selected = target.id == selected,
-                    onClick = { if (target.enabled) selected = target.id },
-                )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .selectableGroup(),
+                verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m),
+            ) {
+                targets.forEach { target ->
+                    TargetRow(
+                        target = target,
+                        selected = target.id == validSelection,
+                        onClick = { selected = target.id },
+                    )
+                }
             }
 
             ParlorButton(
                 label = submitLabel,
                 contentDescription = submitLabel,
-                onClick = { onSubmit(selected) },
-                enabled = selected != null,
+                onClick = { onSubmit(validSelection) },
+                enabled = validSelection != null,
                 modifier = Modifier.fillMaxWidth(),
             )
             if (allowSkip) {
@@ -105,6 +116,14 @@ fun TargetPickerScreen(
             }
         }
     }
+}
+
+/** A removed or newly-disabled target can never reach the submit callback. */
+internal fun validTargetSelection(
+    selected: PlayerId?,
+    targets: List<PickableTarget>,
+): PlayerId? = selected?.takeIf { selectedId ->
+    targets.any { target -> target.id == selectedId && target.enabled }
 }
 
 @Composable
@@ -121,7 +140,12 @@ private fun TargetRow(
             .clip(shape)
             .background(ParlorTheme.colors.surfaceElevated)
             .border(ParlorTheme.borders.hairline, borderColor, shape)
-            .clickable(enabled = target.enabled, onClick = onClick)
+            .selectable(
+                selected = selected,
+                enabled = target.enabled,
+                role = Role.RadioButton,
+                onClick = onClick,
+            )
             .padding(ParlorTheme.spacing.l),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,

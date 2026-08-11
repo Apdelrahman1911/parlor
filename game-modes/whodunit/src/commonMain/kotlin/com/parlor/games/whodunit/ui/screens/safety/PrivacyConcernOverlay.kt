@@ -15,7 +15,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.paneTitle
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import com.parlor.designsystem.components.EyebrowLabel
@@ -55,7 +58,7 @@ fun PrivacyConcernAffordance(
         modifier = modifier
             .heightIn(min = ParlorTheme.spacing.xxl)
             .semantics { contentDescription = openDescription }
-            .clickable(onClick = onOpen)
+            .clickable(role = Role.Button, onClick = onOpen)
             .padding(ParlorTheme.spacing.s),
     )
 }
@@ -85,7 +88,12 @@ internal fun PrivacyConcernDialog(
     check((policy == PrivacyConcernUiPolicy.HostMayReroll) == (onReroll != null)) {
         "Privacy reroll callback must match host authority"
     }
-    Box(modifier = modifier.fillMaxSize()) {
+    val title = stringResource(Res.string.privacy_title)
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .semantics { paneTitle = title },
+    ) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -105,7 +113,10 @@ internal fun PrivacyConcernDialog(
                 contentPadding = ParlorTheme.spacing.xl,
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m)) {
-                    EyebrowLabel(text = stringResource(Res.string.privacy_title))
+                    EyebrowLabel(
+                        text = title,
+                        modifier = Modifier.semantics { heading() },
+                    )
                     Text(
                         text = stringResource(
                             if (policy == PrivacyConcernUiPolicy.HostMayReroll) {
@@ -125,6 +136,7 @@ internal fun PrivacyConcernDialog(
                             contentDescription = stringResource(Res.string.privacy_reroll_description),
                             onClick = onReroll,
                             modifier = Modifier.fillMaxWidth(),
+                            variant = ParlorButtonVariant.Destructive,
                         )
                     }
                     ParlorButton(

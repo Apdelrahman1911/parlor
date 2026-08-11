@@ -166,38 +166,35 @@ fun MafiaMultiDevicePeerFlow(
     val hasAuthoritativeSnapshot by bridge.hasAuthoritativeSnapshot.collectAsState()
     val initialSnapshotError by bridge.initialSnapshotError.collectAsState()
 
-    Box(modifier = modifier.fillMaxSize()) {
-        if (hasAuthoritativeSnapshot) {
-            MafiaMultiDevicePhaseRouter(
-                state = state,
-                selfPlayerId = selfPlayerId,
-                isHost = false,
-                session = session,
-                scope = scope,
-                onBackToHome = onBackToHome,
-                modifier = Modifier.fillMaxSize(),
-            )
-        }
-        if (!hasAuthoritativeSnapshot || state.public.disconnectedPlayers.isNotEmpty()) {
-            ReconnectingOverlay(
-                title = if (!hasAuthoritativeSnapshot) {
-                    stringResource(
-                        if (initialSnapshotError == null) {
-                            Res.string.md_peer_initial_snapshot_loading
-                        } else {
-                            Res.string.md_peer_initial_snapshot_failed
-                        },
-                    )
-                } else {
-                    stringResource(Res.string.md_peer_reconnecting)
-                },
-                leaveLabel = stringResource(Res.string.md_peer_reconnecting_leave),
-                leaveContentDescription = stringResource(
-                    Res.string.md_peer_reconnecting_leave_description,
-                ),
-                onLeave = onBackToHome,
-                modifier = Modifier.fillMaxSize(),
-            )
-        }
+    if (!hasAuthoritativeSnapshot || state.public.disconnectedPlayers.isNotEmpty()) {
+        ReconnectingOverlay(
+            title = if (!hasAuthoritativeSnapshot) {
+                stringResource(
+                    if (initialSnapshotError == null) {
+                        Res.string.md_peer_initial_snapshot_loading
+                    } else {
+                        Res.string.md_peer_initial_snapshot_failed
+                    },
+                )
+            } else {
+                stringResource(Res.string.md_peer_reconnecting)
+            },
+            leaveLabel = stringResource(Res.string.md_peer_reconnecting_leave),
+            leaveContentDescription = stringResource(
+                Res.string.md_peer_reconnecting_leave_description,
+            ),
+            onLeave = onBackToHome,
+            modifier = modifier.fillMaxSize(),
+        )
+    } else {
+        MafiaMultiDevicePhaseRouter(
+            state = state,
+            selfPlayerId = selfPlayerId,
+            isHost = false,
+            session = session,
+            scope = scope,
+            onBackToHome = onBackToHome,
+            modifier = modifier.fillMaxSize(),
+        )
     }
 }

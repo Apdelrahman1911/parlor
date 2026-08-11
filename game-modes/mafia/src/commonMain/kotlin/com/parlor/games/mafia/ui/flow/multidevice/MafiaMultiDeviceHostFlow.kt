@@ -186,81 +186,74 @@ fun MafiaMultiDeviceHostFlow(
         }
     }
 
-    Box(modifier = modifier.fillMaxSize()) {
-        if (startGate == HostStartGateState.Started) {
-            MafiaMultiDevicePhaseRouter(
-                state = state,
-                selfPlayerId = room.selfPlayerId,
-                isHost = true,
-                session = session,
-                scope = scope,
-                onBackToHome = { exitToHome(SessionEndReason.HostLeft) },
-                modifier = Modifier.fillMaxSize(),
-            )
-        }
-        if (
-            startGate == HostStartGateState.Started &&
-            disconnectedPlayer != null &&
-            state.phase != MafiaPhase.PostGame
-        ) {
-            val playerName = disconnectedPlayer.displayName
-            if (confirmContinueFor?.id == disconnectedPlayer.id) {
-                ContinueWithoutDialog(
-                    title = stringResource(
-                        Res.string.md_host_continue_without_dialog_title_format,
-                        playerName,
-                    ),
-                    body = stringResource(
-                        Res.string.md_host_continue_without_dialog_body_format,
-                        playerName,
-                    ),
-                    cancelLabel = stringResource(
-                        Res.string.md_host_continue_without_dialog_cancel,
-                    ),
-                    confirmLabel = stringResource(
-                        Res.string.md_host_continue_without_dialog_confirm_format,
-                        playerName,
-                    ),
-                    confirmContentDescription = stringResource(
-                        Res.string.md_host_continue_without_dialog_confirm_description_format,
-                        playerName,
-                    ),
-                    onCancel = { confirmContinueFor = null },
-                    onConfirm = {
-                        confirmContinueFor = null
-                        scope.launch {
-                            bridge.continueWithout(disconnectedPlayer.id)
-                        }
-                    },
-                    modifier = Modifier.fillMaxSize(),
-                )
+    when (val gate = startGate) {
+        HostStartGateState.Started -> {
+            if (disconnectedPlayer != null && state.phase != MafiaPhase.PostGame) {
+                val playerName = disconnectedPlayer.displayName
+                if (confirmContinueFor?.id == disconnectedPlayer.id) {
+                    ContinueWithoutDialog(
+                        title = stringResource(
+                            Res.string.md_host_continue_without_dialog_title_format,
+                            playerName,
+                        ),
+                        body = stringResource(
+                            Res.string.md_host_continue_without_dialog_body_format,
+                            playerName,
+                        ),
+                        cancelLabel = stringResource(
+                            Res.string.md_host_continue_without_dialog_cancel,
+                        ),
+                        confirmLabel = stringResource(
+                            Res.string.md_host_continue_without_dialog_confirm_format,
+                            playerName,
+                        ),
+                        confirmContentDescription = stringResource(
+                            Res.string.md_host_continue_without_dialog_confirm_description_format,
+                            playerName,
+                        ),
+                        onCancel = { confirmContinueFor = null },
+                        onConfirm = {
+                            confirmContinueFor = null
+                            scope.launch { bridge.continueWithout(disconnectedPlayer.id) }
+                        },
+                        modifier = modifier.fillMaxSize(),
+                    )
+                } else {
+                    HostDisconnectedOverlay(
+                        title = stringResource(Res.string.md_host_peer_away_title),
+                        body = stringResource(
+                            Res.string.md_host_peer_away_body_format,
+                            playerName,
+                        ),
+                        continueLabel = stringResource(
+                            Res.string.md_host_continue_without_format,
+                            playerName,
+                        ),
+                        continueContentDescription = stringResource(
+                            Res.string.md_host_continue_without_description_format,
+                            playerName,
+                        ),
+                        leaveLabel = stringResource(Res.string.md_host_leave_session),
+                        leaveContentDescription = stringResource(
+                            Res.string.md_host_leave_session_description,
+                        ),
+                        onContinue = { confirmContinueFor = disconnectedPlayer },
+                        onLeave = { exitToHome(SessionEndReason.Cancelled) },
+                        modifier = modifier.fillMaxSize(),
+                    )
+                }
             } else {
-                HostDisconnectedOverlay(
-                    title = stringResource(Res.string.md_host_peer_away_title),
-                    body = stringResource(
-                        Res.string.md_host_peer_away_body_format,
-                        playerName,
-                    ),
-                    continueLabel = stringResource(
-                        Res.string.md_host_continue_without_format,
-                        playerName,
-                    ),
-                    continueContentDescription = stringResource(
-                        Res.string.md_host_continue_without_description_format,
-                        playerName,
-                    ),
-                    leaveLabel = stringResource(Res.string.md_host_leave_session),
-                    leaveContentDescription = stringResource(
-                        Res.string.md_host_leave_session_description,
-                    ),
-                    onContinue = { confirmContinueFor = disconnectedPlayer },
-                    onLeave = { exitToHome(SessionEndReason.Cancelled) },
-                    modifier = Modifier.fillMaxSize(),
+                MafiaMultiDevicePhaseRouter(
+                    state = state,
+                    selfPlayerId = room.selfPlayerId,
+                    isHost = true,
+                    session = session,
+                    scope = scope,
+                    onBackToHome = { exitToHome(SessionEndReason.HostLeft) },
+                    modifier = modifier.fillMaxSize(),
                 )
             }
         }
-        when (val gate = startGate) {
-            HostStartGateState.Started -> Unit
             HostStartGateState.Starting,
             HostStartGateState.Exiting -> ReconnectingOverlay(
                 title = stringResource(Res.string.md_host_starting),
@@ -271,7 +264,7 @@ fun MafiaMultiDeviceHostFlow(
                 onLeave = {
                     exitToHome(SessionEndReason.Cancelled)
                 },
-                modifier = Modifier.fillMaxSize(),
+                modifier = modifier.fillMaxSize(),
             )
             is HostStartGateState.Failed -> HostDisconnectedOverlay(
                 title = stringResource(Res.string.md_host_start_failed_title),
@@ -296,8 +289,7 @@ fun MafiaMultiDeviceHostFlow(
                 onLeave = {
                     exitToHome(SessionEndReason.Cancelled)
                 },
-                modifier = Modifier.fillMaxSize(),
+                modifier = modifier.fillMaxSize(),
             )
-        }
     }
 }

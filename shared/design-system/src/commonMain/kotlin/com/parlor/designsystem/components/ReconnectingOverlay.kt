@@ -8,11 +8,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.paneTitle
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import com.parlor.designsystem.theme.ParlorTheme
 
@@ -39,9 +45,29 @@ fun ReconnectingOverlay(
         modifier = modifier
             .fillMaxSize()
             .background(colors.coverScreen)
+            .semantics {
+                paneTitle = title
+                liveRegion = LiveRegionMode.Assertive
+            }
             .padding(ParlorTheme.spacing.xl),
         contentAlignment = Alignment.Center,
     ) {
+        // The observing session remains composed behind this surface so it can
+        // report recovery. Consume blank-area pointer input here; the visible
+        // leave button is a later sibling and retains its own hit target.
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .pointerInput(Unit) {
+                    awaitPointerEventScope {
+                        while (true) {
+                            awaitPointerEvent(PointerEventPass.Initial)
+                                .changes
+                                .forEach { change -> change.consume() }
+                        }
+                    }
+                },
+        )
         Column(
             verticalArrangement = Arrangement.spacedBy(
                 ParlorTheme.spacing.l,
@@ -50,9 +76,10 @@ fun ReconnectingOverlay(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxWidth(),
         ) {
-            CircularProgressIndicator(
+            ParlorActivityIndicator(
                 modifier = Modifier.size(ParlorTheme.spacing.xxl),
                 color = colors.accentEmber,
+                trackColor = colors.borderSubtle,
                 strokeWidth = ParlorTheme.borders.strong,
             )
             Text(
@@ -60,6 +87,7 @@ fun ReconnectingOverlay(
                 style = ParlorTheme.typography.displayMedium,
                 color = colors.coverScreenTextPrimary,
                 textAlign = TextAlign.Center,
+                modifier = Modifier.semantics { heading() },
             )
             ParlorButton(
                 label = leaveLabel,

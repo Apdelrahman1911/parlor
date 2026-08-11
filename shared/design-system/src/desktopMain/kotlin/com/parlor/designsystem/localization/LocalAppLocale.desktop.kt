@@ -1,20 +1,40 @@
 package com.parlor.designsystem.localization
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.ProvidedValue
-import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import java.util.Locale
 
 /**
- * Desktop (JVM) `actual`: updates the JVM default `Locale` so Compose
- * Multiplatform's resource lookup picks the right `values-XX/`.
+ * Desktop Compose resources read the JVM default locale. The effect scopes an
+ * explicit development-target override and restores it when disposed.
  */
-private val LocalAppLocale = compositionLocalOf { Locale.getDefault().toLanguageTag() }
-private val defaultAppLocale: Locale = Locale.getDefault()
-
 @Composable
-internal actual fun appLocaleProvidedValue(value: String?): ProvidedValue<*> {
-    val newLocale = value?.let { Locale.forLanguageTag(it) } ?: defaultAppLocale
-    Locale.setDefault(newLocale)
-    return LocalAppLocale provides newLocale.toLanguageTag()
+internal actual fun PlatformAppLocale(
+    languageTag: String?,
+    content: @Composable (activeLanguageTag: String?) -> Unit,
+) {
+    var appliedLanguageTag by remember(languageTag) { mutableStateOf<String?>(null) }
+
+    DisposableEffect(languageTag) {
+        val previousLocale = Locale.getDefault()
+        val requestedLocale = languageTag?.let(Locale::forLanguageTag) ?: previousLocale
+        if (languageTag != null) Locale.setDefault(requestedLocale)
+        appliedLanguageTag = requestedLocale.toLanguageTag()
+
+        onDispose {
+            if (
+                languageTag != null &&
+                Locale.getDefault().toLanguageTag() == requestedLocale.toLanguageTag()
+            ) {
+                Locale.setDefault(previousLocale)
+            }
+        }
+    }
+
+    val activeTag = appliedLanguageTag ?: return
+    content(activeTag)
 }

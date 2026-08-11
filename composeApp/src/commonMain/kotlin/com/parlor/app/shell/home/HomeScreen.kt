@@ -17,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
@@ -133,7 +134,7 @@ private fun HomeTopBar(onSettings: () -> Unit) {
             modifier = Modifier
                 .heightIn(min = ParlorTheme.spacing.xxl)
                 .semantics { contentDescription = settingsDescription }
-                .clickable(onClick = onSettings)
+                .clickable(role = Role.Button, onClick = onSettings)
                 .padding(ParlorTheme.spacing.s),
         )
     }
@@ -182,7 +183,7 @@ private fun ResumeTile(
         modifier = Modifier
             .fillMaxWidth()
             .semantics { this.contentDescription = contentDescription }
-            .clickable(onClick = onTap),
+            .clickable(role = Role.Button, onClick = onTap),
         cornerRadius = ParlorTheme.radii.card,
         contentPadding = ParlorTheme.spacing.l,
     ) {

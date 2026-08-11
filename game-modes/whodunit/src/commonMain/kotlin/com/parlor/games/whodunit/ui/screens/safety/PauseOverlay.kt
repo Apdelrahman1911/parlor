@@ -17,6 +17,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.paneTitle
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ParlorButton
@@ -51,8 +54,9 @@ import org.jetbrains.compose.resources.stringResource
  * - **End Game** — open a confirmation that deletes the snapshot and returns
  *   to Home.
  *
- * The overlay is fullscreen-modal: the underlying in-game screen is dimmed
- * but tapping it does nothing. Players must choose one of the actions.
+ * The caller replaces the in-game screen with this fullscreen modal, so no
+ * private gameplay content or stale action remains exposed behind it. Players
+ * must choose one of the actions.
  */
 @Composable
 fun PauseOverlay(
@@ -62,8 +66,24 @@ fun PauseOverlay(
     modifier: Modifier = Modifier,
 ) {
     var endConfirmOpen by remember { mutableStateOf(false) }
+    if (endConfirmOpen) {
+        EndGameConfirmDialog(
+            onConfirmEndNow = {
+                endConfirmOpen = false
+                onEndNow()
+            },
+            onCancel = { endConfirmOpen = false },
+            modifier = modifier,
+        )
+        return
+    }
 
-    Box(modifier = modifier.fillMaxSize()) {
+    val title = stringResource(Res.string.pause_title)
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .semantics { paneTitle = title },
+    ) {
         // Dim the background. The pause card sits in the center.
         Box(
             modifier = Modifier
@@ -87,7 +107,10 @@ fun PauseOverlay(
                 Column(
                     verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m),
                 ) {
-                    EyebrowLabel(text = stringResource(Res.string.pause_title))
+                    EyebrowLabel(
+                        text = title,
+                        modifier = Modifier.semantics { heading() },
+                    )
                     Text(
                         text = stringResource(Res.string.pause_body),
                         style = ParlorTheme.typography.bodyLarge,
@@ -121,16 +144,6 @@ fun PauseOverlay(
                 }
             }
         }
-
-        if (endConfirmOpen) {
-            EndGameConfirmDialog(
-                onConfirmEndNow = {
-                    endConfirmOpen = false
-                    onEndNow()
-                },
-                onCancel = { endConfirmOpen = false },
-            )
-        }
     }
 }
 
@@ -138,8 +151,14 @@ fun PauseOverlay(
 private fun EndGameConfirmDialog(
     onConfirmEndNow: () -> Unit,
     onCancel: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    Box(modifier = Modifier.fillMaxSize()) {
+    val title = stringResource(Res.string.endgame_title)
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .semantics { paneTitle = title },
+    ) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -160,11 +179,13 @@ private fun EndGameConfirmDialog(
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m)) {
                     Text(
-                        text = stringResource(Res.string.endgame_title),
+                        text = title,
                         style = ParlorTheme.typography.displayMedium,
                         color = ParlorTheme.colors.textPrimary,
                         textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .semantics { heading() },
                     )
                     Text(
                         text = stringResource(Res.string.endgame_body),

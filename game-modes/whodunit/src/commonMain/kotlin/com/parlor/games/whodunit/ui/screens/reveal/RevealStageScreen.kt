@@ -1,6 +1,5 @@
 package com.parlor.games.whodunit.ui.screens.reveal
 
-import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -74,6 +73,7 @@ fun RevealStageScreen(
 ) {
     val colors = ParlorTheme.colors
     val reduced = ParlorTheme.reducedMotion
+    val motion = ParlorTheme.motion
     // Capture the verdict in a local so the smart cast in the nested `when`
     // is anchored to one stable read. The previous code branched three times
     // on the parameter; on Kotlin/Native an incremental rebuild occasionally
@@ -112,25 +112,34 @@ fun RevealStageScreen(
     var stage by remember { mutableStateOf(if (reduced) 2 else 0) }
     LaunchedEffect(reduced) {
         if (reduced) return@LaunchedEffect
-        delay(220L)
+        delay(motion.durationFast.toLong())
         stage = 1
-        delay(540L)
+        delay(motion.durationSlow.toLong())
         stage = 2
     }
 
     val accentLineProgress by animateFloatAsState(
         targetValue = if (stage >= 1) 1f else 0f,
-        animationSpec = tween(durationMillis = 540, easing = LinearOutSlowInEasing),
+        animationSpec = tween(
+            durationMillis = motion.durationSlow,
+            easing = motion.easingTheatrical,
+        ),
         label = "reveal-accent-line",
     )
     val cardAlpha by animateFloatAsState(
         targetValue = if (stage >= 1) 1f else 0f,
-        animationSpec = tween(durationMillis = 460),
+        animationSpec = tween(
+            durationMillis = motion.durationSlow,
+            easing = motion.easingStandard,
+        ),
         label = "reveal-card-alpha",
     )
     val narrativeAlpha by animateFloatAsState(
         targetValue = if (stage >= 2) 1f else 0f,
-        animationSpec = tween(durationMillis = 520),
+        animationSpec = tween(
+            durationMillis = motion.durationSlow,
+            easing = motion.easingStandard,
+        ),
         label = "reveal-narrative-alpha",
     )
 

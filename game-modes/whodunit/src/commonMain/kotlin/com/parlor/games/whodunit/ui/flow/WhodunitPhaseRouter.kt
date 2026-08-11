@@ -566,78 +566,80 @@ private fun LocalCharacterRevealSegment(
         }
     }
 
-    Box(modifier = modifier.fillMaxSize()) {
-        when (stage) {
-            RevealStage.Handoff -> CharacterRevealHandoffScreen(
-                playerName = currentPlayer.displayName,
-                onContinue = { stage = RevealStage.Gate },
-                modifier = Modifier.fillMaxSize(),
-            )
-            RevealStage.Gate -> CharacterRevealGateScreen(
-                playerName = currentPlayer.displayName,
-                onRevealed = {
-                    scope.launch {
-                        session.submit(
-                            WhodunitAction.StartCharacterReveal(
-                                currentPlayer.id,
-                                roleAssignmentGeneration,
+    if (privacyOpen) {
+        PrivacyConcernDialog(
+            policy = PrivacyConcernUiPolicy.HostMayReroll,
+            onContinue = { privacyOpen = false },
+            onReroll = {
+                privacyOpen = false
+                scope.launch { session.submit(WhodunitAction.RequestReroll) }
+            },
+            modifier = modifier.fillMaxSize(),
+        )
+    } else {
+        Box(modifier = modifier.fillMaxSize()) {
+            when (stage) {
+                RevealStage.Handoff -> CharacterRevealHandoffScreen(
+                    playerName = currentPlayer.displayName,
+                    onContinue = { stage = RevealStage.Gate },
+                    modifier = Modifier.fillMaxSize(),
+                )
+                RevealStage.Gate -> CharacterRevealGateScreen(
+                    playerName = currentPlayer.displayName,
+                    onRevealed = {
+                        scope.launch {
+                            session.submit(
+                                WhodunitAction.StartCharacterReveal(
+                                    currentPlayer.id,
+                                    roleAssignmentGeneration,
+                                )
                             )
+                        }
+                    },
+                    modifier = Modifier.fillMaxSize(),
+                )
+                RevealStage.Dossier -> {
+                    if (!dossierUnlocked || character == null || role == null) {
+                        LoadingScreen(Modifier.fillMaxSize())
+                    } else {
+                        DossierRevealScreen(
+                            character = character,
+                            role = role,
+                            onDone = { stage = RevealStage.Hide },
+                            modifier = Modifier.fillMaxSize(),
+                            allCharacters = payload.characters,
+                            deflectionTargets = privateData.deflectionTargets,
                         )
                     }
-                },
-                modifier = Modifier.fillMaxSize(),
-            )
-            RevealStage.Dossier -> {
-                if (!dossierUnlocked || character == null || role == null) {
-                    LoadingScreen(Modifier.fillMaxSize())
-                } else {
-                    DossierRevealScreen(
-                        character = character,
-                        role = role,
-                        onDone = { stage = RevealStage.Hide },
-                        modifier = Modifier.fillMaxSize(),
-                        allCharacters = payload.characters,
-                        deflectionTargets = privateData.deflectionTargets,
-                    )
                 }
-            }
-            RevealStage.Hide -> HideAndPassScreen(
-                nextPlayerName = nextPlayer?.displayName,
-                onTap = {
-                    scope.launch {
-                        session.setActiveViewer(ViewerContext.Public)
-                        session.submit(
-                            WhodunitAction.CompleteCharacterReveal(
-                                currentPlayer.id,
-                                roleAssignmentGeneration,
+                RevealStage.Hide -> HideAndPassScreen(
+                    nextPlayerName = nextPlayer?.displayName,
+                    onTap = {
+                        scope.launch {
+                            session.setActiveViewer(ViewerContext.Public)
+                            session.submit(
+                                WhodunitAction.CompleteCharacterReveal(
+                                    currentPlayer.id,
+                                    roleAssignmentGeneration,
+                                )
                             )
-                        )
-                    }
-                    // The keyed remember(currentPlayer.id) resets `stage` to
-                    // Handoff when the cursor advances on recomposition.
-                },
-                modifier = Modifier.fillMaxSize(),
-            )
-        }
+                        }
+                        // The keyed remember(currentPlayer.id) resets `stage` to
+                        // Handoff when the cursor advances on recomposition.
+                    },
+                    modifier = Modifier.fillMaxSize(),
+                )
+            }
 
-        if (stage == RevealStage.Handoff || stage == RevealStage.Hide) {
-            PrivacyConcernAffordance(
-                onOpen = { privacyOpen = true },
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(ParlorTheme.spacing.l),
-            )
-        }
+            if (stage == RevealStage.Handoff || stage == RevealStage.Hide) {
+                PrivacyConcernAffordance(
+                    onOpen = { privacyOpen = true },
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(ParlorTheme.spacing.l),
+                )
+            }
 
-        if (privacyOpen) {
-            PrivacyConcernDialog(
-                policy = PrivacyConcernUiPolicy.HostMayReroll,
-                onContinue = { privacyOpen = false },
-                onReroll = {
-                    privacyOpen = false
-                    scope.launch { session.submit(WhodunitAction.RequestReroll) }
-                },
-            )
         }
     }
 }
@@ -735,80 +737,82 @@ private fun SelfCharacterRevealSegment(
         }
     }
 
-    Box(modifier = modifier.fillMaxSize()) {
-        when (stage) {
-            RevealStage.Handoff -> CharacterRevealHandoffScreen(
-                playerName = selfPlayer.displayName,
-                onContinue = { stage = RevealStage.Gate },
-                modifier = Modifier.fillMaxSize(),
-            )
-            RevealStage.Gate -> CharacterRevealGateScreen(
-                playerName = selfPlayer.displayName,
-                onRevealed = {
-                    scope.launch {
-                        session.submit(
-                            WhodunitAction.StartCharacterReveal(
-                                selfPlayer.id,
-                                roleAssignmentGeneration,
-                            )
-                        )
-                    }
-                },
-                modifier = Modifier.fillMaxSize(),
-            )
-            RevealStage.Dossier -> {
-                if (!dossierUnlocked || character == null || role == null) {
-                    LoadingScreen(Modifier.fillMaxSize())
-                } else {
-                    DossierRevealScreen(
-                        character = character,
-                        role = role,
-                        onDone = { stage = RevealStage.Hide },
-                        modifier = Modifier.fillMaxSize(),
-                        allCharacters = payload.characters,
-                        deflectionTargets = privateData.deflectionTargets,
-                    )
+    if (privacyOpen) {
+        PrivacyConcernDialog(
+            policy = privacyPolicy,
+            onContinue = { privacyOpen = false },
+            onReroll = if (privacyPolicy == PrivacyConcernUiPolicy.HostMayReroll) {
+                {
+                    privacyOpen = false
+                    scope.launch { session.submit(WhodunitAction.RequestReroll) }
                 }
-            }
-            RevealStage.Hide -> HideAndPassScreen(
-                nextPlayerName = null,
-                onTap = {
-                    scope.launch {
-                        session.setActiveViewer(ViewerContext.Public)
-                        session.submit(
-                            WhodunitAction.CompleteCharacterReveal(
-                                selfPlayer.id,
-                                roleAssignmentGeneration,
+            } else {
+                null
+            },
+            modifier = modifier.fillMaxSize(),
+        )
+    } else {
+        Box(modifier = modifier.fillMaxSize()) {
+            when (stage) {
+                RevealStage.Handoff -> CharacterRevealHandoffScreen(
+                    playerName = selfPlayer.displayName,
+                    onContinue = { stage = RevealStage.Gate },
+                    modifier = Modifier.fillMaxSize(),
+                )
+                RevealStage.Gate -> CharacterRevealGateScreen(
+                    playerName = selfPlayer.displayName,
+                    onRevealed = {
+                        scope.launch {
+                            session.submit(
+                                WhodunitAction.StartCharacterReveal(
+                                    selfPlayer.id,
+                                    roleAssignmentGeneration,
+                                )
                             )
+                        }
+                    },
+                    modifier = Modifier.fillMaxSize(),
+                )
+                RevealStage.Dossier -> {
+                    if (!dossierUnlocked || character == null || role == null) {
+                        LoadingScreen(Modifier.fillMaxSize())
+                    } else {
+                        DossierRevealScreen(
+                            character = character,
+                            role = role,
+                            onDone = { stage = RevealStage.Hide },
+                            modifier = Modifier.fillMaxSize(),
+                            allCharacters = payload.characters,
+                            deflectionTargets = privateData.deflectionTargets,
                         )
                     }
-                },
-                modifier = Modifier.fillMaxSize(),
-            )
-        }
+                }
+                RevealStage.Hide -> HideAndPassScreen(
+                    nextPlayerName = null,
+                    onTap = {
+                        scope.launch {
+                            session.setActiveViewer(ViewerContext.Public)
+                            session.submit(
+                                WhodunitAction.CompleteCharacterReveal(
+                                    selfPlayer.id,
+                                    roleAssignmentGeneration,
+                                )
+                            )
+                        }
+                    },
+                    modifier = Modifier.fillMaxSize(),
+                )
+            }
 
-        if (stage == RevealStage.Handoff || stage == RevealStage.Hide) {
-            PrivacyConcernAffordance(
-                onOpen = { privacyOpen = true },
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(ParlorTheme.spacing.l),
-            )
-        }
+            if (stage == RevealStage.Handoff || stage == RevealStage.Hide) {
+                PrivacyConcernAffordance(
+                    onOpen = { privacyOpen = true },
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(ParlorTheme.spacing.l),
+                )
+            }
 
-        if (privacyOpen) {
-            PrivacyConcernDialog(
-                policy = privacyPolicy,
-                onContinue = { privacyOpen = false },
-                onReroll = if (privacyPolicy == PrivacyConcernUiPolicy.HostMayReroll) {
-                    {
-                        privacyOpen = false
-                        scope.launch { session.submit(WhodunitAction.RequestReroll) }
-                    }
-                } else {
-                    null
-                },
-            )
         }
     }
 }
@@ -1018,7 +1022,7 @@ private fun VoteSegment(
             }
             HideScreen(
                 line = stringResource(Res.string.whodunit_vote_counting),
-                onTap = {},
+                onTap = null,
                 modifier = modifier,
             )
             return
@@ -1026,7 +1030,7 @@ private fun VoteSegment(
         VoteTurnPresentation.WaitingForHostTally -> {
             HideScreen(
                 line = stringResource(Res.string.whodunit_vote_counting),
-                onTap = {},
+                onTap = null,
                 modifier = modifier,
             )
             return

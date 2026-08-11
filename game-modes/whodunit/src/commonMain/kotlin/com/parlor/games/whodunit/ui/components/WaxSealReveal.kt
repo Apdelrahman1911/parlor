@@ -28,6 +28,9 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.onClick
+import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import com.parlor.designsystem.theme.ParlorTheme
@@ -57,8 +60,10 @@ fun WaxSealReveal(
     modifier: Modifier = Modifier,
     holdMs: Long = 1500L,
 ) {
+    require(holdMs > 0L) { "holdMs must be positive" }
     val colors = ParlorTheme.colors
     val reduced = ParlorTheme.reducedMotion
+    val motion = ParlorTheme.motion
     val a11y = stringResource(Res.string.reveal_gate_a11y)
     val reduceMotionHint = stringResource(Res.string.reveal_gate_reduce_motion_hint)
 
@@ -70,11 +75,15 @@ fun WaxSealReveal(
 
     val pressScale by animateFloatAsState(
         targetValue = when {
+            reduced -> 1f
             completed -> 1.10f
             pressing -> 1.04f
             else -> 1f
         },
-        animationSpec = tween(durationMillis = 240),
+        animationSpec = tween(
+            durationMillis = motion.durationFast,
+            easing = motion.easingStandard,
+        ),
         label = "reveal-press-scale",
     )
 
@@ -100,7 +109,7 @@ fun WaxSealReveal(
     // callback and strand the ceremony in a completed-but-unadvanced state.
     LaunchedEffect(completed) {
         if (!completed) return@LaunchedEffect
-        if (!reduced) delay(180L)
+        if (!reduced) delay(motion.durationFast.toLong())
         currentOnRevealed()
     }
 
@@ -120,7 +129,7 @@ fun WaxSealReveal(
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .size(ringDiameter)
-                .pointerInput(reduced) {
+                .pointerInput(reduced, completed, holdMs) {
                     detectTapGestures(
                         onPress = {
                             if (reduced || completed) return@detectTapGestures
@@ -136,7 +145,18 @@ fun WaxSealReveal(
                         },
                     )
                 }
-                .semantics { contentDescription = a11y },
+                .semantics {
+                    contentDescription = a11y
+                    role = Role.Button
+                    onClick(label = a11y) {
+                        if (completed || !completionGate.tryComplete()) {
+                            false
+                        } else {
+                            completed = true
+                            true
+                        }
+                    }
+                },
         ) {
             // Progress ring — hairline circular stroke that fills clockwise.
             Canvas(modifier = Modifier.size(ringDiameter)) {

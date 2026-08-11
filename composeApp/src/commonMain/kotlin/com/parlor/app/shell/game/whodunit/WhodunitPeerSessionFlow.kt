@@ -25,6 +25,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.style.TextAlign
 import com.parlor.app.resources.Res
 import com.parlor.app.resources.party_offline_banner
@@ -305,68 +306,74 @@ fun WhodunitPeerSessionFlow(
         )
     } else {
         Box(modifier = modifier.fillMaxSize()) {
-            Column(modifier = Modifier.fillMaxSize()) {
-                if (selfOffline) {
-                    OfflineBanner(label = stringResource(Res.string.party_offline_banner))
-                }
-                Box(modifier = Modifier.fillMaxSize()) {
-                    when {
-                        renderedCaseError != null -> PeerErrorState(
-                            error = dataErrorMessage(renderedCaseError),
-                            onRetry = retryConnection.takeIf { joinError == null },
-                            onBack = finalBackToLibrary,
-                            actionsEnabled = !finalLeaveInFlight && !retryInFlight,
-                            backInFlight = finalLeaveInFlight,
-                            retryInFlight = retryInFlight,
-                            modifier = Modifier.fillMaxSize(),
-                        )
-                        renderedJoinError != null -> PeerErrorState(
-                            error = netErrorMessage(renderedJoinError),
-                            onRetry = retryConnection.takeIf { joinError == null },
-                            onOpenNetworkSettings = onOpenNetworkSettings.takeIf {
-                                localNetworkAccess.needsRecoveryGuidance
-                            },
-                            showNetworkRecovery = localNetworkAccess.needsRecoveryGuidance,
-                            onBack = finalBackToLibrary,
-                            actionsEnabled = !finalLeaveInFlight && !retryInFlight,
-                            backInFlight = finalLeaveInFlight,
-                            retryInFlight = retryInFlight,
-                            modifier = Modifier.fillMaxSize(),
-                        )
-                        current == null -> PeerConnectingState(
-                            code = code,
-                            resuming = resumeExistingSession,
-                            onLeave = finalBackToLibrary,
-                            leaveEnabled = !finalLeaveInFlight,
-                            leaveInFlight = finalLeaveInFlight,
-                            modifier = Modifier.fillMaxSize(),
-                        )
-                        start == null -> PeerWaitingForHostStart(
-                            current,
-                            peerName,
-                            modifier = Modifier.fillMaxSize(),
-                            onLeave = finalBackToLibrary,
-                        )
-                        else -> PeerSessionWithCase(
-                            room = current,
-                            ownedSession = checkNotNull(ownedSession),
-                            start = start,
-                            onBackToLibrary = finalBackToLibrary,
-                            modifier = Modifier.fillMaxSize(),
-                            onHostLostChanged = { hostLost = it },
-                            onSelfOfflineChanged = { selfOffline = it },
-                        )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .then(if (hostLost) Modifier.clearAndSetSemantics { } else Modifier),
+            ) {
+                Column(modifier = Modifier.fillMaxSize()) {
+                    if (selfOffline) {
+                        OfflineBanner(label = stringResource(Res.string.party_offline_banner))
+                    }
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        when {
+                            renderedCaseError != null -> PeerErrorState(
+                                error = dataErrorMessage(renderedCaseError),
+                                onRetry = retryConnection.takeIf { joinError == null },
+                                onBack = finalBackToLibrary,
+                                actionsEnabled = !finalLeaveInFlight && !retryInFlight,
+                                backInFlight = finalLeaveInFlight,
+                                retryInFlight = retryInFlight,
+                                modifier = Modifier.fillMaxSize(),
+                            )
+                            renderedJoinError != null -> PeerErrorState(
+                                error = netErrorMessage(renderedJoinError),
+                                onRetry = retryConnection.takeIf { joinError == null },
+                                onOpenNetworkSettings = onOpenNetworkSettings.takeIf {
+                                    localNetworkAccess.needsRecoveryGuidance
+                                },
+                                showNetworkRecovery = localNetworkAccess.needsRecoveryGuidance,
+                                onBack = finalBackToLibrary,
+                                actionsEnabled = !finalLeaveInFlight && !retryInFlight,
+                                backInFlight = finalLeaveInFlight,
+                                retryInFlight = retryInFlight,
+                                modifier = Modifier.fillMaxSize(),
+                            )
+                            current == null -> PeerConnectingState(
+                                code = code,
+                                resuming = resumeExistingSession,
+                                onLeave = finalBackToLibrary,
+                                leaveEnabled = !finalLeaveInFlight,
+                                leaveInFlight = finalLeaveInFlight,
+                                modifier = Modifier.fillMaxSize(),
+                            )
+                            start == null -> PeerWaitingForHostStart(
+                                current,
+                                peerName,
+                                modifier = Modifier.fillMaxSize(),
+                                onLeave = finalBackToLibrary,
+                            )
+                            else -> PeerSessionWithCase(
+                                room = current,
+                                ownedSession = checkNotNull(ownedSession),
+                                start = start,
+                                onBackToLibrary = finalBackToLibrary,
+                                modifier = Modifier.fillMaxSize(),
+                                onHostLostChanged = { hostLost = it },
+                                onSelfOfflineChanged = { selfOffline = it },
+                            )
+                        }
                     }
                 }
-            }
-            if (gameIsActive && !hostLost) {
-                SessionExitAffordance(
-                    onClick = { leaveConfirmationOpen = true },
-                    modifier = Modifier
-                        .align(Alignment.TopStart)
-                        .windowInsetsPadding(WindowInsets.statusBars)
-                        .padding(ParlorTheme.spacing.m),
-                )
+                if (gameIsActive && !hostLost) {
+                    SessionExitAffordance(
+                        onClick = { leaveConfirmationOpen = true },
+                        modifier = Modifier
+                            .align(Alignment.TopStart)
+                            .windowInsetsPadding(WindowInsets.statusBars)
+                            .padding(ParlorTheme.spacing.m),
+                    )
+                }
             }
             if (hostLost) {
                 ReconnectingOverlay(

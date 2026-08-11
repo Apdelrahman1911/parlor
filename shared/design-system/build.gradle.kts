@@ -15,6 +15,10 @@ kotlin {
         commonTest.dependencies {
             implementation(kotlin("test"))
             implementation(libs.assertk)
+            implementation(libs.kotlinx.coroutines.test)
+        }
+        desktopTest.dependencies {
+            implementation(compose.desktop.currentOs)
         }
     }
 }

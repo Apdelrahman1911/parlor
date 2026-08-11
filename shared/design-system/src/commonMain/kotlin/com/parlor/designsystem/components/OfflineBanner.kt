@@ -6,11 +6,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.semantics
 import com.parlor.designsystem.theme.ParlorTheme
 
 /**
@@ -34,6 +36,7 @@ fun OfflineBanner(
         modifier = modifier
             .fillMaxWidth()
             .background(colors.accentBrass)
+            .semantics { liveRegion = LiveRegionMode.Polite }
             .padding(
                 horizontal = ParlorTheme.spacing.l,
                 vertical = ParlorTheme.spacing.s,
@@ -41,9 +44,10 @@ fun OfflineBanner(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s),
     ) {
-        CircularProgressIndicator(
+        ParlorActivityIndicator(
             modifier = Modifier.size(ParlorTheme.spacing.m),
             color = colors.textOnAccent,
+            trackColor = colors.textOnAccent.copy(alpha = OFFLINE_TRACK_ALPHA),
             strokeWidth = ParlorTheme.borders.regular,
         )
         Text(
@@ -53,3 +57,5 @@ fun OfflineBanner(
         )
     }
 }
+
+private const val OFFLINE_TRACK_ALPHA: Float = 0.35f

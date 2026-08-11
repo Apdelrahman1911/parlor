@@ -13,15 +13,21 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.paneTitle
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import com.parlor.designsystem.theme.ParlorTheme
 
 /**
  * Host-facing recovery surface for a temporarily disconnected player.
  *
- * The game remains mounted behind this surface. The host can wait for the
- * rejoin grace period or explicitly drop the seat through the game reducer;
- * the caller owns the confirmation step and lifecycle action.
+ * The caller replaces interactive gameplay with this surface while keeping
+ * the process-owned session runtime alive. The host can wait for the rejoin
+ * grace period or explicitly drop the seat through the game reducer; the
+ * caller owns the confirmation step and lifecycle action.
  */
 @Composable
 fun HostDisconnectedOverlay(
@@ -40,6 +46,10 @@ fun HostDisconnectedOverlay(
         modifier = modifier
             .fillMaxSize()
             .background(colors.coverScreen)
+            .semantics {
+                paneTitle = title
+                liveRegion = LiveRegionMode.Assertive
+            }
             .padding(ParlorTheme.spacing.xl),
         contentAlignment = Alignment.Center,
     ) {
@@ -55,6 +65,7 @@ fun HostDisconnectedOverlay(
                 style = ParlorTheme.typography.displayMedium,
                 color = colors.coverScreenTextPrimary,
                 textAlign = TextAlign.Center,
+                modifier = Modifier.semantics { heading() },
             )
             Text(
                 text = body,

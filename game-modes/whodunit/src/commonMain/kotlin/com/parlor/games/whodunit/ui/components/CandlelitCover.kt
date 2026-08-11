@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import com.parlor.designsystem.theme.ParlorTheme
 
@@ -30,7 +31,7 @@ fun CandlelitCover(
         modifier = modifier
             .fillMaxSize()
             .background(ParlorTheme.colors.coverScreen)
-            .clickable { onDismiss() },
+            .clickable(role = Role.Button, onClick = onDismiss),
     ) {
         Column(
             modifier = Modifier
@@ -61,14 +62,20 @@ fun CandlelitCover(
 @Composable
 fun HideScreen(
     line: String,
-    onTap: () -> Unit,
+    onTap: (() -> Unit)?,
     modifier: Modifier = Modifier,
 ) {
     Box(
         modifier = modifier
             .fillMaxSize()
             .background(ParlorTheme.colors.coverScreen)
-            .clickable { onTap() },
+            .then(
+                if (onTap != null) {
+                    Modifier.clickable(role = Role.Button, onClick = onTap)
+                } else {
+                    Modifier
+                },
+            ),
         contentAlignment = Alignment.Center,
     ) {
         Text(

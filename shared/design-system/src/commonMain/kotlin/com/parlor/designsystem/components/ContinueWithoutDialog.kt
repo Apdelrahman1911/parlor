@@ -16,6 +16,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.paneTitle
+import androidx.compose.ui.semantics.semantics
 import com.parlor.designsystem.theme.ParlorTheme
 
 /**
@@ -27,8 +30,8 @@ import com.parlor.designsystem.theme.ParlorTheme
  * Localization: every text comes in pre-formatted. The "%1$s" in the
  * EN/AR strings is interpolated by the caller against the offline
  * player's display name. Button order respects platform convention
- * (Cancel start, Confirm end in LTR; flips in RTL because the Row
- * uses spacedBy without explicit alignment).
+ * (Cancel start, Confirm end in LTR; logical start/end placement mirrors in
+ * RTL through the ambient layout direction).
  */
 @Composable
 fun ContinueWithoutDialog(
@@ -46,6 +49,7 @@ fun ContinueWithoutDialog(
         modifier = modifier
             .fillMaxSize()
             .background(colors.coverScreen)
+            .semantics { paneTitle = title }
             .padding(ParlorTheme.spacing.l),
         contentAlignment = Alignment.Center,
     ) {
@@ -62,6 +66,7 @@ fun ContinueWithoutDialog(
                 text = title,
                 style = ParlorTheme.typography.displayMedium,
                 color = colors.textPrimary,
+                modifier = Modifier.semantics { heading() },
             )
             Text(
                 text = body,
@@ -84,7 +89,7 @@ fun ContinueWithoutDialog(
                     contentDescription = confirmContentDescription,
                     onClick = onConfirm,
                     modifier = Modifier.weight(1f),
-                    variant = ParlorButtonVariant.Primary,
+                    variant = ParlorButtonVariant.Destructive,
                 )
             }
         }

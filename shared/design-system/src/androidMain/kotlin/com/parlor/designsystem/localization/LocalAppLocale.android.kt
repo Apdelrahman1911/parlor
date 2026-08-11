@@ -1,28 +1,72 @@
 package com.parlor.designsystem.localization
 
+import android.content.res.Configuration
+import android.os.LocaleList
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.ProvidedValue
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import java.util.Locale
 
 /**
- * Android `actual`: updates `Configuration` + the JVM default `Locale` so
- * Compose Multiplatform's resource lookup picks the right `values-XX/`.
- *
- * The first time `provides` is invoked we snapshot the original Locale so
- * passing `null` later restores the system default.
+ * Compose resources read [Locale.getDefault], so an explicit in-app language
+ * requires a process-locale override. The mutation is owned by
+ * [DisposableEffect], restored on disposal, and paired with a scoped Android
+ * configuration for framework/Material resources. No shared Resources object
+ * is mutated.
  */
-private val defaultAppLocale: Locale = Locale.getDefault()
-
 @Composable
-internal actual fun appLocaleProvidedValue(value: String?): ProvidedValue<*> {
-    val configuration = LocalConfiguration.current
-    val newLocale = value?.let { Locale.forLanguageTag(it) } ?: defaultAppLocale
-    Locale.setDefault(newLocale)
-    configuration.setLocale(newLocale)
-    val resources = LocalContext.current.resources
-    @Suppress("DEPRECATION")
-    resources.updateConfiguration(configuration, resources.displayMetrics)
-    return LocalConfiguration provides configuration
+internal actual fun PlatformAppLocale(
+    languageTag: String?,
+    content: @Composable (activeLanguageTag: String?) -> Unit,
+) {
+    val baseContext = LocalContext.current
+    val baseConfiguration = LocalConfiguration.current
+    val systemLocale = baseConfiguration.locales[0]
+    val requestedLocale = remember(languageTag, systemLocale) {
+        languageTag?.let(Locale::forLanguageTag) ?: systemLocale
+    }
+    var appliedLanguageTag by remember(languageTag, systemLocale) {
+        mutableStateOf<String?>(null)
+    }
+
+    DisposableEffect(languageTag, requestedLocale) {
+        val previousLocale = Locale.getDefault()
+        val previousLocaleList = LocaleList.getDefault()
+        if (languageTag != null) {
+            Locale.setDefault(requestedLocale)
+            LocaleList.setDefault(LocaleList(requestedLocale))
+        }
+        appliedLanguageTag = requestedLocale.toLanguageTag()
+
+        onDispose {
+            if (
+                languageTag != null &&
+                Locale.getDefault().toLanguageTag() == requestedLocale.toLanguageTag()
+            ) {
+                Locale.setDefault(previousLocale)
+                LocaleList.setDefault(previousLocaleList)
+            }
+        }
+    }
+
+    val activeTag = appliedLanguageTag ?: return
+    val localizedConfiguration = remember(baseConfiguration, activeTag) {
+        Configuration(baseConfiguration).apply { setLocale(requestedLocale) }
+    }
+    val localizedContext = remember(baseContext, localizedConfiguration) {
+        baseContext.createConfigurationContext(localizedConfiguration)
+    }
+
+    CompositionLocalProvider(
+        LocalConfiguration provides localizedConfiguration,
+        LocalContext provides localizedContext,
+    ) {
+        content(activeTag)
+    }
 }

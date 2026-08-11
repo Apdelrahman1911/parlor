@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -38,6 +39,7 @@ import com.parlor.app.resources.settings_experience_label
 import com.parlor.app.resources.settings_language_arabic
 import com.parlor.app.resources.settings_language_english
 import com.parlor.app.resources.settings_language_label
+import com.parlor.app.resources.settings_language_system
 import com.parlor.app.resources.settings_reduced_motion_description
 import com.parlor.app.resources.settings_reduced_motion_title
 import com.parlor.app.resources.settings_save_failed
@@ -84,7 +86,7 @@ fun SettingsScreen(
     val themeModeTag by settings.themeMode.collectAsState(initial = ThemeMode.Default.tag)
     val reducedMotion by settings.reducedMotion.collectAsState(initial = false)
 
-    val currentLanguage = AppLanguage.fromTag(languageTag)
+    val currentLanguage = languageTag?.let(AppLanguage::fromTag)
     val currentThemeMode = ThemeMode.fromTag(themeModeTag)
 
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
@@ -101,7 +103,17 @@ fun SettingsScreen(
                 backContentDescription = stringResource(Res.string.settings_back_description),
             )
 
-            SettingsSection(label = stringResource(Res.string.settings_language_label)) {
+            SettingsSection(
+                label = stringResource(Res.string.settings_language_label),
+                selectableGroup = true,
+            ) {
+                LanguageOption(
+                    label = stringResource(Res.string.settings_language_system),
+                    selected = currentLanguage == null,
+                    onSelected = {
+                        mutations.submit { settings.setLanguageOverride(null) }
+                    },
+                )
                 LanguageOption(
                     label = stringResource(Res.string.settings_language_english),
                     selected = currentLanguage == AppLanguage.English,
@@ -118,7 +130,10 @@ fun SettingsScreen(
                 )
             }
 
-            SettingsSection(label = stringResource(Res.string.settings_appearance_label)) {
+            SettingsSection(
+                label = stringResource(Res.string.settings_appearance_label),
+                selectableGroup = true,
+            ) {
                 AppearanceOption(
                     label = stringResource(Res.string.settings_appearance_system),
                     selected = currentThemeMode == ThemeMode.System,
@@ -161,6 +176,7 @@ fun SettingsScreen(
 @Composable
 private fun SettingsSection(
     label: String,
+    selectableGroup: Boolean = false,
     content: @Composable () -> Unit,
 ) {
     ParlorCard(
@@ -169,7 +185,10 @@ private fun SettingsSection(
         cornerRadius = ParlorTheme.radii.elevated,
         contentPadding = ParlorTheme.spacing.l,
     ) {
-        Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m)) {
+        Column(
+            modifier = if (selectableGroup) Modifier.selectableGroup() else Modifier,
+            verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m),
+        ) {
             Text(
                 text = label.uppercase(),
                 style = ParlorTheme.typography.labelSmall,

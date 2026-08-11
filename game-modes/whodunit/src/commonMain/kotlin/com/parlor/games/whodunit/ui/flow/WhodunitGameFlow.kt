@@ -1,6 +1,7 @@
 package com.parlor.games.whodunit.ui.flow
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,6 +14,11 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Text
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.paneTitle
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -882,6 +888,13 @@ private fun SessionDrivenFlow(
             destructive = false,
             modifier = modifier,
         )
+    } else if (state.public.paused) {
+        PauseOverlay(
+            onResume = { scope.launch { session.submit(WhodunitAction.Resume) } },
+            onResumeLater = { exitAfterFlush() },
+            onEndNow = { requestExit(true) },
+            modifier = modifier,
+        )
     } else {
         Box(modifier = modifier.fillMaxSize()) {
             HostPhaseRouter(
@@ -899,8 +912,7 @@ private fun SessionDrivenFlow(
             // Pause chrome — visible on every in-game screen except during the
             // overlay itself. Tapping it submits the Pause action; the reducer
             // flips public.paused, the snapshot writer fires on PauseEngaged.
-            if (!state.public.paused &&
-                state.phase is WhodunitPhase.Round &&
+            if (state.phase is WhodunitPhase.Round &&
                 state.public.voteState !is VoteState.Collecting
             ) {
                 PauseAffordance(
@@ -912,21 +924,13 @@ private fun SessionDrivenFlow(
                 )
             }
 
-            if (!state.public.paused && state.phase !is WhodunitPhase.PostGame) {
+            if (state.phase !is WhodunitPhase.PostGame) {
                 SessionExitAffordance(
                     onClick = { exitConfirmationOpen = true },
                     modifier = Modifier
                         .align(Alignment.TopStart)
                         .windowInsetsPadding(WindowInsets.statusBars)
                         .padding(ParlorTheme.spacing.m),
-                )
-            }
-
-            if (state.public.paused) {
-                PauseOverlay(
-                    onResume = { scope.launch { session.submit(WhodunitAction.Resume) } },
-                    onResumeLater = { exitAfterFlush() },
-                    onEndNow = { requestExit(true) },
                 )
             }
         }
@@ -943,7 +947,7 @@ private fun PauseAffordance(
         modifier = modifier
             .size(48.dp)
             .semantics { contentDescription = openDescription }
-            .clickable(onClick = onPause),
+            .clickable(role = Role.Button, onClick = onPause),
         contentAlignment = Alignment.Center,
     ) {
         Text(
@@ -1067,101 +1071,95 @@ fun WhodunitMultiplayerHostFlow(
         }
     }
 
-    Box(modifier = modifier.fillMaxSize()) {
-        if (startGate == HostStartGateState.Started) {
-            HostPhaseRouter(
-                playMode = hostPlayMode,
-                phase = state.phase,
-                state = state,
-                case = retainedCase,
-                payload = payload,
-                session = session,
-                scope = scope,
-                onBackToLibrary = { exitToLibrary(SessionEndReason.HostLeft) },
-                modifier = Modifier.fillMaxSize(),
+    when (val gate = startGate) {
+        HostStartGateState.Started -> when {
+            disconnectedPlayer != null && state.phase !is WhodunitPhase.PostGame -> {
+                val playerName = disconnectedPlayer.displayName
+                if (confirmContinueFor?.id == disconnectedPlayer.id) {
+                    ContinueWithoutDialog(
+                        title = stringResource(
+                            Res.string.host_continue_without_dialog_title_format,
+                            playerName,
+                        ),
+                        body = stringResource(
+                            Res.string.host_continue_without_dialog_body_format,
+                            playerName,
+                        ),
+                        cancelLabel = stringResource(
+                            Res.string.host_continue_without_dialog_cancel,
+                        ),
+                        confirmLabel = stringResource(
+                            Res.string.host_continue_without_dialog_confirm_format,
+                            playerName,
+                        ),
+                        confirmContentDescription = stringResource(
+                            Res.string.host_continue_without_dialog_confirm_description_format,
+                            playerName,
+                        ),
+                        onCancel = { confirmContinueFor = null },
+                        onConfirm = {
+                            confirmContinueFor = null
+                            scope.launch { bridge.continueWithout(disconnectedPlayer.id) }
+                        },
+                        modifier = modifier.fillMaxSize(),
+                    )
+                } else {
+                    HostDisconnectedOverlay(
+                        title = stringResource(Res.string.host_peer_away_title),
+                        body = stringResource(
+                            Res.string.host_peer_away_body_format,
+                            playerName,
+                        ),
+                        continueLabel = stringResource(
+                            Res.string.host_continue_without_format,
+                            playerName,
+                        ),
+                        continueContentDescription = stringResource(
+                            Res.string.host_continue_without_description_format,
+                            playerName,
+                        ),
+                        leaveLabel = stringResource(Res.string.host_leave_session),
+                        leaveContentDescription = stringResource(
+                            Res.string.host_leave_session_description,
+                        ),
+                        onContinue = { confirmContinueFor = disconnectedPlayer },
+                        onLeave = { exitToLibrary(SessionEndReason.Cancelled) },
+                        modifier = modifier.fillMaxSize(),
+                    )
+                }
+            }
+            state.public.paused -> PauseOverlay(
+                onResume = { scope.launch { session.submit(WhodunitAction.Resume) } },
+                onResumeLater = null,
+                onEndNow = { exitToLibrary(SessionEndReason.Cancelled) },
+                modifier = modifier.fillMaxSize(),
             )
-
-            if (!state.public.paused &&
-                state.phase is WhodunitPhase.Round &&
-                state.public.voteState !is VoteState.Collecting
-            ) {
-                PauseAffordance(
-                    onPause = { scope.launch { session.submit(WhodunitAction.Pause) } },
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .windowInsetsPadding(WindowInsets.statusBars)
-                        .padding(ParlorTheme.spacing.m),
-                )
-            }
-            if (state.public.paused) {
-                PauseOverlay(
-                    onResume = { scope.launch { session.submit(WhodunitAction.Resume) } },
-                    onResumeLater = null,
-                    onEndNow = { exitToLibrary(SessionEndReason.Cancelled) },
-                )
-            }
-        }
-        if (
-            startGate == HostStartGateState.Started &&
-            disconnectedPlayer != null &&
-            state.phase !is WhodunitPhase.PostGame
-        ) {
-            val playerName = disconnectedPlayer.displayName
-            if (confirmContinueFor?.id == disconnectedPlayer.id) {
-                ContinueWithoutDialog(
-                    title = stringResource(
-                        Res.string.host_continue_without_dialog_title_format,
-                        playerName,
-                    ),
-                    body = stringResource(
-                        Res.string.host_continue_without_dialog_body_format,
-                        playerName,
-                    ),
-                    cancelLabel = stringResource(Res.string.host_continue_without_dialog_cancel),
-                    confirmLabel = stringResource(
-                        Res.string.host_continue_without_dialog_confirm_format,
-                        playerName,
-                    ),
-                    confirmContentDescription = stringResource(
-                        Res.string.host_continue_without_dialog_confirm_description_format,
-                        playerName,
-                    ),
-                    onCancel = { confirmContinueFor = null },
-                    onConfirm = {
-                        confirmContinueFor = null
-                        scope.launch {
-                            bridge.continueWithout(disconnectedPlayer.id)
-                        }
-                    },
+            else -> Box(modifier = modifier.fillMaxSize()) {
+                HostPhaseRouter(
+                    playMode = hostPlayMode,
+                    phase = state.phase,
+                    state = state,
+                    case = retainedCase,
+                    payload = payload,
+                    session = session,
+                    scope = scope,
+                    onBackToLibrary = { exitToLibrary(SessionEndReason.HostLeft) },
                     modifier = Modifier.fillMaxSize(),
                 )
-            } else {
-                HostDisconnectedOverlay(
-                    title = stringResource(Res.string.host_peer_away_title),
-                    body = stringResource(
-                        Res.string.host_peer_away_body_format,
-                        playerName,
-                    ),
-                    continueLabel = stringResource(
-                        Res.string.host_continue_without_format,
-                        playerName,
-                    ),
-                    continueContentDescription = stringResource(
-                        Res.string.host_continue_without_description_format,
-                        playerName,
-                    ),
-                    leaveLabel = stringResource(Res.string.host_leave_session),
-                    leaveContentDescription = stringResource(
-                        Res.string.host_leave_session_description,
-                    ),
-                    onContinue = { confirmContinueFor = disconnectedPlayer },
-                    onLeave = { exitToLibrary(SessionEndReason.Cancelled) },
-                    modifier = Modifier.fillMaxSize(),
-                )
+                if (
+                    state.phase is WhodunitPhase.Round &&
+                    state.public.voteState !is VoteState.Collecting
+                ) {
+                    PauseAffordance(
+                        onPause = { scope.launch { session.submit(WhodunitAction.Pause) } },
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .windowInsetsPadding(WindowInsets.statusBars)
+                            .padding(ParlorTheme.spacing.m),
+                    )
+                }
             }
         }
-        when (val gate = startGate) {
-            HostStartGateState.Started -> Unit
             HostStartGateState.Starting,
             HostStartGateState.Exiting -> ReconnectingOverlay(
                 title = stringResource(Res.string.host_starting),
@@ -1175,7 +1173,7 @@ fun WhodunitMultiplayerHostFlow(
                         exitToLibrary(SessionEndReason.Cancelled)
                     }
                 },
-                modifier = Modifier.fillMaxSize(),
+                modifier = modifier.fillMaxSize(),
             )
             is HostStartGateState.Failed -> HostDisconnectedOverlay(
                 title = stringResource(Res.string.host_start_failed_title),
@@ -1206,9 +1204,8 @@ fun WhodunitMultiplayerHostFlow(
                         exitToLibrary(SessionEndReason.Cancelled)
                     }
                 },
-                modifier = Modifier.fillMaxSize(),
+                modifier = modifier.fillMaxSize(),
             )
-        }
     }
 }
 
@@ -1344,48 +1341,50 @@ fun WhodunitMultiplayerPeerFlow(
     val hasAuthoritativeSnapshot by bridge.hasAuthoritativeSnapshot.collectAsState()
     val initialSnapshotError by bridge.initialSnapshotError.collectAsState()
 
-    Box(modifier = modifier.fillMaxSize()) {
-        if (hasAuthoritativeSnapshot) {
+    when {
+        !hasAuthoritativeSnapshot -> ReconnectingOverlay(
+            title = stringResource(
+                if (initialSnapshotError == null) {
+                    Res.string.peer_initial_snapshot_loading
+                } else {
+                    Res.string.peer_initial_snapshot_failed
+                },
+            ),
+            leaveLabel = stringResource(Res.string.peer_leave_room),
+            leaveContentDescription = stringResource(
+                Res.string.peer_leave_room_description,
+            ),
+            onLeave = onBackToLibrary,
+            modifier = modifier.fillMaxSize(),
+        )
+        state.public.paused -> PeerHostPausedBanner(modifier = modifier.fillMaxSize())
+        else -> {
             PeerPhaseRouter(
                 playMode = peerPlayMode,
                 projection = playerProjection,
                 payload = payload,
                 session = session,
-                modifier = Modifier.fillMaxSize(),
-            )
-            if (state.public.paused) {
-                PeerHostPausedBanner(modifier = Modifier.align(Alignment.Center))
-            }
-        } else {
-            ReconnectingOverlay(
-                title = stringResource(
-                    if (initialSnapshotError == null) {
-                        Res.string.peer_initial_snapshot_loading
-                    } else {
-                        Res.string.peer_initial_snapshot_failed
-                    },
-                ),
-                leaveLabel = stringResource(Res.string.peer_leave_room),
-                leaveContentDescription = stringResource(
-                    Res.string.peer_leave_room_description,
-                ),
-                onLeave = onBackToLibrary,
-                modifier = Modifier.fillMaxSize(),
+                modifier = modifier.fillMaxSize(),
             )
         }
     }
 }
 
 /**
- * Tiny banner shown on peer devices when the host has paused. Peers can't
- * resume — only the host can. Tapping does nothing; the banner clears
- * automatically when the host resumes (state.public.paused = false).
+ * Fullscreen peer state shown while the host has paused. Peers cannot resume;
+ * only a new authoritative host snapshot clears this surface.
  */
 @Composable
 private fun PeerHostPausedBanner(modifier: Modifier = Modifier) {
+    val title = stringResource(Res.string.peer_paused_eyebrow)
     Box(
         modifier = modifier
             .fillMaxSize()
+            .background(ParlorTheme.colors.coverScreen)
+            .semantics {
+                paneTitle = title
+                liveRegion = LiveRegionMode.Assertive
+            }
             .padding(ParlorTheme.spacing.xl),
         contentAlignment = Alignment.Center,
     ) {
@@ -1394,9 +1393,10 @@ private fun PeerHostPausedBanner(modifier: Modifier = Modifier) {
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s),
         ) {
             Text(
-                text = stringResource(Res.string.peer_paused_eyebrow).uppercase(),
+                text = title.uppercase(),
                 style = ParlorTheme.typography.labelSmall,
                 color = ParlorTheme.colors.accentEmber,
+                modifier = Modifier.semantics { heading() },
             )
             Text(
                 text = stringResource(Res.string.peer_paused_body),

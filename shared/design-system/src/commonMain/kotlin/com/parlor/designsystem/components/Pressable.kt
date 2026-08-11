@@ -11,6 +11,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.Dp
 import com.parlor.designsystem.theme.ParlorTheme
 
@@ -51,6 +52,7 @@ fun Modifier.pressableSurface(
         .clickable(
             interactionSource = interaction,
             indication = null,
+            role = Role.Button,
             onClick = onClick,
         )
 }

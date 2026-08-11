@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import com.parlor.designsystem.theme.ParlorTheme
 
@@ -25,7 +26,7 @@ fun MafiaCandlelitCover(
         modifier = modifier
             .fillMaxSize()
             .background(ParlorTheme.colors.coverScreen)
-            .clickable { onDismiss() },
+            .clickable(role = Role.Button, onClick = onDismiss),
     ) {
         Column(
             modifier = Modifier
@@ -62,7 +63,7 @@ fun MafiaHideScreen(
         modifier = modifier
             .fillMaxSize()
             .background(ParlorTheme.colors.coverScreen)
-            .clickable { onTap() },
+            .clickable(role = Role.Button, onClick = onTap),
         contentAlignment = Alignment.Center,
     ) {
         Text(

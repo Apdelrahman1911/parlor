@@ -2,7 +2,6 @@ package com.parlor.app.shell.game
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -25,7 +24,7 @@ internal fun P2pPermissionRoute(
     }
     if (status.entersMultiplayerWithoutRationale) {
         // Navigation is applied from the effect, outside composition.
-        Text(text = "")
+        Box(modifier = Modifier.fillMaxSize())
     } else {
         P2pPermissionRationaleScreen(
             gate = gate,

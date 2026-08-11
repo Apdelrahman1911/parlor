@@ -28,3 +28,11 @@ enum class AppLanguage(
         }
     }
 }
+
+/** Resolves a persisted override while preserving `null` as "follow system". */
+fun resolveAppLanguage(
+    languageOverride: String?,
+    systemLanguageTag: String?,
+): AppLanguage = languageOverride
+    ?.let(AppLanguage::fromTag)
+    ?: AppLanguage.fromTag(systemLanguageTag)

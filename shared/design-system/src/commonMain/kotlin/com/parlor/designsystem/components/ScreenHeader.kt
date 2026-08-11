@@ -13,9 +13,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.unit.LayoutDirection
 import com.parlor.designsystem.theme.ParlorTheme
 
 /**
@@ -89,10 +92,11 @@ private fun BackChevron(
 ) {
     val colors = ParlorTheme.colors
     val description = contentDescription
+    val glyph = backChevronGlyph(LocalLayoutDirection.current)
     Box(
         modifier = Modifier
             .size(ParlorTheme.spacing.xxl)
-            .clickable(onClick = onClick)
+            .clickable(role = Role.Button, onClick = onClick)
             .then(
                 if (description != null) {
                     Modifier.semantics { this.contentDescription = description }
@@ -106,9 +110,12 @@ private fun BackChevron(
         // sized via labelLarge so it matches the back-affordance scale on
         // every other major design system.
         Text(
-            text = "‹",
+            text = glyph,
             style = ParlorTheme.typography.displayMedium,
             color = colors.textSecondary,
         )
     }
 }
+
+internal fun backChevronGlyph(layoutDirection: LayoutDirection): String =
+    if (layoutDirection == LayoutDirection.Rtl) "›" else "‹"

@@ -1,36 +1,55 @@
 package com.parlor.designsystem.localization
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.ProvidedValue
-import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import platform.Foundation.NSLocale
 import platform.Foundation.NSUserDefaults
-import platform.Foundation.currentLocale
-import platform.Foundation.languageCode
+import platform.Foundation.preferredLanguages
 
 /**
- * iOS `actual`: writes the chosen locale to `NSUserDefaults["AppleLanguages"]`
- * so Compose Multiplatform's resource lookup picks the right `values-XX/`.
- *
- * The first time `provides` is invoked with a non-null value we snapshot the
- * original `AppleLanguages` so passing `null` later restores the system default.
+ * Compose resources read [NSLocale.preferredLanguages]. An explicit in-app
+ * language therefore needs the platform AppleLanguages override used by the
+ * Compose resource implementation. The effect owns and restores only the value
+ * it installed; System mode leaves platform language preferences untouched.
  */
-private val LocalAppLocale = compositionLocalOf {
-    NSLocale.currentLocale.languageCode
-}
-private var defaultAppLanguages: List<*>? = null
-
 @Composable
-internal actual fun appLocaleProvidedValue(value: String?): ProvidedValue<*> {
-    val effective = value ?: NSLocale.currentLocale.languageCode
-    val userDefaults = NSUserDefaults.standardUserDefaults
-    if (defaultAppLanguages == null) {
-        defaultAppLanguages = userDefaults.arrayForKey("AppleLanguages")
+internal actual fun PlatformAppLocale(
+    languageTag: String?,
+    content: @Composable (activeLanguageTag: String?) -> Unit,
+) {
+    var appliedLanguageTag by remember(languageTag) { mutableStateOf<String?>(null) }
+
+    DisposableEffect(languageTag) {
+        val userDefaults = NSUserDefaults.standardUserDefaults
+        val previousLanguages = userDefaults.arrayForKey(APPLE_LANGUAGES_KEY)
+        if (languageTag != null) {
+            userDefaults.setObject(listOf(languageTag), APPLE_LANGUAGES_KEY)
+        }
+        appliedLanguageTag = languageTag ?: NSLocale.preferredLanguages
+            .firstOrNull()
+            ?.toString()
+
+        onDispose {
+            val installedLanguage = languageTag ?: return@onDispose
+            val currentLanguage = userDefaults.arrayForKey(APPLE_LANGUAGES_KEY)
+                ?.firstOrNull()
+                ?.toString()
+            if (currentLanguage == installedLanguage) {
+                if (previousLanguages == null) {
+                    userDefaults.removeObjectForKey(APPLE_LANGUAGES_KEY)
+                } else {
+                    userDefaults.setObject(previousLanguages, APPLE_LANGUAGES_KEY)
+                }
+            }
+        }
     }
-    if (value == null) {
-        userDefaults.setObject(defaultAppLanguages, "AppleLanguages")
-    } else {
-        userDefaults.setObject(listOf(value), "AppleLanguages")
-    }
-    return LocalAppLocale provides effective
+
+    val activeTag = appliedLanguageTag ?: return
+    content(activeTag)
 }
+
+private const val APPLE_LANGUAGES_KEY = "AppleLanguages"

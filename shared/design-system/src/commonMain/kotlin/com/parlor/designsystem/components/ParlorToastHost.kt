@@ -5,6 +5,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,7 +21,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -119,6 +122,29 @@ fun ParlorToastHost(
     modifier: Modifier = Modifier,
 ) {
     val toasts by state.toasts.collectAsState()
+    val motion = ParlorTheme.motion
+    val enterFade = fadeIn(
+        animationSpec = tween(motion.durationFast, easing = motion.easingStandard),
+    )
+    val exitFade = fadeOut(
+        animationSpec = tween(motion.durationFast, easing = motion.easingStandard),
+    )
+    val enterTransition = if (ParlorTheme.reducedMotion) {
+        enterFade
+    } else {
+        enterFade + slideInVertically(
+            animationSpec = tween(motion.durationFast, easing = motion.easingStandard),
+            initialOffsetY = { it / 2 },
+        )
+    }
+    val exitTransition = if (ParlorTheme.reducedMotion) {
+        exitFade
+    } else {
+        exitFade + slideOutVertically(
+            animationSpec = tween(motion.durationFast, easing = motion.easingStandard),
+            targetOffsetY = { it / 2 },
+        )
+    }
 
     Column(
         modifier = modifier
@@ -133,14 +159,17 @@ fun ParlorToastHost(
             // LaunchedEffect keyed on toasts.lastOrNull() left older toasts
             // stranded forever (see PROBLEMS_PARLOR.md → ds-01).
             key(toast.id) {
+                var visible by remember(toast.id) { mutableStateOf(true) }
                 LaunchedEffect(toast.id) {
                     delay(state.duration())
+                    visible = false
+                    delay(motion.durationFast.toLong())
                     state.dismiss(toast.id)
                 }
                 AnimatedVisibility(
-                    visible = true,
-                    enter = fadeIn() + slideInVertically(initialOffsetY = { it / 2 }),
-                    exit = fadeOut() + slideOutVertically(targetOffsetY = { it / 2 }),
+                    visible = visible,
+                    enter = enterTransition,
+                    exit = exitTransition,
                 ) {
                     ToastChip(toast)
                 }

@@ -33,7 +33,8 @@ import com.parlor.designsystem.components.ParlorToastSeverity
 import com.parlor.designsystem.components.ParlorToastState
 import com.parlor.designsystem.localization.AppLanguage
 import com.parlor.designsystem.localization.ProvideAppLanguage
-import com.parlor.designsystem.localization.customAppLocale
+import com.parlor.designsystem.motion.rememberSystemReducedMotion
+import com.parlor.designsystem.motion.shouldReduceMotion
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.designsystem.theme.ThemeMode
 import com.parlor.networking.transport.ResumableSessionInfo
@@ -61,9 +62,13 @@ fun App() {
     val languageTag by settings.languageOverride.collectAsState(initial = null)
     val themeModeTag by settings.themeMode.collectAsState(initial = ThemeMode.Default.tag)
     val reducedMotion by settings.reducedMotion.collectAsState(initial = false)
-    val language = AppLanguage.fromTag(languageTag)
+    val language = languageTag?.let(AppLanguage::fromTag)
     val themeMode = ThemeMode.fromTag(themeModeTag)
-    LaunchedEffect(language) { customAppLocale = language.tag }
+    val systemReducedMotion = rememberSystemReducedMotion()
+    val effectiveReducedMotion = shouldReduceMotion(
+        appPreference = reducedMotion,
+        systemPreference = systemReducedMotion,
+    )
 
     val snapshotStore: SnapshotStore = koinInject()
     val roomTransport: RoomTransport = koinInject()
@@ -79,7 +84,7 @@ fun App() {
     ProvideAppLanguage(language = language) {
         ParlorTheme(
             themeMode = themeMode,
-            reducedMotion = reducedMotion,
+            reducedMotion = effectiveReducedMotion,
         ) {
             CompositionLocalProvider(LocalParlorToastState provides toastState) {
                 val resumeOpenFailedText = stringResource(Res.string.home_resume_open_failed)
@@ -182,7 +187,10 @@ fun App() {
                 ) {
                     Crossfade(
                         targetState = screen,
-                        animationSpec = tween(durationMillis = if (reducedMotion) 0 else 220),
+                        animationSpec = tween(
+                            durationMillis = ParlorTheme.motion.durationFast,
+                            easing = ParlorTheme.motion.easingStandard,
+                        ),
                         modifier = Modifier.fillMaxSize(),
                         label = "parlor-screen-transition",
                     ) { current ->

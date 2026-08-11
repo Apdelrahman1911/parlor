@@ -10,6 +10,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
 import com.parlor.designsystem.motion.ParlorMotion
+import com.parlor.designsystem.motion.forReducedMotion
 import com.parlor.designsystem.tokens.CozyNoirPalette
 import com.parlor.designsystem.tokens.DefaultParlorTypography
 import com.parlor.designsystem.tokens.LightCozyNoirPalette
@@ -89,6 +90,7 @@ fun ParlorTheme(
         ThemeMode.System -> isSystemInDarkTheme()
     }
     val colors = if (isDark) darkPalette else lightPalette
+    val effectiveMotion = motion.forReducedMotion(reducedMotion)
 
     val m3Scheme = if (colors.isLight) {
         lightColorScheme(
@@ -129,7 +131,7 @@ fun ParlorTheme(
         LocalParlorBlur provides blur,
         LocalParlorBorders provides borders,
         LocalParlorIconSize provides iconSize,
-        LocalParlorMotion provides motion,
+        LocalParlorMotion provides effectiveMotion,
         LocalReducedMotion provides reducedMotion,
         LocalThemeMode provides themeMode,
         LocalContentColor provides colors.textPrimary,
