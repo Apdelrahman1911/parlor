@@ -52,7 +52,6 @@ import com.parlor.games.mafia.resources.md_host_approve
 import com.parlor.games.mafia.resources.md_host_approve_description
 import com.parlor.games.mafia.resources.md_host_decline
 import com.parlor.games.mafia.resources.md_host_decline_description
-import com.parlor.games.mafia.resources.md_host_error_detail
 import com.parlor.games.mafia.resources.md_host_error_title
 import com.parlor.games.mafia.resources.md_host_eyebrow
 import com.parlor.games.mafia.resources.md_host_hosting_as_format
@@ -190,6 +189,7 @@ fun MafiaHostLobbyFlow(
 
     val current = ownedSession?.room
     val localNetworkAccess by transport.localNetworkAccess.collectAsState()
+    val renderedHostError = ownerError ?: acquireError
     var gameStarted by remember(route) { mutableStateOf(false) }
     LaunchedEffect(frozenRoster) {
         if (frozenRoster != null) gameStarted = true
@@ -215,9 +215,9 @@ fun MafiaHostLobbyFlow(
     } else {
         Box(modifier = modifier.fillMaxSize()) {
             when {
-                ownerError != null || acquireError != null -> MafiaLobbyErrorState(
+                renderedHostError != null -> MafiaLobbyErrorState(
                     title = stringResource(Res.string.md_host_error_title),
-                    detail = stringResource(Res.string.md_host_error_detail),
+                    detail = mafiaNetworkErrorMessage(renderedHostError),
                     showNetworkRecovery = localNetworkAccess.needsRecoveryGuidance,
                     onRetry = { hostAttempt++ },
                     onOpenNetworkSettings = onOpenNetworkSettings.takeIf {

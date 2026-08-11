@@ -10,9 +10,22 @@ import com.parlor.app.resources.data_error_permission_denied
 import com.parlor.app.resources.data_error_unknown
 import com.parlor.app.resources.net_error_not_connected
 import com.parlor.app.resources.net_error_name_in_use
+import com.parlor.app.resources.net_error_already_connected
+import com.parlor.app.resources.net_error_command_in_flight
+import com.parlor.app.resources.net_error_host_declined
+import com.parlor.app.resources.net_error_incompatible
+import com.parlor.app.resources.net_error_invalid_input
 import com.parlor.app.resources.net_error_timeout
+import com.parlor.app.resources.net_error_payload_too_large
+import com.parlor.app.resources.net_error_rate_limited
+import com.parlor.app.resources.net_error_rejoin_expired
+import com.parlor.app.resources.net_error_room_full
+import com.parlor.app.resources.net_error_secure_storage
+import com.parlor.app.resources.net_error_session_started
+import com.parlor.app.resources.net_error_suspended
 import com.parlor.app.resources.net_error_transport
 import com.parlor.app.resources.net_error_unauthorized
+import com.parlor.app.resources.net_error_wrong_code
 import com.parlor.core.result.DataError
 import com.parlor.networking.room.NetError
 import org.jetbrains.compose.resources.stringResource
@@ -42,24 +55,66 @@ fun dataErrorMessage(error: DataError): String = stringResource(
  */
 @Composable
 fun netErrorMessage(error: NetError): String = stringResource(
-    when (error) {
-        is NetError.NotConnected -> Res.string.net_error_not_connected
-        is NetError.Timeout -> Res.string.net_error_timeout
-        is NetError.PayloadTooLarge,
-        is NetError.WrongCode,
-        is NetError.HostDeclined,
-        is NetError.RoomFull,
-        is NetError.SessionStarted,
-        is NetError.IncompatibleProtocol,
-        is NetError.RateLimited,
-        is NetError.RejoinExpired,
-        is NetError.AlreadyConnected,
-        is NetError.SecureStorageUnavailable,
-        is NetError.CommandInFlight,
-        is NetError.SessionSuspended,
-        is NetError.TransportFailure -> Res.string.net_error_transport
-        is NetError.DisplayNameInUse -> Res.string.net_error_name_in_use
-        is NetError.Unauthorized,
-        is NetError.InvalidInput -> Res.string.net_error_unauthorized
+    when (netErrorMessageKey(error)) {
+        NetErrorMessageKey.NotConnected -> Res.string.net_error_not_connected
+        NetErrorMessageKey.Timeout -> Res.string.net_error_timeout
+        NetErrorMessageKey.PayloadTooLarge -> Res.string.net_error_payload_too_large
+        NetErrorMessageKey.WrongCode -> Res.string.net_error_wrong_code
+        NetErrorMessageKey.HostDeclined -> Res.string.net_error_host_declined
+        NetErrorMessageKey.RoomFull -> Res.string.net_error_room_full
+        NetErrorMessageKey.SessionStarted -> Res.string.net_error_session_started
+        NetErrorMessageKey.Incompatible -> Res.string.net_error_incompatible
+        NetErrorMessageKey.RateLimited -> Res.string.net_error_rate_limited
+        NetErrorMessageKey.RejoinExpired -> Res.string.net_error_rejoin_expired
+        NetErrorMessageKey.AlreadyConnected -> Res.string.net_error_already_connected
+        NetErrorMessageKey.SecureStorage -> Res.string.net_error_secure_storage
+        NetErrorMessageKey.CommandInFlight -> Res.string.net_error_command_in_flight
+        NetErrorMessageKey.Suspended -> Res.string.net_error_suspended
+        NetErrorMessageKey.Transport -> Res.string.net_error_transport
+        NetErrorMessageKey.NameInUse -> Res.string.net_error_name_in_use
+        NetErrorMessageKey.Unauthorized -> Res.string.net_error_unauthorized
+        NetErrorMessageKey.InvalidInput -> Res.string.net_error_invalid_input
     },
 )
+
+internal enum class NetErrorMessageKey {
+    NotConnected,
+    Timeout,
+    PayloadTooLarge,
+    WrongCode,
+    HostDeclined,
+    RoomFull,
+    SessionStarted,
+    Incompatible,
+    RateLimited,
+    RejoinExpired,
+    AlreadyConnected,
+    SecureStorage,
+    CommandInFlight,
+    Suspended,
+    Transport,
+    NameInUse,
+    Unauthorized,
+    InvalidInput,
+}
+
+internal fun netErrorMessageKey(error: NetError): NetErrorMessageKey = when (error) {
+    NetError.NotConnected -> NetErrorMessageKey.NotConnected
+    NetError.Timeout -> NetErrorMessageKey.Timeout
+    NetError.PayloadTooLarge -> NetErrorMessageKey.PayloadTooLarge
+    NetError.WrongCode -> NetErrorMessageKey.WrongCode
+    NetError.HostDeclined -> NetErrorMessageKey.HostDeclined
+    NetError.RoomFull -> NetErrorMessageKey.RoomFull
+    NetError.SessionStarted -> NetErrorMessageKey.SessionStarted
+    NetError.IncompatibleProtocol -> NetErrorMessageKey.Incompatible
+    NetError.RateLimited -> NetErrorMessageKey.RateLimited
+    NetError.RejoinExpired -> NetErrorMessageKey.RejoinExpired
+    NetError.AlreadyConnected -> NetErrorMessageKey.AlreadyConnected
+    NetError.SecureStorageUnavailable -> NetErrorMessageKey.SecureStorage
+    NetError.CommandInFlight -> NetErrorMessageKey.CommandInFlight
+    NetError.SessionSuspended -> NetErrorMessageKey.Suspended
+    is NetError.TransportFailure -> NetErrorMessageKey.Transport
+    NetError.DisplayNameInUse -> NetErrorMessageKey.NameInUse
+    NetError.Unauthorized -> NetErrorMessageKey.Unauthorized
+    NetError.InvalidInput -> NetErrorMessageKey.InvalidInput
+}

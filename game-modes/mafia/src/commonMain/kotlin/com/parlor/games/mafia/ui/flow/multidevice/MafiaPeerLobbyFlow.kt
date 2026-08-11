@@ -48,7 +48,6 @@ import com.parlor.games.mafia.domain.rules.MafiaSessionRules
 import com.parlor.games.mafia.resources.Res
 import com.parlor.games.mafia.resources.md_peer_connecting_format
 import com.parlor.games.mafia.resources.md_peer_error_title
-import com.parlor.games.mafia.resources.md_peer_error_detail
 import com.parlor.games.mafia.resources.md_peer_eyebrow
 import com.parlor.games.mafia.resources.md_peer_leave
 import com.parlor.games.mafia.resources.md_peer_leave_description
@@ -251,6 +250,7 @@ fun MafiaPeerLobbyFlow(
     }
     val localNetworkAccess by transport.localNetworkAccess.collectAsState()
     val checkpointFailure = startCheckpointState as? MafiaStartCheckpointState.Failed
+    val renderedPeerError = joinError ?: checkpointFailure?.error ?: ownerError ?: acquireError
     val retryConnection: () -> Unit = retry@{
         if (finalLeaveInFlight || retryInFlight) return@retry
         val failedCheckpoint = checkpointFailure
@@ -291,12 +291,9 @@ fun MafiaPeerLobbyFlow(
                     }
                     Box(modifier = Modifier.fillMaxSize()) {
                         when {
-                            joinError != null ||
-                                checkpointFailure != null ||
-                                ownerError != null ||
-                                acquireError != null -> MafiaPeerErrorState(
+                            renderedPeerError != null -> MafiaPeerErrorState(
                                 title = stringResource(Res.string.md_peer_error_title),
-                                detail = stringResource(Res.string.md_peer_error_detail),
+                                detail = mafiaNetworkErrorMessage(renderedPeerError),
                                 showNetworkRecovery = localNetworkAccess.needsRecoveryGuidance,
                                 onRetry = retryConnection.takeIf { joinError == null },
                                 onOpenNetworkSettings = onOpenNetworkSettings.takeIf {
