@@ -4,8 +4,80 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 class DiscoveryCandidateSchedulerTest {
+
+    @Test
+    fun sustained_candidate_flood_cannot_create_an_unbounded_retry_ledger() {
+        val scheduler = DiscoveryCandidateScheduler(
+            totalDeadlineMs = 30_000L,
+            maxAttemptsPerCandidate = 1,
+        )
+        scheduler.update(
+            (0 until 10_000).map { index ->
+                DiscoveryCandidate("attacker-$index", "endpoint-$index")
+            },
+            nowMs = 0L,
+        )
+
+        var attempts = 0
+        while (scheduler.next(0L) != null && attempts <= 64) {
+            attempts += 1
+        }
+
+        assertEquals(
+            DiscoveryCandidateScheduler.MAX_NEW_CANDIDATES_PER_UPDATE,
+            attempts,
+            "one discovery observation exceeded its candidate-admission throttle",
+        )
+        assertTrue(
+            scheduler.trackedCandidateCount <= DiscoveryCandidateScheduler.MAX_TRACKED_CANDIDATES,
+        )
+    }
+
+    @Test
+    fun repeated_churn_never_exceeds_the_persistent_candidate_budget() {
+        val scheduler = DiscoveryCandidateScheduler(totalDeadlineMs = 30_000L)
+
+        repeat(1_000) { observation ->
+            scheduler.update(
+                (0 until 100).map { index ->
+                    DiscoveryCandidate(
+                        key = "candidate-${observation * 100 + index}",
+                        endpointVersion = "endpoint-$observation-$index",
+                    )
+                },
+                nowMs = observation.toLong(),
+            )
+            assertTrue(
+                scheduler.trackedCandidateCount <=
+                    DiscoveryCandidateScheduler.MAX_TRACKED_CANDIDATES,
+            )
+        }
+    }
+
+    @Test
+    fun a_late_candidate_displaces_an_exhausted_candidate_at_capacity() {
+        val scheduler = DiscoveryCandidateScheduler(
+            totalDeadlineMs = 30_000L,
+            maxAttemptsPerCandidate = 1,
+            maxTrackedCandidates = 4,
+            maxNewCandidatesPerUpdate = 4,
+        )
+        val existing = (0 until 4).map { index ->
+            DiscoveryCandidate("existing-$index", "endpoint-$index")
+        }
+        scheduler.update(existing, nowMs = 0L)
+        repeat(4) { assertNotNull(scheduler.next(0L)) }
+        assertNull(scheduler.next(0L))
+
+        val late = DiscoveryCandidate("late-correct-room", "endpoint-late")
+        scheduler.update(existing + late, nowMs = 1L)
+
+        assertEquals(late, assertNotNull(scheduler.next(1L)).candidate)
+        assertEquals(4, scheduler.trackedCandidateCount)
+    }
 
     @Test
     fun wrong_room_is_candidate_local_and_a_late_correct_room_is_selected_first() {

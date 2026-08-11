@@ -6,6 +6,8 @@ import com.parlor.core.ids.SessionId
 import com.parlor.core.result.Result
 import com.parlor.networking.protocol.CommandStatus
 import com.parlor.networking.protocol.HostMessage
+import com.parlor.networking.protocol.MAX_CONTROL_PAYLOAD_BYTES
+import com.parlor.networking.protocol.MAX_ROOM_FRAME_BYTES
 import com.parlor.networking.protocol.PeerMessage
 import com.parlor.networking.protocol.ProtocolVersion
 import com.parlor.networking.protocol.RoomMessage
@@ -42,6 +44,16 @@ class BoundedPeerOutboxTest {
         gameId = GameId("fixture-game"),
         gameVersion = 1,
     )
+
+    @Test
+    fun `documented per-peer byte ceiling includes the retained heartbeat`() {
+        assertEquals(
+            BoundedPeerOutbox.MAX_CONTROL_FRAMES * MAX_CONTROL_PAYLOAD_BYTES +
+                MAX_CONTROL_PAYLOAD_BYTES +
+                MAX_ROOM_FRAME_BYTES * 2,
+            BoundedPeerOutbox.MAX_OUTBOUND_BYTES_PER_PEER,
+        )
+    }
 
     @Test
     fun `control queue is bounded and unsent snapshots are conflated`() = runTest {

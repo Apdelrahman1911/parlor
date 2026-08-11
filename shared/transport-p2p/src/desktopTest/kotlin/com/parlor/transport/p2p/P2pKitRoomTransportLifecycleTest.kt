@@ -572,6 +572,25 @@ class P2pKitRoomTransportLifecycleTest {
     }
 
     @Test
+    fun terminal_unadmitted_sessions_release_their_state_collectors() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("host-pid"))
+        val room = newHostRoom(kit)
+
+        repeat(32) { index ->
+            val session = FakeP2pSession(peer("closed-$index", "Closed $index"))
+            kit.incomingSessionsFlow.emit(session)
+            awaitCondition { session.stateFlow.subscriptionCount.value == 1 }
+
+            session.stateFlow.value = ConnectionState.Closed
+
+            awaitCondition { session.stateFlow.subscriptionCount.value == 0 }
+        }
+
+        room.leave()
+        assertThat(kit.stopCalls).isEqualTo(1)
+    }
+
+    @Test
     fun host_application_queue_applies_bounded_backpressure_without_dropping_gameplay() =
         runBlocking {
             val kit = FakeP2pKit(P2pPeerId("host-pid"))

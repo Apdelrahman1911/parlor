@@ -35,11 +35,14 @@ internal class DiscoveryCandidateScheduler(
     private val totalDeadlineMs: Long,
     private val perAttemptTimeoutMs: Long = DEFAULT_PER_ATTEMPT_TIMEOUT_MS,
     private val maxAttemptsPerCandidate: Int = MAX_ATTEMPTS_PER_CANDIDATE,
+    private val maxTrackedCandidates: Int = MAX_TRACKED_CANDIDATES,
+    private val maxNewCandidatesPerUpdate: Int = MAX_NEW_CANDIDATES_PER_UPDATE,
 ) {
     private data class CandidateState(
         var endpointVersion: String,
         var visible: Boolean,
         var generation: Long,
+        val admittedOrdinal: Long,
         var totalAttempts: Int = 0,
         var transientFailuresInBurst: Int = 0,
         var nextEligibleAtMs: Long = 0L,
@@ -49,38 +52,96 @@ internal class DiscoveryCandidateScheduler(
         require(totalDeadlineMs >= 0L) { "totalDeadlineMs must be non-negative" }
         require(perAttemptTimeoutMs > 0L) { "perAttemptTimeoutMs must be positive" }
         require(maxAttemptsPerCandidate > 0) { "maxAttemptsPerCandidate must be positive" }
+        require(maxTrackedCandidates > 0) { "maxTrackedCandidates must be positive" }
+        require(maxNewCandidatesPerUpdate > 0) {
+            "maxNewCandidatesPerUpdate must be positive"
+        }
+        require(maxNewCandidatesPerUpdate <= maxTrackedCandidates) {
+            "maxNewCandidatesPerUpdate cannot exceed maxTrackedCandidates"
+        }
     }
 
     private val states = mutableMapOf<String, CandidateState>()
+    private var admissionOrdinal: Long = 0L
+    private var candidateScanOffset: Int = 0
     private var sawWrongRoom: Boolean = false
     private var sawIncompatibleProtocol: Boolean = false
 
+    /** Test-visible proof of the scheduler's persistent memory invariant. */
+    internal val trackedCandidateCount: Int
+        get() = states.size
+
     fun update(candidates: List<DiscoveryCandidate>, nowMs: Long) {
-        val distinct = candidates.distinctBy(DiscoveryCandidate::key)
-        val visibleKeys = distinct.mapTo(mutableSetOf(), DiscoveryCandidate::key)
-        states.forEach { (key, state) ->
-            if (key !in visibleKeys) state.visible = false
-        }
-        distinct.forEach { candidate ->
-            val existing = states[candidate.key]
-            when {
-                existing == null -> states[candidate.key] = CandidateState(
-                    endpointVersion = candidate.endpointVersion,
-                    visible = true,
-                    generation = 1L,
-                    nextEligibleAtMs = nowMs,
-                )
-                !existing.visible || existing.endpointVersion != candidate.endpointVersion -> {
-                    existing.endpointVersion = candidate.endpointVersion
-                    existing.visible = true
-                    existing.generation += 1L
-                    existing.totalAttempts = 0
-                    existing.transientFailuresInBurst = 0
-                    existing.nextEligibleAtMs = nowMs
-                }
-                else -> existing.visible = true
+        // Only keys already in the bounded ledger are retained during this
+        // pass. This avoids the previous distinctBy()/visible-key copies,
+        // whose memory grew linearly with an attacker-controlled discovery
+        // list even before the persistent state map was updated.
+        val observedTrackedEndpoints = mutableMapOf<String, String>()
+        candidates.forEach { candidate ->
+            if (candidate.key in states) {
+                observedTrackedEndpoints[candidate.key] = candidate.endpointVersion
             }
         }
+        states.forEach { (key, state) ->
+            val observedEndpoint = observedTrackedEndpoints[key]
+            when {
+                observedEndpoint == null -> state.visible = false
+                !state.visible || state.endpointVersion != observedEndpoint -> {
+                    state.endpointVersion = observedEndpoint
+                    state.visible = true
+                    state.generation += 1L
+                    state.totalAttempts = 0
+                    state.transientFailuresInBurst = 0
+                    state.nextEligibleAtMs = nowMs
+                }
+                else -> state.visible = true
+            }
+        }
+
+        if (candidates.isEmpty()) {
+            candidateScanOffset = 0
+            return
+        }
+
+        // Admit a bounded rotating slice of previously unseen candidates.
+        // Existing candidates do not consume this per-observation budget, so
+        // a legitimate room appearing beside a stable set is considered on
+        // the very next update. Rotation prevents a large, stable discovery
+        // list from permanently privileging only its first entries.
+        val start = candidateScanOffset.mod(candidates.size)
+        val admittedKeys = mutableSetOf<String>()
+        var scanned = 0
+        while (
+            scanned < candidates.size &&
+            admittedKeys.size < maxNewCandidatesPerUpdate
+        ) {
+            val candidate = candidates[(start + scanned).mod(candidates.size)]
+            scanned += 1
+            if (candidate.key in states || !admittedKeys.add(candidate.key)) continue
+            admit(candidate, nowMs)
+        }
+        candidateScanOffset = (start + maxOf(scanned, 1)).mod(candidates.size)
+    }
+
+    private fun admit(candidate: DiscoveryCandidate, nowMs: Long) {
+        if (states.size >= maxTrackedCandidates) {
+            val eviction = states.entries.minWithOrNull(
+                compareBy<Map.Entry<String, CandidateState>> {
+                    if (it.value.visible) VISIBLE_EVICTION_PRIORITY else INVISIBLE_EVICTION_PRIORITY
+                }.thenByDescending { it.value.totalAttempts }
+                    .thenBy { it.value.admittedOrdinal }
+                    .thenBy { it.key },
+            )
+            if (eviction != null) states.remove(eviction.key)
+        }
+        admissionOrdinal += 1L
+        states[candidate.key] = CandidateState(
+            endpointVersion = candidate.endpointVersion,
+            visible = true,
+            generation = 1L,
+            admittedOrdinal = admissionOrdinal,
+            nextEligibleAtMs = nowMs,
+        )
     }
 
     /** Returns one eligible, deadline-bounded dial lease and consumes one attempt. */
@@ -188,7 +249,13 @@ internal class DiscoveryCandidateScheduler(
     companion object {
         /** Hard bound even when failures return immediately. */
         const val MAX_ATTEMPTS_PER_CANDIDATE: Int = 16
+        /** Persistent scheduler-state ceiling for one discovery operation. */
+        const val MAX_TRACKED_CANDIDATES: Int = 64
+        /** New-candidate admission throttle for one discovery observation. */
+        const val MAX_NEW_CANDIDATES_PER_UPDATE: Int = 16
         const val DEFAULT_PER_ATTEMPT_TIMEOUT_MS: Long = 5_000L
+        private const val INVISIBLE_EVICTION_PRIORITY: Int = 0
+        private const val VISIBLE_EVICTION_PRIORITY: Int = 1
         private const val TRANSIENT_BURST_ATTEMPTS: Int = 4
         private const val RECOVERY_PROBE_COOLDOWN_MS: Long = 5_000L
         private const val WRONG_ROOM_REPROBE_COOLDOWN_MS: Long = 5_000L

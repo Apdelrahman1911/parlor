@@ -2036,7 +2036,7 @@ internal class HostP2pRoom(
             // transition out of it can emit PeerReconnected without
             // spuriously emitting it on the very first Connected.
             var wasReconnecting = false
-            session.state.collect { state ->
+            session.state.first { state ->
                 when (state) {
                     ConnectionState.Reconnecting -> {
                         wasReconnecting = true
@@ -2122,6 +2122,12 @@ internal class HostP2pRoom(
                     ConnectionState.Handshaking,
                     ConnectionState.Closing -> Unit
                 }
+                // StateFlow is terminal-by-value rather than terminal-by-
+                // completion. Returning true here releases this per-session
+                // collector after its one terminal cleanup transaction; a
+                // long-lived host must not retain one suspended job for every
+                // session that has ever connected.
+                state == ConnectionState.Closed || state == ConnectionState.Failed
             }
         }
     }

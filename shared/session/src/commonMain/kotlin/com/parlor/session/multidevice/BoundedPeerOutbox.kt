@@ -246,10 +246,12 @@ internal class BoundedPeerOutbox(
 
         /**
          * Conservative retained/in-flight protocol payload bound per peer:
-         * 32 control frames, one conflated snapshot, and one in-flight frame.
+         * 32 control frames, one conflated heartbeat, one conflated snapshot,
+         * and one in-flight frame.
          */
         const val MAX_OUTBOUND_BYTES_PER_PEER: Int =
             MAX_CONTROL_FRAMES * MAX_CONTROL_PAYLOAD_BYTES +
+                MAX_CONTROL_PAYLOAD_BYTES +
                 MAX_ROOM_FRAME_BYTES * 2
     }
 }
