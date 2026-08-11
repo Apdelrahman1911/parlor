@@ -644,7 +644,9 @@ internal object WhodunitStateValidator {
             "A player is both disconnected and permanently dropped"
         }
         require(
-            state.phase == WhodunitPhase.PostGame || public.droppedPlayers.isEmpty(),
+            state.phase == WhodunitPhase.Reveal ||
+                state.phase == WhodunitPhase.PostGame ||
+                public.droppedPlayers.isEmpty(),
         ) { "Active Whodunit state contains a permanently dropped player" }
         require(
             state.public.modeId == WhodunitIds.EliminationModeId ||

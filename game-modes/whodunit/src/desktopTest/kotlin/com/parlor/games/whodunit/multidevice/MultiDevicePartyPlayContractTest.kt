@@ -520,6 +520,12 @@ class MultiDevicePartyPlayContractTest {
         assertThat(terminal.public.paused).isEqualTo(false)
         assertThat(terminal.public.droppedPlayers).isEqualTo(setOf(bob))
         assertThat(terminal.players.map { it.id }).isEqualTo(players.map { it.id })
+        assertThat(aliceBridge.controller.publicState.value.state.phase)
+            .isEqualTo(WhodunitPhase.Reveal)
+        assertThat(aliceBridge.controller.publicState.value.state.public.droppedPlayers)
+            .isEqualTo(setOf(bob))
+        assertThat(carolBridge.controller.publicState.value.state.phase)
+            .isEqualTo(WhodunitPhase.Reveal)
 
         hostBridge.close()
         aliceBridge.close()

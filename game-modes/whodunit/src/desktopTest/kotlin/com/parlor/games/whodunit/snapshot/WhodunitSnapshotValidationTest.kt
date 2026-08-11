@@ -21,6 +21,7 @@ import com.parlor.games.whodunit.content.WhodunitCase
 import com.parlor.games.whodunit.domain.action.WhodunitAction
 import com.parlor.games.whodunit.domain.event.Verdict
 import com.parlor.games.whodunit.domain.phase.WhodunitPhase
+import com.parlor.games.whodunit.domain.projection.WhodunitProjectionPolicy
 import com.parlor.games.whodunit.domain.reducer.WhodunitReducer
 import com.parlor.games.whodunit.domain.reducer.WhodunitReducerContext
 import com.parlor.games.whodunit.testing.validatedWhodunitCaseForTest
@@ -34,6 +35,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
 import kotlin.test.assertFailsWith
+import kotlin.test.assertTrue
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
@@ -136,6 +138,40 @@ class WhodunitSnapshotValidationTest {
         assertDecodeRejected(
             assigned.copy(
                 public = assigned.public.copy(droppedPlayers = setOf(players.last().id)),
+            ),
+        )
+    }
+
+    @Test
+    fun graceExpiryRevealRoundTripsAndIsValidForPeerInstallation() {
+        val missingPlayer = players.last().id
+        val disconnected = WhodunitReducer.reduce(
+            assigned,
+            WhodunitAction.MarkPlayerDisconnected(missingPlayer),
+            reducerContext(),
+        ).newState
+        val terminalReveal = WhodunitReducer.reduce(
+            disconnected,
+            WhodunitAction.ContinueWithoutPlayer(missingPlayer),
+            reducerContext(),
+        ).newState
+
+        assertEquals(WhodunitPhase.Reveal, terminalReveal.phase)
+        assertEquals(setOf(missingPlayer), terminalReveal.public.droppedPlayers)
+        assertEquals(terminalReveal, codec.decode(codec.encode(terminalReveal)))
+
+        val receivingPlayer = players.first().id
+        val publicProjection = WhodunitProjectionPolicy.toPublic(terminalReveal).state
+        val ownPrivate = WhodunitProjectionPolicy
+            .toPlayer(terminalReveal, receivingPlayer)
+            .state
+            .privatePerPlayer[receivingPlayer]
+        assertTrue(
+            WhodunitStateValidator.isValidPeerProjectionForCase(
+                publicState = publicProjection,
+                ownPrivate = ownPrivate,
+                selfPlayerId = receivingPlayer,
+                case = validatedCase(),
             ),
         )
     }
