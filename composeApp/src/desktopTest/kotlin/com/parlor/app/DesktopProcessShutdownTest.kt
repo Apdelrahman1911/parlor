@@ -34,6 +34,10 @@ class DesktopProcessShutdownTest {
     fun activeHostLeavesBeforeTheProcessScopeIsCancelled() = runTest {
         val processJob = SupervisorJob()
         val processScope = CoroutineScope(processJob + StandardTestDispatcher(testScheduler))
+        val transportJob = SupervisorJob()
+        val transportScope = CoroutineScope(
+            transportJob + StandardTestDispatcher(testScheduler),
+        )
         val owner = ProcessMultiplayerSessionOwner(processScope)
         val room = DesktopTestRoom(isHost = true)
         val route = MultiplayerSessionRoute.host(
@@ -45,18 +49,23 @@ class DesktopProcessShutdownTest {
             owner.acquire(route, hostSeed = 7L) { Result.Success(room) },
         )
 
-        val result = shutdownDesktopMultiplayer(owner, processScope)
+        val result = shutdownDesktopMultiplayer(owner, processScope, transportScope)
 
         assertIs<Result.Success<Unit>>(result)
         assertEquals(1, room.leaveCalls)
         assertIs<ProcessMultiplayerState.Idle>(owner.state.value)
         assertFalse(processJob.isActive)
+        assertFalse(transportJob.isActive)
     }
 
     @Test
     fun stalledLeaveIsBoundedAndStillCancelsTheProcessScope() = runTest {
         val processJob = SupervisorJob()
         val processScope = CoroutineScope(processJob + StandardTestDispatcher(testScheduler))
+        val transportJob = SupervisorJob()
+        val transportScope = CoroutineScope(
+            transportJob + StandardTestDispatcher(testScheduler),
+        )
         val owner = ProcessMultiplayerSessionOwner(processScope)
         val room = DesktopTestRoom(
             isHost = false,
@@ -72,6 +81,7 @@ class DesktopProcessShutdownTest {
         val result = shutdownDesktopMultiplayer(
             sessionOwner = owner,
             sessionScope = processScope,
+            transportScope = transportScope,
             timeoutMillis = 1_000L,
         )
 
@@ -79,21 +89,27 @@ class DesktopProcessShutdownTest {
         assertEquals(NetError.Timeout, result.error)
         assertEquals(1, room.finalLeaveCalls)
         assertFalse(processJob.isActive)
+        assertFalse(transportJob.isActive)
     }
 
     @Test
     fun idleShutdownIsSuccessfulAndIdempotentlyCancelsTheScope() = runTest {
         val processJob = SupervisorJob()
         val processScope = CoroutineScope(processJob + StandardTestDispatcher(testScheduler))
+        val transportJob = SupervisorJob()
+        val transportScope = CoroutineScope(
+            transportJob + StandardTestDispatcher(testScheduler),
+        )
         val owner = ProcessMultiplayerSessionOwner(processScope)
 
-        val first = shutdownDesktopMultiplayer(owner, processScope)
-        val second = shutdownDesktopMultiplayer(owner, processScope)
+        val first = shutdownDesktopMultiplayer(owner, processScope, transportScope)
+        val second = shutdownDesktopMultiplayer(owner, processScope, transportScope)
 
         assertIs<Result.Success<Unit>>(first)
         assertIs<Result.Success<Unit>>(second)
         assertTrue(owner.state.value is ProcessMultiplayerState.Idle)
         assertFalse(processJob.isActive)
+        assertFalse(transportJob.isActive)
     }
 }
 

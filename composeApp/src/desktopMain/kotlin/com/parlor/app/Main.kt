@@ -22,12 +22,17 @@ fun main() {
     val koinApplication = startKoin { modules(allModules) }
     val sessionOwner = koinApplication.koin.get<ProcessMultiplayerSessionOwner>()
     val sessionScope = koinApplication.koin.get<CoroutineScope>(named("multiplayerSession"))
+    val transportScope = koinApplication.koin.get<CoroutineScope>(named("p2pTransport"))
     application {
         Window(
             onCloseRequest = {
                 try {
                     runBlocking {
-                        shutdownDesktopMultiplayer(sessionOwner, sessionScope)
+                        shutdownDesktopMultiplayer(
+                            sessionOwner = sessionOwner,
+                            sessionScope = sessionScope,
+                            transportScope = transportScope,
+                        )
                     }
                 } finally {
                     koinApplication.close()
@@ -50,6 +55,7 @@ fun main() {
 internal suspend fun shutdownDesktopMultiplayer(
     sessionOwner: ProcessMultiplayerSessionOwner,
     sessionScope: CoroutineScope,
+    transportScope: CoroutineScope,
     timeoutMillis: Long = DESKTOP_SHUTDOWN_TIMEOUT_MILLIS,
 ): Result<Unit, NetError> = try {
     withTimeoutOrNull(timeoutMillis) {
@@ -59,6 +65,7 @@ internal suspend fun shutdownDesktopMultiplayer(
     } ?: Result.Failure(NetError.Timeout)
 } finally {
     sessionScope.cancel("Desktop application is closing")
+    transportScope.cancel("Desktop application is closing")
 }
 
 private const val DESKTOP_SHUTDOWN_TIMEOUT_MILLIS: Long = 5_000L
