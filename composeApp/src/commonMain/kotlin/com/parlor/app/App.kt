@@ -27,6 +27,7 @@ import com.parlor.app.shell.game.GameShellRouter
 import com.parlor.app.shell.home.HomeScreen
 import com.parlor.app.shell.home.HomeRecoveryAvailability
 import com.parlor.app.shell.home.LocalResumeFailureScreen
+import com.parlor.app.shell.home.readLocalRecoveryInventory
 import com.parlor.app.shell.home.resolveHomeRecoveryAvailability
 import com.parlor.app.shell.settings.SettingsScreen
 import com.parlor.core.ids.SessionId
@@ -127,11 +128,16 @@ internal fun App(settings: SettingsStore) {
                 ) {
                     if (screen != AppScreen.Home) return@produceState
                     value = HomeRecoveryAvailability.Loading
-                    val localResult = snapshotStore.listUnfinished()
+                    val localResult = readLocalRecoveryInventory(snapshotStore)
                     val multiplayerResult = roomTransport.resumableSession()
                     value = resolveHomeRecoveryAvailability(
                         localResult = localResult,
                         multiplayerResult = multiplayerResult,
+                        supportsLocalResume = { entry ->
+                            entry.gameId?.let { gameId ->
+                                gameShellRouter.resumeLocal(gameId, entry.sessionId)
+                            } != null
+                        },
                         supportsMultiplayerResume = { info ->
                             gameShellRouter.resumeMultiplayer(
                                 gameId = info.gameId,

@@ -100,7 +100,10 @@ class ProductionUiAccessibilityContractTest {
         val english = read("composeApp/src/commonMain/composeResources/values/strings.xml")
         val arabic = read("composeApp/src/commonMain/composeResources/values-ar/strings.xml")
 
-        assertContains(home, "for (game in games)")
+        assertContains(home, "items = games")
+        assertContains(home, "game.definition.id")
+        assertFalse(home.contains("WhodunitIds"))
+        assertFalse(home.contains("MafiaIds"))
         assertFalse(home.contains("ComingSoonTile"))
         assertFalse(english.contains("home_coming_soon_state"))
         assertFalse(arabic.contains("home_coming_soon_state"))

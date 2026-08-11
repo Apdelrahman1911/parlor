@@ -3,6 +3,7 @@ package com.parlor.app.shell.home
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,8 +11,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -31,8 +33,12 @@ import com.parlor.app.resources.home_recovery_retry_description
 import com.parlor.app.resources.home_recovery_unavailable_body
 import com.parlor.app.resources.home_recovery_unavailable_title
 import com.parlor.app.resources.home_resume_tile_description
+import com.parlor.app.resources.home_resume_tile_game_description
+import com.parlor.app.resources.home_resume_tile_game_title
+import com.parlor.app.resources.home_resume_tile_position
 import com.parlor.app.resources.home_resume_tile_subtitle
 import com.parlor.app.resources.home_resume_tile_title
+import com.parlor.app.resources.home_resume_tile_unknown_description
 import com.parlor.app.resources.home_resume_multiplayer_description
 import com.parlor.app.resources.home_resume_multiplayer_subtitle
 import com.parlor.app.resources.home_resume_multiplayer_title
@@ -73,7 +79,7 @@ internal fun HomeScreen(
     onGameSelected: (GameId) -> Unit,
     onSettings: () -> Unit,
     modifier: Modifier = Modifier,
-    unfinishedSessions: List<SessionId> = emptyList(),
+    unfinishedSessions: List<LocalRecoveryEntry> = emptyList(),
     onResume: (SessionId) -> Unit = {},
     hasResumableMultiplayer: Boolean = false,
     onResumeMultiplayer: () -> Unit = {},
@@ -82,38 +88,73 @@ internal fun HomeScreen(
     onRetryRecovery: () -> Unit = {},
 ) {
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
-        Column(
+        LazyColumn(
             modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(
-                    start = ParlorTheme.spacing.xl,
-                    end = ParlorTheme.spacing.xl,
-                    top = ParlorTheme.spacing.xl,
-                    bottom = ParlorTheme.spacing.xxl,
-                ),
+                .fillMaxSize(),
+            contentPadding = PaddingValues(
+                start = ParlorTheme.spacing.xl,
+                end = ParlorTheme.spacing.xl,
+                top = ParlorTheme.spacing.xl,
+                bottom = ParlorTheme.spacing.xxl,
+            ),
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.xl),
         ) {
-            HomeTopBar(onSettings = onSettings)
+            item(key = "home-top-bar") { HomeTopBar(onSettings = onSettings) }
 
             when {
-                recoveryLoading -> RecoveryLoadingCard()
-                recoveryUnavailable -> RecoveryUnavailableCard(onRetryRecovery)
+                recoveryLoading -> item(key = "recovery-loading") { RecoveryLoadingCard() }
+                recoveryUnavailable -> item(key = "recovery-unavailable") {
+                    RecoveryUnavailableCard(onRetryRecovery)
+                }
             }
 
             if (unfinishedSessions.isNotEmpty() || hasResumableMultiplayer) {
-                ContinueSection(
-                    sessions = unfinishedSessions,
-                    onResume = onResume,
-                    hasResumableMultiplayer = hasResumableMultiplayer,
-                    onResumeMultiplayer = onResumeMultiplayer,
-                )
+                item(key = "continue-label") {
+                    EyebrowLabel(
+                        text = stringResource(Res.string.home_continue_label),
+                        accent = false,
+                    )
+                }
+                itemsIndexed(
+                    items = unfinishedSessions,
+                    key = { _, entry -> "local:${entry.sessionId.raw}" },
+                ) { index, entry ->
+                    LocalResumeTile(
+                        entry = entry,
+                        position = index + 1,
+                        total = unfinishedSessions.size,
+                        games = games,
+                        onResume = onResume,
+                    )
+                }
+                if (hasResumableMultiplayer) {
+                    item(key = "multiplayer-resume") {
+                        ResumeTile(
+                            title = stringResource(Res.string.home_resume_multiplayer_title),
+                            subtitle = stringResource(
+                                Res.string.home_resume_multiplayer_subtitle,
+                            ),
+                            contentDescription = stringResource(
+                                Res.string.home_resume_multiplayer_description,
+                            ),
+                            onTap = onResumeMultiplayer,
+                        )
+                    }
+                }
             }
 
-            GamesSection(
-                games = games,
-                onGameSelected = onGameSelected,
-            )
+            item(key = "games-label") {
+                EyebrowLabel(text = stringResource(Res.string.home_games_label), accent = false)
+            }
+            items(
+                items = games,
+                key = { game -> "game:${game.definition.id.raw}" },
+            ) { game ->
+                GameHeroCard(
+                    presentation = game.catalogPresentation(),
+                    onOpen = { onGameSelected(game.definition.id) },
+                )
+            }
         }
     }
 }
@@ -202,33 +243,46 @@ private fun HomeTopBar(onSettings: () -> Unit) {
 // =========================================================================== Continue ==
 
 @Composable
-private fun ContinueSection(
-    sessions: List<SessionId>,
+private fun LocalResumeTile(
+    entry: LocalRecoveryEntry,
+    position: Int,
+    total: Int,
+    games: List<GameShellBinding>,
     onResume: (SessionId) -> Unit,
-    hasResumableMultiplayer: Boolean,
-    onResumeMultiplayer: () -> Unit,
 ) {
-    Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m)) {
-        EyebrowLabel(text = stringResource(Res.string.home_continue_label), accent = false)
-        sessions.forEach { id ->
-            ResumeTile(
-                title = stringResource(Res.string.home_resume_tile_title),
-                subtitle = stringResource(Res.string.home_resume_tile_subtitle),
-                contentDescription = stringResource(Res.string.home_resume_tile_description),
-                onTap = { onResume(id) },
-            )
-        }
-        if (hasResumableMultiplayer) {
-            ResumeTile(
-                title = stringResource(Res.string.home_resume_multiplayer_title),
-                subtitle = stringResource(Res.string.home_resume_multiplayer_subtitle),
-                contentDescription = stringResource(
-                    Res.string.home_resume_multiplayer_description,
-                ),
-                onTap = onResumeMultiplayer,
-            )
-        }
+    val binding = entry.gameId?.let { gameId ->
+        games.firstOrNull { game -> game.definition.id == gameId }
     }
+    val gameTitle = if (binding == null) null else binding.catalogPresentation().title
+    val title = if (gameTitle == null) {
+        stringResource(Res.string.home_resume_tile_title)
+    } else {
+        stringResource(Res.string.home_resume_tile_game_title, gameTitle)
+    }
+    val contentDescription = if (gameTitle == null) {
+        if (total == 1) {
+            stringResource(Res.string.home_resume_tile_description)
+        } else {
+            stringResource(Res.string.home_resume_tile_unknown_description, position, total)
+        }
+    } else {
+        stringResource(
+            Res.string.home_resume_tile_game_description,
+            gameTitle,
+            position,
+            total,
+        )
+    }
+    ResumeTile(
+        title = title,
+        subtitle = if (total == 1) {
+            stringResource(Res.string.home_resume_tile_subtitle)
+        } else {
+            stringResource(Res.string.home_resume_tile_position, position, total)
+        },
+        contentDescription = contentDescription,
+        onTap = { onResume(entry.sessionId) },
+    )
 }
 
 @Composable
@@ -256,24 +310,6 @@ private fun ResumeTile(
                 text = subtitle,
                 style = ParlorTheme.typography.bodyMedium,
                 color = ParlorTheme.colors.textSecondary,
-            )
-        }
-    }
-}
-
-// =============================================================================== Games ==
-
-@Composable
-private fun GamesSection(
-    games: List<GameShellBinding>,
-    onGameSelected: (GameId) -> Unit,
-) {
-    Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m)) {
-        EyebrowLabel(text = stringResource(Res.string.home_games_label), accent = false)
-        for (game in games) {
-            GameHeroCard(
-                presentation = game.catalogPresentation(),
-                onOpen = { onGameSelected(game.definition.id) },
             )
         }
     }
