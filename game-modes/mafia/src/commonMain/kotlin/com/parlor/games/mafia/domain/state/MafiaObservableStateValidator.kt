@@ -60,6 +60,7 @@ internal object MafiaObservableStateValidator {
         require(state.public.day >= 0) { "Mafia day is negative" }
 
         validateAnnouncements(state, playerIdSet)
+        validateMortalityReachability(state)
         validateVote(state)
         validatePhase(state)
         validateRoleVisibility(state)
@@ -86,8 +87,13 @@ internal object MafiaObservableStateValidator {
             require(announcement.tally.all { (id, count) -> id in playerIds && count > 0 }) {
                 "Vote announcement contains an invalid tally"
             }
-            require(announcement.tally.values.sumOf { it.toLong() } <= playerIds.size.toLong()) {
-                "Vote announcement contains more votes than players"
+            val laterNightDeath = public.lastNight
+                ?.takeIf { it.day > announcement.day }
+                ?.killedPlayerId
+            val eligibleBeforeVote = public.roster.count(PublicPlayerSlot::alive) +
+                listOfNotNull(announcement.eliminatedPlayerId, laterNightDeath).distinct().size
+            require(announcement.tally.values.sumOf { it.toLong() } <= eligibleBeforeVote.toLong()) {
+                "Vote announcement contains more votes than eligible players"
             }
             require(announcement.eliminatedPlayerId == null || announcement.eliminatedPlayerId in playerIds) {
                 "Vote announcement references an unknown elimination"
@@ -122,10 +128,25 @@ internal object MafiaObservableStateValidator {
                 require(public.roster.single { it.playerId == eliminated }.alive.not()) {
                     "Latest vote elimination is still alive"
                 }
+                require(eliminated != public.lastNight?.killedPlayerId) {
+                    "Latest night and vote eliminate the same player"
+                }
             }
         }
         require(public.winner == null || state.phase == MafiaPhase.PostGame) {
             "A non-terminal Mafia phase contains a winner"
+        }
+    }
+
+    /**
+     * At most one player can die during each Night and one during each day vote.
+     * This public bound does not need the host audit log and therefore also
+     * protects peers from a redacted-but-impossible mortality history.
+     */
+    private fun validateMortalityReachability(state: MafiaState) {
+        val deadCount = state.public.roster.count { !it.alive }
+        require(deadCount.toLong() <= state.public.day.toLong() * MAX_DEATHS_PER_DAY) {
+            "Mafia mortality exceeds the number of resolved phases"
         }
     }
 
@@ -345,4 +366,6 @@ internal object MafiaObservableStateValidator {
         val maximum = values.maxOrNull() ?: return false
         return values.count { it == maximum } >= 2
     }
+
+    private const val MAX_DEATHS_PER_DAY = 2L
 }

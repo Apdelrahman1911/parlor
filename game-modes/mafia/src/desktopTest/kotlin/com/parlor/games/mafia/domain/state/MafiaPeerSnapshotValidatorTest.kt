@@ -102,7 +102,7 @@ class MafiaPeerSnapshotValidatorTest {
         val base = MafiaState(
             public = MafiaPublic(
                 settings = MafiaSettingsPresets.forPlayerCount(terminalPlayers.size),
-                day = 1,
+                day = 2,
                 roster = terminalPlayers.map { player ->
                     val alive = player.id == mafia || player.id == survivingTown
                     PublicPlayerSlot(
@@ -113,6 +113,17 @@ class MafiaPeerSnapshotValidatorTest {
                         revealedRole = roles.getValue(player.id),
                     )
                 },
+                lastNight = NightAnnouncement(
+                    day = 2,
+                    killedPlayerId = terminalPlayers[4].id,
+                    wasSaved = false,
+                ),
+                lastVote = VoteAnnouncement(
+                    day = 1,
+                    tally = mapOf(terminalPlayers[3].id to 3),
+                    eliminatedPlayerId = terminalPlayers[3].id,
+                    outcome = VoteOutcome.Eliminated,
+                ),
                 winner = Team.Mafia,
             ),
             privatePerPlayer = emptyMap(),
@@ -134,9 +145,12 @@ class MafiaPeerSnapshotValidatorTest {
 
         val earlyEnd = base.copy(
             public = base.public.copy(
-                roster = base.public.roster.mapIndexed { index, slot ->
-                    slot.copy(alive = index < 4)
+                day = 0,
+                roster = base.public.roster.map { slot ->
+                    slot.copy(alive = true)
                 },
+                lastNight = null,
+                lastVote = null,
                 winner = null,
             ),
         )
@@ -150,12 +164,12 @@ class MafiaPeerSnapshotValidatorTest {
                 base.copy(
                     public = base.public.copy(
                         lastNight = NightAnnouncement(
-                            day = 1,
+                            day = 2,
                             killedPlayerId = null,
                             wasSaved = false,
                         ),
                         lastVote = VoteAnnouncement(
-                            day = 1,
+                            day = 2,
                             tally = mapOf(
                                 terminalPlayers[1].id to Int.MAX_VALUE,
                                 terminalPlayers[2].id to Int.MAX_VALUE,
@@ -178,6 +192,94 @@ class MafiaPeerSnapshotValidatorTest {
                 mafia,
             ),
             "terminal day five cannot exist without any prior resolution",
+        )
+    }
+
+    @Test
+    fun terminal_projection_rejects_reducer_impossible_mortality_and_vote_history() {
+        val terminalPlayers = players.take(5)
+        val mafia = terminalPlayers.first().id
+        val roles = terminalPlayers.mapIndexed { index, player ->
+            player.id to when (index) {
+                0 -> Role.Mafia
+                1 -> Role.Detective
+                else -> Role.Civilian
+            }
+        }.toMap()
+        val oneDayTerminal = MafiaState(
+            public = MafiaPublic(
+                settings = MafiaSettingsPresets.forPlayerCount(terminalPlayers.size),
+                day = 1,
+                roster = terminalPlayers.mapIndexed { index, player ->
+                    PublicPlayerSlot(
+                        playerId = player.id,
+                        displayName = player.displayName,
+                        seat = player.seat,
+                        alive = index < 2,
+                        revealedRole = roles.getValue(player.id),
+                    )
+                },
+                lastNight = NightAnnouncement(
+                    day = 1,
+                    killedPlayerId = terminalPlayers[2].id,
+                    wasSaved = false,
+                ),
+                lastVote = VoteAnnouncement(
+                    day = 1,
+                    tally = mapOf(terminalPlayers[3].id to 3),
+                    eliminatedPlayerId = terminalPlayers[3].id,
+                    outcome = VoteOutcome.Eliminated,
+                ),
+                winner = Team.Mafia,
+            ),
+            privatePerPlayer = emptyMap(),
+            hostOnly = MafiaHostOnly(fullRoleMap = emptyMap(), randomSeed = 0L),
+            phase = MafiaPhase.PostGame,
+            players = terminalPlayers,
+        )
+        val own = MafiaPrivate(role = Role.Mafia, team = Team.Mafia)
+
+        assertFalse(
+            MafiaPeerSnapshotValidator.isValid(oneDayTerminal, own, mafia),
+            "one night and one vote cannot produce three deaths",
+        )
+
+        val reachableOneDayEnd = oneDayTerminal.copy(
+            public = oneDayTerminal.public.copy(
+                roster = oneDayTerminal.public.roster.mapIndexed { index, slot ->
+                    slot.copy(alive = index !in setOf(2, 3))
+                },
+                winner = null,
+            ),
+        )
+        assertTrue(MafiaPeerSnapshotValidator.isValid(reachableOneDayEnd, own, mafia))
+        val tooManyEligibleVotes = reachableOneDayEnd.copy(
+            public = reachableOneDayEnd.public.copy(
+                lastVote = requireNotNull(reachableOneDayEnd.public.lastVote).copy(
+                    tally = mapOf(terminalPlayers[3].id to 3, terminalPlayers[4].id to 2),
+                ),
+            ),
+        )
+        assertFalse(
+            MafiaPeerSnapshotValidator.isValid(tooManyEligibleVotes, own, mafia),
+            "players killed before the ballot cannot contribute votes",
+        )
+
+        val duplicateVictim = oneDayTerminal.copy(
+            public = oneDayTerminal.public.copy(
+                roster = oneDayTerminal.public.roster.mapIndexed { index, slot ->
+                    slot.copy(alive = index != 2)
+                },
+                lastVote = requireNotNull(oneDayTerminal.public.lastVote).copy(
+                    tally = mapOf(terminalPlayers[2].id to 4),
+                    eliminatedPlayerId = terminalPlayers[2].id,
+                ),
+                winner = null,
+            ),
+        )
+        assertFalse(
+            MafiaPeerSnapshotValidator.isValid(duplicateVictim, own, mafia),
+            "the same player cannot be killed at night and eliminated by vote",
         )
     }
 
