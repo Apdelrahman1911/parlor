@@ -230,7 +230,7 @@ class ProductionVerificationWorkflowContractTest {
             ".toolchains.apple.minimum_ios_sdk_major",
             "xcrun --sdk iphoneos --show-sdk-version",
             "xcrun --sdk iphonesimulator --show-sdk-version",
-            "allTests",
+            "productionIosSimulatorRuntimeTests",
             "productionAppleCheck",
             "Apple type-aware static analysis",
             "--dependency-verification=strict",
@@ -249,6 +249,26 @@ class ProductionVerificationWorkflowContractTest {
                 message = "Apple CI must retain the release gate: $required",
             )
         }
+
+        val appleTestStep = workflow
+            .substringAfter("- name: Run iOS simulator tests, Apple static analysis, and release linkage gates")
+            .substringBefore("- name: Validate iOS plist and privacy manifest")
+        assertContains(
+            appleTestStep,
+            "./gradlew productionIosSimulatorRuntimeTests productionAppleCheck",
+            message = "Apple CI must run the dedicated executable simulator aggregate before linkage gates",
+        )
+        assertFalse(
+            "./gradlew allTests" in appleTestStep,
+            "Apple CI must not duplicate the Linux common/desktop/Android aggregate",
+        )
+
+        val simulatorRuntimeGate = rootBuild
+            .substringAfter("val productionIosSimulatorRuntimeTests")
+            .substringBefore("val productionAndroidCheck")
+        assertContains(simulatorRuntimeGate, "Runs every KMP iosSimulatorArm64 runtime test")
+        assertContains(rootBuild, "it.name == \"iosSimulatorArm64Test\"")
+        assertContains(rootBuild, "tasks.named(\"productionIosSimulatorRuntimeTests\")")
         assertContains(
             xcodeProject,
             "embedAndSignAppleFrameworkForXcode --dependency-verification=strict",

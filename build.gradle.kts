@@ -29,6 +29,11 @@ val productionDesktopCheck = tasks.register("productionDesktopCheck") {
     description = "Runs every KMP desktop test plus the desktop application compile."
 }
 
+val productionIosSimulatorRuntimeTests = tasks.register("productionIosSimulatorRuntimeTests") {
+    group = "verification"
+    description = "Runs every KMP iosSimulatorArm64 runtime test."
+}
+
 val productionAndroidCheck = tasks.register("productionAndroidCheck") {
     group = "verification"
     description = "Runs Android debug/release unit tests and builds, shrinks, and lints the unsigned release bundle."
@@ -177,6 +182,12 @@ subprojects {
             val moduleAllTests = this
             rootProject.tasks.named("allTests").configure {
                 dependsOn(moduleAllTests)
+            }
+        }
+        tasks.matching { it.name == "iosSimulatorArm64Test" }.configureEach {
+            val moduleIosSimulatorTest = this
+            rootProject.tasks.named("productionIosSimulatorRuntimeTests").configure {
+                dependsOn(moduleIosSimulatorTest)
             }
         }
         rootProject.tasks.named("productionDesktopCheck").configure {

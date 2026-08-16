@@ -13,12 +13,13 @@ remain separate evidence.
 |---|---|---|
 | Common/domain/desktop tests | `./gradlew productionDesktopCheck` | Every KMP module's `desktopTest` passes; the app's desktop main code compiles as a dependency. |
 | Repository test aggregate | `./gradlew allTests` | The explicit root aggregate runs every KMP module's `allTests` task that exists; platform-host limitations are reported by Gradle rather than silently omitted. |
+| iOS simulator runtime tests | `./gradlew productionIosSimulatorRuntimeTests` on Apple Silicon macOS | Every KMP module's executable `iosSimulatorArm64Test` task runs; new KMP modules join automatically. This is runtime-test evidence for the simulator only, not physical-device evidence. |
 | Android release | `./gradlew productionAndroidCheck` | Android debug and release unit tests, release Kotlin compilation, R8, unsigned release AAB, `lintRelease`, and the allowlist-enforcing `verifyReleaseLintWarnings` task all pass. |
 | iOS KMP release | `./gradlew productionAppleCheck` on macOS | Release frameworks link serially for `iosArm64`, `iosSimulatorArm64`, and `iosX64` without concurrent-LTO heap pressure. |
 | Unsigned Swift Release wrapper | The Release `xcodebuild` command in `IOS_SETUP.md`/`RELEASE_RUNBOOK.md` with `ARCHS=arm64`, `ONLY_ACTIVE_ARCH=YES`, and signing disabled | The arm64 simulator `.app` builds, its executable and plist/privacy inputs are inspected, and its checksum is recorded. Other Kotlin/Native architectures remain independently covered by `productionAppleCheck`; neither result is physical-device runtime evidence. |
 | Host-independent aggregate | `./gradlew productionCheck` | Desktop/common, Android unit, repository-wide Detekt/static-analysis, shell-dispatch validation, and unsigned Android release gates (including lint warning verification) pass. Apple remains a separate macOS job. |
 | Release automation security | `./gradlew productionReleaseAutomationCheck` | Candidate/provenance tampering tests, exact-tree/history tests, no-publication tests, workflow contracts, immutable Action pins, pinned ShellCheck/actionlint, and shell/YAML checks pass. |
-| Exact-candidate aggregate | `./gradlew productionCheck productionAppleCheck allTests --dependency-verification=strict --no-daemon --stacktrace --console=plain` on macOS | Every configured automated suite and unsigned Android/Apple release gate passes in one invocation at the recorded clean Git SHA. |
+| Exact-candidate aggregate | Linux runs `./gradlew productionCheck allTests`; macOS runs `./gradlew productionIosSimulatorRuntimeTests productionAppleCheck`, both with strict dependency verification | Every configured automated suite and unsigned Android/Apple release gate passes at the same recorded clean Git SHA without duplicating common/desktop/Android tests on the expensive Apple runner. |
 
 The root tasks discover KMP modules through the multiplatform plugin. A newly
 included game module therefore joins the desktop gate automatically.
@@ -64,11 +65,12 @@ unit test.
   `verifyReleaseLintWarnings` contract, unsigned AAB, merged-manifest
   inspection, and artifact hashes.
 - macOS: pinned Xcode `26.3` build `17C529` and iOS SDK-floor validation,
-  strict KMP `allTests`, release framework linkage for all supported
-  Apple targets (linkage-only for `iosArm64`/`iosX64` on this job), plist and
-  privacy-manifest validation, and an unsigned Xcode Swift Release wrapper
-  build. The wrapper invokes the real Gradle resource/embed task with strict
-  dependency verification.
+  every KMP `iosSimulatorArm64Test` through the dedicated
+  `productionIosSimulatorRuntimeTests` aggregate, release framework linkage
+  for all supported Apple targets (linkage-only for `iosArm64`/`iosX64` on
+  this job), plist and privacy-manifest validation, and an unsigned Xcode
+  Swift Release wrapper build. The wrapper invokes the real Gradle
+  resource/embed task with strict dependency verification.
 
 The workflow deliberately labels framework linkage separately from executable
 simulator runtime tests. A successful link is not reported as a runtime test.

@@ -81,6 +81,14 @@ def verify_validation(text: str) -> None:
         fail("validation workflow must qualify all protected branches")
     if "productionReleaseAutomationCheck" not in text:
         fail("validation workflow does not enforce release-system tests")
+    apple_test_step = text.split(
+        "- name: Run iOS simulator tests, Apple static analysis, and release linkage gates",
+        1,
+    )[-1].split("- name: Validate iOS plist and privacy manifest", 1)[0]
+    if "./gradlew productionIosSimulatorRuntimeTests productionAppleCheck" not in apple_test_step:
+        fail("validation workflow does not enforce the dedicated executable iOS simulator test aggregate")
+    if "./gradlew allTests" in apple_test_step:
+        fail("Apple validation duplicates the Linux common/desktop/Android test aggregate")
     if '$1 ~ /PRODUCT_BUNDLE_IDENTIFIER$/' in text:
         fail("validation workflow can confuse the Mac Catalyst derivation flag with the Bundle ID")
     if text.count('key == "PRODUCT_BUNDLE_IDENTIFIER"') != 2:

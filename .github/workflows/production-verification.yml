@@ -135,8 +135,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          echo "allTests includes executable simulator runtime tests; productionAppleCheck runs Apple type-aware static analysis and linkage-only checks for iosArm64, iosSimulatorArm64, and iosX64."
-          ./gradlew allTests productionAppleCheck --dependency-verification=strict --no-daemon --stacktrace --console=plain
+          echo "productionIosSimulatorRuntimeTests runs all executable iosSimulatorArm64 runtime tests; productionAppleCheck runs Apple type-aware static analysis and linkage-only checks for iosArm64, iosSimulatorArm64, and iosX64."
+          ./gradlew productionIosSimulatorRuntimeTests productionAppleCheck --dependency-verification=strict --no-daemon --stacktrace --console=plain
 
       - name: Validate iOS plist and privacy manifest
         shell: bash

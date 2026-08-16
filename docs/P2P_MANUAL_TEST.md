@@ -211,7 +211,9 @@ restarting devices. A single success is evidence for that run, not a claim of
 1. Run the automated gates for the exact SHA first:
 
    ```bash
-   ./gradlew productionCheck productionAppleCheck allTests \
+   ./gradlew productionCheck allTests \
+     --dependency-verification=strict --no-daemon --stacktrace --console=plain
+   ./gradlew productionIosSimulatorRuntimeTests productionAppleCheck \
      --dependency-verification=strict --no-daemon --stacktrace --console=plain
    ```
 
