@@ -799,6 +799,33 @@ class ValidationOnlyTest(unittest.TestCase):
         ):
             self.assertEqual(store_api.main(), 0)
 
+    def test_execute_mode_cannot_bypass_blocked_store_identity_ownership(self) -> None:
+        commands = [
+            [
+                "store_api.py",
+                "google-check-unique",
+                "--package", "com.parlor.app",
+                "--version-code", "1",
+                "--credentials", "/private/credential.json",
+                "--execute",
+            ],
+            [
+                "store_api.py",
+                "apple-check-unique",
+                "--app-id", "app-1",
+                "--bundle-id", "com.parlor.app",
+                "--build-number", "1",
+                "--issuer-id", "issuer-1",
+                "--key-id", "KEY1234567",
+                "--private-key", "/private/AuthKey.p8",
+                "--execute",
+            ],
+        ]
+        for argv in commands:
+            with self.subTest(command=argv[1]), mock.patch.object(sys, "argv", argv):
+                with self.assertRaisesRegex(store_api.ReleaseError, "ownership is not verified"):
+                    store_api.main()
+
     @staticmethod
     def external_receipt(candidate: dict, platform: str) -> dict:
         common = {

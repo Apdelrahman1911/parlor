@@ -138,12 +138,31 @@ class WorkflowContractTest(unittest.TestCase):
 
     def test_missing_shared_store_lock_is_rejected(self) -> None:
         workflows = {
-            name: "group: parlor-google-play-com-parlor-app\ngroup: parlor-app-store-connect-com-parlor-app"
+            name: "group: parlor-google-play-production-identity\n"
+            "group: parlor-app-store-connect-production-identity"
             for name in workflow_contract.STORE_WORKFLOWS
         }
-        workflows["testing-candidate.yml"] = "group: parlor-google-play-com-parlor-app"
+        workflows["testing-candidate.yml"] = "group: parlor-google-play-production-identity"
         with self.assertRaises(RuntimeError):
             workflow_contract.verify_store_serialization(workflows)
+
+    def test_store_workflow_without_identity_ownership_gate_is_rejected(self) -> None:
+        workflow = (
+            workflow_contract.ROOT / ".github/workflows/testing-candidate.yml"
+        ).read_text(encoding="utf-8")
+        with self.assertRaisesRegex(RuntimeError, "identity ownership"):
+            workflow_contract.verify_store_workflow(
+                "testing-candidate.yml",
+                workflow.replace("assert-store-identity-approved", "identity-check-removed", 1),
+            )
+
+    def test_release_tool_download_failure_cannot_false_pass(self) -> None:
+        script = (
+            workflow_contract.ROOT / "scripts/release/validate_release_system.sh"
+        ).read_text(encoding="utf-8")
+        broken = script.replace("return 2", "return", 1)
+        with self.assertRaisesRegex(RuntimeError, "lose the failing command status"):
+            workflow_contract.verify_tool_downloader(broken)
 
     def test_promotion_without_candidate_attestation_is_rejected(self) -> None:
         with self.assertRaises(RuntimeError):

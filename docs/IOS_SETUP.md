@@ -81,8 +81,11 @@ xcodebuild -project iosApp/iosApp.xcodeproj \
   pick a team in Xcode's *Signing & Capabilities* tab. The latter writes to
   per-user data (`xcuserdata/`) and is gitignored, so it stays out of commits.
 
-Bundle id is `com.parlor.app` (matches Android). Change it in `Config.xcconfig`
-if you fork.
+The checked-in provisional Bundle ID is `com.parlor.app`, but it is already
+registered by another developer and is blocked from Store signing/upload by the
+release policy. Simulator development may continue with the Debug identity.
+Before a real-device or Store build, use the reviewed owner-controlled identity
+recorded by the release migration; do not submit the provisional identifier.
 
 ---
 

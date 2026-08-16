@@ -28,6 +28,7 @@ from typing import Any, Callable
 
 from release_tool import (
     ReleaseError,
+    assert_store_identity_approved,
     atomic_write_json,
     fail,
     load_json,
@@ -1756,6 +1757,10 @@ def main() -> int:
         validate_artifact_descriptor(artifact, "ios")
         validate_apple_upload_transport(Path(args.receipt), artifact, args.upload_request_id)
         return 0
+    if args.execute and args.command.startswith("google"):
+        assert_store_identity_approved("android")
+    if args.execute and args.command.startswith("apple"):
+        assert_store_identity_approved("ios")
     if args.command == "apple-check-unique":
         if not args.execute:
             require_store_id(args.app_id, "App Store Connect app ID")

@@ -64,6 +64,15 @@ jobs:
           [[ "$CANDIDATE_RUN_ATTEMPT" =~ ^[1-9][0-9]*$ ]]
           test -z "$(git status --porcelain=v1 --untracked-files=all)"
 
+      - name: Require verified ownership of selected Store identities
+        shell: bash
+        env:
+          SELECTED_PLATFORM: ${{ inputs.platform }}
+        run: |
+          set -euo pipefail
+          python3 scripts/release/release_tool.py assert-store-identity-approved \
+            --platform "$SELECTED_PLATFORM"
+
       - name: Download exact candidate manifest
         shell: bash
         env:
@@ -137,7 +146,7 @@ jobs:
     name: Promote Google Play version code without rebuilding
     needs: preflight
     concurrency:
-      group: parlor-google-play-com-parlor-app
+      group: parlor-google-play-production-identity
       cancel-in-progress: false
     if: ${{ inputs.platform == 'android' || inputs.platform == 'both' }}
     runs-on: ubuntu-24.04
@@ -226,7 +235,7 @@ jobs:
     name: Promote processed App Store build to external TestFlight
     needs: preflight
     concurrency:
-      group: parlor-app-store-connect-com-parlor-app
+      group: parlor-app-store-connect-production-identity
       cancel-in-progress: false
     if: ${{ inputs.platform == 'ios' || inputs.platform == 'both' }}
     runs-on: macos-15

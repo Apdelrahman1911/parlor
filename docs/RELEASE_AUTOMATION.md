@@ -9,10 +9,10 @@ and deterministic-test target and has no publishing workflow.
 
 | Item | Repository truth | External confirmation still required |
 |---|---|---|
-| Android Store identity | `com.parlor.app` | The existing Google Play app must have this package name. |
-| Android Debug identity | `com.parlor.app.debug` | No Store registration is required. |
-| iOS Store identity | `com.parlor.app` | The existing App Store Connect app must have this Bundle ID. |
-| iOS Debug identity | `com.parlor.app.debug` | A development profile may be needed for local device runs. |
+| Android release build identity | `com.parlor.app` | **Blocked:** Google Play publicly assigns this package to an unrelated beauty-salon app. It is not an approved Parlor Store identity. |
+| Android Debug identity | `com.parlor.app.debug` | Provisional; derive the final Debug identity from the owner-controlled Store identity during the identity migration. |
+| iOS release build identity | `com.parlor.app` | **Blocked:** Apple publicly assigns this Bundle ID to “The Parlor Kuwait,” seller Moiz Bohra. It is not an approved Parlor Store identity. |
+| iOS Debug identity | `com.parlor.app.debug` | Provisional; derive the final Debug identity from the owner-controlled Store identity during the identity migration. |
 | Version source | `config/parlor-version.xcconfig` | Version code/build number must be unused in both Stores. |
 | Current version | marketing `1.0.0`, Android code `1`, iOS build `1` | These initial numeric values must be deliberately approved as unused, or reviewed and bumped, before the first candidate. |
 | Android signing | External keystore supported; no key is committed | Play App Signing enrollment and the upload-key fingerprint must be confirmed. |
@@ -20,12 +20,36 @@ and deterministic-test target and has no publishing workflow.
 | Apple Store toolchain | Candidate/CI policy pins Xcode `26.3` build `17C529`, physical iOS SDK major `26` or newer, and deployment target `16.0` | Confirm the hosted `macos-15` image still contains that exact path/build before each candidate; a toolchain change requires review. |
 | Existing Store automation | None existed before this release system | Store API access and environments must be configured. |
 | Google external track | Not discoverable from the repository | Set the exact existing closed or open track; do not invent one. |
-| GitHub protection | Not represented in Git | Configure and verify it in GitHub before any publishing run. |
+| GitHub protection | Environments and an exact ruleset are configured; the ruleset remains deliberately disabled until the final reviewed tree is synchronized | The current private personal-account plan cannot enforce environment reviewers or private artifact attestations. |
 
 No Firebase, Google Services, APNs, OAuth callback, associated-domain, app
 group, URL-scheme, or deep-link production configuration was found. The iOS
 signed-artifact validator therefore rejects unreviewed entitlements. Adding any
 of those services reopens identity, signing, privacy, and release review.
+
+### Blocking Store-identity collision
+
+On 2026-08-16, repository-independent public Store readback proved that the
+provisional `com.parlor.app` identifier is already used by another developer on
+both platforms:
+
+- Google Play: `https://play.google.com/store/apps/details?id=com.parlor.app`
+- Apple public lookup: `https://itunes.apple.com/lookup?bundleId=com.parlor.app&country=us`
+
+The affected GitHub environment variables were removed immediately. Every
+candidate or promotion workflow, and every direct Store API execution command,
+now calls `assert-store-identity-approved` before signing or Store access. The
+checked-in release policy marks both identities `blocked`; changing only that
+flag is rejected while the known-colliding identifier remains configured.
+
+Before any signed candidate can exist, authenticated Store readback must either
+locate existing Parlor app records controlled by the owner or the owner must
+approve and register new canonical identifiers. The resulting reviewed identity
+migration must update Gradle/Xcode configuration, Debug derivations, release
+policy, manifest schema, validators, workflow guards, signing/services, and
+tests together. Only then may API readback evidence set the policy status to
+`verified` and repopulate protected GitHub variables. Never upload under
+`com.parlor.app`, and never guess a replacement reverse-DNS identifier.
 
 ## Branch and workflow lifecycle
 
@@ -254,10 +278,12 @@ The live repository configuration was inspected and hardened on 2026-08-16:
   from `testing` only;
 - `production-android` and `production-ios` accept deployments from `release`
   only; and
-- the branch ruleset for `main`, `testing`, and `release` requires pull
-  requests, one approval, last-pusher separation, resolved conversations, both
-  GitHub-Actions-bound production verification checks, and blocks deletion and
-  force pushes without an administrator bypass.
+- disabled safety ruleset `20910226` exactly defines pull requests, one
+  approval, last-pusher separation, resolved conversations, both
+  GitHub-Actions-bound production verification checks, and deletion/force-push
+  protection without a bypass. It remains disabled only until the final
+  reviewed tree is green and synchronized to `main`, `testing`, and `release`;
+  activation and API readback are mandatory before any candidate dispatch.
 
 The current private personal-account plan rejected required environment
 reviewers and secret scanning/push protection with HTTP 422, and the repository
@@ -322,19 +348,19 @@ environment. Do not use repository-wide Store secrets.
 | `PARLOR_ANDROID_KEY_PASSWORD` | secret, `testing-android` | Gradle signing | Exact private-key password | Yes | Verify through a protected local signing rehearsal | Rotate with the key |
 | `PARLOR_ANDROID_UPLOAD_CERT_SHA256` | variable, `testing-android` | AAB validator | 64 lowercase hex characters, no colons | No | Compare `keytool` output with Play Console's registered upload certificate | Reapprove whenever Play resets the upload key |
 | `GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_B64` | environment secret in each Android Store environment | Store API client | Base64 of one Google service-account JSON file | Yes | Create/link in the Google Cloud project used by Play Console; enable Android Publisher API; validate its JSON shape privately with `jq -e`, then prove app-level least privilege only in an explicitly authorized protected Store run (validation-only mode never loads it) | Rotate JSON keys regularly and immediately on personnel/security changes |
-| `GOOGLE_PLAY_PACKAGE_NAME` | environment variable in each Android Store environment | validation and Store API | `com.parlor.app` | No | Compare with the existing Play app record; workflow rejects any other value | Immutable after Play registration |
+| `GOOGLE_PLAY_PACKAGE_NAME` | environment variable in each Android Store environment | validation and Store API | Owner-controlled package verified by authenticated Play API readback | No | Must equal the reviewed release policy and an app record administered by the supplied principal; currently deliberately unset | Immutable after Play registration |
 | `GOOGLE_PLAY_EXTERNAL_TRACK` | variable, `external-testing-android` and `production-android` | Play promotion | Exact existing API track name for the repository's closed or open test | No | Read from Play Console/API; do not guess `alpha`, `beta`, or a display label | Review if track configuration changes |
 | `GOOGLE_PLAY_EXTERNAL_TRACK_TYPE` | variable, `external-testing-android` | external-track guard | `closed` or `open` | No | Match the existing track selected above | Review with track changes |
 | `PARLOR_APPLE_DISTRIBUTION_CERTIFICATE_P12_B64` | secret, `testing-ios` | archive/sign/export | Base64 PKCS#12 containing the Apple Distribution certificate and private key | Yes | Export from Keychain/managed signing custody; validator binds its leaf SHA-256 to the profile | Replace before expiry/revocation; new signing inputs require a new candidate |
 | `PARLOR_APPLE_DISTRIBUTION_CERTIFICATE_PASSWORD` | secret, `testing-ios` | ephemeral keychain import | PKCS#12 password | Yes | Verify with `openssl pkcs12` in a protected terminal | Rotate with the PKCS#12 |
-| `PARLOR_APPLE_APP_STORE_PROFILE_B64` | secret, `testing-ios` | archive/export | Base64 App Store provisioning profile for `com.parlor.app` | Yes | Download from Apple Developer; validator rejects development, ad-hoc, enterprise, expired, wrong-team, wrong-ID, or wrong-certificate profiles | Renew before expiry; new profile means a new candidate |
+| `PARLOR_APPLE_APP_STORE_PROFILE_B64` | secret, `testing-ios` | archive/export | Base64 App Store provisioning profile for the verified owner-controlled Bundle ID | Yes | Download from Apple Developer; validator rejects development, ad-hoc, enterprise, expired, wrong-team, wrong-ID, or wrong-certificate profiles | Renew before expiry; new profile means a new candidate |
 | `PARLOR_APPLE_TEAM_ID` | variable, `testing-ios` | Xcode and validation | 10 uppercase alphanumeric characters | No | Apple Developer membership details; compare signed entitlement/profile | Normally stable |
-| `PARLOR_APPLE_BUNDLE_ID` | variable in all Apple Store environments | validation/API | `com.parlor.app` | No | Compare with Apple Developer and App Store Connect app records | Immutable after registration |
+| `PARLOR_APPLE_BUNDLE_ID` | variable in all Apple Store environments | validation/API | Owner-controlled Bundle ID verified by authenticated Apple API readback | No | Must equal the reviewed release policy, provisioning profile, Apple identifier, and App Store Connect app; currently deliberately unset | Immutable after registration |
 | `PARLOR_APPLE_DISTRIBUTION_CERT_SHA256` | variable, `testing-ios` | archive/IPA validator | 64 lowercase hex characters, no colons | No | Derive from the `.p12` leaf certificate and compare with Apple Developer | Reapprove on certificate rotation |
 | `APP_STORE_CONNECT_API_KEY_P8_B64` | environment secret in each Apple Store environment | upload/TestFlight/App Store API | Base64 of the `.p8` private key | Yes | Create a least-privilege App Store Connect API key; the file can be downloaded only once | Revoke/replace before personnel or security changes; keys do not expose an expiry date |
 | `APP_STORE_CONNECT_KEY_ID` | variable in each Apple Store environment | Apple JWT/upload | 10 uppercase alphanumeric characters | No | App Store Connect Users and Access → Integrations | Update with the `.p8` key |
 | `APP_STORE_CONNECT_ISSUER_ID` | variable in each Apple Store environment | Apple JWT/upload | Issuer UUID | No | App Store Connect Users and Access → Integrations | Normally stable for the issuer |
-| `APP_STORE_CONNECT_APP_ID` | variable in each Apple Store environment | build lookup/group/review | App Store Connect app resource/numeric ID | No | App information/API; verify it resolves to Bundle ID `com.parlor.app` | Stable for the app |
+| `APP_STORE_CONNECT_APP_ID` | variable in each Apple Store environment | build lookup/group/review | App Store Connect app resource/numeric ID | No | Retrieve through the authenticated API and verify it resolves to the approved Bundle ID | Stable for the app |
 | `TESTFLIGHT_INTERNAL_GROUP_ID` | variable, `testing-ios` | internal distribution | Internal beta-group resource ID, not display name | No | App Store Connect API/URL for the intended internal group; workflow verifies it is internal | Review when groups change |
 | `TESTFLIGHT_EXTERNAL_GROUP_ID` | variable, `external-testing-ios` | external distribution | External beta-group resource ID, not display name | No | App Store Connect API/URL; workflow verifies it is external | Review when groups change |
 | App Store version resource ID | protected production workflow input `app_store_version_id` | production iOS job | Exact version record ID whose marketing version equals the candidate | No | Create/select the existing version record in App Store Connect and copy its API resource ID | Supply per marketing version; never reuse blindly |
@@ -436,7 +462,9 @@ halted rollout, multiple releases, or a multi-version release. Resolve such a
 track deliberately in Play Console and capture the decision; the workflow must
 not silently cancel or replace it.
 
-- existing app record and canonical package `com.parlor.app`;
+- owner-controlled app record and canonical package matching the reviewed
+  release policy; `com.parlor.app` is expressly forbidden by the known public
+  collision;
 - Play App Signing enrollment, app-signing certificate, and registered upload
   certificate matching `PARLOR_ANDROID_UPLOAD_CERT_SHA256`;
 - the workflow verifies the upload-signed AAB; because Google Play generates
@@ -470,7 +498,9 @@ group, associate the same build with an external group and Beta App Review,
 attach the same build to an App Store version, and optionally submit that
 version's review submission. An owner must inspect and record:
 
-- existing app record, Bundle ID `com.parlor.app`, SKU, Team ID, and app ID;
+- owner-controlled app record, Bundle ID matching the reviewed release policy,
+  SKU, Team ID, and app ID; `com.parlor.app` is expressly forbidden by the
+  known public collision;
 - Apple Developer certificate/profile validity and App Store Connect API-key
   access/role;
 - agreements, tax, and banking state where applicable;
@@ -532,13 +562,18 @@ artifact or move an immutable release tag.
 
 Until evidence is supplied, release automation is **NOT READY TO PUBLISH**:
 
+- both provisional production identifiers are assigned to another developer in
+  the public Stores; identity variables were removed from GitHub and all Store
+  workflows are fail-closed until an owner-controlled identity migration is
+  reviewed and authenticated API readback is recorded;
 - the private personal-account GitHub plan does not support required
   environment reviewers, secret scanning/push protection, or
   private-repository artifact attestations; move the repository to an
   Enterprise Cloud organization (preferred) or explicitly approve public
   visibility only after its exposure is reviewed;
-- an independent release reviewer has not been selected or added, so the active
-  branch rules intentionally prevent an unreviewed protected-branch change;
+- an independent release reviewer has not been selected or added, and the exact
+  branch ruleset remains disabled until final-tree synchronization and reviewer
+  configuration can be completed without locking out the only administrator;
 - no signing or Store secrets are configured; the ignored local handoff at
   `release/private/REQUIRED_FROM_USER.md` lists only the unavailable private
   inputs;

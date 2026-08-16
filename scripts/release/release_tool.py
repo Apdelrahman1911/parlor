@@ -158,6 +158,38 @@ def policy() -> dict[str, Any]:
     return value
 
 
+def assert_store_identity_approved(platform: str) -> None:
+    """Fail before signing or Store access unless ownership was API-verified."""
+    selected = ("android", "ios") if platform == "both" else (platform,)
+    if any(item not in {"android", "ios"} for item in selected):
+        fail("Store identity platform must be android, ios, or both")
+
+    applications = policy().get("applications")
+    if not isinstance(applications, dict):
+        fail("Release policy does not define application identities")
+    for item in selected:
+        application = applications.get(item)
+        if not isinstance(application, dict):
+            fail(f"Release policy does not define the {item} application")
+        approval = application.get("store_identity_ownership")
+        if not isinstance(approval, dict):
+            fail(f"{item} Store identity ownership approval is missing")
+        require_keys(
+            approval,
+            {"status", "reason", "verified_at", "verification_reference"},
+            {"status", "reason", "verified_at", "verification_reference"},
+            f"{item} Store identity ownership approval",
+        )
+        if approval["status"] != "verified":
+            fail(f"{item} Store identity ownership is not verified")
+        if approval["reason"] is not None:
+            fail(f"{item} verified Store identity must not retain a blocking reason")
+        parse_timestamp(approval["verified_at"], f"{item} Store identity verification time")
+        reference = approval["verification_reference"]
+        if not isinstance(reference, str) or not reference.strip() or len(reference) > 512:
+            fail(f"{item} Store identity verification reference is invalid")
+
+
 def version_values() -> tuple[str, int]:
     configured_path = ROOT / policy()["version_source"]
     assignments: dict[str, str] = {}
@@ -1090,6 +1122,12 @@ def parser() -> argparse.ArgumentParser:
     version = commands.add_parser("version", help="print the canonical marketing/build version as JSON")
     version.add_argument("--output", required=True)
 
+    identity = commands.add_parser(
+        "assert-store-identity-approved",
+        help="refuse signing and Store operations until canonical identity ownership is verified",
+    )
+    identity.add_argument("--platform", required=True, choices=("android", "ios", "both"))
+
     source = commands.add_parser("source-record", help="freeze an exact clean candidate source")
     source.add_argument("--candidate-sha", required=True)
     source.add_argument("--repository-id", required=True)
@@ -1240,6 +1278,8 @@ def main() -> int:
     if args.command == "version":
         marketing, build = version_values()
         atomic_write_json(Path(args.output), {"marketing_version": marketing, "build_number": build})
+    elif args.command == "assert-store-identity-approved":
+        assert_store_identity_approved(args.platform)
     elif args.command == "source-record":
         atomic_write_json(Path(args.output), source_record(args.candidate_sha, args.repository_id, not args.allow_dirty))
     elif args.command == "create-candidate-claim":

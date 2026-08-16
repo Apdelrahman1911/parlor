@@ -47,7 +47,7 @@ download_tool() {
   local digest
   url=$(python3 -c 'import json,sys; print(json.load(open("config/release-policy.json"))["tools"][sys.argv[1]]["artifacts"][sys.argv[2]]["url"])' "$tool" "$platform_key")
   digest=$(python3 -c 'import json,sys; print(json.load(open("config/release-policy.json"))["tools"][sys.argv[1]]["artifacts"][sys.argv[2]]["sha256"])' "$tool" "$platform_key")
-  curl --fail --silent --show-error --location \
+  if ! curl --fail --silent --show-error --location \
     --proto '=https' \
     --tlsv1.2 \
     --retry 3 \
@@ -55,9 +55,15 @@ download_tool() {
     --max-filesize 209715200 \
     --max-time 120 \
     "$url" \
-    --output "$archive" || return
-  printf '%s  %s\n' "$digest" "$archive" | shasum -a 256 -c - >&2 || return
-  python3 - "$archive" "$executable_name" "$destination" <<'PY' || return
+    --output "$archive"; then
+    echo "could not download pinned $tool release" >&2
+    return 2
+  fi
+  if ! printf '%s  %s\n' "$digest" "$archive" | shasum -a 256 -c - >&2; then
+    echo "pinned $tool release digest mismatch" >&2
+    return 2
+  fi
+  if ! python3 - "$archive" "$executable_name" "$destination" <<'PY'
 import os
 import sys
 import tarfile
@@ -84,6 +90,10 @@ with tarfile.open(archive_path, "r:gz") as archive:
         output.write(source.read())
     os.chmod(destination, 0o755)
 PY
+  then
+    echo "could not safely extract pinned $tool release" >&2
+    return 2
+  fi
   printf '%s\n' "$destination"
 }
 

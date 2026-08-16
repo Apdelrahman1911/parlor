@@ -107,14 +107,16 @@ def verify_store_workflow(name: str, text: str) -> None:
         fail(f"{name}: Store jobs must use protected environments")
     if "validation_only" not in text and "publish" not in text and "execute" not in text:
         fail(f"{name}: Store workflow lacks explicit mutation mode")
+    if "assert-store-identity-approved" not in text:
+        fail(f"{name}: Store workflow does not fail closed on unverified Store identity ownership")
     preflight = text.split("\n  android:", 1)[0]
     if "secrets." in preflight:
         fail(f"{name}: preflight code can access Store credentials before protected-environment approval")
 
 
 def verify_store_serialization(files: dict[str, str]) -> None:
-    android_group = "group: parlor-google-play-com-parlor-app"
-    ios_group = "group: parlor-app-store-connect-com-parlor-app"
+    android_group = "group: parlor-google-play-production-identity"
+    ios_group = "group: parlor-app-store-connect-production-identity"
     for name in STORE_WORKFLOWS:
         text = files[name]
         if text.count(android_group) != 1 or text.count(ios_group) != 1:
@@ -302,12 +304,53 @@ def verify_policy() -> None:
     policy = json.loads((ROOT / "config" / "release-policy.json").read_text(encoding="utf-8"))
     android = policy["applications"]["android"]
     ios = policy["applications"]["ios"]
-    if android["store_application_id"] != "com.parlor.app" or ios["store_bundle_id"] != "com.parlor.app":
-        fail("release policy changed canonical Store identities")
+    identity_pattern = re.compile(r"^[A-Za-z0-9]+(?:[.-][A-Za-z0-9]+)+$")
+    if not identity_pattern.fullmatch(str(android["store_application_id"])):
+        fail("release policy has an invalid Android Store identity")
+    if not identity_pattern.fullmatch(str(ios["store_bundle_id"])):
+        fail("release policy has an invalid iOS Store identity")
     if android["debug_application_id"] == android["store_application_id"]:
         fail("Android Debug identity is not isolated")
     if ios["debug_bundle_id"] == ios["store_bundle_id"]:
         fail("iOS Debug identity is not isolated")
+    for platform, application in (("android", android), ("ios", ios)):
+        approval = application.get("store_identity_ownership")
+        expected_fields = {"status", "reason", "verified_at", "verification_reference"}
+        if not isinstance(approval, dict) or set(approval) != expected_fields:
+            fail(f"{platform} Store identity ownership approval is malformed")
+        if approval["status"] not in {"blocked", "verified"}:
+            fail(f"{platform} Store identity ownership status is invalid")
+        if approval["status"] == "blocked":
+            if not isinstance(approval["reason"], str) or not approval["reason"]:
+                fail(f"{platform} blocked Store identity lacks a reason")
+            if approval["verified_at"] is not None or approval["verification_reference"] is not None:
+                fail(f"{platform} blocked Store identity contains false verification evidence")
+        else:
+            if approval["reason"] is not None:
+                fail(f"{platform} verified Store identity retains a blocking reason")
+            if not isinstance(approval["verified_at"], str) or not approval["verified_at"]:
+                fail(f"{platform} verified Store identity lacks a timestamp")
+            reference = approval["verification_reference"]
+            if not isinstance(reference, str) or not reference or len(reference) > 512:
+                fail(f"{platform} verified Store identity lacks bounded evidence")
+    # Both public Stores currently assign this reverse-DNS identifier to an
+    # unrelated application. It may never be approved by changing only a flag.
+    if android["store_application_id"] == "com.parlor.app" and android["store_identity_ownership"]["status"] != "blocked":
+        fail("known-colliding Android Store identity was marked verified")
+    if ios["store_bundle_id"] == "com.parlor.app" and ios["store_identity_ownership"]["status"] != "blocked":
+        fail("known-colliding iOS Store identity was marked verified")
+    manifest_schema = json.loads((ROOT / "config/candidate-manifest.schema.json").read_text(encoding="utf-8"))
+    manifest_applications = manifest_schema["properties"]["applications"]["properties"]
+    google_receipt = manifest_schema["$defs"]["googleReceipt"]["allOf"][1]["properties"]
+    apple_receipt = manifest_schema["$defs"]["appleReceipt"]["allOf"][1]["properties"]
+    if manifest_applications["android_application_id"].get("const") != android["store_application_id"]:
+        fail("candidate manifest schema Android identity drifted from release policy")
+    if manifest_applications["ios_bundle_id"].get("const") != ios["store_bundle_id"]:
+        fail("candidate manifest schema iOS identity drifted from release policy")
+    if google_receipt["package_name"].get("const") != android["store_application_id"]:
+        fail("candidate manifest Google receipt identity drifted from release policy")
+    if apple_receipt["bundle_id"].get("const") != ios["store_bundle_id"]:
+        fail("candidate manifest Apple receipt identity drifted from release policy")
     expected_environments = {
         "candidate_control": "testing-candidate",
         "candidate_android": "testing-android",
@@ -356,11 +399,29 @@ def verify_policy() -> None:
         fail("release artifact safety limits differ from the reviewed policy")
 
 
+def verify_tool_downloader(script: str) -> None:
+    if re.search(r"\|\|\s+return(?:\s|$)", script):
+        fail("release-tool download/extraction can lose the failing command status")
+    if script.count("return 2") != 3:
+        fail("release-tool download/extraction can lose the failing command status")
+    for token in (
+        "could not download pinned $tool release",
+        "pinned $tool release digest mismatch",
+        "could not safely extract pinned $tool release",
+    ):
+        if token not in script:
+            fail(f"release-tool downloader is not fail-closed: {token!r}")
+
+
 def verify_signing_scripts() -> None:
     build = (ROOT / "scripts" / "release" / "build_ios_candidate.sh").read_text(encoding="utf-8")
     validator = (ROOT / "scripts" / "release" / "validate_ios_artifact.sh").read_text(encoding="utf-8")
     store_client = (ROOT / "scripts" / "release" / "store_api.py").read_text(encoding="utf-8")
     release_tool = (ROOT / "scripts" / "release" / "release_tool.py").read_text(encoding="utf-8")
+    release_system_validator = (
+        ROOT / "scripts" / "release" / "validate_release_system.sh"
+    ).read_text(encoding="utf-8")
+    verify_tool_downloader(release_system_validator)
     cleanup_contract = (
         "cleanup_status=0",
         "could not restore the original user keychain search list",
