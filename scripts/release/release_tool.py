@@ -171,6 +171,9 @@ def assert_store_identity_approved(platform: str) -> None:
         application = applications.get(item)
         if not isinstance(application, dict):
             fail(f"Release policy does not define the {item} application")
+        identity_key = "store_application_id" if item == "android" else "store_bundle_id"
+        if application.get(identity_key) == "com.parlor.app":
+            fail(f"{item} Store identity has a known public Store collision")
         approval = application.get("store_identity_ownership")
         if not isinstance(approval, dict):
             fail(f"{item} Store identity ownership approval is missing")

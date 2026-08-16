@@ -119,11 +119,13 @@ class StoreIdentityApprovalTest(unittest.TestCase):
     def test_public_store_collision_blocks_every_candidate_platform(self) -> None:
         for platform in ("android", "ios", "both"):
             with self.subTest(platform=platform):
-                with self.assertRaisesRegex(release_tool.ReleaseError, "ownership is not verified"):
+                with self.assertRaisesRegex(release_tool.ReleaseError, "known public Store collision"):
                     release_tool.assert_store_identity_approved(platform)
 
     def test_api_verified_identity_approval_is_accepted(self) -> None:
         configured = json.loads(json.dumps(release_tool.policy()))
+        configured["applications"]["android"]["store_application_id"] = "com.example.parlor"
+        configured["applications"]["ios"]["store_bundle_id"] = "com.example.parlor"
         for platform in ("android", "ios"):
             configured["applications"][platform]["store_identity_ownership"] = {
                 "status": "verified",
@@ -136,6 +138,7 @@ class StoreIdentityApprovalTest(unittest.TestCase):
 
     def test_verified_status_without_evidence_fails_closed(self) -> None:
         configured = json.loads(json.dumps(release_tool.policy()))
+        configured["applications"]["android"]["store_application_id"] = "com.example.parlor"
         configured["applications"]["android"]["store_identity_ownership"] = {
             "status": "verified",
             "reason": None,
@@ -144,6 +147,18 @@ class StoreIdentityApprovalTest(unittest.TestCase):
         }
         with mock.patch.object(release_tool, "policy", return_value=configured):
             with self.assertRaisesRegex(release_tool.ReleaseError, "verification time"):
+                release_tool.assert_store_identity_approved("android")
+
+    def test_known_collision_cannot_be_approved_by_changing_only_the_flag(self) -> None:
+        configured = json.loads(json.dumps(release_tool.policy()))
+        configured["applications"]["android"]["store_identity_ownership"] = {
+            "status": "verified",
+            "reason": None,
+            "verified_at": "2026-08-16T16:00:00Z",
+            "verification_reference": "untrusted-flag-only-change",
+        }
+        with mock.patch.object(release_tool, "policy", return_value=configured):
+            with self.assertRaisesRegex(release_tool.ReleaseError, "known public Store collision"):
                 release_tool.assert_store_identity_approved("android")
 
 

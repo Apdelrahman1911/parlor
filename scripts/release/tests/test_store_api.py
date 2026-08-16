@@ -823,7 +823,7 @@ class ValidationOnlyTest(unittest.TestCase):
         ]
         for argv in commands:
             with self.subTest(command=argv[1]), mock.patch.object(sys, "argv", argv):
-                with self.assertRaisesRegex(store_api.ReleaseError, "ownership is not verified"):
+                with self.assertRaisesRegex(store_api.ReleaseError, "known public Store collision"):
                     store_api.main()
 
     @staticmethod
