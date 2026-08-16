@@ -20,7 +20,7 @@ and deterministic-test target and has no publishing workflow.
 | Apple Store toolchain | Candidate/CI policy pins Xcode `26.3` build `17C529`, physical iOS SDK major `26` or newer, and deployment target `16.0` | Confirm the hosted `macos-15` image still contains that exact path/build before each candidate; a toolchain change requires review. |
 | Existing Store automation | None existed before this release system | Store API access and environments must be configured. |
 | Google external track | Not discoverable from the repository | Set the exact existing closed or open track; do not invent one. |
-| GitHub protection | The repository is public; branch-scoped environments, artifact attestations, secret scanning, push protection, and an exact ruleset are available/configured. The ruleset remains deliberately disabled until the final reviewed tree and an independent reviewer are synchronized. | Select and add a second trusted reviewer before enabling the ruleset or Store workflows. |
+| GitHub protection | The repository is public; branch-scoped environments, artifact attestations, secret scanning, push protection, and an active ruleset are configured. The ruleset requires pull requests, both production-verification checks, resolved conversations, and blocks deletion/force-push. | Select and add a second trusted reviewer, then raise the active ruleset from zero to one approval with last-pusher separation before enabling Store workflows. |
 
 No Firebase, Google Services, APNs, OAuth callback, associated-domain, app
 group, URL-scheme, or deep-link production configuration was found. The iOS
@@ -285,12 +285,12 @@ The live repository configuration was inspected and hardened on 2026-08-16:
   from `testing` only;
 - `production-android` and `production-ios` accept deployments from `release`
   only; and
-- disabled safety ruleset `20910226` exactly defines pull requests, one
-  approval, last-pusher separation, resolved conversations, both
-  GitHub-Actions-bound production verification checks, and deletion/force-push
-  protection without a bypass. It remains disabled only until the final
-  reviewed tree is green and synchronized to `main`, `testing`, and `release`;
-  activation and API readback are mandatory before any candidate dispatch.
+- active safety ruleset `20910226` requires pull requests, resolved
+  conversations, both GitHub-Actions-bound production-verification checks, and
+  deletion/force-push protection without a bypass. Its approval count is
+  temporarily zero because the repository has no second trusted collaborator;
+  before any candidate dispatch, add that reviewer, require one approval plus
+  last-pusher separation, and read the final ruleset back through the API.
 
 The repository is public, so GitHub makes required environment reviewers and
 artifact attestations available on the current plan. It currently has only one
@@ -578,9 +578,9 @@ Until evidence is supplied, release automation is **NOT READY TO PUBLISH**:
   readback is recorded;
 - the public repository now has secret scanning and push protection enabled and
   supports environment reviewers and artifact attestations, but an independent
-  release reviewer has not been selected or added; the exact
-  branch ruleset remains disabled until final-tree synchronization and reviewer
-  configuration can be completed without locking out the only administrator;
+  release reviewer has not been selected or added; the active branch ruleset
+  therefore enforces PR/check/conversation/immutability controls but cannot yet
+  enforce an independent approval or last-pusher separation;
 - no signing or Store secrets are configured; the ignored local handoff at
   `release/private/REQUIRED_FROM_USER.md` lists only the unavailable private
   inputs;
