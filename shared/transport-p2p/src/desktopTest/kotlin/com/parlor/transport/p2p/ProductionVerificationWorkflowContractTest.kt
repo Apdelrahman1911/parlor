@@ -147,7 +147,7 @@ class ProductionVerificationWorkflowContractTest {
     }
 
     @Test
-    fun clean_ci_can_resolve_the_detekt_plugin_with_strict_dependency_verification() {
+    fun clean_ci_can_resolve_required_artifacts_with_strict_dependency_verification() {
         val verificationMetadata = read("gradle/verification-metadata.xml")
         fun verifyComponent(componentMarker: String, artifactName: String, sha256: String) {
             assertContains(verificationMetadata, componentMarker)
@@ -184,6 +184,12 @@ class ProductionVerificationWorkflowContractTest {
                 "<component group=\"org.jetbrains.kotlinx\" name=\"kotlinx-coroutines-bom\" version=\"1.8.0\">",
             artifactName = "kotlinx-coroutines-bom-1.8.0.pom",
             sha256 = "1239e9dbe1397cd5971342956b2511bc3ace7b641842e4372a088dcfa8b9ad55",
+        )
+        verifyComponent(
+            componentMarker =
+                "<component group=\"dev.whyoleg.cryptography\" name=\"cryptography-bom\" version=\"0.6.0\">",
+            artifactName = "cryptography-bom-0.6.0.pom",
+            sha256 = "3e83e5af287ca142a03ab81a35395e59bb20cb43d63915b2f96049835eb22d6b",
         )
     }
 
