@@ -161,6 +161,19 @@ class StoreIdentityApprovalTest(unittest.TestCase):
             with self.assertRaisesRegex(release_tool.ReleaseError, "known public Store collision"):
                 release_tool.assert_store_identity_approved("android")
 
+    def test_verified_identity_still_requires_platform_valid_format(self) -> None:
+        configured = json.loads(json.dumps(release_tool.policy()))
+        configured["applications"]["android"]["store_application_id"] = "Invalid-Android-ID"
+        configured["applications"]["android"]["store_identity_ownership"] = {
+            "status": "verified",
+            "reason": None,
+            "verified_at": "2026-08-16T16:00:00Z",
+            "verification_reference": "protected-store-api-readback:android:record-1",
+        }
+        with mock.patch.object(release_tool, "policy", return_value=configured):
+            with self.assertRaisesRegex(release_tool.ReleaseError, "invalid format"):
+                release_tool.assert_store_identity_approved("android")
+
 
 class CandidateManifestTest(unittest.TestCase):
     def test_candidate_claim_binds_build_source_and_workflow(self) -> None:

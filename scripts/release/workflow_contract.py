@@ -304,10 +304,11 @@ def verify_policy() -> None:
     policy = json.loads((ROOT / "config" / "release-policy.json").read_text(encoding="utf-8"))
     android = policy["applications"]["android"]
     ios = policy["applications"]["ios"]
-    identity_pattern = re.compile(r"^[A-Za-z0-9]+(?:[.-][A-Za-z0-9]+)+$")
-    if not identity_pattern.fullmatch(str(android["store_application_id"])):
+    android_identity_pattern = re.compile(r"^[a-z][a-z0-9_]*(?:\.[a-z][a-z0-9_]*)+$")
+    apple_identity_pattern = re.compile(r"^[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+$")
+    if not android_identity_pattern.fullmatch(str(android["store_application_id"])):
         fail("release policy has an invalid Android Store identity")
-    if not identity_pattern.fullmatch(str(ios["store_bundle_id"])):
+    if not apple_identity_pattern.fullmatch(str(ios["store_bundle_id"])):
         fail("release policy has an invalid iOS Store identity")
     if android["debug_application_id"] == android["store_application_id"]:
         fail("Android Debug identity is not isolated")

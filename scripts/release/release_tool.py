@@ -27,6 +27,8 @@ POLICY_PATH = ROOT / "config" / "release-policy.json"
 SHA_RE = re.compile(r"^[0-9a-f]{40}$")
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 VERSION_RE = re.compile(r"^[0-9]+\.[0-9]+\.[0-9]+$")
+ANDROID_APPLICATION_ID_RE = re.compile(r"^[a-z][a-z0-9_]*(?:\.[a-z][a-z0-9_]*)+$")
+APPLE_BUNDLE_ID_RE = re.compile(r"^[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+$")
 MAX_CONTROL_ARTIFACT_BYTES = 1024 * 1024
 MAX_BINARY_ARTIFACT_BYTES = 2 * 1024 * 1024 * 1024
 
@@ -172,7 +174,11 @@ def assert_store_identity_approved(platform: str) -> None:
         if not isinstance(application, dict):
             fail(f"Release policy does not define the {item} application")
         identity_key = "store_application_id" if item == "android" else "store_bundle_id"
-        if application.get(identity_key) == "com.parlor.app":
+        identity = application.get(identity_key)
+        identity_pattern = ANDROID_APPLICATION_ID_RE if item == "android" else APPLE_BUNDLE_ID_RE
+        if not isinstance(identity, str) or not identity_pattern.fullmatch(identity):
+            fail(f"{item} Store identity has an invalid format")
+        if identity == "com.parlor.app":
             fail(f"{item} Store identity has a known public Store collision")
         approval = application.get("store_identity_ownership")
         if not isinstance(approval, dict):
