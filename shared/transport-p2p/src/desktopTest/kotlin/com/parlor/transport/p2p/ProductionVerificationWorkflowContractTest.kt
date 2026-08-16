@@ -181,6 +181,12 @@ class ProductionVerificationWorkflowContractTest {
         )
         verifyComponent(
             componentMarker =
+                "<component group=\"org.junit\" name=\"junit-bom\" version=\"5.11.0-M2\">",
+            artifactName = "junit-bom-5.11.0-M2.module",
+            sha256 = "86477abcf490d6ca059aa9973cb108d22a506f49d1a5569bb32cc6cbf43c2cce",
+        )
+        verifyComponent(
+            componentMarker =
                 "<component group=\"org.jetbrains.kotlinx\" name=\"kotlinx-coroutines-bom\" version=\"1.8.0\">",
             artifactName = "kotlinx-coroutines-bom-1.8.0.pom",
             sha256 = "1239e9dbe1397cd5971342956b2511bc3ace7b641842e4372a088dcfa8b9ad55",
