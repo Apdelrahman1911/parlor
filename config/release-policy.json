@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "repository": {
+    "full_name": "Apdelrahman1911/parlor"
+  },
+  "version_source": "config/parlor-version.xcconfig",
+  "applications": {
+    "android": {
+      "store_application_id": "com.parlor.app",
+      "debug_application_id": "com.parlor.app.debug",
+      "internal_track": "internal",
+      "production_track": "production"
+    },
+    "ios": {
+      "store_bundle_id": "com.parlor.app",
+      "debug_bundle_id": "com.parlor.app.debug"
+    }
+  },
+  "github": {
+    "development_branch": "main",
+    "candidate_branch": "testing",
+    "production_branch": "release",
+    "artifact_retention_days": 90,
+    "environments": {
+      "candidate_control": "testing-candidate",
+      "candidate_android": "testing-android",
+      "candidate_ios": "testing-ios",
+      "external_android": "external-testing-android",
+      "external_ios": "external-testing-ios",
+      "production_android": "production-android",
+      "production_ios": "production-ios"
+    }
+  },
+  "toolchains": {
+    "apple": {
+      "xcode_version": "26.3",
+      "xcode_build": "17C529",
+      "developer_dir": "/Applications/Xcode_26.3.app/Contents/Developer",
+      "minimum_ios_sdk_major": 26,
+      "deployment_target": "16.0"
+    }
+  },
+  "limits": {
+    "control_artifact_bytes": 1048576,
+    "android_artifact_bytes": 536870912,
+    "ios_artifact_bytes": 2147483648,
+    "github_binary_archive_bytes": 2147483648,
+    "archive_entry_count": 100000
+  },
+  "tools": {
+    "bundletool": {
+      "version": "1.18.3",
+      "url": "https://github.com/google/bundletool/releases/download/1.18.3/bundletool-all-1.18.3.jar",
+      "sha256": "a099cfa1543f55593bc2ed16a70a7c67fe54b1747bb7301f37fdfd6d91028e29"
+    },
+    "actionlint": {
+      "version": "1.7.12",
+      "artifacts": {
+        "linux-amd64": {
+          "url": "https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_1.7.12_linux_amd64.tar.gz",
+          "sha256": "8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8"
+        },
+        "linux-arm64": {
+          "url": "https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_1.7.12_linux_arm64.tar.gz",
+          "sha256": "325e971b6ba9bfa504672e29be93c24981eeb1c07576d730e9f7c8805afff0c6"
+        },
+        "darwin-amd64": {
+          "url": "https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_1.7.12_darwin_amd64.tar.gz",
+          "sha256": "5b44c3bc2255115c9b69e30efc0fecdf498fdb63c5d58e17084fd5f16324c644"
+        },
+        "darwin-arm64": {
+          "url": "https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_1.7.12_darwin_arm64.tar.gz",
+          "sha256": "aba9ced2dee8d27fecca3dc7feb1a7f9a52caefa1eb46f3271ea66b6e0e6953f"
+        }
+      }
+    },
+    "shellcheck": {
+      "version": "0.11.0",
+      "artifacts": {
+        "linux-amd64": {
+          "url": "https://github.com/koalaman/shellcheck/releases/download/v0.11.0/shellcheck-v0.11.0.linux.x86_64.tar.gz",
+          "sha256": "b7af85e41cc99489dcc21d66c6d5f3685138f06d34651e6d34b42ec6d54fe6f6"
+        },
+        "linux-arm64": {
+          "url": "https://github.com/koalaman/shellcheck/releases/download/v0.11.0/shellcheck-v0.11.0.linux.aarch64.tar.gz",
+          "sha256": "68a8133197a50beb8803f8d42f9908d1af1c5540d4bb05fdfca8c1fa47decefc"
+        },
+        "darwin-amd64": {
+          "url": "https://github.com/koalaman/shellcheck/releases/download/v0.11.0/shellcheck-v0.11.0.darwin.x86_64.tar.gz",
+          "sha256": "c2c15e08df0e8fbc374c335b230a7ee958c313fa5714817a59aa59f1aa594f51"
+        },
+        "darwin-arm64": {
+          "url": "https://github.com/koalaman/shellcheck/releases/download/v0.11.0/shellcheck-v0.11.0.darwin.aarch64.tar.gz",
+          "sha256": "339b930feb1ea764467013cc1f72d09cd6b869ebf1013296ba9055ab2ffbd26f"
+        }
+      }
+    }
+  }
+}

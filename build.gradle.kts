@@ -41,6 +41,7 @@ val productionAndroidCheck = tasks.register("productionAndroidCheck") {
         ":composeApp:lintRelease",
         ":composeApp:verifyReleaseLintWarnings",
         ":composeApp:verifyMergedReleaseManifest",
+        ":composeApp:verifyApplicationIdentities",
     )
 }
 
@@ -48,6 +49,13 @@ val productionAndroidSigningCheck = tasks.register("productionAndroidSigningChec
     group = "verification"
     description = "Verifies protected Android signing material and builds the store bundle."
     dependsOn(":composeApp:verifyStoreRelease")
+}
+
+val productionReleaseAutomationCheck = tasks.register<Exec>("productionReleaseAutomationCheck") {
+    group = "verification"
+    description = "Runs release provenance, workflow-security, and no-rebuild promotion tests."
+    workingDir(rootProject.projectDir)
+    commandLine("bash", "scripts/release/validate_release_system.sh")
 }
 
 val staticAnalysis = tasks.register("staticAnalysis") {
@@ -122,6 +130,7 @@ tasks.register("productionCheck") {
     dependsOn(
         productionDesktopCheck,
         productionAndroidCheck,
+        productionReleaseAutomationCheck,
         productionStaticAnalysis,
         ":composeApp:verifyGameShellDispatch",
     )

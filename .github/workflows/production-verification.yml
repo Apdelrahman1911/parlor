@@ -2,10 +2,15 @@ name: Production verification
 
 on:
   pull_request:
+    branches:
+      - main
+      - testing
+      - release
   push:
     branches:
       - main
-      - "release/**"
+      - testing
+      - release
   workflow_dispatch:
 
 concurrency:
@@ -52,7 +57,7 @@ jobs:
           test -z "$(git status --porcelain)"
 
       - name: Run common, desktop, Android, static-analysis, and release gates
-        run: ./gradlew productionCheck productionStaticAnalysis allTests --dependency-verification=strict --no-daemon --stacktrace --console=plain
+        run: ./gradlew productionCheck productionStaticAnalysis productionReleaseAutomationCheck allTests --dependency-verification=strict --no-daemon --stacktrace --console=plain
 
       - name: Inspect unsigned Android release artifact and merged manifest
         shell: bash
@@ -90,9 +95,10 @@ jobs:
     timeout-minutes: 120
     env:
       # macos-15 installs this reviewed GA toolchain alongside newer Xcodes.
+      # Apple has required the iOS 26 SDK for uploads since 2026-04-28.
       # Fail explicitly if the runner image removes or replaces it instead of
       # silently qualifying a candidate with a different compiler/SDK.
-      DEVELOPER_DIR: /Applications/Xcode_16.4.app/Contents/Developer
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
 
     steps:
       - name: Check out source
@@ -115,10 +121,13 @@ jobs:
           mkdir -p build/ci-evidence
           test -x "$DEVELOPER_DIR/usr/bin/xcodebuild"
           xcodebuild -version | tee build/ci-evidence/xcode-version.txt
-          test "$(sed -n '1p' build/ci-evidence/xcode-version.txt)" = "Xcode 16.4"
-          test "$(sed -n '2p' build/ci-evidence/xcode-version.txt)" = "Build version 16F6"
+          test "$(sed -n '1p' build/ci-evidence/xcode-version.txt)" = "Xcode 26.3"
+          test "$(sed -n '2p' build/ci-evidence/xcode-version.txt)" = "Build version 17C529"
+          test "$(jq -r .toolchains.apple.developer_dir config/release-policy.json)" = "$DEVELOPER_DIR"
+          test "$(jq -r .toolchains.apple.xcode_build config/release-policy.json)" = "17C529"
           xcrun --sdk iphoneos --show-sdk-version | tee build/ci-evidence/iphoneos-sdk.txt
           xcrun --sdk iphonesimulator --show-sdk-version | tee build/ci-evidence/iphonesimulator-sdk.txt
+          test "$(cut -d. -f1 build/ci-evidence/iphoneos-sdk.txt)" -ge "$(jq -r .toolchains.apple.minimum_ios_sdk_major config/release-policy.json)"
           git rev-parse HEAD | tee build/ci-evidence/commit.txt
           test -z "$(git status --porcelain)"
 
@@ -135,6 +144,23 @@ jobs:
           set -euo pipefail
           plutil -lint iosApp/iosApp/Info.plist
           plutil -lint iosApp/iosApp/PrivacyInfo.xcprivacy
+
+      - name: Verify effective Debug and Release application identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          debug_settings=build/ci-evidence/xcode-debug-settings.txt
+          release_settings=build/ci-evidence/xcode-release-settings.txt
+          xcodebuild -project iosApp/iosApp.xcodeproj -scheme iosApp -configuration Debug \
+            -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
+            -showBuildSettings >"$debug_settings"
+          xcodebuild -project iosApp/iosApp.xcodeproj -scheme iosApp -configuration Release \
+            -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
+            -showBuildSettings >"$release_settings"
+          debug_bundle=$(awk -F' = ' '{key=$1; gsub(/^[[:space:]]+|[[:space:]]+$/, "", key); if (key == "PRODUCT_BUNDLE_IDENTIFIER") {print $2; exit}}' "$debug_settings")
+          release_bundle=$(awk -F' = ' '{key=$1; gsub(/^[[:space:]]+|[[:space:]]+$/, "", key); if (key == "PRODUCT_BUNDLE_IDENTIFIER") {print $2; exit}}' "$release_settings")
+          [[ "$debug_bundle" == com.parlor.app.debug ]]
+          [[ "$release_bundle" == com.parlor.app ]]
 
       - name: Build unsigned Swift Release wrapper
         shell: bash
@@ -155,6 +181,9 @@ jobs:
           app="build/xcode-derived-data/Build/Products/Release-iphonesimulator/Parlor.app"
           test -x "$app/Parlor"
           plutil -lint "$app/Info.plist"
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$app/Info.plist")" = "com.parlor.app"
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$app/Info.plist")" = "$(sed -n 's/^PARLOR_VERSION_NAME = //p' config/parlor-version.xcconfig)"
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$app/Info.plist")" = "$(sed -n 's/^PARLOR_BUILD_NUMBER = //p' config/parlor-version.xcconfig)"
           file "$app/Parlor" | tee build/ci-evidence/xcode-binary.txt
           shasum -a 256 "$app/Parlor" | tee build/ci-evidence/xcode-binary.sha256
 

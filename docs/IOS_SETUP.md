@@ -9,7 +9,7 @@ Simulator or physical device. The minimum deployment target is iOS 16.
 
 | Tool | Minimum version | Notes |
 | --- | --- | --- |
-| **Xcode** | 16.0 | Includes the iOS 16+ SDK and Simulator. Use the release toolchain recorded by the candidate. |
+| **Xcode** | 16.0+ for local development; exact release policy for Store candidates | Local development may use a compatible Xcode, but Store-qualified CI currently pins Xcode 26.3 build 17C529 and requires a physical iOS SDK major of at least 26. The app deployment target remains iOS 16.0. |
 | **JDK** | 21 (Temurin / Zulu / Adoptium) | The Gradle toolchain auto-downloads if missing, but having one installed avoids first-build delay. |
 | **Android Studio** | Koala (2024.1) or newer | Comes with the bundled JDK Parlor expects. |
 | **Kotlin Multiplatform plugin** | bundled with current AS | Settings → Plugins → "Kotlin Multiplatform" must be enabled. Drives the **iOS App** run configuration. |

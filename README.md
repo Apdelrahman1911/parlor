@@ -25,13 +25,14 @@ The current architecture and release contracts are documented in:
 - [`docs/P2P_REMEDIATION_STATUS.md`](docs/P2P_REMEDIATION_STATUS.md)
 - [`docs/P2PKIT_MAVEN_PROVENANCE.md`](docs/P2PKIT_MAVEN_PROVENANCE.md)
 - [`docs/RELEASE_GATES.md`](docs/RELEASE_GATES.md)
+- [`docs/RELEASE_AUTOMATION.md`](docs/RELEASE_AUTOMATION.md)
 - [`docs/PRIVACY_AND_COMPLIANCE.md`](docs/PRIVACY_AND_COMPLIANCE.md)
 
 ## Requirements
 
 - JDK 21
 - Android SDK 36 (`minSdk = 26`, `targetSdk = 36`)
-- Xcode 16 or newer for Apple builds (minimum iOS 16)
+- Policy-pinned Xcode for Store-qualified Apple builds (currently Xcode 26.3 build 17C529; minimum deployment target iOS 16)
 - P2pKit 0.7.0-rc3 from Maven Central
 
 The checked-in Gradle 8.13 wrapper is the build entry point.

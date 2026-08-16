@@ -17,6 +17,7 @@ remain separate evidence.
 | iOS KMP release | `./gradlew productionAppleCheck` on macOS | Release frameworks link serially for `iosArm64`, `iosSimulatorArm64`, and `iosX64` without concurrent-LTO heap pressure. |
 | Unsigned Swift Release wrapper | The Release `xcodebuild` command in `IOS_SETUP.md`/`RELEASE_RUNBOOK.md` with `ARCHS=arm64`, `ONLY_ACTIVE_ARCH=YES`, and signing disabled | The arm64 simulator `.app` builds, its executable and plist/privacy inputs are inspected, and its checksum is recorded. Other Kotlin/Native architectures remain independently covered by `productionAppleCheck`; neither result is physical-device runtime evidence. |
 | Host-independent aggregate | `./gradlew productionCheck` | Desktop/common, Android unit, repository-wide Detekt/static-analysis, shell-dispatch validation, and unsigned Android release gates (including lint warning verification) pass. Apple remains a separate macOS job. |
+| Release automation security | `./gradlew productionReleaseAutomationCheck` | Candidate/provenance tampering tests, exact-tree/history tests, no-publication tests, workflow contracts, immutable Action pins, pinned ShellCheck/actionlint, and shell/YAML checks pass. |
 | Exact-candidate aggregate | `./gradlew productionCheck productionAppleCheck allTests --dependency-verification=strict --no-daemon --stacktrace --console=plain` on macOS | Every configured automated suite and unsigned Android/Apple release gate passes in one invocation at the recorded clean Git SHA. |
 
 The root tasks discover KMP modules through the multiplatform plugin. A newly
@@ -40,7 +41,7 @@ receipt:
 | Gate | Required receipt |
 |---|---|
 | Android signing | `./gradlew productionAndroidSigningCheck --no-configuration-cache` with protected credentials, then a signed AAB receipt; Play App Signing enrollment confirmed; key fingerprints recorded out of band. |
-| iOS archive/signing | Successful Release archive using the distribution certificate and provisioning profile in the intended App Store Connect team. |
+| iOS archive/signing | Successful Release archive using Xcode `26.3` build `17C529` and physical iOS SDK major `26` or newer, with the distribution certificate and provisioning profile in the intended App Store Connect team. The IPA validator also proves deployment target `16.0` and device-platform Mach-O metadata. |
 | Android devices | Canonical `P2P_MANUAL_TEST.md` rows on supported APIs: Android-to-Android in both host directions, three-device play, normal LAN, relevant hotspot topologies, background/foreground, network change, transient resume versus final Leave, host exit, rematch, and repeated sessions. Confirm no Nearby/Location runtime prompt appears. |
 | Apple devices | Canonical rows on physical iPhone/iPad pairs and mixed Android/iOS pairs in both host directions, including Local Network denial/Settings recovery, three devices, normal LAN, applicable Personal Hotspot topologies, lifecycle/process death, and repeated sessions. |
 | Cross-platform synchronization | Both games complete on Android host/iOS peer and iOS host/Android peer; simultaneous commands, snapshots, resume, terminal state, and private-state isolation have dated evidence. |
@@ -62,7 +63,8 @@ unit test.
   Detekt, release compilation/R8/lint plus the enforced
   `verifyReleaseLintWarnings` contract, unsigned AAB, merged-manifest
   inspection, and artifact hashes.
-- macOS: strict KMP `allTests`, release framework linkage for all supported
+- macOS: pinned Xcode `26.3` build `17C529` and iOS SDK-floor validation,
+  strict KMP `allTests`, release framework linkage for all supported
   Apple targets (linkage-only for `iosArm64`/`iosX64` on this job), plist and
   privacy-manifest validation, and an unsigned Xcode Swift Release wrapper
   build. The wrapper invokes the real Gradle resource/embed task with strict
@@ -73,15 +75,23 @@ simulator runtime tests. A successful link is not reported as a runtime test.
 Both jobs record the checked-out SHA and fail if the checkout is dirty.
 
 The workflow has read-only repository permission and receives no signing or
-store secrets on pull requests. Signed delivery belongs in a separately
-approved protected-environment workflow after the unsigned gates pass.
+Store secrets on pull requests. Signed delivery and promotion use the separate
+manual protected-environment workflows defined in
+[`RELEASE_AUTOMATION.md`](RELEASE_AUTOMATION.md). Candidate creation builds once
+on `testing`; external and production workflows promote recorded Store IDs and
+contain no mobile compilation/signing command.
 
-The action versions were checked against the official GitHub release pages on
-2026-07-28:
+Action revisions and the actionlint/ShellCheck/bundletool release checksums are
+locked in source and mechanically enforced. Review their official release pages
+before updating:
 
 - <https://github.com/actions/checkout/releases>
 - <https://github.com/actions/setup-java/releases>
 - <https://github.com/actions/upload-artifact/releases>
+- <https://github.com/actions/attest-build-provenance/releases>
+- <https://github.com/rhysd/actionlint/releases>
+- <https://github.com/koalaman/shellcheck/releases>
+- <https://github.com/google/bundletool/releases>
 
 Dependabot proposes action updates. Updating an action still requires its
 release/security notes and CI result to be reviewed.

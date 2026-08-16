@@ -1,0 +1,454 @@
+name: Promote tested Store candidate to production
+
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_run_id:
+        description: Workflow run ID that created the immutable candidate manifest
+        required: true
+        type: string
+      candidate_run_attempt:
+        description: Exact successful candidate workflow attempt
+        required: true
+        type: string
+      external_run_id:
+        description: External-testing promotion workflow run ID
+        required: true
+        type: string
+      external_run_attempt:
+        description: Exact external-testing workflow attempt
+        required: true
+        type: string
+      platform:
+        description: Production platform to promote independently
+        required: true
+        default: both
+        type: choice
+        options:
+          - android
+          - ios
+          - both
+      apple_operation:
+        description: Attach the tested build, or attach and submit it for App Review
+        required: true
+        default: attach
+        type: choice
+        options:
+          - attach
+          - submit
+      app_store_version_id:
+        description: Exact App Store Connect version resource ID; required for ios/both
+        required: false
+        default: ""
+        type: string
+      publish:
+        description: Change production Store state; false is validation_only
+        required: true
+        default: false
+        type: boolean
+
+concurrency:
+  group: parlor-production-${{ inputs.candidate_run_id }}-${{ inputs.platform }}
+  cancel-in-progress: false
+
+permissions:
+  actions: read
+  attestations: read
+  contents: read
+
+jobs:
+  preflight:
+    name: Verify release tree equals approved candidate tree
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    outputs:
+      candidate_sha: ${{ steps.candidate.outputs.candidate_sha }}
+      manifest_b64: ${{ steps.candidate.outputs.manifest_b64 }}
+      external_source_sha: ${{ steps.external_run.outputs.external_source_sha }}
+      external_evidence_b64: ${{ steps.external_evidence.outputs.external_evidence_b64 }}
+
+    steps:
+      - name: Check out complete protected release history
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Enforce release branch and exact numeric selection
+        shell: bash
+        env:
+          EVENT_REF: ${{ github.ref }}
+          CANDIDATE_RUN_ID: ${{ inputs.candidate_run_id }}
+          CANDIDATE_RUN_ATTEMPT: ${{ inputs.candidate_run_attempt }}
+          EXTERNAL_RUN_ID: ${{ inputs.external_run_id }}
+          EXTERNAL_RUN_ATTEMPT: ${{ inputs.external_run_attempt }}
+        run: |
+          set -euo pipefail
+          [[ "$EVENT_REF" == refs/heads/release ]]
+          [[ "$CANDIDATE_RUN_ID" =~ ^[1-9][0-9]*$ ]]
+          [[ "$CANDIDATE_RUN_ATTEMPT" =~ ^[1-9][0-9]*$ ]]
+          [[ "$EXTERNAL_RUN_ID" =~ ^[1-9][0-9]*$ ]]
+          [[ "$EXTERNAL_RUN_ATTEMPT" =~ ^[1-9][0-9]*$ ]]
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+
+      - name: Download exact immutable candidate manifest
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          RUN_ID: ${{ inputs.candidate_run_id }}
+          RUN_ATTEMPT: ${{ inputs.candidate_run_attempt }}
+        run: |
+          set -euo pipefail
+          mkdir -p build/release-promotion
+          python3 scripts/release/release_tool.py fetch-artifact \
+            --repository "$REPOSITORY" \
+            --run-id "$RUN_ID" \
+            --artifact-name "parlor-candidate-manifest-$RUN_ID-attempt-$RUN_ATTEMPT" \
+            --expected-file candidate-manifest.json \
+            --output build/release-promotion/candidate-manifest.json
+          python3 scripts/release/release_tool.py validate-manifest \
+            --manifest build/release-promotion/candidate-manifest.json
+          [[ "$(jq -r .build.workflow_run_id build/release-promotion/candidate-manifest.json)" == "$RUN_ID" ]]
+          [[ "$(jq -r .build.workflow_run_attempt build/release-promotion/candidate-manifest.json)" == "$RUN_ATTEMPT" ]]
+
+      - name: Bind manifest to the exact successful candidate workflow attempt
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          REPOSITORY_ID: ${{ github.repository_id }}
+          RUN_ID: ${{ inputs.candidate_run_id }}
+          RUN_ATTEMPT: ${{ inputs.candidate_run_attempt }}
+        run: |
+          set -euo pipefail
+          python3 scripts/release/release_tool.py workflow-run-record \
+            --repository "$REPOSITORY" \
+            --repository-id "$REPOSITORY_ID" \
+            --run-id "$RUN_ID" \
+            --run-attempt "$RUN_ATTEMPT" \
+            --expected-workflow .github/workflows/testing-candidate.yml \
+            --expected-branch testing \
+            --output build/release-promotion/candidate-workflow-run.json
+          [[ "$(jq -r .head_sha build/release-promotion/candidate-workflow-run.json)" == \
+            "$(jq -r .source.commit_sha build/release-promotion/candidate-manifest.json)" ]]
+
+      - name: Bind external receipts to the exact successful workflow run
+        id: external_run
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          REPOSITORY_ID: ${{ github.repository_id }}
+          EXTERNAL_RUN_ID: ${{ inputs.external_run_id }}
+          EXTERNAL_RUN_ATTEMPT: ${{ inputs.external_run_attempt }}
+        run: |
+          set -euo pipefail
+          python3 scripts/release/release_tool.py workflow-run-record \
+            --repository "$REPOSITORY" \
+            --repository-id "$REPOSITORY_ID" \
+            --run-id "$EXTERNAL_RUN_ID" \
+            --run-attempt "$EXTERNAL_RUN_ATTEMPT" \
+            --expected-workflow .github/workflows/testing-external-promotion.yml \
+            --expected-branch testing \
+            --output build/release-promotion/external-workflow-run.json
+          echo "external_source_sha=$(jq -r .head_sha build/release-promotion/external-workflow-run.json)" >>"$GITHUB_OUTPUT"
+
+      - name: Require shared history and complete tree equality
+        id: candidate
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          REPOSITORY_ID: ${{ github.repository_id }}
+        run: |
+          set -euo pipefail
+          candidate_sha=$(jq -r .source.commit_sha build/release-promotion/candidate-manifest.json)
+          recorded_tree=$(jq -r .source.tree_sha build/release-promotion/candidate-manifest.json)
+          external_source_sha=$(jq -r .head_sha build/release-promotion/external-workflow-run.json)
+          [[ "$candidate_sha" =~ ^[0-9a-f]{40}$ && "$recorded_tree" =~ ^[0-9a-f]{40}$ ]]
+          git cat-file -e "${candidate_sha}^{commit}"
+          [[ "$(git rev-parse "${candidate_sha}^{tree}")" == "$recorded_tree" ]]
+          [[ "$(git rev-parse 'HEAD^{tree}')" == "$recorded_tree" ]]
+          if [[ "$(git rev-parse HEAD)" != "$candidate_sha" ]]; then
+            git merge-base "$candidate_sha" HEAD >/dev/null
+          fi
+          git cat-file -e "${external_source_sha}^{commit}"
+          git merge-base "$candidate_sha" "$external_source_sha" >/dev/null
+          gh attestation verify build/release-promotion/candidate-manifest.json \
+            --repo "$REPOSITORY" \
+            --signer-workflow "$REPOSITORY/.github/workflows/testing-candidate.yml" \
+            --source-digest "$candidate_sha" \
+            --deny-self-hosted-runners
+          verification=$(python3 scripts/release/release_tool.py verify-source \
+            --manifest build/release-promotion/candidate-manifest.json \
+            --repository "$REPOSITORY" \
+            --repository-id "$REPOSITORY_ID")
+          [[ "$verification" == exact-commit || "$verification" == shared-history-equal-tree ]]
+          {
+            echo "candidate_sha=$candidate_sha"
+            echo "manifest_b64=$(python3 scripts/release/release_tool.py base64 --file build/release-promotion/candidate-manifest.json)"
+          } >>"$GITHUB_OUTPUT"
+
+      - name: Load and attest one successful external-testing evidence record
+        id: external_evidence
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          EXTERNAL_RUN_ID: ${{ inputs.external_run_id }}
+          EXTERNAL_RUN_ATTEMPT: ${{ inputs.external_run_attempt }}
+          PLATFORM: ${{ inputs.platform }}
+        run: |
+          set -euo pipefail
+          candidate_sha=$(jq -r .source.commit_sha build/release-promotion/candidate-manifest.json)
+          external_source_sha=$(jq -r .head_sha build/release-promotion/external-workflow-run.json)
+          python3 scripts/release/release_tool.py fetch-artifact \
+            --repository "$REPOSITORY" \
+            --run-id "$EXTERNAL_RUN_ID" \
+            --artifact-name "parlor-external-evidence-$candidate_sha-run-$EXTERNAL_RUN_ID-attempt-$EXTERNAL_RUN_ATTEMPT" \
+            --expected-file external-evidence.json \
+            --output build/release-promotion/external-evidence.json
+          python3 scripts/release/store_api.py validate-external-evidence \
+            --manifest build/release-promotion/candidate-manifest.json \
+            --evidence build/release-promotion/external-evidence.json \
+            --run-id "$EXTERNAL_RUN_ID" \
+            --run-attempt "$EXTERNAL_RUN_ATTEMPT" \
+            --workflow-source-sha "$external_source_sha"
+          if [[ "$PLATFORM" == android || "$PLATFORM" == both ]]; then
+            jq -e '.platforms | index("android") != null' build/release-promotion/external-evidence.json >/dev/null
+          fi
+          if [[ "$PLATFORM" == ios || "$PLATFORM" == both ]]; then
+            jq -e '.platforms | index("ios") != null' build/release-promotion/external-evidence.json >/dev/null
+          fi
+          gh attestation verify build/release-promotion/external-evidence.json \
+            --repo "$REPOSITORY" \
+            --signer-workflow "$REPOSITORY/.github/workflows/testing-external-promotion.yml" \
+            --source-digest "$external_source_sha" \
+            --deny-self-hosted-runners
+          echo "external_evidence_b64=$(python3 scripts/release/release_tool.py base64 --file build/release-promotion/external-evidence.json)" >>"$GITHUB_OUTPUT"
+
+  android:
+    name: Promote exact tested Play version code to production
+    needs: preflight
+    concurrency:
+      group: parlor-google-play-com-parlor-app
+      cancel-in-progress: false
+    if: ${{ inputs.platform == 'android' || inputs.platform == 'both' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    environment: production-android
+    permissions:
+      actions: read
+      attestations: write
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Check out release tree without compiling
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Restore and reverify complete source provenance
+        shell: bash
+        env:
+          MANIFEST_B64: ${{ needs.preflight.outputs.manifest_b64 }}
+          REPOSITORY: ${{ github.repository }}
+          REPOSITORY_ID: ${{ github.repository_id }}
+        run: |
+          set -euo pipefail
+          mkdir -p build/release-promotion
+          printf '%s' "$MANIFEST_B64" | openssl base64 -d -A >build/release-promotion/candidate-manifest.json
+          python3 scripts/release/release_tool.py verify-source \
+            --manifest build/release-promotion/candidate-manifest.json \
+            --repository "$REPOSITORY" \
+            --repository-id "$REPOSITORY_ID"
+
+      - name: Extract the validated Android receipt from attested external evidence
+        shell: bash
+        env:
+          EXTERNAL_EVIDENCE_B64: ${{ needs.preflight.outputs.external_evidence_b64 }}
+          EXTERNAL_RUN_ID: ${{ inputs.external_run_id }}
+          EXTERNAL_RUN_ATTEMPT: ${{ inputs.external_run_attempt }}
+          EXTERNAL_SOURCE_SHA: ${{ needs.preflight.outputs.external_source_sha }}
+        run: |
+          set -euo pipefail
+          printf '%s' "$EXTERNAL_EVIDENCE_B64" | openssl base64 -d -A >build/release-promotion/external-evidence.json
+          python3 scripts/release/store_api.py validate-external-evidence \
+            --manifest build/release-promotion/candidate-manifest.json \
+            --evidence build/release-promotion/external-evidence.json \
+            --run-id "$EXTERNAL_RUN_ID" \
+            --run-attempt "$EXTERNAL_RUN_ATTEMPT" \
+            --workflow-source-sha "$EXTERNAL_SOURCE_SHA" \
+            --require-platform android \
+            --receipt-output build/release-promotion/external-android-receipt.json
+
+      - name: Promote recorded version code to Play production or rehearse
+        shell: bash
+        env:
+          PUBLISH: ${{ inputs.publish }}
+          PACKAGE_NAME: ${{ vars.GOOGLE_PLAY_PACKAGE_NAME }}
+          EXTERNAL_TRACK: ${{ vars.GOOGLE_PLAY_EXTERNAL_TRACK }}
+          SERVICE_ACCOUNT_B64: ${{ inputs.publish && secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_B64 || '' }}
+        run: |
+          set -euo pipefail
+          [[ "$PACKAGE_NAME" == com.parlor.app ]]
+          [[ -n "$EXTERNAL_TRACK" && "$EXTERNAL_TRACK" != internal && "$EXTERNAL_TRACK" != production ]]
+          command=(
+            python3 scripts/release/store_api.py google-promote
+            --manifest build/release-promotion/candidate-manifest.json
+            --operation production
+            --source-track "$EXTERNAL_TRACK"
+            --destination-track production
+            --package "$PACKAGE_NAME"
+            --external-receipt build/release-promotion/external-android-receipt.json
+            --output build/release-promotion/production-android-receipt.json
+          )
+          if [[ "$PUBLISH" == true ]]; then
+            [[ -n "$SERVICE_ACCOUNT_B64" ]]
+            printf '%s' "$SERVICE_ACCOUNT_B64" | openssl base64 -d -A >"$RUNNER_TEMP/google-play-service-account.json"
+            chmod 600 "$RUNNER_TEMP/google-play-service-account.json"
+            command+=(--credentials "$RUNNER_TEMP/google-play-service-account.json" --execute)
+          fi
+          "${command[@]}"
+          rm -f "$RUNNER_TEMP/google-play-service-account.json"
+
+      - name: Attest exact Android production receipt
+        if: ${{ inputs.publish }}
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: build/release-promotion/production-android-receipt.json
+
+      - name: Upload immutable Android production receipt
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: parlor-production-${{ needs.preflight.outputs.candidate_sha }}-android-run-${{ github.run_id }}-attempt-${{ github.run_attempt }}
+          if-no-files-found: error
+          retention-days: 90
+          path: build/release-promotion/production-android-receipt.json
+
+      - name: Cleanup Google credentials
+        if: always()
+        shell: bash
+        run: rm -f "$RUNNER_TEMP/google-play-service-account.json"
+
+  ios:
+    name: Attach or submit exact tested TestFlight build
+    needs: preflight
+    concurrency:
+      group: parlor-app-store-connect-com-parlor-app
+      cancel-in-progress: false
+    if: ${{ inputs.platform == 'ios' || inputs.platform == 'both' }}
+    runs-on: macos-15
+    timeout-minutes: 30
+    environment: production-ios
+    permissions:
+      actions: read
+      attestations: write
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Check out release tree without compiling
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Restore and reverify complete source provenance
+        shell: bash
+        env:
+          MANIFEST_B64: ${{ needs.preflight.outputs.manifest_b64 }}
+          REPOSITORY: ${{ github.repository }}
+          REPOSITORY_ID: ${{ github.repository_id }}
+        run: |
+          set -euo pipefail
+          mkdir -p build/release-promotion
+          printf '%s' "$MANIFEST_B64" | openssl base64 -d -A >build/release-promotion/candidate-manifest.json
+          python3 scripts/release/release_tool.py verify-source \
+            --manifest build/release-promotion/candidate-manifest.json \
+            --repository "$REPOSITORY" \
+            --repository-id "$REPOSITORY_ID"
+
+      - name: Extract the validated iOS receipt from attested external evidence
+        shell: bash
+        env:
+          EXTERNAL_EVIDENCE_B64: ${{ needs.preflight.outputs.external_evidence_b64 }}
+          EXTERNAL_RUN_ID: ${{ inputs.external_run_id }}
+          EXTERNAL_RUN_ATTEMPT: ${{ inputs.external_run_attempt }}
+          EXTERNAL_SOURCE_SHA: ${{ needs.preflight.outputs.external_source_sha }}
+        run: |
+          set -euo pipefail
+          printf '%s' "$EXTERNAL_EVIDENCE_B64" | openssl base64 -d -A >build/release-promotion/external-evidence.json
+          python3 scripts/release/store_api.py validate-external-evidence \
+            --manifest build/release-promotion/candidate-manifest.json \
+            --evidence build/release-promotion/external-evidence.json \
+            --run-id "$EXTERNAL_RUN_ID" \
+            --run-attempt "$EXTERNAL_RUN_ATTEMPT" \
+            --workflow-source-sha "$EXTERNAL_SOURCE_SHA" \
+            --require-platform ios \
+            --receipt-output build/release-promotion/external-ios-receipt.json
+
+      - name: Attach exact build and optionally submit for App Review, or rehearse
+        shell: bash
+        env:
+          PUBLISH: ${{ inputs.publish }}
+          APPLE_OPERATION: ${{ inputs.apple_operation }}
+          APP_ID: ${{ vars.APP_STORE_CONNECT_APP_ID }}
+          APP_STORE_VERSION_ID: ${{ inputs.app_store_version_id }}
+          BUNDLE_ID: ${{ vars.PARLOR_APPLE_BUNDLE_ID }}
+          API_KEY_ID: ${{ vars.APP_STORE_CONNECT_KEY_ID }}
+          API_ISSUER_ID: ${{ vars.APP_STORE_CONNECT_ISSUER_ID }}
+          API_KEY_B64: ${{ inputs.publish && secrets.APP_STORE_CONNECT_API_KEY_P8_B64 || '' }}
+        run: |
+          set -euo pipefail
+          [[ "$BUNDLE_ID" == com.parlor.app ]]
+          [[ -n "$APP_ID" && -n "$APP_STORE_VERSION_ID" ]]
+          command=(
+            python3 scripts/release/store_api.py apple-production
+            --manifest build/release-promotion/candidate-manifest.json
+            --external-receipt build/release-promotion/external-ios-receipt.json
+            --app-id "$APP_ID"
+            --bundle-id "$BUNDLE_ID"
+            --app-store-version-id "$APP_STORE_VERSION_ID"
+            --output build/release-promotion/production-ios-receipt.json
+          )
+          if [[ "$APPLE_OPERATION" == submit ]]; then
+            command+=(--submit)
+          fi
+          if [[ "$PUBLISH" == true ]]; then
+            [[ -n "$API_KEY_B64" && -n "$API_KEY_ID" && -n "$API_ISSUER_ID" ]]
+            printf '%s' "$API_KEY_B64" | openssl base64 -d -A >"$RUNNER_TEMP/AuthKey_$API_KEY_ID.p8"
+            chmod 600 "$RUNNER_TEMP/AuthKey_$API_KEY_ID.p8"
+            command+=(
+              --issuer-id "$API_ISSUER_ID"
+              --key-id "$API_KEY_ID"
+              --private-key "$RUNNER_TEMP/AuthKey_$API_KEY_ID.p8"
+              --execute
+            )
+          fi
+          "${command[@]}"
+          rm -f "$RUNNER_TEMP/AuthKey_$API_KEY_ID.p8"
+
+      - name: Attest exact iOS production receipt
+        if: ${{ inputs.publish }}
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: build/release-promotion/production-ios-receipt.json
+
+      - name: Upload immutable iOS production receipt
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: parlor-production-${{ needs.preflight.outputs.candidate_sha }}-ios-run-${{ github.run_id }}-attempt-${{ github.run_attempt }}
+          if-no-files-found: error
+          retention-days: 90
+          path: build/release-promotion/production-ios-receipt.json
+
+      - name: Cleanup App Store Connect credentials
+        if: always()
+        shell: bash
+        env:
+          API_KEY_ID: ${{ vars.APP_STORE_CONNECT_KEY_ID }}
+        run: rm -f "$RUNNER_TEMP/AuthKey_$API_KEY_ID.p8"

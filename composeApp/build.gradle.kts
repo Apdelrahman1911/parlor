@@ -203,6 +203,13 @@ android {
     }
 
     buildTypes {
+        getByName("debug") {
+            // Local development installs beside the canonical Store app. Store
+            // workflows reject this suffix and always archive the Release
+            // identity configured below.
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-debug"
+        }
         getByName("release") {
             isDebuggable = false
             isJniDebuggable = false
@@ -242,6 +249,29 @@ android {
 
     // Case JSON lives inside the Whodunit module's Compose Multiplatform
     // resources, not in app-level Android assets. See game-modes/whodunit/.
+}
+
+val configuredStoreApplicationId = requireNotNull(android.defaultConfig.applicationId)
+val configuredDebugApplicationIdSuffix = android.buildTypes.getByName("debug").applicationIdSuffix.orEmpty()
+val configuredReleaseApplicationIdSuffix = android.buildTypes.getByName("release").applicationIdSuffix.orEmpty()
+
+val verifyApplicationIdentities by tasks.registering {
+    group = "verification"
+    description = "Rejects Debug/Store Android identity drift before release automation runs."
+    inputs.property("storeApplicationId", configuredStoreApplicationId)
+    inputs.property("debugApplicationIdSuffix", configuredDebugApplicationIdSuffix)
+    inputs.property("releaseApplicationIdSuffix", configuredReleaseApplicationIdSuffix)
+    doLast {
+        check(inputs.properties.getValue("storeApplicationId") == "com.parlor.app") {
+            "Android Store application ID changed from com.parlor.app."
+        }
+        check(inputs.properties.getValue("debugApplicationIdSuffix") == ".debug") {
+            "Android Debug must use the isolated com.parlor.app.debug identity."
+        }
+        check(inputs.properties.getValue("releaseApplicationIdSuffix") == "") {
+            "Android Release must not add a non-Store application-ID suffix."
+        }
+    }
 }
 
 // The release target and pinned toolchain are deliberate compatibility

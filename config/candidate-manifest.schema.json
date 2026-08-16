@@ -1,0 +1,208 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Apdelrahman1911/parlor/blob/main/config/candidate-manifest.schema.json",
+  "title": "Parlor immutable Store candidate manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "repository",
+    "source",
+    "version",
+    "build",
+    "applications",
+    "artifacts",
+    "stores"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "repository": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["full_name", "id"],
+      "properties": {
+        "full_name": { "type": "string", "minLength": 3 },
+        "id": { "type": "string", "pattern": "^[1-9][0-9]*$" }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["commit_sha", "tree_sha"],
+      "properties": {
+        "commit_sha": { "$ref": "#/$defs/gitSha" },
+        "tree_sha": { "$ref": "#/$defs/gitSha" }
+      }
+    },
+    "version": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["marketing_version", "android_version_code", "ios_build_number"],
+      "properties": {
+        "marketing_version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "android_version_code": { "type": "integer", "minimum": 1 },
+        "ios_build_number": { "type": "string", "pattern": "^[1-9][0-9]*$" }
+      }
+    },
+    "build": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["workflow_run_id", "workflow_run_attempt", "created_at"],
+      "properties": {
+        "workflow_run_id": { "type": "string", "pattern": "^[1-9][0-9]*$" },
+        "workflow_run_attempt": { "type": "integer", "minimum": 1 },
+        "created_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "applications": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["android_application_id", "ios_bundle_id"],
+      "properties": {
+        "android_application_id": { "const": "com.parlor.app" },
+        "ios_bundle_id": { "const": "com.parlor.app" }
+      }
+    },
+    "artifacts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["android", "ios"],
+      "properties": {
+        "android": { "$ref": "#/$defs/artifact" },
+        "ios": { "$ref": "#/$defs/artifact" }
+      }
+    },
+    "stores": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["google_play", "app_store_connect"],
+      "properties": {
+        "google_play": { "$ref": "#/$defs/googleReceipt" },
+        "app_store_connect": { "$ref": "#/$defs/appleReceipt" }
+      }
+    }
+  },
+  "$defs": {
+    "gitSha": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "filename",
+        "size_bytes",
+        "sha256",
+        "signing_fingerprint_sha256",
+        "github_artifact",
+        "attestation"
+      ],
+      "properties": {
+        "filename": { "type": "string", "pattern": "^[^/\\\\]+\\.(aab|ipa)$" },
+        "size_bytes": { "type": "integer", "minimum": 1 },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "signing_fingerprint_sha256": { "$ref": "#/$defs/sha256" },
+        "github_artifact": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "name", "url", "archive_sha256"],
+          "properties": {
+            "id": { "type": "string", "pattern": "^[1-9][0-9]*$" },
+            "name": { "type": "string", "minLength": 1 },
+            "url": { "type": "string", "pattern": "^https://github\\.com/Apdelrahman1911/parlor/actions/runs/[1-9][0-9]*/artifacts/[1-9][0-9]*$" },
+            "archive_sha256": { "$ref": "#/$defs/sha256" }
+          }
+        },
+        "attestation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "url"],
+          "properties": {
+            "id": { "type": "string", "minLength": 1 },
+            "url": { "type": "string", "pattern": "^https://github\\.com/Apdelrahman1911/parlor/attestations/" }
+          }
+        }
+      }
+    },
+    "receiptCommon": {
+      "type": "object",
+      "required": ["schema_version", "platform", "operation", "candidate_commit_sha", "artifact_sha256", "state", "read_back_at"],
+      "properties": {
+        "schema_version": { "const": 1 },
+        "platform": { "enum": ["android", "ios"] },
+        "operation": { "type": "string", "minLength": 1 },
+        "candidate_commit_sha": { "$ref": "#/$defs/gitSha" },
+        "artifact_sha256": { "$ref": "#/$defs/sha256" },
+        "state": { "type": "string", "minLength": 1 },
+        "read_back_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "googleReceipt": {
+      "allOf": [
+        { "$ref": "#/$defs/receiptCommon" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "schema_version", "platform", "operation", "candidate_commit_sha", "artifact_sha256",
+            "package_name", "version_code", "track", "release_name", "release_status", "edit_id",
+            "store_bundle_sha256", "upload_evidence", "state", "read_back_at", "resumed_without_upload"
+          ],
+          "properties": {
+            "schema_version": { "const": 1 },
+            "platform": { "const": "android" },
+            "operation": { "const": "internal_upload" },
+            "candidate_commit_sha": { "$ref": "#/$defs/gitSha" },
+            "artifact_sha256": { "$ref": "#/$defs/sha256" },
+            "package_name": { "const": "com.parlor.app" },
+            "version_code": { "type": "integer", "minimum": 1 },
+            "track": { "const": "internal" },
+            "release_name": { "type": "string" },
+            "release_status": { "const": "completed" },
+            "edit_id": { "type": ["string", "null"] },
+            "store_bundle_sha256": { "$ref": "#/$defs/sha256" },
+            "upload_evidence": { "enum": ["committed_edit", "store_sha256_readback"] },
+            "state": { "const": "internal_track_committed" },
+            "read_back_at": { "type": "string", "format": "date-time" },
+            "resumed_without_upload": { "type": "boolean" }
+          }
+        }
+      ]
+    },
+    "appleReceipt": {
+      "allOf": [
+        { "$ref": "#/$defs/receiptCommon" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "schema_version", "platform", "operation", "candidate_commit_sha", "artifact_sha256",
+            "bundle_id", "marketing_version", "build_number", "app_id", "build_id", "upload_request_id",
+            "internal_group_id", "processing_state", "build_audience_type",
+            "uses_non_exempt_encryption", "expired", "state", "read_back_at", "resumed_without_upload"
+          ],
+          "properties": {
+            "schema_version": { "const": 1 },
+            "platform": { "const": "ios" },
+            "operation": { "const": "internal_upload" },
+            "candidate_commit_sha": { "$ref": "#/$defs/gitSha" },
+            "artifact_sha256": { "$ref": "#/$defs/sha256" },
+            "bundle_id": { "const": "com.parlor.app" },
+            "marketing_version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+            "build_number": { "type": "string", "pattern": "^[1-9][0-9]*$" },
+            "app_id": { "type": "string", "minLength": 1 },
+            "build_id": { "type": "string", "minLength": 1 },
+            "upload_request_id": { "type": "string", "minLength": 1 },
+            "internal_group_id": { "type": "string", "minLength": 1 },
+            "processing_state": { "const": "VALID" },
+            "build_audience_type": { "const": "APP_STORE_ELIGIBLE" },
+            "uses_non_exempt_encryption": { "type": "boolean" },
+            "expired": { "const": false },
+            "state": { "const": "available_to_internal_testers" },
+            "read_back_at": { "type": "string", "format": "date-time" },
+            "resumed_without_upload": { "type": "boolean" }
+          }
+        }
+      ]
+    }
+  }
+}

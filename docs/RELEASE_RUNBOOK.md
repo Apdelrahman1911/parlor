@@ -3,17 +3,25 @@
 Android and iOS are the production targets. Desktop is a development/test
 harness and is not shipped by this runbook.
 
+The protected branch, build-once, credential, and Store-promotion contract is
+canonical in [`RELEASE_AUTOMATION.md`](RELEASE_AUTOMATION.md). This runbook
+covers qualification around that automation; it must not be used to build a
+second production artifact after testing.
+
 ## 1. Open the release candidate
 
-1. Create the release branch from the approved commit. Record the Parlor commit,
-   resolved P2pKit 0.7.0-rc3 coordinates/checksums, and upstream release-tag
-   provenance. A sibling P2pKit checkout is not the executed dependency.
+1. Review the candidate on `main`, then move its complete tree through protected
+   `testing`. Record the exact full commit and tree SHA, resolved P2pKit
+   0.7.0-rc3 coordinates/checksums, and upstream release-tag provenance. A
+   sibling P2pKit checkout is not the executed dependency.
 2. Confirm the worktree is clean and the diff contains no generated caches,
    credentials, signing assets, local repository paths, or debug-only
    transport/logging switches.
-3. Set Android `versionCode`/`versionName` and iOS
-   `CURRENT_PROJECT_VERSION`/`MARKETING_VERSION`. Record the protocol major,
-   game protocol versions, content versions, and P2pKit coordinate.
+3. Review the one version change in `config/parlor-version.xcconfig`. Android
+   `versionCode` and iOS build number use the same positive integer; Android
+   `versionName` and iOS marketing version use the same three-part version.
+   Workflows never auto-increment it. Record protocol, game/content versions,
+   and the P2pKit coordinate.
 4. Resolve `io.github.apdelrahman1911:p2p-core:0.7.0-rc3` and
    `io.github.apdelrahman1911:p2p-transport-lan:0.7.0-rc3` from Maven Central.
    Do not use `mavenLocal()`, a sibling checkout, or a repository override.
@@ -34,7 +42,9 @@ On Linux or macOS with JDK 21 and Android SDK 36:
 ./gradlew productionAndroidSigningCheck --no-daemon --no-configuration-cache --stacktrace --console=plain
 ```
 
-On macOS with the release Xcode toolchain:
+On macOS with the release Xcode toolchain pinned in
+`config/release-policy.json` (currently Xcode `26.3` build `17C529`, with a
+physical iOS SDK major of at least `26`; deployment remains iOS `16.0`):
 
 ```bash
 ./gradlew productionAppleCheck --no-daemon --stacktrace --console=plain
@@ -112,31 +122,48 @@ Complete `docs/PRIVACY_AND_COMPLIANCE.md` and
   and content-rights reviews.
 - Legal must approve the project license, SBOM, and third-party notices.
 
-## 5. Sign and stage
+## 5. Create and stage the immutable Store candidate
 
 ### Android
 
-1. Build the final AAB from the already-verified commit in the protected
-   signing environment.
-2. Supply the upload key only through the secret store; never copy a keystore
-   or password into the repository or logs.
-3. Confirm the artifact is release/minified as configured, signed by the
-   expected upload certificate, and byte-identical in inputs to the unsigned
-   candidate other than signing.
-4. Upload to Play internal testing. Re-run install, startup, LAN multiplayer,
-   background/rejoin, and no-provider-traffic inspection from the delivered build.
+1. Dispatch `.github/workflows/testing-candidate.yml` on protected `testing`
+   with the exact branch-tip SHA. An optional `publish=false` dispatch is a
+   disposable, non-promotable rehearsal. Authorize a separate `publish=true`
+   dispatch through `testing-android`; only that run creates the candidate
+   manifest and the Store-tested artifact.
+2. The workflow builds/signs one AAB, validates its exact identity, version,
+   certificate, manifest, permissions, SDKs, DEX/native contents, R8/lint, and
+   provenance, then uploads that AAB once to Play `internal`.
+3. Record the candidate run/attempt, manifest, artifact SHA-256, Play version
+   code/edit/track receipt, and Console readback. Re-run install, startup, LAN
+   multiplayer, background/rejoin, and provider-traffic inspection from the
+   Play-delivered build.
+   If a run loses its edit receipt after a successful commit, the automation may
+   resume only when Play reports the exact immutable AAB SHA-256 on the single
+   completed internal release; the recovery receipt explicitly has no edit ID.
 
 ### iOS
 
-1. Archive the same commit with the protected distribution certificate,
-   provisioning profile, bundle ID, and App Store configuration.
-2. Validate the archive and privacy manifest in Xcode/Organizer.
-3. Upload to TestFlight. Re-run install, startup, LAN multiplayer,
-   background/rejoin, and no-provider-traffic inspection from the delivered build.
+1. The same candidate dispatch uses `testing-ios` to create one signed Release
+   archive/IPA with an ephemeral keychain and protected profile. It refuses a
+   runner whose Xcode build or physical SDK differs from the reviewed policy.
+2. It validates the archive and IPA Bundle ID, version/build, Team/certificate,
+   profile, entitlements, nested signatures, arm64, privacy manifest, and exact
+   bytes before uploading once to App Store Connect.
+3. Record the processed App Store Connect build ID and internal TestFlight
+   group readback. Re-run install, startup, LAN multiplayer,
+   background/rejoin, and provider-traffic inspection from that TestFlight build.
 
-Promote through internal/TestFlight cohorts before broader rollout. Store
+Use `testing-external-promotion.yml` to promote the recorded version/build to
+the existing Play external track and external TestFlight group. After testing,
+move only the complete candidate tree to `release` and use
+`production-promotion.yml`; production promotion never builds or signs. Store
 submission is blocked while any Blocker/Critical/High issue is open without
 written risk acceptance.
+
+Before a Play promotion, verify the destination track has no staged/draft/
+halted rollout or multi-version release. The workflow fails closed for those
+states because replacing them automatically could cancel an unrelated rollout.
 
 ## 6. Rollout and rollback
 
@@ -163,6 +190,8 @@ Store one release evidence record containing:
 - automated logs and reports;
 - dependency/SBOM/license review;
 - signed artifact identifiers/checksums;
+- canonical candidate manifest, exact Git tree SHA, GitHub artifact IDs and
+  attestations, candidate/external/production workflow run IDs and attempts;
 - physical-device, accessibility, privacy, and store receipts;
 - accepted risks and residual `UNVERIFIED` checks; and
 - rollout/rollback owner and decision timestamps.

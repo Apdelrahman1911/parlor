@@ -1,0 +1,1214 @@
+name: Create immutable Store candidate
+
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_sha:
+        description: Full 40-character commit SHA at the tip of protected testing
+        required: true
+        type: string
+      publish:
+        description: Upload once to Play internal testing and TestFlight internal testing
+        required: true
+        default: false
+        type: boolean
+
+concurrency:
+  # Candidate claims live in GitHub artifacts, whose list/create sequence is
+  # not an atomic compare-and-set. Serialize every candidate-creation run so
+  # two different SHAs carrying the same reviewed build number cannot both
+  # observe an empty claim set before either durable claim is uploaded.
+  group: parlor-store-candidate-claim
+  cancel-in-progress: false
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  preflight:
+    name: Freeze source and run candidate gates
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    environment: testing-candidate
+    outputs:
+      source_record_b64: ${{ steps.source.outputs.source_record_b64 }}
+      marketing_version: ${{ steps.source.outputs.marketing_version }}
+      build_number: ${{ steps.source.outputs.build_number }}
+
+    steps:
+      - name: Check out the exact requested candidate
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.candidate_sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Enforce protected testing source
+        shell: bash
+        env:
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+          EVENT_SHA: ${{ github.sha }}
+          EVENT_REF: ${{ github.ref }}
+        run: |
+          set -euo pipefail
+          [[ "$EVENT_REF" == refs/heads/testing ]]
+          [[ "$CANDIDATE_SHA" =~ ^[0-9a-f]{40}$ ]]
+          [[ "$CANDIDATE_SHA" == "$EVENT_SHA" ]]
+          [[ "$(git rev-parse HEAD)" == "$CANDIDATE_SHA" ]]
+          [[ "$(git rev-parse refs/remotes/origin/testing)" == "$CANDIDATE_SHA" ]]
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95 # v5.6.0
+        with:
+          distribution: temurin
+          java-version: "21"
+          check-latest: false
+
+      - name: Install pinned Android SDK packages
+        shell: bash
+        run: |
+          set -euo pipefail
+          "${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager" \
+            "platforms;android-36" \
+            "build-tools;36.0.0"
+
+      - name: Run source, test, static-analysis, and release-automation gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          ./gradlew productionCheck productionStaticAnalysis productionReleaseAutomationCheck allTests \
+            --dependency-verification=strict \
+            --no-daemon \
+            --stacktrace \
+            --console=plain
+
+      - name: Freeze candidate source and version
+        id: source
+        shell: bash
+        env:
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+          REPOSITORY_ID: ${{ github.repository_id }}
+        run: |
+          set -euo pipefail
+          mkdir -p build/release-candidate
+          python3 scripts/release/release_tool.py source-record \
+            --candidate-sha "$CANDIDATE_SHA" \
+            --repository-id "$REPOSITORY_ID" \
+            --output build/release-candidate/source-record.json
+          {
+            echo "source_record_b64=$(python3 scripts/release/release_tool.py base64 --file build/release-candidate/source-record.json)"
+            echo "marketing_version=$(jq -r .version.marketing_version build/release-candidate/source-record.json)"
+            echo "build_number=$(jq -r .version.android_version_code build/release-candidate/source-record.json)"
+          } >>"$GITHUB_OUTPUT"
+
+      - name: Refuse a second protected claim for this Store build number
+        if: ${{ inputs.publish }}
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          REPOSITORY_ID: ${{ github.repository_id }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          python3 scripts/release/release_tool.py assert-candidate-claim-exclusive \
+            --repository "$REPOSITORY" \
+            --repository-id "$REPOSITORY_ID" \
+            --run-id "$RUN_ID" \
+            --source build/release-candidate/source-record.json
+          python3 scripts/release/release_tool.py create-candidate-claim \
+            --source build/release-candidate/source-record.json \
+            --run-id "$RUN_ID" \
+            --run-attempt "$GITHUB_RUN_ATTEMPT" \
+            --output build/release-candidate/candidate-claim.json
+
+      - name: Reserve this version/build before either signed binary is created
+        if: ${{ inputs.publish }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: parlor-candidate-claim-build-${{ steps.source.outputs.build_number }}-run-${{ github.run_id }}-attempt-${{ github.run_attempt }}
+          if-no-files-found: error
+          retention-days: 90
+          path: build/release-candidate/candidate-claim.json
+
+      - name: Upload preflight evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: parlor-candidate-preflight-${{ inputs.candidate_sha }}-attempt-${{ github.run_attempt }}
+          if-no-files-found: error
+          retention-days: 90
+          path: |
+            build/release-candidate/
+            **/build/reports/tests/
+            **/build/reports/detekt/
+            **/build/reports/lint-results-*
+
+  android:
+    name: Build, sign, validate, and stage Android once
+    needs: preflight
+    concurrency:
+      group: parlor-google-play-com-parlor-app
+      cancel-in-progress: false
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    environment: testing-android
+    permissions:
+      actions: read
+      attestations: write
+      contents: read
+      id-token: write
+    outputs:
+      artifact_b64: ${{ steps.outputs.outputs.artifact_b64 }}
+      receipt_b64: ${{ steps.outputs.outputs.receipt_b64 }}
+      promotable: ${{ steps.outputs.outputs.promotable }}
+
+    steps:
+      - name: Check out exact candidate
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.candidate_sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Restore and validate frozen source record
+        shell: bash
+        env:
+          SOURCE_RECORD_B64: ${{ needs.preflight.outputs.source_record_b64 }}
+        run: |
+          set -euo pipefail
+          mkdir -p build/release-candidate/android
+          printf '%s' "$SOURCE_RECORD_B64" | openssl base64 -d -A >build/release-candidate/source-record.json
+          [[ "$(jq -r .source.commit_sha build/release-candidate/source-record.json)" == "$(git rev-parse HEAD)" ]]
+
+      - name: Recover prior immutable Android platform state before any rebuild
+        id: android_state_recovery
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+        run: |
+          set -euo pipefail
+          receipt_recovered=false
+          mutation_intent_recovered=false
+          set +e
+          python3 scripts/release/release_tool.py fetch-artifact \
+            --repository "$REPOSITORY" \
+            --run-id "$RUN_ID" \
+            --artifact-prefix "parlor-candidate-$CANDIDATE_SHA-android-state-attempt-" \
+            --expected-file platform-state.json \
+            --output build/release-candidate/android/prior-state.json
+          status=$?
+          set -e
+          if [[ $status -eq 0 ]]; then
+            python3 scripts/release/release_tool.py restore-platform-state \
+              --platform android \
+              --source build/release-candidate/source-record.json \
+              --state build/release-candidate/android/prior-state.json \
+              --artifact-output build/release-candidate/android/artifact.json \
+              --receipt-output build/release-candidate/android/prior-receipt.json
+            receipt_recovered=true
+          elif [[ $status -eq 3 ]]; then
+            set +e
+            python3 scripts/release/release_tool.py fetch-artifact \
+              --repository "$REPOSITORY" \
+              --run-id "$RUN_ID" \
+              --artifact-prefix "parlor-candidate-$CANDIDATE_SHA-android-descriptor-attempt-" \
+              --expected-file artifact.json \
+              --output build/release-candidate/android/artifact.json
+            descriptor_status=$?
+            set -e
+            if [[ $descriptor_status -eq 3 ]]; then
+              python3 scripts/release/release_tool.py assert-artifact-prefix-absent \
+                --repository "$REPOSITORY" \
+                --run-id "$RUN_ID" \
+                --artifact-prefix "parlor-candidate-$CANDIDATE_SHA-android-attempt-"
+              {
+                echo "recovered=false"
+                echo "receipt_recovered=false"
+                echo "mutation_intent_recovered=false"
+              } >>"$GITHUB_OUTPUT"
+              exit 0
+            fi
+            [[ $descriptor_status -eq 0 ]] || exit "$descriptor_status"
+          else
+            exit "$status"
+          fi
+          filename=$(jq -r .filename build/release-candidate/android/artifact.json)
+          binary="build/release-candidate/android/recovered/$filename"
+          python3 scripts/release/release_tool.py fetch-binary-artifact \
+            --repository "$REPOSITORY" \
+            --run-id "$RUN_ID" \
+            --descriptor build/release-candidate/android/artifact.json \
+            --output "$binary"
+          gh attestation verify "$binary" \
+            --repo "$REPOSITORY" \
+            --signer-workflow "$REPOSITORY/.github/workflows/testing-candidate.yml" \
+            --source-digest "$CANDIDATE_SHA" \
+            --deny-self-hosted-runners
+          if [[ "$receipt_recovered" != true ]]; then
+            set +e
+            python3 scripts/release/release_tool.py fetch-artifact \
+              --repository "$REPOSITORY" \
+              --run-id "$RUN_ID" \
+              --artifact-prefix "parlor-candidate-$CANDIDATE_SHA-android-mutation-intent-attempt-" \
+              --expected-file mutation-intent.json \
+              --output build/release-candidate/android/mutation-intent.json
+            intent_status=$?
+            set -e
+            if [[ $intent_status -eq 0 ]]; then
+              python3 scripts/release/release_tool.py validate-mutation-intent \
+                --platform android \
+                --source build/release-candidate/source-record.json \
+                --artifact build/release-candidate/android/artifact.json \
+                --intent build/release-candidate/android/mutation-intent.json
+              mutation_intent_recovered=true
+            elif [[ $intent_status -eq 3 ]]; then
+              python3 scripts/release/release_tool.py assert-artifact-prefix-absent \
+                --repository "$REPOSITORY" \
+                --run-id "$RUN_ID" \
+                --artifact-prefix "parlor-candidate-$CANDIDATE_SHA-android-mutation-intent-attempt-"
+            else
+              exit "$intent_status"
+            fi
+          fi
+          {
+            echo "binary=$binary"
+            echo "receipt_recovered=$receipt_recovered"
+            echo "mutation_intent_recovered=$mutation_intent_recovered"
+            echo "recovered=true"
+          } >>"$GITHUB_OUTPUT"
+
+      - name: Set up JDK 21
+        if: ${{ steps.android_state_recovery.outputs.recovered != 'true' }}
+        uses: actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95 # v5.6.0
+        with:
+          distribution: temurin
+          java-version: "21"
+          check-latest: false
+
+      - name: Reject a reused Google Play version before compiling or signing
+        if: ${{ inputs.publish && steps.android_state_recovery.outputs.recovered != 'true' }}
+        shell: bash
+        env:
+          PACKAGE_NAME: ${{ vars.GOOGLE_PLAY_PACKAGE_NAME }}
+          VERSION_CODE: ${{ needs.preflight.outputs.build_number }}
+          SERVICE_ACCOUNT_B64: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_B64 }}
+        run: |
+          set -euo pipefail
+          [[ "$PACKAGE_NAME" == com.parlor.app && -n "$SERVICE_ACCOUNT_B64" ]]
+          printf '%s' "$SERVICE_ACCOUNT_B64" | openssl base64 -d -A >"$RUNNER_TEMP/google-play-service-account.json"
+          chmod 600 "$RUNNER_TEMP/google-play-service-account.json"
+          python3 scripts/release/store_api.py google-check-unique \
+            --package "$PACKAGE_NAME" \
+            --version-code "$VERSION_CODE" \
+            --credentials "$RUNNER_TEMP/google-play-service-account.json" \
+            --execute
+          rm -f "$RUNNER_TEMP/google-play-service-account.json"
+
+      - name: Install pinned Android SDK packages
+        if: ${{ steps.android_state_recovery.outputs.recovered != 'true' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          "${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager" \
+            "platforms;android-36" \
+            "build-tools;36.0.0"
+
+      - name: Materialize protected upload keystore
+        if: ${{ steps.android_state_recovery.outputs.recovered != 'true' }}
+        shell: bash
+        env:
+          KEYSTORE_B64: ${{ secrets.PARLOR_ANDROID_KEYSTORE_B64 }}
+        run: |
+          set -euo pipefail
+          [[ -n "$KEYSTORE_B64" ]]
+          printf '%s' "$KEYSTORE_B64" | openssl base64 -d -A >"$RUNNER_TEMP/parlor-upload.jks"
+          chmod 600 "$RUNNER_TEMP/parlor-upload.jks"
+
+      - name: Build and sign the only Android Store candidate
+        if: ${{ steps.android_state_recovery.outputs.recovered != 'true' }}
+        shell: bash
+        env:
+          PARLOR_ANDROID_KEYSTORE_PATH: ${{ runner.temp }}/parlor-upload.jks
+          PARLOR_ANDROID_KEYSTORE_PASSWORD: ${{ secrets.PARLOR_ANDROID_KEYSTORE_PASSWORD }}
+          PARLOR_ANDROID_KEY_ALIAS: ${{ secrets.PARLOR_ANDROID_KEY_ALIAS }}
+          PARLOR_ANDROID_KEY_PASSWORD: ${{ secrets.PARLOR_ANDROID_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          ./gradlew productionAndroidSigningCheck \
+            --dependency-verification=strict \
+            --no-configuration-cache \
+            --no-daemon \
+            --stacktrace \
+            --console=plain
+          ./gradlew :composeApp:dependencies \
+            --configuration releaseRuntimeClasspath \
+            --dependency-verification=strict \
+            --no-daemon \
+            --console=plain >build/release-candidate/android/dependencies.txt
+
+      - name: Remove Android signing material before third-party Actions
+        if: ${{ always() && steps.android_state_recovery.outputs.recovered != 'true' }}
+        shell: bash
+        run: rm -f "$RUNNER_TEMP/parlor-upload.jks"
+
+      - name: Locate signed AAB and download pinned bundletool
+        id: android_path
+        if: ${{ steps.android_state_recovery.outputs.recovered != 'true' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t aabs < <(find composeApp/build/outputs/bundle/release -maxdepth 1 -type f -name '*.aab' -print)
+          [[ ${#aabs[@]} -eq 1 ]]
+          aab=${aabs[0]}
+          bundletool_url=$(jq -r .tools.bundletool.url config/release-policy.json)
+          bundletool_sha=$(jq -r .tools.bundletool.sha256 config/release-policy.json)
+          curl --fail --silent --show-error --location \
+            --proto '=https' \
+            --tlsv1.2 \
+            --retry 3 \
+            --retry-all-errors \
+            --max-filesize 209715200 \
+            --max-time 180 \
+            "$bundletool_url" \
+            --output "$RUNNER_TEMP/bundletool.jar"
+          printf '%s  %s\n' "$bundletool_sha" "$RUNNER_TEMP/bundletool.jar" | sha256sum -c -
+          echo "aab=$aab" >>"$GITHUB_OUTPUT"
+
+      - name: Validate signed AAB identity, signature, manifest, DEX, SDKs, and contents
+        if: ${{ steps.android_state_recovery.outputs.recovered != 'true' }}
+        shell: bash
+        env:
+          AAB: ${{ steps.android_path.outputs.aab }}
+          APPLICATION_ID: ${{ vars.GOOGLE_PLAY_PACKAGE_NAME }}
+          VERSION_NAME: ${{ needs.preflight.outputs.marketing_version }}
+          VERSION_CODE: ${{ needs.preflight.outputs.build_number }}
+          CERTIFICATE_SHA256: ${{ vars.PARLOR_ANDROID_UPLOAD_CERT_SHA256 }}
+        run: |
+          set -euo pipefail
+          [[ "$APPLICATION_ID" == com.parlor.app ]]
+          scripts/release/validate_android_artifact.sh \
+            "$AAB" \
+            "$RUNNER_TEMP/bundletool.jar" \
+            "$APPLICATION_ID" \
+            "$VERSION_NAME" \
+            "$VERSION_CODE" \
+            "$CERTIFICATE_SHA256" \
+            build/release-candidate/android/dependencies.txt \
+            build/release-candidate/android/validation.json
+
+      - name: Upload immutable signed Android candidate
+        id: android_upload
+        if: ${{ steps.android_state_recovery.outputs.recovered != 'true' }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: parlor-candidate-${{ inputs.candidate_sha }}-android-attempt-${{ github.run_attempt }}
+          if-no-files-found: error
+          retention-days: 90
+          compression-level: 0
+          path: ${{ steps.android_path.outputs.aab }}
+
+      - name: Attest exact signed Android candidate bytes
+        id: android_attestation
+        if: ${{ steps.android_state_recovery.outputs.recovered != 'true' }}
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: ${{ steps.android_path.outputs.aab }}
+
+      - name: Bind Android artifact to source and provenance
+        if: ${{ steps.android_state_recovery.outputs.recovered != 'true' }}
+        shell: bash
+        env:
+          AAB: ${{ steps.android_path.outputs.aab }}
+          APPLICATION_ID: ${{ vars.GOOGLE_PLAY_PACKAGE_NAME }}
+          CERTIFICATE_SHA256: ${{ vars.PARLOR_ANDROID_UPLOAD_CERT_SHA256 }}
+          ARTIFACT_ID: ${{ steps.android_upload.outputs.artifact-id }}
+          ARTIFACT_URL: ${{ steps.android_upload.outputs.artifact-url }}
+          ARTIFACT_DIGEST: ${{ steps.android_upload.outputs.artifact-digest }}
+          ATTESTATION_ID: ${{ steps.android_attestation.outputs.attestation-id }}
+          ATTESTATION_URL: ${{ steps.android_attestation.outputs.attestation-url }}
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+          VERSION_NAME: ${{ needs.preflight.outputs.marketing_version }}
+          VERSION_CODE: ${{ needs.preflight.outputs.build_number }}
+        run: |
+          set -euo pipefail
+          python3 scripts/release/release_tool.py artifact-descriptor \
+            --platform android \
+            --candidate-sha "$CANDIDATE_SHA" \
+            --identity "$APPLICATION_ID" \
+            --marketing-version "$VERSION_NAME" \
+            --build-number "$VERSION_CODE" \
+            --file "$AAB" \
+            --signing-fingerprint "$CERTIFICATE_SHA256" \
+            --github-artifact-id "$ARTIFACT_ID" \
+            --github-artifact-name "parlor-candidate-$CANDIDATE_SHA-android-attempt-${GITHUB_RUN_ATTEMPT}" \
+            --github-artifact-url "$ARTIFACT_URL" \
+            --github-artifact-digest "$ARTIFACT_DIGEST" \
+            --attestation-id "$ATTESTATION_ID" \
+            --attestation-url "$ATTESTATION_URL" \
+            --validation build/release-candidate/android/validation.json \
+            --output build/release-candidate/android/artifact.json
+
+      - name: Checkpoint immutable Android artifact descriptor before Store mutation
+        if: ${{ steps.android_state_recovery.outputs.recovered != 'true' }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: parlor-candidate-${{ inputs.candidate_sha }}-android-descriptor-attempt-${{ github.run_attempt }}
+          if-no-files-found: error
+          retention-days: 90
+          path: build/release-candidate/android/artifact.json
+
+      - name: Retain Android dependency and deep-validation evidence
+        if: ${{ steps.android_state_recovery.outputs.recovered != 'true' }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: parlor-candidate-${{ inputs.candidate_sha }}-android-validation-attempt-${{ github.run_attempt }}
+          if-no-files-found: error
+          retention-days: 90
+          path: |
+            build/release-candidate/android/dependencies.txt
+            build/release-candidate/android/validation.json
+
+      - name: Select newly built or recovered Android binary
+        id: android_binary
+        shell: bash
+        env:
+          RECOVERED: ${{ steps.android_state_recovery.outputs.recovered }}
+          RECOVERED_BINARY: ${{ steps.android_state_recovery.outputs.binary }}
+          NEW_BINARY: ${{ steps.android_path.outputs.aab }}
+        run: |
+          set -euo pipefail
+          binary=$NEW_BINARY
+          [[ "$RECOVERED" != true ]] || binary=$RECOVERED_BINARY
+          [[ -f "$binary" ]]
+          echo "aab=$binary" >>"$GITHUB_OUTPUT"
+
+      - name: Seal Android Store mutation intent before any upload can start
+        if: ${{ inputs.publish && steps.android_state_recovery.outputs.receipt_recovered != 'true' && steps.android_state_recovery.outputs.mutation_intent_recovered != 'true' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/release/release_tool.py create-mutation-intent \
+            --platform android \
+            --source build/release-candidate/source-record.json \
+            --artifact build/release-candidate/android/artifact.json \
+            --output build/release-candidate/android/mutation-intent.json
+
+      - name: Checkpoint Android Store mutation intent
+        if: ${{ inputs.publish && steps.android_state_recovery.outputs.receipt_recovered != 'true' && steps.android_state_recovery.outputs.mutation_intent_recovered != 'true' }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: parlor-candidate-${{ inputs.candidate_sha }}-android-mutation-intent-attempt-${{ github.run_attempt }}
+          if-no-files-found: error
+          retention-days: 90
+          path: build/release-candidate/android/mutation-intent.json
+
+      - name: Upload once to Google Play internal testing or rehearse safely
+        shell: bash
+        env:
+          PUBLISH: ${{ inputs.publish }}
+          RECEIPT_RECOVERED: ${{ steps.android_state_recovery.outputs.receipt_recovered }}
+          MUTATION_INTENT_RECOVERED: ${{ steps.android_state_recovery.outputs.mutation_intent_recovered }}
+          AAB: ${{ steps.android_binary.outputs.aab }}
+          PACKAGE_NAME: ${{ vars.GOOGLE_PLAY_PACKAGE_NAME }}
+          SERVICE_ACCOUNT_B64: ${{ inputs.publish && secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_B64 || '' }}
+        run: |
+          set -euo pipefail
+          artifact_sha=$(jq -r .sha256 build/release-candidate/android/artifact.json)
+          command=(
+            python3 scripts/release/store_api.py google-internal
+            --source build/release-candidate/source-record.json
+            --artifact build/release-candidate/android/artifact.json
+            --bundle "$AAB"
+            --artifact-sha256 "$artifact_sha"
+            --package "$PACKAGE_NAME"
+            --output build/release-candidate/android/google-receipt.json
+          )
+          if [[ "$PUBLISH" == true ]]; then
+            [[ -n "$SERVICE_ACCOUNT_B64" ]]
+            printf '%s' "$SERVICE_ACCOUNT_B64" | openssl base64 -d -A >"$RUNNER_TEMP/google-play-service-account.json"
+            chmod 600 "$RUNNER_TEMP/google-play-service-account.json"
+            command+=(--credentials "$RUNNER_TEMP/google-play-service-account.json" --execute)
+            if [[ "$RECEIPT_RECOVERED" == true ]]; then
+              command+=(--prior-receipt build/release-candidate/android/prior-receipt.json)
+            elif [[ "$MUTATION_INTENT_RECOVERED" == true ]]; then
+              command+=(--recover-only)
+            fi
+          fi
+          "${command[@]}"
+          rm -f "$RUNNER_TEMP/google-play-service-account.json"
+
+      - name: Seal resumable Android platform state
+        if: ${{ inputs.publish }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/release/release_tool.py create-platform-state \
+            --platform android \
+            --source build/release-candidate/source-record.json \
+            --artifact build/release-candidate/android/artifact.json \
+            --receipt build/release-candidate/android/google-receipt.json \
+            --output build/release-candidate/android/platform-state.json
+
+      - name: Upload immutable Android rerun state
+        if: ${{ inputs.publish }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: parlor-candidate-${{ inputs.candidate_sha }}-android-state-attempt-${{ github.run_attempt }}
+          if-no-files-found: error
+          retention-days: 90
+          path: build/release-candidate/android/platform-state.json
+
+      - name: Upload sanitized Android Store receipt
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: parlor-candidate-${{ inputs.candidate_sha }}-android-receipt-attempt-${{ github.run_attempt }}
+          if-no-files-found: error
+          retention-days: 90
+          path: build/release-candidate/android/google-receipt.json
+
+      - name: Export bounded Android control records
+        id: outputs
+        shell: bash
+        env:
+          PUBLISH: ${{ inputs.publish }}
+        run: |
+          set -euo pipefail
+          {
+            echo "artifact_b64=$(python3 scripts/release/release_tool.py base64 --file build/release-candidate/android/artifact.json)"
+            echo "receipt_b64=$(python3 scripts/release/release_tool.py base64 --file build/release-candidate/android/google-receipt.json)"
+            echo "promotable=$PUBLISH"
+          } >>"$GITHUB_OUTPUT"
+
+      - name: Cleanup Android credentials
+        if: always()
+        shell: bash
+        run: rm -f "$RUNNER_TEMP/parlor-upload.jks" "$RUNNER_TEMP/google-play-service-account.json" "$RUNNER_TEMP/bundletool.jar"
+
+  ios:
+    name: Archive, sign, validate, and stage iOS once
+    needs: preflight
+    concurrency:
+      group: parlor-app-store-connect-com-parlor-app
+      cancel-in-progress: false
+    runs-on: macos-15
+    timeout-minutes: 180
+    environment: testing-ios
+    permissions:
+      actions: read
+      attestations: write
+      contents: read
+      id-token: write
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+    outputs:
+      artifact_b64: ${{ steps.outputs.outputs.artifact_b64 }}
+      receipt_b64: ${{ steps.outputs.outputs.receipt_b64 }}
+      promotable: ${{ steps.outputs.outputs.promotable }}
+
+    steps:
+      - name: Check out exact candidate
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.candidate_sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Restore and validate frozen source record
+        shell: bash
+        env:
+          SOURCE_RECORD_B64: ${{ needs.preflight.outputs.source_record_b64 }}
+        run: |
+          set -euo pipefail
+          mkdir -p build/release-candidate/ios
+          printf '%s' "$SOURCE_RECORD_B64" | openssl base64 -d -A >build/release-candidate/source-record.json
+          [[ "$(jq -r .source.commit_sha build/release-candidate/source-record.json)" == "$(git rev-parse HEAD)" ]]
+
+      - name: Recover prior immutable iOS platform state before any rebuild
+        id: ios_state_recovery
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+        run: |
+          set -euo pipefail
+          receipt_recovered=false
+          upload_recovered=false
+          mutation_intent_recovered=false
+          set +e
+          python3 scripts/release/release_tool.py fetch-artifact \
+            --repository "$REPOSITORY" \
+            --run-id "$RUN_ID" \
+            --artifact-prefix "parlor-candidate-$CANDIDATE_SHA-ios-state-attempt-" \
+            --expected-file platform-state.json \
+            --output build/release-candidate/ios/prior-state.json
+          status=$?
+          set -e
+          if [[ $status -eq 0 ]]; then
+            python3 scripts/release/release_tool.py restore-platform-state \
+              --platform ios \
+              --source build/release-candidate/source-record.json \
+              --state build/release-candidate/ios/prior-state.json \
+              --artifact-output build/release-candidate/ios/artifact.json \
+              --receipt-output build/release-candidate/ios/prior-receipt.json
+            receipt_recovered=true
+          elif [[ $status -eq 3 ]]; then
+            set +e
+            python3 scripts/release/release_tool.py fetch-artifact \
+              --repository "$REPOSITORY" \
+              --run-id "$RUN_ID" \
+              --artifact-prefix "parlor-candidate-$CANDIDATE_SHA-ios-descriptor-attempt-" \
+              --expected-file artifact.json \
+              --output build/release-candidate/ios/artifact.json
+            descriptor_status=$?
+            set -e
+            if [[ $descriptor_status -eq 3 ]]; then
+              python3 scripts/release/release_tool.py assert-artifact-prefix-absent \
+                --repository "$REPOSITORY" \
+                --run-id "$RUN_ID" \
+                --artifact-prefix "parlor-candidate-$CANDIDATE_SHA-ios-attempt-"
+              {
+                echo "recovered=false"
+                echo "receipt_recovered=false"
+                echo "upload_recovered=false"
+                echo "mutation_intent_recovered=false"
+              } >>"$GITHUB_OUTPUT"
+              exit 0
+            fi
+            [[ $descriptor_status -eq 0 ]] || exit "$descriptor_status"
+          else
+            exit "$status"
+          fi
+          filename=$(jq -r .filename build/release-candidate/ios/artifact.json)
+          binary="build/release-candidate/ios/recovered/$filename"
+          python3 scripts/release/release_tool.py fetch-binary-artifact \
+            --repository "$REPOSITORY" \
+            --run-id "$RUN_ID" \
+            --descriptor build/release-candidate/ios/artifact.json \
+            --output "$binary"
+          gh attestation verify "$binary" \
+            --repo "$REPOSITORY" \
+            --signer-workflow "$REPOSITORY/.github/workflows/testing-candidate.yml" \
+            --source-digest "$CANDIDATE_SHA" \
+            --deny-self-hosted-runners
+          if [[ "$receipt_recovered" != true ]]; then
+            set +e
+            python3 scripts/release/release_tool.py fetch-artifact \
+              --repository "$REPOSITORY" \
+              --run-id "$RUN_ID" \
+              --artifact-prefix "parlor-candidate-$CANDIDATE_SHA-ios-upload-transport-attempt-" \
+              --expected-file upload-transport.json \
+              --output build/release-candidate/ios/upload-transport.json
+            upload_status=$?
+            set -e
+            if [[ $upload_status -eq 0 ]]; then
+              upload_request_id=$(jq -r .upload_request_id build/release-candidate/ios/upload-transport.json)
+              python3 scripts/release/store_api.py validate-apple-upload-transport \
+                --artifact build/release-candidate/ios/artifact.json \
+                --receipt build/release-candidate/ios/upload-transport.json \
+                --upload-request-id "$upload_request_id"
+              upload_recovered=true
+            elif [[ $upload_status -ne 3 ]]; then
+              exit "$upload_status"
+            fi
+          fi
+          if [[ "$receipt_recovered" != true && "$upload_recovered" != true ]]; then
+            set +e
+            python3 scripts/release/release_tool.py fetch-artifact \
+              --repository "$REPOSITORY" \
+              --run-id "$RUN_ID" \
+              --artifact-prefix "parlor-candidate-$CANDIDATE_SHA-ios-mutation-intent-attempt-" \
+              --expected-file mutation-intent.json \
+              --output build/release-candidate/ios/mutation-intent.json
+            intent_status=$?
+            set -e
+            if [[ $intent_status -eq 0 ]]; then
+              python3 scripts/release/release_tool.py validate-mutation-intent \
+                --platform ios \
+                --source build/release-candidate/source-record.json \
+                --artifact build/release-candidate/ios/artifact.json \
+                --intent build/release-candidate/ios/mutation-intent.json
+              mutation_intent_recovered=true
+            elif [[ $intent_status -eq 3 ]]; then
+              python3 scripts/release/release_tool.py assert-artifact-prefix-absent \
+                --repository "$REPOSITORY" \
+                --run-id "$RUN_ID" \
+                --artifact-prefix "parlor-candidate-$CANDIDATE_SHA-ios-mutation-intent-attempt-"
+            else
+              exit "$intent_status"
+            fi
+          fi
+          {
+            echo "binary=$binary"
+            echo "receipt_recovered=$receipt_recovered"
+            echo "upload_recovered=$upload_recovered"
+            echo "mutation_intent_recovered=$mutation_intent_recovered"
+            echo "recovered=true"
+          } >>"$GITHUB_OUTPUT"
+
+      - name: Reject a reused App Store build number before compiling or signing
+        if: ${{ inputs.publish && steps.ios_state_recovery.outputs.recovered != 'true' }}
+        shell: bash
+        env:
+          APP_ID: ${{ vars.APP_STORE_CONNECT_APP_ID }}
+          BUNDLE_ID: ${{ vars.PARLOR_APPLE_BUNDLE_ID }}
+          BUILD_NUMBER: ${{ needs.preflight.outputs.build_number }}
+          API_KEY_ID: ${{ vars.APP_STORE_CONNECT_KEY_ID }}
+          API_ISSUER_ID: ${{ vars.APP_STORE_CONNECT_ISSUER_ID }}
+          API_KEY_B64: ${{ secrets.APP_STORE_CONNECT_API_KEY_P8_B64 }}
+        run: |
+          set -euo pipefail
+          [[ "$BUNDLE_ID" == com.parlor.app ]]
+          [[ -n "$APP_ID" && -n "$API_KEY_ID" && -n "$API_ISSUER_ID" && -n "$API_KEY_B64" ]]
+          printf '%s' "$API_KEY_B64" | openssl base64 -d -A >"$RUNNER_TEMP/AuthKey_$API_KEY_ID.p8"
+          chmod 600 "$RUNNER_TEMP/AuthKey_$API_KEY_ID.p8"
+          python3 scripts/release/store_api.py apple-check-unique \
+            --app-id "$APP_ID" \
+            --bundle-id "$BUNDLE_ID" \
+            --build-number "$BUILD_NUMBER" \
+            --issuer-id "$API_ISSUER_ID" \
+            --key-id "$API_KEY_ID" \
+            --private-key "$RUNNER_TEMP/AuthKey_$API_KEY_ID.p8" \
+            --execute
+          rm -f "$RUNNER_TEMP/AuthKey_$API_KEY_ID.p8"
+
+      - name: Set up JDK 21
+        if: ${{ steps.ios_state_recovery.outputs.recovered != 'true' }}
+        uses: actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95 # v5.6.0
+        with:
+          distribution: temurin
+          java-version: "21"
+          check-latest: false
+
+      - name: Run Apple tests, static analysis, and release linkage
+        if: ${{ steps.ios_state_recovery.outputs.recovered != 'true' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(xcodebuild -version | sed -n '1p')" = "Xcode 26.3"
+          test "$(xcodebuild -version | sed -n '2p')" = "Build version 17C529"
+          test "$(jq -r .toolchains.apple.developer_dir config/release-policy.json)" = "$DEVELOPER_DIR"
+          test "$(jq -r .toolchains.apple.xcode_build config/release-policy.json)" = "17C529"
+          ios_sdk=$(xcrun --sdk iphoneos --show-sdk-version)
+          test "${ios_sdk%%.*}" -ge "$(jq -r .toolchains.apple.minimum_ios_sdk_major config/release-policy.json)"
+          ./gradlew productionAppleCheck allTests \
+            --dependency-verification=strict \
+            --no-daemon \
+            --stacktrace \
+            --console=plain
+          plutil -lint iosApp/iosApp/Info.plist
+          plutil -lint iosApp/iosApp/PrivacyInfo.xcprivacy
+
+      - name: Materialize protected Apple signing inputs
+        if: ${{ steps.ios_state_recovery.outputs.recovered != 'true' }}
+        shell: bash
+        env:
+          CERTIFICATE_B64: ${{ secrets.PARLOR_APPLE_DISTRIBUTION_CERTIFICATE_P12_B64 }}
+          PROFILE_B64: ${{ secrets.PARLOR_APPLE_APP_STORE_PROFILE_B64 }}
+        run: |
+          set -euo pipefail
+          [[ -n "$CERTIFICATE_B64" && -n "$PROFILE_B64" ]]
+          printf '%s' "$CERTIFICATE_B64" | openssl base64 -d -A >"$RUNNER_TEMP/parlor-distribution.p12"
+          printf '%s' "$PROFILE_B64" | openssl base64 -d -A >"$RUNNER_TEMP/parlor-app-store.mobileprovision"
+          chmod 600 "$RUNNER_TEMP/parlor-distribution.p12" "$RUNNER_TEMP/parlor-app-store.mobileprovision"
+
+      - name: Create the only signed iOS archive and exported IPA
+        if: ${{ steps.ios_state_recovery.outputs.recovered != 'true' }}
+        shell: bash
+        env:
+          PARLOR_APPLE_CERTIFICATE_P12_PATH: ${{ runner.temp }}/parlor-distribution.p12
+          PARLOR_APPLE_CERTIFICATE_PASSWORD: ${{ secrets.PARLOR_APPLE_DISTRIBUTION_CERTIFICATE_PASSWORD }}
+          PARLOR_APPLE_PROFILE_PATH: ${{ runner.temp }}/parlor-app-store.mobileprovision
+          PARLOR_APPLE_TEAM_ID: ${{ vars.PARLOR_APPLE_TEAM_ID }}
+          PARLOR_APPLE_BUNDLE_ID: ${{ vars.PARLOR_APPLE_BUNDLE_ID }}
+          PARLOR_APPLE_DISTRIBUTION_CERT_SHA256: ${{ vars.PARLOR_APPLE_DISTRIBUTION_CERT_SHA256 }}
+        run: |
+          set -euo pipefail
+          [[ "$PARLOR_APPLE_BUNDLE_ID" == com.parlor.app ]]
+          scripts/release/build_ios_candidate.sh \
+            "$RUNNER_TEMP/Parlor.xcarchive" \
+            "$RUNNER_TEMP/parlor-export" \
+            "$RUNNER_TEMP/parlor-derived-data" \
+            build/release-candidate/ios
+
+      - name: Remove Apple signing source files before third-party Actions
+        if: ${{ always() && steps.ios_state_recovery.outputs.recovered != 'true' }}
+        shell: bash
+        run: rm -f "$RUNNER_TEMP/parlor-distribution.p12" "$RUNNER_TEMP/parlor-app-store.mobileprovision"
+
+      - name: Locate and validate signed iOS archive and IPA
+        id: ios_path
+        if: ${{ steps.ios_state_recovery.outputs.recovered != 'true' }}
+        shell: bash
+        env:
+          BUNDLE_ID: ${{ vars.PARLOR_APPLE_BUNDLE_ID }}
+          VERSION_NAME: ${{ needs.preflight.outputs.marketing_version }}
+          BUILD_NUMBER: ${{ needs.preflight.outputs.build_number }}
+          TEAM_ID: ${{ vars.PARLOR_APPLE_TEAM_ID }}
+          CERTIFICATE_SHA256: ${{ vars.PARLOR_APPLE_DISTRIBUTION_CERT_SHA256 }}
+        run: |
+          set -euo pipefail
+          ipa=$(cat build/release-candidate/ios/ipa-path.txt)
+          scripts/release/validate_ios_artifact.sh \
+            "$RUNNER_TEMP/Parlor.xcarchive" \
+            "$ipa" \
+            "$BUNDLE_ID" \
+            "$VERSION_NAME" \
+            "$BUILD_NUMBER" \
+            "$TEAM_ID" \
+            "$CERTIFICATE_SHA256" \
+            build/release-candidate/ios/validation.json
+          echo "ipa=$ipa" >>"$GITHUB_OUTPUT"
+
+      - name: Upload immutable signed iOS candidate
+        id: ios_upload
+        if: ${{ steps.ios_state_recovery.outputs.recovered != 'true' }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: parlor-candidate-${{ inputs.candidate_sha }}-ios-attempt-${{ github.run_attempt }}
+          if-no-files-found: error
+          retention-days: 90
+          compression-level: 0
+          path: ${{ steps.ios_path.outputs.ipa }}
+
+      - name: Retain signed archive, dSYMs, and export evidence
+        if: ${{ steps.ios_state_recovery.outputs.recovered != 'true' }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: parlor-candidate-${{ inputs.candidate_sha }}-ios-archive-attempt-${{ github.run_attempt }}
+          if-no-files-found: error
+          retention-days: 90
+          compression-level: 0
+          path: |
+            ${{ runner.temp }}/Parlor.xcarchive/
+            build/release-candidate/ios/
+
+      - name: Attest exact signed IPA bytes
+        id: ios_attestation
+        if: ${{ steps.ios_state_recovery.outputs.recovered != 'true' }}
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: ${{ steps.ios_path.outputs.ipa }}
+
+      - name: Bind iOS artifact to source and provenance
+        if: ${{ steps.ios_state_recovery.outputs.recovered != 'true' }}
+        shell: bash
+        env:
+          IPA: ${{ steps.ios_path.outputs.ipa }}
+          BUNDLE_ID: ${{ vars.PARLOR_APPLE_BUNDLE_ID }}
+          CERTIFICATE_SHA256: ${{ vars.PARLOR_APPLE_DISTRIBUTION_CERT_SHA256 }}
+          ARTIFACT_ID: ${{ steps.ios_upload.outputs.artifact-id }}
+          ARTIFACT_URL: ${{ steps.ios_upload.outputs.artifact-url }}
+          ARTIFACT_DIGEST: ${{ steps.ios_upload.outputs.artifact-digest }}
+          ATTESTATION_ID: ${{ steps.ios_attestation.outputs.attestation-id }}
+          ATTESTATION_URL: ${{ steps.ios_attestation.outputs.attestation-url }}
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+          VERSION_NAME: ${{ needs.preflight.outputs.marketing_version }}
+          BUILD_NUMBER: ${{ needs.preflight.outputs.build_number }}
+        run: |
+          set -euo pipefail
+          python3 scripts/release/release_tool.py artifact-descriptor \
+            --platform ios \
+            --candidate-sha "$CANDIDATE_SHA" \
+            --identity "$BUNDLE_ID" \
+            --marketing-version "$VERSION_NAME" \
+            --build-number "$BUILD_NUMBER" \
+            --file "$IPA" \
+            --signing-fingerprint "$CERTIFICATE_SHA256" \
+            --github-artifact-id "$ARTIFACT_ID" \
+            --github-artifact-name "parlor-candidate-$CANDIDATE_SHA-ios-attempt-${GITHUB_RUN_ATTEMPT}" \
+            --github-artifact-url "$ARTIFACT_URL" \
+            --github-artifact-digest "$ARTIFACT_DIGEST" \
+            --attestation-id "$ATTESTATION_ID" \
+            --attestation-url "$ATTESTATION_URL" \
+            --validation build/release-candidate/ios/validation.json \
+            --output build/release-candidate/ios/artifact.json
+
+      - name: Checkpoint immutable iOS artifact descriptor before Store mutation
+        if: ${{ steps.ios_state_recovery.outputs.recovered != 'true' }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: parlor-candidate-${{ inputs.candidate_sha }}-ios-descriptor-attempt-${{ github.run_attempt }}
+          if-no-files-found: error
+          retention-days: 90
+          path: build/release-candidate/ios/artifact.json
+
+      - name: Select newly built or recovered iOS binary
+        id: ios_binary
+        shell: bash
+        env:
+          RECOVERED: ${{ steps.ios_state_recovery.outputs.recovered }}
+          RECOVERED_BINARY: ${{ steps.ios_state_recovery.outputs.binary }}
+          NEW_BINARY: ${{ steps.ios_path.outputs.ipa }}
+        run: |
+          set -euo pipefail
+          binary=$NEW_BINARY
+          [[ "$RECOVERED" != true ]] || binary=$RECOVERED_BINARY
+          [[ -f "$binary" ]]
+          echo "ipa=$binary" >>"$GITHUB_OUTPUT"
+
+      - name: Seal Apple Store mutation intent before any upload can start
+        if: ${{ inputs.publish && steps.ios_state_recovery.outputs.receipt_recovered != 'true' && steps.ios_state_recovery.outputs.upload_recovered != 'true' && steps.ios_state_recovery.outputs.mutation_intent_recovered != 'true' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/release/release_tool.py create-mutation-intent \
+            --platform ios \
+            --source build/release-candidate/source-record.json \
+            --artifact build/release-candidate/ios/artifact.json \
+            --output build/release-candidate/ios/mutation-intent.json
+
+      - name: Checkpoint Apple Store mutation intent
+        if: ${{ inputs.publish && steps.ios_state_recovery.outputs.receipt_recovered != 'true' && steps.ios_state_recovery.outputs.upload_recovered != 'true' && steps.ios_state_recovery.outputs.mutation_intent_recovered != 'true' }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: parlor-candidate-${{ inputs.candidate_sha }}-ios-mutation-intent-attempt-${{ github.run_attempt }}
+          if-no-files-found: error
+          retention-days: 90
+          path: build/release-candidate/ios/mutation-intent.json
+
+      - name: Refuse an indeterminate Apple upload instead of sending the IPA twice
+        if: ${{ inputs.publish && steps.ios_state_recovery.outputs.receipt_recovered != 'true' && steps.ios_state_recovery.outputs.upload_recovered != 'true' && steps.ios_state_recovery.outputs.mutation_intent_recovered == 'true' }}
+        shell: bash
+        run: |
+          echo "A prior Apple upload may have started without a durable accepted-upload receipt. App Store Connect cannot prove the existing IPA byte digest; create a new reviewed build number/candidate instead of uploading these bytes again." >&2
+          exit 2
+
+      - name: Materialize protected App Store Connect API key
+        if: ${{ inputs.publish }}
+        shell: bash
+        env:
+          API_KEY_ID: ${{ vars.APP_STORE_CONNECT_KEY_ID }}
+          API_ISSUER_ID: ${{ vars.APP_STORE_CONNECT_ISSUER_ID }}
+          API_KEY_B64: ${{ secrets.APP_STORE_CONNECT_API_KEY_P8_B64 }}
+        run: |
+          set -euo pipefail
+          [[ -n "$API_KEY_B64" && -n "$API_KEY_ID" && -n "$API_ISSUER_ID" ]]
+          printf '%s' "$API_KEY_B64" | openssl base64 -d -A >"$RUNNER_TEMP/AuthKey_$API_KEY_ID.p8"
+          chmod 600 "$RUNNER_TEMP/AuthKey_$API_KEY_ID.p8"
+
+      - name: Upload the exact IPA once when no trusted upload checkpoint exists
+        if: ${{ inputs.publish && steps.ios_state_recovery.outputs.receipt_recovered != 'true' && steps.ios_state_recovery.outputs.upload_recovered != 'true' && steps.ios_state_recovery.outputs.mutation_intent_recovered != 'true' }}
+        shell: bash
+        env:
+          IPA: ${{ steps.ios_binary.outputs.ipa }}
+          APP_ID: ${{ vars.APP_STORE_CONNECT_APP_ID }}
+          API_KEY_ID: ${{ vars.APP_STORE_CONNECT_KEY_ID }}
+          API_ISSUER_ID: ${{ vars.APP_STORE_CONNECT_ISSUER_ID }}
+        run: |
+          set -euo pipefail
+          python3 scripts/release/store_api.py apple-check-unique \
+            --app-id "$APP_ID" \
+            --bundle-id "${{ vars.PARLOR_APPLE_BUNDLE_ID }}" \
+            --build-number "${{ needs.preflight.outputs.build_number }}" \
+            --issuer-id "$API_ISSUER_ID" \
+            --key-id "$API_KEY_ID" \
+            --private-key "$RUNNER_TEMP/AuthKey_$API_KEY_ID.p8" \
+            --execute
+          scripts/release/upload_ios_candidate.sh \
+            "$IPA" \
+            "$RUNNER_TEMP/AuthKey_$API_KEY_ID.p8" \
+            "$API_KEY_ID" \
+            "$API_ISSUER_ID" \
+            build/release-candidate/ios/upload-transport.json \
+            build/release-candidate/ios/altool-upload.json
+
+      - name: Checkpoint accepted Apple upload transport before processing wait
+        if: ${{ inputs.publish && steps.ios_state_recovery.outputs.receipt_recovered != 'true' && steps.ios_state_recovery.outputs.upload_recovered != 'true' }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: parlor-candidate-${{ inputs.candidate_sha }}-ios-upload-transport-attempt-${{ github.run_attempt }}
+          if-no-files-found: error
+          retention-days: 90
+          path: build/release-candidate/ios/upload-transport.json
+
+      - name: Read back internal TestFlight state or rehearse safely
+        shell: bash
+        env:
+          PUBLISH: ${{ inputs.publish }}
+          RECEIPT_RECOVERED: ${{ steps.ios_state_recovery.outputs.receipt_recovered }}
+          APP_ID: ${{ vars.APP_STORE_CONNECT_APP_ID }}
+          INTERNAL_GROUP_ID: ${{ vars.TESTFLIGHT_INTERNAL_GROUP_ID }}
+          API_KEY_ID: ${{ vars.APP_STORE_CONNECT_KEY_ID }}
+          API_ISSUER_ID: ${{ vars.APP_STORE_CONNECT_ISSUER_ID }}
+        run: |
+          set -euo pipefail
+          artifact_sha=$(jq -r .sha256 build/release-candidate/ios/artifact.json)
+          command=(
+            python3 scripts/release/store_api.py apple-internal
+            --source build/release-candidate/source-record.json
+            --artifact build/release-candidate/ios/artifact.json
+            --artifact-sha256 "$artifact_sha"
+            --app-id "$APP_ID"
+            --internal-group-id "$INTERNAL_GROUP_ID"
+            --output build/release-candidate/ios/apple-receipt.json
+          )
+          if [[ "$PUBLISH" == true ]]; then
+            if [[ "$RECEIPT_RECOVERED" == true ]]; then
+              command+=(--prior-receipt build/release-candidate/ios/prior-receipt.json)
+            else
+              upload_request_id=$(jq -r .upload_request_id build/release-candidate/ios/upload-transport.json)
+              command+=(
+                --upload-request-id "$upload_request_id"
+                --upload-transport-receipt build/release-candidate/ios/upload-transport.json
+              )
+            fi
+            command+=(
+              --issuer-id "$API_ISSUER_ID"
+              --key-id "$API_KEY_ID"
+              --private-key "$RUNNER_TEMP/AuthKey_$API_KEY_ID.p8"
+              --execute
+            )
+          fi
+          "${command[@]}"
+          rm -f "$RUNNER_TEMP/AuthKey_$API_KEY_ID.p8"
+
+      - name: Seal resumable iOS platform state
+        if: ${{ inputs.publish }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/release/release_tool.py create-platform-state \
+            --platform ios \
+            --source build/release-candidate/source-record.json \
+            --artifact build/release-candidate/ios/artifact.json \
+            --receipt build/release-candidate/ios/apple-receipt.json \
+            --output build/release-candidate/ios/platform-state.json
+
+      - name: Upload immutable iOS rerun state
+        if: ${{ inputs.publish }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: parlor-candidate-${{ inputs.candidate_sha }}-ios-state-attempt-${{ github.run_attempt }}
+          if-no-files-found: error
+          retention-days: 90
+          path: build/release-candidate/ios/platform-state.json
+
+      - name: Upload sanitized Apple Store receipt
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: parlor-candidate-${{ inputs.candidate_sha }}-ios-receipt-attempt-${{ github.run_attempt }}
+          if-no-files-found: error
+          retention-days: 90
+          path: |
+            build/release-candidate/ios/apple-receipt.json
+            build/release-candidate/ios/upload-transport.json
+
+      - name: Export bounded iOS control records
+        id: outputs
+        shell: bash
+        env:
+          PUBLISH: ${{ inputs.publish }}
+        run: |
+          set -euo pipefail
+          {
+            echo "artifact_b64=$(python3 scripts/release/release_tool.py base64 --file build/release-candidate/ios/artifact.json)"
+            echo "receipt_b64=$(python3 scripts/release/release_tool.py base64 --file build/release-candidate/ios/apple-receipt.json)"
+            echo "promotable=$PUBLISH"
+          } >>"$GITHUB_OUTPUT"
+
+      - name: Cleanup Apple credentials and temporary signing files
+        if: always()
+        shell: bash
+        env:
+          API_KEY_ID: ${{ vars.APP_STORE_CONNECT_KEY_ID }}
+        run: |
+          rm -f \
+            "$RUNNER_TEMP/parlor-distribution.p12" \
+            "$RUNNER_TEMP/parlor-app-store.mobileprovision" \
+            "$RUNNER_TEMP/AuthKey_$API_KEY_ID.p8"
+
+  finalize:
+    name: Seal immutable candidate manifest or rehearsal evidence
+    needs: [preflight, android, ios]
+    if: ${{ always() && needs.preflight.result == 'success' && needs.android.result == 'success' && needs.ios.result == 'success' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      attestations: write
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Check out exact candidate tooling
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.candidate_sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Restore bounded control records
+        shell: bash
+        env:
+          SOURCE_B64: ${{ needs.preflight.outputs.source_record_b64 }}
+          ANDROID_B64: ${{ needs.android.outputs.artifact_b64 }}
+          GOOGLE_B64: ${{ needs.android.outputs.receipt_b64 }}
+          IOS_B64: ${{ needs.ios.outputs.artifact_b64 }}
+          APPLE_B64: ${{ needs.ios.outputs.receipt_b64 }}
+        run: |
+          set -euo pipefail
+          mkdir -p build/release-candidate/final
+          printf '%s' "$SOURCE_B64" | openssl base64 -d -A >build/release-candidate/final/source-record.json
+          printf '%s' "$ANDROID_B64" | openssl base64 -d -A >build/release-candidate/final/android-artifact.json
+          printf '%s' "$GOOGLE_B64" | openssl base64 -d -A >build/release-candidate/final/google-receipt.json
+          printf '%s' "$IOS_B64" | openssl base64 -d -A >build/release-candidate/final/ios-artifact.json
+          printf '%s' "$APPLE_B64" | openssl base64 -d -A >build/release-candidate/final/apple-receipt.json
+
+      - name: Create canonical promotable manifest
+        if: ${{ inputs.publish }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/release/release_tool.py create-manifest \
+            --source build/release-candidate/final/source-record.json \
+            --android-artifact build/release-candidate/final/android-artifact.json \
+            --ios-artifact build/release-candidate/final/ios-artifact.json \
+            --google-receipt build/release-candidate/final/google-receipt.json \
+            --apple-receipt build/release-candidate/final/apple-receipt.json \
+            --run-id "$GITHUB_RUN_ID" \
+            --run-attempt "$GITHUB_RUN_ATTEMPT" \
+            --output build/release-candidate/final/candidate-manifest.json
+          python3 scripts/release/release_tool.py validate-manifest \
+            --manifest build/release-candidate/final/candidate-manifest.json
+
+      - name: Attest canonical candidate manifest
+        if: ${{ inputs.publish }}
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: build/release-candidate/final/candidate-manifest.json
+
+      - name: Upload immutable candidate manifest
+        if: ${{ inputs.publish }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: parlor-candidate-manifest-${{ github.run_id }}-attempt-${{ github.run_attempt }}
+          if-no-files-found: error
+          retention-days: 90
+          path: build/release-candidate/final/candidate-manifest.json
+
+      - name: Record non-mutating rehearsal result
+        if: ${{ !inputs.publish }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          jq -n \
+            --arg candidate "${{ inputs.candidate_sha }}" \
+            --arg run "$GITHUB_RUN_ID" \
+            '{schema_version:1, mode:"validation_only", mutation_performed:false, promotable:false, candidate_commit_sha:$candidate, workflow_run_id:$run}' \
+            >build/release-candidate/final/rehearsal.json
+
+      - name: Upload rehearsal evidence
+        if: ${{ !inputs.publish }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: parlor-candidate-rehearsal-${{ github.run_id }}-attempt-${{ github.run_attempt }}
+          if-no-files-found: error
+          retention-days: 30
+          path: build/release-candidate/final/
