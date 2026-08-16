@@ -147,6 +147,47 @@ class ProductionVerificationWorkflowContractTest {
     }
 
     @Test
+    fun clean_ci_can_resolve_the_detekt_plugin_with_strict_dependency_verification() {
+        val verificationMetadata = read("gradle/verification-metadata.xml")
+        fun verifyComponent(componentMarker: String, artifactName: String, sha256: String) {
+            assertContains(verificationMetadata, componentMarker)
+            val component = verificationMetadata
+                .substringAfter(componentMarker)
+                .substringBefore("</component>")
+            assertContains(component, "<artifact name=\"$artifactName\">")
+            assertContains(
+                component,
+                "<sha256 value=\"$sha256\"",
+                message = "Fresh CI must verify $artifactName before plugin resolution",
+            )
+        }
+
+        verifyComponent(
+            componentMarker =
+                "<component group=\"org.jetbrains.kotlinx\" name=\"kotlinx-coroutines-bom\" version=\"1.6.4\">",
+            artifactName = "kotlinx-coroutines-bom-1.6.4.pom",
+            sha256 = "ab2614855fba66aa8a42514dbe3d5a884315ffe1ed63f5932e710a8006245ce1",
+        )
+        verifyComponent(
+            componentMarker =
+                "<component group=\"com.google.guava\" name=\"guava-parent\" version=\"33.3.1-jre\">",
+            artifactName = "guava-parent-33.3.1-jre.pom",
+            sha256 = "55441db27e8869dfefe053059bdf478bdc7e95585642bf391f0023345fd56287",
+        )
+        verifyComponent(
+            componentMarker = "<component group=\"org.junit\" name=\"junit-bom\" version=\"5.10.2\">",
+            artifactName = "junit-bom-5.10.2.module",
+            sha256 = "de23b114b3e4119a8fe6eb17bed5a3852816698bace67071579d6d927ebb080a",
+        )
+        verifyComponent(
+            componentMarker =
+                "<component group=\"org.jetbrains.kotlinx\" name=\"kotlinx-coroutines-bom\" version=\"1.8.0\">",
+            artifactName = "kotlinx-coroutines-bom-1.8.0.pom",
+            sha256 = "1239e9dbe1397cd5971342956b2511bc3ace7b641842e4372a088dcfa8b9ad55",
+        )
+    }
+
+    @Test
     fun apple_job_runs_simulator_tests_all_link_targets_and_unsigned_swift_release() {
         val workflow = read(".github/workflows/production-verification.yml")
         val rootBuild = read("build.gradle.kts")
