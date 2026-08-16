@@ -191,6 +191,30 @@ class ProductionVerificationWorkflowContractTest {
             artifactName = "cryptography-bom-0.6.0.pom",
             sha256 = "3e83e5af287ca142a03ab81a35395e59bb20cb43d63915b2f96049835eb22d6b",
         )
+        verifyComponent(
+            componentMarker =
+                "<component group=\"com.android.tools.build\" name=\"aapt2\" version=\"8.13.2-14304508\">",
+            artifactName = "aapt2-8.13.2-14304508-linux.jar",
+            sha256 = "839609d6d776d6dd60a02aa577d97193ce3e650cf1deaabf062321e23bbd6bf6",
+        )
+        verifyComponent(
+            componentMarker =
+                "<component group=\"org.jetbrains.compose.desktop\" name=\"desktop-jvm-linux-x64\" version=\"1.10.3\">",
+            artifactName = "desktop-jvm-linux-x64-1.10.3.pom",
+            sha256 = "5a6361c112715bea2334898e208ec82640863d592287c2828b9edf56d5d733a9",
+        )
+        verifyComponent(
+            componentMarker =
+                "<component group=\"org.jetbrains.skiko\" name=\"skiko-awt-runtime-linux-x64\" version=\"0.9.37.4\">",
+            artifactName = "skiko-awt-runtime-linux-x64-0.9.37.4.jar",
+            sha256 = "ec796df135d980bbb1740e789fe8668a8184df243e4d1c39997750303c76f13b",
+        )
+        verifyComponent(
+            componentMarker =
+                "<component group=\"org.jetbrains.skiko\" name=\"skiko-awt-runtime-linux-x64\" version=\"0.9.37.4\">",
+            artifactName = "skiko-awt-runtime-linux-x64-0.9.37.4.pom",
+            sha256 = "39d4d3b389fb0191258e0202b7b0de6b09210509bcd6168b2774a5b24f2ed6a2",
+        )
     }
 
     @Test
