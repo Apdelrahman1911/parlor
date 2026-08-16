@@ -41,6 +41,11 @@ candidate or promotion workflow, and every direct Store API execution command,
 now calls `assert-store-identity-approved` before signing or Store access. The
 checked-in release policy marks both identities `blocked`; changing only that
 flag is rejected while the known-colliding identifier remains configured.
+As an independent live control, the candidate, external-testing promotion, and
+production-promotion workflows are manually disabled in GitHub; only production
+verification remains active. Re-enable those workflows only after the reviewed
+identity migration, authenticated Store readback, protected-variable setup,
+environment approval support, and branch-rule activation are all complete.
 
 Before any signed candidate can exist, authenticated Store readback must either
 locate existing Parlor app records controlled by the owner or the owner must
@@ -564,8 +569,9 @@ Until evidence is supplied, release automation is **NOT READY TO PUBLISH**:
 
 - both provisional production identifiers are assigned to another developer in
   the public Stores; identity variables were removed from GitHub and all Store
-  workflows are fail-closed until an owner-controlled identity migration is
-  reviewed and authenticated API readback is recorded;
+  workflows are both manually disabled and fail-closed in code until an
+  owner-controlled identity migration is reviewed and authenticated API
+  readback is recorded;
 - the private personal-account GitHub plan does not support required
   environment reviewers, secret scanning/push protection, or
   private-repository artifact attestations; move the repository to an
