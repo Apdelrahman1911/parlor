@@ -248,6 +248,7 @@ The live repository configuration was inspected and hardened on 2026-08-16:
 - workflow tokens default to read-only and cannot approve pull requests;
 - only GitHub-owned Actions are permitted and every Action is required by
   repository policy to use a full-length commit SHA;
+- dependency vulnerability alerts and automated security updates are enabled;
 - `testing-candidate`, `testing-android`, `testing-ios`,
   `external-testing-android`, and `external-testing-ios` accept deployments
   from `testing` only;
@@ -259,10 +260,11 @@ The live repository configuration was inspected and hardened on 2026-08-16:
   force pushes without an administrator bypass.
 
 The current private personal-account plan rejected required environment
-reviewers with HTTP 422, and the repository has only one collaborator. The
-branch rules remain fail-closed, but no Store workflow may be treated as fully
-authorized until the repository is moved to a plan that supports protected
-environment reviewers and an independent trusted reviewer is added.
+reviewers and secret scanning/push protection with HTTP 422, and the repository
+has only one collaborator. The branch rules remain fail-closed, but no Store
+workflow may be treated as fully authorized until the repository is moved to a
+plan that supports protected environment reviewers and an independent trusted
+reviewer is added.
 
 Before enabling publication, confirm the repository visibility and GitHub plan.
 People with repository read access can download retained workflow artifacts,
@@ -531,9 +533,10 @@ artifact or move an immutable release tag.
 Until evidence is supplied, release automation is **NOT READY TO PUBLISH**:
 
 - the private personal-account GitHub plan does not support required
-  environment reviewers or private-repository artifact attestations; move the
-  repository to an Enterprise Cloud organization (preferred) or explicitly
-  approve public visibility only after its exposure is reviewed;
+  environment reviewers, secret scanning/push protection, or
+  private-repository artifact attestations; move the repository to an
+  Enterprise Cloud organization (preferred) or explicitly approve public
+  visibility only after its exposure is reviewed;
 - an independent release reviewer has not been selected or added, so the active
   branch rules intentionally prevent an unreviewed protected-branch change;
 - no signing or Store secrets are configured; the ignored local handoff at
