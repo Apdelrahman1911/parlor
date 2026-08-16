@@ -20,7 +20,7 @@ and deterministic-test target and has no publishing workflow.
 | Apple Store toolchain | Candidate/CI policy pins Xcode `26.3` build `17C529`, physical iOS SDK major `26` or newer, and deployment target `16.0` | Confirm the hosted `macos-15` image still contains that exact path/build before each candidate; a toolchain change requires review. |
 | Existing Store automation | None existed before this release system | Store API access and environments must be configured. |
 | Google external track | Not discoverable from the repository | Set the exact existing closed or open track; do not invent one. |
-| GitHub protection | Environments and an exact ruleset are configured; the ruleset remains deliberately disabled until the final reviewed tree is synchronized | The current private personal-account plan cannot enforce environment reviewers or private artifact attestations. |
+| GitHub protection | The repository is public; branch-scoped environments, artifact attestations, secret scanning, push protection, and an exact ruleset are available/configured. The ruleset remains deliberately disabled until the final reviewed tree and an independent reviewer are synchronized. | Select and add a second trusted reviewer before enabling the ruleset or Store workflows. |
 
 No Firebase, Google Services, APNs, OAuth callback, associated-domain, app
 group, URL-scheme, or deep-link production configuration was found. The iOS
@@ -278,6 +278,8 @@ The live repository configuration was inspected and hardened on 2026-08-16:
 - only GitHub-owned Actions are permitted and every Action is required by
   repository policy to use a full-length commit SHA;
 - dependency vulnerability alerts and automated security updates are enabled;
+- secret scanning and push protection are enabled and were read back through
+  the repository API;
 - `testing-candidate`, `testing-android`, `testing-ios`,
   `external-testing-android`, and `external-testing-ios` accept deployments
   from `testing` only;
@@ -290,24 +292,26 @@ The live repository configuration was inspected and hardened on 2026-08-16:
   reviewed tree is green and synchronized to `main`, `testing`, and `release`;
   activation and API readback are mandatory before any candidate dispatch.
 
-The current private personal-account plan rejected required environment
-reviewers and secret scanning/push protection with HTTP 422, and the repository
-has only one collaborator. The branch rules remain fail-closed, but no Store
-workflow may be treated as fully authorized until the repository is moved to a
-plan that supports protected environment reviewers and an independent trusted
-reviewer is added.
+The repository is public, so GitHub makes required environment reviewers and
+artifact attestations available on the current plan. It currently has only one
+collaborator, however, and the person who triggers a Store deployment must not
+approve their own deployment. No Store workflow may be treated as fully
+authorized until a second trusted reviewer with repository read access is
+selected, configured on every Store environment, and independently verified.
+See GitHub's current
+[environment-reviewer policy](https://docs.github.com/en/actions/reference/workflows-and-actions/deployments-and-environments)
+and
+[artifact-attestation availability](https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/use-artifact-attestations).
 
-Before enabling publication, confirm the repository visibility and GitHub plan.
-People with repository read access can download retained workflow artifacts,
-including the signed candidate binaries. If that audience is too broad, restrict
-repository access or move the immutable binaries to a separately reviewed secure
-artifact service before publishing; do not remove the byte/provenance checks.
-Artifact attestations for a private or internal repository require a GitHub
-Enterprise Cloud plan. The workflows intentionally fail if attestations are
-unavailable rather than silently weakening provenance. The checked-in 90-day
-retention is the public-repository maximum; if qualification cannot finish in
-that window, create and retest a new candidate or approve a private long-term
-evidence design before the old evidence expires.
+The repository and its Actions artifacts are part of a public project. Treat
+signed candidate binaries as publicly retrievable release inputs, never as
+secret material. If that exposure becomes unacceptable, migrate the repository
+or immutable binaries only through a separately reviewed design that preserves
+approval and attestation guarantees. A visibility change invalidates this
+GitHub capability review. The checked-in 90-day retention is the
+public-repository maximum; if qualification cannot finish in that window,
+create and retest a new candidate or approve a durable evidence design before
+the old evidence expires.
 
 ### Protected branches
 
@@ -572,12 +576,9 @@ Until evidence is supplied, release automation is **NOT READY TO PUBLISH**:
   workflows are both manually disabled and fail-closed in code until an
   owner-controlled identity migration is reviewed and authenticated API
   readback is recorded;
-- the private personal-account GitHub plan does not support required
-  environment reviewers, secret scanning/push protection, or
-  private-repository artifact attestations; move the repository to an
-  Enterprise Cloud organization (preferred) or explicitly approve public
-  visibility only after its exposure is reviewed;
-- an independent release reviewer has not been selected or added, and the exact
+- the public repository now has secret scanning and push protection enabled and
+  supports environment reviewers and artifact attestations, but an independent
+  release reviewer has not been selected or added; the exact
   branch ruleset remains disabled until final-tree synchronization and reviewer
   configuration can be completed without locking out the only administrator;
 - no signing or Store secrets are configured; the ignored local handoff at
