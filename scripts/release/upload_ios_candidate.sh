@@ -8,6 +8,10 @@ usage() {
 
 [[ $# -eq 6 ]] || usage
 
+repo_root=$(cd "$(dirname "$0")/../.." && pwd -P)
+python3 "$repo_root/scripts/release/release_tool.py" \
+  assert-store-identity-approved --platform ios
+
 ipa=$1
 private_key=$2
 key_id=$3

@@ -422,6 +422,15 @@ def verify_signing_scripts() -> None:
         ROOT / "scripts" / "release" / "validate_release_system.sh"
     ).read_text(encoding="utf-8")
     verify_tool_downloader(release_system_validator)
+    for name, script in (
+        ("build_ios_candidate.sh", build),
+        (
+            "upload_ios_candidate.sh",
+            (ROOT / "scripts" / "release" / "upload_ios_candidate.sh").read_text(encoding="utf-8"),
+        ),
+    ):
+        if "assert-store-identity-approved --platform ios" not in script:
+            fail(f"{name} can use Apple signing/Store credentials before identity ownership approval")
     cleanup_contract = (
         "cleanup_status=0",
         "could not restore the original user keychain search list",

@@ -164,6 +164,14 @@ class WorkflowContractTest(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "lose the failing command status"):
             workflow_contract.verify_tool_downloader(broken)
 
+    def test_apple_signing_and_upload_scripts_require_identity_approval(self) -> None:
+        for name in ("build_ios_candidate.sh", "upload_ios_candidate.sh"):
+            with self.subTest(script=name):
+                script = (
+                    workflow_contract.ROOT / "scripts/release" / name
+                ).read_text(encoding="utf-8")
+                self.assertIn("assert-store-identity-approved --platform ios", script)
+
     def test_promotion_without_candidate_attestation_is_rejected(self) -> None:
         with self.assertRaises(RuntimeError):
             workflow_contract.verify_promotions(
