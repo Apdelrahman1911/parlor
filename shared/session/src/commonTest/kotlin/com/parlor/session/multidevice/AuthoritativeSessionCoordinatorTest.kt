@@ -152,6 +152,46 @@ class AuthoritativeSessionCoordinatorTest {
     }
 
     @Test
+    fun `host routes each private snapshot only to its recipient`() = runTest {
+        val otherPeerId = PlayerId("peer-two")
+        val room = RecordingRoom(isHost = true, selfPlayerId = PlayerId("host"))
+        val coordinator = HostAuthoritativeSessionCoordinator(
+            room = room,
+            protocol = protocol,
+            remotePlayers = setOf(peerId, otherPeerId),
+            scope = this,
+            applyCommand = { _, _ -> CommandApplication.InvalidAction },
+            snapshotFor = { playerId ->
+                PlayerSnapshotPayload(
+                    publicPayload = byteArrayOf(1),
+                    privatePayload = playerId.raw.encodeToByteArray(),
+                )
+            },
+            heartbeatIntervalMs = 0L,
+            requireStartHandshake = false,
+        )
+
+        coordinator.publishState(incrementRevision = false)
+        advanceUntilIdle()
+
+        val snapshotDeliveries = room.sent.mapNotNull { sent ->
+            (sent.message as? HostMessage.PlayerSnapshot)?.let { snapshot ->
+                sent.target to snapshot.privatePayload.decodeToString()
+            }
+        }
+        assertEquals(2, snapshotDeliveries.size)
+        assertEquals(
+            mapOf<SendTarget, String>(
+                SendTarget.Direct(peerId) to peerId.raw,
+                SendTarget.Direct(otherPeerId) to otherPeerId.raw,
+            ),
+            snapshotDeliveries.toMap(),
+        )
+        assertTrue(snapshotDeliveries.none { it.first == SendTarget.Broadcast })
+        coordinator.close()
+    }
+
+    @Test
     fun `fresh peer runtime resumes the host command sequence from its authoritative snapshot`() = runTest {
         val hostRoom = RecordingRoom(isHost = true, selfPlayerId = PlayerId("host"))
         var applied = 0
