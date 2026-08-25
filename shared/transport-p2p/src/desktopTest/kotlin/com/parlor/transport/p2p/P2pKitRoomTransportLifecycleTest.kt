@@ -3826,6 +3826,25 @@ class P2pKitRoomTransportLifecycleTest {
     }
 
     @Test
+    fun host_background_close_preserves_cancellation() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("host-pid"))
+        val room = newHostRoom(kit)
+        val alice = FakeP2pSession(peer("alice-pid", "Alice"))
+        admit(room, kit, alice)
+        alice.closeHandler = { throw CancellationException("cancel background close") }
+
+        assertFailsWith<CancellationException> {
+            room.appBackgrounded(1_000L)
+        }
+
+        assertThat(alice.closeCalls).isEqualTo(1)
+        assertThat(kit.stopCalls).isEqualTo(0)
+
+        alice.closeHandler = null
+        room.leave()
+    }
+
+    @Test
     fun host_rejects_a_physical_session_that_arrives_after_background_retirement() = runBlocking {
         val kit = FakeP2pKit(P2pPeerId("host-pid"))
         val room = newHostRoom(kit)
@@ -4077,6 +4096,25 @@ class P2pKitRoomTransportLifecycleTest {
 
         assertThat(kit.stopCalls).isEqualTo(1)
         assertThat(room.members.value).isEqualTo(emptyList())
+    }
+
+    @Test
+    fun host_leave_continues_cleanup_after_a_session_close_fails() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("host-pid"))
+        val room = newHostRoom(kit)
+        val alice = FakeP2pSession(peer("alice-pid", "Alice"))
+        val bob = FakeP2pSession(peer("bob-pid", "Bob"))
+        admit(room, kit, alice)
+        admit(room, kit, bob)
+        alice.closeHandler = { error("socket already dead") }
+
+        room.leave()
+
+        assertThat(alice.closeCalls).isEqualTo(1)
+        assertThat(bob.closeCalls).isEqualTo(1)
+        assertThat(bob.state.value).isEqualTo(ConnectionState.Closed)
+        assertThat(kit.stopCalls).isEqualTo(1)
+        assertThat(room.members.value).isEmpty()
     }
 
     @Test
