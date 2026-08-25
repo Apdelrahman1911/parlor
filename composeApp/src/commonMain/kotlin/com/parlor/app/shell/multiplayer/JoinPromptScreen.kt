@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -18,6 +19,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import com.parlor.app.resources.Res
 import com.parlor.app.resources.join_cancel
@@ -34,7 +37,6 @@ import com.parlor.designsystem.components.ParlorTextField
 import com.parlor.designsystem.components.ScreenHeader
 import com.parlor.designsystem.components.StickyActionBar
 import com.parlor.designsystem.theme.ParlorTheme
-import androidx.compose.foundation.text.KeyboardOptions
 import com.parlor.networking.room.RoomInputPolicy
 import org.jetbrains.compose.resources.stringResource
 
@@ -50,6 +52,8 @@ fun JoinPromptScreen(
     modifier: Modifier = Modifier,
 ) {
     var code by remember { mutableStateOf("") }
+    val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
         Box(modifier = Modifier.fillMaxSize().imePadding()) {
@@ -78,6 +82,12 @@ fun JoinPromptScreen(
                     onValueChange = { input -> code = RoomInputPolicy.normalizeRoomCode(input) },
                     label = stringResource(Res.string.join_code_field),
                     capitalization = KeyboardCapitalization.Characters,
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            focusManager.clearFocus()
+                            keyboardController?.hide()
+                        },
+                    ),
                 )
             }
 
