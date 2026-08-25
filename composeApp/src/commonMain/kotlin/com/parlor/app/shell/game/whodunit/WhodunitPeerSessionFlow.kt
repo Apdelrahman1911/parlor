@@ -104,6 +104,18 @@ import org.koin.core.qualifier.named
 private const val LOADING_FLAME_SIZE_DP: Float = 72f
 
 /**
+ * A failed leave is recoverable independently from an incompatible retained
+ * checkpoint. Only the latter makes a new connection attempt impossible.
+ */
+internal data class WhodunitPeerConnectionErrorState(
+    val checkpointInstallationError: NetError? = null,
+    val leaveError: NetError? = null,
+) {
+    val canRetryConnection: Boolean
+        get() = checkpointInstallationError == null
+}
+
+/**
  * End-to-end peer flow: join the room, prepare and acknowledge the host's
  * start offer, wait for its authoritative commit, then hand off to
  * [WhodunitMultiplayerPeerFlow]. The process-scoped session owner retains the
@@ -146,7 +158,8 @@ fun WhodunitPeerSessionFlow(
     // Keep the typed error so the rendering site can localise it. Stringifying
     // here would lose the type and ship "NetError$TransportFailure(reason=...)"
     // straight to the user.
-    var joinError by remember { mutableStateOf<NetError?>(null) }
+    var checkpointInstallationError by remember { mutableStateOf<NetError?>(null) }
+    var leaveError by remember { mutableStateOf<NetError?>(null) }
     var joinAttempt by remember { mutableStateOf(0) }
     var finalLeaveInFlight by remember { mutableStateOf(false) }
     var retryInFlight by remember { mutableStateOf(false) }
@@ -180,7 +193,8 @@ fun WhodunitPeerSessionFlow(
 
     LaunchedEffect(transport, route, joinAttempt) {
         acquireError = null
-        joinError = null
+        checkpointInstallationError = null
+        leaveError = null
         val result = sessionOwner.acquire(route) { mode ->
             when (mode) {
                 MultiplayerOpenMode.Resume -> transport.resumeLastSession()
@@ -201,8 +215,8 @@ fun WhodunitPeerSessionFlow(
                 WhodunitStartCheckpoint()
             }
         ) {
-            is RetainedValueResult.KindConflict -> joinError = NetError.IncompatibleProtocol
-            is RetainedValueResult.CreationFailed -> joinError = installed.error
+            is RetainedValueResult.KindConflict -> checkpointInstallationError = NetError.IncompatibleProtocol
+            is RetainedValueResult.CreationFailed -> checkpointInstallationError = installed.error
             is RetainedValueResult.Ready -> {
                 val retained = installed.value as WhodunitStartCheckpoint
                 retained.start(
@@ -244,7 +258,7 @@ fun WhodunitPeerSessionFlow(
                         onBackToLibrary()
                     }
                     is Result.Failure -> {
-                        joinError = discarded.error
+                        leaveError = discarded.error
                         finalLeaveInFlight = false
                         leaveConfirmationOpen = false
                     }
@@ -277,7 +291,16 @@ fun WhodunitPeerSessionFlow(
     val localNetworkAccess by transport.localNetworkAccess.collectAsState()
     val checkpointFailure = startCheckpointState as? WhodunitStartCheckpointState.Failed
     val renderedCaseError = checkpointFailure?.dataError
-    val renderedJoinError = joinError ?: checkpointFailure?.netError ?: ownerError ?: acquireError
+    val connectionErrorState = WhodunitPeerConnectionErrorState(
+        checkpointInstallationError = checkpointInstallationError,
+        leaveError = leaveError,
+    )
+    val renderedJoinError = connectionErrorState.leaveError
+        ?: connectionErrorState.checkpointInstallationError
+        ?: checkpointFailure?.netError
+        ?: ownerError
+        ?: acquireError
+    val connectionRetryAllowed = connectionErrorState.canRetryConnection
     val retryConnection: () -> Unit = retry@{
         if (finalLeaveInFlight || retryInFlight) return@retry
         val failedCheckpoint = checkpointFailure
@@ -320,7 +343,7 @@ fun WhodunitPeerSessionFlow(
                         when {
                             renderedCaseError != null -> PeerErrorState(
                                 error = dataErrorMessage(renderedCaseError),
-                                onRetry = retryConnection.takeIf { joinError == null },
+                                onRetry = retryConnection.takeIf { connectionRetryAllowed },
                                 onBack = finalBackToLibrary,
                                 actionsEnabled = !finalLeaveInFlight && !retryInFlight,
                                 backInFlight = finalLeaveInFlight,
@@ -329,7 +352,7 @@ fun WhodunitPeerSessionFlow(
                             )
                             renderedJoinError != null -> PeerErrorState(
                                 error = netErrorMessage(renderedJoinError),
-                                onRetry = retryConnection.takeIf { joinError == null },
+                                onRetry = retryConnection.takeIf { connectionRetryAllowed },
                                 onOpenNetworkSettings = onOpenNetworkSettings.takeIf {
                                     localNetworkAccess.needsRecoveryGuidance
                                 },
