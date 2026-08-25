@@ -97,6 +97,7 @@ parlor/
 │   ├── engine-testing/           # Non-shipping extensibility fixture
 │   ├── session/                  # Local and host-authoritative session logic
 │   ├── networking/               # Versioned transport-independent protocol
+│   ├── networking-testing/       # Non-shipping in-memory transport fixture
 │   ├── transport-p2p/            # The only P2pKit adapter
 │   ├── content/                  # Bundled offline content and validation
 │   └── storage/                  # Settings and protected snapshots
