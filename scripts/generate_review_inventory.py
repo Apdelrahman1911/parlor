@@ -17,6 +17,7 @@ from pathlib import Path
 
 BASELINE = "9cd4040a81c4f2f8fe6f5f161dabcd5351682c02"
 DEFAULT_OUTPUT = "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv"
+FINDING_OVERRIDES = "docs/review/INDEPENDENT_REVIEW_FINDING_OVERRIDES.csv"
 
 HISTORICAL_DOCUMENTS = {
     "ARCHITECTURE.md",
@@ -37,6 +38,7 @@ HISTORICAL_DOCUMENTS = {
 REVIEW_INFRASTRUCTURE = {
     "scripts/generate_review_inventory.py",
     "docs/review/README.md",
+    FINDING_OVERRIDES,
     DEFAULT_OUTPUT,
 }
 
@@ -250,13 +252,17 @@ def disposition_for(classification: str, source_set: str) -> str:
     return "RETAIN in the current production, build, test, or release contract"
 
 
-def last_changes(root: Path) -> dict[str, tuple[str, str]]:
+def last_changes(
+    root: Path,
+    baseline: str = BASELINE,
+) -> dict[str, tuple[str, str]]:
     log = run_git(
         root,
         "log",
-        "--format=@@@%h%x09%s",
+        "--no-merges",
+        "--format=@@@%H%x09%s",
         "--name-only",
-        f"{BASELINE}..HEAD",
+        f"{baseline}..HEAD",
     )
     current: tuple[str, str] | None = None
     changes: dict[str, tuple[str, str]] = {}
@@ -270,39 +276,54 @@ def last_changes(root: Path) -> dict[str, tuple[str, str]]:
     return changes
 
 
-def finding_for(path: str, changes: dict[str, tuple[str, str]]) -> str:
+def finding_overrides(root: Path) -> dict[str, str]:
+    path = root / FINDING_OVERRIDES
+    with path.open(encoding="utf-8", newline="") as source:
+        reader = csv.DictReader(source)
+        if reader.fieldnames != ["commit_sha", "finding"]:
+            raise ValueError(f"Invalid finding override header: {path}")
+        overrides: dict[str, str] = {}
+        for row in reader:
+            commit = row["commit_sha"].strip()
+            finding = row["finding"].strip()
+            if not re.fullmatch(r"[0-9a-f]{40}", commit):
+                raise ValueError(f"Finding override must use a full commit SHA: {commit}")
+            if not finding:
+                raise ValueError(f"Finding override must not be empty: {commit}")
+            if commit in overrides:
+                raise ValueError(f"Duplicate finding override: {commit}")
+            overrides[commit] = finding
+    return overrides
+
+
+def finding_for(
+    path: str,
+    changes: dict[str, tuple[str, str]],
+    overrides: dict[str, str],
+) -> str:
     if path in REVIEW_INFRASTRUCTURE or path.startswith("docs/review/"):
         return "Review infrastructure; no product finding"
     change = changes.get(path)
     if change is None:
         return "None identified in the independent review"
     commit, subject = change
-    if commit == "d6133ef":
-        return "IR-DOC-01 CLOSED: stale active contracts; fix d6133ef"
-    return f"See findings register; latest review remediation {commit} ({subject})"
+    override = overrides.get(commit)
+    if override is not None:
+        return override
+    return f"See findings register; latest review remediation {commit[:7]} ({subject})"
 
 
-def main() -> int:
-    root = repository_root()
-    arguments = sys.argv[1:]
-    check_only = "--check" in arguments
-    positional = [argument for argument in arguments if argument != "--check"]
-    if len(positional) > 1:
-        raise SystemExit("Usage: generate_review_inventory.py [--check] [output.csv]")
-    output_arg = positional[0] if positional else DEFAULT_OUTPUT
-    output = (root / output_arg).resolve()
-    try:
-        output_relative = output.relative_to(root).as_posix()
-    except ValueError as error:
-        raise SystemExit(f"Output must be inside the repository: {output}") from error
+def tracked_paths(root: Path, output_relative: str) -> list[str]:
+    tracked = set(run_git(root, "ls-files", "--cached").splitlines())
+    tracked.add(output_relative)
+    return sorted(path for path in tracked if path)
 
-    tracked_and_new = set(
-        run_git(root, "ls-files", "--cached", "--others", "--exclude-standard").splitlines(),
-    )
-    tracked_and_new.add(output_relative)
-    paths = sorted(path for path in tracked_and_new if path)
-    changes = last_changes(root)
 
+def render_inventory(
+    paths: list[str],
+    changes: dict[str, tuple[str, str]],
+    overrides: dict[str, str],
+) -> str:
     rendered = io.StringIO(newline="")
     writer = csv.writer(rendered, lineterminator="\n")
     writer.writerow(
@@ -331,11 +352,38 @@ def main() -> int:
                 reachability_for(path, source_set, classification, module),
                 consumers_for(path, classification, module),
                 "REVIEWED",
-                finding_for(path, changes),
+                finding_for(path, changes, overrides),
                 disposition_for(classification, source_set),
             ],
         )
-    content = rendered.getvalue()
+    return rendered.getvalue()
+
+
+def inventory_content(
+    root: Path,
+    output_relative: str,
+    baseline: str = BASELINE,
+) -> tuple[list[str], str]:
+    paths = tracked_paths(root, output_relative)
+    changes = last_changes(root, baseline)
+    return paths, render_inventory(paths, changes, finding_overrides(root))
+
+
+def main() -> int:
+    root = repository_root()
+    arguments = sys.argv[1:]
+    check_only = "--check" in arguments
+    positional = [argument for argument in arguments if argument != "--check"]
+    if len(positional) > 1:
+        raise SystemExit("Usage: generate_review_inventory.py [--check] [output.csv]")
+    output_arg = positional[0] if positional else DEFAULT_OUTPUT
+    output = (root / output_arg).resolve()
+    try:
+        output_relative = output.relative_to(root).as_posix()
+    except ValueError as error:
+        raise SystemExit(f"Output must be inside the repository: {output}") from error
+
+    paths, content = inventory_content(root, output_relative)
 
     if check_only:
         if not output.is_file() or output.read_text(encoding="utf-8") != content:
@@ -349,7 +397,8 @@ def main() -> int:
     else:
         output.parent.mkdir(parents=True, exist_ok=True)
         temporary = output.with_suffix(output.suffix + ".tmp")
-        temporary.write_text(content, encoding="utf-8", newline="")
+        with temporary.open("w", encoding="utf-8", newline="") as destination:
+            destination.write(content)
         temporary.replace(output)
         print(f"Wrote {len(paths)} reviewed rows to {output_relative}")
     return 0
