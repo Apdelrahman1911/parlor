@@ -3,13 +3,18 @@ package com.parlor.app.shell.home
 import com.parlor.core.ids.GameId
 import com.parlor.core.ids.SessionId
 import com.parlor.core.result.DataError
+import com.parlor.core.result.EmptyOk
+import com.parlor.core.result.EmptyResult
 import com.parlor.core.result.Result
 import com.parlor.core.versioning.SemVer
 import com.parlor.engine.snapshot.GameSnapshot
 import com.parlor.networking.room.NetError
 import com.parlor.networking.transport.ResumableSessionInfo
 import com.parlor.storage.snapshot.InMemorySnapshotStore
+import com.parlor.storage.snapshot.SnapshotMetadata
 import com.parlor.storage.snapshot.SnapshotStore
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.async
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -107,6 +112,56 @@ class HomeRecoveryAvailabilityTest {
     }
 
     @Test
+    fun localInventoryBoundsMetadataReadsWithoutLoadingSnapshotPayloads() = runTest {
+        val sessionIds = (0..MAX_LOCAL_RECOVERY_ENTRIES).map { index ->
+            SessionId("session-$index")
+        }
+        val store = MetadataOnlyStore(sessionIds)
+
+        val inventory = (readLocalRecoveryInventory(store) as Result.Success).data
+
+        assertEquals(
+            sessionIds.take(MAX_LOCAL_RECOVERY_ENTRIES),
+            inventory.entries.map { it.sessionId },
+        )
+        assertEquals(sessionIds.take(MAX_LOCAL_RECOVERY_ENTRIES), store.metadataRequests)
+        assertEquals(0, store.fullLoadRequests)
+        assertTrue(inventory.hasAdditionalRecords)
+    }
+
+    @Test
+    fun multiplayerRecoveryProbeStartsWhileLocalInventoryIsSlow() = runTest {
+        val localReadStarted = CompletableDeferred<Unit>()
+        val releaseLocalRead = CompletableDeferred<Unit>()
+        val multiplayerProbeStarted = CompletableDeferred<Unit>()
+        val store = object : SnapshotStore by InMemorySnapshotStore() {
+            override suspend fun listUnfinished(): Result<List<SessionId>, DataError> {
+                localReadStarted.complete(Unit)
+                releaseLocalRead.await()
+                return Result.Success(emptyList())
+            }
+        }
+
+        val availability = async {
+            loadHomeRecoveryAvailability(
+                store = store,
+                loadMultiplayer = {
+                    multiplayerProbeStarted.complete(Unit)
+                    Result.Success(null)
+                },
+                supportsLocalResume = { true },
+                supportsMultiplayerResume = { true },
+            )
+        }
+
+        localReadStarted.await()
+        multiplayerProbeStarted.await()
+        releaseLocalRead.complete(Unit)
+
+        assertFalse(availability.await().hasUnavailableSource)
+    }
+
+    @Test
     fun unsupportedLocalGameIsVisibleButMarksRecoverySourceUnavailable() {
         val entry = LocalRecoveryEntry(SessionId("unknown"), GameId("future-game"))
 
@@ -144,5 +199,32 @@ class HomeRecoveryAvailabilityTest {
             } else {
                 delegate.load(sessionId)
             }
+    }
+
+    private class MetadataOnlyStore(
+        private val sessionIds: List<SessionId>,
+    ) : SnapshotStore {
+        val metadataRequests = mutableListOf<SessionId>()
+        var fullLoadRequests: Int = 0
+            private set
+
+        override suspend fun save(snapshot: GameSnapshot): EmptyResult<DataError> = EmptyOk
+
+        override suspend fun load(sessionId: SessionId): Result<GameSnapshot, DataError> {
+            fullLoadRequests += 1
+            return Result.Failure(DataError.NotFound)
+        }
+
+        override suspend fun loadMetadata(
+            sessionId: SessionId,
+        ): Result<SnapshotMetadata, DataError> {
+            metadataRequests += sessionId
+            return Result.Success(SnapshotMetadata(sessionId, GameId("mafia")))
+        }
+
+        override suspend fun delete(sessionId: SessionId): EmptyResult<DataError> = EmptyOk
+
+        override suspend fun listUnfinished(): Result<List<SessionId>, DataError> =
+            Result.Success(sessionIds)
     }
 }

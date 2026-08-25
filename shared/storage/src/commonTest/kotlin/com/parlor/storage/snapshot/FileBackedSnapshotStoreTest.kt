@@ -173,6 +173,41 @@ class FileBackedSnapshotStoreTest {
         assertEquals(snapshot.gameId, loaded.gameId)
         assertEquals(snapshot.phaseId, loaded.phaseId)
         assertEquals(snapshot.payload.toList(), loaded.payload.toList())
+        assertEquals(
+            Result.Success(SnapshotMetadata(sessionId, GameId("whodunit"))),
+            store.loadMetadata(sessionId),
+        )
+    }
+
+    @Test
+    fun metadata_read_uses_the_header_decoder_instead_of_full_snapshot_decoder() = runTest {
+        val codec = object : SnapshotEnvelopeCodec {
+            var metadataDecodeCalls = 0
+
+            override suspend fun encode(snapshot: GameSnapshot): ByteArray = byteArrayOf(1)
+
+            override suspend fun decode(bytes: ByteArray): GameSnapshot =
+                error("metadata reads must not decode the complete snapshot")
+
+            override suspend fun decodeMetadata(bytes: ByteArray): SnapshotMetadata {
+                metadataDecodeCalls += 1
+                return SnapshotMetadata(sessionId, GameId("mafia"))
+            }
+        }
+        val fileSystem = MemoryFileSystem().apply {
+            put("${sessionId.raw}${FileBackedSnapshotStore.SUFFIX}", byteArrayOf(1))
+        }
+        val store = FileBackedSnapshotStore(
+            fileSystem = fileSystem,
+            serializationContext = StandardTestDispatcher(testScheduler),
+            codec = codec,
+        )
+
+        assertEquals(
+            Result.Success(SnapshotMetadata(sessionId, GameId("mafia"))),
+            store.loadMetadata(sessionId),
+        )
+        assertEquals(1, codec.metadataDecodeCalls)
     }
 
     @Test

@@ -1,5 +1,6 @@
 package com.parlor.storage.snapshot
 
+import com.parlor.core.ids.GameId
 import com.parlor.core.ids.SessionId
 import com.parlor.core.result.DataError
 import com.parlor.core.result.EmptyOk
@@ -85,6 +86,24 @@ class FileBackedSnapshotStore private constructor(
         }
     }
 
+    override suspend fun loadMetadata(
+        sessionId: SessionId,
+    ): Result<SnapshotMetadata, DataError> = mutex.withLock {
+        try {
+            val bytes = fileSystem.read(fileName(sessionId))
+                ?: return@withLock Result.Failure(DataError.NotFound)
+            Result.Success(
+                withContext(serializationContext) {
+                    codec.decodeMetadata(bytes)
+                },
+            )
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
+            Result.Failure(mapToDataError(failure))
+        }
+    }
+
     override suspend fun delete(sessionId: SessionId): EmptyResult<DataError> = mutex.withLock {
         try {
             fileSystem.delete(fileName(sessionId))
@@ -138,6 +157,14 @@ class FileBackedSnapshotStore private constructor(
 internal interface SnapshotEnvelopeCodec {
     suspend fun encode(snapshot: GameSnapshot): ByteArray
     suspend fun decode(bytes: ByteArray): GameSnapshot
+
+    suspend fun decodeMetadata(bytes: ByteArray): SnapshotMetadata =
+        decode(bytes).let { snapshot ->
+            SnapshotMetadata(
+                sessionId = snapshot.sessionId,
+                gameId = snapshot.gameId,
+            )
+        }
 }
 
 private class JsonSnapshotEnvelopeCodec(
@@ -150,7 +177,23 @@ private class JsonSnapshotEnvelopeCodec(
 
     override suspend fun decode(bytes: ByteArray): GameSnapshot =
         json.decodeFromString(GameSnapshot.serializer(), bytes.decodeUtf8StrictForSnapshot())
+
+    override suspend fun decodeMetadata(bytes: ByteArray): SnapshotMetadata {
+        val root = json.parseToJsonElement(bytes.decodeUtf8StrictForSnapshot())
+            as? kotlinx.serialization.json.JsonObject
+            ?: throw SerializationException("snapshot envelope is not an object")
+        return SnapshotMetadata(
+            sessionId = SessionId(root.requiredString("sessionId")),
+            gameId = GameId(root.requiredString("gameId")),
+        )
+    }
 }
+
+private fun kotlinx.serialization.json.JsonObject.requiredString(name: String): String =
+    (this[name] as? kotlinx.serialization.json.JsonPrimitive)
+        ?.takeIf { it.isString }
+        ?.content
+        ?: throw SerializationException("snapshot envelope is missing $name")
 
 private fun ByteArray.decodeUtf8StrictForSnapshot(): String = try {
     decodeToString(throwOnInvalidSequence = true)

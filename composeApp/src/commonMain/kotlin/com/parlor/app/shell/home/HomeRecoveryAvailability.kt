@@ -7,6 +7,11 @@ import com.parlor.core.result.Result
 import com.parlor.networking.room.NetError
 import com.parlor.networking.transport.ResumableSessionInfo
 import com.parlor.storage.snapshot.SnapshotStore
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+
+/** Home keeps recovery scanning bounded to a small, actionable set of tiles. */
+internal const val MAX_LOCAL_RECOVERY_ENTRIES: Int = 8
 
 /** Minimal, non-private envelope data needed to identify a local recovery tile. */
 internal data class LocalRecoveryEntry(
@@ -18,6 +23,8 @@ internal data class LocalRecoveryEntry(
 internal data class LocalRecoveryInventory(
     val entries: List<LocalRecoveryEntry>,
     val hasUnreadableRecord: Boolean,
+    /** More records exist than Home can inspect and offer in one bounded scan. */
+    val hasAdditionalRecords: Boolean = false,
 )
 
 /** Non-sensitive result of checking both local and multiplayer recovery stores. */
@@ -33,9 +40,10 @@ internal sealed interface HomeRecoveryAvailability {
 }
 
 /**
- * Reads only each authenticated snapshot envelope. Unreadable records remain
+ * Reads only metadata from each authenticated snapshot envelope. Unreadable records remain
  * addressable so the player can open the existing Retry / Discard recovery
- * surface; one damaged record cannot hide healthy saves.
+ * surface; one damaged record cannot hide healthy saves. The scan is bounded
+ * because Home can only offer [MAX_LOCAL_RECOVERY_ENTRIES] recovery actions.
  */
 internal suspend fun readLocalRecoveryInventory(
     store: SnapshotStore,
@@ -43,12 +51,17 @@ internal suspend fun readLocalRecoveryInventory(
     is Result.Failure -> listed
     is Result.Success -> {
         var hasUnreadableRecord = false
-        val entries = listed.data.distinct().map { sessionId ->
-            when (val loaded = store.load(sessionId)) {
+        val sessionIds = listed.data
+            .asSequence()
+            .distinct()
+            .take(MAX_LOCAL_RECOVERY_ENTRIES + 1)
+            .toList()
+        val entries = sessionIds.take(MAX_LOCAL_RECOVERY_ENTRIES).map { sessionId ->
+            when (val loaded = store.loadMetadata(sessionId)) {
                 is Result.Success -> {
-                    val snapshot = loaded.data
-                    if (snapshot.sessionId == sessionId) {
-                        LocalRecoveryEntry(sessionId, snapshot.gameId)
+                    val metadata = loaded.data
+                    if (metadata.sessionId == sessionId) {
+                        LocalRecoveryEntry(sessionId, metadata.gameId)
                     } else {
                         hasUnreadableRecord = true
                         LocalRecoveryEntry(sessionId, null)
@@ -61,8 +74,31 @@ internal suspend fun readLocalRecoveryInventory(
                 }
             }
         }
-        Result.Success(LocalRecoveryInventory(entries, hasUnreadableRecord))
+        Result.Success(
+            LocalRecoveryInventory(
+                entries = entries,
+                hasUnreadableRecord = hasUnreadableRecord,
+                hasAdditionalRecords = sessionIds.size > MAX_LOCAL_RECOVERY_ENTRIES,
+            ),
+        )
     }
+}
+
+/** Starts local and multiplayer recovery probes together so neither delays the other. */
+internal suspend fun loadHomeRecoveryAvailability(
+    store: SnapshotStore,
+    loadMultiplayer: suspend () -> Result<ResumableSessionInfo?, NetError>,
+    supportsLocalResume: (LocalRecoveryEntry) -> Boolean,
+    supportsMultiplayerResume: (ResumableSessionInfo) -> Boolean,
+): HomeRecoveryAvailability.Ready = coroutineScope {
+    val local = async { readLocalRecoveryInventory(store) }
+    val multiplayer = async { loadMultiplayer() }
+    resolveHomeRecoveryAvailability(
+        localResult = local.await(),
+        multiplayerResult = multiplayer.await(),
+        supportsLocalResume = supportsLocalResume,
+        supportsMultiplayerResume = supportsMultiplayerResume,
+    )
 }
 
 /**
@@ -84,6 +120,7 @@ internal fun resolveHomeRecoveryAvailability(
     val localUnavailable = when (localResult) {
         is Result.Failure -> true
         is Result.Success -> localResult.data.hasUnreadableRecord ||
+            localResult.data.hasAdditionalRecords ||
             localResult.data.entries.any { entry ->
                 entry.gameId == null || !supportsLocalResume(entry)
             }

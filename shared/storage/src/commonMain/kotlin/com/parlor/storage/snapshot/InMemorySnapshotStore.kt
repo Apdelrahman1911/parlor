@@ -28,6 +28,13 @@ class InMemorySnapshotStore : SnapshotStore {
         Result.Success(snapshot)
     }
 
+    override suspend fun loadMetadata(
+        sessionId: SessionId,
+    ): Result<SnapshotMetadata, DataError> = mutex.withLock {
+        val snapshot = byId[sessionId] ?: return@withLock Result.Failure(DataError.NotFound)
+        Result.Success(SnapshotMetadata(snapshot.sessionId, snapshot.gameId))
+    }
+
     override suspend fun delete(sessionId: SessionId): EmptyResult<DataError> = mutex.withLock {
         byId.remove(sessionId)
         EmptyOk
