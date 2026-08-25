@@ -25,10 +25,11 @@ class ProvideAppLanguageDesktopTest {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun explicit_language_switches_resources_and_disposal_restores_platform_locale() = runTest {
+    fun first_composition_emits_loading_then_switches_resources_and_restores_locale() = runTest {
         val processLocale = Locale.getDefault()
         Locale.setDefault(Locale.US)
         val selectedLanguage = mutableStateOf<AppLanguage?>(AppLanguage.English)
+        var renderedPhase = RenderedPhase.None
         var rendered = ""
         var observedLocale = ""
         val compositionContext = coroutineContext + ImmediateFrameClock
@@ -43,17 +44,24 @@ class ProvideAppLanguageDesktopTest {
                 CompositionLocalProvider(LocalDensity provides Density(1f)) {
                     ProvideAppLanguage(
                         language = selectedLanguage.value,
-                        loading = {},
+                        loading = {
+                            SideEffect { renderedPhase = RenderedPhase.Loading }
+                        },
                     ) {
                         val text = stringResource(Res.string.session_exit_affordance)
                         SideEffect {
+                            renderedPhase = RenderedPhase.Content
                             rendered = text
                             observedLocale = Locale.getDefault().toLanguageTag()
                         }
                     }
                 }
             }
+            assertEquals(RenderedPhase.Loading, renderedPhase)
+            assertEquals("", rendered)
+
             runCurrent()
+            assertEquals(RenderedPhase.Content, renderedPhase)
             assertEquals("Leave", rendered)
 
             selectedLanguage.value = AppLanguage.Arabic
@@ -73,6 +81,12 @@ class ProvideAppLanguageDesktopTest {
             assertEquals(Locale.US, Locale.getDefault())
             Locale.setDefault(processLocale)
         }
+    }
+
+    private enum class RenderedPhase {
+        None,
+        Loading,
+        Content,
     }
 }
 
