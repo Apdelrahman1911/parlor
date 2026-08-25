@@ -24,6 +24,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.parlor.designsystem.backdrop.HeroBackdrop
@@ -111,12 +115,27 @@ fun RevealStageScreen(
     //   1 = accent line draws + card fades in
     //   2 = narrative fades in
     var stage by remember { mutableStateOf(if (reduced) 2 else 0) }
+    var cardAccessible by remember { mutableStateOf(reduced) }
+    var narrativeAccessible by remember { mutableStateOf(reduced) }
     LaunchedEffect(reduced) {
-        if (reduced) return@LaunchedEffect
+        if (reduced) {
+            stage = 2
+            cardAccessible = true
+            narrativeAccessible = true
+            return@LaunchedEffect
+        }
+        stage = 0
+        cardAccessible = false
+        narrativeAccessible = false
         delay(motion.durationFast.toLong())
         stage = 1
         delay(motion.durationSlow.toLong())
+        // Do not make alpha-zero content available to assistive technology.
+        // The card becomes accessible once its fade-in has completed.
+        cardAccessible = true
         stage = 2
+        delay(motion.durationSlow.toLong())
+        narrativeAccessible = true
     }
 
     val accentLineProgress by animateFloatAsState(
@@ -179,7 +198,14 @@ fun RevealStageScreen(
             ParlorCard(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .alpha(cardAlpha),
+                    .alpha(cardAlpha)
+                    .then(
+                        if (cardAccessible) {
+                            Modifier
+                        } else {
+                            Modifier.clearAndSetSemantics { }
+                        }
+                    ),
                 cornerRadius = ParlorTheme.radii.elevated,
                 contentPadding = ParlorTheme.spacing.xxl,
                 hero = true,
@@ -190,13 +216,28 @@ fun RevealStageScreen(
                         text = killerDisplayName,
                         style = ParlorTheme.typography.displayHero,
                         color = colors.textPrimary,
+                        modifier = Modifier.semantics {
+                            // This node enters the tree only after the card has
+                            // visibly faded in, so it announces the reveal once.
+                            liveRegion = LiveRegionMode.Assertive
+                        },
                     )
                     Spacer(Modifier.height(ParlorTheme.spacing.s))
                     Text(
                         text = revealNarrative,
                         style = ParlorTheme.typography.narration,
                         color = colors.textNarration,
-                        modifier = Modifier.alpha(narrativeAlpha),
+                        modifier = Modifier
+                            .alpha(narrativeAlpha)
+                            .then(
+                                if (narrativeAccessible) {
+                                    Modifier.semantics {
+                                        liveRegion = LiveRegionMode.Polite
+                                    }
+                                } else {
+                                    Modifier.clearAndSetSemantics { }
+                                }
+                            ),
                     )
                 }
             }

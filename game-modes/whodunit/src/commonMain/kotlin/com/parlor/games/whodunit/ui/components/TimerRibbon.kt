@@ -2,6 +2,7 @@ package com.parlor.games.whodunit.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -11,10 +12,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.semantics
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.whodunit.resources.Res
+import com.parlor.games.whodunit.resources.round_discussion_timer_description_format
 import com.parlor.games.whodunit.resources.round_discussion_paused_label
 import com.parlor.games.whodunit.resources.round_discussion_timer_label
+import com.parlor.games.whodunit.resources.round_discussion_urgent_announcement
+import com.parlor.games.whodunit.resources.round_discussion_urgent_label
 import com.parlor.games.whodunit.resources.timer_elapsed_format
 import com.parlor.games.whodunit.resources.timer_total_format
 import org.jetbrains.compose.resources.stringResource
@@ -31,17 +40,28 @@ fun TimerRibbon(
     modifier: Modifier = Modifier,
 ) {
     val colors = ParlorTheme.colors
-    val urgent = remainingSeconds in 1..10
+    val urgent = !paused && remainingSeconds in 1..10
+    val urgencyThreshold = !paused && remainingSeconds == 10
     val mm = remainingSeconds / 60
     val ss = (remainingSeconds % 60).toString().padStart(2, '0')
     val totalMm = totalSeconds / 60
     val totalSs = (totalSeconds % 60).toString().padStart(2, '0')
 
-    val statusLabel = if (paused) {
-        stringResource(Res.string.round_discussion_paused_label)
-    } else {
-        stringResource(Res.string.round_discussion_timer_label)
+    val statusLabel = when {
+        paused -> stringResource(Res.string.round_discussion_paused_label)
+        urgent -> stringResource(Res.string.round_discussion_urgent_label)
+        else -> stringResource(Res.string.round_discussion_timer_label)
     }
+    val remainingTime = stringResource(Res.string.timer_elapsed_format, mm.toString(), ss)
+    val totalTime = stringResource(Res.string.timer_elapsed_format, totalMm.toString(), totalSs)
+    val visualTotalTime = stringResource(Res.string.timer_total_format, totalMm.toString(), totalSs)
+    val timerDescription = stringResource(
+        Res.string.round_discussion_timer_description_format,
+        statusLabel,
+        remainingTime,
+        totalTime,
+    )
+    val urgentAnnouncement = stringResource(Res.string.round_discussion_urgent_announcement)
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -50,6 +70,11 @@ fun TimerRibbon(
             .fillMaxWidth()
             .clip(RoundedCornerShape(ParlorTheme.radii.subtle))
             .background(if (urgent) colors.accentEmberDeep else colors.surfaceInset)
+            .clearAndSetSemantics {
+                // The visual label, current value, and total form one timer value;
+                // presenting them as separate nodes makes it hard to follow.
+                contentDescription = timerDescription
+            }
             .padding(horizontal = ParlorTheme.spacing.l, vertical = ParlorTheme.spacing.m),
     ) {
         Text(
@@ -58,14 +83,25 @@ fun TimerRibbon(
             color = if (urgent) colors.textPrimary else colors.textSecondary,
         )
         Text(
-            text = stringResource(Res.string.timer_elapsed_format, mm.toString(), ss),
+            text = remainingTime,
             style = ParlorTheme.typography.timerMedium,
             color = colors.textPrimary,
         )
         Text(
-            text = stringResource(Res.string.timer_total_format, totalMm.toString(), totalSs),
+            text = visualTotalTime,
             style = ParlorTheme.typography.bodyMedium,
             color = colors.textTertiary,
+        )
+    }
+
+    if (urgencyThreshold) {
+        // Keep the threshold announcement separate from the ticking timer: a
+        // live region on its changing value would speak every remaining second.
+        Box(
+            modifier = Modifier.semantics {
+                liveRegion = LiveRegionMode.Assertive
+                contentDescription = urgentAnnouncement
+            },
         )
     }
 }

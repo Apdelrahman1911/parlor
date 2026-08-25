@@ -28,6 +28,42 @@ class ProductionUiAccessibilityContractTest {
     }
 
     @Test
+    fun whodunit_timer_and_staged_reveal_publish_only_visible_coherent_semantics() {
+        val timer = read(
+            "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/" +
+                "ui/components/TimerRibbon.kt",
+        )
+        val reveal = read(
+            "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/" +
+                "ui/screens/reveal/RevealStageScreen.kt",
+        )
+
+        // Normal and urgent timer states are one value rather than three
+        // independently navigable text nodes; urgency is textual and announced
+        // once on entry, not from the ticking value itself.
+        assertContains(timer, ".clearAndSetSemantics {")
+        assertContains(timer, "contentDescription = timerDescription")
+        assertContains(timer, "urgent -> stringResource(Res.string.round_discussion_urgent_label)")
+        assertContains(timer, "if (urgencyThreshold) {")
+        assertContains(timer, "liveRegion = LiveRegionMode.Assertive")
+        assertContains(timer, "round_discussion_urgent_announcement")
+
+        // The initial/animating reveal state clears secret text, then separately
+        // exposes and announces the card and narrative only after each fade.
+        assertContains(reveal, "var cardAccessible by remember { mutableStateOf(reduced) }")
+        assertContains(reveal, "var narrativeAccessible by remember { mutableStateOf(reduced) }")
+        assertContains(reveal, "cardAccessible = false")
+        assertContains(reveal, "narrativeAccessible = false")
+        assertContains(reveal, "if (cardAccessible) {")
+        assertContains(reveal, "if (narrativeAccessible) {")
+        assertTrue(Regex("Modifier\\.clearAndSetSemantics \\{ \\}").findAll(reveal).count() >= 2)
+        assertContains(reveal, "cardAccessible = true\n        stage = 2")
+        assertContains(reveal, "narrativeAccessible = true")
+        assertContains(reveal, "liveRegion = LiveRegionMode.Assertive")
+        assertContains(reveal, "liveRegion = LiveRegionMode.Polite")
+    }
+
+    @Test
     fun mafia_target_rows_expose_radio_selection_and_revalidate_stale_selection() {
         val source = read(
             "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/" +
