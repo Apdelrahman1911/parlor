@@ -39,8 +39,10 @@ admission, reconnect, ordering, or a P2pKit instance.
 |---|---|
 | `:composeApp` | Catalog, setup, permissions/privacy rationale, root navigation, DI, platform storage wiring. |
 | `:shared:engine` | Generic game definitions, reducers, projections, snapshots, immutable registration. |
+| `:shared:engine-testing` | Non-shipping fixture proving a second game definition can register without changing production catalogs. |
 | `:shared:session` | Local controllers and the transport-independent host/peer authoritative coordinators. |
 | `:shared:networking` | Protocol envelopes, validation, room contracts, admission and lifecycle events. |
+| `:shared:networking-testing` | Non-shipping in-memory transport fixture for cross-module protocol and game tests. |
 | `:shared:transport-p2p` | P2pKit factories, discovery, room-code admission, host approval, seat binding, reconnect, and cleanup. |
 | `:game-modes:*` | A game's state/actions/events, reducer, rules, projections, codecs, screens, and bridge callbacks. |
 | `:shared:storage` | Persistent settings and authenticated, platform-protected snapshots. |
@@ -227,8 +229,9 @@ Each shipping game contributes:
 
 The composition root lists installed modules explicitly. Duplicate game or
 navigation IDs fail fast. The non-shipping engine-testing fixture registers and
-completes a second minimal definition without changing session, networking, or
-P2pKit adapter code. See `HOW_TO_ADD_A_GAME.md`.
+completes a second minimal definition, while networking-testing supplies the
+in-memory transport fixture, without either entering production catalogs. See
+`HOW_TO_ADD_A_GAME.md`.
 
 ## Persistence, content, and diagnostics
 

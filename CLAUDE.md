@@ -73,8 +73,10 @@ The dependency graph points inward toward pure shared contracts:
   versioning;
 - `:shared:engine` contains generic game/reducer/projection contracts and may
   not import UI, DI, transport, storage, or a game module;
+- `:shared:engine-testing` is a non-shipping extensibility fixture;
 - `:shared:networking` defines the versioned transport-independent wire and
   room contracts;
+- `:shared:networking-testing` is the non-shipping in-memory transport fixture;
 - `:shared:session` owns local controllers and host/peer authority semantics;
 - `:shared:transport-p2p` is the only module allowed to import P2pKit;
 - `:shared:storage` owns settings and protected snapshot storage;
@@ -86,8 +88,9 @@ The dependency graph points inward toward pure shared contracts:
 
 Game modules depend on shared contracts, never on P2pKit. Shared modules never
 depend on a shipping game module. The app shell composes both sides through
-`GameShellRegistry`. The non-shipping fixture in `:shared:engine-testing`
-proves the registration boundary without entering production catalogs.
+`GameShellRegistry`. The non-shipping fixtures in `:shared:engine-testing` and
+`:shared:networking-testing` prove registration and transport-isolation
+boundaries without entering production catalogs.
 
 Konsist tests in `:shared:engine:desktopTest` enforce engine purity and absence
 of Whodunit coupling. Detekt is applied repository-wide by the root build and
