@@ -233,14 +233,15 @@ P2pKit adapter code. See `HOW_TO_ADD_A_GAME.md`.
 ## Persistence, content, and diagnostics
 
 Shipping game content is bundled and validated offline; release behavior does
-not depend on a mock HTTP engine or network service. Canonical Whodunit
-pass-and-play resume snapshots are encrypted/authenticated below
+not depend on a mock HTTP engine or network service. Canonical pass-and-play
+resume snapshots for both shipping games are encrypted/authenticated below
 `SnapshotStore` and use platform protection:
 Android Keystore plus no-backup storage, iOS Keychain plus protected
-Application Support files, and an owner-only desktop development key/file.
-Mafia currently does not write a pass-and-play cold-start snapshot. Multiplayer
-resume is a separate transport credential and is available for both shipping
-games while the original host/seat remains valid.
+Application Support files, and an owner-only desktop development key/file. Each
+game supplies a versioned snapshot codec and validates its `engineVersion`
+during recovery (`MafiaSnapshotRecovery.kt` and `WhodunitGameFlow.kt`).
+Multiplayer resume is a separate transport credential and is available for both
+shipping games while the original host/seat remains valid.
 
 Settings are persistent per platform. The shipping controls are language,
 theme, and reduced motion; each has a validated default and a typed persistence
