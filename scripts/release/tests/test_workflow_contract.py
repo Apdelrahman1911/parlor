@@ -164,6 +164,27 @@ class WorkflowContractTest(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "lose the failing command status"):
             workflow_contract.verify_tool_downloader(broken)
 
+    def test_release_system_enforces_review_inventory_freshness(self) -> None:
+        script = (
+            workflow_contract.ROOT / "scripts/release/validate_release_system.sh"
+        ).read_text(encoding="utf-8")
+        workflow_contract.verify_review_inventory_gate(script)
+        broken = script.replace(
+            "python3 scripts/generate_review_inventory.py --check",
+            "",
+            1,
+        )
+        with self.assertRaisesRegex(RuntimeError, "review-inventory freshness"):
+            workflow_contract.verify_review_inventory_gate(broken)
+
+    def test_review_inventory_gate_has_full_git_history(self) -> None:
+        workflow = (
+            workflow_contract.ROOT / ".github/workflows/production-verification.yml"
+        ).read_text(encoding="utf-8")
+        broken = workflow.replace("fetch-depth: 0", "fetch-depth: 1", 1)
+        with self.assertRaisesRegex(RuntimeError, "full Git history"):
+            workflow_contract.verify_validation(broken)
+
     def test_apple_signing_and_upload_scripts_require_identity_approval(self) -> None:
         for name in ("build_ios_candidate.sh", "upload_ios_candidate.sh"):
             with self.subTest(script=name):

@@ -81,6 +81,9 @@ def verify_validation(text: str) -> None:
         fail("validation workflow must qualify all protected branches")
     if "productionReleaseAutomationCheck" not in text:
         fail("validation workflow does not enforce release-system tests")
+    desktop_android_job = text.split("\n  ios:", 1)[0]
+    if "fetch-depth: 0" not in desktop_android_job:
+        fail("validation workflow review-inventory gate requires full Git history")
     apple_test_step = text.split(
         "- name: Run iOS simulator tests, Apple static analysis, and release linkage gates",
         1,
@@ -422,6 +425,12 @@ def verify_tool_downloader(script: str) -> None:
             fail(f"release-tool downloader is not fail-closed: {token!r}")
 
 
+def verify_review_inventory_gate(script: str) -> None:
+    command = "python3 scripts/generate_review_inventory.py --check"
+    if script.count(command) != 1:
+        fail("release-system validation does not enforce review-inventory freshness exactly once")
+
+
 def verify_signing_scripts() -> None:
     build = (ROOT / "scripts" / "release" / "build_ios_candidate.sh").read_text(encoding="utf-8")
     validator = (ROOT / "scripts" / "release" / "validate_ios_artifact.sh").read_text(encoding="utf-8")
@@ -431,6 +440,7 @@ def verify_signing_scripts() -> None:
         ROOT / "scripts" / "release" / "validate_release_system.sh"
     ).read_text(encoding="utf-8")
     verify_tool_downloader(release_system_validator)
+    verify_review_inventory_gate(release_system_validator)
     for name, script in (
         ("build_ios_candidate.sh", build),
         (

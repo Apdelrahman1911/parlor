@@ -14,7 +14,14 @@ generator/report themselves. Each row records its module, source set,
 classification, production reachability, primary consumers, review status,
 finding linkage, and final disposition. A row may only use `REVIEWED` or an
 explicit exclusion; the current generator intentionally reviews all tracked
-items and emits no blanket exclusions.
+items and emits no blanket exclusions. Untracked working-tree files are
+deliberately excluded so the result is reproducible from the Git index used to
+form the next commit. Stage newly added files before regeneration.
+
+`INDEPENDENT_REVIEW_FINDING_OVERRIDES.csv` maps full remediation commit SHAs to
+the exceptional finding text used by the inventory. This keeps historical
+finding attribution data-driven without relying on collision-prone abbreviated
+commit IDs in generator code.
 
 Regenerate it from the repository root:
 
@@ -23,10 +30,12 @@ python3 scripts/generate_review_inventory.py
 python3 scripts/generate_review_inventory.py --check
 ```
 
-The final review gate regenerates the CSV and requires `git diff --exit-code`
-to remain empty. The inventory does not embed its own HEAD SHA, which would make
-a tracked generated file self-referential. Exact baseline/final SHAs and command
-receipts belong in the final review report.
+`productionReleaseAutomationCheck` runs the generator's `--check` mode, so CI
+fails when the committed CSV differs from the tracked tree. The final review
+gate also regenerates the CSV and requires `git diff --exit-code` to remain
+empty. The inventory does not embed its own HEAD SHA, which would make a tracked
+generated file self-referential. Exact baseline/final SHAs and command receipts
+belong in the final review report.
 
 Binary assets are reviewed for identity, dimensions, packaging, and dependency
 reachability; perceptual quality, real screen-reader behavior, signed-store
