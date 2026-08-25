@@ -102,7 +102,7 @@ fun ParlorTheme(
             primary = colors.accentEmber,
             onPrimary = colors.textOnAccent,
             secondary = colors.accentBrass,
-            onSecondary = colors.textPrimary,
+            onSecondary = colors.textOnAccent,
             error = colors.semanticDanger,
             onError = colors.textOnAccent,
         )
@@ -116,9 +116,9 @@ fun ParlorTheme(
             primary = colors.accentEmber,
             onPrimary = colors.textOnAccent,
             secondary = colors.accentBrass,
-            onSecondary = colors.textPrimary,
+            onSecondary = colors.textOnAccent,
             error = colors.semanticDanger,
-            onError = colors.textPrimary,
+            onError = colors.textOnAccent,
         )
     }
 
