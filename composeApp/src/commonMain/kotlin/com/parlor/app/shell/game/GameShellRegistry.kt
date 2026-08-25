@@ -50,6 +50,11 @@ internal data class GameShellCapabilities(
 internal data class GameShellMultiplayerContract(
     val gameId: GameId,
     val gameVersion: Int,
+    /**
+     * Counts available to this app release's multiplayer setup. They may be a
+     * subset of the game engine's theoretical definition while shipped cases
+     * are still being expanded.
+     */
     val supportedPlayerCounts: IntRange,
 ) {
     init {
@@ -182,8 +187,8 @@ internal class DefaultGameShellRegistry(
                 require(contract.gameId == binding.definition.id) {
                     "Multiplayer contract id does not match game '${binding.definition.id.raw}'"
                 }
-                require(contract.supportedPlayerCounts == binding.definition.supportedPlayerCounts) {
-                    "Multiplayer bounds do not match game '${binding.definition.id.raw}'"
+                require(contract.supportedPlayerCounts.all(binding.definition.supportedPlayerCounts::contains)) {
+                    "Multiplayer bounds exceed game '${binding.definition.id.raw}'"
                 }
             }
         }
