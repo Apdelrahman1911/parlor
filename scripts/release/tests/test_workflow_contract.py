@@ -28,6 +28,18 @@ class WorkflowContractTest(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "Mac Catalyst"):
             workflow_contract.verify_validation(broken)
 
+    def test_ios_app_launch_ui_test_cannot_be_replaced_with_a_build(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(
+            encoding="utf-8"
+        )
+        broken = workflow.replace(
+            "test | tee build/ci-evidence/xcode-ui-test.log",
+            "build | tee build/ci-evidence/xcode-ui-test.log",
+            1,
+        )
+        with self.assertRaisesRegex(RuntimeError, "app-launch test"):
+            workflow_contract.verify_validation(broken)
+
     def test_candidate_bundletool_download_must_be_bounded(self) -> None:
         workflow = (workflow_contract.ROOT / ".github/workflows/testing-candidate.yml").read_text(
             encoding="utf-8"

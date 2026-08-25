@@ -14,6 +14,7 @@ remain separate evidence.
 | Common/domain/desktop tests | `./gradlew productionDesktopCheck` | Every KMP module's `desktopTest` passes; the app's desktop main code compiles as a dependency. |
 | Repository test aggregate | `./gradlew allTests` | The explicit root aggregate runs every KMP module's `allTests` task that exists; platform-host limitations are reported by Gradle rather than silently omitted. |
 | iOS simulator runtime tests | `./gradlew productionIosSimulatorRuntimeTests` on Apple Silicon macOS | Every KMP module's executable `iosSimulatorArm64Test` task runs; new KMP modules join automatically. This is runtime-test evidence for the simulator only, not physical-device evidence. |
+| iOS app launch UI test | The `xcodebuild test` command in `IOS_SETUP.md` | The real SwiftUI wrapper launches on an iOS Simulator, instantiates the exported Kotlin controller, renders the Compose home screen, remains foreground, and presents no alert during the observation window. This is simulator launch evidence, not Local Network permission evidence. |
 | Android release | `./gradlew productionAndroidCheck` | Android debug and release unit tests, release Kotlin compilation, R8, unsigned release AAB, `lintRelease`, and the allowlist-enforcing `verifyReleaseLintWarnings` task all pass. |
 | iOS KMP release | `./gradlew productionAppleCheck` on macOS | Release frameworks link serially for `iosArm64`, `iosSimulatorArm64`, and `iosX64` without concurrent-LTO heap pressure. |
 | Unsigned Swift Release wrapper | The Release `xcodebuild` command in `IOS_SETUP.md`/`RELEASE_RUNBOOK.md` with `ARCHS=arm64`, `ONLY_ACTIVE_ARCH=YES`, and signing disabled | The arm64 simulator `.app` builds, its executable and plist/privacy inputs are inspected, and its checksum is recorded. Other Kotlin/Native architectures remain independently covered by `productionAppleCheck`; neither result is physical-device runtime evidence. |
@@ -68,9 +69,10 @@ unit test.
   every KMP `iosSimulatorArm64Test` through the dedicated
   `productionIosSimulatorRuntimeTests` aggregate, release framework linkage
   for all supported Apple targets (linkage-only for `iosArm64`/`iosX64` on
-  this job), plist and privacy-manifest validation, and an unsigned Xcode
-  Swift Release wrapper build. The wrapper invokes the real Gradle
-  resource/embed task with strict dependency verification.
+  this job), plist and privacy-manifest validation, an XCTest launch of the
+  SwiftUI/Compose app on an iOS Simulator, and an unsigned Xcode Swift Release
+  wrapper build. The wrapper invokes the real Gradle resource/embed task with
+  strict dependency verification.
 
 The workflow deliberately labels framework linkage separately from executable
 simulator runtime tests. A successful link is not reported as a runtime test.

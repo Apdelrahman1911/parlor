@@ -181,6 +181,25 @@ jobs:
           [[ "$debug_bundle" == com.parlor.app.debug ]]
           [[ "$release_bundle" == com.parlor.app ]]
 
+      - name: Launch Swift host and Compose root on iOS Simulator
+        shell: bash
+        run: |
+          set -euo pipefail
+          simulator_inventory=build/ci-evidence/ios-simulators.json
+          xcrun simctl list devices available --json | tee "$simulator_inventory"
+          simulator_udid="$(jq -er '[.devices[][] | select(.name | startswith("iPhone"))][0].udid' "$simulator_inventory")"
+          rm -rf build/ci-evidence/ios-ui-tests.xcresult
+          xcodebuild \
+            -project iosApp/iosApp.xcodeproj \
+            -scheme iosApp \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination "platform=iOS Simulator,id=$simulator_udid" \
+            -destination-timeout 120 \
+            -derivedDataPath build/xcode-derived-data \
+            -resultBundlePath build/ci-evidence/ios-ui-tests.xcresult \
+            test | tee build/ci-evidence/xcode-ui-test.log
+
       - name: Build unsigned Swift Release wrapper
         shell: bash
         run: |
