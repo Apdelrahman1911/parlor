@@ -61,6 +61,11 @@ class ProductionVerificationWorkflowContractTest {
         val staticGate = rootBuild.substringAfter("val productionStaticAnalysis")
             .substringBefore("tasks.register(\"productionAppleCheck\")")
         assertContains(staticGate, "dependsOn(staticAnalysis, typeAwareStaticAnalysis)")
+        assertContains(
+            staticGate,
+            "Runs the host-independent production static-analysis policy; run " +
+                "productionAppleStaticAnalysis on macOS for iOS source sets.",
+        )
         val repositoryStaticGate = rootBuild.substringAfter("val staticAnalysis")
             .substringBefore("val productionStaticAnalysis")
         assertContains(repositoryStaticGate, "includedBuild(\"build-logic\")")
