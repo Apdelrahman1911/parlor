@@ -54,7 +54,7 @@ class InMemoryRoomBus {
     suspend fun fromHost(target: SendTarget, message: HostMessage) {
         when (target) {
             SendTarget.Broadcast -> peerInboxes.values.forEach { it.send(message) }
-            is SendTarget.Direct -> peerInboxes[target.playerId]?.send(message)
+            is SendTarget.Direct -> peerInboxes.getValue(target.playerId).send(message)
         }
     }
 
