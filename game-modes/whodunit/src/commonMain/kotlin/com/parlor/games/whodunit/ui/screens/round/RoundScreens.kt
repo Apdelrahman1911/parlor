@@ -23,6 +23,7 @@ import com.parlor.games.whodunit.domain.state.RevealedClue
 import com.parlor.games.whodunit.resources.Res
 import com.parlor.games.whodunit.resources.round_begin_discussion
 import com.parlor.games.whodunit.resources.round_begin_discussion_description
+import com.parlor.games.whodunit.resources.round_clue_bullet_format
 import com.parlor.games.whodunit.resources.round_clue_eyebrow_format
 import com.parlor.games.whodunit.resources.round_discussion_eyebrow
 import com.parlor.games.whodunit.resources.round_eyebrow_format
@@ -146,7 +147,7 @@ fun DiscussionScreen(
             )
             revealedClues.forEach { c ->
                 Text(
-                    text = "·  ${c.text}",
+                    text = stringResource(Res.string.round_clue_bullet_format, c.text),
                     style = ParlorTheme.typography.bodyLarge,
                     color = ParlorTheme.colors.textPrimary,
                 )

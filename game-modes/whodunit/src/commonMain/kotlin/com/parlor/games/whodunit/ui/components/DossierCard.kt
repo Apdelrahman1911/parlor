@@ -41,6 +41,7 @@ import com.parlor.games.whodunit.resources.dossier_killer_method_label
 import com.parlor.games.whodunit.resources.dossier_killer_must_hide_fallback
 import com.parlor.games.whodunit.resources.dossier_killer_timeline_label
 import com.parlor.games.whodunit.resources.dossier_killer_timeline_row_format
+import com.parlor.games.whodunit.resources.whodunit_list_separator
 import com.parlor.games.whodunit.resources.dossier_motive_label
 import com.parlor.games.whodunit.resources.dossier_must_hide_label
 import com.parlor.games.whodunit.resources.dossier_relationship_label
@@ -273,7 +274,10 @@ private fun KillerOnlySections(
                     id.raw,
                 )
             }
-            LabeledLine(deflectionLabel, names.joinToString(separator = " · "))
+            LabeledLine(
+                deflectionLabel,
+                names.joinToString(separator = stringResource(Res.string.whodunit_list_separator)),
+            )
         }
     }
 }
