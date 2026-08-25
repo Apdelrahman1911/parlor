@@ -6,11 +6,16 @@ import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.lifecycle.lifecycleScope
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
+import androidx.compose.ui.Modifier
+import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.storage.settings.SettingsStore
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.getKoin
 
@@ -32,12 +37,25 @@ class MainActivity : ComponentActivity() {
             window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
         }
         enableEdgeToEdge()
-        lifecycleScope.launch {
-            val settings = loadSettingsForFirstComposition {
-                getKoin().get<SettingsStore>()
+        // Install Compose synchronously. While settings initialize off the UI
+        // dispatcher, the Activity owns an explicit first-frame surface.
+        setContent {
+            val settings by produceState<SettingsStore?>(initialValue = null) {
+                value = loadSettingsForFirstComposition {
+                    getKoin().get<SettingsStore>()
+                }
             }
-            setContent {
-                App(settings)
+            val loadedSettings = settings
+            if (loadedSettings == null) {
+                ParlorTheme {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(ParlorTheme.colors.surfaceCanvas),
+                    )
+                }
+            } else {
+                App(loadedSettings)
             }
         }
     }
