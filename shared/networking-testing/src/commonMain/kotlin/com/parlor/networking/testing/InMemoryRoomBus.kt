@@ -117,6 +117,37 @@ class InMemoryRoomBus {
     }
 }
 
+/** Host-side [LocalRoom] endpoint backed by [InMemoryRoomBus]. */
+class InMemoryHostRoom(
+    private val bus: InMemoryRoomBus,
+    override val selfPlayerId: PlayerId,
+    hostDisplayName: String,
+) : LocalRoom {
+    private val _info = MutableStateFlow(
+        RoomInfo("local", hostDisplayName, selfPlayerId, RoomInfo.Status.Hosting),
+    )
+    private val _members = MutableStateFlow<List<RoomMember>>(emptyList())
+
+    override val info = _info.asStateFlow()
+    override val members = _members.asStateFlow()
+    override val isHost = true
+    override val incoming: Flow<RoomMessage> = bus.hostMessagesIn
+    override val peerEvents: SharedFlow<PeerEvent> = bus.peerEvents
+
+    override suspend fun send(
+        target: SendTarget,
+        message: HostMessage,
+    ): Result<Unit, NetError> {
+        bus.fromHost(target, message)
+        return Result.Success(Unit)
+    }
+
+    override suspend fun sendToHost(message: PeerMessage): Result<Unit, NetError> =
+        Result.Failure(NetError.Unauthorized)
+
+    override suspend fun leave() = Unit
+}
+
 /** A peer-side room whose sender identity is bound by construction. */
 class InMemoryPeerRoom(
     private val bus: InMemoryRoomBus,
