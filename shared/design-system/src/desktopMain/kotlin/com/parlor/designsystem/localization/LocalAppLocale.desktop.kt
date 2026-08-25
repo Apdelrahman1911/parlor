@@ -15,6 +15,7 @@ import java.util.Locale
 @Composable
 internal actual fun PlatformAppLocale(
     languageTag: String?,
+    loading: @Composable () -> Unit,
     content: @Composable (activeLanguageTag: String?) -> Unit,
 ) {
     var appliedLanguageTag by remember(languageTag) { mutableStateOf<String?>(null) }
@@ -35,6 +36,9 @@ internal actual fun PlatformAppLocale(
         }
     }
 
-    val activeTag = appliedLanguageTag ?: return
+    val activeTag = appliedLanguageTag ?: run {
+        loading()
+        return
+    }
     content(activeTag)
 }

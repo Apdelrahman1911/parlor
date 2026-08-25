@@ -41,7 +41,10 @@ class ProvideAppLanguageDesktopTest {
         try {
             composition.setContent {
                 CompositionLocalProvider(LocalDensity provides Density(1f)) {
-                    ProvideAppLanguage(selectedLanguage.value) {
+                    ProvideAppLanguage(
+                        language = selectedLanguage.value,
+                        loading = {},
+                    ) {
                         val text = stringResource(Res.string.session_exit_affordance)
                         SideEffect {
                             rendered = text
