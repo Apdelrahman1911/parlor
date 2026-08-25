@@ -11,8 +11,9 @@ import com.parlor.engine.phase.GamePhase
  * - `hostOnly` is visible only to the host device.
  *
  * Game modules parameterize this with their own concrete bucket types. The
- * `ProjectionPolicy` strips the unwanted buckets per viewer; the type system
- * prevents host-only data from ending up in a `PublicProjection`.
+ * `ProjectionPolicy` must strip unwanted buckets per viewer at runtime. The
+ * generic projection wrappers retain the full state type, so the type system
+ * does not itself prevent host-only data from reaching a `PublicProjection`.
  */
 data class GameStateContainer<P, Pr, H>(
     val public: P,
