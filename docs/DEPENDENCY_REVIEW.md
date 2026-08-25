@@ -23,9 +23,10 @@ versions, unexpected repositories, and platform-specific native binaries.
 ## Current direct families
 
 The version catalog currently declares Kotlin/Kotlinx, Compose Multiplatform,
-Android Gradle Plugin, Koin, Ktor, P2pKit, SQLDelight, Detekt, Konsist,
-JUnit, Turbine, and AssertK. Presence in the catalog does not prove a library
-is packaged; the resolved release graphs are authoritative.
+Android Gradle Plugin, Koin, Ktor, P2pKit, Detekt, Konsist,
+Turbine, and AssertK. JVM test tasks use JUnit Platform through the Gradle test
+convention rather than a catalog alias. Presence in the catalog does not prove
+a library is packaged; the resolved release graphs are authoritative.
 
 The published P2pKit 0.7.0-rc3 release declares the Apache-2.0 license. Its
 current Maven Central POMs, selected Android/JVM/iOS artifacts, SHA-256 values,
