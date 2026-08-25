@@ -4,7 +4,8 @@ The executable source of truth is `:composeApp:verifyReleaseLintWarnings` plus
 `config/android-lint-accepted-warnings.txt`. The task runs `lintRelease`, parses
 the generated XML report, and requires an exact multiset match on lint ID,
 repository-relative location, dependency/current-version message, and count.
-Only the volatile latest-available-version suffix is ignored. This document
+Only volatile latest-available-version suffixes are ignored, including the
+alternate `Newer version of lint available: <latest>` wording. This document
 records why the current advisories remain; it does not override the build.
 
 ## 2026-08-09 baseline and result
@@ -35,7 +36,7 @@ explicitly reviewed advisory classes below:
 |---|---:|---|
 | `OldTargetApi` | 1 | Target/compile SDK 36 is deliberately pinned for the current compatibility baseline. Store target-level compliance must be rechecked at release and can require a reviewed SDK migration. |
 | `AndroidGradlePluginVersion` | 4 | Gradle 8.13 and AGP 8.13.2 are a verified pair. Moving to Gradle 8.14.5 or AGP 9.3.1 is a separate compatibility migration, not a lint-only edit. |
-| `GradleDependency` | 2 | Lint 9.1.1 is the reviewed stable analyzer compatible with Kotlin 2.4 metadata; lint reports the unrelated 9.4.0 alpha preview. Activity Compose 1.9.3 remains pinned pending a lifecycle/source compatibility migration. |
+| `GradleDependency` | 2 | Lint 9.1.1 is the reviewed stable analyzer compatible with Kotlin 2.4 metadata; lint reports a moving, unrelated alpha preview whose latest version is normalized by the gate. Activity Compose 1.9.3 remains pinned pending a lifecycle/source compatibility migration. |
 | `NewerVersionAvailable` | 22 | These are update notifications for pinned datetime, Compose, Koin, Ktor, Konsist, Detekt, and Turbine coordinates. They do not report a demonstrated correctness defect. Kotlin 2.4.10, serialization 1.11.0, and P2pKit 0.7.0-rc3 are current and no longer appear in this class. |
 
 The remaining advisories are not permanent waivers. Dependency/security review

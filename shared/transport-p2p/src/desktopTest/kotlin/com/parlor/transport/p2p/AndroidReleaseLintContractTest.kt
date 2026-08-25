@@ -51,6 +51,7 @@ class AndroidReleaseLintContractTest {
         assertContains(appBuild, "dependsOn(\"lintRelease\")")
         assertContains(appBuild, "reports/lint-results-release.xml")
         assertContains(appBuild, "config/android-lint-accepted-warnings.txt")
+        assertContains(appBuild, "Newer version of lint available: ")
         assertContains(appBuild, "actual == expected")
         val accepted = inventory.lineSequence()
             .map(String::trim)
@@ -65,6 +66,17 @@ class AndroidReleaseLintContractTest {
                 "OldTargetApi" to 1,
             ),
             accepted.groupingBy { line -> line.substringBefore('|') }.eachCount(),
+        )
+        assertContains(
+            accepted,
+            "GradleDependency|gradle.properties|Newer version of lint available",
+        )
+        assertFalse(
+            accepted.any { line ->
+                line.startsWith(
+                    "GradleDependency|gradle.properties|Newer version of lint available: ",
+                )
+            },
         )
         assertContains(workflow, "productionCheck")
         assertContains(workflow, "lint-results-*")
