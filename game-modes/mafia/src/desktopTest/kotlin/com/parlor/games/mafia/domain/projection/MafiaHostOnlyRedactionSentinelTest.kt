@@ -15,6 +15,7 @@ import com.parlor.games.mafia.domain.state.PublicPlayerSlot
 import com.parlor.games.mafia.domain.state.Role
 import com.parlor.games.mafia.domain.state.VoteRoundRecord
 import kotlin.test.Test
+import kotlinx.serialization.ExperimentalSerializationApi
 
 /**
  * Sentinel for the hand-maintained `redactedHostOnly` constant inside
@@ -22,13 +23,15 @@ import kotlin.test.Test
  *
  * The policy clears the `hostOnly` bucket by replacing the field with a
  * fully redacted [MafiaHostOnly] instance — not by mutating the original.
- * That means **every field** of `MafiaHostOnly` must be reset to its
- * empty/zero default by the projection. If a future `MafiaHostOnly` field
- * is added but not added to the redaction constant, this test fails —
- * preventing a silent privacy leak through `toPublic` / `toPlayer`.
+ * The field-level assertions below cover every currently serialized field.
+ * The serialized-field count sentinel below forces a deliberate review when
+ * a future [MafiaHostOnly] field is added; it does not infer that a new
+ * declared default is safe or that the projection redacts it.
  *
  * To extend [MafiaHostOnly] safely: add the new field with an explicit
- * empty/zero default here AND inside `MafiaProjectionPolicy.redactedHostOnly`.
+ * empty/zero default, update `MafiaProjectionPolicy.redactedHostOnly`, add a
+ * populated fixture value and an explicit assertion, and update the pinned
+ * serialized-field count.
  */
 class MafiaHostOnlyRedactionSentinelTest {
 
@@ -70,10 +73,7 @@ class MafiaHostOnlyRedactionSentinelTest {
     @Test
     fun to_public_redacts_every_known_host_only_field() {
         val redacted = MafiaProjectionPolicy.toPublic(stateWithPopulatedHostOnly()).state.hostOnly
-        // Every known field must be the "empty" sentinel value. If a new
-        // field is added to MafiaHostOnly without being redacted, the
-        // resulting projection will retain it and one of these assertions
-        // (or a new one you write alongside the new field) will fail.
+        // Every currently serialized field must be the "empty" sentinel value.
         assertThat(redacted.fullRoleMap).isEmpty()
         assertThat(redacted.randomSeed).isEqualTo(0L)
         assertThat(redacted.nightLog).isEmpty()
@@ -95,11 +95,17 @@ class MafiaHostOnlyRedactionSentinelTest {
     fun redacted_host_only_equals_empty_constructor_baseline() {
         // The redaction constant must equal a freshly constructed
         // [MafiaHostOnly] with `fullRoleMap = emptyMap()`, `randomSeed = 0L`,
-        // and all other fields at their declared defaults. Anyone adding a
-        // new MafiaHostOnly field must either give it a safe default OR
-        // update the redaction constant to match.
+        // and all other fields at their declared defaults. This documents the
+        // constructor baseline; the schema-count test below forces review of
+        // whether any newly declared default is safe to project.
         val baseline = MafiaHostOnly(fullRoleMap = emptyMap(), randomSeed = 0L)
         val projected = MafiaProjectionPolicy.toPublic(stateWithPopulatedHostOnly()).state.hostOnly
         assertThat(projected).isEqualTo(baseline)
+    }
+
+    @OptIn(ExperimentalSerializationApi::class)
+    @Test
+    fun redaction_sentinel_requires_review_when_host_only_schema_changes() {
+        assertThat(MafiaHostOnly.serializer().descriptor.elementsCount).isEqualTo(4)
     }
 }
