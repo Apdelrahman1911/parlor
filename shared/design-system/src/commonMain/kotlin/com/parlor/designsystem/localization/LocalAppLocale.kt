@@ -3,8 +3,9 @@ package com.parlor.designsystem.localization
 import androidx.compose.runtime.Composable
 
 /**
- * Applies the requested process locale after composition commits, then renders
- * [content] with the language tag actually visible to Compose resources.
+ * Applies the requested process locale after composition commits. Until that
+ * mutation is visible to Compose resources, renders [loading]; then renders
+ * [content] with the active language tag.
  *
  * Compose Multiplatform 1.10 does not expose a public resource-environment
  * composition local. Its resource resolver reads the platform locale, so each
@@ -15,5 +16,6 @@ import androidx.compose.runtime.Composable
 @Composable
 internal expect fun PlatformAppLocale(
     languageTag: String?,
+    loading: @Composable () -> Unit,
     content: @Composable (activeLanguageTag: String?) -> Unit,
 )

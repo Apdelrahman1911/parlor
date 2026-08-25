@@ -23,6 +23,7 @@ import java.util.Locale
 @Composable
 internal actual fun PlatformAppLocale(
     languageTag: String?,
+    loading: @Composable () -> Unit,
     content: @Composable (activeLanguageTag: String?) -> Unit,
 ) {
     val baseContext = LocalContext.current
@@ -55,7 +56,10 @@ internal actual fun PlatformAppLocale(
         }
     }
 
-    val activeTag = appliedLanguageTag ?: return
+    val activeTag = appliedLanguageTag ?: run {
+        loading()
+        return
+    }
     val localizedConfiguration = remember(baseConfiguration, activeTag) {
         Configuration(baseConfiguration).apply { setLocale(requestedLocale) }
     }

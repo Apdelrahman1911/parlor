@@ -3,6 +3,9 @@ package com.parlor.designsystem.localization
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.key
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Surface
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 
 /**
@@ -26,7 +29,28 @@ fun ProvideAppLanguage(
     language: AppLanguage?,
     content: @Composable () -> Unit,
 ) {
-    PlatformAppLocale(languageTag = language?.tag) { activeLanguageTag ->
+    ProvideAppLanguage(
+        language = language,
+        loading = {
+            // Platform locale effects commit after the first composition. Do
+            // not render resource-bearing content against the previous locale.
+            Surface(modifier = Modifier.fillMaxSize()) {}
+        },
+        content = content,
+    )
+}
+
+/** Internal loading seam used by platform-composition tests. */
+@Composable
+internal fun ProvideAppLanguage(
+    language: AppLanguage?,
+    loading: @Composable () -> Unit,
+    content: @Composable () -> Unit,
+) {
+    PlatformAppLocale(
+        languageTag = language?.tag,
+        loading = loading,
+    ) { activeLanguageTag ->
         val resolved = resolveAppLanguage(
             languageOverride = language?.tag,
             systemLanguageTag = activeLanguageTag,
