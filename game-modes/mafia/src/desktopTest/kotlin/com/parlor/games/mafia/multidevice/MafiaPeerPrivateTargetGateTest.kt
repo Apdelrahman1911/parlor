@@ -185,12 +185,6 @@ class MafiaPeerPrivateTargetGateTest {
             protocol = protocol,
             json = json,
         )
-        val impossible = initial.copy(
-            phase = MafiaPhase.Night(day = 1),
-            // A legal Night(1) snapshot must also expose public.day == 1 and
-            // carry the receiving player's assigned private role.
-            public = initial.public.copy(day = 0),
-        )
         val validOwnPrivate = MafiaPrivate(Role.Civilian, Team.Town)
 
         bus.fromHost(
@@ -210,8 +204,16 @@ class MafiaPeerPrivateTargetGateTest {
             ),
         )
         scope.runCurrent()
+        val acceptedPublic = bridge.controller.publicState.value.state
+        val acceptedPrivate = bridge.controller.privateStateFor(alice).value.state
         assertThat(bridge.hasAuthoritativeSnapshot.value).isTrue()
-        assertThat(bridge.controller.publicState.value.state.phase).isEqualTo(MafiaPhase.Night(1))
+        assertThat(acceptedPublic.phase).isEqualTo(MafiaPhase.Night(1))
+        assertThat(acceptedPublic.public.day).isEqualTo(1)
+
+        val impossible = acceptedPublic.copy(
+            // A legal Night(1) snapshot must also expose public.day == 1.
+            public = acceptedPublic.public.copy(day = 0),
+        )
 
         bus.fromHost(
             SendTarget.Direct(alice),
@@ -232,9 +234,8 @@ class MafiaPeerPrivateTargetGateTest {
         scope.runCurrent()
 
         assertThat(bridge.hasAuthoritativeSnapshot.value).isTrue()
-        assertThat(bridge.controller.publicState.value.state.phase).isEqualTo(MafiaPhase.Night(1))
-        assertThat(bridge.controller.privateStateFor(alice).value.state.privatePerPlayer[alice])
-            .isEqualTo(validOwnPrivate)
+        assertThat(bridge.controller.publicState.value.state).isEqualTo(acceptedPublic)
+        assertThat(bridge.controller.privateStateFor(alice).value.state).isEqualTo(acceptedPrivate)
         bridge.close()
     }
 
