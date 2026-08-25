@@ -50,6 +50,12 @@ val productionAndroidCheck = tasks.register("productionAndroidCheck") {
     )
 }
 
+val productionAndroidRuntimeCheck = tasks.register("productionAndroidRuntimeCheck") {
+    group = "verification"
+    description = "Launches the R8-shrunk release app and exercises Android runtime permissions on a managed device."
+    dependsOn(":composeApp:pixel2Api35ReleaseAndroidTest")
+}
+
 val productionAndroidSigningCheck = tasks.register("productionAndroidSigningCheck") {
     group = "verification"
     description = "Verifies protected Android signing material and builds the store bundle."

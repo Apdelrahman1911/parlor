@@ -147,6 +147,20 @@ kotlin {
             implementation(libs.koin.android)
             implementation(libs.androidx.activity.compose)
         }
+        androidInstrumentedTest.dependencies {
+            // InstrumentationTestCase is supplied by the platform's
+            // android.test.runner shared library. Compile against the matching
+            // SDK stub without adding a Maven dependency to the test APK.
+            compileOnly(
+                files(
+                    androidComponents.sdkComponents.sdkDirectory.map { sdkDirectory ->
+                        sdkDirectory.file(
+                            "platforms/android-${libs.versions.android.compile.sdk.get()}/optional/android.test.base.jar",
+                        )
+                    },
+                ),
+            )
+        }
         commonTest.dependencies {
             implementation(kotlin("test"))
             implementation(libs.kotlinx.coroutines.test)
@@ -185,6 +199,7 @@ android {
         targetSdk = libs.versions.android.target.sdk.get().toInt()
         versionCode = parlorBuildNumber
         versionName = parlorVersionName
+        testInstrumentationRunner = "android.test.InstrumentationTestRunner"
     }
 
     signingConfigs {
@@ -241,10 +256,33 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    sourceSets {
+        // KMP owns the androidInstrumentedTest hierarchy, while AGP's Java
+        // compiler reads androidTest. Point it at the shared KMP layout so the
+        // platform-only smoke test is packaged in the test APK.
+        getByName("androidTest").java.srcDir("src/androidInstrumentedTest/java")
+    }
 
     lint {
         abortOnError = true
         checkReleaseBuilds = true
+    }
+
+    // Exercise the same R8-shrunk variant that is submitted to the Store. CI
+    // supplies an ephemeral, non-production signing key only for installation
+    // on this disposable managed device; normal release builds remain unsigned.
+    testBuildType = "release"
+    testOptions {
+        managedDevices {
+            localDevices {
+                create("pixel2Api35") {
+                    device = "Pixel 2"
+                    apiLevel = 35
+                    systemImageSource = "google"
+                    require64Bit = true
+                }
+            }
+        }
     }
 
     // Case JSON lives inside the Whodunit module's Compose Multiplatform

@@ -44,9 +44,22 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          test -c /dev/kvm
+          sudo chmod 0666 /dev/kvm
+          test -r /dev/kvm
+          test -w /dev/kvm
+          managed_device_image=$(jq -r '.toolchains.android_managed_device.system_image_package' config/release-policy.json)
+          test "$managed_device_image" = "system-images;android-35;google_apis;x86_64"
           "${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager" \
             "platforms;android-36" \
-            "build-tools;36.0.0"
+            "build-tools;36.0.0" \
+            "platform-tools" \
+            "emulator" \
+            "$managed_device_image"
+          image_properties="${ANDROID_HOME}/system-images/android-35/google_apis/x86_64/source.properties"
+          test -s "$image_properties"
+          image_revision=$(sed -n 's/^Pkg.Revision=//p' "$image_properties" | tr -d '\r')
+          test "$image_revision" = "$(jq -r '.toolchains.android_managed_device.system_image_revision' config/release-policy.json)"
 
       - name: Record exact source and require a clean checkout
         shell: bash
@@ -58,6 +71,10 @@ jobs:
 
       - name: Run common, desktop, Android, static-analysis, and release gates
         run: ./gradlew productionCheck productionStaticAnalysis productionReleaseAutomationCheck allTests --dependency-verification=strict --no-daemon --stacktrace --console=plain
+
+      - name: Run release Android managed-device smoke tests
+        shell: bash
+        run: scripts/android/run_release_managed_device_smoke.sh
 
       - name: Inspect unsigned Android release artifact and merged manifest
         shell: bash
@@ -85,6 +102,8 @@ jobs:
             build/ci-evidence/
             **/build/reports/detekt/
             **/build/reports/tests/
+            **/build/reports/androidTests/managedDevice/
+            **/build/outputs/androidTest-results/managedDevice/
             **/build/reports/lint-results-*
             composeApp/build/outputs/mapping/release/
             composeApp/build/outputs/bundle/release/*.aab
