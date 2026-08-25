@@ -19,6 +19,7 @@ import com.parlor.core.result.Result
 import com.parlor.networking.protocol.AdmissionRejection
 import com.parlor.networking.protocol.CommandStatus
 import com.parlor.networking.protocol.HostMessage
+import com.parlor.networking.protocol.MAX_COMMAND_PAYLOAD_BYTES
 import com.parlor.networking.protocol.PeerMessage
 import com.parlor.networking.protocol.ProtocolVersion
 import com.parlor.networking.protocol.RoomMessage
@@ -756,6 +757,66 @@ class P2pKitRoomTransportLifecycleTest {
                 .isEqualTo(testPeerHeartbeat())
             withTimeout(2_000) { producer.await() }
             assertThat(alice.state.value).isEqualTo(ConnectionState.Connected)
+        }
+
+    @Test
+    fun collectors_drop_non_binary_frames_and_accept_followup() = runBlocking {
+        val frame = P2pMessage.Text("reserved text channel")
+
+        assertHostCollectorRejects(frame, P2pDiagnosticReason.MALFORMED)
+        assertPeerCollectorRejects(frame, P2pDiagnosticReason.MALFORMED)
+    }
+
+    @Test
+    fun collectors_drop_truncated_cbor_frames_and_accept_followup() = runBlocking {
+        val truncatedMap = P2pMessage.Binary(byteArrayOf(0xBF.toByte()))
+
+        assertHostCollectorRejects(truncatedMap, P2pDiagnosticReason.MALFORMED)
+        assertPeerCollectorRejects(truncatedMap, P2pDiagnosticReason.MALFORMED)
+    }
+
+    @Test
+    fun collectors_drop_wrong_direction_frames_and_accept_followup() = runBlocking {
+        assertHostCollectorRejects(
+            P2pMessage.Binary(codec.encode(testHostHeartbeat())),
+            P2pDiagnosticReason.WRONG_DIRECTION,
+        )
+        assertPeerCollectorRejects(
+            P2pMessage.Binary(codec.encode(testPeerHeartbeat())),
+            P2pDiagnosticReason.WRONG_DIRECTION,
+        )
+    }
+
+    @Test
+    fun collectors_drop_oversized_wire_frames_and_accept_followup() = runBlocking {
+        assertHostCollectorRejects(
+            P2pMessage.Binary(
+                ByteArray(P2pTrafficLimits.MAX_PEER_TO_HOST_FRAME_BYTES + 1),
+            ),
+            P2pDiagnosticReason.RATE_LIMIT,
+        )
+        assertPeerCollectorRejects(
+            P2pMessage.Binary(
+                ByteArray(P2pTrafficLimits.MAX_HOST_TO_PEER_FRAME_BYTES + 1),
+            ),
+            P2pDiagnosticReason.RATE_LIMIT,
+        )
+    }
+
+    @Test
+    fun host_collector_drops_decoded_command_with_oversized_payload_and_accepts_followup() =
+        runBlocking {
+            val encoded = codec.encode(
+                testClientCommand(ByteArray(MAX_COMMAND_PAYLOAD_BYTES + 1)),
+            )
+            assertThat(
+                encoded.size <= P2pTrafficLimits.MAX_PEER_TO_HOST_FRAME_BYTES,
+            ).isTrue()
+
+            assertHostCollectorRejects(
+                P2pMessage.Binary(encoded),
+                P2pDiagnosticReason.WRONG_DIRECTION,
+            )
         }
 
     @Test
@@ -4327,6 +4388,105 @@ class P2pKitRoomTransportLifecycleTest {
     }
 
     // -------------------------------------------------------------- Helpers ----
+
+    private suspend fun assertHostCollectorRejects(
+        invalidFrame: P2pMessage,
+        reason: P2pDiagnosticReason,
+    ) {
+        val kit = FakeP2pKit(P2pPeerId("host-pid"))
+        val diagnostics = RecordingP2pDiagnostics()
+        val room = newHostRoom(kit, diagnostics = diagnostics)
+        val alice = FakeP2pSession(peer("alice-pid", "Alice"))
+        admit(room, kit, alice)
+        val valid = testPeerHeartbeat()
+        val received = testScope.async { room.incoming.first() }
+        yield()
+
+        alice.incomingFlow.emit(invalidFrame)
+        awaitCondition {
+            diagnostics.hasTrafficEvent(
+                P2pDiagnosticEventName.FRAME_DROPPED,
+                P2pDiagnosticRole.HOST,
+                reason,
+            )
+        }
+        assertThat(alice.state.value).isEqualTo(ConnectionState.Connected)
+
+        alice.incomingFlow.emit(P2pMessage.Binary(codec.encode(valid)))
+        assertThat(withTimeout(2_000L) { received.await() }).isEqualTo(valid)
+
+        repeat(P2pTrafficLimits.MAX_TRAFFIC_VIOLATIONS - 1) {
+            alice.incomingFlow.emit(invalidFrame)
+        }
+        awaitCondition { alice.state.value == ConnectionState.Closed }
+        assertThat(
+            diagnostics.hasTrafficEvent(
+                P2pDiagnosticEventName.PEER_RATE_LIMITED,
+                P2pDiagnosticRole.HOST,
+                reason,
+            ),
+        ).isTrue()
+        room.leave()
+    }
+
+    private suspend fun assertPeerCollectorRejects(
+        invalidFrame: P2pMessage,
+        reason: P2pDiagnosticReason,
+    ) {
+        val kit = FakeP2pKit(P2pPeerId("peer-pid"))
+        val diagnostics = RecordingP2pDiagnostics()
+        val hostPeer = peer("host-pid", "Host Device")
+        val session = FakeP2pSession(hostPeer)
+        val room = PeerP2pRoom(
+            kit = kit,
+            session = session,
+            hostPeer = hostPeer,
+            roomCode = "ABCDEF",
+            scope = testScope,
+            codec = codec,
+            diagnostics = diagnostics,
+        )
+        val valid = testHostHeartbeat()
+        val received = testScope.async { room.incoming.first() }
+        yield()
+
+        session.incomingFlow.emit(invalidFrame)
+        awaitCondition {
+            diagnostics.hasTrafficEvent(
+                P2pDiagnosticEventName.FRAME_DROPPED,
+                P2pDiagnosticRole.PEER,
+                reason,
+            )
+        }
+        assertThat(session.state.value).isEqualTo(ConnectionState.Connected)
+
+        session.incomingFlow.emit(P2pMessage.Binary(codec.encode(valid)))
+        assertThat(withTimeout(2_000L) { received.await() }).isEqualTo(valid)
+
+        repeat(P2pTrafficLimits.MAX_TRAFFIC_VIOLATIONS - 1) {
+            session.incomingFlow.emit(invalidFrame)
+        }
+        awaitCondition { session.state.value == ConnectionState.Closed }
+        assertThat(
+            diagnostics.hasTrafficEvent(
+                P2pDiagnosticEventName.PEER_RATE_LIMITED,
+                P2pDiagnosticRole.PEER,
+                reason,
+            ),
+        ).isTrue()
+        room.leave()
+    }
+
+    private fun RecordingP2pDiagnostics.hasTrafficEvent(
+        name: P2pDiagnosticEventName,
+        role: P2pDiagnosticRole,
+        reason: P2pDiagnosticReason,
+    ): Boolean = events.any { event ->
+        event.name == name &&
+            event.role == role &&
+            event.result == P2pDiagnosticResult.REJECTED &&
+            event.reason == reason
+    }
 
     /**
      * Direct room-unit tests do not run the admission wire handshake. This
