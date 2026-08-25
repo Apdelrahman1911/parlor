@@ -132,7 +132,12 @@ class DesktopSnapshotFileSystem(
             if (
                 version != FORMAT_VERSION ||
                 ivSize != GCM_IV_BYTES ||
-                protectedBytes.size <= offset + ivSize + GCM_TAG_BYTES
+                !hasCompleteGcmPayload(
+                    recordSize = protectedBytes.size,
+                    payloadOffset = offset,
+                    nonceBytes = ivSize,
+                    tagBytes = GCM_TAG_BYTES,
+                )
             ) {
                 throw SnapshotProtectionException()
             }
@@ -142,7 +147,7 @@ class DesktopSnapshotFileSystem(
             val cipher = Cipher.getInstance(TRANSFORMATION)
             cipher.init(Cipher.DECRYPT_MODE, snapshotKey(), GCMParameterSpec(GCM_TAG_BITS, iv))
             cipher.updateAAD(aad(name))
-            return cipher.doFinal(ciphertext)
+            return enforceSnapshotPlaintextLimit(cipher.doFinal(ciphertext))
         } catch (failure: AEADBadTagException) {
             throw SnapshotProtectionException(cause = failure)
         } catch (cancelled: CancellationException) {
@@ -252,7 +257,6 @@ class DesktopSnapshotFileSystem(
         const val GCM_TAG_BYTES = 16
         const val GCM_TAG_BITS = GCM_TAG_BYTES * 8
         const val HEADER_BYTES = 2
-        const val MAX_PLAINTEXT_SNAPSHOT_BYTES = 8 * 1024 * 1024
         const val MAX_PROTECTED_SNAPSHOT_BYTES = MAX_PLAINTEXT_SNAPSHOT_BYTES + 1024
         const val FORMAT_VERSION: Byte = 1
 

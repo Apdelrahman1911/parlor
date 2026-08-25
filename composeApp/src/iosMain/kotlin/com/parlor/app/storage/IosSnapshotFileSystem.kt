@@ -291,12 +291,9 @@ internal class IosSnapshotFileSystem(
                 } finally {
                     expectedTag.fill(0)
                 }
-                iosAesCbc(kCCDecrypt, encryptionKey, iv, ciphertext).also { plaintext ->
-                    if (plaintext.size > MAX_PLAINTEXT_SNAPSHOT_BYTES) {
-                        plaintext.fill(0)
-                        throw SnapshotProtectionException()
-                    }
-                }
+                enforceSnapshotPlaintextLimit(
+                    iosAesCbc(kCCDecrypt, encryptionKey, iv, ciphertext),
+                )
             } finally {
                 encryptionKey.fill(0)
                 macKey.fill(0)
@@ -384,7 +381,6 @@ internal class IosSnapshotFileSystem(
         const val IV_BYTES = 16
         const val MAC_BYTES = 32
         const val HEADER_BYTES = 2
-        const val MAX_PLAINTEXT_SNAPSHOT_BYTES = 8 * 1024 * 1024
         const val MAX_PROTECTED_SNAPSHOT_BYTES = MAX_PLAINTEXT_SNAPSHOT_BYTES + 1024
         const val FORMAT_VERSION: Byte = 1
 
