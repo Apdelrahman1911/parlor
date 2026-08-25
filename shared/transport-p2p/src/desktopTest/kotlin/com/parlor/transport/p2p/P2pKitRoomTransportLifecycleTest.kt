@@ -3772,8 +3772,11 @@ class P2pKitRoomTransportLifecycleTest {
 
         room.appBackgrounded(1_000L)
         kit.incomingSessionsFlow.emit(lateSession)
-        awaitCondition { lateSession.closeCalls == 1 }
+        withTimeout(5.seconds) {
+            lateSession.state.first { it == ConnectionState.Closed }
+        }
 
+        assertThat(lateSession.closeCalls).isEqualTo(1)
         assertThat(lateSession.state.value).isEqualTo(ConnectionState.Closed)
         assertThat(room.pendingAdmissions.value).isEmpty()
         assertThat(room.members.value).isEmpty()

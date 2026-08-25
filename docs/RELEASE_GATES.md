@@ -20,6 +20,7 @@ remain separate evidence.
 | Unsigned Swift Release wrapper | The Release `xcodebuild` command in `IOS_SETUP.md`/`RELEASE_RUNBOOK.md` with `ARCHS=arm64`, `ONLY_ACTIVE_ARCH=YES`, and signing disabled | The arm64 simulator `.app` builds, its executable and plist/privacy inputs are inspected, and its checksum is recorded. Other Kotlin/Native architectures remain independently covered by `productionAppleCheck`; neither result is physical-device runtime evidence. |
 | Host-independent aggregate | `./gradlew productionCheck` | Desktop/common, Android unit, repository-wide Detekt/static-analysis, shell-dispatch validation, and unsigned Android release gates (including lint warning verification) pass. Apple remains a separate macOS job. |
 | Release automation security | `./gradlew productionReleaseAutomationCheck` | Candidate/provenance tampering tests, exact-tree/history tests, no-publication tests, workflow contracts, immutable Action pins, pinned ShellCheck/actionlint, and shell/YAML checks pass. |
+| Desktop host compatibility | `./gradlew productionDesktopCheck` on Linux x64, Linux arm64, macOS arm64, macOS x64, and Windows x64; the x64 macOS/Windows jobs also run `:composeApp:downloadKotlinNativeDistribution`, and Windows runs `:composeApp:processDebugResources` | Each supported host resolves and executes its real host-selected dependency graph under strict verification. Linux arm64 support is Desktop-only because Kotlin Native does not publish a Linux arm64 host distribution. |
 | Exact-candidate aggregate | Linux runs `./gradlew productionCheck allTests`; macOS runs `./gradlew productionIosSimulatorRuntimeTests productionAppleCheck`, both with strict dependency verification | Every configured automated suite and unsigned Android/Apple release gate passes at the same recorded clean Git SHA without duplicating common/desktop/Android tests on the expensive Apple runner. |
 
 The root tasks discover KMP modules through the multiplatform plugin. A newly
@@ -58,14 +59,21 @@ unit test.
 
 ## CI policy
 
-`.github/workflows/production-verification.yml` runs two required jobs:
+`.github/workflows/production-verification.yml` runs five jobs:
 
-- Linux: strict dependency verification, the root `productionCheck` and
+- Linux x64: strict dependency verification, the root `productionCheck` and
   `allTests` aggregates, Android debug/release unit tests, repository-wide
   Detekt, release compilation/R8/lint plus the enforced
   `verifyReleaseLintWarnings` contract, unsigned AAB, merged-manifest
   inspection, and artifact hashes.
-- macOS: pinned Xcode `26.3` build `17C529` and iOS SDK-floor validation,
+- Linux arm64: the real host-selected Desktop graph and tests. This job does
+  not claim Kotlin Native support.
+- macOS x64: the real host-selected Desktop graph, tests, and Kotlin Native
+  distribution download.
+- Windows x64: the real host-selected Desktop graph, tests, Kotlin Native
+  distribution download, and Android resource processing through Windows
+  `aapt2`.
+- macOS arm64: pinned Xcode `26.3` build `17C529` and iOS SDK-floor validation,
   every KMP `iosSimulatorArm64Test` through the dedicated
   `productionIosSimulatorRuntimeTests` aggregate, release framework linkage
   for all supported Apple targets (linkage-only for `iosArm64`/`iosX64` on
@@ -76,7 +84,7 @@ unit test.
 
 The workflow deliberately labels framework linkage separately from executable
 simulator runtime tests. A successful link is not reported as a runtime test.
-Both jobs record the checked-out SHA and fail if the checkout is dirty.
+Every job prints the checked-out SHA and fails if the checkout is dirty.
 
 The workflow has read-only repository permission and receives no signing or
 Store secrets on pull requests. Signed delivery and promotion use the separate

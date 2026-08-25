@@ -135,6 +135,60 @@ class ProductionVerificationWorkflowContractTest {
     }
 
     @Test
+    fun supported_desktop_hosts_execute_real_host_selected_gradle_graphs() {
+        val workflow = read(".github/workflows/production-verification.yml")
+        listOf(
+            "  desktop-linux-arm64:",
+            "  desktop-macos-x64:",
+            "  desktop-windows-x64:",
+        ).forEach { job -> assertContains(workflow, job) }
+
+        val linuxArm64Job = workflow
+            .substringAfter("  desktop-linux-arm64:")
+            .substringBefore("  desktop-macos-x64:")
+        listOf(
+            "runs-on: ubuntu-24.04-arm",
+            "test \"\$(uname -s)\" = \"Linux\"",
+            "test \"\$(uname -m)\" = \"aarch64\"",
+            "./gradlew productionDesktopCheck",
+            "--dependency-verification=strict",
+        ).forEach { contract -> assertContains(linuxArm64Job, contract) }
+        assertFalse(
+            "downloadKotlinNativeDistribution" in linuxArm64Job,
+            "Linux arm64 support is Desktop-only because Kotlin Native has no Linux arm64 host distribution",
+        )
+
+        val macosX64Job = workflow
+            .substringAfter("  desktop-macos-x64:")
+            .substringBefore("  desktop-windows-x64:")
+        listOf(
+            "runs-on: macos-15-intel",
+            "test \"\$(uname -s)\" = \"Darwin\"",
+            "test \"\$(uname -m)\" = \"x86_64\"",
+            "./gradlew productionDesktopCheck :composeApp:downloadKotlinNativeDistribution",
+            "--dependency-verification=strict",
+        ).forEach { contract -> assertContains(macosX64Job, contract) }
+
+        val windowsX64Job = workflow
+            .substringAfter("  desktop-windows-x64:")
+            .substringBefore("  ios:")
+        listOf(
+            "runs-on: windows-2025",
+            "RuntimeInformation]::OSArchitecture",
+            "Architecture]::X64",
+            ".\\gradlew.bat productionDesktopCheck",
+            ":composeApp:downloadKotlinNativeDistribution",
+            ":composeApp:processDebugResources",
+            "--dependency-verification=strict",
+        ).forEach { contract -> assertContains(windowsX64Job, contract) }
+
+        assertFalse(
+            "detachedConfiguration" in workflow,
+            "Cross-host CI must execute the real build graphs rather than detached coordinates",
+        )
+    }
+
+    @Test
     fun third_party_actions_are_pinned_to_reviewed_immutable_commits() {
         val workflow = read(".github/workflows/production-verification.yml")
         val expectedPins = listOf(

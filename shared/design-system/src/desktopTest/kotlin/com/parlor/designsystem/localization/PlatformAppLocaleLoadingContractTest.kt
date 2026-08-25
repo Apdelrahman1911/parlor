@@ -8,7 +8,7 @@ class PlatformAppLocaleLoadingContractTest {
     @Test
     fun every_platform_renders_the_loading_slot_before_its_locale_effect_applies() {
         platformActuals.forEach { relativePath ->
-            val source = repositoryRoot().resolve(relativePath).readText()
+            val source = repositoryRoot().resolve(relativePath).readText().replace("\r\n", "\n")
 
             assertTrue("loading: @Composable () -> Unit" in source, relativePath)
             assertTrue("val activeTag = appliedLanguageTag ?: run {" in source, relativePath)
