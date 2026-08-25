@@ -124,6 +124,29 @@ class ProductionUiAccessibilityContractTest {
     }
 
     @Test
+    fun shell_done_actions_dismiss_the_software_keyboard() {
+        val textField = read(
+            "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/" +
+                "ParlorTextField.kt",
+        )
+        assertContains(textField, "keyboardActions: KeyboardActions")
+        assertContains(textField, "keyboardActions = keyboardActions")
+
+        listOf(
+            "composeApp/src/commonMain/kotlin/com/parlor/app/shell/multiplayer/" +
+                "JoinPromptScreen.kt",
+            "composeApp/src/commonMain/kotlin/com/parlor/app/shell/multiplayer/" +
+                "NameInputScreen.kt",
+        ).forEach { path ->
+            val source = read(path)
+            assertContains(source, "keyboardActions = KeyboardActions(")
+            assertContains(source, "onDone = {")
+            assertContains(source, "focusManager.clearFocus()")
+            assertContains(source, "keyboardController?.hide()")
+        }
+    }
+
+    @Test
     fun fullscreen_recovery_and_confirmation_states_hide_or_replace_interactive_content() {
         val whodunitPeer = read(
             "composeApp/src/commonMain/kotlin/com/parlor/app/shell/game/whodunit/" +

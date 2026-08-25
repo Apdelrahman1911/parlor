@@ -1,6 +1,7 @@
 package com.parlor.designsystem.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -26,6 +27,7 @@ fun ParlorTextField(
     modifier: Modifier = Modifier,
     singleLine: Boolean = true,
     imeAction: ImeAction = ImeAction.Done,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
     capitalization: KeyboardCapitalization = KeyboardCapitalization.Sentences,
 ) {
     val colors = ParlorTheme.colors
@@ -39,6 +41,7 @@ fun ParlorTextField(
             capitalization = capitalization,
             imeAction = imeAction,
         ),
+        keyboardActions = keyboardActions,
         colors = TextFieldDefaults.colors(
             focusedContainerColor = colors.surfaceElevated,
             unfocusedContainerColor = colors.surfaceElevated,

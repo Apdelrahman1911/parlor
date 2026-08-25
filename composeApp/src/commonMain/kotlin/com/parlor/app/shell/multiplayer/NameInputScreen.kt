@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.ui.Alignment
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -18,6 +19,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import com.parlor.app.resources.Res
 import com.parlor.app.resources.name_back
 import com.parlor.app.resources.name_back_description
@@ -62,6 +65,8 @@ fun NameInputScreen(
     modifier: Modifier = Modifier,
 ) {
     var name by remember { mutableStateOf(initial) }
+    val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
     val sanitized = normalizedMultiplayerDisplayName(name)
 
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
@@ -94,6 +99,12 @@ fun NameInputScreen(
                         name = RoomInputPolicy.sanitizeDisplayNameInput(input)
                     },
                     label = stringResource(Res.string.name_field),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            focusManager.clearFocus()
+                            keyboardController?.hide()
+                        },
+                    ),
                 )
             }
 
