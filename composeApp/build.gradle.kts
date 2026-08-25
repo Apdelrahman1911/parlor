@@ -313,8 +313,12 @@ val verifyReleaseLintWarnings by tasks.registering {
             for (index in 0 until issues.length) {
                 val issue = issues.item(index)
                 val id = issue.attributes.getNamedItem("id")?.nodeValue.orEmpty()
-                val message = issue.attributes.getNamedItem("message")?.nodeValue.orEmpty()
-                    .substringBefore(" is available:")
+                val rawMessage = issue.attributes.getNamedItem("message")?.nodeValue.orEmpty()
+                val message = if (rawMessage.startsWith("Newer version of lint available: ")) {
+                    "Newer version of lint available"
+                } else {
+                    rawMessage.substringBefore(" is available:")
+                }
                 val location = issue.childNodes.let { children ->
                     (0 until children.length)
                         .map(children::item)

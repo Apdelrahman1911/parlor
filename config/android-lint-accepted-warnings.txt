@@ -1,13 +1,14 @@
 # Reviewed Android release-lint advisory inventory.
 #
 # Format: lint-id|repository-relative source path|stable message prefix
-# The verifier strips only the volatile " is available: <latest>" suffix.
+# The verifier strips the volatile latest-version suffix from both dependency
+# advisory message forms emitted by Android lint.
 # Duplicate lines are significant and therefore must be retained.
 AndroidGradlePluginVersion|gradle/libs.versions.toml|A newer version of com.android.application than 8.13.2
 AndroidGradlePluginVersion|gradle/libs.versions.toml|A newer version of com.android.library than 8.13.2
 AndroidGradlePluginVersion|gradle/libs.versions.toml|A newer version of com.android.tools.build:gradle than 8.13.2
 AndroidGradlePluginVersion|gradle/wrapper/gradle-wrapper.properties|A newer version of Gradle than 8.13
-GradleDependency|gradle.properties|Newer version of lint available: 9.4.0-alpha08
+GradleDependency|gradle.properties|Newer version of lint available
 GradleDependency|gradle/libs.versions.toml|A newer version of androidx.activity:activity-compose than 1.9.3
 NewerVersionAvailable|gradle/libs.versions.toml|A newer version of app.cash.turbine:turbine than 1.2.0
 NewerVersionAvailable|gradle/libs.versions.toml|A newer version of com.lemonappdev:konsist than 0.16.1
