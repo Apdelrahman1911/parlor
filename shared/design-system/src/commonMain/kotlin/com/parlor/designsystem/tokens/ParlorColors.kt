@@ -84,7 +84,7 @@ val CozyNoirPalette = ParlorColors(
     surfaceInset = Color(0xFF050507),
     surfaceHero = Color(0xFF1A1A23),
 
-    accentEmber = Color(0xFF7C5CFF),
+    accentEmber = Color(0xFF8C6EFF),
     accentEmberGlow = Color(0xFF9477FF),
     accentEmberDeep = Color(0xFF5A3EE0),
     accentBrass = Color(0xFF8A8A92),
@@ -92,8 +92,11 @@ val CozyNoirPalette = ParlorColors(
 
     textPrimary = Color(0xFFFAFAFA),
     textSecondary = Color(0xFFB6B6BE),
-    textTertiary = Color(0xFF7A7A82),
-    textOnAccent = Color(0xFFFFFFFF),
+    textTertiary = Color(0xFF86868E),
+    // Dark-palette accents are bright enough that black text clears AA,
+    // including the primary button's pressed tint. White does not clear AA
+    // on danger and brass surfaces.
+    textOnAccent = Color(0xFF000000),
     textNarration = Color(0xFFB6B6BE),
 
     semanticSuccess = Color(0xFF3FB66E),
@@ -126,17 +129,17 @@ val LightCozyNoirPalette = ParlorColors(
     accentEmber = Color(0xFF5A3EE0),
     accentEmberGlow = Color(0xFF6F4BE8),
     accentEmberDeep = Color(0xFF3F25B5),
-    accentBrass = Color(0xFF6E6E78),
+    accentBrass = Color(0xFF686870),
     accentParchment = Color(0xFF0B0B0F),
 
     textPrimary = Color(0xFF0B0B0F),
     textSecondary = Color(0xFF4A4A52),
-    textTertiary = Color(0xFF8A8A92),
+    textTertiary = Color(0xFF686870),
     textOnAccent = Color(0xFFFFFFFF),
     textNarration = Color(0xFF4A4A52),
 
-    semanticSuccess = Color(0xFF1E8E4F),
-    semanticDanger = Color(0xFFD93022),
+    semanticSuccess = Color(0xFF177940),
+    semanticDanger = Color(0xFFC82B1E),
     semanticMuted = Color(0xFFC8C8D0),
 
     borderSubtle = Color(0xFFE2E2E8),

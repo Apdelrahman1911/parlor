@@ -2,8 +2,8 @@ package com.parlor.designsystem.tokens
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import assertk.assertions.isFalse
 import assertk.assertions.isTrue
+import kotlin.math.pow
 import kotlin.test.Test
 
 /**
@@ -29,9 +29,6 @@ class PaletteCoverageTest {
     /** Fields that are intentionally identical across light and dark. */
     private val expectedIdentical = setOf(
         "transparent",
-        // textOnAccent: both palettes use a dark indigo accent, so white text
-        // works on top of the accent in both modes.
-        "textOnAccent",
         "coverScreen",
         "coverScreenTextPrimary",
         "coverScreenTextSecondary",
@@ -103,8 +100,38 @@ class PaletteCoverageTest {
         // Accent text or icons on canvas should clear AA (4.5:1) for body.
         val darkRatio = contrastRatio(dark.accentEmber, dark.surfaceCanvas)
         val lightRatio = contrastRatio(light.accentEmber, light.surfaceCanvas)
-        assertThat(darkRatio >= 3f).isTrue()  // 3:1 minimum for large UI
-        assertThat(lightRatio >= 3f).isTrue()
+        assertThat(darkRatio >= AA_NORMAL_TEXT_MINIMUM).isTrue()
+        assertThat(lightRatio >= AA_NORMAL_TEXT_MINIMUM).isTrue()
+    }
+
+    @Test
+    fun active_normal_text_pairs_used_by_design_system_components_meet_AA() {
+        val violations = mutableListOf<String>()
+        listOf("dark" to dark, "light" to light).forEach { (name, palette) ->
+            val activePairs = listOf(
+                "primary button" to (palette.textOnAccent to palette.accentEmber),
+                "pressed primary button" to (
+                    palette.textOnAccent to palette.accentEmberDeep
+                        .copy(alpha = PRIMARY_BUTTON_PRESSED_TINT_ALPHA)
+                        .compositedOver(palette.accentEmber)
+                ),
+                "destructive button" to (palette.textOnAccent to palette.semanticDanger),
+                "offline banner" to (palette.textOnAccent to palette.accentBrass),
+                "inactive bottom tab" to (palette.textTertiary to palette.surfaceCanvas),
+                "info toast" to (palette.accentBrass to palette.surfaceElevated),
+                "success toast" to (palette.semanticSuccess to palette.surfaceElevated),
+                "warning toast" to (palette.accentEmber to palette.surfaceElevated),
+                "danger toast" to (palette.semanticDanger to palette.surfaceElevated),
+            )
+            activePairs.forEach { (callSite, colors) ->
+                val ratio = contrastRatio(colors.first, colors.second)
+                if (ratio < AA_NORMAL_TEXT_MINIMUM) {
+                    violations += "$name $callSite has $ratio:1 contrast"
+                }
+            }
+        }
+
+        assertThat(violations.joinToString("; ")).isEqualTo("")
     }
 
     @Test
@@ -114,9 +141,9 @@ class PaletteCoverageTest {
     }
 
     private fun luminance(c: androidx.compose.ui.graphics.Color): Float {
-        fun lin(v: Float) = if (v <= 0.03928f) v / 12.92f else {
+        fun lin(v: Float) = if (v <= 0.04045f) v / 12.92f else {
             val x = (v + 0.055f) / 1.055f
-            x * x  // approximation of pow(x, 2.4)
+            x.toDouble().pow(2.4).toFloat()
         }
         return 0.2126f * lin(c.red) + 0.7152f * lin(c.green) + 0.0722f * lin(c.blue)
     }
@@ -128,5 +155,20 @@ class PaletteCoverageTest {
         val lFg = luminance(fg) + 0.05f
         val lBg = luminance(bg) + 0.05f
         return if (lFg > lBg) lFg / lBg else lBg / lFg
+    }
+
+    /** Returns the opaque color produced by drawing this color over [background]. */
+    private fun androidx.compose.ui.graphics.Color.compositedOver(
+        background: androidx.compose.ui.graphics.Color,
+    ): androidx.compose.ui.graphics.Color = androidx.compose.ui.graphics.Color(
+        red = red * alpha + background.red * (1f - alpha),
+        green = green * alpha + background.green * (1f - alpha),
+        blue = blue * alpha + background.blue * (1f - alpha),
+        alpha = 1f,
+    )
+
+    private companion object {
+        const val AA_NORMAL_TEXT_MINIMUM = 4.5f
+        const val PRIMARY_BUTTON_PRESSED_TINT_ALPHA = 0.35f
     }
 }
