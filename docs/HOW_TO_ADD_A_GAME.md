@@ -21,8 +21,7 @@ game-modes/<game-id>/
 ├── protocol/                  # game payload codecs/version, not transport
 ├── ui/                        # screens and SessionController-facing flows
 ├── di/<Game>DiModule.kt
-├── <Game>Definition.kt
-└── <Game>NavGraph.kt
+└── <Game>Definition.kt
 ```
 
 The domain package remains pure Kotlin. It may depend on `:shared:core` and
@@ -39,17 +38,22 @@ The domain package remains pure Kotlin. It may depend on `:shared:core` and
    content, lobby, and resume routes.
 4. Implement a pure reducer, a projection policy for public/private/host-only
    state, and a versioned snapshot codec.
-5. Implement `ModuleNavGraph` with the same `GameId`.
-6. Export one Koin module containing the definition, graph, and game-local
-   dependencies.
-7. Add that Koin module and its binding at the app composition root. The
-   binding supplies the catalog card, setup/lobby route, local snapshot/resume
-   route, and any game-specific multiplayer start flow. The root registry and
-   router remain game-id neutral; adding a game-specific `when` to lobby,
-   transport, protocol routing, or shared session code is not.
+5. Implement `<Game>GameShellBinding` in
+   `composeApp/src/commonMain/kotlin/com/parlor/app/shell/game/` as a
+   `GameShellBinding`. Its `definition` must expose the same stable `GameId`;
+   it supplies the catalog card, setup/lobby route, local snapshot/resume
+   route, and any game-specific multiplayer start flow. The binding owns the
+   game's Compose content; it is the shell adapter, not a navigation graph.
+6. Export one Koin module containing the definition and game-local
+   dependencies. Keep the shell binding in the app-shell module so game
+   modules remain independent of app navigation and transport wiring.
+7. Add that Koin module and binding at the app composition root. Register the
+   binding in `DefaultGameShellRegistry`; the root `GameShellRouter` remains
+   game-id neutral. Adding a game-specific `when` to lobby, transport,
+   protocol routing, or shared session code is not allowed.
 
-`DefaultGameRegistry` and `DefaultNavGraphRegistry` fail fast on duplicate game
-IDs. A duplicate must therefore fail at startup or in tests rather than
+`DefaultGameRegistry` and `DefaultGameShellRegistry` fail fast on duplicate
+game IDs. A duplicate must therefore fail at startup or in tests rather than
 silently routing to whichever module was registered last.
 
 ## Multiplayer boundary
@@ -89,7 +93,7 @@ round-trip, local resume, and owned host/peer route restoration without a
 central game branch or networking-core change:
 
 ```bash
-./gradlew :shared:engine-testing:desktopTest
+./gradlew :composeApp:desktopTest
 ```
 
 ## Shell boundary

@@ -1,4 +1,4 @@
-# ADR-0001: Game modules register definitions and navigation
+# ADR-0001: Game modules register definitions and shell bindings
 
 - Status: Accepted
 - Date: 2026-07-28
@@ -12,15 +12,17 @@ grow a central game-specific dispatch statement.
 
 ## Decision
 
-Each game is a sibling Gradle module and contributes two stable descriptors:
+Each game is a sibling Gradle module and contributes a stable definition. The
+app composition root supplies one shell binding for each installed game:
 
 - `GameDefinition<State, Action, Event>` for metadata, modes, initialization,
   reducer, projections, and snapshots; and
-- `ModuleNavGraph` for its shell entry route.
+- `GameShellBinding` for catalog presentation, setup/lobby/resume entry points,
+  and the game's Compose content.
 
-Both use the same stable `GameId`. The app composition root assembles the
-installed set. Registries are immutable after startup and reject duplicate
-IDs.
+The binding's `definition` and all shell launches use the same stable `GameId`.
+The app composition root assembles the installed set. `DefaultGameRegistry` and
+`DefaultGameShellRegistry` are immutable after startup and reject duplicate IDs.
 
 Game UI depends on `SessionController`. Game protocol adapters depend on the
 transport-independent multiplayer contracts. Game modules never import
@@ -43,5 +45,8 @@ protocol envelope's game ID and version.
 
 `GameRegistryExtensibilityTest` registers an existing catalog sentinel and the
 non-shipping round-robin fixture, resolves the second definition, and exercises
-its reducer to completion. `NavGraphRegistryTest` proves lookup is descriptor
-driven. Both tests pin duplicate-ID rejection.
+its reducer to completion. `GameShellRegistryExtensibilityTest` proves a third
+binding reaches the catalog and router and rejects duplicate shell IDs.
+`GameShellRegistryCompositionTest` proves the resolved binding's Compose content
+receives the typed launch. These tests keep registry lookup descriptor-driven
+and pin duplicate-ID rejection.

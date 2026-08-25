@@ -56,6 +56,21 @@ tasks.named("desktopTest") {
         rootProject.fileTree("shared/networking-testing/src/commonMain") {
             include("**/*.kt")
         },
+        rootProject.fileTree("shared/engine/src/commonMain") {
+            include("**/*.kt")
+        },
+        rootProject.fileTree("shared/engine-testing/src/commonTest") {
+            include("**/*.kt")
+        },
+        rootProject.fileTree("composeApp/src/commonMain/kotlin/com/parlor/app/shell/game") {
+            include("**/*.kt")
+        },
+        rootProject.fileTree("composeApp/src/commonTest/kotlin/com/parlor/app/shell/game") {
+            include("**/*.kt")
+        },
+        rootProject.fileTree("composeApp/src/desktopTest/kotlin/com/parlor/app/shell/game") {
+            include("**/*.kt")
+        },
         rootProject.file("gradle/libs.versions.toml"),
         rootProject.file("gradle/wrapper/gradle-wrapper.properties"),
         rootProject.file("gradle/verification-metadata.xml"),
