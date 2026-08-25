@@ -120,7 +120,8 @@ val productionAppleStaticAnalysis = tasks.register("productionAppleStaticAnalysi
 // use, while automation and release evidence can invoke an unambiguous gate.
 val productionStaticAnalysis = tasks.register("productionStaticAnalysis") {
     group = "verification"
-    description = "Runs the complete repository-wide production static-analysis policy."
+    description =
+        "Runs the host-independent production static-analysis policy; run productionAppleStaticAnalysis on macOS for iOS source sets."
     dependsOn(staticAnalysis, typeAwareStaticAnalysis)
 }
 
