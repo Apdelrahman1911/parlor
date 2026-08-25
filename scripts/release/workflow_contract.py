@@ -74,6 +74,21 @@ def verify_common(name: str, text: str) -> None:
         fail(f"{name}: missing least-privilege baseline permissions")
 
 
+def verify_android_runtime_smoke(name: str, text: str) -> None:
+    required = (
+        "scripts/android/run_release_managed_device_smoke.sh",
+        "system-images;android-35;google_apis;x86_64",
+        "test -c /dev/kvm",
+        "sudo chmod 0666 /dev/kvm",
+        ".toolchains.android_managed_device.system_image_revision",
+        "**/build/reports/androidTests/managedDevice/",
+        "**/build/outputs/androidTest-results/managedDevice/",
+    )
+    for token in required:
+        if token not in text:
+            fail(f"{name}: release managed-device smoke gate is missing {token!r}")
+
+
 def verify_validation(text: str) -> None:
     if "secrets." in text:
         fail("main/PR validation workflow must not reference secrets")
@@ -81,6 +96,7 @@ def verify_validation(text: str) -> None:
         fail("validation workflow must qualify all protected branches")
     if "productionReleaseAutomationCheck" not in text:
         fail("validation workflow does not enforce release-system tests")
+    verify_android_runtime_smoke("production-verification.yml", text)
     apple_test_step = text.split(
         "- name: Run iOS simulator tests, Apple static analysis, and release linkage gates",
         1,
@@ -219,6 +235,7 @@ def verify_candidate(text: str) -> None:
         fail("candidate claim is not protected by the testing-candidate environment")
     if "secrets." in preflight:
         fail("candidate control/preflight job must not receive or reference Store secrets")
+    verify_android_runtime_smoke("testing-candidate.yml preflight", preflight)
     if "candidate_sha" not in text or "^[0-9a-f]{40}$" not in text:
         fail("candidate workflow does not require an exact full commit SHA")
     if "testing-android" not in text or "testing-ios" not in text:
@@ -318,6 +335,17 @@ def verify_policy() -> None:
         fail("release policy has an invalid Android Store identity")
     if not apple_identity_pattern.fullmatch(str(ios["store_bundle_id"])):
         fail("release policy has an invalid iOS Store identity")
+    managed_device = policy.get("toolchains", {}).get("android_managed_device")
+    expected_managed_device = {
+        "device": "Pixel 2",
+        "api_level": 35,
+        "system_image_source": "google",
+        "system_image_package": "system-images;android-35;google_apis;x86_64",
+        "system_image_revision": "9",
+        "abi": "x86_64",
+    }
+    if managed_device != expected_managed_device:
+        fail("release policy does not pin the reviewed Android managed device")
     if android["debug_application_id"] == android["store_application_id"]:
         fail("Android Debug identity is not isolated")
     if ios["debug_bundle_id"] == ios["store_bundle_id"]:
@@ -513,10 +541,42 @@ def verify_signing_scripts() -> None:
         fail("Apple upload can retain its raw response after completion")
 
 
+def verify_android_runtime_script() -> None:
+    script = (ROOT / "scripts" / "android" / "run_release_managed_device_smoke.sh").read_text(
+        encoding="utf-8"
+    )
+    required = (
+        "productionAndroidRuntimeCheck",
+        "--dependency-verification=strict",
+        "--no-daemon",
+        "--max-workers=2",
+        "android.injected.signing.store.file",
+        "android.injected.signing.store.password",
+        "android.injected.signing.key.alias",
+        "android.injected.signing.key.password",
+        "trap 'cleanup $?' EXIT",
+        "trap 'exit 130' INT",
+        "trap 'exit 143' TERM",
+        '"$repo_root/gradlew" --stop',
+    )
+    for token in required:
+        if token not in script:
+            fail(f"Android managed-device runner is missing {token!r}")
+    for production_secret in (
+        "PARLOR_ANDROID_KEYSTORE_PATH",
+        "PARLOR_ANDROID_KEYSTORE_PASSWORD",
+        "PARLOR_ANDROID_KEY_ALIAS",
+        "PARLOR_ANDROID_KEY_PASSWORD",
+    ):
+        if production_secret in script:
+            fail("Android managed-device runner must not consume production signing material")
+
+
 def main() -> int:
     files = load_files()
     verify_policy()
     verify_signing_scripts()
+    verify_android_runtime_script()
     for name, text in files.items():
         verify_common(name, text)
     verify_validation(files["production-verification.yml"])

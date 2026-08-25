@@ -180,6 +180,11 @@ class ProductionVerificationWorkflowContractTest {
             sha256 = "de23b114b3e4119a8fe6eb17bed5a3852816698bace67071579d6d927ebb080a",
         )
         verifyComponent(
+            componentMarker = "<component group=\"org.junit\" name=\"junit-bom\" version=\"5.9.2\">",
+            artifactName = "junit-bom-5.9.2.module",
+            sha256 = "ab137ba5a8e32c9b066bf9126a1c76dd5614b724ba5c0b02549772b5e9f4cf1f",
+        )
+        verifyComponent(
             componentMarker =
                 "<component group=\"org.junit\" name=\"junit-bom\" version=\"5.11.0-M2\">",
             artifactName = "junit-bom-5.11.0-M2.module",

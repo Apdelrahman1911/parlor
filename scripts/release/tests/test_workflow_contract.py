@@ -53,6 +53,37 @@ class WorkflowContractTest(unittest.TestCase):
                 workflow.replace("Retain Android dependency and deep-validation evidence", "Evidence removed", 1)
             )
 
+    def test_validation_requires_release_managed_device_runtime_gate(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(
+            encoding="utf-8"
+        )
+        with self.assertRaisesRegex(RuntimeError, "managed-device smoke gate"):
+            workflow_contract.verify_validation(
+                workflow.replace("scripts/android/run_release_managed_device_smoke.sh", "smoke-removed", 1)
+            )
+
+    def test_candidate_preflight_requires_reviewed_managed_device_image(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/testing-candidate.yml").read_text(
+            encoding="utf-8"
+        )
+        with self.assertRaisesRegex(RuntimeError, "managed-device smoke gate"):
+            workflow_contract.verify_candidate(
+                workflow.replace("system-images;android-35;google_apis;x86_64", "unreviewed-image", 1)
+            )
+
+    def test_managed_device_runner_cannot_use_production_signing_material(self) -> None:
+        script_path = (
+            workflow_contract.ROOT / "scripts/android/run_release_managed_device_smoke.sh"
+        )
+        original = script_path.read_text(encoding="utf-8")
+        with patch.object(
+            Path,
+            "read_text",
+            return_value=original + "\nPARLOR_ANDROID_KEYSTORE_PATH=forbidden\n",
+        ):
+            with self.assertRaisesRegex(RuntimeError, "production signing material"):
+                workflow_contract.verify_android_runtime_script()
+
     def test_candidate_build_number_claim_cannot_be_removed(self) -> None:
         workflow = (workflow_contract.ROOT / ".github/workflows/testing-candidate.yml").read_text(
             encoding="utf-8"
