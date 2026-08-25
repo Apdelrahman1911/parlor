@@ -39,9 +39,11 @@ import kotlin.test.assertFails
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.encodeToJsonElement
+import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import kotlin.time.Instant
@@ -882,6 +884,36 @@ class WhodunitSnapshotValidationTest {
             valid,
             case = validatedCase(),
         )
+    }
+
+    @Test
+    fun snapshotDecodeAcceptsStructurallyValidButCaseInconsistentClueUntilCaseBinding() {
+        val valid = stateWithFirstClue()
+        val envelope = json
+            .parseToJsonElement(codec.encode(valid).decodeToString())
+            .jsonObject
+        val state = envelope.getValue("state").jsonObject
+        val public = state.getValue("public").jsonObject
+        val clues = public.getValue("revealedClues").jsonArray
+        val changedClue = JsonObject(
+            clues.single().jsonObject + ("text" to JsonPrimitive("Arbitrary text")),
+        )
+        val changedPublic = JsonObject(
+            public + ("revealedClues" to JsonArray(listOf(changedClue))),
+        )
+        val changedEnvelope = JsonObject(
+            envelope + ("state" to JsonObject(state + ("public" to changedPublic))),
+        )
+
+        val decoded = codec.decode(changedEnvelope.toString().encodeToByteArray())
+
+        assertEquals("Arbitrary text", decoded.public.revealedClues.single().text)
+        assertFailsWith<IllegalArgumentException> {
+            WhodunitStateValidator.requireValidForCase(
+                decoded,
+                case = validatedCase(),
+            )
+        }
     }
 
     @Test

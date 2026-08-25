@@ -19,7 +19,9 @@ import com.parlor.games.whodunit.domain.rules.WhodunitRules
  * types. It does not prove that identities, roles, votes, timers, or phases
  * describe a state the reducer could ever produce. Restoring an impossible
  * shape can leak the wrong dossier or strand every player, so the snapshot
- * codec runs this validator before accepting or emitting state.
+ * codec runs this structural validator before accepting or emitting state.
+ * Case identity, authored character references, and deterministic clue
+ * history require [requireValidForCase] after the expected case is loaded.
  */
 internal object WhodunitStateValidator {
     fun requireValid(state: WhodunitState) {

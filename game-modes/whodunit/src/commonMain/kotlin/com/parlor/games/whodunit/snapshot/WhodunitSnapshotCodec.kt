@@ -14,14 +14,22 @@ import kotlinx.serialization.json.jsonObject
  * kotlinx.serialization-based codec for [WhodunitState]. The payload format is
  * game-owned, so adding fields to this state does not silently redefine the
  * engine's generic snapshot envelope.
+ *
+ * Decoding enforces the state's structural invariants only. A codec does not
+ * have the loaded case payload needed to bind case ids, character references,
+ * or clue history, so callers must run
+ * [WhodunitStateValidator.requireValidForCase] before a restored state reaches
+ * a reducer.
  */
 class WhodunitSnapshotCodec(
     json: Json,
 ) : SnapshotCodec<WhodunitState> {
 
     /**
-     * Snapshot decoding is a persistence trust boundary. A caller's
-     * permissive application Json configuration must not weaken it.
+     * Snapshot decoding is the structural persistence trust boundary. A
+     * caller's permissive application Json configuration must not weaken it.
+     * Case-bound validation is a separate gate once the expected case has been
+     * loaded; see [WhodunitStateValidator.requireValidForCase].
      */
     private val strictJson = Json(json) {
         ignoreUnknownKeys = false
