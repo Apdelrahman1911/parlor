@@ -4,8 +4,8 @@ import com.parlor.core.versioning.SemVer
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.descriptors.PrimitiveKind
-import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.builtins.ListSerializer
+import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
@@ -61,11 +61,8 @@ data class IntRangePair(val min: Int, val max: Int) {
     }
 
     object Serializer : KSerializer<IntRangePair> {
-        // The wire format is a JSON array `[min, max]`. Using a primitive
-        // descriptor keeps non-JSON formats from trying to introspect a fake
-        // class shape — and this type is JSON-only by design.
         override val descriptor: SerialDescriptor =
-            PrimitiveSerialDescriptor("IntRangePair", PrimitiveKind.STRING)
+            ListSerializer(Int.serializer()).descriptor
 
         override fun serialize(encoder: Encoder, value: IntRangePair) {
             val jsonEncoder = encoder as? JsonEncoder
