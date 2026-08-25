@@ -35,6 +35,8 @@ import com.parlor.session.multidevice.MultiplayerSessionRole
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
+internal val SHIPPED_WHODUNIT_PLAYER_COUNTS: IntRange = 6..6
+
 internal class WhodunitGameShellBinding(
     private val whodunitDefinition: WhodunitDefinition,
 ) : GameShellBinding {
@@ -49,7 +51,7 @@ internal class WhodunitGameShellBinding(
     override val multiplayerContract = GameShellMultiplayerContract(
         gameId = WhodunitIds.GameId,
         gameVersion = WhodunitHostRoomBridge.GAME_VERSION,
-        supportedPlayerCounts = whodunitDefinition.supportedPlayerCounts,
+        supportedPlayerCounts = SHIPPED_WHODUNIT_PLAYER_COUNTS,
     )
 
     @Composable
@@ -72,7 +74,7 @@ internal class WhodunitGameShellBinding(
         WhodunitShellContent(
             launch = launch,
             capabilities = capabilities,
-            supportedPlayerCounts = definition.supportedPlayerCounts,
+            supportedPlayerCounts = SHIPPED_WHODUNIT_PLAYER_COUNTS,
             onExit = onExit,
             backRequest = backRequest,
             modifier = modifier,
