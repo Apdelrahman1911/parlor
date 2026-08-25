@@ -175,6 +175,8 @@ class ProductionUiAccessibilityContractTest {
 
         assertContains(whodunitPeer, "if (hostLost) Modifier.clearAndSetSemantics { }")
         assertContains(mafiaPeer, "if (hostLost) Modifier.clearAndSetSemantics { }")
+        assertContains(whodunitPeer, ".focusProperties { canFocus = !hostLost }")
+        assertContains(mafiaPeer, ".focusProperties { canFocus = !hostLost }")
         assertContains(whodunitPeer, "onHostLostChanged = { hostLost = it }")
         assertContains(mafiaPeer, "onHostLostChanged = { hostLost = it }")
         assertContains(whodunitHost, "when (val gate = startGate)")

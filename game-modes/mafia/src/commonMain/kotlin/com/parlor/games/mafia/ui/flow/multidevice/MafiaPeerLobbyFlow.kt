@@ -25,6 +25,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.style.TextAlign
 import com.parlor.core.result.Result
@@ -284,6 +285,7 @@ fun MafiaPeerLobbyFlow(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
+                    .focusProperties { canFocus = !hostLost }
                     .then(if (hostLost) Modifier.clearAndSetSemantics { } else Modifier),
             ) {
                 Column(modifier = Modifier.fillMaxSize()) {
