@@ -170,7 +170,13 @@ internal class IosSnapshotFileSystem(
 
         val protectedBytes = readBytes(path, MAX_PROTECTED_SNAPSHOT_BYTES)
         return when {
-            protectedBytes.hasMagic() -> decrypt(name, protectedBytes).also {
+            protectedBytes.hasMagic() -> try {
+                decrypt(name, protectedBytes)
+            } finally {
+                // A protected record takes precedence over an old Documents
+                // copy even when it is unreadable (for example after key
+                // loss). Keeping that plaintext copy would leave it backup
+                // visible indefinitely.
                 deleteLegacy(name)
             }
             protectedBytes.looksLikeLegacyJson() -> {
