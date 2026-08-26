@@ -108,6 +108,112 @@ jobs:
             composeApp/build/outputs/mapping/release/
             composeApp/build/outputs/bundle/release/*.aab
 
+  desktop-linux-arm64:
+    name: Desktop strict verification (Linux arm64)
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95 # v5.6.0
+        with:
+          distribution: temurin
+          java-version: "21"
+          check-latest: false
+
+      - name: Require the Linux arm64 host
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(uname -s)" = "Linux"
+          test "$(uname -m)" = "aarch64"
+          git rev-parse HEAD
+          test -z "$(git status --porcelain)"
+
+      - name: Resolve and test the supported Linux arm64 desktop graph
+        shell: bash
+        run: ./gradlew productionDesktopCheck --dependency-verification=strict --no-daemon --stacktrace --console=plain
+
+  desktop-macos-x64:
+    name: Desktop and Kotlin Native strict verification (macOS x64)
+    runs-on: macos-15-intel
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95 # v5.6.0
+        with:
+          distribution: temurin
+          java-version: "21"
+          check-latest: false
+
+      - name: Require the macOS x64 host
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(uname -s)" = "Darwin"
+          test "$(uname -m)" = "x86_64"
+          git rev-parse HEAD
+          test -z "$(git status --porcelain)"
+
+      - name: Resolve and test the macOS x64 host-selected graphs
+        shell: bash
+        run: ./gradlew productionDesktopCheck :composeApp:downloadKotlinNativeDistribution --dependency-verification=strict --no-daemon --stacktrace --console=plain
+
+  desktop-windows-x64:
+    name: Desktop, Kotlin Native, and Android resources strict verification (Windows x64)
+    runs-on: windows-2025
+    timeout-minutes: 60
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95 # v5.6.0
+        with:
+          distribution: temurin
+          java-version: "21"
+          check-latest: false
+
+      - name: Require the Windows x64 host
+        shell: pwsh
+        run: |
+          if (-not $IsWindows) { throw "Expected a Windows runner" }
+          if ([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture -ne [System.Runtime.InteropServices.Architecture]::X64) {
+            throw "Expected an x64 runner"
+          }
+          git rev-parse HEAD
+          if (git status --porcelain) { throw "Checkout is not clean" }
+
+      - name: Install pinned Android SDK packages
+        shell: pwsh
+        run: |
+          & "$env:ANDROID_HOME\cmdline-tools\latest\bin\sdkmanager.bat" `
+            "platforms;android-36" `
+            "build-tools;36.0.0" `
+            "platform-tools"
+          if ($LASTEXITCODE -ne 0) { throw "sdkmanager failed with exit code $LASTEXITCODE" }
+
+      - name: Resolve and test the Windows x64 host-selected graphs
+        shell: pwsh
+        run: .\gradlew.bat productionDesktopCheck :composeApp:downloadKotlinNativeDistribution :composeApp:processDebugResources --dependency-verification=strict --no-daemon --stacktrace --console=plain
+
   ios:
     name: iOS tests, release frameworks, and Swift wrapper
     runs-on: macos-15

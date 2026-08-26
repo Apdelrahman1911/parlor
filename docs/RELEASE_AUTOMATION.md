@@ -20,7 +20,7 @@ and deterministic-test target and has no publishing workflow.
 | Apple Store toolchain | Candidate/CI policy pins Xcode `26.3` build `17C529`, physical iOS SDK major `26` or newer, and deployment target `16.0` | Confirm the hosted `macos-15` image still contains that exact path/build before each candidate; a toolchain change requires review. |
 | Existing Store automation | None existed before this release system | Store API access and environments must be configured. |
 | Google external track | Not discoverable from the repository | Set the exact existing closed or open track; do not invent one. |
-| GitHub protection | The repository is public; branch-scoped environments, artifact attestations, secret scanning, push protection, and an active ruleset are configured. The ruleset requires pull requests, both production-verification checks, resolved conversations, and blocks deletion/force-push. | Select and add a second trusted reviewer, then raise the active ruleset from zero to one approval with last-pusher separation before enabling Store workflows. |
+| GitHub protection | The repository is public; branch-scoped environments, artifact attestations, secret scanning, push protection, and an active ruleset are configured. The ruleset requires pull requests, every required production-verification check, resolved conversations, and blocks deletion/force-push. | Select and add a second trusted reviewer, then raise the active ruleset from zero to one approval with last-pusher separation before enabling Store workflows. |
 
 No Firebase, Google Services, APNs, OAuth callback, associated-domain, app
 group, URL-scheme, or deep-link production configuration was found. The iOS
@@ -224,8 +224,8 @@ email, gameplay payload, room secret, or private signed binary.
 1. Review and commit a version bump in `config/parlor-version.xcconfig`. Android
    version code and iOS build number intentionally share the same positive
    integer. Never let a workflow choose a number automatically.
-2. Land the complete reviewed tree on protected `testing` and wait for both
-   normal production-verification jobs.
+2. Land the complete reviewed tree on protected `testing` and wait for every
+   normal production-verification job.
 3. Optionally dispatch **Create immutable Store candidate** on `testing` with
    the exact branch-tip SHA and `publish=false`. This is only a non-promotable
    signing/validation rehearsal and cannot call a Store API.
@@ -286,7 +286,7 @@ The live repository configuration was inspected and hardened on 2026-08-16:
 - `production-android` and `production-ios` accept deployments from `release`
   only; and
 - active safety ruleset `20910226` requires pull requests, resolved
-  conversations, both GitHub-Actions-bound production-verification checks, and
+  conversations, every required GitHub-Actions-bound production-verification check, and
   deletion/force-push protection without a bypass. Its approval count is
   temporarily zero because the repository has no second trusted collaborator;
   before any candidate dispatch, add that reviewer, require one approval plus
