@@ -25,8 +25,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.focusProperties
-import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.style.TextAlign
 import com.parlor.core.result.Result
 import com.parlor.designsystem.backdrop.HeroBackdrop
@@ -41,6 +39,7 @@ import com.parlor.designsystem.components.SessionExitAffordance
 import com.parlor.designsystem.components.SessionExitBackAction
 import com.parlor.designsystem.components.SessionExitConfirmation
 import com.parlor.designsystem.components.SessionExitKind
+import com.parlor.designsystem.components.coveredByReconnectingOverlay
 import com.parlor.designsystem.components.sessionExitBackAction
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.engine.state.Player
@@ -285,8 +284,7 @@ fun MafiaPeerLobbyFlow(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .focusProperties { canFocus = !hostLost }
-                    .then(if (hostLost) Modifier.clearAndSetSemantics { } else Modifier),
+                    .coveredByReconnectingOverlay(hostLost),
             ) {
                 Column(modifier = Modifier.fillMaxSize()) {
                     if (selfOffline) {
