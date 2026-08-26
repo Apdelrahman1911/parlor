@@ -28,6 +28,7 @@ import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 class IosStorageSafetyTest {
     @Test
@@ -95,6 +96,36 @@ class IosStorageSafetyTest {
             fileManager.removeItemAtPath(legacyPath, error = null)
         }
     }
+
+    @Test
+    fun protectedSnapshotWithMissingKeyRemovesMatchingLegacyPlaintext() {
+        val name = "${NSUUID.UUID().UUIDString}${FileBackedSnapshotStore.SUFFIX}"
+        val protectedPath = protectedSnapshotPath(name)
+        val legacyPath = legacySnapshotPath(name)
+        val plaintext = "{\"hiddenRole\":\"secret\"}".encodeToByteArray()
+        try {
+            writeBytes(protectedPath, structurallyValidProtectedRecord())
+            writeBytes(legacyPath, plaintext)
+
+            assertFailsWith<SnapshotProtectionException> {
+                runBlocking {
+                    IosSnapshotFileSystem(snapshotKeyReader = { null }).read(name)
+                }
+            }
+            assertFalse(fileManager.fileExistsAtPath(legacyPath))
+            assertTrue(fileManager.fileExistsAtPath(protectedPath))
+        } finally {
+            fileManager.removeItemAtPath(protectedPath, error = null)
+            fileManager.removeItemAtPath(legacyPath, error = null)
+        }
+    }
+
+    private fun structurallyValidProtectedRecord(): ByteArray =
+        "PARSNAP".encodeToByteArray() +
+            byteArrayOf(1, 16) +
+            ByteArray(16) +
+            ByteArray(16) +
+            ByteArray(32)
 
     private inline fun withTemporaryData(bytes: ByteArray, block: (String) -> Unit) {
         val path = "${NSTemporaryDirectory()}parlor-${NSUUID.UUID().UUIDString}.bin"
