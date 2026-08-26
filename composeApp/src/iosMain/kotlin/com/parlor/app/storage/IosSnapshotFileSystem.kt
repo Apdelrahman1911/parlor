@@ -68,6 +68,7 @@ internal class IosSnapshotFileSystem(
     private val keychain: IosSnapshotKeychain = IosSnapshotKeychain(),
     private val fileManager: NSFileManager = NSFileManager.defaultManager,
     private val dispatcher: CoroutineDispatcher = Dispatchers.Default,
+    private val snapshotKeyReader: () -> ByteArray? = keychain::readExisting,
 ) : SnapshotFileSystem {
 
     private val basePath: String by lazy {
@@ -280,7 +281,7 @@ internal class IosSnapshotFileSystem(
             val receivedTag = protectedBytes.copyOfRange(ciphertextEnd, protectedBytes.size)
             if (ciphertext.size % AES_BLOCK_BYTES != 0) throw SnapshotProtectionException()
 
-            val keyMaterial = keychain.readExisting() ?: throw SnapshotProtectionException()
+            val keyMaterial = snapshotKeyReader() ?: throw SnapshotProtectionException()
             val encryptionKey = keyMaterial.copyOfRange(0, AES_KEY_BYTES)
             val macKey = keyMaterial.copyOfRange(AES_KEY_BYTES, IosSnapshotKeychain.KEY_BYTES)
             return try {
