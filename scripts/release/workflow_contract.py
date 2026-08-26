@@ -105,6 +105,24 @@ def verify_validation(text: str) -> None:
         fail("validation workflow does not enforce the dedicated executable iOS simulator test aggregate")
     if "./gradlew allTests" in apple_test_step:
         fail("Apple validation duplicates the Linux common/desktop/Android test aggregate")
+    app_launch_marker = "- name: Launch Swift host and Compose root on iOS Simulator"
+    swift_release_marker = "- name: Build unsigned Swift Release wrapper"
+    if app_launch_marker not in text or swift_release_marker not in text:
+        fail("validation workflow does not run the iOS app-launch UI test")
+    app_launch_step = text.split(app_launch_marker, 1)[1].split(swift_release_marker, 1)[0]
+    required_app_launch_contract = (
+        "xcrun simctl list devices available --json",
+        "-project iosApp/iosApp.xcodeproj",
+        "-scheme iosApp",
+        "-configuration Debug",
+        "-sdk iphonesimulator",
+        'platform=iOS Simulator,id=$simulator_udid',
+        "-resultBundlePath build/ci-evidence/ios-ui-tests.xcresult",
+        "test | tee build/ci-evidence/xcode-ui-test.log",
+    )
+    for token in required_app_launch_contract:
+        if token not in app_launch_step:
+            fail(f"validation workflow iOS app-launch test lacks {token!r}")
     if '$1 ~ /PRODUCT_BUNDLE_IDENTIFIER$/' in text:
         fail("validation workflow can confuse the Mac Catalyst derivation flag with the Bundle ID")
     if text.count('key == "PRODUCT_BUNDLE_IDENTIFIER"') != 2:

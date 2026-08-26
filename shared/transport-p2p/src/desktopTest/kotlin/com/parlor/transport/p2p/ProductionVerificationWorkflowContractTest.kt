@@ -240,10 +240,13 @@ class ProductionVerificationWorkflowContractTest {
     }
 
     @Test
-    fun apple_job_runs_simulator_tests_all_link_targets_and_unsigned_swift_release() {
+    fun apple_job_runs_kotlin_and_app_launch_tests_all_link_targets_and_unsigned_swift_release() {
         val workflow = read(".github/workflows/production-verification.yml")
         val rootBuild = read("build.gradle.kts")
+        val composeBuild = read("composeApp/build.gradle.kts")
         val xcodeProject = read("iosApp/iosApp.xcodeproj/project.pbxproj")
+        val xcodeScheme = read("iosApp/iosApp.xcodeproj/xcshareddata/xcschemes/iosApp.xcscheme")
+        val appLaunchTest = read("iosApp/iosAppUITests/IOSAppLaunchUITests.swift")
 
         listOf(
             "DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer",
@@ -293,11 +296,52 @@ class ProductionVerificationWorkflowContractTest {
         assertContains(rootBuild, "tasks.named(\"productionIosSimulatorRuntimeTests\")")
         assertContains(
             xcodeProject,
-            "embedAndSignAppleFrameworkForXcode --dependency-verification=strict",
+            "./gradlew --no-daemon :composeApp:embedAndSignAppleFrameworkForXcode " +
+                "--dependency-verification=strict",
             message = "The Xcode shell phase must enforce strict dependency verification",
         )
+        assertContains(
+            composeBuild,
+            "isStatic = false",
+            message = "The launchable app must embed a dynamic Kotlin framework, not a static archive",
+        )
 
+        val appLaunchMarker = "- name: Launch Swift host and Compose root on iOS Simulator"
         val swiftReleaseMarker = "- name: Build unsigned Swift Release wrapper"
+        assertContains(workflow, appLaunchMarker)
+        val appLaunchStep = workflow
+            .substringAfter(appLaunchMarker)
+            .substringBefore(swiftReleaseMarker)
+        listOf(
+            "xcrun simctl list devices available --json",
+            "-configuration Debug",
+            "platform=iOS Simulator,id=\$simulator_udid",
+            "-resultBundlePath build/ci-evidence/ios-ui-tests.xcresult",
+            "test | tee build/ci-evidence/xcode-ui-test.log",
+        ).forEach { required ->
+            assertContains(
+                appLaunchStep,
+                required,
+                message = "Apple CI must launch the real app through XCTest: $required",
+            )
+        }
+        listOf(
+            "com.apple.product-type.bundle.ui-testing",
+            "IOSAppLaunchUITests.swift in Sources",
+            "TEST_TARGET_NAME = iosApp",
+        ).forEach { required -> assertContains(xcodeProject, required) }
+        listOf(
+            "TestableReference",
+            "BlueprintName = \"iosAppUITests\"",
+        ).forEach { required -> assertContains(xcodeScheme, required) }
+        listOf(
+            "XCUIApplication()",
+            "runningForeground",
+            "staticTexts[\"PARLOR\"]",
+            "No alert should appear during the simulator cold-start observation window",
+            "The Swift host should remain in the foreground after Compose renders",
+        ).forEach { required -> assertContains(appLaunchTest, required) }
+
         val appleEvidenceMarker = "- name: Upload Apple verification evidence"
         assertContains(workflow, swiftReleaseMarker)
         assertContains(workflow, appleEvidenceMarker)
@@ -377,6 +421,8 @@ class ProductionVerificationWorkflowContractTest {
             ".github/workflows/production-verification.yml",
             "gradle/verification-metadata.xml",
             "iosApp/iosApp.xcodeproj/project.pbxproj",
+            "iosApp/iosApp.xcodeproj/xcshareddata/xcschemes/iosApp.xcscheme",
+            "iosApp/iosAppUITests/IOSAppLaunchUITests.swift",
         ).forEach { input ->
             assertContains(
                 transportBuild,

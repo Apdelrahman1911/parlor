@@ -69,6 +69,24 @@ xcodebuild -project iosApp/iosApp.xcodeproj \
            build
 ```
 
+Run the checked-in Swift-host/Compose-root launch test on the same simulator:
+
+```bash
+xcodebuild -project iosApp/iosApp.xcodeproj \
+           -scheme iosApp \
+           -configuration Debug \
+           -sdk iphonesimulator \
+           -destination 'platform=iOS Simulator,name=iPhone 16 Pro' \
+           test
+```
+
+This simulator smoke test verifies that the SwiftUI host launches, creates the
+exported Kotlin view controller, renders the Compose home screen, remains in the
+foreground, and presents no alert during the cold-start observation window.
+It does not validate iOS Local Network permission behavior. Prompt presentation,
+denial, Settings recovery, and real LAN connectivity require the physical-device
+and exact-candidate evidence tracked by [issue #6](https://github.com/Apdelrahman1911/parlor/issues/6).
+
 ---
 
 ## Signing
@@ -97,7 +115,8 @@ recorded by the release migration; do not submit the provisional identifier.
 | `iosApp/iosApp/ContentView.swift` | Wraps `MainViewControllerKt.MainViewController()` (the Kotlin Compose entry) in a `UIViewControllerRepresentable`. |
 | `iosApp/iosApp/Info.plist` | Bundle id, version, supported orientations, **`NSLocalNetworkUsageDescription`** for LAN play, Bonjour service names. |
 | `iosApp/Configuration/Config.xcconfig` | TEAM_ID + BUNDLE_ID + APP_NAME — the only knobs you typically touch. |
-| `iosApp/iosApp.xcodeproj/...` | Xcode project. Single app target, Debug + Release configurations, shared scheme so VCS picks it up. |
+| `iosApp/iosApp.xcodeproj/...` | Xcode project. App and UI-test targets, Debug + Release configurations, and a shared scheme so CI runs both. |
+| `iosApp/iosAppUITests/IOSAppLaunchUITests.swift` | Simulator launch smoke test for the Swift host and Compose root. |
 | `composeApp/src/iosMain/.../MainViewController.kt` | Kotlin side of the entry — produces the `UIViewController` that hosts `App()`. |
 
 Linking flow:
@@ -111,7 +130,7 @@ composeApp/build/xcode-frameworks/Debug/iphonesimulator/ComposeApp.framework
         ↓
 Xcode picks it up via FRAMEWORK_SEARCH_PATHS in project.pbxproj
         ↓
-Linker embeds ComposeApp.framework into iOSApp.app
+Linker embeds the dynamic ComposeApp.framework into Parlor.app
 ```
 
 No CocoaPods, no Swift Package Manager glue — just the framework path. Swap to
@@ -152,9 +171,10 @@ Each shared module + `:composeApp` declares the three iOS targets via the
 - `iosArm64` — physical iPhones / iPads.
 - `iosSimulatorArm64` — Apple-silicon Mac simulator (the common case).
 
-`composeApp` exposes a framework named `ComposeApp` (`baseName`,
-`isStatic = true`). That's the name `import ComposeApp` resolves to in the
-Swift sources.
+`composeApp` exposes a dynamic framework named `ComposeApp` (`baseName`,
+`isStatic = false`). The dynamic form is required because iOS rejects a static
+archive copied into an app's `Frameworks` directory. That's the name
+`import ComposeApp` resolves to in the Swift sources.
 
 ---
 
