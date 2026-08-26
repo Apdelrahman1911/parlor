@@ -4,6 +4,7 @@ import com.parlor.networking.protocol.PARLOR_PROTOCOL_MAJOR
 import com.parlor.networking.protocol.PARLOR_PROTOCOL_MINOR
 import java.io.File
 import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
@@ -22,6 +23,14 @@ class MultiplayerDocumentationContractTest {
         val match = Regex("(?m)^p2pkit = \"([^\"]+)\"$")
             .find(read("gradle/libs.versions.toml"))
         assertNotNull(match, "The version catalog must declare p2pkit").groupValues[1]
+    }
+
+    @Test
+    fun documentation_reader_normalizes_platform_line_endings() {
+        assertEquals(
+            "first\nsecond\nthird",
+            normalizeDocumentationLineEndings("first\r\nsecond\rthird"),
+        )
     }
 
     @Test
@@ -311,7 +320,7 @@ class MultiplayerDocumentationContractTest {
     private fun read(relativePath: String): String {
         val file = File(repositoryRoot, relativePath)
         assertTrue(file.isFile, "Missing documentation contract file: ${file.absolutePath}")
-        return file.readText()
+        return normalizeDocumentationLineEndings(file.readText())
     }
 
     private fun locateRepositoryRoot(): File {
@@ -327,3 +336,6 @@ class MultiplayerDocumentationContractTest {
         )
     }
 }
+
+internal fun normalizeDocumentationLineEndings(text: String): String =
+    text.replace("\r\n", "\n").replace('\r', '\n')
