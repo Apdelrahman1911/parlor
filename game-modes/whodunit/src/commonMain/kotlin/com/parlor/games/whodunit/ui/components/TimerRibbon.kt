@@ -2,7 +2,6 @@ package com.parlor.games.whodunit.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -16,13 +15,11 @@ import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.liveRegion
-import androidx.compose.ui.semantics.semantics
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.whodunit.resources.Res
 import com.parlor.games.whodunit.resources.round_discussion_timer_description_format
 import com.parlor.games.whodunit.resources.round_discussion_paused_label
 import com.parlor.games.whodunit.resources.round_discussion_timer_label
-import com.parlor.games.whodunit.resources.round_discussion_urgent_announcement
 import com.parlor.games.whodunit.resources.round_discussion_urgent_label
 import com.parlor.games.whodunit.resources.timer_elapsed_format
 import com.parlor.games.whodunit.resources.timer_total_format
@@ -61,8 +58,6 @@ fun TimerRibbon(
         remainingTime,
         totalTime,
     )
-    val urgentAnnouncement = stringResource(Res.string.round_discussion_urgent_announcement)
-
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s),
@@ -74,6 +69,11 @@ fun TimerRibbon(
                 // The visual label, current value, and total form one timer value;
                 // presenting them as separate nodes makes it hard to follow.
                 contentDescription = timerDescription
+                if (urgencyThreshold) {
+                    // Apply the live region only at the boundary. Leaving it
+                    // active would announce every subsequent timer tick.
+                    liveRegion = LiveRegionMode.Assertive
+                }
             }
             .padding(horizontal = ParlorTheme.spacing.l, vertical = ParlorTheme.spacing.m),
     ) {
@@ -91,17 +91,6 @@ fun TimerRibbon(
             text = visualTotalTime,
             style = ParlorTheme.typography.bodyMedium,
             color = colors.textTertiary,
-        )
-    }
-
-    if (urgencyThreshold) {
-        // Keep the threshold announcement separate from the ticking timer: a
-        // live region on its changing value would speak every remaining second.
-        Box(
-            modifier = Modifier.semantics {
-                liveRegion = LiveRegionMode.Assertive
-                contentDescription = urgentAnnouncement
-            },
         )
     }
 }

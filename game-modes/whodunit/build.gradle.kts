@@ -36,6 +36,10 @@ kotlin {
             implementation(project(":shared:networking"))
             implementation(project(":shared:networking-testing"))
         }
+        desktopTest.dependencies {
+            implementation(compose.desktop.currentOs)
+            implementation(libs.compose.ui.test)
+        }
     }
 }
 
