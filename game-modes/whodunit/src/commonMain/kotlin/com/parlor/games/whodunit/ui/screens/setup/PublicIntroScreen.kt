@@ -19,6 +19,7 @@ import com.parlor.games.whodunit.resources.setup_intro_continue
 import com.parlor.games.whodunit.resources.setup_intro_continue_description
 import com.parlor.games.whodunit.resources.setup_intro_read_aloud_eyebrow
 import com.parlor.games.whodunit.resources.setup_intro_what_is_true_eyebrow
+import com.parlor.games.whodunit.resources.round_clue_bullet_format
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -54,7 +55,7 @@ fun PublicIntroScreen(
             EyebrowLabel(text = stringResource(Res.string.setup_intro_what_is_true_eyebrow))
             bedrockClues.forEach { clue ->
                 Text(
-                    text = "·  $clue",
+                    text = stringResource(Res.string.round_clue_bullet_format, clue),
                     style = ParlorTheme.typography.bodyLarge,
                     color = ParlorTheme.colors.textPrimary,
                 )

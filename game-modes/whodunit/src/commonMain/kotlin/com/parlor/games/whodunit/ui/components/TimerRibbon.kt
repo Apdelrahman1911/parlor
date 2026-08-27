@@ -15,6 +15,8 @@ import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.whodunit.resources.Res
 import com.parlor.games.whodunit.resources.round_discussion_paused_label
 import com.parlor.games.whodunit.resources.round_discussion_timer_label
+import com.parlor.games.whodunit.resources.timer_elapsed_format
+import com.parlor.games.whodunit.resources.timer_total_format
 import org.jetbrains.compose.resources.stringResource
 
 /**
@@ -56,12 +58,12 @@ fun TimerRibbon(
             color = if (urgent) colors.textPrimary else colors.textSecondary,
         )
         Text(
-            text = "$mm:$ss",
+            text = stringResource(Res.string.timer_elapsed_format, mm.toString(), ss),
             style = ParlorTheme.typography.timerMedium,
             color = colors.textPrimary,
         )
         Text(
-            text = "/ $totalMm:$totalSs",
+            text = stringResource(Res.string.timer_total_format, totalMm.toString(), totalSs),
             style = ParlorTheme.typography.bodyMedium,
             color = colors.textTertiary,
         )

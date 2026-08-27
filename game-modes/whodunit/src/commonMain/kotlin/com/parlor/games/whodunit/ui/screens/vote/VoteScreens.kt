@@ -43,6 +43,7 @@ import com.parlor.games.whodunit.resources.vote_tied_begin_revote
 import com.parlor.games.whodunit.resources.vote_tied_begin_revote_description
 import com.parlor.games.whodunit.resources.vote_tied_body
 import com.parlor.games.whodunit.resources.vote_tied_eyebrow
+import com.parlor.games.whodunit.resources.whodunit_list_separator
 import com.parlor.games.whodunit.ui.components.CandlelitCover
 import org.jetbrains.compose.resources.stringResource
 
@@ -150,7 +151,7 @@ fun TiedRevoteScreen(
         ) {
             EyebrowLabel(text = stringResource(Res.string.vote_tied_eyebrow))
             Text(
-                text = tiedNames.joinToString(separator = " · "),
+                text = tiedNames.joinToString(separator = stringResource(Res.string.whodunit_list_separator)),
                 style = ParlorTheme.typography.displayLarge,
                 color = ParlorTheme.colors.textPrimary,
                 textAlign = TextAlign.Center,
