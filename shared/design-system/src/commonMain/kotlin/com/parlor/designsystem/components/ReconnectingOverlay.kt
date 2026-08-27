@@ -14,15 +14,27 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.paneTitle
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import com.parlor.designsystem.theme.ParlorTheme
+
+/**
+ * Excludes mounted content covered by a [ReconnectingOverlay] from semantics
+ * and hardware-keyboard focus traversal. Apply this to the covered container,
+ * while keeping the overlay itself as a sibling so its Leave action remains
+ * reachable.
+ */
+fun Modifier.coveredByReconnectingOverlay(overlayVisible: Boolean): Modifier =
+    focusProperties { canFocus = !overlayVisible }
+        .then(if (overlayVisible) Modifier.clearAndSetSemantics { } else Modifier)
 
 /**
  * Full-screen overlay shown on a peer device when the bridge synthesises

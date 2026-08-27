@@ -19,6 +19,7 @@ kotlin {
         }
         desktopTest.dependencies {
             implementation(compose.desktop.currentOs)
+            implementation(libs.compose.ui.test)
         }
     }
 }
