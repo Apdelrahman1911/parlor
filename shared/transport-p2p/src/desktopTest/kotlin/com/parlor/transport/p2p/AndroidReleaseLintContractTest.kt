@@ -57,12 +57,12 @@ class AndroidReleaseLintContractTest {
             .map(String::trim)
             .filter { line -> line.isNotEmpty() && !line.startsWith('#') }
             .toList()
-        assertEquals(29, accepted.size)
+        assertEquals(30, accepted.size)
         assertEquals(
             mapOf(
                 "AndroidGradlePluginVersion" to 4,
                 "GradleDependency" to 2,
-                "NewerVersionAvailable" to 22,
+                "NewerVersionAvailable" to 23,
                 "OldTargetApi" to 1,
             ),
             accepted.groupingBy { line -> line.substringBefore('|') }.eachCount(),
