@@ -317,6 +317,54 @@ class MultiplayerDocumentationContractTest {
         assertFalse("NSBluetoothPeripheralUsageDescription" in plist)
     }
 
+    @Test
+    fun current_game_module_guides_name_the_live_shell_registry_contract() {
+        val documents = listOf(
+            "docs/PRODUCTION_ARCHITECTURE.md",
+            "docs/adr/0001-game-module-registration.md",
+            "docs/HOW_TO_ADD_A_GAME.md",
+        )
+        val text = documents.joinToString(separator = "\n") { path -> read(path) }
+
+        listOf(
+            "ModuleNavGraph",
+            "NavGraphRegistry",
+            "DefaultNavGraphRegistry",
+            ":shared:navigation",
+        ).forEach { removedContract ->
+            assertFalse(
+                removedContract in text,
+                "Current game-module guides must not require removed $removedContract",
+            )
+        }
+
+        mapOf(
+            "GameDefinition" to
+                "shared/engine/src/commonMain/kotlin/com/parlor/engine/definition/GameDefinition.kt",
+            "DefaultGameRegistry" to
+                "shared/engine/src/commonMain/kotlin/com/parlor/engine/registry/GameRegistry.kt",
+            "GameShellBinding" to
+                "composeApp/src/commonMain/kotlin/com/parlor/app/shell/game/GameShellRegistry.kt",
+            "DefaultGameShellRegistry" to
+                "composeApp/src/commonMain/kotlin/com/parlor/app/shell/game/GameShellRegistry.kt",
+            "GameShellRouter" to
+                "composeApp/src/commonMain/kotlin/com/parlor/app/shell/game/GameShellRegistry.kt",
+            "GameRegistryExtensibilityTest" to
+                "shared/engine-testing/src/commonTest/kotlin/" +
+                    "com/parlor/engine/testing/registry/GameRegistryExtensibilityTest.kt",
+            "GameShellRegistryExtensibilityTest" to
+                "composeApp/src/commonTest/kotlin/com/parlor/app/shell/game/GameShellRegistryExtensibilityTest.kt",
+            "GameShellRegistryCompositionTest" to
+                "composeApp/src/desktopTest/kotlin/com/parlor/app/shell/game/GameShellRegistryCompositionTest.kt",
+        ).forEach { (name, sourcePath) ->
+            assertTrue(name in text, "Current game-module guides must name $name")
+            assertTrue(
+                Regex("\\b(?:class|interface)\\s+$name\\b").containsMatchIn(read(sourcePath)),
+                "$name must resolve to a source declaration at $sourcePath",
+            )
+        }
+    }
+
     private fun read(relativePath: String): String {
         val file = File(repositoryRoot, relativePath)
         assertTrue(file.isFile, "Missing documentation contract file: ${file.absolutePath}")

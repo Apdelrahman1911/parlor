@@ -221,14 +221,16 @@ Each shipping game contributes:
 - pure reducer and validation rules;
 - public, per-player-private, and host-only projections;
 - versioned action and snapshot codecs;
-- a `ModuleNavGraph` using the same stable game ID;
+- a `GameShellBinding` whose `definition` uses that stable game ID and owns
+  catalog presentation, setup/lobby/resume entry points, and game UI;
 - UI/resources and a Koin module; and
 - reducer, authority, privacy, serialization, lifecycle, and full-game tests.
 
-The composition root lists installed modules explicitly. Duplicate game or
-navigation IDs fail fast. The non-shipping engine-testing fixture registers and
-completes a second minimal definition without changing session, networking, or
-P2pKit adapter code. See `HOW_TO_ADD_A_GAME.md`.
+The composition root lists installed modules and shell bindings explicitly.
+`DefaultGameRegistry` and `DefaultGameShellRegistry` reject duplicate game IDs
+before routing or catalog construction. The non-shipping engine-testing fixture
+registers and completes a second minimal definition without changing session,
+networking, or P2pKit adapter code. See `HOW_TO_ADD_A_GAME.md`.
 
 ## Persistence, content, and diagnostics
 
