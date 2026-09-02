@@ -12,9 +12,22 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
 class InMemoryRoomBusTest {
+    @Test
+    fun `direct send to an unknown peer fails instead of disappearing`() = runTest {
+        val bus = InMemoryRoomBus()
+
+        assertFailsWith<NoSuchElementException> {
+            bus.fromHost(
+                SendTarget.Direct(PlayerId("missing")),
+                HostMessage.AdmissionPending(PlayerId("missing")),
+            )
+        }
+    }
+
     @Test
     fun `peer to host overflow is non blocking and observable`() = runTest {
         val bus = InMemoryRoomBus()

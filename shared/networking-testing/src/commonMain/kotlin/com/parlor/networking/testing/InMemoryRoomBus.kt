@@ -78,7 +78,7 @@ class InMemoryRoomBus {
                     droppedPeerMessages.addAndFetch(1)
                 }
             }
-            is SendTarget.Direct -> peerInboxes[target.playerId]?.let { inbox ->
+            is SendTarget.Direct -> peerInboxes.getValue(target.playerId).let { inbox ->
                 if (inbox.trySend(message).isFailure) {
                     droppedPeerMessages.addAndFetch(1)
                 }
