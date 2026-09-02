@@ -98,7 +98,11 @@ def verify_validation(text: str) -> None:
     if "productionReleaseAutomationCheck" not in text:
         fail("validation workflow does not enforce release-system tests")
     verify_android_runtime_smoke("production-verification.yml", text)
-    desktop_android_job = text.split("\n  ios:", 1)[0]
+    desktop_android_marker = "\n  desktop-android:"
+    next_job_marker = "\n  desktop-linux-arm64:"
+    if desktop_android_marker not in text or next_job_marker not in text:
+        fail("validation workflow is missing the desktop-android job boundary")
+    desktop_android_job = text.split(desktop_android_marker, 1)[1].split(next_job_marker, 1)[0]
     if "fetch-depth: 0" not in desktop_android_job:
         fail("validation workflow review-inventory gate requires full Git history")
     apple_test_step = text.split(

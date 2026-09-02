@@ -245,6 +245,12 @@ class WorkflowContractTest(unittest.TestCase):
             workflow_contract.ROOT / ".github/workflows/production-verification.yml"
         ).read_text(encoding="utf-8")
         broken = workflow.replace("fetch-depth: 0", "fetch-depth: 1", 1)
+        before_other_job, other_jobs = broken.split("\n  desktop-linux-arm64:", 1)
+        broken = before_other_job + "\n  desktop-linux-arm64:" + other_jobs.replace(
+            "fetch-depth: 1",
+            "fetch-depth: 0",
+            1,
+        )
         with self.assertRaisesRegex(RuntimeError, "full Git history"):
             workflow_contract.verify_validation(broken)
 
