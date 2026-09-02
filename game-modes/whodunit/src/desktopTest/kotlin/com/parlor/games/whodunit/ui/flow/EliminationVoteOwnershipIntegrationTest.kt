@@ -1,24 +1,30 @@
 package com.parlor.games.whodunit.ui.flow
 
 import com.parlor.core.ids.CaseId
-import com.parlor.core.ids.CharacterId
 import com.parlor.core.ids.PlayerId
+import com.parlor.core.ids.SessionId
 import com.parlor.core.random.RandomSource
 import com.parlor.core.time.FakeClock
+import com.parlor.engine.session.SessionConfig
 import com.parlor.engine.state.Player
+import com.parlor.games.whodunit.WhodunitDefinition
 import com.parlor.games.whodunit.WhodunitIds
+import com.parlor.games.whodunit.content.Character
+import com.parlor.games.whodunit.content.Clue
 import com.parlor.games.whodunit.content.CluePools
+import com.parlor.games.whodunit.content.GuiltyBrief
+import com.parlor.games.whodunit.content.InnocentBrief
+import com.parlor.games.whodunit.content.TimelineEntry
 import com.parlor.games.whodunit.content.WhodunitCase
 import com.parlor.games.whodunit.domain.action.WhodunitAction
-import com.parlor.games.whodunit.domain.phase.WhodunitPhase
 import com.parlor.games.whodunit.domain.reducer.WhodunitReducer
 import com.parlor.games.whodunit.domain.reducer.WhodunitReducerContext
 import com.parlor.games.whodunit.testing.validatedWhodunitCaseForTest
 import com.parlor.games.whodunit.domain.state.VoteState
-import com.parlor.games.whodunit.domain.state.WhodunitHostOnly
-import com.parlor.games.whodunit.domain.state.WhodunitPublic
 import com.parlor.games.whodunit.domain.state.WhodunitState
+import com.parlor.games.whodunit.domain.state.WhodunitStateValidator
 import com.parlor.session.PlayMode
+import kotlinx.serialization.json.Json
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -30,6 +36,8 @@ import kotlin.time.Instant
  * pass-and-play defaults and therefore exposed remote players' ballots.
  */
 class EliminationVoteOwnershipIntegrationTest {
+    private val json = Json { encodeDefaults = true }
+    private val definition = WhodunitDefinition(json)
     private val players = listOf("host", "alice", "bob", "carol", "dina")
         .mapIndexed { seat, id -> Player(PlayerId(id), id, seat) }
     private val hostId = players.first().id
@@ -39,25 +47,16 @@ class EliminationVoteOwnershipIntegrationTest {
             isHost = player.id == hostId,
         )
     }
+    private val validatedCase = validatedWhodunitCaseForTest(
+        payload = case(),
+        caseId = CASE_ID,
+        supportedPlayerCounts = players.size..players.size,
+        supportedModes = listOf(WhodunitIds.EliminationModeId.raw),
+    )
     private val reducerContext = WhodunitReducerContext(
         clock = FakeClock(Instant.fromEpochMilliseconds(0)),
-        random = RandomSource.seeded(17L),
-        case = validatedWhodunitCaseForTest(
-            payload = WhodunitCase(
-            publicIntro = "",
-            bedrockClues = emptyList(),
-            characters = emptyList(),
-            cluePools = CluePools(
-                publicUniversal = emptyList(),
-                killerPointing = emptyMap(),
-                redHerring = emptyMap(),
-                contradiction = emptyMap(),
-                finalStrong = emptyMap(),
-            ),
-                revealNarratives = emptyMap(),
-            ),
-            caseId = "vote-ownership",
-        ),
+        random = RandomSource.seeded(SEED),
+        case = validatedCase,
     )
 
     @Test
@@ -92,11 +91,7 @@ class EliminationVoteOwnershipIntegrationTest {
             }
 
             val target = players.first { it.id != expectedVoter.id }.id
-            state = WhodunitReducer.reduce(
-                state,
-                WhodunitAction.CastVote(expectedVoter.id, target),
-                reducerContext,
-            ).newState
+            state = step(state, WhodunitAction.CastVote(expectedVoter.id, target))
         }
 
         val completeVote = assertIs<VoteState.Collecting>(state.public.voteState)
@@ -126,11 +121,7 @@ class EliminationVoteOwnershipIntegrationTest {
                 voteTurnPresentation(PlayMode.PassAndPlay, vote),
             )
             val target = players.first { it.id != expectedVoter.id }.id
-            state = WhodunitReducer.reduce(
-                state,
-                WhodunitAction.CastVote(expectedVoter.id, target),
-                reducerContext,
-            ).newState
+            state = step(state, WhodunitAction.CastVote(expectedVoter.id, target))
         }
 
         assertEquals(
@@ -143,30 +134,87 @@ class EliminationVoteOwnershipIntegrationTest {
     }
 
     private fun eliminationVoteState(): WhodunitState {
-        val ballot = players.map(Player::id)
-        return WhodunitState(
-            public = WhodunitPublic(
-                caseId = CaseId("vote-ownership"),
+        var state = definition.createInitialState(
+            SessionConfig(
+                sessionId = SessionId("vote-ownership-session"),
+                caseId = CaseId(CASE_ID),
                 modeId = WhodunitIds.EliminationModeId,
-                playersAtTable = players,
-                currentRound = 1,
-                voteState = VoteState.Collecting(
-                    isElimination = true,
-                    ballotPlayerIds = ballot,
-                ),
+                players = players,
+                randomSeed = SEED,
             ),
-            privatePerPlayer = emptyMap(),
-            hostOnly = WhodunitHostOnly(
-                killerId = hostId,
-                killerCharacterId = CharacterId("killer"),
-                randomSeed = 17L,
-                seatToCharacter = players.associate { player ->
-                    player.id to CharacterId("character-${player.seat}")
-                },
-                redHerringTargets = emptyList(),
-            ),
-            phase = WhodunitPhase.Round(1),
-            players = players,
         )
+        WhodunitStateValidator.requireValidForCase(state, validatedCase)
+        state = step(state, WhodunitAction.AssignRoles(SEED))
+        players.forEach { state = step(state, WhodunitAction.AcknowledgeIntro(it.id)) }
+        state = step(state, WhodunitAction.AdvanceFromIntro)
+        players.forEach { state = step(state, WhodunitAction.AcknowledgeBriefing(it.id)) }
+        for (card in 1..4) {
+            state = step(state, WhodunitAction.AdvanceBriefingCard(card))
+        }
+        val generation = state.public.roleAssignmentGeneration
+        players.forEach { player ->
+            state = step(state, WhodunitAction.StartCharacterReveal(player.id, generation))
+            state = step(state, WhodunitAction.CompleteCharacterReveal(player.id, generation))
+        }
+        state = step(state, WhodunitAction.AdvanceFromCharacterReveal)
+        state = step(state, WhodunitAction.RevealNextClue)
+        state = step(state, WhodunitAction.StartDiscussionTimer(180))
+        state = step(state, WhodunitAction.AdvanceFromDiscussion)
+        assertIs<VoteState.Collecting>(state.public.voteState)
+        return state
+    }
+
+    private fun step(state: WhodunitState, action: WhodunitAction): WhodunitState =
+        WhodunitReducer.reduce(state, action, reducerContext).newState.also {
+            WhodunitStateValidator.requireValidForCase(it, validatedCase)
+        }
+
+    private fun case(): WhodunitCase {
+        val ids = players.indices.map { "character-$it" }
+        val characters = ids.map { id -> character(id, ids) }
+        return WhodunitCase(
+            publicIntro = "Intro",
+            bedrockClues = listOf("Bedrock"),
+            characters = characters,
+            cluePools = CluePools(
+                publicUniversal = listOf(Clue("public", "Public")),
+                killerPointing = ids.associateWith { id ->
+                    (1..3).map { index -> Clue("pointing-$id-$index", "Pointing $index") }
+                },
+                redHerring = ids.associateWith { id ->
+                    listOf(Clue("red-$id", "Red herring"))
+                },
+                contradiction = ids.associateWith { id ->
+                    listOf(Clue("contradiction-$id", "Contradiction"))
+                },
+                finalStrong = ids.associateWith { id ->
+                    (1..2).map { index -> Clue("final-$id-$index", "Final $index") }
+                },
+            ),
+            revealNarratives = ids.associateWith { "Reveal $it" },
+        )
+    }
+
+    private fun character(id: String, ids: List<String>) = Character(
+        id = id,
+        displayName = id,
+        relationshipToVictim = "Friend",
+        publicIdentity = "Identity",
+        publicMotive = "Motive",
+        privateSecret = "Secret",
+        innocentBrief = InnocentBrief("Innocent", "Alibi", "Goal", "Say", "Hide"),
+        guiltyBrief = GuiltyBrief(
+            verdictLine = "Guilty",
+            method = "Method",
+            timeline = listOf(TimelineEntry("10:00", "Action")),
+            fakeAlibi = "Alibi",
+            deflectionTargets = ids.filterNot { it == id },
+            panicMove = "Panic",
+        ),
+    )
+
+    private companion object {
+        const val CASE_ID = "vote-ownership"
+        const val SEED = 17L
     }
 }

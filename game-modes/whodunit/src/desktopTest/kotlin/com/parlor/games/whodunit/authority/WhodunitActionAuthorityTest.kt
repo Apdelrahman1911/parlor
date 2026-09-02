@@ -35,6 +35,7 @@ class WhodunitActionAuthorityTest {
             WhodunitAction.AssignRoles(seed = 42L),
             WhodunitAction.AdvanceFromIntro,
             WhodunitAction.AdvanceBriefingCard(1),
+            WhodunitAction.AdvanceFromCharacterReveal,
             WhodunitAction.RevealNextClue,
             WhodunitAction.StartDiscussionTimer(60),
             WhodunitAction.PauseDiscussionTimer,
