@@ -59,7 +59,6 @@ import com.parlor.designsystem.components.SessionExitAffordance
 import com.parlor.designsystem.components.SessionExitConfirmation
 import com.parlor.designsystem.components.SessionExitKind
 import com.parlor.designsystem.theme.ParlorTheme
-import com.parlor.engine.session.SessionConfig
 import com.parlor.engine.state.Player
 import com.parlor.games.whodunit.WhodunitDefinition
 import com.parlor.games.whodunit.WhodunitIds
@@ -766,12 +765,12 @@ private fun SessionDrivenFlow(
     }
 
     val sessionConfig = remember(case.envelope.caseId, modeId, players, seed, restoredSessionId) {
-        SessionConfig(
-            sessionId = restoredSessionId ?: SessionId("local-${seed.toString(16)}"),
+        createLocalWhodunitSessionConfig(
             caseId = CaseId(case.envelope.caseId),
             modeId = modeId,
             players = players,
             randomSeed = seed,
+            restoredSessionId = restoredSessionId,
         )
     }
 

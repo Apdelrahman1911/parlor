@@ -24,7 +24,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import com.parlor.core.ids.CaseId
 import com.parlor.core.ids.PlayerId
 import com.parlor.core.ids.SessionId
 import com.parlor.core.random.RandomSource
@@ -44,7 +43,6 @@ import com.parlor.designsystem.components.SessionExitConfirmation
 import com.parlor.designsystem.components.SessionExitKind
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.engine.reducer.DefaultReducerContext
-import com.parlor.engine.session.SessionConfig
 import com.parlor.engine.state.Player
 import com.parlor.games.mafia.MafiaDefinition
 import com.parlor.games.mafia.MafiaIds
@@ -237,12 +235,10 @@ private fun SessionDrivenFlow(
     }
 
     val sessionConfig = remember(players, seed, restoredSessionId) {
-        SessionConfig(
-            sessionId = restoredSessionId ?: SessionId("mafia-local-${seed.toString(16)}"),
-            caseId = CaseId("default"),
-            modeId = MafiaIds.ClassicModeId,
+        createLocalMafiaSessionConfig(
             players = players,
             randomSeed = seed,
+            restoredSessionId = restoredSessionId,
         )
     }
 
