@@ -42,7 +42,6 @@ class ResponsiveLayoutAuditTest {
         "PrivacyConcernOverlay.kt",
         // Pure cover screens / brief states — content is one line + a tap target.
         "CharacterRevealScreens.kt",   // waiting/hide/cover screens; dossier card scrolls internally
-        "RoundScreens.kt",              // ClueRevealScreen uses ClueCard fullscreen; title card uses SpaceBetween
         // Backdrops and full-screen game segments handled inside the segment.
         "WhodunitGameFlow.kt",
     )

@@ -264,6 +264,8 @@ class ProductionUiAccessibilityContractTest {
             "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/" +
                 "screens/reveal/CharacterRevealScreens.kt" to 2,
             "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/" +
+                "screens/round/RoundScreens.kt" to 3,
+            "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/" +
                 "screens/safety/PauseOverlay.kt" to 2,
             "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/" +
                 "screens/safety/PrivacyConcernOverlay.kt" to 1,
