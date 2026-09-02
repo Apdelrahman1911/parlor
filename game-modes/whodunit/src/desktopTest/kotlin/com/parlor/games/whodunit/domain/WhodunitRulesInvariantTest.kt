@@ -305,6 +305,54 @@ class WhodunitRulesInvariantTest {
         }
     }
 
+    @Test
+    fun eliminationVoteOpensOnlyAfterACompletedDiscussion() {
+        val roster = players(5)
+        val seed = 41L
+        var state = definition.createInitialState(
+            config(WhodunitIds.EliminationModeId, roster, seed),
+        )
+        state = submitValid(state, WhodunitAction.AssignRoles(seed))
+        roster.forEach { player ->
+            state = submitValid(state, WhodunitAction.AcknowledgeIntro(player.id))
+        }
+        state = submitValid(state, WhodunitAction.AdvanceFromIntro)
+        roster.forEach { player ->
+            state = submitValid(state, WhodunitAction.AcknowledgeBriefing(player.id))
+        }
+        for (card in 1..4) {
+            state = submitValid(state, WhodunitAction.AdvanceBriefingCard(card))
+        }
+        val generation = state.public.roleAssignmentGeneration
+        roster.forEach { player ->
+            state = submitValid(
+                state,
+                WhodunitAction.StartCharacterReveal(player.id, generation),
+            )
+            state = submitValid(
+                state,
+                WhodunitAction.CompleteCharacterReveal(player.id, generation),
+            )
+        }
+        state = submitValid(state, WhodunitAction.AdvanceFromCharacterReveal)
+
+        assertEquals(WhodunitPhase.Round(1), state.phase)
+        val beforeClue = reduce(state, WhodunitAction.OpenVote)
+        assertEquals(state, beforeClue.newState)
+        assertTrue(beforeClue.events.isEmpty())
+
+        state = submitValid(state, WhodunitAction.RevealNextClue)
+        val beforeDiscussion = reduce(state, WhodunitAction.OpenVote)
+        assertEquals(state, beforeDiscussion.newState)
+        assertTrue(beforeDiscussion.events.isEmpty())
+
+        state = submitValid(state, WhodunitAction.StartDiscussionTimer(180))
+        state = submitValid(state, WhodunitAction.AdvanceFromDiscussion)
+        val vote = state.public.voteState as VoteState.Collecting
+        assertFalse(vote.isSecondRound)
+        assertEquals(roster.map { it.id }, vote.ballotPlayerIds)
+    }
+
     private fun assignedState(
         modeId: com.parlor.core.ids.ModeId,
         count: Int,
