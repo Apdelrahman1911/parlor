@@ -31,6 +31,7 @@ import com.parlor.games.mafia.domain.state.Role
 import com.parlor.games.mafia.domain.state.Team
 import com.parlor.games.mafia.domain.state.VoteOutcome
 import com.parlor.games.mafia.domain.state.team
+import com.parlor.games.mafia.snapshot.isValidRecoveryState
 import kotlin.time.Instant
 import kotlinx.serialization.json.Json
 import kotlin.test.Test
@@ -403,15 +404,58 @@ class MafiaReducerEdgeCasesTest {
     // -------------------------------------------------------------------- Win check & advance
 
     @Test
-    fun advance_from_vote_announcement_jumps_to_post_game_when_winner_set() {
-        // Build a contrived VoteAnnouncement state with a winner already set —
-        // and players still unacked. The reducer must short-circuit to PostGame.
-        val state = initialState(7).copy(
-            phase = MafiaPhase.VoteAnnouncement(day = 1),
-            public = initialState(7).public.copy(winner = Team.Town),
+    fun close_vote_that_reaches_mafia_parity_enters_post_game_immediately() {
+        val seed = 42L
+        var state = initialState(5, seed)
+        val settings = state.public.settings.copy(
+            roleCounts = MafiaRoleCounts(mafia = 2, detective = 0, doctor = 0),
         )
-        val after = MafiaReducer.reduce(state, MafiaAction.AdvanceFromVoteAnnouncement, ctx()).newState
-        assertThat(after.phase).isEqualTo(MafiaPhase.PostGame)
+        state = MafiaReducer.reduce(state, MafiaAction.ApplySettings(settings), ctx(seed)).newState
+        state = MafiaReducer.reduce(state, MafiaAction.StartGame, ctx(seed)).newState
+        for (player in state.players) {
+            state = MafiaReducer.reduce(
+                state,
+                MafiaAction.AcknowledgeRoleViewed(player.id),
+                ctx(seed),
+            ).newState
+        }
+        state = MafiaReducer.reduce(
+            state,
+            MafiaAction.AdvanceFromRoleAssignment,
+            ctx(seed),
+        ).newState
+        state = submitUnsubmittedNightActions(state, seed)
+        state = MafiaReducer.reduce(state, MafiaAction.ResolveNight, ctx(seed)).newState
+        for (player in state.players) {
+            state = MafiaReducer.reduce(
+                state,
+                MafiaAction.AcknowledgeNightAnnouncement(player.id),
+                ctx(seed),
+            ).newState
+        }
+        state = MafiaReducer.reduce(state, MafiaAction.OpenDiscussion, ctx(seed)).newState
+        state = MafiaReducer.reduce(state, MafiaAction.OpenVote, ctx(seed)).newState
+
+        val townTarget = state.privatePerPlayer.entries.first { (_, private) ->
+            private.role.team == Team.Town
+        }.key
+        val ballot = requireNotNull(state.public.activeVote).ballot
+        for (voter in ballot) {
+            val action = if (voter == townTarget) {
+                MafiaAction.AbstainVote(voter)
+            } else {
+                MafiaAction.CastVote(voter, townTarget)
+            }
+            state = MafiaReducer.reduce(state, action, ctx(seed)).newState
+        }
+        assertThat(state.isValidRecoveryState()).isTrue()
+
+        state = MafiaReducer.reduce(state, MafiaAction.CloseVote, ctx(seed)).newState
+
+        assertThat(state.phase).isEqualTo(MafiaPhase.PostGame)
+        assertThat(state.public.winner).isEqualTo(Team.Mafia)
+        assertThat(requireNotNull(state.public.lastVote).eliminatedPlayerId).isEqualTo(townTarget)
+        assertThat(state.isValidRecoveryState()).isTrue()
     }
 
     @Test
