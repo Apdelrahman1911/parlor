@@ -101,11 +101,11 @@ central game branch or networking-core change:
 The app root is a registry-driven dispatcher. `App.kt`, `HomeScreen.kt`,
 `LocalResumeRouter.kt`, and the shared multiplayer lobby helpers contain no
 game ids or game-specific branches. Each binding owns its localized setup,
-content picker, host/peer flow, and resume route; Whodunit's case picker and
-start handshake live under `shell/game/whodunit`, while Mafia's equivalent
-flows remain in the Mafia module. `composeApp:verifyGameShellDispatch` is a
-release gate that scans the neutral root and shared multiplayer helpers for
-game-specific tokens.
+content picker, host/peer flow, and resume route. Whodunit and Mafia keep those
+implementations in their respective `:game-modes:*` modules; only their thin
+composition-root bindings live in `composeApp`. `composeApp:verifyGameShellDispatch`
+is a release gate that scans the neutral root, shared multiplayer helpers, and
+non-binding game-shell support for game-specific tokens.
 
 Cold-start resume is exposed only by a binding whose transport/session adapter
 can validate the saved game id and version. A game without that adapter is

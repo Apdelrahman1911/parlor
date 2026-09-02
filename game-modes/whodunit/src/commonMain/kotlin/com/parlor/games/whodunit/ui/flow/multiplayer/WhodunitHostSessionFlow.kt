@@ -1,4 +1,4 @@
-package com.parlor.app.shell.game.whodunit
+package com.parlor.games.whodunit.ui.flow.multiplayer
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,39 +26,39 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import com.parlor.app.resources.Res
-import com.parlor.app.resources.error_back
-import com.parlor.app.resources.error_back_description
-import com.parlor.app.resources.host_cancel
-import com.parlor.app.resources.host_error_title
-import com.parlor.app.resources.host_start_description
-import com.parlor.app.resources.host_start_blocked
-import com.parlor.app.resources.host_start_failed
-import com.parlor.app.resources.host_start_with_players_format
-import com.parlor.app.resources.host_cancel_description
-import com.parlor.app.resources.host_admission_failed
-import com.parlor.app.resources.host_approve
-import com.parlor.app.resources.host_approve_description
-import com.parlor.app.resources.host_decline
-import com.parlor.app.resources.host_decline_description
-import com.parlor.app.resources.host_join_request_format
-import com.parlor.app.resources.host_members_empty
-import com.parlor.app.resources.host_members_eyebrow
-import com.parlor.app.resources.host_pending_eyebrow
-import com.parlor.app.resources.host_room_code_eyebrow
-import com.parlor.app.resources.host_starting
-import com.parlor.app.resources.host_title
-import com.parlor.app.resources.network_open_settings
-import com.parlor.app.resources.network_open_settings_description
-import com.parlor.app.resources.network_recovery_help
-import com.parlor.app.resources.network_retry
-import com.parlor.app.resources.network_retry_description
-import com.parlor.app.resources.host_hosting_as_format
-import com.parlor.app.resources.host_start_need_more_format
-import com.parlor.app.resources.host_start_pending
-import com.parlor.app.resources.host_start_too_many_format
-import com.parlor.app.shell.dataErrorMessage
-import com.parlor.app.shell.netErrorMessage
+import com.parlor.games.whodunit.resources.Res
+import com.parlor.games.whodunit.resources.error_back
+import com.parlor.games.whodunit.resources.error_back_description
+import com.parlor.games.whodunit.resources.host_cancel
+import com.parlor.games.whodunit.resources.host_error_title
+import com.parlor.games.whodunit.resources.host_start_description
+import com.parlor.games.whodunit.resources.host_start_blocked
+import com.parlor.games.whodunit.resources.host_start_failed
+import com.parlor.games.whodunit.resources.host_start_with_players_format
+import com.parlor.games.whodunit.resources.host_cancel_description
+import com.parlor.games.whodunit.resources.host_admission_failed
+import com.parlor.games.whodunit.resources.host_approve
+import com.parlor.games.whodunit.resources.host_approve_description
+import com.parlor.games.whodunit.resources.host_decline
+import com.parlor.games.whodunit.resources.host_decline_description
+import com.parlor.games.whodunit.resources.host_join_request_format
+import com.parlor.games.whodunit.resources.host_members_empty
+import com.parlor.games.whodunit.resources.host_members_eyebrow
+import com.parlor.games.whodunit.resources.host_pending_eyebrow
+import com.parlor.games.whodunit.resources.host_room_code_eyebrow
+import com.parlor.games.whodunit.resources.host_opening_room
+import com.parlor.games.whodunit.resources.host_title
+import com.parlor.games.whodunit.resources.network_open_settings
+import com.parlor.games.whodunit.resources.network_open_settings_description
+import com.parlor.games.whodunit.resources.network_recovery_help
+import com.parlor.games.whodunit.resources.network_retry
+import com.parlor.games.whodunit.resources.network_retry_description
+import com.parlor.games.whodunit.resources.host_hosting_as_format
+import com.parlor.games.whodunit.resources.host_start_need_more_format
+import com.parlor.games.whodunit.resources.host_start_pending
+import com.parlor.games.whodunit.resources.host_start_too_many_format
+import com.parlor.games.whodunit.ui.dataErrorMessage
+import com.parlor.games.whodunit.ui.netErrorMessage
 import com.parlor.content.repository.CaseRepository
 import com.parlor.content.validation.PayloadValidator
 import com.parlor.content.validation.ValidatedCase
@@ -87,7 +87,6 @@ import com.parlor.games.whodunit.content.WhodunitCase
 import com.parlor.games.whodunit.domain.rules.WhodunitRules
 import com.parlor.games.whodunit.WhodunitIds
 import com.parlor.games.whodunit.ui.flow.WhodunitMultiplayerHostFlow
-import com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostRoomBridge
 import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.NetError
 import com.parlor.networking.room.RoomMember
@@ -582,7 +581,7 @@ private fun HostLoadingState(
         ) {
             CandleFlame(size = androidx.compose.ui.unit.Dp(LOADING_FLAME_SIZE_DP))
             Text(
-                text = stringResource(Res.string.host_starting),
+                text = stringResource(Res.string.host_opening_room),
                 style = ParlorTheme.typography.displayMedium,
                 color = ParlorTheme.colors.textPrimary,
                 textAlign = TextAlign.Center,

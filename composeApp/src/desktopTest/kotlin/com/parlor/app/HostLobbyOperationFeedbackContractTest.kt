@@ -16,7 +16,8 @@ class HostLobbyOperationFeedbackContractTest {
     fun bothShippingLobbiesObserveFailuresAndGuardOperationsInFlight() {
         val sources = listOf(
             read(
-                "composeApp/src/commonMain/kotlin/com/parlor/app/shell/game/whodunit/" +
+                "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/" +
+                    "multiplayer/" +
                     "WhodunitHostSessionFlow.kt",
             ),
             read(

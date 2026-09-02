@@ -1,31 +1,31 @@
-package com.parlor.app.shell
+package com.parlor.games.whodunit.ui
 
 import androidx.compose.runtime.Composable
-import com.parlor.app.resources.Res
-import com.parlor.app.resources.data_error_corrupted
-import com.parlor.app.resources.data_error_disk_full
-import com.parlor.app.resources.data_error_io
-import com.parlor.app.resources.data_error_not_found
-import com.parlor.app.resources.data_error_permission_denied
-import com.parlor.app.resources.data_error_unknown
-import com.parlor.app.resources.net_error_not_connected
-import com.parlor.app.resources.net_error_name_in_use
-import com.parlor.app.resources.net_error_already_connected
-import com.parlor.app.resources.net_error_command_in_flight
-import com.parlor.app.resources.net_error_host_declined
-import com.parlor.app.resources.net_error_incompatible
-import com.parlor.app.resources.net_error_invalid_input
-import com.parlor.app.resources.net_error_timeout
-import com.parlor.app.resources.net_error_payload_too_large
-import com.parlor.app.resources.net_error_rate_limited
-import com.parlor.app.resources.net_error_rejoin_expired
-import com.parlor.app.resources.net_error_room_full
-import com.parlor.app.resources.net_error_secure_storage
-import com.parlor.app.resources.net_error_session_started
-import com.parlor.app.resources.net_error_suspended
-import com.parlor.app.resources.net_error_transport
-import com.parlor.app.resources.net_error_unauthorized
-import com.parlor.app.resources.net_error_wrong_code
+import com.parlor.games.whodunit.resources.Res
+import com.parlor.games.whodunit.resources.data_error_corrupted
+import com.parlor.games.whodunit.resources.data_error_disk_full
+import com.parlor.games.whodunit.resources.data_error_io
+import com.parlor.games.whodunit.resources.data_error_not_found
+import com.parlor.games.whodunit.resources.data_error_permission_denied
+import com.parlor.games.whodunit.resources.data_error_unknown
+import com.parlor.games.whodunit.resources.net_error_not_connected
+import com.parlor.games.whodunit.resources.net_error_name_in_use
+import com.parlor.games.whodunit.resources.net_error_already_connected
+import com.parlor.games.whodunit.resources.net_error_command_in_flight
+import com.parlor.games.whodunit.resources.net_error_host_declined
+import com.parlor.games.whodunit.resources.net_error_incompatible
+import com.parlor.games.whodunit.resources.net_error_invalid_input
+import com.parlor.games.whodunit.resources.net_error_timeout
+import com.parlor.games.whodunit.resources.net_error_payload_too_large
+import com.parlor.games.whodunit.resources.net_error_rate_limited
+import com.parlor.games.whodunit.resources.net_error_rejoin_expired
+import com.parlor.games.whodunit.resources.net_error_room_full
+import com.parlor.games.whodunit.resources.net_error_secure_storage
+import com.parlor.games.whodunit.resources.net_error_session_started
+import com.parlor.games.whodunit.resources.net_error_suspended
+import com.parlor.games.whodunit.resources.net_error_transport
+import com.parlor.games.whodunit.resources.net_error_unauthorized
+import com.parlor.games.whodunit.resources.net_error_wrong_code
 import com.parlor.core.result.DataError
 import com.parlor.networking.room.NetError
 import org.jetbrains.compose.resources.stringResource
@@ -37,7 +37,7 @@ import org.jetbrains.compose.resources.stringResource
  * to the user and is never translated.
  */
 @Composable
-fun dataErrorMessage(error: DataError): String = stringResource(
+internal fun dataErrorMessage(error: DataError): String = stringResource(
     when (error) {
         is DataError.NotFound -> Res.string.data_error_not_found
         is DataError.CorruptedData -> Res.string.data_error_corrupted
@@ -54,7 +54,7 @@ fun dataErrorMessage(error: DataError): String = stringResource(
  * not for the user.
  */
 @Composable
-fun netErrorMessage(error: NetError): String = stringResource(
+internal fun netErrorMessage(error: NetError): String = stringResource(
     when (netErrorMessageKey(error)) {
         NetErrorMessageKey.NotConnected -> Res.string.net_error_not_connected
         NetErrorMessageKey.Timeout -> Res.string.net_error_timeout

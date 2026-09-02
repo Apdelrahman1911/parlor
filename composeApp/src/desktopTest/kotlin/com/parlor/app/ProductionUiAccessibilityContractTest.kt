@@ -149,7 +149,8 @@ class ProductionUiAccessibilityContractTest {
     @Test
     fun fullscreen_recovery_and_confirmation_states_hide_or_replace_interactive_content() {
         val whodunitPeer = read(
-            "composeApp/src/commonMain/kotlin/com/parlor/app/shell/game/whodunit/" +
+            "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/" +
+                "multiplayer/" +
                 "WhodunitPeerSessionFlow.kt",
         )
         val mafiaPeer = read(

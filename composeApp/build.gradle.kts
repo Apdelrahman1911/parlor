@@ -540,7 +540,13 @@ val verifyGameShellDispatch by tasks.registering {
     val multiplayerShellSources = fileTree(
         "src/commonMain/kotlin/com/parlor/app/shell/multiplayer",
     ).matching { include("**/*.kt") }
-    inputs.files(neutralShellSources, multiplayerShellSources)
+    val gameShellSupportSources = fileTree(
+        "src/commonMain/kotlin/com/parlor/app/shell/game",
+    ).matching {
+        include("**/*.kt")
+        exclude("**/*GameShellBinding.kt")
+    }
+    inputs.files(neutralShellSources, multiplayerShellSources, gameShellSupportSources)
     doLast {
         val forbidden = listOf("whodunit", "mafia", "com.parlor.games.")
         inputs.files.files.filter { file -> file.isFile }.forEach { source ->
