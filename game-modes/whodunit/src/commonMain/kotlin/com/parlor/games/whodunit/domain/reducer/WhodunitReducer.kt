@@ -720,7 +720,7 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
             return if (vote.isElimination) {
                 continueAfterUnresolvedEliminationVote(state)
             } else {
-                killerWins(state, KillerWinCause.TieUnresolved)
+                killerWinsAfterUnresolvedTie(state)
             }
         }
 
@@ -760,7 +760,7 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
             return if (isElimination) {
                 continueAfterUnresolvedEliminationVote(state)
             } else {
-                killerWins(state, KillerWinCause.TieUnresolved)
+                killerWinsAfterUnresolvedTie(state)
             }
         }
         val tiedState = VoteState.Tied(
@@ -891,7 +891,7 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
         // advancing again would eventually exhaust every unique clue and trap
         // the room on an unrevealable round.
         if (phase.index >= maximumRounds) {
-            return killerWins(state, KillerWinCause.TieUnresolved)
+            return killerWinsAfterUnresolvedTie(state)
         }
         val nextRoundIndex = phase.index + 1
         val nextPhase = WhodunitPhase.Round(nextRoundIndex)
@@ -915,14 +915,14 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
             .filterNot { it in state.public.eliminatedPlayers }
             .filterNot { it in state.public.droppedPlayers }
         if (survivors.size <= 2) {
-            return killerWins(state, KillerWinCause.SurvivedToFinalTwo)
+            return killerSurvivedToFinalTwo(state)
         }
         val maximumRounds = WhodunitRules.maximumRoundCount(
             state.public.modeId,
             state.public.playersAtTable.size,
         ) ?: return Reduction(state)
         if (state.public.currentRound >= maximumRounds) {
-            return killerWins(state, KillerWinCause.TieUnresolved)
+            return killerWinsAfterUnresolvedTie(state)
         }
         val nextRoundIndex = state.public.currentRound + 1
         val nextPhase = WhodunitPhase.Round(nextRoundIndex)
@@ -939,10 +939,41 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
         )
     }
 
-    private fun killerWins(state: WhodunitState, cause: KillerWinCause): Reduction<WhodunitState, WhodunitEvent> {
+    private fun killerWinsAfterUnresolvedTie(
+        state: WhodunitState,
+    ): Reduction<WhodunitState, WhodunitEvent> = finishKillerWin(
+        state = state,
+        cause = KillerWinCause.TieUnresolved,
+        resolvedVote = VoteState.Resolved(state.hostOnly.killerId, wasKiller = true),
+    )
+
+    private fun killerSurvivedToFinalTwo(
+        state: WhodunitState,
+    ): Reduction<WhodunitState, WhodunitEvent> {
+        val eliminated = state.public.eliminatedPlayers
+        if (
+            state.public.modeId != WhodunitIds.EliminationModeId ||
+            eliminated.size != state.players.size - 2
+        ) {
+            return Reduction(state)
+        }
+        val lastEliminated = eliminated.lastOrNull() ?: return Reduction(state)
+        if (lastEliminated == state.hostOnly.killerId) return Reduction(state)
+        return finishKillerWin(
+            state = state,
+            cause = KillerWinCause.SurvivedToFinalTwo,
+            resolvedVote = VoteState.Resolved(lastEliminated, wasKiller = false),
+        )
+    }
+
+    private fun finishKillerWin(
+        state: WhodunitState,
+        cause: KillerWinCause,
+        resolvedVote: VoteState.Resolved,
+    ): Reduction<WhodunitState, WhodunitEvent> {
         val verdict = Verdict.KillerWins(state.hostOnly.killerCharacterId.raw, cause)
         val newPublic = state.public.copy(
-            voteState = VoteState.Resolved(state.hostOnly.killerId, true),
+            voteState = resolvedVote,
             verdict = verdict,
         )
         return Reduction(

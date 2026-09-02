@@ -17,6 +17,8 @@ import com.parlor.games.whodunit.content.InnocentBrief
 import com.parlor.games.whodunit.content.TimelineEntry
 import com.parlor.games.whodunit.content.WhodunitCase
 import com.parlor.games.whodunit.domain.action.WhodunitAction
+import com.parlor.games.whodunit.domain.event.KillerWinCause
+import com.parlor.games.whodunit.domain.event.Verdict
 import com.parlor.games.whodunit.domain.phase.WhodunitPhase
 import com.parlor.games.whodunit.domain.projection.WhodunitProjectionPolicy
 import com.parlor.games.whodunit.domain.reducer.WhodunitReducer
@@ -27,6 +29,7 @@ import com.parlor.games.whodunit.domain.state.PlayerRole
 import com.parlor.games.whodunit.domain.state.VoteState
 import com.parlor.games.whodunit.domain.state.WhodunitState
 import com.parlor.games.whodunit.domain.state.WhodunitStateValidator
+import com.parlor.games.whodunit.snapshot.WhodunitSnapshotCodec
 import com.parlor.networking.room.RoomInputPolicy
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -351,6 +354,90 @@ class WhodunitRulesInvariantTest {
         val vote = state.public.voteState as VoteState.Collecting
         assertFalse(vote.isSecondRound)
         assertEquals(roster.map { it.id }, vote.ballotPlayerIds)
+    }
+
+    @Test
+    fun unresolvedFinalTwoVoteProducesCanonicalPersistableWinner() {
+        val roster = players(5)
+        val seed = 73L
+        var state = definition.createInitialState(
+            config(WhodunitIds.EliminationModeId, roster, seed),
+        )
+        state = submitValid(state, WhodunitAction.AssignRoles(seed))
+        roster.forEach { player ->
+            state = submitValid(state, WhodunitAction.AcknowledgeIntro(player.id))
+        }
+        state = submitValid(state, WhodunitAction.AdvanceFromIntro)
+        roster.forEach { player ->
+            state = submitValid(state, WhodunitAction.AcknowledgeBriefing(player.id))
+        }
+        for (card in 1..4) {
+            state = submitValid(state, WhodunitAction.AdvanceBriefingCard(card))
+        }
+        val generation = state.public.roleAssignmentGeneration
+        roster.forEach { player ->
+            state = submitValid(
+                state,
+                WhodunitAction.StartCharacterReveal(player.id, generation),
+            )
+            state = submitValid(
+                state,
+                WhodunitAction.CompleteCharacterReveal(player.id, generation),
+            )
+        }
+        state = submitValid(state, WhodunitAction.AdvanceFromCharacterReveal)
+
+        repeat(3) { index ->
+            state = submitValid(state, WhodunitAction.RevealNextClue)
+            state = submitValid(state, WhodunitAction.StartDiscussionTimer(180))
+            state = submitValid(state, WhodunitAction.AdvanceFromDiscussion)
+            val innocent = roster.first { player ->
+                player.id != state.hostOnly.killerId &&
+                    player.id !in state.public.eliminatedPlayers
+            }.id
+            val ballot = (state.public.voteState as VoteState.Collecting).ballotPlayerIds
+            ballot.forEach { voter ->
+                state = submitValid(
+                    state,
+                    if (voter == innocent) {
+                        WhodunitAction.AbstainVote(voter)
+                    } else {
+                        WhodunitAction.CastVote(voter, innocent)
+                    },
+                )
+            }
+            state = submitValid(state, WhodunitAction.CloseVote)
+            if (index < 2) {
+                state = submitValid(state, WhodunitAction.AcknowledgeRevealCard)
+            }
+        }
+
+        val finalTwo = roster.map { it.id }
+            .filterNot(state.public.eliminatedPlayers::contains)
+        state = state.copy(
+            phase = WhodunitPhase.Round(state.public.currentRound),
+            public = state.public.copy(
+                voteState = VoteState.Collecting(
+                    isElimination = true,
+                    ballotPlayerIds = finalTwo,
+                    candidatePlayerIds = finalTwo,
+                ),
+                verdict = null,
+            ),
+        )
+        assertSnapshotBoundaries(state)
+        finalTwo.forEach { voter ->
+            state = submitValid(state, WhodunitAction.AbstainVote(voter))
+        }
+
+        state = submitValid(state, WhodunitAction.CloseVote)
+        val verdict = state.public.verdict as Verdict.KillerWins
+        val resolved = state.public.voteState as VoteState.Resolved
+        assertEquals(KillerWinCause.SurvivedToFinalTwo, verdict.cause)
+        assertEquals(state.public.eliminatedPlayers.last(), resolved.accusedPlayerId)
+        assertFalse(resolved.wasKiller)
+        val codec = WhodunitSnapshotCodec(json)
+        assertEquals(state, codec.decode(codec.encode(state)))
     }
 
     private fun assignedState(
