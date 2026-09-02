@@ -41,11 +41,13 @@ candidate or promotion workflow, and every direct Store API execution command,
 now calls `assert-store-identity-approved` before signing or Store access. The
 checked-in release policy marks both identities `blocked`; changing only that
 flag is rejected while the known-colliding identifier remains configured.
-As an independent live control, the candidate, external-testing promotion, and
-production-promotion workflows are manually disabled in GitHub; only production
-verification remains active. Re-enable those workflows only after the reviewed
-identity migration, authenticated Store readback, protected-variable setup,
-environment approval support, and branch-rule activation are all complete.
+As independent live controls, the candidate, external-testing promotion, and
+production-promotion workflows are manually disabled in GitHub **and** every
+job has a checked-in `if: ${{ always() && false }}` guard enforced by the
+workflow contract; only production verification remains active. Re-enable
+those workflows only in a reviewed change after the identity migration,
+authenticated Store readback, protected-variable setup, environment approval
+support, and branch-rule activation are all complete.
 
 Before any signed candidate can exist, authenticated Store readback must either
 locate existing Parlor app records controlled by the owner or the owner must
@@ -57,6 +59,10 @@ tests together. Only then may API readback evidence set the policy status to
 `com.parlor.app`, and never guess a replacement reverse-DNS identifier.
 
 ## Branch and workflow lifecycle
+
+The table below describes the intended lifecycle after the release stop is
+deliberately removed. In the current tree, every job in the three Store
+workflows is unconditionally disabled.
 
 | Branch | Workflow | Trigger | Store credentials | Store mutation |
 |---|---|---|---|---|
@@ -573,9 +579,10 @@ Until evidence is supplied, release automation is **NOT READY TO PUBLISH**:
 
 - both provisional production identifiers are assigned to another developer in
   the public Stores; identity variables were removed from GitHub and all Store
-  workflows are both manually disabled and fail-closed in code until an
-  owner-controlled identity migration is reviewed and authenticated API
-  readback is recorded;
+  workflows are manually disabled, guarded by checked-in
+  `if: ${{ always() && false }}` conditions, and fail-closed on identity
+  ownership until an owner-controlled identity migration is reviewed and
+  authenticated API readback is recorded;
 - the public repository now has secret scanning and push protection enabled and
   supports environment reviewers and artifact attestations, but an independent
   release reviewer has not been selected or added; the active branch ruleset

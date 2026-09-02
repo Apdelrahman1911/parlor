@@ -26,6 +26,7 @@ ALLOWED_ACTIONS = {
     "actions/upload-artifact",
     "actions/attest-build-provenance",
 }
+DISABLED_STORE_JOB_CONDITION = "if: ${{ always() && false }}"
 
 
 def fail(message: str) -> None:
@@ -154,6 +155,44 @@ def verify_store_workflow(name: str, text: str) -> None:
     preflight = text.split("\n  android:", 1)[0]
     if "secrets." in preflight:
         fail(f"{name}: preflight code can access Store credentials before protected-environment approval")
+    verify_store_jobs_disabled(name, text)
+
+
+def verify_store_jobs_disabled(name: str, text: str) -> None:
+    """Require an unconditional repository-owned stop on every Store job."""
+    lines = text.splitlines()
+    try:
+        jobs_start = lines.index("jobs:")
+    except ValueError:
+        fail(f"{name}: Store workflow has no jobs section")
+
+    jobs: dict[str, list[str]] = {}
+    current_job: str | None = None
+    for line in lines[jobs_start + 1 :]:
+        if line and not line[0].isspace():
+            if line.startswith("#"):
+                continue
+            break
+        match = re.fullmatch(r"  ([A-Za-z_][A-Za-z0-9_-]*):\s*(?:#.*)?", line)
+        if match:
+            current_job = match.group(1)
+            jobs[current_job] = []
+        elif current_job is not None:
+            jobs[current_job].append(line)
+
+    if not jobs:
+        fail(f"{name}: Store workflow has no reviewable jobs")
+    for job, block in jobs.items():
+        conditions = [
+            line.strip()
+            for line in block
+            if re.match(r"^ {4}if:", line)
+        ]
+        if conditions != [DISABLED_STORE_JOB_CONDITION]:
+            fail(
+                f"{name}: Store job {job!r} must remain repository-disabled with "
+                f"{DISABLED_STORE_JOB_CONDITION!r}"
+            )
 
 
 def verify_store_serialization(files: dict[str, str]) -> None:

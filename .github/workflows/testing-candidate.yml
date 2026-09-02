@@ -26,7 +26,10 @@ permissions:
   contents: read
 
 jobs:
+  # Repository-enforced release stop. Every job remains disabled until the
+  # Store identity migration and release-authorization gates are reviewed.
   preflight:
+    if: ${{ always() && false }}
     name: Freeze source and run candidate gates
     runs-on: ubuntu-24.04
     timeout-minutes: 120
@@ -172,6 +175,7 @@ jobs:
             **/build/reports/lint-results-*
 
   android:
+    if: ${{ always() && false }}
     name: Build, sign, validate, and stage Android once
     needs: preflight
     concurrency:
@@ -616,6 +620,7 @@ jobs:
         run: rm -f "$RUNNER_TEMP/parlor-upload.jks" "$RUNNER_TEMP/google-play-service-account.json" "$RUNNER_TEMP/bundletool.jar"
 
   ios:
+    if: ${{ always() && false }}
     name: Archive, sign, validate, and stage iOS once
     needs: preflight
     concurrency:
@@ -1153,7 +1158,7 @@ jobs:
   finalize:
     name: Seal immutable candidate manifest or rehearsal evidence
     needs: [preflight, android, ios]
-    if: ${{ always() && needs.preflight.result == 'success' && needs.android.result == 'success' && needs.ios.result == 'success' }}
+    if: ${{ always() && false }}
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     permissions:

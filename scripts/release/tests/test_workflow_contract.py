@@ -199,6 +199,26 @@ class WorkflowContractTest(unittest.TestCase):
                 workflow.replace("assert-store-identity-approved", "identity-check-removed", 1),
             )
 
+    def test_every_store_workflow_job_is_repository_disabled(self) -> None:
+        for name in sorted(workflow_contract.STORE_WORKFLOWS):
+            with self.subTest(workflow=name):
+                workflow = (workflow_contract.WORKFLOWS / name).read_text(encoding="utf-8")
+                broken = workflow.replace(
+                    workflow_contract.DISABLED_STORE_JOB_CONDITION,
+                    "if: ${{ true }}",
+                    1,
+                )
+                with self.assertRaisesRegex(RuntimeError, "must remain repository-disabled"):
+                    workflow_contract.verify_store_jobs_disabled(name, broken)
+
+    def test_new_store_workflow_job_cannot_omit_the_release_stop(self) -> None:
+        workflow = (
+            workflow_contract.ROOT / ".github/workflows/testing-candidate.yml"
+        ).read_text(encoding="utf-8")
+        broken = workflow + "\n  bypass:\n    runs-on: ubuntu-24.04\n"
+        with self.assertRaisesRegex(RuntimeError, "Store job 'bypass'"):
+            workflow_contract.verify_store_jobs_disabled("testing-candidate.yml", broken)
+
     def test_release_tool_download_failure_cannot_false_pass(self) -> None:
         script = (
             workflow_contract.ROOT / "scripts/release/validate_release_system.sh"

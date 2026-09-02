@@ -124,6 +124,12 @@ Complete `docs/PRIVACY_AND_COMPLIANCE.md` and
 
 ## 5. Create and stage the immutable Store candidate
 
+> **Current release stop:** do not execute this section. Every candidate and
+> promotion job is repository-disabled with
+> `if: ${{ always() && false }}` until the owner-controlled Store identity
+> migration and release authorization gates are reviewed. The steps below
+> document the future procedure only.
+
 ### Android
 
 1. Dispatch `.github/workflows/testing-candidate.yml` on protected `testing`
