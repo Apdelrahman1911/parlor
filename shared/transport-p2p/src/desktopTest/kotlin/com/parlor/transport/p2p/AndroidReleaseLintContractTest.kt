@@ -164,10 +164,19 @@ class AndroidReleaseLintContractTest {
 
     @Test
     fun compact_interactive_affordances_enforce_accessible_semantics_and_touch_targets() {
+        val iconButton = read(
+            "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/" +
+                "ParlorIconButton.kt",
+        )
+        assertContains(iconButton, ".size(ParlorTheme.spacing.xxl)")
+        assertContains(iconButton, "contentDescription: String")
+        assertContains(iconButton, "contentDescription.isNotBlank()")
+        assertContains(iconButton, "role = Role.Button")
+
         val header = read(
             "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ScreenHeader.kt",
         )
-        assertContains(header, ".size(ParlorTheme.spacing.xxl)")
+        assertContains(header, "ParlorIconButton(")
         assertContains(header, "Modifier.semantics { heading() }")
 
         val tabs = read(
@@ -179,7 +188,7 @@ class AndroidReleaseLintContractTest {
         assertContains(tabs, "role = Role.Tab")
 
         val home = read("composeApp/src/commonMain/kotlin/com/parlor/app/shell/home/HomeScreen.kt")
-        assertContains(home, ".heightIn(min = ParlorTheme.spacing.xxl)")
+        assertContains(home, "icon = ParlorIcons.Settings")
 
         val privacy = read(
             "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/screens/safety/PrivacyConcernOverlay.kt",

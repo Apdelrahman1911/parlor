@@ -1,6 +1,5 @@
 package com.parlor.games.whodunit.ui.flow
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,15 +12,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Text
-import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.paneTitle
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -52,12 +48,15 @@ import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.HostDisconnectedOverlay
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorButtonVariant
+import com.parlor.designsystem.components.ParlorIconButton
+import com.parlor.designsystem.components.ParlorIconButtonVariant
 import com.parlor.designsystem.components.ReconnectingOverlay
 import com.parlor.designsystem.components.LocalParlorToastState
 import com.parlor.designsystem.components.ParlorToastSeverity
 import com.parlor.designsystem.components.SessionExitAffordance
 import com.parlor.designsystem.components.SessionExitConfirmation
 import com.parlor.designsystem.components.SessionExitKind
+import com.parlor.designsystem.icons.ParlorIcons
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.engine.state.Player
 import com.parlor.games.whodunit.WhodunitDefinition
@@ -949,21 +948,14 @@ private fun PauseAffordance(
     onPause: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val openDescription = stringResource(Res.string.pause_open_description)
-    Box(
-        modifier = modifier
-            .size(48.dp)
-            .semantics { contentDescription = openDescription }
-            .clickable(role = Role.Button, onClick = onPause),
-        contentAlignment = Alignment.Center,
-    ) {
-        Text(
-            text = "II",
-            style = ParlorTheme.typography.labelSmall,
-            color = ParlorTheme.colors.accentEmber,
-            textAlign = TextAlign.Center,
-        )
-    }
+    ParlorIconButton(
+        icon = ParlorIcons.Pause,
+        contentDescription = stringResource(Res.string.pause_open_description),
+        onClick = onPause,
+        modifier = modifier,
+        variant = ParlorIconButtonVariant.Ghost,
+        tint = ParlorTheme.colors.accentEmber,
+    )
 }
 
 
