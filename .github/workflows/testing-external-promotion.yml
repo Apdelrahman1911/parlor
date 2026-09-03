@@ -36,7 +36,10 @@ permissions:
   contents: read
 
 jobs:
+  # Repository-enforced release stop. Every job remains disabled until the
+  # Store identity migration and release-authorization gates are reviewed.
   preflight:
+    if: ${{ always() && false }}
     name: Load and verify immutable candidate
     runs-on: ubuntu-24.04
     timeout-minutes: 15
@@ -148,7 +151,7 @@ jobs:
     concurrency:
       group: parlor-google-play-production-identity
       cancel-in-progress: false
-    if: ${{ inputs.platform == 'android' || inputs.platform == 'both' }}
+    if: ${{ always() && false }}
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     environment: external-testing-android
@@ -237,7 +240,7 @@ jobs:
     concurrency:
       group: parlor-app-store-connect-production-identity
       cancel-in-progress: false
-    if: ${{ inputs.platform == 'ios' || inputs.platform == 'both' }}
+    if: ${{ always() && false }}
     runs-on: macos-15
     timeout-minutes: 30
     environment: external-testing-ios
@@ -342,11 +345,7 @@ jobs:
   finalize:
     name: Seal one successful external-testing evidence record
     needs: [preflight, android, ios]
-    if: >-
-      ${{ always() && inputs.publish && needs.preflight.result == 'success' &&
-          ((inputs.platform == 'android' && needs.android.result == 'success') ||
-           (inputs.platform == 'ios' && needs.ios.result == 'success') ||
-           (inputs.platform == 'both' && needs.android.result == 'success' && needs.ios.result == 'success')) }}
+    if: ${{ always() && false }}
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     permissions:

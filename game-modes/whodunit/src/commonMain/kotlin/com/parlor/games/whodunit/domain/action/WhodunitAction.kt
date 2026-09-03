@@ -72,6 +72,7 @@ sealed interface WhodunitAction : GameAction {
     @Serializable data object AdvanceFromDiscussion : WhodunitAction
 
     // --- Voting ---
+    /** Opens a tied revote; initial ballots open only through [AdvanceFromDiscussion]. */
     @Serializable data object OpenVote : WhodunitAction
     @Serializable data class CastVote(val voter: PlayerId, val target: PlayerId) : WhodunitAction
     @Serializable data class AbstainVote(val voter: PlayerId) : WhodunitAction

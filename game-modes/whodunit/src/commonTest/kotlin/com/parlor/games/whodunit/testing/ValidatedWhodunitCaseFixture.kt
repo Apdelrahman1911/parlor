@@ -3,15 +3,14 @@ package com.parlor.games.whodunit.testing
 import com.parlor.content.schema.CaseEnvelope
 import com.parlor.content.schema.IntRangePair
 import com.parlor.content.validation.DefaultCaseValidator
-import com.parlor.content.validation.PayloadValidator
 import com.parlor.content.validation.ValidatedCase
 import com.parlor.core.result.Result
-import com.parlor.core.result.ValidationError
 import com.parlor.core.versioning.SemVer
 import com.parlor.engine.registry.DefaultGameRegistry
 import com.parlor.games.whodunit.WhodunitDefinition
 import com.parlor.games.whodunit.WhodunitIds
 import com.parlor.games.whodunit.content.WhodunitCase
+import com.parlor.games.whodunit.content.WhodunitPayloadValidator
 import com.parlor.games.whodunit.content.Character
 import com.parlor.games.whodunit.content.Clue
 import com.parlor.games.whodunit.content.CluePools
@@ -25,19 +24,22 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.encodeToJsonElement
 
 /**
- * Creates a genuine [ValidatedCase] token for reducer tests while allowing the
- * payload itself to exercise defensive branches that strict content validation
- * would reject. This helper is test-source-only; production code has no bypass
- * around [DefaultCaseValidator].
+ * Creates a [ValidatedCase] token through the same envelope and payload
+ * validators used by production. Reducer tests must therefore use playable
+ * content rather than fixtures that production admission would reject.
  */
 internal fun validatedWhodunitCaseForTest(
     payload: WhodunitCase,
     caseId: String,
-    supportedPlayerCounts: IntRange = 4..8,
-    supportedModes: List<String> = listOf(
-        WhodunitIds.ClassicVoteModeId.raw,
-        WhodunitIds.EliminationModeId.raw,
-    ),
+    supportedPlayerCounts: IntRange = 4..payload.characters.size,
+    supportedModes: List<String> = buildList {
+        if (supportedPlayerCounts.any { it in 4..8 }) {
+            add(WhodunitIds.ClassicVoteModeId.raw)
+        }
+        if (supportedPlayerCounts.any { it in 5..8 }) {
+            add(WhodunitIds.EliminationModeId.raw)
+        }
+    },
 ): ValidatedCase<WhodunitCase> {
     val json = Json { encodeDefaults = true }
     val envelope = CaseEnvelope(
@@ -60,18 +62,10 @@ internal fun validatedWhodunitCaseForTest(
         installedAppVersion = SemVer(1, 0, 0),
         gameRegistry = DefaultGameRegistry(listOf(WhodunitDefinition(json))),
     )
-    val payloadValidator = object : PayloadValidator<WhodunitCase> {
-        override val gameId: String = WhodunitIds.GameId.raw
-
-        override fun validate(
-            envelope: CaseEnvelope,
-        ): Result<WhodunitCase, ValidationError> = Result.Success(payload)
-    }
-
     return when (
         val result = validator.validate(
             json.encodeToString(CaseEnvelope.serializer(), envelope),
-            payloadValidator,
+            WhodunitPayloadValidator(json),
         )
     ) {
         is Result.Success -> result.data
@@ -101,7 +95,8 @@ internal fun whodunitPeerCaseForTest(
             panicMove = "panic",
         ),
     )
-    fun keyedClue(prefix: String, id: String) = Clue("$prefix-$id", "$prefix clue for $id")
+    fun keyedClue(prefix: String, id: String, index: Int) =
+        Clue("$prefix-$id-$index", "$prefix clue $index for $id")
     val rounds = (1..3).map { round ->
         Round(
             id = "round-$round",
@@ -119,10 +114,18 @@ internal fun whodunitPeerCaseForTest(
             characters = ids.map(::character),
             cluePools = CluePools(
                 publicUniversal = listOf(Clue("public-one", "Public clue")),
-                killerPointing = ids.associateWith { listOf(keyedClue("pointing", it)) },
-                redHerring = ids.associateWith { listOf(keyedClue("red", it)) },
-                contradiction = ids.associateWith { listOf(keyedClue("contradiction", it)) },
-                finalStrong = ids.associateWith { listOf(keyedClue("final", it)) },
+                killerPointing = ids.associateWith { id ->
+                    (1..3).map { keyedClue("pointing", id, it) }
+                },
+                redHerring = ids.associateWith { id ->
+                    listOf(keyedClue("red", id, 1))
+                },
+                contradiction = ids.associateWith { id ->
+                    listOf(keyedClue("contradiction", id, 1))
+                },
+                finalStrong = ids.associateWith { id ->
+                    (1..2).map { keyedClue("final", id, it) }
+                },
             ),
             revealNarratives = ids.associateWith { "Reveal $it" },
             roundConfigByPlayerCount = mapOf("4" to RoundConfig(rounds)),

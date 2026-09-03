@@ -199,6 +199,26 @@ class WorkflowContractTest(unittest.TestCase):
                 workflow.replace("assert-store-identity-approved", "identity-check-removed", 1),
             )
 
+    def test_every_store_workflow_job_is_repository_disabled(self) -> None:
+        for name in sorted(workflow_contract.STORE_WORKFLOWS):
+            with self.subTest(workflow=name):
+                workflow = (workflow_contract.WORKFLOWS / name).read_text(encoding="utf-8")
+                broken = workflow.replace(
+                    workflow_contract.DISABLED_STORE_JOB_CONDITION,
+                    "if: ${{ true }}",
+                    1,
+                )
+                with self.assertRaisesRegex(RuntimeError, "must remain repository-disabled"):
+                    workflow_contract.verify_store_jobs_disabled(name, broken)
+
+    def test_new_store_workflow_job_cannot_omit_the_release_stop(self) -> None:
+        workflow = (
+            workflow_contract.ROOT / ".github/workflows/testing-candidate.yml"
+        ).read_text(encoding="utf-8")
+        broken = workflow + "\n  bypass:\n    runs-on: ubuntu-24.04\n"
+        with self.assertRaisesRegex(RuntimeError, "Store job 'bypass'"):
+            workflow_contract.verify_store_jobs_disabled("testing-candidate.yml", broken)
+
     def test_release_tool_download_failure_cannot_false_pass(self) -> None:
         script = (
             workflow_contract.ROOT / "scripts/release/validate_release_system.sh"
@@ -206,6 +226,33 @@ class WorkflowContractTest(unittest.TestCase):
         broken = script.replace("return 2", "return", 1)
         with self.assertRaisesRegex(RuntimeError, "lose the failing command status"):
             workflow_contract.verify_tool_downloader(broken)
+
+    def test_release_system_enforces_review_inventory_freshness(self) -> None:
+        script = (
+            workflow_contract.ROOT / "scripts/release/validate_release_system.sh"
+        ).read_text(encoding="utf-8")
+        workflow_contract.verify_review_inventory_gate(script)
+        broken = script.replace(
+            "python3 scripts/generate_review_inventory.py --check",
+            "",
+            1,
+        )
+        with self.assertRaisesRegex(RuntimeError, "review-inventory freshness"):
+            workflow_contract.verify_review_inventory_gate(broken)
+
+    def test_review_inventory_gate_has_full_git_history(self) -> None:
+        workflow = (
+            workflow_contract.ROOT / ".github/workflows/production-verification.yml"
+        ).read_text(encoding="utf-8")
+        broken = workflow.replace("fetch-depth: 0", "fetch-depth: 1", 1)
+        before_other_job, other_jobs = broken.split("\n  desktop-linux-arm64:", 1)
+        broken = before_other_job + "\n  desktop-linux-arm64:" + other_jobs.replace(
+            "fetch-depth: 1",
+            "fetch-depth: 0",
+            1,
+        )
+        with self.assertRaisesRegex(RuntimeError, "full Git history"):
+            workflow_contract.verify_validation(broken)
 
     def test_apple_signing_and_upload_scripts_require_identity_approval(self) -> None:
         for name in ("build_ios_candidate.sh", "upload_ios_candidate.sh"):

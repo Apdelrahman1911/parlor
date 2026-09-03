@@ -76,9 +76,10 @@ data class WhodunitPublic(
     val disconnectedPlayers: Set<PlayerId> = emptySet(),
 
     /**
-     * Legacy snapshot compatibility for sessions saved by versions that
-     * permitted continuing without a player. New reducers never add entries:
-     * a missing player makes the current case impossible to continue safely.
+     * Players whose rejoin grace period expired after roles were assigned.
+     * `ContinueWithoutPlayer` records the missing seat only while ending
+     * active play through Reveal/PostGame, so this set is empty in active
+     * phases. A Setup expiry cancels without recording a dropped seat.
      */
     val droppedPlayers: Set<PlayerId> = emptySet(),
 

@@ -47,6 +47,12 @@ data class MafiaPublic(
      * with a reduced roster.
      */
     val disconnectedPlayers: Set<PlayerId> = emptySet(),
+    /**
+     * Players whose rejoin grace period expired after roles were assigned.
+     * `ContinueWithoutPlayer` records the missing seat and ends the game, so
+     * this set is empty in every active phase. A Setup expiry cancels without
+     * recording a dropped seat.
+     */
     val droppedPlayers: Set<PlayerId> = emptySet(),
 )
 

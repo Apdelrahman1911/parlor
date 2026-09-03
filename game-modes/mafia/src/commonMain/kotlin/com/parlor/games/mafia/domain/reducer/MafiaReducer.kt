@@ -774,12 +774,6 @@ object MafiaReducer : GameReducer<MafiaState, MafiaAction, MafiaEvent> {
 
     private fun advanceFromVoteAnnouncement(state: MafiaState): Reduction<MafiaState, MafiaEvent> {
         val ann = state.phase as? MafiaPhase.VoteAnnouncement ?: return Reduction(state)
-        if (state.public.winner != null) {
-            return Reduction(
-                finishGame(state, state.public.winner),
-                listOf(MafiaEvent.PhaseEntered(MafiaPhase.PostGame)),
-            )
-        }
         val active = activeRoster(state).filter { isAlive(state, it) }
         val acked = active.all { state.privatePerPlayer[it]?.voteAcknowledged == true }
         if (!acked) return Reduction(state)

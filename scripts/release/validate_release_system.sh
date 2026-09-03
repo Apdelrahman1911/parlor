@@ -22,9 +22,10 @@ trap 'cleanup $?' EXIT
 trap 'exit 130' INT
 trap 'exit 143' TERM
 
-python3 -m py_compile scripts/release/*.py
+python3 -m py_compile scripts/generate_review_inventory.py scripts/release/*.py
 python3 -m unittest discover -s scripts/release/tests -p 'test_*.py' -v
 python3 scripts/release/workflow_contract.py
+python3 scripts/generate_review_inventory.py --check
 
 os_name=$(uname -s | tr '[:upper:]' '[:lower:]')
 case $(uname -m) in

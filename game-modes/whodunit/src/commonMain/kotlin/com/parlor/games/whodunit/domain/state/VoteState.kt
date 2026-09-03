@@ -34,10 +34,10 @@ sealed interface VoteState {
         val currentVoterIndex: Int = 0,
         /**
          * True when this collection is the *revote* opened after a previous
-         * tie (i.e., `OpenVote` ran from a [Tied] state). The reducer reads
-         * this to decide whether a fresh tie should trigger the tied-twice
-         * outcome (killer wins in Classic; advance round in Elimination,
-         * per design doc §12 / §13).
+         * tie (i.e., the `OpenVote` action ran from a [Tied] state). The
+         * reducer reads this to decide whether a fresh tie should trigger the
+         * tied-twice outcome (killer wins in Classic; advance round in
+         * Elimination, per design doc §12 / §13).
          */
         val isSecondRound: Boolean = false,
     ) : VoteState

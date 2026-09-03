@@ -57,7 +57,10 @@ permissions:
   contents: read
 
 jobs:
+  # Repository-enforced release stop. Every job remains disabled until the
+  # Store identity migration and release-authorization gates are reviewed.
   preflight:
+    if: ${{ always() && false }}
     name: Verify release tree equals approved candidate tree
     runs-on: ubuntu-24.04
     timeout-minutes: 15
@@ -243,7 +246,7 @@ jobs:
     concurrency:
       group: parlor-google-play-production-identity
       cancel-in-progress: false
-    if: ${{ inputs.platform == 'android' || inputs.platform == 'both' }}
+    if: ${{ always() && false }}
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     environment: production-android
@@ -349,7 +352,7 @@ jobs:
     concurrency:
       group: parlor-app-store-connect-production-identity
       cancel-in-progress: false
-    if: ${{ inputs.platform == 'ios' || inputs.platform == 'both' }}
+    if: ${{ always() && false }}
     runs-on: macos-15
     timeout-minutes: 30
     environment: production-ios

@@ -26,6 +26,7 @@ ALLOWED_ACTIONS = {
     "actions/upload-artifact",
     "actions/attest-build-provenance",
 }
+DISABLED_STORE_JOB_CONDITION = "if: ${{ always() && false }}"
 
 
 def fail(message: str) -> None:
@@ -97,6 +98,13 @@ def verify_validation(text: str) -> None:
     if "productionReleaseAutomationCheck" not in text:
         fail("validation workflow does not enforce release-system tests")
     verify_android_runtime_smoke("production-verification.yml", text)
+    desktop_android_marker = "\n  desktop-android:"
+    next_job_marker = "\n  desktop-linux-arm64:"
+    if desktop_android_marker not in text or next_job_marker not in text:
+        fail("validation workflow is missing the desktop-android job boundary")
+    desktop_android_job = text.split(desktop_android_marker, 1)[1].split(next_job_marker, 1)[0]
+    if "fetch-depth: 0" not in desktop_android_job:
+        fail("validation workflow review-inventory gate requires full Git history")
     apple_test_step = text.split(
         "- name: Run iOS simulator tests, Apple static analysis, and release linkage gates",
         1,
@@ -154,6 +162,44 @@ def verify_store_workflow(name: str, text: str) -> None:
     preflight = text.split("\n  android:", 1)[0]
     if "secrets." in preflight:
         fail(f"{name}: preflight code can access Store credentials before protected-environment approval")
+    verify_store_jobs_disabled(name, text)
+
+
+def verify_store_jobs_disabled(name: str, text: str) -> None:
+    """Require an unconditional repository-owned stop on every Store job."""
+    lines = text.splitlines()
+    try:
+        jobs_start = lines.index("jobs:")
+    except ValueError:
+        fail(f"{name}: Store workflow has no jobs section")
+
+    jobs: dict[str, list[str]] = {}
+    current_job: str | None = None
+    for line in lines[jobs_start + 1 :]:
+        if line and not line[0].isspace():
+            if line.startswith("#"):
+                continue
+            break
+        match = re.fullmatch(r"  ([A-Za-z_][A-Za-z0-9_-]*):\s*(?:#.*)?", line)
+        if match:
+            current_job = match.group(1)
+            jobs[current_job] = []
+        elif current_job is not None:
+            jobs[current_job].append(line)
+
+    if not jobs:
+        fail(f"{name}: Store workflow has no reviewable jobs")
+    for job, block in jobs.items():
+        conditions = [
+            line.strip()
+            for line in block
+            if re.match(r"^ {4}if:", line)
+        ]
+        if conditions != [DISABLED_STORE_JOB_CONDITION]:
+            fail(
+                f"{name}: Store job {job!r} must remain repository-disabled with "
+                f"{DISABLED_STORE_JOB_CONDITION!r}"
+            )
 
 
 def verify_store_serialization(files: dict[str, str]) -> None:
@@ -468,6 +514,12 @@ def verify_tool_downloader(script: str) -> None:
             fail(f"release-tool downloader is not fail-closed: {token!r}")
 
 
+def verify_review_inventory_gate(script: str) -> None:
+    command = "python3 scripts/generate_review_inventory.py --check"
+    if script.count(command) != 1:
+        fail("release-system validation does not enforce review-inventory freshness exactly once")
+
+
 def verify_signing_scripts() -> None:
     build = (ROOT / "scripts" / "release" / "build_ios_candidate.sh").read_text(encoding="utf-8")
     validator = (ROOT / "scripts" / "release" / "validate_ios_artifact.sh").read_text(encoding="utf-8")
@@ -477,6 +529,7 @@ def verify_signing_scripts() -> None:
         ROOT / "scripts" / "release" / "validate_release_system.sh"
     ).read_text(encoding="utf-8")
     verify_tool_downloader(release_system_validator)
+    verify_review_inventory_gate(release_system_validator)
     for name, script in (
         ("build_ios_candidate.sh", build),
         (

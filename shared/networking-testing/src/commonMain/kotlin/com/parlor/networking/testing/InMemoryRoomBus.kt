@@ -19,6 +19,8 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.consumeAsFlow
+import kotlin.concurrent.atomics.AtomicInt
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
 
 /**
  * Bounded, in-process room bus for cross-module protocol and game tests.
@@ -27,9 +29,13 @@ import kotlinx.coroutines.flow.consumeAsFlow
  * production transport's authenticated actor stamping so authority tests do
  * not accidentally rely on peer-controlled identity fields.
  */
+@OptIn(ExperimentalAtomicApi::class)
 class InMemoryRoomBus {
     private val hostInbox = Channel<PeerMessage>(TEST_HOST_QUEUE_CAPACITY)
     private val peerInboxes = mutableMapOf<PlayerId, Channel<HostMessage>>()
+    private val droppedHostMessages = AtomicInt(0)
+    private val droppedPeerMessages = AtomicInt(0)
+    private val droppedPeerEvents = AtomicInt(0)
     private val _peerEvents = MutableSharedFlow<PeerEvent>(
         replay = 0,
         extraBufferCapacity = TEST_EVENT_QUEUE_CAPACITY,
@@ -40,6 +46,18 @@ class InMemoryRoomBus {
         get() = _peerEvents.subscriptionCount.value
     val hostMessagesIn: Flow<PeerMessage> = hostInbox.consumeAsFlow()
 
+    /** Number of peer-to-host frames rejected because the bounded inbox was full or closed. */
+    val droppedHostMessageCount: Int
+        get() = droppedHostMessages.load()
+
+    /** Number of host-to-peer frames rejected by any bounded peer inbox. */
+    val droppedPeerMessageCount: Int
+        get() = droppedPeerMessages.load()
+
+    /** Number of lifecycle events rejected because the shared event buffer was full or closed. */
+    val droppedPeerEventCount: Int
+        get() = droppedPeerEvents.load()
+
     fun registerPeer(id: PlayerId) {
         peerInboxes.getOrPut(id) { Channel(TEST_PEER_QUEUE_CAPACITY) }
     }
@@ -48,30 +66,48 @@ class InMemoryRoomBus {
         peerInboxes.getValue(id).consumeAsFlow()
 
     suspend fun fromPeer(message: PeerMessage) {
-        hostInbox.send(message)
+        if (hostInbox.trySend(message).isFailure) {
+            droppedHostMessages.addAndFetch(1)
+        }
     }
 
     suspend fun fromHost(target: SendTarget, message: HostMessage) {
         when (target) {
-            SendTarget.Broadcast -> peerInboxes.values.forEach { it.send(message) }
-            is SendTarget.Direct -> peerInboxes[target.playerId]?.send(message)
+            SendTarget.Broadcast -> peerInboxes.values.forEach { inbox ->
+                if (inbox.trySend(message).isFailure) {
+                    droppedPeerMessages.addAndFetch(1)
+                }
+            }
+            is SendTarget.Direct -> peerInboxes.getValue(target.playerId).let { inbox ->
+                if (inbox.trySend(message).isFailure) {
+                    droppedPeerMessages.addAndFetch(1)
+                }
+            }
         }
     }
 
     suspend fun emitPeerLeft(playerId: PlayerId, displayName: String) {
-        _peerEvents.emit(PeerEvent.PeerLeft(playerId, displayName))
+        if (!_peerEvents.tryEmit(PeerEvent.PeerLeft(playerId, displayName))) {
+            droppedPeerEvents.addAndFetch(1)
+        }
     }
 
     suspend fun emitPeerReconnected(playerId: PlayerId, displayName: String) {
-        _peerEvents.emit(PeerEvent.PeerReconnected(playerId, displayName))
+        if (!_peerEvents.tryEmit(PeerEvent.PeerReconnected(playerId, displayName))) {
+            droppedPeerEvents.addAndFetch(1)
+        }
     }
 
     suspend fun emitHostLost() {
-        _peerEvents.emit(PeerEvent.HostLost)
+        if (!_peerEvents.tryEmit(PeerEvent.HostLost)) {
+            droppedPeerEvents.addAndFetch(1)
+        }
     }
 
     suspend fun emitHostRestored() {
-        _peerEvents.emit(PeerEvent.HostRestored)
+        if (!_peerEvents.tryEmit(PeerEvent.HostRestored)) {
+            droppedPeerEvents.addAndFetch(1)
+        }
     }
 
     private companion object {
@@ -79,6 +115,37 @@ class InMemoryRoomBus {
         const val TEST_PEER_QUEUE_CAPACITY = 32
         const val TEST_EVENT_QUEUE_CAPACITY = 32
     }
+}
+
+/** Host-side [LocalRoom] endpoint backed by [InMemoryRoomBus]. */
+class InMemoryHostRoom(
+    private val bus: InMemoryRoomBus,
+    override val selfPlayerId: PlayerId,
+    hostDisplayName: String,
+) : LocalRoom {
+    private val _info = MutableStateFlow(
+        RoomInfo("local", hostDisplayName, selfPlayerId, RoomInfo.Status.Hosting),
+    )
+    private val _members = MutableStateFlow<List<RoomMember>>(emptyList())
+
+    override val info = _info.asStateFlow()
+    override val members = _members.asStateFlow()
+    override val isHost = true
+    override val incoming: Flow<RoomMessage> = bus.hostMessagesIn
+    override val peerEvents: SharedFlow<PeerEvent> = bus.peerEvents
+
+    override suspend fun send(
+        target: SendTarget,
+        message: HostMessage,
+    ): Result<Unit, NetError> {
+        bus.fromHost(target, message)
+        return Result.Success(Unit)
+    }
+
+    override suspend fun sendToHost(message: PeerMessage): Result<Unit, NetError> =
+        Result.Failure(NetError.Unauthorized)
+
+    override suspend fun leave() = Unit
 }
 
 /** A peer-side room whose sender identity is bound by construction. */

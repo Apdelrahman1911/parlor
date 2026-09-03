@@ -1,4 +1,4 @@
-package com.parlor.app.shell.game.whodunit
+package com.parlor.games.whodunit.ui.flow.multiplayer
 
 import com.parlor.networking.room.NetError
 import kotlin.test.Test

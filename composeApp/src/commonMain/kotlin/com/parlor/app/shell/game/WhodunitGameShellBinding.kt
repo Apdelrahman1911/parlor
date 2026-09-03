@@ -14,11 +14,11 @@ import com.parlor.app.resources.home_whodunit_open_description
 import com.parlor.app.resources.home_whodunit_subtitle
 import com.parlor.app.resources.home_whodunit_tagline
 import com.parlor.app.resources.home_whodunit_title
-import com.parlor.app.shell.game.whodunit.WhodunitCasePickerScreen
-import com.parlor.app.shell.game.whodunit.WhodunitHostSessionFlow
+import com.parlor.games.whodunit.ui.screens.setup.WhodunitCasePickerScreen
+import com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostSessionFlow
 import com.parlor.app.shell.multiplayer.JoinPromptScreen
 import com.parlor.app.shell.multiplayer.NameInputScreen
-import com.parlor.app.shell.game.whodunit.WhodunitPeerSessionFlow
+import com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitPeerSessionFlow
 import com.parlor.app.shell.playmode.PlayModePickerScreen
 import com.parlor.content.repository.CaseRepository
 import com.parlor.core.ids.ModeId

@@ -161,6 +161,26 @@ class MultiplayerDocumentationContractTest {
     }
 
     @Test
+    fun local_snapshot_inventory_matches_both_shipping_games() {
+        val architecture = read("docs/PRODUCTION_ARCHITECTURE.md")
+        val privacy = read("docs/PRIVACY_AND_COMPLIANCE.md")
+
+        assertTrue(
+            "Canonical pass-and-play\nresume snapshots for both shipping games" in architecture,
+            "Architecture documentation must inventory both shipping games' protected snapshots",
+        )
+        listOf("MafiaSnapshotRecovery.kt", "WhodunitGameFlow.kt").forEach { recoveryGate ->
+            assertTrue(
+                recoveryGate in architecture,
+                "Architecture documentation must name $recoveryGate as a snapshot recovery gate",
+            )
+        }
+        assertFalse("Mafia currently does not write a pass-and-play cold-start snapshot" in architecture)
+        assertTrue("Enables play and optional local resume when a game supplies a snapshot adapter" in privacy)
+        assertFalse("(currently for Whodunit)" in privacy)
+    }
+
+    @Test
     fun current_operational_docs_do_not_repeat_obsolete_positive_claims() {
         val canonicalDocuments = listOf(
             "README.md",

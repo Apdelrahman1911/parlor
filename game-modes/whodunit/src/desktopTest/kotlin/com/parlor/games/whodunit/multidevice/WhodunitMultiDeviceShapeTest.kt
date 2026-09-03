@@ -2,9 +2,11 @@ package com.parlor.games.whodunit.multidevice
 
 import assertk.assertThat
 import assertk.assertions.containsExactly
+import assertk.assertions.containsExactlyInAnyOrder
 import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
+import assertk.assertions.isNotEqualTo
 import assertk.assertions.isNotNull
 import assertk.assertions.isTrue
 import com.parlor.content.datasource.InMemoryCachedCaseDataSource
@@ -198,12 +200,22 @@ class WhodunitMultiDeviceShapeTest {
         // --- Setup → CharacterReveal: every player's role is on host, peer
         // sees only the redacted public projection. ---
         host.submit(WhodunitAction.AssignRoles(seed))
+        val assignedHostState = host.hostState.value.state
+        val hostSecrets = assignedHostState.hostOnly
+        val playerIds = players.map { it.id }.toTypedArray()
+
+        // Establish that the canonical host state contains real assignment
+        // data before checking that the peer projection redacts it.
+        assertThat(hostSecrets.killerId)
+            .isNotEqualTo(PlayerId(PeerStateRedactionAssertions.REDACTED_MARKER))
+        assertThat(hostSecrets.randomSeed).isEqualTo(seed)
+        assertThat(hostSecrets.seatToCharacter.keys)
+            .containsExactlyInAnyOrder(*playerIds)
+        assertThat(assignedHostState.privatePerPlayer.keys)
+            .containsExactlyInAnyOrder(*playerIds)
+        assertThat(hostSecrets.seatToCharacter.getValue(hostSecrets.killerId))
+            .isEqualTo(hostSecrets.killerCharacterId)
         assertPeerMirrorsHostAndRedactsHostOnly(host, peers, "after AssignRoles")
-        // Host has rich hostOnly data; peer must not.
-        assertThat(host.hostState.value.state.hostOnly.killerId.raw).isEqualTo(
-            host.hostState.value.state.hostOnly.killerId.raw,
-        )
-        // (The peer mirror equality check above already enforces redaction.)
 
         host.ackIntroForAll(players)
         host.submit(WhodunitAction.AdvanceFromIntro)

@@ -19,6 +19,7 @@ import com.parlor.core.result.Result
 import com.parlor.networking.protocol.AdmissionRejection
 import com.parlor.networking.protocol.CommandStatus
 import com.parlor.networking.protocol.HostMessage
+import com.parlor.networking.protocol.MAX_COMMAND_PAYLOAD_BYTES
 import com.parlor.networking.protocol.PeerMessage
 import com.parlor.networking.protocol.ProtocolVersion
 import com.parlor.networking.protocol.RoomMessage
@@ -543,6 +544,89 @@ class P2pKitRoomTransportLifecycleTest {
     }
 
     @Test
+    fun host_rejects_a_session_without_an_authenticated_peer_fingerprint() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("host-pid"))
+        val room = newHostRoom(kit)
+        val alicePeer = peer("alice-pid", "Alice")
+        val alice = FakeP2pSession(
+            peer = alicePeer,
+            peerIdentity = PeerIdentity(alicePeer.id, fingerprint = null),
+        )
+
+        attachSession(kit, alice)
+
+        awaitCondition { alice.state.value == ConnectionState.Closed }
+        assertThat(alice.admissionRejections())
+            .containsExactly(AdmissionRejection.InvalidCredential)
+        assertThat(alice.closeCalls).isEqualTo(1)
+        assertThat(room.members.value).isEmpty()
+        assertThat(room.pendingAdmissions.value).isEmpty()
+    }
+
+    @Test
+    fun host_rejects_a_session_whose_authenticated_peer_id_disagrees_with_the_peer() =
+        runBlocking {
+            val kit = FakeP2pKit(P2pPeerId("host-pid"))
+            val room = newHostRoom(kit)
+            val alicePeer = peer("alice-pid", "Alice")
+            val alice = FakeP2pSession(
+                peer = alicePeer,
+                peerIdentity = PeerIdentity(
+                    peerId = P2pPeerId("different-pid"),
+                    fingerprint = TEST_PEER_FINGERPRINT,
+                ),
+            )
+
+            attachSession(kit, alice)
+
+            awaitCondition { alice.state.value == ConnectionState.Closed }
+            assertThat(alice.admissionRejections())
+                .containsExactly(AdmissionRejection.InvalidCredential)
+            assertThat(alice.closeCalls).isEqualTo(1)
+            assertThat(room.members.value).isEmpty()
+            assertThat(room.pendingAdmissions.value).isEmpty()
+        }
+
+    @Test
+    fun host_rejects_resume_when_the_presented_fingerprint_differs_from_the_stored_credential() =
+        runBlocking {
+            val kit = FakeP2pKit(P2pPeerId("host-pid"))
+            val room = newHostRoom(kit)
+            val firstAlice = FakeP2pSession(peer("alice-pid", "Alice"))
+            val rejoinSecret = admit(room, kit, firstAlice)
+            firstAlice.stateFlow.value = ConnectionState.Closed
+            awaitCondition { room.members.value.singleOrNull()?.connected == false }
+
+            val returningPeer = peer("alice-pid", "Alice")
+            val returningAlice = FakeP2pSession(
+                peer = returningPeer,
+                peerIdentity = PeerIdentity(returningPeer.id, TEST_OTHER_PEER_FINGERPRINT),
+            )
+            attachSession(kit, returningAlice)
+            returningAlice.incomingFlow.emit(
+                P2pMessage.Binary(
+                    codec.encode(
+                        PeerMessage.ResumeRequested(
+                            protocol = ProtocolVersion(),
+                            actor = PlayerId("forged-body-id"),
+                            roomCode = "ABCDEF",
+                            displayName = "Alice",
+                            secret = rejoinSecret,
+                            generation = 1L,
+                        ),
+                    ),
+                ),
+            )
+
+            awaitCondition { returningAlice.state.value == ConnectionState.Closed }
+            assertThat(returningAlice.admissionRejections())
+                .containsExactly(AdmissionRejection.InvalidCredential)
+            assertThat(returningAlice.closeCalls).isEqualTo(1)
+            assertThat(room.members.value.single().connected).isFalse()
+            assertThat(room.pendingAdmissions.value).isEmpty()
+        }
+
+    @Test
     fun host_rejects_a_wrong_code_without_creating_a_member_or_pending_seat() = runBlocking {
         val kit = FakeP2pKit(P2pPeerId("host-pid"))
         val room = newHostRoom(kit)
@@ -756,6 +840,66 @@ class P2pKitRoomTransportLifecycleTest {
                 .isEqualTo(testPeerHeartbeat())
             withTimeout(2_000) { producer.await() }
             assertThat(alice.state.value).isEqualTo(ConnectionState.Connected)
+        }
+
+    @Test
+    fun collectors_drop_non_binary_frames_and_accept_followup() = runBlocking {
+        val frame = P2pMessage.Text("reserved text channel")
+
+        assertHostCollectorRejects(frame, P2pDiagnosticReason.MALFORMED)
+        assertPeerCollectorRejects(frame, P2pDiagnosticReason.MALFORMED)
+    }
+
+    @Test
+    fun collectors_drop_truncated_cbor_frames_and_accept_followup() = runBlocking {
+        val truncatedMap = P2pMessage.Binary(byteArrayOf(0xBF.toByte()))
+
+        assertHostCollectorRejects(truncatedMap, P2pDiagnosticReason.MALFORMED)
+        assertPeerCollectorRejects(truncatedMap, P2pDiagnosticReason.MALFORMED)
+    }
+
+    @Test
+    fun collectors_drop_wrong_direction_frames_and_accept_followup() = runBlocking {
+        assertHostCollectorRejects(
+            P2pMessage.Binary(codec.encode(testHostHeartbeat())),
+            P2pDiagnosticReason.WRONG_DIRECTION,
+        )
+        assertPeerCollectorRejects(
+            P2pMessage.Binary(codec.encode(testPeerHeartbeat())),
+            P2pDiagnosticReason.WRONG_DIRECTION,
+        )
+    }
+
+    @Test
+    fun collectors_drop_oversized_wire_frames_and_accept_followup() = runBlocking {
+        assertHostCollectorRejects(
+            P2pMessage.Binary(
+                ByteArray(P2pTrafficLimits.MAX_PEER_TO_HOST_FRAME_BYTES + 1),
+            ),
+            P2pDiagnosticReason.RATE_LIMIT,
+        )
+        assertPeerCollectorRejects(
+            P2pMessage.Binary(
+                ByteArray(P2pTrafficLimits.MAX_HOST_TO_PEER_FRAME_BYTES + 1),
+            ),
+            P2pDiagnosticReason.RATE_LIMIT,
+        )
+    }
+
+    @Test
+    fun host_collector_drops_decoded_command_with_oversized_payload_and_accepts_followup() =
+        runBlocking {
+            val encoded = codec.encode(
+                testClientCommand(ByteArray(MAX_COMMAND_PAYLOAD_BYTES + 1)),
+            )
+            assertThat(
+                encoded.size <= P2pTrafficLimits.MAX_PEER_TO_HOST_FRAME_BYTES,
+            ).isTrue()
+
+            assertHostCollectorRejects(
+                P2pMessage.Binary(encoded),
+                P2pDiagnosticReason.WRONG_DIRECTION,
+            )
         }
 
     @Test
@@ -2715,6 +2859,48 @@ class P2pKitRoomTransportLifecycleTest {
         }
 
     @Test
+    fun process_resume_rejects_a_host_session_presenting_a_different_fingerprint() = runBlocking {
+        val secureStorage = testSecureStorage()
+        val now = kotlin.time.Clock.System.now().toEpochMilliseconds()
+        val credential = resumableCredential(generation = 1L).copy(
+            issuedAtEpochMillis = now - 1_000L,
+            expiresAtEpochMillis = now + 60_000L,
+        )
+        val store = ResumableCredentialStore(secureStorage)
+        store.stage(credential)
+        store.commit(credential.offerId, credential.generation)
+        val hostPeer = peer(
+            credential.hostPeerId,
+            "${P2pKitRoomTransport.P2P_ROOM_PREFIX}Pinned Host",
+        )
+        val mismatchedSession = FakeP2pSession(
+            peer = hostPeer,
+            peerIdentity = PeerIdentity(hostPeer.id, TEST_OTHER_PEER_FINGERPRINT),
+        )
+        val kit = FakeP2pKit(P2pPeerId(credential.playerId)).apply {
+            peersFlow.value = listOf(hostPeer)
+            connectHandler = { mismatchedSession }
+        }
+        val transport = P2pKitRoomTransport(
+            appId = AppId("com.parlor.test"),
+            deviceName = "self-device",
+            scope = testScope,
+            kitFactory = object : P2pKitFactory {
+                override suspend fun createKit(appId: AppId, deviceName: String): P2pKit = kit
+            },
+            secureStorage = secureStorage,
+        )
+
+        assertThat(transport.resumeLastSession())
+            .isEqualTo(Result.Failure(NetError.Unauthorized))
+        assertThat(kit.lastExpectedFingerprint).isEqualTo(TEST_PEER_FINGERPRINT)
+        assertThat(mismatchedSession.sent).isEmpty()
+        assertThat(mismatchedSession.closeCalls).isEqualTo(1)
+        assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(credential))
+        assertThat(kit.stopCalls).isEqualTo(1)
+    }
+
+    @Test
     fun process_recreation_prefers_a_pending_different_room_that_the_host_may_have_committed() =
         runBlocking {
             val secureStorage = testSecureStorage()
@@ -3765,6 +3951,25 @@ class P2pKitRoomTransportLifecycleTest {
     }
 
     @Test
+    fun host_background_close_preserves_cancellation() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("host-pid"))
+        val room = newHostRoom(kit)
+        val alice = FakeP2pSession(peer("alice-pid", "Alice"))
+        admit(room, kit, alice)
+        alice.closeHandler = { throw CancellationException("cancel background close") }
+
+        assertFailsWith<CancellationException> {
+            room.appBackgrounded(1_000L)
+        }
+
+        assertThat(alice.closeCalls).isEqualTo(1)
+        assertThat(kit.stopCalls).isEqualTo(0)
+
+        alice.closeHandler = null
+        room.leave()
+    }
+
+    @Test
     fun host_rejects_a_physical_session_that_arrives_after_background_retirement() = runBlocking {
         val kit = FakeP2pKit(P2pPeerId("host-pid"))
         val room = newHostRoom(kit)
@@ -4016,6 +4221,25 @@ class P2pKitRoomTransportLifecycleTest {
 
         assertThat(kit.stopCalls).isEqualTo(1)
         assertThat(room.members.value).isEqualTo(emptyList())
+    }
+
+    @Test
+    fun host_leave_continues_cleanup_after_a_session_close_fails() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("host-pid"))
+        val room = newHostRoom(kit)
+        val alice = FakeP2pSession(peer("alice-pid", "Alice"))
+        val bob = FakeP2pSession(peer("bob-pid", "Bob"))
+        admit(room, kit, alice)
+        admit(room, kit, bob)
+        alice.closeHandler = { error("socket already dead") }
+
+        room.leave()
+
+        assertThat(alice.closeCalls).isEqualTo(1)
+        assertThat(bob.closeCalls).isEqualTo(1)
+        assertThat(bob.state.value).isEqualTo(ConnectionState.Closed)
+        assertThat(kit.stopCalls).isEqualTo(1)
+        assertThat(room.members.value).isEmpty()
     }
 
     @Test
@@ -4327,6 +4551,105 @@ class P2pKitRoomTransportLifecycleTest {
     }
 
     // -------------------------------------------------------------- Helpers ----
+
+    private suspend fun assertHostCollectorRejects(
+        invalidFrame: P2pMessage,
+        reason: P2pDiagnosticReason,
+    ) {
+        val kit = FakeP2pKit(P2pPeerId("host-pid"))
+        val diagnostics = RecordingP2pDiagnostics()
+        val room = newHostRoom(kit, diagnostics = diagnostics)
+        val alice = FakeP2pSession(peer("alice-pid", "Alice"))
+        admit(room, kit, alice)
+        val valid = testPeerHeartbeat()
+        val received = testScope.async { room.incoming.first() }
+        yield()
+
+        alice.incomingFlow.emit(invalidFrame)
+        awaitCondition {
+            diagnostics.hasTrafficEvent(
+                P2pDiagnosticEventName.FRAME_DROPPED,
+                P2pDiagnosticRole.HOST,
+                reason,
+            )
+        }
+        assertThat(alice.state.value).isEqualTo(ConnectionState.Connected)
+
+        alice.incomingFlow.emit(P2pMessage.Binary(codec.encode(valid)))
+        assertThat(withTimeout(2_000L) { received.await() }).isEqualTo(valid)
+
+        repeat(P2pTrafficLimits.MAX_TRAFFIC_VIOLATIONS - 1) {
+            alice.incomingFlow.emit(invalidFrame)
+        }
+        awaitCondition { alice.state.value == ConnectionState.Closed }
+        assertThat(
+            diagnostics.hasTrafficEvent(
+                P2pDiagnosticEventName.PEER_RATE_LIMITED,
+                P2pDiagnosticRole.HOST,
+                reason,
+            ),
+        ).isTrue()
+        room.leave()
+    }
+
+    private suspend fun assertPeerCollectorRejects(
+        invalidFrame: P2pMessage,
+        reason: P2pDiagnosticReason,
+    ) {
+        val kit = FakeP2pKit(P2pPeerId("peer-pid"))
+        val diagnostics = RecordingP2pDiagnostics()
+        val hostPeer = peer("host-pid", "Host Device")
+        val session = FakeP2pSession(hostPeer)
+        val room = PeerP2pRoom(
+            kit = kit,
+            session = session,
+            hostPeer = hostPeer,
+            roomCode = "ABCDEF",
+            scope = testScope,
+            codec = codec,
+            diagnostics = diagnostics,
+        )
+        val valid = testHostHeartbeat()
+        val received = testScope.async { room.incoming.first() }
+        yield()
+
+        session.incomingFlow.emit(invalidFrame)
+        awaitCondition {
+            diagnostics.hasTrafficEvent(
+                P2pDiagnosticEventName.FRAME_DROPPED,
+                P2pDiagnosticRole.PEER,
+                reason,
+            )
+        }
+        assertThat(session.state.value).isEqualTo(ConnectionState.Connected)
+
+        session.incomingFlow.emit(P2pMessage.Binary(codec.encode(valid)))
+        assertThat(withTimeout(2_000L) { received.await() }).isEqualTo(valid)
+
+        repeat(P2pTrafficLimits.MAX_TRAFFIC_VIOLATIONS - 1) {
+            session.incomingFlow.emit(invalidFrame)
+        }
+        awaitCondition { session.state.value == ConnectionState.Closed }
+        assertThat(
+            diagnostics.hasTrafficEvent(
+                P2pDiagnosticEventName.PEER_RATE_LIMITED,
+                P2pDiagnosticRole.PEER,
+                reason,
+            ),
+        ).isTrue()
+        room.leave()
+    }
+
+    private fun RecordingP2pDiagnostics.hasTrafficEvent(
+        name: P2pDiagnosticEventName,
+        role: P2pDiagnosticRole,
+        reason: P2pDiagnosticReason,
+    ): Boolean = events.any { event ->
+        event.name == name &&
+            event.role == role &&
+            event.result == P2pDiagnosticResult.REJECTED &&
+            event.reason == reason
+    }
 
     /**
      * Direct room-unit tests do not run the admission wire handshake. This
@@ -4708,9 +5031,9 @@ internal class FakeP2pKit(
 internal class FakeP2pSession(
     override val peer: Peer,
     incomingExtraBufferCapacity: Int = 16,
+    override val peerIdentity: PeerIdentity = PeerIdentity(peer.id, TEST_PEER_FINGERPRINT),
 ) : P2pSession {
     override val id: String = "fake-${peer.id.value}"
-    override val peerIdentity: PeerIdentity = PeerIdentity(peer.id, TEST_PEER_FINGERPRINT)
     val stateFlow: MutableStateFlow<ConnectionState> = MutableStateFlow(ConnectionState.Connected)
     val incomingFlow: MutableSharedFlow<P2pMessage> = MutableSharedFlow(
         extraBufferCapacity = incomingExtraBufferCapacity,
@@ -4825,6 +5148,10 @@ internal class FakeP2pSession(
 
 private val TEST_PEER_FINGERPRINT = PeerFingerprint(
     "p2f1-zlmerarbaugm753v5mvipavkkhwxbvlu3cpx4unzvuvov7zu7dkq",
+)
+
+private val TEST_OTHER_PEER_FINGERPRINT = PeerFingerprint(
+    "p2f1-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
 )
 
 private fun testEnvelopeHeader(

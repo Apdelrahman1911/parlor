@@ -1,4 +1,4 @@
-package com.parlor.app.shell.game.whodunit
+package com.parlor.games.whodunit.ui.screens.setup
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -27,20 +27,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.text.style.TextAlign
-import com.parlor.app.resources.Res
-import com.parlor.app.resources.case_picker_back
-import com.parlor.app.resources.library_load_error_format
-import com.parlor.app.resources.case_picker_back_description
-import com.parlor.app.resources.case_picker_eyebrow
-import com.parlor.app.resources.case_picker_empty
-import com.parlor.app.resources.case_picker_modes_format
-import com.parlor.app.resources.case_picker_mode_classic
-import com.parlor.app.resources.case_picker_mode_elimination
-import com.parlor.app.resources.case_picker_mode_unknown
-import com.parlor.app.resources.case_picker_players_format
-import com.parlor.app.resources.case_picker_subtitle
-import com.parlor.app.resources.case_picker_title
-import com.parlor.app.shell.dataErrorMessage
+import com.parlor.games.whodunit.resources.Res
+import com.parlor.games.whodunit.resources.case_picker_back
+import com.parlor.games.whodunit.resources.library_load_error_format
+import com.parlor.games.whodunit.resources.case_picker_back_description
+import com.parlor.games.whodunit.resources.case_picker_eyebrow
+import com.parlor.games.whodunit.resources.case_picker_empty
+import com.parlor.games.whodunit.resources.case_picker_language_arabic
+import com.parlor.games.whodunit.resources.case_picker_language_english
+import com.parlor.games.whodunit.resources.case_picker_language_format
+import com.parlor.games.whodunit.resources.case_picker_modes_format
+import com.parlor.games.whodunit.resources.case_picker_mode_classic
+import com.parlor.games.whodunit.resources.case_picker_mode_elimination
+import com.parlor.games.whodunit.resources.case_picker_mode_unknown
+import com.parlor.games.whodunit.resources.case_picker_players_format
+import com.parlor.games.whodunit.resources.case_picker_subtitle
+import com.parlor.games.whodunit.resources.case_picker_title
+import com.parlor.games.whodunit.ui.dataErrorMessage
 import com.parlor.content.repository.CaseRepository
 import com.parlor.content.schema.CaseSummary
 import com.parlor.core.ids.GameId
@@ -152,6 +155,12 @@ fun WhodunitCasePickerScreen(
 @Composable
 private fun CaseRow(summary: CaseSummary, onClick: () -> Unit) {
     val colors = ParlorTheme.colors
+    val languageName = when (caseLanguageLabel(summary.language)) {
+        CaseLanguageLabel.English -> stringResource(Res.string.case_picker_language_english)
+        CaseLanguageLabel.Arabic -> stringResource(Res.string.case_picker_language_arabic)
+        CaseLanguageLabel.Other -> summary.language
+    }
+    val languageText = stringResource(Res.string.case_picker_language_format, languageName)
     val playersText = stringResource(
         Res.string.case_picker_players_format,
         "${summary.supportedPlayerCounts.min}–${summary.supportedPlayerCounts.max}",
@@ -188,6 +197,18 @@ private fun CaseRow(summary: CaseSummary, onClick: () -> Unit) {
                     color = colors.textSecondary,
                 )
             }
+            Text(
+                text = languageText,
+                modifier = Modifier
+                    .clip(RoundedCornerShape(ParlorTheme.radii.pill))
+                    .background(colors.surfaceHigher)
+                    .padding(
+                        horizontal = ParlorTheme.spacing.s,
+                        vertical = ParlorTheme.spacing.xs,
+                    ),
+                style = ParlorTheme.typography.labelSmall,
+                color = colors.textSecondary,
+            )
             Row(
                 horizontalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m),
             ) {
@@ -205,6 +226,19 @@ private fun CaseRow(summary: CaseSummary, onClick: () -> Unit) {
         }
     }
 }
+
+internal enum class CaseLanguageLabel {
+    English,
+    Arabic,
+    Other,
+}
+
+internal fun caseLanguageLabel(languageTag: String): CaseLanguageLabel =
+    when (languageTag.substringBefore('-').lowercase()) {
+        "en" -> CaseLanguageLabel.English
+        "ar" -> CaseLanguageLabel.Arabic
+        else -> CaseLanguageLabel.Other
+    }
 
 @Composable
 private fun localizedModeNames(modeIds: List<String>): String {

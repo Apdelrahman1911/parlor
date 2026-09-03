@@ -8,7 +8,6 @@ kotlin {
         commonMain.dependencies {
             api(project(":shared:core"))
             api(project(":shared:networking"))
-            implementation(project(":shared:session"))
             implementation(project(":shared:storage"))
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.serialization.json)

@@ -3,243 +3,232 @@ package com.parlor.games.whodunit.domain
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isTrue
+import com.parlor.content.validation.ValidatedCase
 import com.parlor.core.ids.CaseId
-import com.parlor.core.ids.CharacterId
-import com.parlor.core.ids.ClueId
 import com.parlor.core.ids.PlayerId
+import com.parlor.core.ids.SessionId
 import com.parlor.core.random.RandomSource
 import com.parlor.core.time.FakeClock
+import com.parlor.engine.session.SessionConfig
 import com.parlor.engine.state.Player
+import com.parlor.games.whodunit.WhodunitDefinition
 import com.parlor.games.whodunit.WhodunitIds
+import com.parlor.games.whodunit.content.Character
 import com.parlor.games.whodunit.content.Clue
 import com.parlor.games.whodunit.content.CluePools
-import com.parlor.games.whodunit.content.Character
 import com.parlor.games.whodunit.content.GuiltyBrief
 import com.parlor.games.whodunit.content.InnocentBrief
+import com.parlor.games.whodunit.content.TimelineEntry
 import com.parlor.games.whodunit.content.WhodunitCase
 import com.parlor.games.whodunit.domain.action.WhodunitAction
-import com.parlor.games.whodunit.domain.phase.WhodunitPhase
 import com.parlor.games.whodunit.domain.reducer.WhodunitReducer
 import com.parlor.games.whodunit.domain.reducer.WhodunitReducerContext
-import com.parlor.games.whodunit.testing.validatedWhodunitCaseForTest
-import com.parlor.games.whodunit.domain.state.WhodunitHostOnly
-import com.parlor.games.whodunit.domain.state.WhodunitPublic
 import com.parlor.games.whodunit.domain.state.WhodunitState
-import kotlin.time.Instant
+import com.parlor.games.whodunit.domain.state.WhodunitStateValidator
+import com.parlor.games.whodunit.testing.validatedWhodunitCaseForTest
+import kotlinx.serialization.json.Json
 import kotlin.test.Test
+import kotlin.test.assertFailsWith
+import kotlin.time.Instant
 
-/**
- * Clue-selection policy tests. The game-design contract requires the final
- * round to carry the strongest clue, so validated content must draw from the
- * killer variant's `finalStrong` pool before any defensive fallback.
- *
- * Determinism: each test pins seeds [1..50] and drives the reducer through
- * `RevealNextClue` actions. Same seed → same sequence; different seeds
- * produce at least one differing sequence.
- */
+/** Deterministic clue-selection checks driven only through admitted content and legal states. */
 class CluePolicyTest {
 
-    private val killerCharId = "k-1"
-    private val killerPlayerId = PlayerId("p-killer")
-    private val players: List<Player> = (1..5).map { idx ->
-        Player(PlayerId("p-$idx"), "Player $idx", seat = idx)
-    } + Player(killerPlayerId, "Killer", seat = 6)
-
-    private val finalStrongClues = listOf(
-        clue("fs-1", "Final strong 1"),
-        clue("fs-2", "Final strong 2"),
-        clue("fs-3", "Final strong 3"),
-    )
-    private val killerPointingClues = listOf(
-        clue("kp-1", "Killer pointing 1"),
-        clue("kp-2", "Killer pointing 2"),
-        clue("kp-3", "Killer pointing 3"),
-    )
-    private val contradictionClues = listOf(
-        clue("ct-1", "Contradiction 1"),
-        clue("ct-2", "Contradiction 2"),
-    )
-    private val redHerringClues = listOf(
-        clue("rh-1", "Red herring 1"),
-        clue("rh-2", "Red herring 2"),
-    )
-    private val publicUniversalClues = listOf(
-        clue("pu-1", "Public 1"),
-        clue("pu-2", "Public 2"),
-    )
-
+    private val json = Json { encodeDefaults = true }
+    private val definition = WhodunitDefinition(json)
+    private val players = (0 until PLAYER_COUNT).map { index ->
+        Player(PlayerId("p-${index + 1}"), "Player ${index + 1}", seat = index)
+    }
+    private val characterIds = (1..PLAYER_COUNT).map { "c-$it" }
+    private val finalStrongClues = characterIds.associateWith { characterId ->
+        (1..3).map { index -> clue("fs-$characterId-$index", "Final $index for $characterId") }
+    }
     private val case = WhodunitCase(
-        publicIntro = "intro",
-        bedrockClues = emptyList(),
-        characters = listOf(
-            character(killerCharId, "Killer Cassidy"),
-            character("c-2", "Other"),
-        ),
+        publicIntro = "Intro",
+        bedrockClues = listOf("Bedrock"),
+        characters = characterIds.map(::character),
         cluePools = CluePools(
-            publicUniversal = publicUniversalClues,
-            killerPointing = mapOf(killerCharId to killerPointingClues),
-            contradiction = mapOf(killerCharId to contradictionClues),
-            redHerring = mapOf(killerCharId to redHerringClues),
-            finalStrong = mapOf(killerCharId to finalStrongClues),
+            publicUniversal = (1..2).map { clue("public-$it", "Public $it") },
+            killerPointing = characterIds.associateWith { characterId ->
+                (1..3).map { index ->
+                    clue("pointing-$characterId-$index", "Pointing $index for $characterId")
+                }
+            },
+            contradiction = characterIds.associateWith { characterId ->
+                listOf(clue("contradiction-$characterId", "Contradiction for $characterId"))
+            },
+            redHerring = characterIds.associateWith { characterId ->
+                listOf(clue("red-$characterId", "Red herring for $characterId"))
+            },
+            finalStrong = finalStrongClues,
         ),
-        revealNarratives = emptyMap(),
+        revealNarratives = characterIds.associateWith { "Reveal $it" },
     )
+    private val validatedCase = validate(case)
 
     @Test
     fun lastRoundAlwaysUsesFinalStrongWhenAvailable() {
-        val finalStrongIds = finalStrongClues.map { it.id }.toSet()
+        val finalStrongIds = finalStrongClues.values.flatten().map { it.id }.toSet()
         for (seed in 1L..50L) {
-            val clueId = pickLateRoundClueId(seed)
-            assertThat(clueId in finalStrongIds).isTrue()
+            assertThat(pickLateRoundClueId(seed) in finalStrongIds).isTrue()
         }
     }
 
     @Test
-    fun sameSeedProducesSameLateClue() {
+    fun sameSeedProducesSameClueSequence() {
         for (seed in 1L..50L) {
-            val first = pickLateRoundClueId(seed)
-            val second = pickLateRoundClueId(seed)
-            assertThat(second).isEqualTo(first)
+            assertThat(driveCluesThroughFinalRound(seed))
+                .isEqualTo(driveCluesThroughFinalRound(seed))
         }
     }
 
     @Test
     fun differentSeedsProduceAtLeastOneDifferentSequence() {
-        val sequences = (1L..50L).map { seed -> driveCluesThroughFinalRound(seed) }
-        val distinct = sequences.toSet()
-        // At least two distinct sequences proves variation across seeds.
-        assertThat(distinct.size > 1).isTrue()
+        val sequences = (1L..50L).map(::driveCluesThroughFinalRound)
+        assertThat(sequences.toSet().size > 1).isTrue()
     }
 
     @Test
-    fun emptyLateGamePoolDoesNotCrash() {
-        // Build a case whose pools are entirely empty for the killer.
-        val emptyCase = case.copy(
+    fun admittedCaseNeverDrawsTheSameClueTwice() {
+        for (seed in 1L..50L) {
+            val sequence = driveCluesThroughFinalRound(seed)
+            assertThat(sequence.size).isEqualTo(sequence.toSet().size)
+        }
+    }
+
+    @Test
+    fun exhaustedCluePoolsAreRejectedBeforeReducerUse() {
+        val emptyPools = case.copy(
             cluePools = CluePools(
                 publicUniversal = emptyList(),
-                killerPointing = mapOf(killerCharId to emptyList()),
-                contradiction = mapOf(killerCharId to emptyList()),
-                redHerring = mapOf(killerCharId to emptyList()),
-                finalStrong = mapOf(killerCharId to emptyList()),
+                killerPointing = characterIds.associateWith { emptyList() },
+                contradiction = characterIds.associateWith { emptyList() },
+                redHerring = characterIds.associateWith { emptyList() },
+                finalStrong = characterIds.associateWith { emptyList() },
             ),
         )
-        val ctx = ctxFor(emptyCase)
-        val state = stateAtRound(roundIndex = 4, hostSeed = 1L)
 
-        val reduction = WhodunitReducer.reduce(state, WhodunitAction.RevealNextClue, ctx)
-
-        // With nothing to draw the reducer must be a no-op — same state, same
-        // drawn set — not throw.
-        assertThat(reduction.newState.public.revealedClues).isEqualTo(emptyList())
-        assertThat(reduction.newState.hostOnly.drawnClueIds).isEqualTo(emptySet())
+        assertFailsWith<IllegalStateException> { validate(emptyPools) }
     }
 
-    @Test
-    fun drawnCluesAreNotPickedAgain() {
-        // Pre-mark all but one clue as drawn; that one must come out.
-        val onlyRemainingId = ClueId("kp-3")
-        val allOtherIds: Set<ClueId> = (finalStrongClues + killerPointingClues + contradictionClues +
-            redHerringClues + publicUniversalClues)
-            .map { ClueId(it.id) }
-            .toSet() - onlyRemainingId
-
-        val ctx = ctxFor(case)
-        val state = stateAtRound(roundIndex = 4, drawn = allOtherIds, hostSeed = 7L)
-
-        val reduction = WhodunitReducer.reduce(state, WhodunitAction.RevealNextClue, ctx)
-        val revealed = reduction.newState.public.revealedClues.last()
-        assertThat(revealed.id).isEqualTo(onlyRemainingId)
-    }
-
-    // ----- helpers ------------------------------------------------------------
-
-    /**
-     * Drive the reducer through round 4 (the last round under the existing
-     * isLastRound rule: playerCount=6, lastRound when idx>=4) and return the
-     * single clue picked. The clue picker derives its random from
-     * `state.hostOnly.randomSeed`, so we vary that — not `ctx.random` — to
-     * control the seed.
-     */
     private fun pickLateRoundClueId(seed: Long): String {
-        val ctx = ctxFor(case)
-        val state = stateAtRound(roundIndex = 4, hostSeed = seed)
-        val reduction = WhodunitReducer.reduce(state, WhodunitAction.RevealNextClue, ctx)
-        return reduction.newState.public.revealedClues.last().id.raw
+        val context = context()
+        val state = stateAtRound(roundIndex = FINAL_ROUND, seed = seed, context = context)
+        return step(state, WhodunitAction.RevealNextClue, context)
+            .public
+            .revealedClues
+            .last()
+            .id
+            .raw
     }
 
-    /**
-     * Repeated delivery of the same command is idempotent: each round reveals
-     * at most one clue. The returned single-item sequence still lets us assert
-     * deterministic variation across seeds.
-     */
     private fun driveCluesThroughFinalRound(seed: Long): List<String> {
-        val ctx = ctxFor(case)
-        var state = stateAtRound(roundIndex = 4, hostSeed = seed)
+        val context = context()
+        var state = stateAtRound(roundIndex = 1, seed = seed, context = context)
         val picks = mutableListOf<String>()
-        repeat(8) {
-            val reduction = WhodunitReducer.reduce(state, WhodunitAction.RevealNextClue, ctx)
-            val newPicks = reduction.newState.public.revealedClues
-            if (newPicks.size == state.public.revealedClues.size) return@repeat
-            picks += newPicks.last().id.raw
-            state = reduction.newState
+        repeat(FINAL_ROUND) { index ->
+            state = step(state, WhodunitAction.RevealNextClue, context)
+            picks += state.public.revealedClues.last().id.raw
+            if (index < FINAL_ROUND - 1) {
+                state = step(state, WhodunitAction.StartDiscussionTimer(180), context)
+                state = step(state, WhodunitAction.AdvanceFromDiscussion, context)
+            }
         }
         return picks
     }
 
-    private fun ctxFor(payload: WhodunitCase): WhodunitReducerContext =
-        WhodunitReducerContext(
-            clock = FakeClock(Instant.fromEpochMilliseconds(0)),
-            random = RandomSource.seeded(0L),
-            case = validatedWhodunitCaseForTest(payload, caseId = "test-case"),
-        )
-
     private fun stateAtRound(
         roundIndex: Int,
-        drawn: Set<ClueId> = emptySet(),
-        hostSeed: Long = 0L,
-    ): WhodunitState = WhodunitState(
-        public = WhodunitPublic(
-            caseId = CaseId("test-case"),
-            modeId = WhodunitIds.ClassicVoteModeId,
-            playersAtTable = players,
-            currentRound = roundIndex,
-        ),
-        privatePerPlayer = emptyMap(),
-        hostOnly = WhodunitHostOnly(
-            killerId = killerPlayerId,
-            killerCharacterId = CharacterId(killerCharId),
-            randomSeed = hostSeed,
-            seatToCharacter = emptyMap(),
-            redHerringTargets = emptyList(),
-            drawnClueIds = drawn,
-        ),
-        phase = WhodunitPhase.Round(roundIndex),
-        players = players,
+        seed: Long,
+        context: WhodunitReducerContext,
+    ): WhodunitState {
+        var state = definition.createInitialState(
+            SessionConfig(
+                sessionId = SessionId("clue-policy-$seed"),
+                caseId = CaseId(CASE_ID),
+                modeId = WhodunitIds.ClassicVoteModeId,
+                players = players,
+                randomSeed = seed,
+            ),
+        ).also { WhodunitStateValidator.requireValidForCase(it, validatedCase) }
+        state = step(state, WhodunitAction.AssignRoles(seed), context)
+        players.forEach { player ->
+            state = step(state, WhodunitAction.AcknowledgeIntro(player.id), context)
+        }
+        state = step(state, WhodunitAction.AdvanceFromIntro, context)
+        players.forEach { player ->
+            state = step(state, WhodunitAction.AcknowledgeBriefing(player.id), context)
+        }
+        for (card in 1..4) {
+            state = step(state, WhodunitAction.AdvanceBriefingCard(card), context)
+        }
+        val generation = state.public.roleAssignmentGeneration
+        players.forEach { player ->
+            state = step(
+                state,
+                WhodunitAction.StartCharacterReveal(player.id, generation),
+                context,
+            )
+            state = step(
+                state,
+                WhodunitAction.CompleteCharacterReveal(player.id, generation),
+                context,
+            )
+        }
+        state = step(state, WhodunitAction.AdvanceFromCharacterReveal, context)
+        repeat(roundIndex - 1) {
+            state = step(state, WhodunitAction.RevealNextClue, context)
+            state = step(state, WhodunitAction.StartDiscussionTimer(180), context)
+            state = step(state, WhodunitAction.AdvanceFromDiscussion, context)
+        }
+        return state
+    }
+
+    private fun step(
+        state: WhodunitState,
+        action: WhodunitAction,
+        context: WhodunitReducerContext,
+    ): WhodunitState = WhodunitReducer.reduce(state, action, context).newState.also {
+        WhodunitStateValidator.requireValidForCase(it, validatedCase)
+    }
+
+    private fun context() = WhodunitReducerContext(
+        clock = FakeClock(Instant.fromEpochMilliseconds(0)),
+        random = RandomSource.seeded(0L),
+        case = validatedCase,
     )
+
+    private fun validate(payload: WhodunitCase): ValidatedCase<WhodunitCase> =
+        validatedWhodunitCaseForTest(
+            payload = payload,
+            caseId = CASE_ID,
+            supportedPlayerCounts = PLAYER_COUNT..PLAYER_COUNT,
+            supportedModes = listOf(WhodunitIds.ClassicVoteModeId.raw),
+        )
 
     private fun clue(id: String, text: String): Clue = Clue(id = id, text = text)
 
-    private fun character(id: String, displayName: String): Character = Character(
+    private fun character(id: String) = Character(
         id = id,
-        displayName = displayName,
-        relationshipToVictim = "",
-        publicIdentity = "",
-        publicMotive = "",
-        privateSecret = "",
-        innocentBrief = InnocentBrief(
-            verdictLine = "",
-            alibi = "",
-            goal = "",
-            canSayFreely = "",
-            mustHide = "",
-        ),
+        displayName = id,
+        relationshipToVictim = "Friend",
+        publicIdentity = "Identity",
+        publicMotive = "Motive",
+        privateSecret = "Secret",
+        innocentBrief = InnocentBrief("Innocent", "Alibi", "Goal", "Say", "Hide"),
         guiltyBrief = GuiltyBrief(
-            verdictLine = "",
-            method = "",
-            timeline = emptyList(),
-            fakeAlibi = "",
-            deflectionTargets = emptyList(),
-            panicMove = "",
+            verdictLine = "Guilty",
+            method = "Method",
+            timeline = listOf(TimelineEntry("10:00", "Action")),
+            fakeAlibi = "Alibi",
+            deflectionTargets = characterIds.filterNot { it == id },
+            panicMove = "Panic",
         ),
     )
+
+    private companion object {
+        const val CASE_ID = "test-case"
+        const val PLAYER_COUNT = 6
+        const val FINAL_ROUND = 4
+    }
 }

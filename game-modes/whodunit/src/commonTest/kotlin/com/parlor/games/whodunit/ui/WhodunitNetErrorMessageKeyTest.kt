@@ -1,10 +1,10 @@
-package com.parlor.app.shell
+package com.parlor.games.whodunit.ui
 
 import com.parlor.networking.room.NetError
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class NetErrorMessageKeyTest {
+class WhodunitNetErrorMessageKeyTest {
     @Test
     fun everyNetworkFailureKeepsItsActionableUiClassification() {
         val expected = listOf(

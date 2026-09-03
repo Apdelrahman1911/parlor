@@ -1155,14 +1155,18 @@ class WhodunitSnapshotValidationTest {
             cluePools = CluePools(
                 publicUniversal = listOf(Clue("public", "Public")),
                 killerPointing = characters.associate { character ->
-                    character.id to listOf(Clue("${character.id}-pointing", "Pointing"))
+                    character.id to (1..3).map { index ->
+                        Clue("${character.id}-pointing-$index", "Pointing $index")
+                    }
                 },
                 redHerring = emptyMap(),
                 contradiction = characters.associate { character ->
                     character.id to listOf(Clue("${character.id}-contradiction", "Contradiction"))
                 },
                 finalStrong = characters.associate { character ->
-                    character.id to listOf(Clue("${character.id}-final", "Final"))
+                    character.id to (1..2).map { index ->
+                        Clue("${character.id}-final-$index", "Final $index")
+                    }
                 },
             ),
             revealNarratives = characters.associate { it.id to "Reveal" },

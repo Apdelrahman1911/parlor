@@ -7,7 +7,6 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             api(project(":shared:core"))
-            implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.serialization.json)
         }
         commonTest.dependencies {

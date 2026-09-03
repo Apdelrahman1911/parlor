@@ -168,6 +168,24 @@ class BoundedPeerOutboxTest {
                     (it.message as? HostMessage.PlayerSnapshot)?.revision == 1L
             },
         )
+        val privatePayloadsByTarget = room.sent
+            .mapNotNull { sent ->
+                (sent.message as? HostMessage.PlayerSnapshot)?.let { snapshot ->
+                    sent.target to snapshot.privatePayload.decodeToString()
+                }
+            }
+            .groupBy({ it.first }, { it.second })
+        assertEquals(
+            mapOf<SendTarget, List<String>>(
+                SendTarget.Direct(honest) to listOf(honest.raw, honest.raw),
+            ),
+            privatePayloadsByTarget,
+        )
+        assertTrue(
+            room.sent.none {
+                it.target == SendTarget.Broadcast && it.message is HostMessage.PlayerSnapshot
+            },
+        )
         coordinator.close()
     }
 

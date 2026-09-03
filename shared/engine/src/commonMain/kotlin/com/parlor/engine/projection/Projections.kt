@@ -4,9 +4,11 @@ import com.parlor.core.ids.PlayerId
 import com.parlor.engine.state.GameState
 
 /**
- * The viewer-filtered slice of game state. Three subclasses, one per viewer
- * context. The compiler prevents a `PublicProjection` consumer from receiving
- * `HostOnlyState`.
+ * The viewer-filtered slice of game state. Three variants, one per viewer
+ * context, carry the same full state type. They are not type-separated over
+ * state buckets, so the compiler cannot establish redaction. Each game's
+ * [ProjectionPolicy] enforces redaction at runtime; see its discipline note
+ * below.
  */
 sealed interface Projection<S : GameState> {
     val state: S

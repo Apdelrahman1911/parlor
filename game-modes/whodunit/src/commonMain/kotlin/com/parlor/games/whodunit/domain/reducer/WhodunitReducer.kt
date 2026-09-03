@@ -82,7 +82,7 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
             WhodunitAction.AdvanceFromDiscussion -> advanceFromDiscussion(state)
 
             // Voting
-            WhodunitAction.OpenVote -> openVote(state)
+            WhodunitAction.OpenVote -> openRevote(state)
             is WhodunitAction.CastVote -> castVote(state, action.voter, action.target)
             is WhodunitAction.AbstainVote -> abstainVote(state, action.voter, refused = false)
             is WhodunitAction.RefuseToVote -> abstainVote(state, action.voter, refused = true)
@@ -598,7 +598,7 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
 
         return if (isElimination || lastRound) {
             val target = if (lastRound && !isElimination) WhodunitPhase.FinalVote else state.phase
-            openVote(state.copy(phase = target, public = state.public.copy(timer = null)))
+            beginVote(state.copy(phase = target, public = state.public.copy(timer = null)))
         } else {
             val next = WhodunitPhase.Round(round.index + 1)
             val newState = state.copy(
@@ -611,19 +611,18 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
 
     // ====================================================================== Voting (P5) ==
 
-    private fun openVote(state: WhodunitState): Reduction<WhodunitState, WhodunitEvent> {
+    private fun openRevote(state: WhodunitState): Reduction<WhodunitState, WhodunitEvent> {
+        val tied = state.public.voteState as? VoteState.Tied ?: return Reduction(state)
+        if (state.phase != WhodunitPhase.TiedRevote) return Reduction(state)
+        return beginVote(state, tied)
+    }
+
+    private fun beginVote(
+        state: WhodunitState,
+        tied: VoteState.Tied? = null,
+    ): Reduction<WhodunitState, WhodunitEvent> {
         val isElimination = state.public.modeId == WhodunitIds.EliminationModeId
-        val tied = state.public.voteState as? VoteState.Tied
         val isSecondRound = tied != null
-        val validEntry = when {
-            tied != null -> state.phase == WhodunitPhase.TiedRevote
-            isElimination -> state.phase is WhodunitPhase.Round &&
-                state.public.voteState == VoteState.Idle &&
-                state.public.timer == null
-            else -> state.phase == WhodunitPhase.FinalVote &&
-                state.public.voteState == VoteState.Idle
-        }
-        if (!validEntry) return Reduction(state)
 
         val tableIds = state.public.playersAtTable.map { it.id }
         // Active roster excludes players the host explicitly dropped after
@@ -721,7 +720,7 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
             return if (vote.isElimination) {
                 continueAfterUnresolvedEliminationVote(state)
             } else {
-                killerWins(state, KillerWinCause.TieUnresolved)
+                killerWinsAfterUnresolvedTie(state)
             }
         }
 
@@ -739,7 +738,7 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
      * Resolve a tie outcome.
      *
      * The [isSecondRound] flag arrives from the current [VoteState.Collecting]
-     * — set true by [openVote] when it ran from a [VoteState.Tied] state.
+     * — set true by [openRevote] when it ran from a [VoteState.Tied] state.
      * (Reading it from `voteState` here would not work: at close-time the
      * voteState is `Collecting`, not `Tied`, so the previous reducer's
      * `priorTied?.secondRound == true` was always false — the killer-wins /
@@ -761,7 +760,7 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
             return if (isElimination) {
                 continueAfterUnresolvedEliminationVote(state)
             } else {
-                killerWins(state, KillerWinCause.TieUnresolved)
+                killerWinsAfterUnresolvedTie(state)
             }
         }
         val tiedState = VoteState.Tied(
@@ -892,7 +891,7 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
         // advancing again would eventually exhaust every unique clue and trap
         // the room on an unrevealable round.
         if (phase.index >= maximumRounds) {
-            return killerWins(state, KillerWinCause.TieUnresolved)
+            return killerWinsAfterUnresolvedTie(state)
         }
         val nextRoundIndex = phase.index + 1
         val nextPhase = WhodunitPhase.Round(nextRoundIndex)
@@ -916,14 +915,14 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
             .filterNot { it in state.public.eliminatedPlayers }
             .filterNot { it in state.public.droppedPlayers }
         if (survivors.size <= 2) {
-            return killerWins(state, KillerWinCause.SurvivedToFinalTwo)
+            return killerSurvivedToFinalTwo(state)
         }
         val maximumRounds = WhodunitRules.maximumRoundCount(
             state.public.modeId,
             state.public.playersAtTable.size,
         ) ?: return Reduction(state)
         if (state.public.currentRound >= maximumRounds) {
-            return killerWins(state, KillerWinCause.TieUnresolved)
+            return killerWinsAfterUnresolvedTie(state)
         }
         val nextRoundIndex = state.public.currentRound + 1
         val nextPhase = WhodunitPhase.Round(nextRoundIndex)
@@ -940,10 +939,41 @@ object WhodunitReducer : GameReducer<WhodunitState, WhodunitAction, WhodunitEven
         )
     }
 
-    private fun killerWins(state: WhodunitState, cause: KillerWinCause): Reduction<WhodunitState, WhodunitEvent> {
+    private fun killerWinsAfterUnresolvedTie(
+        state: WhodunitState,
+    ): Reduction<WhodunitState, WhodunitEvent> = finishKillerWin(
+        state = state,
+        cause = KillerWinCause.TieUnresolved,
+        resolvedVote = VoteState.Resolved(state.hostOnly.killerId, wasKiller = true),
+    )
+
+    private fun killerSurvivedToFinalTwo(
+        state: WhodunitState,
+    ): Reduction<WhodunitState, WhodunitEvent> {
+        val eliminated = state.public.eliminatedPlayers
+        if (
+            state.public.modeId != WhodunitIds.EliminationModeId ||
+            eliminated.size != state.players.size - 2
+        ) {
+            return Reduction(state)
+        }
+        val lastEliminated = eliminated.lastOrNull() ?: return Reduction(state)
+        if (lastEliminated == state.hostOnly.killerId) return Reduction(state)
+        return finishKillerWin(
+            state = state,
+            cause = KillerWinCause.SurvivedToFinalTwo,
+            resolvedVote = VoteState.Resolved(lastEliminated, wasKiller = false),
+        )
+    }
+
+    private fun finishKillerWin(
+        state: WhodunitState,
+        cause: KillerWinCause,
+        resolvedVote: VoteState.Resolved,
+    ): Reduction<WhodunitState, WhodunitEvent> {
         val verdict = Verdict.KillerWins(state.hostOnly.killerCharacterId.raw, cause)
         val newPublic = state.public.copy(
-            voteState = VoteState.Resolved(state.hostOnly.killerId, true),
+            voteState = resolvedVote,
             verdict = verdict,
         )
         return Reduction(

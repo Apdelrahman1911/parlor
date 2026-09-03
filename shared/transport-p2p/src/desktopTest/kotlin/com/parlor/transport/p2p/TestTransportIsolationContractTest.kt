@@ -10,6 +10,13 @@ class TestTransportIsolationContractTest {
     private val repositoryRoot: File = findRepositoryRoot()
 
     @Test
+    fun `transport adapter does not depend on the session implementation`() {
+        val buildFile = repositoryRoot.resolve("shared/transport-p2p/build.gradle.kts")
+
+        assertFalse("project(\":shared:session\")" in buildFile.readText())
+    }
+
+    @Test
     fun `in-memory room fake is isolated from shipping source sets`() {
         val oldProductionFake = repositoryRoot.resolve(
             "shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/" +

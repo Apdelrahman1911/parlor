@@ -48,7 +48,8 @@ fun RoundTitleCardScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(ParlorTheme.spacing.xxl),
+                .padding(ParlorTheme.spacing.xxl)
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -93,7 +94,8 @@ fun ClueRevealScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(ParlorTheme.spacing.xl),
+                .padding(ParlorTheme.spacing.xl)
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.xl),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
