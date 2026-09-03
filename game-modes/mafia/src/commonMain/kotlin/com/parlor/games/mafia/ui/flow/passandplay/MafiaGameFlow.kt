@@ -41,6 +41,7 @@ import com.parlor.designsystem.components.ParlorToastSeverity
 import com.parlor.designsystem.components.SessionExitAffordance
 import com.parlor.designsystem.components.SessionExitConfirmation
 import com.parlor.designsystem.components.SessionExitKind
+import com.parlor.designsystem.components.parlorSafeContentPadding
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.engine.reducer.DefaultReducerContext
 import com.parlor.engine.state.Player
@@ -369,7 +370,10 @@ private fun MafiaRecoveryErrorScreen(
 ) {
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
         Column(
-            modifier = Modifier.fillMaxSize().padding(ParlorTheme.spacing.xl),
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .parlorSafeContentPadding(ParlorTheme.spacing.xl),
             verticalArrangement = Arrangement.spacedBy(
                 ParlorTheme.spacing.l,
                 Alignment.CenterVertically,
@@ -436,8 +440,8 @@ private fun MafiaPlayerCountScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(ParlorTheme.spacing.xl)
-                .verticalScroll(rememberScrollState()),
+                .verticalScroll(rememberScrollState())
+                .parlorSafeContentPadding(ParlorTheme.spacing.xl),
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -496,7 +500,7 @@ internal fun MafiaLoadingScreen(modifier: Modifier = Modifier) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(ParlorTheme.spacing.xl),
+                .parlorSafeContentPadding(ParlorTheme.spacing.xl),
             verticalArrangement = Arrangement.spacedBy(
                 ParlorTheme.spacing.l,
                 Alignment.CenterVertically,

@@ -50,7 +50,7 @@ fun ContinueWithoutDialog(
             .fillMaxSize()
             .background(colors.coverScreen)
             .semantics { paneTitle = title }
-            .padding(ParlorTheme.spacing.l),
+            .parlorSafeContentPadding(ParlorTheme.spacing.l),
         contentAlignment = Alignment.Center,
     ) {
         Column(

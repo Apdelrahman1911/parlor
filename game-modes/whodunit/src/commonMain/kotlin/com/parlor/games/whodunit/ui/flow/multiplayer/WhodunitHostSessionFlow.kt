@@ -85,6 +85,7 @@ import com.parlor.designsystem.components.SessionExitConfirmation
 import com.parlor.designsystem.components.SessionExitKind
 import com.parlor.designsystem.components.StickyActionBar
 import com.parlor.designsystem.components.sessionExitBackAction
+import com.parlor.designsystem.components.parlorSafeContentPadding
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.engine.state.Player
 import com.parlor.games.whodunit.content.WhodunitCase
@@ -393,9 +394,8 @@ private fun HostLobbyContent(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(
-                    start = ParlorTheme.spacing.l,
-                    end = ParlorTheme.spacing.l,
+                .parlorSafeContentPadding(
+                    horizontal = ParlorTheme.spacing.l,
                     top = ParlorTheme.spacing.l,
                     bottom = ParlorTheme.spacing.xxxl + ParlorTheme.spacing.xxl,
                 ),
@@ -581,7 +581,9 @@ private fun HostLoadingState(
 ) {
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
         Column(
-            modifier = Modifier.fillMaxSize().padding(ParlorTheme.spacing.xl),
+            modifier = Modifier
+                .fillMaxSize()
+                .parlorSafeContentPadding(ParlorTheme.spacing.xl),
             verticalArrangement = Arrangement.spacedBy(
                 ParlorTheme.spacing.l,
                 Alignment.CenterVertically,
@@ -623,8 +625,8 @@ private fun HostErrorState(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(ParlorTheme.spacing.xl)
-                .verticalScroll(rememberScrollState()),
+                .verticalScroll(rememberScrollState())
+                .parlorSafeContentPadding(ParlorTheme.spacing.xl),
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l, Alignment.CenterVertically),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {

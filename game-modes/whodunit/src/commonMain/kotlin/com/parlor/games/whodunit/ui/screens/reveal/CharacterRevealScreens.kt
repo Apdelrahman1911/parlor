@@ -16,6 +16,7 @@ import com.parlor.designsystem.backdrop.HeroBackdrop
 import com.parlor.designsystem.components.ContextRibbon
 import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ParlorContextTone
+import com.parlor.designsystem.components.parlorSafeContentPadding
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.whodunit.content.Character
 import com.parlor.games.whodunit.domain.state.PlayerRole
@@ -69,8 +70,8 @@ fun CharacterRevealWaitingScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(ParlorTheme.spacing.xl)
-                .verticalScroll(rememberScrollState()),
+                .verticalScroll(rememberScrollState())
+                .parlorSafeContentPadding(ParlorTheme.spacing.xl),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
@@ -110,8 +111,8 @@ fun CharacterRevealGateScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(ParlorTheme.spacing.xl)
-                .verticalScroll(rememberScrollState()),
+                .verticalScroll(rememberScrollState())
+                .parlorSafeContentPadding(ParlorTheme.spacing.xl),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceAround,
         ) {
@@ -156,7 +157,7 @@ fun DossierRevealScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(ParlorTheme.spacing.m),
+                .parlorSafeContentPadding(ParlorTheme.spacing.m),
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s),
         ) {
             ContextRibbon(

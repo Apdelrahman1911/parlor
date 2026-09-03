@@ -6,7 +6,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -74,6 +73,7 @@ import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorCard
 import com.parlor.designsystem.components.ParlorIconButton
 import com.parlor.designsystem.components.ParlorMark
+import com.parlor.designsystem.components.parlorSafeContentPaddingValues
 import com.parlor.designsystem.icons.ParlorIcons
 import com.parlor.designsystem.theme.ParlorAccent
 import com.parlor.designsystem.theme.ParlorAccentScope
@@ -98,9 +98,8 @@ internal fun HomeScreen(
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(
-                start = ParlorTheme.spacing.l,
-                end = ParlorTheme.spacing.l,
+            contentPadding = parlorSafeContentPaddingValues(
+                horizontal = ParlorTheme.spacing.l,
                 top = ParlorTheme.spacing.l,
                 bottom = ParlorTheme.spacing.xxl,
             ),

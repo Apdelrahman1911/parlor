@@ -18,6 +18,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import com.parlor.designsystem.components.ContextRibbon
 import com.parlor.designsystem.components.ParlorContextTone
+import com.parlor.designsystem.components.parlorSafeContentPadding
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.whodunit.resources.Res
 import com.parlor.games.whodunit.resources.private_do_not_pass
@@ -45,8 +46,8 @@ fun CandlelitCover(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(ParlorTheme.spacing.xxl)
-                .verticalScroll(rememberScrollState()),
+                .verticalScroll(rememberScrollState())
+                .parlorSafeContentPadding(ParlorTheme.spacing.xxl),
             verticalArrangement = Arrangement.spacedBy(
                 ParlorTheme.spacing.xl,
                 Alignment.CenterVertically,

@@ -18,6 +18,7 @@ import com.parlor.designsystem.components.ContextRibbon
 import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorContextTone
+import com.parlor.designsystem.components.parlorSafeContentPadding
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.mafia.domain.state.DetectiveSeesAs
 import com.parlor.games.mafia.resources.Res
@@ -78,8 +79,8 @@ fun DetectiveResultScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(ParlorTheme.spacing.xl)
-                .verticalScroll(rememberScrollState()),
+                .verticalScroll(rememberScrollState())
+                .parlorSafeContentPadding(ParlorTheme.spacing.xl),
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l, Alignment.CenterVertically),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {

@@ -4,9 +4,16 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.union
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -60,13 +67,17 @@ fun StickyActionBar(
                     ),
                 ),
         )
-        // Solid action surface. System nav-bar inset is handled by
-        // AmbientBackdrop one level up, so the bar only deals with its
-        // own internal content padding here.
+        // Keep the action above gesture/navigation areas without shrinking
+        // the full-screen backdrop or its scroll viewport.
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(colors.surfaceCanvas)
+                .windowInsetsPadding(
+                    WindowInsets.navigationBars
+                        .union(WindowInsets.displayCutout)
+                        .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom),
+                )
                 .padding(
                     start = ParlorTheme.spacing.l,
                     end = ParlorTheme.spacing.l,

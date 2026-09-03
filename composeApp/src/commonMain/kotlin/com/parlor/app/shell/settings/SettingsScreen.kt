@@ -51,6 +51,7 @@ import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ParlorCard
 import com.parlor.designsystem.components.ParlorToastSeverity
 import com.parlor.designsystem.components.ScreenHeader
+import com.parlor.designsystem.components.parlorSafeContentPadding
 import com.parlor.designsystem.localization.AppLanguage
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.designsystem.theme.ThemeMode
@@ -96,7 +97,7 @@ fun SettingsScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(ParlorTheme.spacing.l),
+                .parlorSafeContentPadding(ParlorTheme.spacing.l),
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.xl),
         ) {
             ScreenHeader(

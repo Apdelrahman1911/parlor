@@ -69,6 +69,7 @@ import com.parlor.designsystem.components.SessionExitConfirmation
 import com.parlor.designsystem.components.SessionExitKind
 import com.parlor.designsystem.components.coveredByReconnectingOverlay
 import com.parlor.designsystem.components.sessionExitBackAction
+import com.parlor.designsystem.components.parlorSafeContentPadding
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.engine.state.Player
 import com.parlor.games.whodunit.WhodunitIds
@@ -451,7 +452,9 @@ private fun PeerConnectingState(
 ) {
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
         Column(
-            modifier = Modifier.fillMaxSize().padding(ParlorTheme.spacing.xl),
+            modifier = Modifier
+                .fillMaxSize()
+                .parlorSafeContentPadding(ParlorTheme.spacing.xl),
             verticalArrangement = Arrangement.spacedBy(
                 ParlorTheme.spacing.l,
                 Alignment.CenterVertically,
@@ -494,8 +497,8 @@ private fun PeerWaitingForHostStart(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(ParlorTheme.spacing.l)
-                .verticalScroll(rememberScrollState()),
+                .verticalScroll(rememberScrollState())
+                .parlorSafeContentPadding(ParlorTheme.spacing.l),
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l),
         ) {
             EyebrowLabel(text = stringResource(Res.string.peer_eyebrow))
@@ -558,8 +561,8 @@ private fun PeerErrorState(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(ParlorTheme.spacing.xl)
-                .verticalScroll(rememberScrollState()),
+                .verticalScroll(rememberScrollState())
+                .parlorSafeContentPadding(ParlorTheme.spacing.xl),
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l, Alignment.CenterVertically),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {

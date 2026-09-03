@@ -16,8 +16,9 @@ import kotlin.math.max
  * game's accent a presence without adding texture, animation, or visual noise.
  *
  * The composable is retained as a screen-level wrapper so every destination
- * receives the complete edge-to-edge viewport. Floating controls that must
- * avoid system chrome apply their own focused insets.
+ * receives the complete edge-to-edge viewport. Scroll containers and floating
+ * controls apply safe-area spacing to their content rather than shrinking the
+ * screen itself.
  */
 @Composable
 fun AmbientBackdrop(

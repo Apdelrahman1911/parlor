@@ -1,6 +1,7 @@
 package com.parlor.games.whodunit.ui.flow
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.LiveRegionMode
@@ -57,6 +59,7 @@ import com.parlor.designsystem.components.SessionExitAffordance
 import com.parlor.designsystem.components.SessionExitConfirmation
 import com.parlor.designsystem.components.SessionExitKind
 import com.parlor.designsystem.icons.ParlorIcons
+import com.parlor.designsystem.components.parlorSafeContentPadding
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.engine.state.Player
 import com.parlor.games.whodunit.WhodunitDefinition
@@ -492,7 +495,10 @@ internal fun validateResumedSessionForCase(
 internal fun LoadingScreen(modifier: Modifier = Modifier) {
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
         Column(
-            modifier = Modifier.fillMaxSize().padding(ParlorTheme.spacing.xl),
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .parlorSafeContentPadding(ParlorTheme.spacing.xl),
             verticalArrangement = Arrangement.spacedBy(
                 ParlorTheme.spacing.l,
                 Alignment.CenterVertically,
@@ -514,7 +520,8 @@ internal fun UnsupportedLocalPlayModeScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(ParlorTheme.spacing.xl),
+                .verticalScroll(rememberScrollState())
+                .parlorSafeContentPadding(ParlorTheme.spacing.xl),
             verticalArrangement = Arrangement.spacedBy(
                 ParlorTheme.spacing.l,
                 Alignment.CenterVertically,
@@ -563,7 +570,8 @@ private fun ErrorScreen(error: DataError, onBack: () -> Unit, modifier: Modifier
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(ParlorTheme.spacing.xl),
+                .verticalScroll(rememberScrollState())
+                .parlorSafeContentPadding(ParlorTheme.spacing.xl),
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l, Alignment.CenterVertically),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -602,7 +610,10 @@ private fun RecoveryErrorScreen(
 ) {
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
         Column(
-            modifier = Modifier.fillMaxSize().padding(ParlorTheme.spacing.xl),
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .parlorSafeContentPadding(ParlorTheme.spacing.xl),
             verticalArrangement = Arrangement.spacedBy(
                 ParlorTheme.spacing.l,
                 Alignment.CenterVertically,

@@ -19,6 +19,7 @@ import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ContextRibbon
 import com.parlor.designsystem.components.ParlorContextTone
 import com.parlor.designsystem.components.ParlorButton
+import com.parlor.designsystem.components.parlorSafeContentPadding
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.whodunit.domain.state.PublicTimerState
 import com.parlor.games.whodunit.domain.state.RevealedClue
@@ -52,8 +53,8 @@ fun RoundTitleCardScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(ParlorTheme.spacing.xxl)
-                .verticalScroll(rememberScrollState()),
+                .verticalScroll(rememberScrollState())
+                .parlorSafeContentPadding(ParlorTheme.spacing.xxl),
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -104,8 +105,8 @@ fun ClueRevealScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(ParlorTheme.spacing.xl)
-                .verticalScroll(rememberScrollState()),
+                .verticalScroll(rememberScrollState())
+                .parlorSafeContentPadding(ParlorTheme.spacing.xl),
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.xl),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -142,8 +143,8 @@ fun DiscussionScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(ParlorTheme.spacing.xl)
-                .verticalScroll(rememberScrollState()),
+                .verticalScroll(rememberScrollState())
+                .parlorSafeContentPadding(ParlorTheme.spacing.xl),
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l),
         ) {
             ContextRibbon(

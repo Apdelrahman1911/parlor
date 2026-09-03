@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.text.KeyboardActions
@@ -40,6 +39,7 @@ import com.parlor.designsystem.components.ParlorCard
 import com.parlor.designsystem.components.ParlorTextField
 import com.parlor.designsystem.components.ScreenHeader
 import com.parlor.designsystem.components.StickyActionBar
+import com.parlor.designsystem.components.parlorSafeContentPadding
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.networking.room.RoomInputPolicy
 import org.jetbrains.compose.resources.stringResource
@@ -65,9 +65,8 @@ fun JoinPromptScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
-                    .padding(
-                        start = ParlorTheme.spacing.l,
-                        end = ParlorTheme.spacing.l,
+                    .parlorSafeContentPadding(
+                        horizontal = ParlorTheme.spacing.l,
                         top = ParlorTheme.spacing.l,
                         bottom = ParlorTheme.spacing.xxxl + ParlorTheme.spacing.xxl,
                     ),

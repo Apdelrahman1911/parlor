@@ -30,6 +30,7 @@ import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ContextRibbon
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorContextTone
+import com.parlor.designsystem.components.parlorSafeContentPadding
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.mafia.resources.Res
 import com.parlor.games.mafia.resources.private_do_not_pass
@@ -69,8 +70,8 @@ fun TargetPickerScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(ParlorTheme.spacing.xl)
-                .verticalScroll(rememberScrollState()),
+                .verticalScroll(rememberScrollState())
+                .parlorSafeContentPadding(ParlorTheme.spacing.xl),
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {

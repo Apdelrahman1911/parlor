@@ -37,6 +37,7 @@ import com.parlor.designsystem.components.ParlorCard
 import com.parlor.designsystem.components.ParlorIconButton
 import com.parlor.designsystem.components.ParlorIconButtonVariant
 import com.parlor.designsystem.icons.ParlorIcons
+import com.parlor.designsystem.components.parlorSafeContentPadding
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.mafia.domain.settings.MafiaKillTie
 import com.parlor.games.mafia.domain.settings.MafiaRoleCounts
@@ -120,8 +121,8 @@ fun MafiaSetupScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .imePadding()
-                .padding(ParlorTheme.spacing.xl)
-                .verticalScroll(rememberScrollState()),
+                .verticalScroll(rememberScrollState())
+                .parlorSafeContentPadding(ParlorTheme.spacing.xl),
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {

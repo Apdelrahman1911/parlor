@@ -37,6 +37,7 @@ import com.parlor.designsystem.components.EmptyState
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorCard
 import com.parlor.designsystem.components.ScreenHeader
+import com.parlor.designsystem.components.parlorSafeContentPadding
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.whodunit.WhodunitIds
 import com.parlor.games.whodunit.resources.Res
@@ -85,7 +86,7 @@ fun WhodunitCasePickerScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(ParlorTheme.spacing.l),
+                .parlorSafeContentPadding(ParlorTheme.spacing.l),
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m),
         ) {
             ScreenHeader(
