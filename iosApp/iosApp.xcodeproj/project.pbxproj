@@ -243,7 +243,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd \"$SRCROOT/..\"\nif [ \"YES\" = \"$OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED\" ]; then\n  echo \"Skipping Gradle build task invocation due to OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED environment variable set to \\\"YES\\\"\"\n  exit 0\nfi\n./gradlew --no-daemon :composeApp:embedAndSignAppleFrameworkForXcode --dependency-verification=strict --console=plain\n";
+			shellScript = "cd \"$SRCROOT/..\"\nif [ \"YES\" = \"$OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED\" ]; then\n  echo \"Skipping Gradle build task invocation due to OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED environment variable set to \\\"YES\\\"\"\n  exit 0\nfi\n./gradlew --no-daemon :composeApp:embedAndSignAppleFrameworkForXcode --dependency-verification=strict --console=plain\nscripts/release/normalize_embedded_apple_framework.sh \"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}\" ComposeApp\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
