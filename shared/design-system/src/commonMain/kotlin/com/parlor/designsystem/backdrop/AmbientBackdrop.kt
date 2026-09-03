@@ -2,10 +2,7 @@ package com.parlor.designsystem.backdrop
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
@@ -18,8 +15,9 @@ import kotlin.math.max
  * Editorial backdrop. A static, low-alpha stage light gives the selected
  * game's accent a presence without adding texture, animation, or visual noise.
  *
- * The composable is retained as a screen-level wrapper so callers can apply
- * the same edge-to-edge surface and system-bar insets consistently.
+ * The composable is retained as a screen-level wrapper so every destination
+ * receives the complete edge-to-edge viewport. Floating controls that must
+ * avoid system chrome apply their own focused insets.
  */
 @Composable
 fun AmbientBackdrop(
@@ -43,13 +41,7 @@ fun AmbientBackdrop(
                 onDrawBehind { drawRect(stageLight) }
             },
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .windowInsetsPadding(WindowInsets.systemBars),
-        ) {
-            content()
-        }
+        content()
     }
 }
 
