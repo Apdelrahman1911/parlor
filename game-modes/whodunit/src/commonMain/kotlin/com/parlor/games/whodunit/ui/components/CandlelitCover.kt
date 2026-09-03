@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -15,7 +16,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
+import com.parlor.designsystem.components.ContextRibbon
+import com.parlor.designsystem.components.ParlorContextTone
 import com.parlor.designsystem.theme.ParlorTheme
+import com.parlor.games.whodunit.resources.Res
+import com.parlor.games.whodunit.resources.private_do_not_pass
+import com.parlor.games.whodunit.resources.private_screen_label
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * Pass-the-phone cover screen. Pure-black body in both light and dark
@@ -40,16 +47,29 @@ fun CandlelitCover(
                 .fillMaxSize()
                 .padding(ParlorTheme.spacing.xxl)
                 .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.Center,
+            verticalArrangement = Arrangement.spacedBy(
+                ParlorTheme.spacing.xl,
+                Alignment.CenterVertically,
+            ),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text(
-                text = title,
-                style = ParlorTheme.typography.displayMedium,
-                color = ParlorTheme.colors.coverScreenTextPrimary,
-                textAlign = TextAlign.Center,
+            ContextRibbon(
+                label = stringResource(Res.string.private_screen_label),
+                detail = stringResource(Res.string.private_do_not_pass),
+                tone = ParlorContextTone.Private,
+                inverted = true,
             )
-            Box(modifier = Modifier.padding(top = ParlorTheme.spacing.m)) {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Text(
+                    text = title,
+                    style = ParlorTheme.typography.displayMedium,
+                    color = ParlorTheme.colors.coverScreenTextPrimary,
+                    textAlign = TextAlign.Center,
+                )
                 Text(
                     text = subtitle,
                     style = ParlorTheme.typography.bodyLarge,

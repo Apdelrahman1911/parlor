@@ -4,13 +4,16 @@
     <string name="app_name">Parlor</string>
 
     <!-- Home screen. -->
-    <string name="home_eyebrow">PARLOR</string>
+    <string name="home_eyebrow">TONIGHT AT YOUR TABLE</string>
+    <string name="home_title">Pick a story. Bring the room together.</string>
     <string name="home_whodunit_title">Whodunit</string>
-    <string name="home_whodunit_subtitle">The Last Dinner</string>
-    <string name="home_whodunit_tagline">A country-manor murder mystery. 25–35 min.</string>
+    <string name="home_whodunit_subtitle">Seven mysteries. One guilty guest.</string>
+    <string name="home_whodunit_tagline">Trade secrets, reveal evidence, and accuse carefully.</string>
+    <string name="home_whodunit_kicker">CASE FILE</string>
     <string name="home_mafia_title">Mafia</string>
     <string name="home_mafia_subtitle">حرامية وظباط</string>
-    <string name="home_mafia_tagline">Hidden roles. Whispered alliances. Vote to survive.</string>
+    <string name="home_mafia_tagline">Hidden roles. Quiet choices. A town deciding whom to trust.</string>
+    <string name="home_mafia_kicker">AFTER DARK</string>
 
     <!-- Resume in-progress sessions. -->
     <string name="home_resume_tile_title">Resume saved game</string>
@@ -31,8 +34,9 @@
     <string name="playmode_solo_choose">Play Solo</string>
     <string name="playmode_solo_choose_description">Start a solo run on this device with no hand-off.</string>
     <string name="playmode_passandplay_title">Pass and Play</string>
-    <string name="playmode_passandplay_body">One phone, several players around the table. Each player takes a turn holding the phone, sees their own dossier in private, then passes it on.</string>
+    <string name="playmode_passandplay_body">Hand one phone around. Private turns stay covered between players.</string>
     <string name="playmode_passandplay_meta">1 phone · %1$d–%2$d players</string>
+    <string name="playmode_passandplay_meta_exact">1 phone · %1$d players</string>
     <string name="playmode_passandplay_choose">Pass and Play</string>
     <string name="playmode_passandplay_choose_description">Start a pass-and-play session on this device.</string>
 
@@ -41,7 +45,7 @@
     <string name="name_eyebrow_peer">JOIN SETUP</string>
     <string name="name_title_host">What should the table call you?</string>
     <string name="name_title_peer">What should the host see?</string>
-    <string name="name_help">Your name appears in the room and on the dossiers passed around the table. You can change it next session.</string>
+    <string name="name_help">Your name is the label shown for your seat in this room. It does not create an account, and you can change it next session.</string>
     <string name="name_field">Your name</string>
     <string name="name_confirm_host">Continue to Story</string>
     <string name="name_confirm_host_description">Save your name and continue to pick a story.</string>
@@ -55,13 +59,17 @@
     <string name="join_title">Enter the room code.</string>
     <string name="join_code_help">Six letters and digits the host showed you.</string>
     <string name="join_code_field">Room code</string>
-    <string name="join_confirm">Connect</string>
+    <string name="join_local_label">LOCAL ROOM</string>
+    <string name="join_local_body">Your device finds the host on the same Wi-Fi. The host must approve you before play begins.</string>
+    <string name="join_confirm">Find the room</string>
     <string name="join_confirm_description">Connect to the host using the entered room code.</string>
     <string name="join_cancel">Cancel</string>
     <string name="join_cancel_description">Return to the home screen.</string>
 
     <!-- Settings. Only controls backed by shipping behavior are exposed. -->
     <string name="settings_title">Settings</string>
+    <string name="settings_eyebrow">PARLOR</string>
+    <string name="settings_subtitle">Changes apply immediately and stay on this device.</string>
     <string name="settings_language_label">Language</string>
     <string name="settings_language_system">System language</string>
     <string name="settings_language_english">English</string>
@@ -92,8 +100,15 @@
     <string name="permission_back_description">Return to the home screen without starting networking.</string>
 
     <!-- Home: game-first redesign. -->
-    <string name="home_subtitle">Pick a game to begin.</string>
-    <string name="home_games_label">GAMES</string>
+    <string name="home_subtitle">No accounts. No strangers. Just the people already here.</string>
+    <string name="home_games_label">CHOOSE A GAME</string>
+    <string name="home_games_count">%1$d games</string>
+    <string name="home_saved_on_device">Saved on this device</string>
+    <string name="home_game_kicker_format">%1$s · %2$d</string>
+    <string name="home_players_exact_format">%1$d players</string>
+    <string name="home_players_range_format">%1$d–%2$d players</string>
+    <string name="home_local_lan_meta">Local + same Wi-Fi</string>
+    <string name="home_local_meta">Local play</string>
     <string name="home_continue_label">CONTINUE</string>
     <string name="home_whodunit_open">Open Whodunit</string>
     <string name="home_whodunit_open_description">Open Whodunit and pick how you want to play.</string>
@@ -102,17 +117,24 @@
     <string name="home_settings_description">Open settings.</string>
 
     <!-- Game setup screen: 4 cards (Solo / Pass and Play / Host / Join). -->
-    <string name="setup_eyebrow">HOW DO YOU WANT TO PLAY?</string>
-    <string name="setup_title">Pick your setup.</string>
-    <string name="setup_subtitle">Choose an available setup for this game.</string>
+    <string name="setup_eyebrow">GAME SETUP</string>
+    <string name="setup_title">How is your table playing?</string>
+    <string name="setup_subtitle">Choose by device setup. Everyone stays in the same room.</string>
+    <string name="setup_one_device_label">ONE DEVICE</string>
+    <string name="setup_each_device_label">ONE DEVICE EACH · SAME WI-FI</string>
+    <string name="setup_solo_unavailable_title">Solo is not available.</string>
+    <string name="setup_solo_requires_exact">This game needs a full table of %1$d players.</string>
+    <string name="setup_solo_requires_range">This game needs %1$d–%2$d players.</string>
+    <string name="setup_solo_unavailable_description_format">Solo is not available. %1$s</string>
+    <string name="setup_lan_note">Rooms stay on your local network. No accounts, public matchmaking, or manual IP addresses.</string>
     <string name="setup_back_description">Return to the home screen.</string>
     <string name="setup_host_title">Host a Room</string>
-    <string name="setup_host_body">Multiple phones. You open a private room, and friends join with a 6-character code.</string>
+    <string name="setup_host_body">Create the code and lead the game.</string>
     <string name="setup_host_meta">One phone per player</string>
     <string name="setup_host_choose">Host a Room</string>
     <string name="setup_host_choose_description">Open a room and show a code your friends can join.</string>
     <string name="setup_join_title">Join a Room</string>
-    <string name="setup_join_body">Your friend opened a room. Enter their 6-character code to drop in.</string>
+    <string name="setup_join_body">Enter the host’s six-character code.</string>
     <string name="setup_join_meta">One phone per player</string>
     <string name="setup_join_choose">Join a Room</string>
     <string name="setup_join_choose_description">Enter the host's room code to join their table.</string>

@@ -13,8 +13,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import com.parlor.designsystem.backdrop.HeroBackdrop
 import com.parlor.designsystem.components.EyebrowLabel
+import com.parlor.designsystem.components.ContextRibbon
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorCard
+import com.parlor.designsystem.components.ParlorContextTone
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.mafia.domain.state.Role
 import com.parlor.games.mafia.domain.state.Team
@@ -33,6 +35,8 @@ import com.parlor.games.mafia.resources.role_mafia
 import com.parlor.games.mafia.resources.role_mafia_brief
 import com.parlor.games.mafia.resources.team_mafia
 import com.parlor.games.mafia.resources.team_town
+import com.parlor.games.mafia.resources.handoff_player_only_format
+import com.parlor.games.mafia.resources.private_screen_label
 import org.jetbrains.compose.resources.stringResource
 
 /**
@@ -58,6 +62,11 @@ fun PrivateRoleCardScreen(
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l),
             horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally,
         ) {
+            ContextRibbon(
+                label = stringResource(Res.string.private_screen_label),
+                detail = stringResource(Res.string.handoff_player_only_format, playerName),
+                tone = ParlorContextTone.Private,
+            )
             EyebrowLabel(text = playerName, textAlign = TextAlign.Center)
             Text(
                 text = roleDisplayName(role),

@@ -16,6 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import com.parlor.designsystem.backdrop.HeroBackdrop
 import com.parlor.designsystem.components.EyebrowLabel
+import com.parlor.designsystem.components.ContextRibbon
+import com.parlor.designsystem.components.ParlorContextTone
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.whodunit.domain.state.PublicTimerState
@@ -23,6 +25,7 @@ import com.parlor.games.whodunit.domain.state.RevealedClue
 import com.parlor.games.whodunit.resources.Res
 import com.parlor.games.whodunit.resources.round_begin_discussion
 import com.parlor.games.whodunit.resources.round_begin_discussion_description
+import com.parlor.games.whodunit.resources.round_context_public
 import com.parlor.games.whodunit.resources.round_clue_bullet_format
 import com.parlor.games.whodunit.resources.round_clue_eyebrow_format
 import com.parlor.games.whodunit.resources.round_discussion_eyebrow
@@ -41,6 +44,7 @@ fun RoundTitleCardScreen(
     roundIndex: Int,
     title: String,
     tagline: String,
+    authorityLabel: String,
     onContinue: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -53,6 +57,11 @@ fun RoundTitleCardScreen(
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+            ContextRibbon(
+                label = stringResource(Res.string.round_context_public),
+                detail = authorityLabel,
+                tone = ParlorContextTone.Public,
+            )
             EyebrowLabel(
                 text = stringResource(Res.string.round_eyebrow_format, roundIndex),
                 accent = false,
@@ -87,6 +96,7 @@ fun RoundTitleCardScreen(
 @Composable
 fun ClueRevealScreen(
     clue: RevealedClue,
+    authorityLabel: String,
     onContinue: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -99,6 +109,11 @@ fun ClueRevealScreen(
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.xl),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+            ContextRibbon(
+                label = stringResource(Res.string.round_context_public),
+                detail = authorityLabel,
+                tone = ParlorContextTone.Public,
+            )
             EyebrowLabel(
                 text = stringResource(Res.string.round_clue_eyebrow_format, clue.roundIndex),
                 accent = false,
@@ -119,6 +134,7 @@ fun ClueRevealScreen(
 fun DiscussionScreen(
     timer: PublicTimerState?,
     revealedClues: List<RevealedClue>,
+    authorityLabel: String,
     onAdvance: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -130,6 +146,11 @@ fun DiscussionScreen(
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l),
         ) {
+            ContextRibbon(
+                label = stringResource(Res.string.round_context_public),
+                detail = authorityLabel,
+                tone = ParlorContextTone.Public,
+            )
             EyebrowLabel(
                 text = stringResource(Res.string.round_discussion_eyebrow),
                 accent = false,

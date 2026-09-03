@@ -4,10 +4,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import com.parlor.designsystem.theme.ParlorTheme
@@ -29,6 +31,7 @@ fun ParlorTextField(
     imeAction: ImeAction = ImeAction.Done,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     capitalization: KeyboardCapitalization = KeyboardCapitalization.Sentences,
+    textStyle: TextStyle = ParlorTheme.typography.bodyLarge,
 ) {
     val colors = ParlorTheme.colors
     OutlinedTextField(
@@ -36,20 +39,21 @@ fun ParlorTextField(
         onValueChange = onValueChange,
         label = { Text(label, style = ParlorTheme.typography.labelMedium) },
         singleLine = singleLine,
-        textStyle = ParlorTheme.typography.bodyLarge,
+        textStyle = textStyle,
+        shape = RoundedCornerShape(ParlorTheme.radii.card),
         keyboardOptions = KeyboardOptions(
             capitalization = capitalization,
             imeAction = imeAction,
         ),
         keyboardActions = keyboardActions,
-        colors = TextFieldDefaults.colors(
+        colors = OutlinedTextFieldDefaults.colors(
             focusedContainerColor = colors.surfaceElevated,
             unfocusedContainerColor = colors.surfaceElevated,
             focusedTextColor = colors.textPrimary,
             unfocusedTextColor = colors.textPrimary,
             cursorColor = colors.accentEmber,
-            focusedIndicatorColor = colors.accentEmber,
-            unfocusedIndicatorColor = colors.borderElevated,
+            focusedBorderColor = colors.accentEmber,
+            unfocusedBorderColor = colors.borderElevated,
             focusedLabelColor = colors.accentEmber,
             unfocusedLabelColor = colors.textSecondary,
         ),

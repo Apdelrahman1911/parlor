@@ -3,6 +3,8 @@ package com.parlor.designsystem.tokens
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isTrue
+import com.parlor.designsystem.theme.ParlorAccent
+import com.parlor.designsystem.theme.withAccent
 import kotlin.math.pow
 import kotlin.test.Test
 
@@ -33,6 +35,9 @@ class PaletteCoverageTest {
         "coverScreenTextPrimary",
         "coverScreenTextSecondary",
         "coverScreenTextTertiary",
+        "surfacePaper",
+        "textOnPaper",
+        "textOnPaperSecondary",
     )
 
     @Test
@@ -43,6 +48,11 @@ class PaletteCoverageTest {
             "surfaceHigher" to (dark.surfaceHigher to light.surfaceHigher),
             "surfaceInset" to (dark.surfaceInset to light.surfaceInset),
             "surfaceHero" to (dark.surfaceHero to light.surfaceHero),
+            "surfacePaper" to (dark.surfacePaper to light.surfacePaper),
+            "textOnPaper" to (dark.textOnPaper to light.textOnPaper),
+            "textOnPaperSecondary" to (
+                dark.textOnPaperSecondary to light.textOnPaperSecondary
+            ),
             "accentEmber" to (dark.accentEmber to light.accentEmber),
             "accentEmberGlow" to (dark.accentEmberGlow to light.accentEmberGlow),
             "accentEmberDeep" to (dark.accentEmberDeep to light.accentEmberDeep),
@@ -105,13 +115,46 @@ class PaletteCoverageTest {
     }
 
     @Test
+    fun evidence_paper_text_pairs_meet_AA() {
+        listOf(dark, light).forEach { palette ->
+            assertThat(contrastRatio(palette.textOnPaper, palette.surfacePaper) >= 7f).isTrue()
+            assertThat(
+                contrastRatio(palette.textOnPaperSecondary, palette.surfacePaper) >=
+                    AA_NORMAL_TEXT_MINIMUM,
+            ).isTrue()
+        }
+    }
+
+    @Test
+    fun text_hierarchy_remains_readable_on_standard_surfaces() {
+        listOf(dark, light).forEach { palette ->
+            val surfaces = listOf(
+                palette.surfaceCanvas,
+                palette.surfaceElevated,
+                palette.surfaceHigher,
+                palette.surfaceInset,
+                palette.surfaceHero,
+            )
+            surfaces.forEach { surface ->
+                assertThat(contrastRatio(palette.textPrimary, surface) >= 7f).isTrue()
+                assertThat(
+                    contrastRatio(palette.textSecondary, surface) >= AA_NORMAL_TEXT_MINIMUM,
+                ).isTrue()
+                assertThat(
+                    contrastRatio(palette.textTertiary, surface) >= AA_NORMAL_TEXT_MINIMUM,
+                ).isTrue()
+            }
+        }
+    }
+
+    @Test
     fun active_normal_text_pairs_used_by_design_system_components_meet_AA() {
         val violations = mutableListOf<String>()
         listOf("dark" to dark, "light" to light).forEach { (name, palette) ->
             val activePairs = listOf(
                 "primary button" to (palette.textOnAccent to palette.accentEmber),
                 "pressed primary button" to (
-                    palette.textOnAccent to palette.accentEmberDeep
+                    palette.textOnAccent to palette.accentEmberGlow
                         .copy(alpha = PRIMARY_BUTTON_PRESSED_TINT_ALPHA)
                         .compositedOver(palette.accentEmber)
                 ),
@@ -127,6 +170,37 @@ class PaletteCoverageTest {
                 val ratio = contrastRatio(colors.first, colors.second)
                 if (ratio < AA_NORMAL_TEXT_MINIMUM) {
                     violations += "$name $callSite has $ratio:1 contrast"
+                }
+            }
+        }
+
+        assertThat(violations.joinToString("; ")).isEqualTo("")
+    }
+
+    @Test
+    fun every_game_accent_meets_active_text_contrast_contracts() {
+        val violations = mutableListOf<String>()
+        listOf("dark" to dark, "light" to light).forEach { (mode, palette) ->
+            ParlorAccent.entries.forEach { accent ->
+                val colors = palette.withAccent(accent)
+                val activePairs = listOf(
+                    "accent on canvas" to (colors.accentEmber to colors.surfaceCanvas),
+                    "accent on elevated surface" to (
+                        colors.accentEmber to colors.surfaceElevated
+                    ),
+                    "accent on hero surface" to (colors.accentEmber to colors.surfaceHero),
+                    "button text" to (colors.textOnAccent to colors.accentEmber),
+                    "pressed button text" to (
+                        colors.textOnAccent to colors.accentEmberGlow
+                            .copy(alpha = PRIMARY_BUTTON_PRESSED_TINT_ALPHA)
+                            .compositedOver(colors.accentEmber)
+                    ),
+                )
+                activePairs.forEach { (callSite, pair) ->
+                    val ratio = contrastRatio(pair.first, pair.second)
+                    if (ratio < AA_NORMAL_TEXT_MINIMUM) {
+                        violations += "$mode $accent $callSite has $ratio:1 contrast"
+                    }
                 }
             }
         }

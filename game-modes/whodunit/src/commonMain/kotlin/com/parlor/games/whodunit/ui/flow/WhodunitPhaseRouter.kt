@@ -51,6 +51,8 @@ import com.parlor.games.whodunit.resources.round_default_final_evidence_title
 import com.parlor.games.whodunit.resources.round_default_generic_title_format
 import com.parlor.games.whodunit.resources.round_default_motives_tagline
 import com.parlor.games.whodunit.resources.round_default_motives_title
+import com.parlor.games.whodunit.resources.round_context_host
+import com.parlor.games.whodunit.resources.round_context_table
 import com.parlor.games.whodunit.resources.vote_next_voter_fallback
 import com.parlor.games.whodunit.resources.vote_voter_fallback
 import com.parlor.games.whodunit.resources.whodunit_vote_counting
@@ -842,6 +844,13 @@ private fun RoundSegment(
     val title = display.title
     val tagline = display.tagline
     val discussionSeconds = display.discussionSeconds
+    val authorityLabel = stringResource(
+        if (playMode is PlayMode.MultiDevice) {
+            Res.string.round_context_host
+        } else {
+            Res.string.round_context_table
+        },
+    )
 
     // Real-time discussion ticker. Keyed on the timer's stable id so:
     //  - a new round starting its own timer spawns a fresh loop,
@@ -868,11 +877,13 @@ private fun RoundSegment(
             roundIndex = roundIndex,
             title = title,
             tagline = tagline,
+            authorityLabel = authorityLabel,
             onContinue = { scope.launch { session.submit(WhodunitAction.RevealNextClue) } },
             modifier = modifier,
         )
         timer == null && state.public.voteState == VoteState.Idle -> ClueRevealScreen(
             clue = clueThisRound,
+            authorityLabel = authorityLabel,
             onContinue = {
                 scope.launch {
                     session.submit(WhodunitAction.StartDiscussionTimer(discussionSeconds))
@@ -883,6 +894,7 @@ private fun RoundSegment(
         timer != null -> DiscussionScreen(
             timer = timer,
             revealedClues = state.public.revealedClues,
+            authorityLabel = authorityLabel,
             onAdvance = { scope.launch { session.submit(WhodunitAction.AdvanceFromDiscussion) } },
             modifier = modifier,
         )
@@ -918,6 +930,7 @@ private fun RoundSegment(
             roundIndex = roundIndex,
             title = title,
             tagline = tagline,
+            authorityLabel = authorityLabel,
             onContinue = { scope.launch { session.submit(WhodunitAction.RevealNextClue) } },
             modifier = modifier,
         )

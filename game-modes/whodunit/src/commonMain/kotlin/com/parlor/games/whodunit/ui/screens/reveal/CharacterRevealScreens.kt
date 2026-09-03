@@ -13,12 +13,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import com.parlor.designsystem.backdrop.HeroBackdrop
+import com.parlor.designsystem.components.ContextRibbon
 import com.parlor.designsystem.components.EyebrowLabel
+import com.parlor.designsystem.components.ParlorContextTone
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.whodunit.content.Character
 import com.parlor.games.whodunit.domain.state.PlayerRole
 import com.parlor.core.ids.CharacterId
 import com.parlor.games.whodunit.resources.Res
+import com.parlor.games.whodunit.resources.private_do_not_pass
+import com.parlor.games.whodunit.resources.private_player_only_format
+import com.parlor.games.whodunit.resources.private_screen_label
 import com.parlor.games.whodunit.resources.reveal_gate_headline_format
 import com.parlor.games.whodunit.resources.reveal_gate_hold_hint
 import com.parlor.games.whodunit.resources.reveal_gate_instruction
@@ -110,6 +115,11 @@ fun CharacterRevealGateScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceAround,
         ) {
+            ContextRibbon(
+                label = stringResource(Res.string.private_screen_label),
+                detail = stringResource(Res.string.private_player_only_format, playerName),
+                tone = ParlorContextTone.Private,
+            )
             Text(
                 text = stringResource(Res.string.reveal_gate_headline_format, playerName),
                 style = ParlorTheme.typography.displayMedium,
@@ -143,16 +153,26 @@ fun DossierRevealScreen(
     deflectionTargets: List<CharacterId> = emptyList(),
 ) {
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
-        DossierCard(
-            character = character,
-            role = role,
-            onDone = onDone,
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(ParlorTheme.spacing.m),
-            allCharacters = allCharacters,
-            deflectionTargets = deflectionTargets,
-        )
+            verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s),
+        ) {
+            ContextRibbon(
+                label = stringResource(Res.string.private_screen_label),
+                detail = stringResource(Res.string.private_do_not_pass),
+                tone = ParlorContextTone.Private,
+            )
+            DossierCard(
+                character = character,
+                role = role,
+                onDone = onDone,
+                modifier = Modifier.weight(1f),
+                allCharacters = allCharacters,
+                deflectionTargets = deflectionTargets,
+            )
+        }
     }
 }
 

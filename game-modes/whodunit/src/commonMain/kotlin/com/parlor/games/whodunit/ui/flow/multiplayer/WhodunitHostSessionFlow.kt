@@ -41,6 +41,8 @@ import com.parlor.games.whodunit.resources.host_approve
 import com.parlor.games.whodunit.resources.host_approve_description
 import com.parlor.games.whodunit.resources.host_decline
 import com.parlor.games.whodunit.resources.host_decline_description
+import com.parlor.games.whodunit.resources.host_context_authority
+import com.parlor.games.whodunit.resources.host_context_local
 import com.parlor.games.whodunit.resources.host_join_request_format
 import com.parlor.games.whodunit.resources.host_members_empty
 import com.parlor.games.whodunit.resources.host_members_eyebrow
@@ -69,11 +71,13 @@ import com.parlor.core.result.DataError
 import com.parlor.core.result.Result
 import com.parlor.designsystem.backdrop.HeroBackdrop
 import com.parlor.designsystem.components.CandleFlame
+import com.parlor.designsystem.components.ContextRibbon
 import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.LocalParlorToastState
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorButtonVariant
 import com.parlor.designsystem.components.ParlorCard
+import com.parlor.designsystem.components.ParlorContextTone
 import com.parlor.designsystem.components.ParlorToastSeverity
 import com.parlor.designsystem.components.SessionExitAffordance
 import com.parlor.designsystem.components.SessionExitBackAction
@@ -397,10 +401,15 @@ private fun HostLobbyContent(
                 ),
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l),
         ) {
+            ContextRibbon(
+                label = stringResource(Res.string.host_context_local),
+                detail = stringResource(Res.string.host_context_authority),
+                tone = ParlorContextTone.Host,
+            )
             EyebrowLabel(text = stringResource(Res.string.host_title))
 
             // Hero room-code card — the screen's signature moment. The
-            // indigo-tinted hero surface makes the code unmistakable when the
+            // high-contrast hero surface makes the code unmistakable when the
             // host turns the phone to a friend.
             ParlorCard(
                 modifier = Modifier.fillMaxWidth(),

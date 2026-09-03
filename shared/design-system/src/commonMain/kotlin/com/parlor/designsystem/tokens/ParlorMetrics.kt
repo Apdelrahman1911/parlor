@@ -41,9 +41,9 @@ data class ElevationSpec(
 @Immutable
 data class ParlorRadii(
     val none: Dp = 0.dp,
-    val subtle: Dp = 4.dp,
-    val card: Dp = 12.dp,
-    val elevated: Dp = 20.dp,
+    val subtle: Dp = 8.dp,
+    val card: Dp = 16.dp,
+    val elevated: Dp = 24.dp,
     val pill: Dp = 9999.dp,
 )
 

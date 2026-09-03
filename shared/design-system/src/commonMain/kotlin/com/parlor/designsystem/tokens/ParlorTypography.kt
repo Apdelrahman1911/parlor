@@ -14,11 +14,11 @@ import parlor.shared.design_system.generated.resources.inter
 import parlor.shared.design_system.generated.resources.jetbrains_mono
 
 /**
- * Typography tokens — Modern Dark Editorial direction.
+ * Typography tokens — warm editorial direction.
  *
  * Inter for everything except locked-digit timers (JetBrains Mono).
- * Big, bold display weights carry the hierarchy; serif decoration is
- * out of scope for this direction.
+ * Big, confident display weights carry the hierarchy without sacrificing
+ * Arabic coverage or large-text resilience.
  *
  * Variable fonts let one .ttf serve every weight.
  */
@@ -80,16 +80,16 @@ private fun buildParlorTypography(
 ): ParlorTypography = ParlorTypography(
     displayHero = TextStyle(
         fontFamily = displaySans,
-        fontWeight = FontWeight.Black,
-        fontSize = 56.sp,
-        lineHeight = 62.sp,
-        letterSpacing = (-1.2).sp,
+        fontWeight = FontWeight.ExtraBold,
+        fontSize = 48.sp,
+        lineHeight = 52.sp,
+        letterSpacing = (-1.0).sp,
     ),
     displayLarge = TextStyle(
         fontFamily = displaySans,
         fontWeight = FontWeight.ExtraBold,
-        fontSize = 38.sp,
-        lineHeight = 44.sp,
+        fontSize = 36.sp,
+        lineHeight = 41.sp,
         letterSpacing = (-0.8).sp,
     ),
     displayMedium = TextStyle(

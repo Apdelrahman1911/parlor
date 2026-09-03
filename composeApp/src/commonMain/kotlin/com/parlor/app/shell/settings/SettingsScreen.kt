@@ -28,7 +28,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.unit.dp
 import com.parlor.app.resources.Res
 import com.parlor.app.resources.settings_appearance_dark
 import com.parlor.app.resources.settings_appearance_label
@@ -36,6 +35,7 @@ import com.parlor.app.resources.settings_appearance_light
 import com.parlor.app.resources.settings_appearance_system
 import com.parlor.app.resources.settings_back_description
 import com.parlor.app.resources.settings_experience_label
+import com.parlor.app.resources.settings_eyebrow
 import com.parlor.app.resources.settings_language_arabic
 import com.parlor.app.resources.settings_language_english
 import com.parlor.app.resources.settings_language_label
@@ -43,9 +43,11 @@ import com.parlor.app.resources.settings_language_system
 import com.parlor.app.resources.settings_reduced_motion_description
 import com.parlor.app.resources.settings_reduced_motion_title
 import com.parlor.app.resources.settings_save_failed
+import com.parlor.app.resources.settings_subtitle
 import com.parlor.app.resources.settings_title
 import com.parlor.designsystem.backdrop.HeroBackdrop
 import com.parlor.designsystem.components.LocalParlorToastState
+import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ParlorCard
 import com.parlor.designsystem.components.ParlorToastSeverity
 import com.parlor.designsystem.components.ScreenHeader
@@ -94,11 +96,13 @@ fun SettingsScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(ParlorTheme.spacing.xl),
+                .padding(ParlorTheme.spacing.l),
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.xl),
         ) {
             ScreenHeader(
                 title = stringResource(Res.string.settings_title),
+                eyebrow = stringResource(Res.string.settings_eyebrow),
+                subtitle = stringResource(Res.string.settings_subtitle),
                 onBack = onBack,
                 backContentDescription = stringResource(Res.string.settings_back_description),
             )
@@ -188,10 +192,9 @@ private fun SettingsSection(
             modifier = if (selectableGroup) Modifier.selectableGroup() else Modifier,
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m),
         ) {
-            Text(
-                text = label.uppercase(),
-                style = ParlorTheme.typography.labelSmall,
-                color = ParlorTheme.colors.textSecondary,
+            EyebrowLabel(
+                text = label,
+                accent = false,
                 modifier = Modifier.semantics { heading() },
             )
             content()
@@ -227,7 +230,7 @@ private fun ToggleOption(
             .clip(RoundedCornerShape(ParlorTheme.radii.card))
             .background(colors.surfaceHigher)
             .border(
-                width = 1.dp,
+                width = ParlorTheme.borders.hairline,
                 color = colors.borderElevated,
                 shape = RoundedCornerShape(ParlorTheme.radii.card),
             )
@@ -273,9 +276,16 @@ private fun OptionRow(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(ParlorTheme.radii.card))
-            .background(if (selected) colors.accentEmberDeep else colors.surfaceHigher)
+            .background(colors.surfaceHigher)
+            .background(
+                if (selected) {
+                    colors.accentEmber.copy(alpha = SELECTED_SURFACE_ALPHA)
+                } else {
+                    colors.transparent
+                },
+            )
             .border(
-                1.dp,
+                ParlorTheme.borders.hairline,
                 if (selected) colors.accentEmber else colors.borderElevated,
                 RoundedCornerShape(ParlorTheme.radii.card),
             )
@@ -296,10 +306,24 @@ private fun OptionRow(
         if (selected) {
             Box(
                 modifier = Modifier
-                    .size(ParlorTheme.iconSize.xxs)
+                    .size(ParlorTheme.iconSize.m)
                     .clip(RoundedCornerShape(ParlorTheme.radii.pill))
-                    .background(colors.accentEmber),
-            )
+                    .border(
+                        ParlorTheme.borders.strong,
+                        colors.accentEmber,
+                        RoundedCornerShape(ParlorTheme.radii.pill),
+                    ),
+                contentAlignment = Alignment.Center,
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(ParlorTheme.iconSize.xxs)
+                        .clip(RoundedCornerShape(ParlorTheme.radii.pill))
+                        .background(colors.accentEmber),
+                )
+            }
         }
     }
 }
+
+private const val SELECTED_SURFACE_ALPHA = 0.12f

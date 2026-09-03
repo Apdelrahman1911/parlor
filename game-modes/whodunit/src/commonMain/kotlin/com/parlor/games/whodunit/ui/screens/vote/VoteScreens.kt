@@ -27,12 +27,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.parlor.core.ids.PlayerId
 import com.parlor.designsystem.backdrop.HeroBackdrop
+import com.parlor.designsystem.components.ContextRibbon
 import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorButtonVariant
+import com.parlor.designsystem.components.ParlorContextTone
 import com.parlor.designsystem.components.pressableSurface
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.whodunit.resources.Res
+import com.parlor.games.whodunit.resources.private_player_only_format
+import com.parlor.games.whodunit.resources.private_screen_label
 import com.parlor.games.whodunit.resources.reveal_handoff_subtitle
 import com.parlor.games.whodunit.resources.reveal_handoff_title_format
 import com.parlor.games.whodunit.resources.vote_ballot_headline_format
@@ -69,6 +73,14 @@ fun VoteBallotScreen(
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+            ContextRibbon(
+                label = stringResource(Res.string.private_screen_label),
+                detail = stringResource(
+                    Res.string.private_player_only_format,
+                    currentVoterName,
+                ),
+                tone = ParlorContextTone.Private,
+            )
             Text(
                 text = stringResource(Res.string.vote_ballot_headline_format, currentVoterName),
                 style = ParlorTheme.typography.displayMedium,

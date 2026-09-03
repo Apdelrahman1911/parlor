@@ -11,6 +11,7 @@ import com.parlor.app.permissions.rememberP2pPermissionGate
 import com.parlor.app.resources.Res
 import com.parlor.app.resources.home_mafia_open
 import com.parlor.app.resources.home_mafia_open_description
+import com.parlor.app.resources.home_mafia_kicker
 import com.parlor.app.resources.home_mafia_subtitle
 import com.parlor.app.resources.home_mafia_tagline
 import com.parlor.app.resources.home_mafia_title
@@ -18,6 +19,8 @@ import com.parlor.app.shell.multiplayer.JoinPromptScreen
 import com.parlor.app.shell.multiplayer.NameInputScreen
 import com.parlor.app.shell.playmode.PlayModePickerScreen
 import com.parlor.engine.definition.GameDefinition
+import com.parlor.designsystem.theme.ParlorAccent
+import com.parlor.designsystem.theme.ParlorAccentScope
 import com.parlor.games.mafia.MafiaDefinition
 import com.parlor.games.mafia.ui.flow.multidevice.MafiaHostLobbyFlow
 import com.parlor.games.mafia.ui.flow.multidevice.MafiaHostRoomBridge
@@ -53,6 +56,8 @@ internal class MafiaGameShellBinding(
         tagline = stringResource(Res.string.home_mafia_tagline),
         openLabel = stringResource(Res.string.home_mafia_open),
         openContentDescription = stringResource(Res.string.home_mafia_open_description),
+        kicker = stringResource(Res.string.home_mafia_kicker),
+        accent = ParlorAccent.Crimson,
     )
 
     @Composable
@@ -63,14 +68,16 @@ internal class MafiaGameShellBinding(
         modifier: Modifier,
     ) {
         require(launch.gameId == definition.id) { "Mafia binding received another game" }
-        MafiaShellContent(
-            launch = launch,
-            capabilities = capabilities,
-            supportedPlayerCounts = definition.supportedPlayerCounts,
-            onExit = onExit,
-            backRequest = backRequest,
-            modifier = modifier,
-        )
+        ParlorAccentScope(ParlorAccent.Crimson) {
+            MafiaShellContent(
+                launch = launch,
+                capabilities = capabilities,
+                supportedPlayerCounts = definition.supportedPlayerCounts,
+                onExit = onExit,
+                backRequest = backRequest,
+                modifier = modifier,
+            )
+        }
     }
 }
 

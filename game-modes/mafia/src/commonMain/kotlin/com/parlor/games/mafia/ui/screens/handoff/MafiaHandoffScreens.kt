@@ -14,16 +14,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import com.parlor.designsystem.backdrop.HeroBackdrop
 import com.parlor.designsystem.components.EyebrowLabel
+import com.parlor.designsystem.components.ContextRibbon
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorButtonVariant
+import com.parlor.designsystem.components.ParlorContextTone
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.mafia.resources.Res
 import com.parlor.games.mafia.resources.handoff_hide_screen
 import com.parlor.games.mafia.resources.handoff_keep_hidden
 import com.parlor.games.mafia.resources.handoff_pass_to_format
+import com.parlor.games.mafia.resources.handoff_player_only_format
+import com.parlor.games.mafia.resources.handoff_private_turn
 import com.parlor.games.mafia.resources.handoff_reveal
 import com.parlor.games.mafia.resources.handoff_reveal_description_format
-import com.parlor.games.mafia.resources.handoff_tap_when_alone
 import com.parlor.games.mafia.resources.waiting_active_player_taking_turn_format
 import com.parlor.games.mafia.resources.waiting_night_eyebrow
 import com.parlor.games.mafia.resources.waiting_wait_quietly
@@ -60,8 +63,7 @@ fun MafiaRoleRevealHandoffScreen(
     modifier: Modifier = Modifier,
 ) {
     MafiaCandlelitCover(
-        title = playerName,
-        subtitle = stringResource(Res.string.handoff_tap_when_alone),
+        playerName = playerName,
         onDismiss = onContinue,
         modifier = modifier,
     )
@@ -88,6 +90,11 @@ fun MafiaRoleRevealGateScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceAround,
         ) {
+            ContextRibbon(
+                label = stringResource(Res.string.handoff_private_turn),
+                detail = stringResource(Res.string.handoff_player_only_format, playerName),
+                tone = ParlorContextTone.Private,
+            )
             EyebrowLabel(text = eyebrow, textAlign = TextAlign.Center)
             Text(
                 text = playerName,

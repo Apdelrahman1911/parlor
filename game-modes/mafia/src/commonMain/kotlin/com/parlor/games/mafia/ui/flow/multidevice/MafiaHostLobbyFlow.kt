@@ -28,11 +28,13 @@ import com.parlor.core.ids.PlayerId
 import com.parlor.core.result.Result
 import com.parlor.designsystem.backdrop.HeroBackdrop
 import com.parlor.designsystem.components.CandleFlame
+import com.parlor.designsystem.components.ContextRibbon
 import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.LocalParlorToastState
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorButtonVariant
 import com.parlor.designsystem.components.ParlorCard
+import com.parlor.designsystem.components.ParlorContextTone
 import com.parlor.designsystem.components.ParlorToastSeverity
 import com.parlor.designsystem.components.SessionExitAffordance
 import com.parlor.designsystem.components.SessionExitBackAction
@@ -55,6 +57,8 @@ import com.parlor.games.mafia.resources.md_host_decline_description
 import com.parlor.games.mafia.resources.md_host_error_title
 import com.parlor.games.mafia.resources.md_host_eyebrow
 import com.parlor.games.mafia.resources.md_host_hosting_as_format
+import com.parlor.games.mafia.resources.md_host_context_authority
+import com.parlor.games.mafia.resources.md_host_context_local
 import com.parlor.games.mafia.resources.md_host_opening_room
 import com.parlor.games.mafia.resources.md_host_join_request_format
 import com.parlor.games.mafia.resources.md_host_pending_eyebrow
@@ -340,6 +344,11 @@ private fun MafiaHostLobbyContent(
                     ),
                 verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l),
             ) {
+                ContextRibbon(
+                    label = stringResource(Res.string.md_host_context_local),
+                    detail = stringResource(Res.string.md_host_context_authority),
+                    tone = ParlorContextTone.Host,
+                )
                 EyebrowLabel(text = stringResource(Res.string.md_host_eyebrow))
 
                 ParlorCard(

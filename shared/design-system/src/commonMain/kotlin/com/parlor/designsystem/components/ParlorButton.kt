@@ -30,7 +30,7 @@ import com.parlor.designsystem.theme.ParlorTheme
 /**
  * Visual variants — editorial direction.
  *
- *  - [Primary] — coral-filled, no border. The most important action on
+ *  - [Primary] — accent-filled, no border. The most important action on
  *    the screen.
  *  - [Secondary] — surfaceElevated body, hairline border, primary text.
  *    Companion to a primary on the same screen.
@@ -82,7 +82,7 @@ fun ParlorButton(
     // no glow.
     val pressedTint = if (isPressed && interactive) {
         when (variant) {
-            ParlorButtonVariant.Primary -> colors.accentEmberDeep.copy(alpha = 0.35f)
+            ParlorButtonVariant.Primary -> colors.accentEmberGlow.copy(alpha = 0.35f)
             ParlorButtonVariant.Destructive -> colors.semanticDanger.copy(alpha = 0.35f)
             ParlorButtonVariant.Secondary -> colors.accentEmber.copy(alpha = 0.10f)
             ParlorButtonVariant.Ghost -> colors.accentEmber.copy(alpha = 0.08f)
