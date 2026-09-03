@@ -59,7 +59,6 @@ import com.parlor.app.resources.home_resume_tile_subtitle
 import com.parlor.app.resources.home_resume_tile_title
 import com.parlor.app.resources.home_resume_tile_unknown_description
 import com.parlor.app.resources.home_saved_on_device
-import com.parlor.app.resources.home_settings_description
 import com.parlor.app.resources.home_subtitle
 import com.parlor.app.resources.home_title
 import com.parlor.app.shell.game.GameCatalogPresentation
@@ -71,7 +70,6 @@ import com.parlor.designsystem.backdrop.HeroBackdrop
 import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorCard
-import com.parlor.designsystem.components.ParlorIconButton
 import com.parlor.designsystem.components.ParlorMark
 import com.parlor.designsystem.components.parlorSafeContentPaddingValues
 import com.parlor.designsystem.icons.ParlorIcons
@@ -85,7 +83,6 @@ import org.jetbrains.compose.resources.stringResource
 internal fun HomeScreen(
     games: List<GameShellBinding>,
     onGameSelected: (GameId) -> Unit,
-    onSettings: () -> Unit,
     modifier: Modifier = Modifier,
     unfinishedSessions: List<LocalRecoveryEntry> = emptyList(),
     onResume: (SessionId) -> Unit = {},
@@ -105,7 +102,7 @@ internal fun HomeScreen(
             ),
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l),
         ) {
-            item(key = "home-top-bar") { HomeTopBar(onSettings = onSettings) }
+            item(key = "home-top-bar") { HomeTopBar() }
             item(key = "home-lead") { HomeLead() }
 
             when {
@@ -175,11 +172,9 @@ internal fun HomeScreen(
 }
 
 @Composable
-private fun HomeTopBar(onSettings: () -> Unit) {
-    val settingsDescription = stringResource(Res.string.home_settings_description)
+private fun HomeTopBar() {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Row(
@@ -193,11 +188,6 @@ private fun HomeTopBar(onSettings: () -> Unit) {
                 color = ParlorTheme.colors.textPrimary,
             )
         }
-        ParlorIconButton(
-            icon = ParlorIcons.Settings,
-            contentDescription = settingsDescription,
-            onClick = onSettings,
-        )
     }
 }
 

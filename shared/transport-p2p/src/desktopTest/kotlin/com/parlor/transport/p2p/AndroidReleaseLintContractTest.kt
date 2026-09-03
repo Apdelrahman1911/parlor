@@ -187,8 +187,11 @@ class AndroidReleaseLintContractTest {
         assertContains(tabs, "selected = selected")
         assertContains(tabs, "role = Role.Tab")
 
-        val home = read("composeApp/src/commonMain/kotlin/com/parlor/app/shell/home/HomeScreen.kt")
-        assertContains(home, "icon = ParlorIcons.Settings")
+        val navigationHost = read(
+            "composeApp/src/commonMain/kotlin/com/parlor/app/AppNavigationHost.kt",
+        )
+        assertContains(navigationHost, "icon = ParlorIcons.Settings")
+        assertContains(navigationHost, "icon = ParlorIcons.FolderOpen")
 
         val privacy = read(
             "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/screens/safety/PrivacyConcernOverlay.kt",

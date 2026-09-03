@@ -1,25 +1,23 @@
 package com.parlor.app
 
-import com.parlor.app.shell.game.GameShellLaunch
-
 /** Global shell response; each game binding owns back policy inside its flow. */
 internal enum class AppBackAction {
     AllowPlatformExit,
-    NavigateHome,
+    NavigateGames,
     DelegateToGame,
+    HandledByNavDisplay,
 }
 
-internal fun appBackAction(screen: AppScreen): AppBackAction = when (screen) {
-    AppScreen.Home -> AppBackAction.AllowPlatformExit
-    AppScreen.Settings,
-    is AppScreen.LocalResumeFailure,
-    -> AppBackAction.NavigateHome
-    is AppScreen.Game -> AppBackAction.DelegateToGame
+internal fun appBackAction(route: AppRoute): AppBackAction = when (route) {
+    AppRoute.Home -> AppBackAction.AllowPlatformExit
+    AppRoute.Settings -> AppBackAction.NavigateGames
+    is AppRoute.LocalResumeFailure -> AppBackAction.HandledByNavDisplay
+    is AppRoute.Game -> AppBackAction.DelegateToGame
 }
 
-internal sealed interface AppScreen {
-    data object Home : AppScreen
-    data class Game(val launch: GameShellLaunch) : AppScreen
-    data class LocalResumeFailure(val sessionId: com.parlor.core.ids.SessionId) : AppScreen
-    data object Settings : AppScreen
-}
+
+/** Prevents guarded game flows from exposing the catalog during predictive Back. */
+internal fun <T> visibleEntriesForBack(
+    route: AppRoute,
+    entries: List<T>,
+): List<T> = if (route is AppRoute.Game) entries.takeLast(1) else entries

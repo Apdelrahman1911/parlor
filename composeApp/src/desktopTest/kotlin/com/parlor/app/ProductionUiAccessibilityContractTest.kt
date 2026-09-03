@@ -263,8 +263,12 @@ class ProductionUiAccessibilityContractTest {
         }
 
         assertContains(
-            read("composeApp/src/commonMain/kotlin/com/parlor/app/shell/home/HomeScreen.kt"),
+            read("composeApp/src/commonMain/kotlin/com/parlor/app/AppNavigationHost.kt"),
             "icon = ParlorIcons.Settings",
+        )
+        assertContains(
+            read("composeApp/src/commonMain/kotlin/com/parlor/app/AppNavigationHost.kt"),
+            "icon = ParlorIcons.FolderOpen",
         )
         assertContains(
             read("composeApp/src/commonMain/kotlin/com/parlor/app/shell/home/HomeScreen.kt"),

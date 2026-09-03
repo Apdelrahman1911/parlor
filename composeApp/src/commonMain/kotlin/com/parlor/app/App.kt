@@ -1,10 +1,10 @@
 package com.parlor.app
 
-import androidx.compose.animation.Crossfade
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -94,11 +94,8 @@ internal fun App(settings: SettingsStore) {
                 val initialLaunch = remember(ownedMultiplayerRoute, gameShellRouter) {
                     ownedMultiplayerRoute?.let(gameShellRouter::restoreOwned)
                 }
-                var screen: AppScreen by remember {
-                    mutableStateOf(
-                        initialLaunch?.let(AppScreen::Game) ?: AppScreen.Home,
-                    )
-                }
+                val navigator = remember { AppNavigator(initialLaunch) }
+                val currentRoute = navigator.currentRoute
                 val localResumeCoordinator = remember(
                     appScope,
                     snapshotStore,
@@ -115,17 +112,17 @@ internal fun App(settings: SettingsStore) {
                 var hadOwnedMultiplayerRoute by remember {
                     mutableStateOf(ownedMultiplayerRoute != null)
                 }
-                val activeGameLaunch = (screen as? AppScreen.Game)?.launch
-                var gameBackRequest by remember(activeGameLaunch) {
+                val activeGameRoute = currentRoute as? AppRoute.Game
+                var gameBackRequest by remember(activeGameRoute) {
                     mutableStateOf(GameShellBackRequest.Initial)
                 }
 
                 val homeRecovery by produceState<HomeRecoveryAvailability>(
                     initialValue = HomeRecoveryAvailability.Loading,
-                    key1 = screen,
+                    key1 = currentRoute,
                     key2 = unfinishedRefreshKey,
                 ) {
-                    if (screen != AppScreen.Home) return@produceState
+                    if (currentRoute != AppRoute.Home) return@produceState
                     value = HomeRecoveryAvailability.Loading
                     value = loadHomeRecoveryAvailability(
                         store = snapshotStore,
@@ -145,162 +142,195 @@ internal fun App(settings: SettingsStore) {
                     )
                 }
 
-                val backToHome: () -> Unit = {
-                    localResumeCoordinator.invalidate()
-                    unfinishedRefreshKey++
-                    screen = AppScreen.Home
+                val backToHome: (AppRoute) -> Unit = { expectedRoute ->
+                    if (
+                        navigator.navigateHome(expectedRoute) !=
+                        AppNavigationMutation.RejectedStaleRoute
+                    ) {
+                        localResumeCoordinator.invalidate()
+                        unfinishedRefreshKey++
+                    }
                 }
 
                 val requestLocalResume: (SessionId) -> Unit = { sessionId ->
                     localResumeCoordinator.request(
                         sessionId = sessionId,
-                        currentScreen = { screen },
-                        navigate = { destination -> screen = destination },
+                        currentRoute = { navigator.currentRoute },
+                        navigate = { destination ->
+                            when (destination) {
+                                is LocalResumeDestination.Game -> {
+                                    navigator.openGame(destination.launch)
+                                }
+                                is LocalResumeDestination.Recovery -> {
+                                    navigator.showLocalResumeFailure(destination.sessionId)
+                                }
+                            }
+                        },
                     )
                 }
 
                 LaunchedEffect(ownedMultiplayerRoute) {
                     val route = ownedMultiplayerRoute
                     if (route == null) {
-                        if (hadOwnedMultiplayerRoute && screen is AppScreen.Game) {
+                        if (hadOwnedMultiplayerRoute && navigator.currentRoute is AppRoute.Game) {
                             hadOwnedMultiplayerRoute = false
-                            backToHome()
+                            backToHome(navigator.currentRoute)
                         }
                     } else {
                         hadOwnedMultiplayerRoute = true
-                        val currentGameId = (screen as? AppScreen.Game)?.launch?.gameId
+                        val currentGameId = (navigator.currentRoute as? AppRoute.Game)?.gameId
                         if (currentGameId != route.gameId) {
                             gameShellRouter.restoreOwned(route)?.let { launch ->
-                                screen = AppScreen.Game(launch)
+                                navigator.openGame(launch)
                             }
                         }
                     }
                 }
 
-                val backAction = appBackAction(screen)
-                PlatformBackHandler(enabled = backAction != AppBackAction.AllowPlatformExit) {
+                val backAction = appBackAction(currentRoute)
+                val interceptPlatformBack = backAction == AppBackAction.NavigateGames ||
+                    backAction == AppBackAction.DelegateToGame
+                PlatformBackHandler(enabled = interceptPlatformBack) {
                     when (backAction) {
                         AppBackAction.AllowPlatformExit -> Unit
-                        AppBackAction.NavigateHome -> backToHome()
+                        AppBackAction.NavigateGames -> {
+                            localResumeCoordinator.invalidate()
+                            navigator.navigateBack(currentRoute)
+                        }
                         AppBackAction.DelegateToGame -> {
                             gameBackRequest = gameBackRequest.next()
                         }
+                        AppBackAction.HandledByNavDisplay -> Unit
                     }
                 }
 
-                Box(
+                Column(
                     modifier = Modifier
                         .fillMaxSize()
                         .background(ParlorTheme.colors.surfaceCanvas),
                 ) {
-                    Crossfade(
-                        targetState = screen,
-                        animationSpec = tween(
-                            durationMillis = ParlorTheme.motion.durationFast,
-                            easing = ParlorTheme.motion.easingStandard,
-                        ),
-                        modifier = Modifier.fillMaxSize(),
-                        label = "parlor-screen-transition",
-                    ) { current ->
-                        when (current) {
-                            AppScreen.Home -> HomeScreen(
-                                games = gameShellRegistry.all,
-                                onGameSelected = { gameId ->
-                                    localResumeCoordinator.invalidate()
-                                    gameShellRouter.newGame(gameId)?.let { launch ->
-                                        screen = AppScreen.Game(launch)
-                                    }
-                                },
-                                onSettings = {
-                                    localResumeCoordinator.invalidate()
-                                    screen = AppScreen.Settings
-                                },
-                                modifier = Modifier.fillMaxSize(),
-                                unfinishedSessions =
-                                    (homeRecovery as? HomeRecoveryAvailability.Ready)
-                                        ?.unfinishedSessions.orEmpty(),
-                                onResume = requestLocalResume,
-                                hasResumableMultiplayer =
-                                    (homeRecovery as? HomeRecoveryAvailability.Ready)
-                                        ?.resumableMultiplayer != null,
-                                recoveryLoading =
-                                    homeRecovery is HomeRecoveryAvailability.Loading,
-                                recoveryUnavailable =
-                                    (homeRecovery as? HomeRecoveryAvailability.Ready)
-                                        ?.hasUnavailableSource == true,
-                                onRetryRecovery = { unfinishedRefreshKey++ },
-                                onResumeMultiplayer = {
-                                    localResumeCoordinator.invalidate()
-                                    val info =
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f),
+                    ) {
+                        AppNavDisplay(
+                            navigator = navigator,
+                            homeContent = {
+                                HomeScreen(
+                                    games = gameShellRegistry.all,
+                                    onGameSelected = { gameId ->
+                                        localResumeCoordinator.invalidate()
+                                        gameShellRouter.newGame(gameId)?.let { launch ->
+                                            navigator.openGame(launch)
+                                        }
+                                    },
+                                    modifier = Modifier.fillMaxSize(),
+                                    unfinishedSessions =
                                         (homeRecovery as? HomeRecoveryAvailability.Ready)
-                                            ?.resumableMultiplayer
-                                    val launch = info?.let {
-                                        gameShellRouter.resumeMultiplayer(
-                                            gameId = it.gameId,
-                                            gameVersion = it.gameVersion,
-                                            displayName = it.displayName,
-                                        )
-                                    }
-                                    if (launch == null) {
-                                        toastState.show(
-                                            text = resumeOpenFailedText,
-                                            severity = ParlorToastSeverity.Danger,
-                                        )
-                                    } else {
-                                        screen = AppScreen.Game(launch)
-                                    }
-                                },
-                            )
-
-                            is AppScreen.LocalResumeFailure -> LocalResumeFailureScreen(
-                                actionsEnabled = !localResumeBusy,
-                                onRetry = { requestLocalResume(current.sessionId) },
-                                onDiscard = {
-                                    localResumeCoordinator.discard(
-                                        sessionId = current.sessionId,
-                                        currentScreen = { screen },
-                                        onDiscarded = {
-                                            unfinishedRefreshKey++
-                                            screen = AppScreen.Home
-                                        },
-                                        onFailure = {
+                                            ?.unfinishedSessions.orEmpty(),
+                                    onResume = requestLocalResume,
+                                    hasResumableMultiplayer =
+                                        (homeRecovery as? HomeRecoveryAvailability.Ready)
+                                            ?.resumableMultiplayer != null,
+                                    recoveryLoading =
+                                        homeRecovery is HomeRecoveryAvailability.Loading,
+                                    recoveryUnavailable =
+                                        (homeRecovery as? HomeRecoveryAvailability.Ready)
+                                            ?.hasUnavailableSource == true,
+                                    onRetryRecovery = { unfinishedRefreshKey++ },
+                                    onResumeMultiplayer = {
+                                        localResumeCoordinator.invalidate()
+                                        val info =
+                                            (homeRecovery as? HomeRecoveryAvailability.Ready)
+                                                ?.resumableMultiplayer
+                                        val launch = info?.let {
+                                            gameShellRouter.resumeMultiplayer(
+                                                gameId = it.gameId,
+                                                gameVersion = it.gameVersion,
+                                                displayName = it.displayName,
+                                            )
+                                        }
+                                        if (launch == null) {
                                             toastState.show(
-                                                text = resumeDiscardFailedText,
+                                                text = resumeOpenFailedText,
                                                 severity = ParlorToastSeverity.Danger,
                                             )
-                                        },
-                                    )
-                                },
-                                onBack = backToHome,
-                                modifier = Modifier.fillMaxSize(),
-                            )
-
-                            is AppScreen.Game -> {
-                                val binding = gameShellRouter.bindingFor(current.launch)
-                                if (binding == null) {
-                                    LaunchedEffect(current) { backToHome() }
+                                        } else {
+                                            navigator.openGame(launch)
+                                        }
+                                    },
+                                )
+                            },
+                            recoveryContent = { route ->
+                                LocalResumeFailureScreen(
+                                    actionsEnabled = !localResumeBusy,
+                                    onRetry = { requestLocalResume(route.sessionId) },
+                                    onDiscard = {
+                                        localResumeCoordinator.discard(
+                                            sessionId = route.sessionId,
+                                            currentRoute = { navigator.currentRoute },
+                                            onDiscarded = {
+                                                if (
+                                                    navigator.navigateHome(route) ==
+                                                    AppNavigationMutation.Applied
+                                                ) {
+                                                    unfinishedRefreshKey++
+                                                }
+                                            },
+                                            onFailure = {
+                                                toastState.show(
+                                                    text = resumeDiscardFailedText,
+                                                    severity = ParlorToastSeverity.Danger,
+                                                )
+                                            },
+                                        )
+                                    },
+                                    onBack = { backToHome(route) },
+                                    modifier = Modifier.fillMaxSize(),
+                                )
+                            },
+                            gameContent = { route ->
+                                val launch = navigator.launchFor(route)
+                                val binding = launch?.let(gameShellRouter::bindingFor)
+                                if (launch == null || binding == null) {
+                                    LaunchedEffect(route) { backToHome(route) }
                                     Box(modifier = Modifier.fillMaxSize())
                                 } else {
                                     binding.Content(
-                                        launch = current.launch,
-                                        onExit = backToHome,
+                                        launch = launch,
+                                        onExit = { backToHome(route) },
                                         backRequest = gameBackRequest,
                                         modifier = Modifier.fillMaxSize(),
                                     )
                                 }
-                            }
-
-                            AppScreen.Settings -> SettingsScreen(
-                                onBack = backToHome,
-                                mutationScope = appScope,
-                                modifier = Modifier.fillMaxSize(),
-                            )
-                        }
+                            },
+                            settingsContent = {
+                                SettingsScreen(
+                                    mutationScope = appScope,
+                                    modifier = Modifier.fillMaxSize(),
+                                )
+                            },
+                            onBack = { route ->
+                                localResumeCoordinator.invalidate()
+                                navigator.navigateBack(route)
+                            },
+                            modifier = Modifier.fillMaxSize(),
+                        )
+                        ParlorToastHost(
+                            state = toastState,
+                            modifier = Modifier.align(Alignment.BottomCenter),
+                        )
                     }
-                    ParlorToastHost(
-                        state = toastState,
-                        modifier = Modifier.align(Alignment.BottomCenter),
-                    )
+                    if (currentRoute.isTopLevel) {
+                        AppNavigationBar(
+                            selectedDestination = navigator.selectedDestination,
+                            onDestinationSelected = { destination ->
+                                localResumeCoordinator.invalidate()
+                                navigator.selectTopLevel(destination)
+                            },
+                        )
+                    }
                 }
             }
         }

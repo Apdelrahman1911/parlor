@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -16,10 +17,12 @@ import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.semantics
@@ -27,18 +30,19 @@ import androidx.compose.ui.text.style.TextAlign
 import com.parlor.designsystem.theme.ParlorTheme
 
 /**
- * Bottom tab bar — pure typographic. Each tab is a [ParlorBottomTab]
- * with a [label] (and optional [contentDescription]). The active tab
- * lights up its label in [com.parlor.designsystem.tokens.ParlorColors.accentEmber];
- * the inactive ones sit at [textTertiary].
+ * Bottom tab bar. Each tab pairs a reviewed vector icon with a localized
+ * label and content description. The active tab uses
+ * [com.parlor.designsystem.tokens.ParlorColors.accentEmber]; inactive tabs
+ * use [com.parlor.designsystem.tokens.ParlorColors.textTertiary].
  *
- * No icons; no underline; no chip. Editorial typographic-only treatment.
+ * No underline or chip; the icon-and-label treatment stays compact.
  * Adds a hairline rule across the top so the bar separates from the
  * content scroll above it.
  */
 data class ParlorBottomTab(
     val label: String,
     val contentDescription: String,
+    val icon: ImageVector,
 )
 
 @Composable
@@ -72,7 +76,7 @@ fun ParlorBottomTabBar(
         ) {
             tabs.forEachIndexed { index, tab ->
                 val selected = index == selectedIndex
-                Box(
+                Column(
                     modifier = Modifier
                         .weight(1f)
                         .heightIn(min = ParlorTheme.spacing.xxl)
@@ -85,12 +89,20 @@ fun ParlorBottomTabBar(
                         .semantics {
                             contentDescription = tab.contentDescription
                         },
-                    contentAlignment = Alignment.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.xs),
                 ) {
+                    val contentColor = if (selected) colors.accentEmber else colors.textTertiary
+                    Icon(
+                        imageVector = tab.icon,
+                        contentDescription = null,
+                        tint = contentColor,
+                        modifier = Modifier.size(ParlorTheme.iconSize.m),
+                    )
                     Text(
                         text = tab.label.uppercase(),
                         style = ParlorTheme.typography.labelSmall,
-                        color = if (selected) colors.accentEmber else colors.textTertiary,
+                        color = contentColor,
                         textAlign = TextAlign.Center,
                     )
                 }

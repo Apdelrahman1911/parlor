@@ -26,6 +26,23 @@ class PlatformAppLocaleLoadingContractTest {
         assertTrue("Surface(modifier = Modifier.fillMaxSize()) {}" in source)
     }
 
+    @Test
+    fun ios_provider_keeps_uikit_start_edge_in_sync_with_runtime_language() {
+        val source = repositoryRoot()
+            .resolve(
+                "shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/" +
+                    "LocalAppLocale.ios.kt",
+            )
+            .readText()
+
+        assertTrue("LocalUIViewController.current" in source)
+        assertTrue("UISemanticContentAttributeForceRightToLeft" in source)
+        assertTrue("UISemanticContentAttributeForceLeftToRight" in source)
+        assertTrue("if (view.semanticContentAttribute == semanticAttribute) return" in source)
+        assertTrue("if (view.window != null)" in source)
+        assertTrue("view.didMoveToWindow()" in source)
+    }
+
     private fun repositoryRoot(): File {
         var directory = File(System.getProperty("user.dir") ?: ".").absoluteFile
         while (!File(directory, "settings.gradle.kts").isFile) {

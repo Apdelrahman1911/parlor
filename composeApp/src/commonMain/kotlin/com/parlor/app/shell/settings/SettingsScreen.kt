@@ -33,7 +33,6 @@ import com.parlor.app.resources.settings_appearance_dark
 import com.parlor.app.resources.settings_appearance_label
 import com.parlor.app.resources.settings_appearance_light
 import com.parlor.app.resources.settings_appearance_system
-import com.parlor.app.resources.settings_back_description
 import com.parlor.app.resources.settings_experience_label
 import com.parlor.app.resources.settings_eyebrow
 import com.parlor.app.resources.settings_language_arabic
@@ -72,7 +71,6 @@ import org.koin.compose.koinInject
  */
 @Composable
 fun SettingsScreen(
-    onBack: () -> Unit,
     mutationScope: CoroutineScope,
     modifier: Modifier = Modifier,
 ) {
@@ -104,8 +102,6 @@ fun SettingsScreen(
                 title = stringResource(Res.string.settings_title),
                 eyebrow = stringResource(Res.string.settings_eyebrow),
                 subtitle = stringResource(Res.string.settings_subtitle),
-                onBack = onBack,
-                backContentDescription = stringResource(Res.string.settings_back_description),
             )
 
             SettingsSection(
@@ -173,7 +169,6 @@ fun SettingsScreen(
                 )
             }
 
-            // Back is in the ScreenHeader; no bottom button needed.
         }
     }
 }

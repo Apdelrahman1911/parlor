@@ -132,6 +132,8 @@ kotlin {
                 implementation(libs.compose.ui)
                 implementation(libs.compose.resources)
                 implementation(libs.compose.ui.tooling.preview)
+                implementation(libs.androidx.navigation3.runtime)
+                implementation(libs.jetbrains.navigation3.ui)
 
                 // Koin
                 implementation(libs.koin.core)
