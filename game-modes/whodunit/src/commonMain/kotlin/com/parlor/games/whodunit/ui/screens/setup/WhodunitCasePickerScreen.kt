@@ -48,6 +48,7 @@ import com.parlor.games.whodunit.resources.case_picker_empty
 import com.parlor.games.whodunit.resources.case_picker_eyebrow
 import com.parlor.games.whodunit.resources.case_picker_filter_all
 import com.parlor.games.whodunit.resources.case_picker_filter_arabic
+import com.parlor.games.whodunit.resources.case_picker_filter_empty
 import com.parlor.games.whodunit.resources.case_picker_filter_english
 import com.parlor.games.whodunit.resources.case_picker_language_arabic
 import com.parlor.games.whodunit.resources.case_picker_language_english
@@ -151,31 +152,38 @@ private fun CaseLibrary(
         verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m),
     ) {
         FilterRow(filter = filter, onSelected = onFilterSelected)
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-                .selectableGroup(),
-            verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m),
-        ) {
-            items(visibleCases, key = { it.caseId }) { summary ->
-                CaseRow(
-                    summary = summary,
-                    selected = summary.caseId == selected?.caseId,
-                    onClick = { onCaseSelected(summary) },
+        if (visibleCases.isEmpty()) {
+            EmptyState(
+                title = stringResource(Res.string.case_picker_filter_empty),
+                modifier = Modifier.weight(1f),
+            )
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .selectableGroup(),
+                verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m),
+            ) {
+                items(visibleCases, key = { it.caseId }) { summary ->
+                    CaseRow(
+                        summary = summary,
+                        selected = summary.caseId == selected?.caseId,
+                        onClick = { onCaseSelected(summary) },
+                    )
+                }
+            }
+            selected?.let { current ->
+                ParlorButton(
+                    label = stringResource(Res.string.case_picker_continue),
+                    contentDescription = stringResource(
+                        Res.string.case_picker_continue_description_format,
+                        current.title,
+                    ),
+                    onClick = { onContinue(current) },
+                    modifier = Modifier.fillMaxWidth(),
                 )
             }
-        }
-        selected?.let { current ->
-            ParlorButton(
-                label = stringResource(Res.string.case_picker_continue),
-                contentDescription = stringResource(
-                    Res.string.case_picker_continue_description_format,
-                    current.title,
-                ),
-                onClick = { onContinue(current) },
-                modifier = Modifier.fillMaxWidth(),
-            )
         }
     }
 }
