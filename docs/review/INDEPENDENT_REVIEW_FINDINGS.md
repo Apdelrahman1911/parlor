@@ -69,6 +69,7 @@ the external gates listed below.
 | RR-DOC-01 | Low | `IosSettingsKeyValueBacking.kt`, `PersistentSettingsStore.kt`, `Settings.kt`, `docs/PRODUCTION_ARCHITECTURE.md`: prose implied synchronous durability although iOS writes are asynchronously serialized. | Documentation overstated the API guarantee. Comments now distinguish immediate in-process publication from ordered eventual persistence. | Documentation drift, no runtime defect; `926e9e0`. | CLOSED |
 | RR-RELEASE-01 | High | `iosApp/iosApp.xcodeproj/project.pbxproj` and `scripts/release/normalize_embedded_apple_framework.sh`: case-sensitive packaging could embed `composeApp.framework` although the Mach-O identity is `ComposeApp`. | Xcode/KMP output casing was not normalized or fail-closed. An idempotent shell step validates exactly one framework and canonical executable. | Shell unit tests, workflow contract, Apple linkage/wrapper builds; newly discovered release defect; `27bebac`. | CLOSED |
 | RR-BUILD-01 | Medium | `composeApp/build.gradle.kts`, `config/android-lint-accepted-warnings.txt`, `docs/ANDROID_LINT_TRIAGE.md`: Navigation 3 dependency advisories were unreviewed and lint changed equivalent dependency warning IDs/messages across invocations. | The accepted inventory depended on unstable renderer text/IDs. The verifier now canonicalizes only the reviewed dependency-warning family while retaining exact deterministic inventory comparison. | Forced lint plus `AndroidReleaseLintContractTest`; newly discovered gate defect; `20a02c5`, `b909b58`. | CLOSED |
+| RR-TEST-01 | Medium | `shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLifecycleTest.kt`: the admission-rate-limit test timed out while waiting for four physical-session closes during a concurrent `productionCheck`. | The rate-limit assertion was coupled to four real-time 100 ms best-effort rejection-flush delays. It now waits for the admission rejection, which is the contract under test; separate real-time and virtual-time tests retain rejection-before-close coverage. | Reproduced at `89d1ec9`; focused test and the complete `:shared:transport-p2p:desktopTest` passed after the change; newly discovered test/gate flake, not a production defect; `5a1b1de`. | CLOSED |
 
 The visual redesign, icon conversion, edge-to-edge migration, and single-engine
 Navigation 3 migration in `26ac4b0`, `42ec623`, `526338e`, `2546a05`,
@@ -191,6 +192,7 @@ are additional fixes.
 | RR-DOC-01 | `926e9e0` |
 | RR-RELEASE-01 | `27bebac` |
 | RR-BUILD-01 | `20a02c5`, `b909b58` |
+| RR-TEST-01 | `5a1b1de` |
 | Reviewed feature migrations, no defect closure | `26ac4b0`, `42ec623`, `526338e`, `2546a05`, `c6af17e`, `db0c8c3` |
 | Regression/review infrastructure, no product defect | `05a3c1b`, `64f58e6`, `b6dbb52`, `0738676` |
 
