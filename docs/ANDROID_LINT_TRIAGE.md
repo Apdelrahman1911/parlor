@@ -2,11 +2,15 @@
 
 The executable source of truth is `:composeApp:verifyReleaseLintWarnings` plus
 `config/android-lint-accepted-warnings.txt`. The task runs `lintRelease`, parses
-the generated XML report, and requires an exact multiset match on lint ID,
-repository-relative location, dependency/current-version message, and count.
-Only volatile latest-available-version suffixes are ignored, including the
-alternate `Newer version of lint available: <latest>` wording. This document
-records why the current advisories remain; it does not override the build.
+the generated XML report, and requires an exact multiset match on canonical
+issue kind, repository-relative location, dependency/current-version message,
+and count. Volatile latest-available-version suffixes are ignored, including
+the alternate `Newer version of lint available: <latest>` wording. Lint 9.1.1
+can emit the same version-catalog update as either `GradleDependency` or
+`NewerVersionAvailable` across identical forced runs, so only that pair is
+canonicalized to `DependencyUpdate`; every other ID remains exact. This
+document records why the current advisories remain; it does not override the
+build.
 
 ## 2026-08-09 baseline and result
 
@@ -36,15 +40,16 @@ explicitly reviewed advisory classes below:
 |---|---:|---|
 | `OldTargetApi` | 1 | Target/compile SDK 36 is deliberately pinned for the current compatibility baseline. Store target-level compliance must be rechecked at release and can require a reviewed SDK migration. |
 | `AndroidGradlePluginVersion` | 4 | Gradle 8.13 and AGP 8.13.2 are a verified pair. Moving to Gradle 8.14.5 or AGP 9.3.1 is a separate compatibility migration, not a lint-only edit. |
-| `GradleDependency` | 3 | Lint 9.1.1 is the reviewed stable analyzer compatible with Kotlin 2.4 metadata; lint reports a moving, unrelated alpha preview whose latest version is normalized by the gate. Activity Compose 1.9.3 remains pinned pending a lifecycle/source compatibility migration. AndroidX Navigation 3 runtime 1.0.0 stays aligned with the reviewed Compose Multiplatform UI port. |
-| `NewerVersionAvailable` | 24 | These are update notifications for pinned datetime, Compose, Navigation 3, Koin, Ktor, Konsist, Detekt, and Turbine coordinates. The Navigation 3 UI port stays at alpha06 because newer publications omit the project's `iosX64` target. They do not report a demonstrated correctness defect. Kotlin 2.4.10, serialization 1.11.0, and P2pKit 0.7.0-rc3 are current and no longer appear in this class. |
+| `GradleDependency` | 1 | Lint 9.1.1 is the reviewed stable analyzer compatible with Kotlin 2.4 metadata; lint reports a moving, unrelated alpha preview whose latest version is normalized by the gate. |
+| `DependencyUpdate` | 26 | These are update notifications for pinned Activity Compose, datetime, Compose, Navigation 3, Koin, Ktor, Konsist, Detekt, and Turbine coordinates. AndroidX Navigation 3 runtime 1.0.0 stays aligned with the reviewed Compose Multiplatform UI port; that UI port stays at alpha06 because newer publications omit the project's `iosX64` target. They do not report a demonstrated correctness defect. Kotlin 2.4.10, serialization 1.11.0, and P2pKit 0.7.0-rc3 are current and no longer appear in this class. |
 
 The remaining advisories are not permanent waivers. Dependency/security review
 and store policy can make a specific upgrade mandatory. Such an upgrade must
 update the reviewed inventory, strict dependency-verification metadata, and
 pass the complete release matrix. A new coordinate, current version, source
-location, ID, or warning count fails the gate; a repository publishing a newer
-latest version does not cause nondeterministic failure by itself.
+location, canonical issue kind, or warning count fails the gate; a repository
+publishing a newer latest version does not cause nondeterministic failure by
+itself.
 
 ## Fixed warning classes
 
