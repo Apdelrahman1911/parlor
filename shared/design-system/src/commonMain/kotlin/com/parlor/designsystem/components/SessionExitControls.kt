@@ -2,19 +2,35 @@ package com.parlor.designsystem.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.union
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.paneTitle
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import com.parlor.designsystem.theme.ParlorTheme
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
@@ -69,6 +85,59 @@ fun SessionExitAffordance(
         variant = ParlorButtonVariant.Secondary,
     )
 }
+
+/**
+ * Draws the session exit action over an edge-to-edge surface while reserving
+ * its measured height in every descendant [parlorSafeContentPadding] call.
+ * This keeps backgrounds full-screen without allowing scrollable content to
+ * begin underneath the floating action, including at large font scales.
+ */
+@Composable
+fun SessionExitOverlay(
+    visible: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit,
+) {
+    val edgeSpacing = ParlorTheme.spacing.m
+    val density = LocalDensity.current
+    var measuredHeightPx by remember { mutableIntStateOf(0) }
+    val measuredHeight = with(density) { measuredHeightPx.toDp() }
+    val contentTop = sessionExitContentTop(
+        edgeSpacing = edgeSpacing,
+        affordanceHeight = maxOf(measuredHeight, ParlorButtonMinimumHeight),
+    )
+
+    Box(modifier = modifier.fillMaxSize()) {
+        if (visible) {
+            ProvideParlorSafeContentMinimumTop(contentTop, content)
+        } else {
+            content()
+        }
+        if (visible) {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .windowInsetsPadding(
+                        WindowInsets.systemBars
+                            .union(WindowInsets.displayCutout)
+                            .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
+                    )
+                    .padding(edgeSpacing),
+            ) {
+                SessionExitAffordance(
+                    onClick = onClick,
+                    modifier = Modifier.onSizeChanged { measuredHeightPx = it.height },
+                )
+            }
+        }
+    }
+}
+
+internal fun sessionExitContentTop(
+    edgeSpacing: Dp,
+    affordanceHeight: Dp,
+): Dp = edgeSpacing + affordanceHeight + edgeSpacing
 
 /**
  * Opaque session-exit confirmation. Callers render this *instead of* the game

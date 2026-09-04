@@ -3,13 +3,10 @@ package com.parlor.games.mafia.ui.flow.multidevice
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,10 +33,10 @@ import com.parlor.designsystem.components.ParlorButtonVariant
 import com.parlor.designsystem.components.ParlorCard
 import com.parlor.designsystem.components.ParlorContextTone
 import com.parlor.designsystem.components.ParlorToastSeverity
-import com.parlor.designsystem.components.SessionExitAffordance
 import com.parlor.designsystem.components.SessionExitBackAction
 import com.parlor.designsystem.components.SessionExitConfirmation
 import com.parlor.designsystem.components.SessionExitKind
+import com.parlor.designsystem.components.SessionExitOverlay
 import com.parlor.designsystem.components.StickyActionBar
 import com.parlor.designsystem.components.sessionExitBackAction
 import com.parlor.designsystem.components.parlorSafeContentPadding
@@ -218,7 +215,11 @@ fun MafiaHostLobbyFlow(
             modifier = modifier,
         )
     } else {
-        Box(modifier = modifier.fillMaxSize()) {
+        SessionExitOverlay(
+            visible = gameIsActive,
+            onClick = { leaveConfirmationOpen = true },
+            modifier = modifier,
+        ) {
             when {
                 renderedHostError != null -> MafiaLobbyErrorState(
                     title = stringResource(Res.string.md_host_error_title),
@@ -300,15 +301,6 @@ fun MafiaHostLobbyFlow(
                         modifier = Modifier.fillMaxSize(),
                     )
                 }
-            }
-            if (gameIsActive) {
-                SessionExitAffordance(
-                    onClick = { leaveConfirmationOpen = true },
-                    modifier = Modifier
-                        .align(Alignment.TopStart)
-                        .windowInsetsPadding(WindowInsets.statusBars)
-                        .padding(ParlorTheme.spacing.m),
-                )
             }
         }
     }
