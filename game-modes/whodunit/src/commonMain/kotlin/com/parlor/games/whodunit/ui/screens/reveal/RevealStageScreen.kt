@@ -249,6 +249,7 @@ fun RevealStageScreen(
                         Res.string.reveal_stage_continue_description,
                     ),
                     onClick = onAcknowledge,
+                    enabled = narrativeAccessible,
                     modifier = Modifier.fillMaxWidth(),
                 )
             } else if (waitingLabel != null) {

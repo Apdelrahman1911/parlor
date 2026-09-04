@@ -7,8 +7,12 @@ import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.assertCountEquals
+import androidx.compose.ui.test.assertIsEnabled
+import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
 import com.parlor.designsystem.localization.AppLanguage
 import com.parlor.designsystem.localization.ProvideAppLanguage
@@ -17,6 +21,7 @@ import com.parlor.games.whodunit.domain.event.Verdict
 import com.parlor.games.whodunit.ui.components.TimerRibbon
 import com.parlor.games.whodunit.ui.screens.reveal.RevealStageScreen
 import kotlin.test.Test
+import kotlin.test.assertEquals
 
 @OptIn(ExperimentalTestApi::class)
 class WhodunitAccessibilitySemanticsTest {
@@ -120,6 +125,32 @@ class WhodunitAccessibilitySemanticsTest {
         onNode(hasText(NARRATIVE) and hasLiveRegion(LiveRegionMode.Polite)).assertExists()
     }
 
+    @Test
+    fun reveal_continue_is_enabled_only_after_the_final_fade_completes() = runComposeUiTest {
+        mainClock.autoAdvance = false
+        var acknowledgements = 0
+        setContent {
+            EnglishParlorTheme {
+                RevealStageScreen(
+                    verdict = Verdict.PlayersWin("killer"),
+                    killerDisplayName = KILLER_NAME,
+                    revealNarrative = NARRATIVE,
+                    onAcknowledge = { acknowledgements++ },
+                )
+            }
+        }
+
+        val continueButton = onNodeWithContentDescription(CONTINUE_DESCRIPTION)
+        continueButton.assertIsNotEnabled()
+
+        mainClock.advanceTimeBy(FAST_MILLIS + SLOW_MILLIS)
+        continueButton.assertIsNotEnabled()
+
+        mainClock.advanceTimeBy(SLOW_MILLIS)
+        continueButton.assertIsEnabled().performClick()
+        runOnIdle { assertEquals(1, acknowledgements) }
+    }
+
     private fun hasLiveRegion(mode: LiveRegionMode): SemanticsMatcher =
         SemanticsMatcher.expectValue(SemanticsProperties.LiveRegion, mode)
 
@@ -136,6 +167,7 @@ class WhodunitAccessibilitySemanticsTest {
     private companion object {
         const val KILLER_NAME = "Mara Vale"
         const val NARRATIVE = "The final clue reveals the hidden killer."
+        const val CONTINUE_DESCRIPTION = "Acknowledge the reveal and continue to post-game."
         const val FAST_MILLIS = 180L
         const val SLOW_MILLIS = 480L
     }
