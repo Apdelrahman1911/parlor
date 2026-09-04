@@ -3,10 +3,12 @@ package com.parlor.designsystem.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.displayCutout
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
@@ -21,25 +23,20 @@ import androidx.compose.ui.graphics.Brush
 import com.parlor.designsystem.theme.ParlorTheme
 
 /**
- * Bottom-pinned action bar. Use it as the bottom layer of a [Box] that
- * also holds the screen's main scrollable content — the bar sits on top
- * of the content with a vertical gradient behind it so anything scrolled
- * close to the bottom fades into the bar rather than collides with it.
+ * Bottom action bar used by [StickyActionLayout]. The parent layout measures
+ * this bar before assigning the remaining height to scrollable content, so
+ * large text, multiple actions, and navigation insets cannot cover content.
  *
  * The actions slot is typically one or two [ParlorButton] calls. The bar
  * pads itself for the system navigation bar insets so the CTA stays
  * reachable above the gesture pill on Android 12+.
  *
- * Usage:
+ * Prefer [StickyActionLayout] instead of overlaying this bar on a [Box]:
  * ```
- * Box(modifier = Modifier.fillMaxSize()) {
- *     Column(
- *         modifier = Modifier.fillMaxSize().padding(bottom = 96.dp).verticalScroll(...),
- *     ) { /* content */ }
- *     StickyActionBar(modifier = Modifier.align(Alignment.BottomCenter)) {
- *         ParlorButton(...)
- *     }
- * }
+ * StickyActionLayout(
+ *     content = { Column(Modifier.fillMaxSize().verticalScroll(...)) { /* content */ } },
+ *     actions = { ParlorButton(...) },
+ * )
  * ```
  */
 @Composable
@@ -93,5 +90,26 @@ fun StickyActionBar(
                 content()
             }
         }
+    }
+}
+
+/**
+ * Full-height layout for a scrollable body followed by bottom actions. Unlike
+ * an overlay, the measured action region always owns its space in the layout.
+ */
+@Composable
+fun StickyActionLayout(
+    content: @Composable BoxScope.() -> Unit,
+    actions: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier.fillMaxSize()) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
+            content = content,
+        )
+        StickyActionBar(content = actions)
     }
 }
