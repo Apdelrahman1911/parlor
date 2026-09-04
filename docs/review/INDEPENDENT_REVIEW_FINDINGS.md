@@ -5,8 +5,10 @@ This is the code-first register for the independent review that began at
 tests, resolved artifacts, and generated release outputs are authoritative.
 Earlier plans, ledgers, and readiness labels are evidence only.
 
-The review is isolated on `codex/parlor-independent-review-9cd4040`. Preserved
-history includes `8186f7d70786057b791bd5c1aa80ca868835ec37`,
+The original review was performed on
+`codex/parlor-independent-review-9cd4040`; its reviewed remediations are now in
+`main`. Preserved history includes
+`8186f7d70786057b791bd5c1aa80ca868835ec37`,
 `dff3fcb317fdb89e310db70eb2c44643672c8c6b`, and
 `37a249676fd8d6de109800cd136352bdd55e32ee`; none was rewritten.
 
@@ -24,8 +26,55 @@ The broad intermediate matrix passed after the production changes through
 `365e7a0`: `allTests`, `productionCheck`, `productionAppleCheck`, and
 `productionStaticAnalysis` with strict dependency verification. After the
 documentation changes, the documentation/content/game/static regression bundle
-passed with `--rerun-tasks` at `d6133ef`. The final exact-HEAD forced matrix is a
-separate global gate.
+passed with `--rerun-tasks` at `d6133ef`. Those historical receipts are
+superseded by the full-tree rerun below.
+
+## 2026-09-04 full-tree re-review
+
+A fresh file inventory and execution-path review covered every tracked module
+again after the UI and Navigation 3 work. The frozen executable tree was
+`0c7cc33e9668029fbabdb00c7c33429235c4a9c1` (tree
+`2e99401ab29d8d8b975c46054252936695fababd`). The review traced both games from
+setup through terminal recovery; pass-and-play and host/peer ownership; protocol
+4.2 codecs, ordering, projections, and rejoin; protected storage and content;
+Android/iOS/Desktop platform adapters; localization, accessibility, layout and
+Back handling; and build/release workflows. No database, account backend,
+internet matchmaking, spectators, host migration, or timed Mafia rounds exist,
+so those product surfaces remain not applicable rather than untested features.
+
+The following clean-tree commands passed at that executable head:
+`productionCheck` (903 tasks), `allTests` (861 tasks),
+`productionAppleCheck` (147 tasks),
+`productionIosSimulatorRuntimeTests` (188 tasks), and
+`scripts/release/validate_release_system.sh` (128 tests). Dependency
+verification was strict where required. Generated build outputs were removed
+and Gradle daemons stopped after each batch. Passing automation does not replace
+the external gates listed below.
+
+### Findings added by the re-review
+
+| ID | Severity | Exact location and failure scenario | Root cause and resolution | Evidence / classification | Status |
+|---|---|---|---|---|---|
+| RR-INPUT-01 | Medium | `shared/networking/src/commonMain/kotlin/com/parlor/networking/room/RoomInputPolicy.kt`: Unicode such as `ß` or full-width letters could expand during uppercasing and become a valid-looking room code. | Whole-string Unicode uppercasing ran before the ASCII allowlist. Filter ASCII first and uppercase per character. | `RoomInputPolicyTest`; newly discovered defect; `5965baa`. | CLOSED |
+| RR-PROTOCOL-01 | High | `shared/networking/src/commonMain/kotlin/com/parlor/networking/protocol/ProtocolValidation.kt`: peer envelopes accepted nonzero header sequences and sequenced host envelopes accepted zero, weakening directional ordering and deduplication domains. | A shared nonnegative check did not encode sender-specific invariants. Peer traffic now requires sequence `0`; sequenced host traffic requires a positive sequence. | `ProtocolValidationTest`; newly discovered defect; `2ac26e5`. Protocol remains exactly 4.2. | CLOSED |
+| RR-STORAGE-01 | High | `composeApp/src/androidMain/kotlin/com/parlor/app/storage/AndroidSnapshotFileSystem.kt`: an Android `File.listFiles()` failure was treated as an empty snapshot directory, hiding protected or legacy saves. | Nullable platform I/O was normalized to absence. Listing now throws `SnapshotProtectionException` and preserves explicit recovery. | `AndroidSnapshotDirectoryListingTest`; newly discovered defect; `3ec396c`. | CLOSED |
+| RR-SESSION-01 | High | `shared/session/src/commonMain/kotlin/com/parlor/session/passandplay/PassAndPlaySessionController.kt`: concurrent submits committed state in one order but could emit reducer event batches in another. | Event emission occurred outside the mutex without reserving a commit-order turn. Ordered completion tokens now serialize batches without holding the reducer mutex during suspension. | `OrderedEventEmissionTurnTest`; newly discovered defect; `bc77a46`. | CLOSED |
+| RR-SESSION-02 | Critical | `shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/AuthoritativeSessionCoordinator.kt`, `SessionStartHandshake.kt`, `shared/networking/src/commonMain/kotlin/com/parlor/networking/room/LocalRoom.kt`, and `shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitRoomTransport.kt`: a host terminal frame could revoke peer rejoin state before full protocol/revision validation, while failed credential deletion could still be presented as a completed end. | Physical authentication and logical terminal acceptance were one premature operation. The transport now stages bounded frames; the session layer validates them; an ownership-checked, rollback-safe transaction durably revokes the credential before publishing terminal state. | Coordinator, handshake, and P2pKit lifecycle terminal-frame tests; newly discovered defect; `388cb27`. | CLOSED |
+| RR-RECOVERY-01 | High | `shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/ProcessMultiplayerSessionOwner.kt` and `shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitRoomTransport.kt`: Leave after a failed cold resume had no retained room through which to erase the persisted credential. | Credential discard was exposed only by `LocalRoom`. `RoomTransport` now owns an identity-checked cold-discard transaction, injected into the process owner; failures remain retryable. | `ProcessMultiplayerSessionOwnerTest`, `P2pKitRoomTransportLifecycleTest`; newly discovered recovery defect; `02bf235`. | CLOSED |
+| RR-CONTENT-01 | High | `shared/content/src/commonMain/kotlin/com/parlor/content/validation/AuthoredTextPolicy.kt`, `CaseSummaryValidator.kt`, and `game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/content/WhodunitPayloadValidator.kt`: authored summaries/payload strings allowed control, bidi-formatting, or malformed surrogate characters. | Length/nonblank checks did not enforce safe display text. Shared authored-text validation now rejects unsafe code points at both summary and payload boundaries. | `CaseSummaryValidatorTest`, `WhodunitPayloadHardeningTest`; newly discovered defect; `acee9e6`. | CLOSED |
+| RR-WHO-01 | High | `game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/state/WhodunitStateValidator.kt`: a terminal peer projection could name one killer in the verdict while its clue history was only reachable for another character. | Clue reachability considered any privacy-compatible killer instead of the terminal verdict character. Terminal validation now binds both. | `WhodunitSnapshotValidationTest`; newly discovered projection-integrity defect; `cf589ec`. | CLOSED |
+| RR-WHO-02 | Medium | `game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/screens/reveal/RevealStageScreen.kt`: Continue was actionable before the final reveal narrative became visible/accessible, allowing the ceremony to be skipped accidentally. | Action availability was not tied to animation/reduced-motion completion. The button is now disabled until the narrative stage is accessible. | `WhodunitAccessibilitySemanticsTest`; newly discovered UI defect; `3db3d68`. | CLOSED |
+| RR-NAV-01 | High | `shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/localization/ProvideAppLanguage.kt`, `composeApp/src/desktopMain/kotlin/com/parlor/app/PlatformBackHandler.desktop.kt`, and `composeApp/src/iosMain/kotlin/com/parlor/app/PlatformBackHandler.ios.kt`: locale changes could recreate remembered app/session state; Desktop Escape and iOS edge Back bypassed the shared guarded-exit policy. | Locale provisioning keyed the subtree, while two platform adapters were no-ops. State is retained across language changes and both adapters now register with Navigation Event/Navigation 3. | Locale-preservation, Desktop Back, app Back-policy, and Apple compile/runtime tests; migration regressions; `79b1cec`, `ad1b815`, `9196e88`. | CLOSED |
+| RR-UI-01 | Medium | `ParlorSafeArea.kt`, `ParlorToastHost.kt`, `SessionExitControls.kt`, `StickyActionBar.kt`, Whodunit lobby/case picker: safe-area spacing could clip content, toasts/actions could overlap it, a lobby row was not localized, and an empty filtered catalog lacked an explanation. | Edge-to-edge migration distributed inset ownership inconsistently and missed two localized states. Centralized safe-area/overlay/sticky-action measurement and added English/Arabic copy. | Safe-area, toast, session-exit, sticky-layout, localization parity, and case-picker tests; migration regressions; `bd7bca1`, `f201781`, `e8e1f42`, `272112b`, `9a55346`, `72ab8bf`. | CLOSED |
+| RR-DOC-01 | Low | `IosSettingsKeyValueBacking.kt`, `PersistentSettingsStore.kt`, `Settings.kt`, `docs/PRODUCTION_ARCHITECTURE.md`: prose implied synchronous durability although iOS writes are asynchronously serialized. | Documentation overstated the API guarantee. Comments now distinguish immediate in-process publication from ordered eventual persistence. | Documentation drift, no runtime defect; `926e9e0`. | CLOSED |
+| RR-RELEASE-01 | High | `iosApp/iosApp.xcodeproj/project.pbxproj` and `scripts/release/normalize_embedded_apple_framework.sh`: case-sensitive packaging could embed `composeApp.framework` although the Mach-O identity is `ComposeApp`. | Xcode/KMP output casing was not normalized or fail-closed. An idempotent shell step validates exactly one framework and canonical executable. | Shell unit tests, workflow contract, Apple linkage/wrapper builds; newly discovered release defect; `27bebac`. | CLOSED |
+| RR-BUILD-01 | Medium | `composeApp/build.gradle.kts`, `config/android-lint-accepted-warnings.txt`, `docs/ANDROID_LINT_TRIAGE.md`: Navigation 3 dependency advisories were unreviewed and lint changed equivalent dependency warning IDs/messages across invocations. | The accepted inventory depended on unstable renderer text/IDs. The verifier now canonicalizes only the reviewed dependency-warning family while retaining exact deterministic inventory comparison. | Forced lint plus `AndroidReleaseLintContractTest`; newly discovered gate defect; `20a02c5`, `b909b58`. | CLOSED |
+
+The visual redesign, icon conversion, edge-to-edge migration, and single-engine
+Navigation 3 migration in `26ac4b0`, `42ec623`, `526338e`, `2546a05`,
+`c6af17e`, and `db0c8c3` were reviewed feature changes, not defect closures.
+They preserve typed routes, application-owned stack state, binding-owned game
+composition, and the host-authoritative session boundary.
 
 ## Findings
 
@@ -86,8 +135,12 @@ The earlier P2P labels were rechecked against current code, not inherited from
 
 ## Commit coverage
 
-Every commit after the independent baseline is attributable below. This guards
-against a quickly fixed issue disappearing from the register.
+The independent-review finding commits are attributable below. Later
+issue-tracker remediations integrated by `1759655` retain their issue/PR
+evidence and per-file generated-inventory attribution. Merge commits carry no
+independent tree change and are omitted. This prevents a quickly fixed issue
+from disappearing from the register without pretending that merge mechanics
+are additional fixes.
 
 | Finding/evidence group | Commits |
 |---|---|
@@ -124,7 +177,22 @@ against a quickly fixed issue disappearing from the register.
 | IR-UI-01 | `55cd941`, `4eab031`, `8844512`, `01e33b4`, `1c7772d`, `c8e12a1` |
 | IR-ANDROID-01 | `4ba3f9b` |
 | IR-DOC-01 | `c9dbe83`, `d6133ef` |
-| Regression infrastructure, no product defect | `05a3c1b` (mechanical inventory) |
+| RR-INPUT-01 | `5965baa` |
+| RR-PROTOCOL-01 | `2ac26e5` |
+| RR-STORAGE-01 | `3ec396c` |
+| RR-SESSION-01 | `bc77a46` |
+| RR-SESSION-02 | `388cb27` |
+| RR-RECOVERY-01 | `02bf235` |
+| RR-CONTENT-01 | `acee9e6` |
+| RR-WHO-01 | `cf589ec` |
+| RR-WHO-02 | `3db3d68` |
+| RR-NAV-01 | `79b1cec`, `ad1b815`, `9196e88` |
+| RR-UI-01 | `bd7bca1`, `f201781`, `e8e1f42`, `272112b`, `9a55346`, `72ab8bf` |
+| RR-DOC-01 | `926e9e0` |
+| RR-RELEASE-01 | `27bebac` |
+| RR-BUILD-01 | `20a02c5`, `b909b58` |
+| Reviewed feature migrations, no defect closure | `26ac4b0`, `42ec623`, `526338e`, `2546a05`, `c6af17e`, `db0c8c3` |
+| Regression/review infrastructure, no product defect | `05a3c1b`, `64f58e6`, `b6dbb52`, `0738676` |
 
 Some commits intentionally appear in two groups where one atomic change closed
 two inseparable root causes (for example unreadable storage plus recovery UI,
@@ -133,10 +201,15 @@ as closure evidence without the tests named in the corresponding finding.
 
 ## External gates retained after code closure
 
-- Physical Android↔Android, iOS↔iOS, and both cross-platform host directions.
+- GitHub issue `#6` remains open: physical Android↔Android, iOS↔iOS, and both
+  cross-platform host directions have no exact-candidate real-LAN receipt.
 - Normal LAN and supported Android/iPhone hotspot topologies, including three
   devices, background/foreground, lock/unlock, network switch, process death,
   rejoin, host loss, and repeated sessions.
+- GitHub issue `#230` remains open: the pinned Store identity
+  `com.parlor.app` is a known collision. Owner-selected identifiers, signing,
+  provisioning, Play Console, and App Store Connect setup are required; the
+  disabled candidate/promotion workflows must not be re-enabled beforehand.
 - Signed Play Internal and TestFlight artifacts, with artifact identity tied to
   the reviewed commit.
 - Physical TalkBack/VoiceOver, large text, RTL, contrast, and motion checks.
@@ -145,3 +218,22 @@ as closure evidence without the tests named in the corresponding finding.
 
 These are not converted into automated PASS results and do not permit a
 production-ready claim.
+
+## Working-tree qualification boundary and verdict
+
+The clean committed executable tree above passes every repository-executable
+gate run in this review. The developer's primary checkout also contains
+preserved, uncommitted Mobile Release Kit work that is intentionally outside
+that candidate. Its focused test
+`WorkflowContractTest.test_mobile_release_kit_ios_signing_mapping_is_release_target_only`
+currently fails because its Xcode configuration parser lets the UI-test
+`Release` configuration overwrite the application target's `Release` entry.
+That work must be corrected and requalified before it can be integrated; it is
+not reported as a defect in `0c7cc33`.
+
+**Final verdict: NOT READY.** The blockers are the failing uncommitted release
+work, open issue `#230` (Store identity/credentials/infrastructure), open issue
+`#6` (real multi-device LAN evidence), and the remaining physical-device,
+signed-artifact, Store, accessibility, and owner/legal gates above. No mock,
+simulator, unsigned build, or source inspection is represented as satisfying
+those external requirements.
