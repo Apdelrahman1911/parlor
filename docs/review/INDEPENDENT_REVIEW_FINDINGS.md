@@ -70,6 +70,7 @@ the external gates listed below.
 | RR-RELEASE-01 | High | `iosApp/iosApp.xcodeproj/project.pbxproj` and `scripts/release/normalize_embedded_apple_framework.sh`: case-sensitive packaging could embed `composeApp.framework` although the Mach-O identity is `ComposeApp`. | Xcode/KMP output casing was not normalized or fail-closed. An idempotent shell step validates exactly one framework and canonical executable. | Shell unit tests, workflow contract, Apple linkage/wrapper builds; newly discovered release defect; `27bebac`. | CLOSED |
 | RR-BUILD-01 | Medium | `composeApp/build.gradle.kts`, `config/android-lint-accepted-warnings.txt`, `docs/ANDROID_LINT_TRIAGE.md`: Navigation 3 dependency advisories were unreviewed and lint changed equivalent dependency warning IDs/messages across invocations. | The accepted inventory depended on unstable renderer text/IDs. The verifier now canonicalizes only the reviewed dependency-warning family while retaining exact deterministic inventory comparison. | Forced lint plus `AndroidReleaseLintContractTest`; newly discovered gate defect; `20a02c5`, `b909b58`. | CLOSED |
 | RR-TEST-01 | Medium | `shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLifecycleTest.kt`: the admission-rate-limit test timed out while waiting for four physical-session closes during a concurrent `productionCheck`. | The rate-limit assertion was coupled to four real-time 100 ms best-effort rejection-flush delays. It now waits for the admission rejection, which is the contract under test; separate real-time and virtual-time tests retain rejection-before-close coverage. | Reproduced at `89d1ec9`; focused test and the complete `:shared:transport-p2p:desktopTest` passed after the change; newly discovered test/gate flake, not a production defect; `5a1b1de`. | CLOSED |
+| RR-IOS-LAUNCH-01 | Medium | `composeApp/src/commonMain/kotlin/com/parlor/app/shell/home/HomeScreen.kt` and `iosApp/iosAppUITests/IOSAppLaunchUITests.swift`: Production-verification run `33873666385`, iOS job `101025374905`, rendered and kept the app foreground but failed because XCTest searched for the obsolete display text `PARLOR`. | The launch probe used mutable localized display copy as its accessibility identifier. The home brand now exposes stable test tag `parlor-home-brand`; XCTest queries that identifier, and a structural contract binds the query to the Compose marker. | UI-redesign regression; focused workflow contract and local iOS UI test passed on Xcode 26.5 / iOS 26.5; `994ff43`. | CLOSED |
 
 The visual redesign, icon conversion, edge-to-edge migration, and single-engine
 Navigation 3 migration in `26ac4b0`, `42ec623`, `526338e`, `2546a05`,
@@ -193,6 +194,7 @@ are additional fixes.
 | RR-RELEASE-01 | `27bebac` |
 | RR-BUILD-01 | `20a02c5`, `b909b58` |
 | RR-TEST-01 | `5a1b1de` |
+| RR-IOS-LAUNCH-01 | `994ff43` |
 | WT-RELEASE-01 | `fffd2d6` |
 | Reviewed feature migrations, no defect closure | `26ac4b0`, `42ec623`, `526338e`, `2546a05`, `c6af17e`, `db0c8c3` |
 | Regression/review infrastructure, no product defect | `05a3c1b`, `64f58e6`, `b6dbb52`, `0738676`, `55922f6` |
