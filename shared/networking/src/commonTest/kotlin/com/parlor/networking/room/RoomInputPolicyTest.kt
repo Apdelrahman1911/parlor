@@ -17,6 +17,8 @@ class RoomInputPolicyTest {
     fun room_code_normalization_drops_formatting_and_ambiguous_characters() {
         assertEquals("A2BCDE", RoomInputPolicy.normalizeRoomCode(" a2-bc de "))
         assertEquals("ABC", RoomInputPolicy.normalizeRoomCode("a0b1cOI"))
+        assertEquals("", RoomInputPolicy.normalizeRoomCode("ßßß"))
+        assertEquals("ABC234", RoomInputPolicy.normalizeRoomCode("ＡＢＣ²³⁴abc234"))
     }
 
     @Test
