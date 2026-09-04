@@ -96,11 +96,17 @@ class WorkflowContractTest(unittest.TestCase):
             r"\s+\};",
             re.DOTALL,
         )
-        app_configurations = {
-            match.group("name"): match.group("settings")
+        app_configuration_matches = [
+            (match.group("name"), match.group("settings"))
             for match in pattern.finditer(project)
-            if "PRODUCT_BUNDLE_IDENTIFIER" in match.group("settings")
-        }
+            if re.search(
+                r'^\s*PRODUCT_NAME = "\$\(APP_NAME\)";\s*$',
+                match.group("settings"),
+                re.MULTILINE,
+            )
+        ]
+        self.assertEqual(len(app_configuration_matches), 2)
+        app_configurations = dict(app_configuration_matches)
         self.assertEqual(set(app_configurations), {"Debug", "Release"})
         debug = app_configurations["Debug"]
         release = app_configurations["Release"]
