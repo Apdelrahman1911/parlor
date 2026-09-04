@@ -13,6 +13,7 @@ import com.parlor.networking.protocol.validateFor
 import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.NetError
 import com.parlor.networking.room.RoomLifecycleState
+import com.parlor.networking.room.SessionEndCommitStatus
 import com.parlor.networking.room.SendTarget
 import com.parlor.networking.security.SecureIds
 import kotlinx.coroutines.CoroutineScope
@@ -1342,6 +1343,12 @@ class PeerAuthoritativeSessionCoordinator(
      * Appended to preserve positional source compatibility for timing knobs.
      */
     private val acceptedStartOffer: HostMessage.SessionStarting? = null,
+    /**
+     * A valid terminal envelope could not durably revoke its resumable
+     * membership. Callers keep the recovery/Leave surface available so the
+     * transaction can be retried instead of pretending the end was accepted.
+     */
+    private val onSessionEndCommitFailure: suspend (NetError) -> Unit = {},
 ) {
     private val requiresInitialSnapshot = acceptedStartId != null
     private val _revision = MutableStateFlow(if (requiresInitialSnapshot) -1L else 0L)
@@ -1706,6 +1713,33 @@ class PeerAuthoritativeSessionCoordinator(
             onProtocolViolation(validation)
             return
         }
+        val eligible = stateMutex.withLock {
+            if (
+                closed ||
+                terminalAccepted ||
+                ended.header.messageId in seenHostMessageIds ||
+                ended.finalRevision < _revision.value
+            ) {
+                false
+            } else true
+        }
+        if (!eligible) return
+
+        val committed = try {
+            room.commitValidatedSessionEnd(ended)
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
+            Result.Failure(NetError.TransportFailure("session end commit failed"))
+        }
+        when (committed) {
+            is Result.Failure -> {
+                onSessionEndCommitFailure(committed.error)
+                return
+            }
+            is Result.Success -> if (committed.data == SessionEndCommitStatus.NotOwned) return
+        }
+
         val accepted = stateMutex.withLock {
             if (
                 closed ||

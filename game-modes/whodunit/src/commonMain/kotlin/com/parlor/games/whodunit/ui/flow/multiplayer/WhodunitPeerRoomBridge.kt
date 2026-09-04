@@ -98,6 +98,7 @@ class WhodunitPeerRoomBridge(
         onSnapshot = ::installSnapshot,
         onSessionEnded = { _hostDisconnected.emit(Unit) },
         onProtocolViolation = { _hostDisconnected.emit(Unit) },
+        onSessionEndCommitFailure = { _hostDisconnected.emit(Unit) },
         acceptedStartId = protocol.startId,
         acceptedStartOffer = acceptedStartOffer,
     )

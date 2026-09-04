@@ -13,6 +13,7 @@ import com.parlor.networking.room.LocalRoom
 import com.parlor.networking.room.NetError
 import com.parlor.networking.room.PeerEvent
 import com.parlor.networking.room.RoomLifecycleState
+import com.parlor.networking.room.SessionEndCommitStatus
 import com.parlor.networking.security.SecureIds
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.channels.ReceiveChannel
@@ -153,8 +154,8 @@ suspend fun awaitAuthoritativeSessionStart(
                             protocol = ProtocolVersion(),
                             connectionEpoch = message.header.connectionEpoch,
                         )
-                        if (message.validateFor(expected) == ProtocolValidation.Valid) {
-                            return@coroutineScope startNetworkFailure(NetError.NotConnected)
+                        terminalStartFailureOrNull(room, message, expected)?.let {
+                            return@coroutineScope it
                         }
                     }
                     else -> Unit
@@ -271,8 +272,8 @@ private suspend fun runStartTransaction(
                         return@withTimeoutOrNull Result.Success(prepared)
                     }
                     is HostMessage.SessionEnded -> {
-                        if (message.validateFor(prepared.protocol) == ProtocolValidation.Valid) {
-                            return@withTimeoutOrNull startNetworkFailure(NetError.NotConnected)
+                        terminalStartFailureOrNull(room, message, prepared.protocol)?.let {
+                            return@withTimeoutOrNull it
                         }
                     }
                     else -> Unit
@@ -284,6 +285,40 @@ private suspend fun runStartTransaction(
         startNetworkFailure(NetError.NotConnected)
     }
     return committed ?: startNetworkFailure(NetError.Timeout)
+}
+
+private suspend fun terminalStartFailureOrNull(
+    room: LocalRoom,
+    message: HostMessage.SessionEnded,
+    expected: SessionProtocol,
+): Result<ValidatedSessionStart, SessionStartFailure>? {
+    if (message.validateFor(expected) != ProtocolValidation.Valid) return null
+    return when (val committed = commitValidatedTerminal(room, message)) {
+        is Result.Failure -> Result.Failure(committed.error)
+        is Result.Success -> if (committed.data == SessionEndCommitStatus.Committed) {
+            startNetworkFailure(NetError.NotConnected)
+        } else {
+            null
+        }
+    }
+}
+
+private suspend fun commitValidatedTerminal(
+    room: LocalRoom,
+    message: HostMessage.SessionEnded,
+): Result<SessionEndCommitStatus, SessionStartFailure> = try {
+    when (val committed = room.commitValidatedSessionEnd(message)) {
+        is Result.Success -> committed
+        is Result.Failure -> Result.Failure(SessionStartFailure.Network(committed.error))
+    }
+} catch (cancelled: CancellationException) {
+    throw cancelled
+} catch (@Suppress("TooGenericExceptionCaught") _: Exception) {
+    Result.Failure(
+        SessionStartFailure.Network(
+            NetError.TransportFailure("session end commit failed"),
+        ),
+    )
 }
 
 private suspend fun sendReady(
