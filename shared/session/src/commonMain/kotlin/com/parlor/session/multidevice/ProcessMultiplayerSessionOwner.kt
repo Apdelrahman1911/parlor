@@ -408,6 +408,9 @@ class ProcessMultiplayerSession internal constructor(
  */
 class ProcessMultiplayerSessionOwner(
     private val processScope: CoroutineScope,
+    private val discardResumableSession: suspend () -> Result<Unit, NetError> = {
+        Result.Success(Unit)
+    },
 ) {
     private val mutex = Mutex()
     private val _state = MutableStateFlow<ProcessMultiplayerState>(ProcessMultiplayerState.Idle)
@@ -556,12 +559,23 @@ class ProcessMultiplayerSessionOwner(
 
     /**
      * Final Leave while no physical room exists (for example after a failed
-     * post-admission start followed by a failed resume).
+     * post-admission start or a cold process-resume failure). A cold resume has
+     * no retained [LocalRoom], so its transport-owned credential is discarded
+     * through the injected ownership-safe transaction.
      */
     suspend fun discardRetainedRoute(route: MultiplayerSessionRoute): Result<Unit, NetError> {
         val completion = mutex.withLock {
             val retained = retainedRetryRoom
-            if (retained == null || retained.route != route) {
+            val coldResumeNeedsDiscard = retained == null &&
+                (_state.value as? ProcessMultiplayerState.Failed)?.let { failed ->
+                    failed.route == route &&
+                        failed.retryMode == MultiplayerOpenMode.Resume &&
+                        route.role == MultiplayerSessionRole.Peer
+                } == true
+            if (
+                (retained == null && !coldResumeNeedsDiscard) ||
+                (retained != null && retained.route != route)
+            ) {
                 if (_state.value.routeOrNull == route) _state.value = ProcessMultiplayerState.Idle
                 return Result.Success(Unit)
             }
@@ -584,7 +598,7 @@ class ProcessMultiplayerSessionOwner(
             processScope.launch {
                 var cancellation: CancellationException? = null
                 val discarded = try {
-                    retained.room.discardRejoinCapability()
+                    retained?.room?.discardRejoinCapability() ?: discardResumableSession()
                 } catch (cancelled: CancellationException) {
                     cancellation = cancelled
                     Result.Failure(NetError.SessionSuspended)

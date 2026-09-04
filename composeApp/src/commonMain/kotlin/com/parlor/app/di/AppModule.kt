@@ -9,6 +9,7 @@ import com.parlor.core.time.SystemClock
 import com.parlor.games.mafia.di.mafiaModule
 import com.parlor.games.whodunit.di.whodunitModule
 import com.parlor.networking.security.SecureIds
+import com.parlor.networking.transport.RoomTransport
 import com.parlor.session.multidevice.ProcessMultiplayerSessionOwner
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -37,8 +38,10 @@ val coreModule: Module = module {
         createMultiplayerSessionScope()
     }
     single {
+        val roomTransport = get<RoomTransport>()
         ProcessMultiplayerSessionOwner(
             processScope = get(qualifier = named("multiplayerSession")),
+            discardResumableSession = roomTransport::discardResumableSession,
         )
     }
     // Strict JSON for content validation: unknown fields in case payloads fail

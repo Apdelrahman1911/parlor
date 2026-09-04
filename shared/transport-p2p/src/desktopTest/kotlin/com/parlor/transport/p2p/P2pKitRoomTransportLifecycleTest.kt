@@ -3417,6 +3417,55 @@ class P2pKitRoomTransportLifecycleTest {
     }
 
     @Test
+    fun explicit_cold_resume_discard_revokes_the_stored_membership() = runBlocking {
+        val secureStorage = testSecureStorage()
+        val credential = resumableCredential(generation = 1L)
+        val pendingRotation = resumableCredential(generation = 2L)
+        val store = ResumableCredentialStore(secureStorage)
+        store.stage(credential)
+        store.commit(credential.offerId, credential.generation)
+        store.stage(pendingRotation)
+        val transport = P2pKitRoomTransport(
+            appId = AppId("com.parlor.test"),
+            deviceName = "self-device",
+            scope = testScope,
+            kitFactory = object : P2pKitFactory {
+                override suspend fun createKit(appId: AppId, deviceName: String): P2pKit =
+                    error("discard must not start P2pKit")
+            },
+            secureStorage = secureStorage,
+        )
+
+        assertThat(transport.discardResumableSession()).isEqualTo(Result.Success(Unit))
+        assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(null))
+    }
+
+    @Test
+    fun explicit_cold_resume_discard_fails_closed_when_secure_removal_fails() = runBlocking {
+        val secureStorage = FailingRemoveSecureStorage(testSecureStorage())
+        val credential = resumableCredential(generation = 1L)
+        val store = ResumableCredentialStore(secureStorage)
+        store.stage(credential)
+        store.commit(credential.offerId, credential.generation)
+        secureStorage.failRemove = true
+        val transport = P2pKitRoomTransport(
+            appId = AppId("com.parlor.test"),
+            deviceName = "self-device",
+            scope = testScope,
+            kitFactory = object : P2pKitFactory {
+                override suspend fun createKit(appId: AppId, deviceName: String): P2pKit =
+                    error("discard must not start P2pKit")
+            },
+            secureStorage = secureStorage,
+        )
+
+        assertThat(transport.discardResumableSession())
+            .isEqualTo(Result.Failure(NetError.SecureStorageUnavailable))
+        secureStorage.failRemove = false
+        assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(credential))
+    }
+
+    @Test
     fun permanent_rejection_invalidation_failure_surfaces_secure_storage_error() = runBlocking {
         val failingStorage = FailingRemoveSecureStorage(testSecureStorage())
         val now = kotlin.time.Clock.System.now().toEpochMilliseconds()

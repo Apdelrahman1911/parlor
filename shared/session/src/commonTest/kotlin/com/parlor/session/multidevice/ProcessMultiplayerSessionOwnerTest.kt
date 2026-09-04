@@ -546,7 +546,11 @@ class ProcessMultiplayerSessionOwnerTest {
 
     @Test
     fun leavingAFailedOpenClearsTheRouteForANewSession() = runTest {
-        val owner = ProcessMultiplayerSessionOwner(backgroundScope)
+        var discardCalls = 0
+        val owner = ProcessMultiplayerSessionOwner(backgroundScope) {
+            discardCalls++
+            Result.Success(Unit)
+        }
         val route = peerRoute()
 
         val failed = owner.acquire(route) { Result.Failure(NetError.Timeout) }
@@ -555,11 +559,57 @@ class ProcessMultiplayerSessionOwnerTest {
 
         assertThat(owner.leaveRoute(route, SessionEndReason.Cancelled))
             .isEqualTo(Result.Success(Unit))
+        assertThat(discardCalls).isEqualTo(0)
         assertThat(owner.state.value).isEqualTo(ProcessMultiplayerState.Idle)
 
         val replacement = FakeRoom(isHost = false)
         val reopened = owner.acquire(route) { Result.Success(replacement) }
         assertThat((reopened as Result.Success).data.room).isSameInstanceAs(replacement)
+    }
+
+    @Test
+    fun leavingAColdFailedResumeDiscardsThePersistedMembership() = runTest {
+        var discardCalls = 0
+        val owner = ProcessMultiplayerSessionOwner(backgroundScope) {
+            discardCalls++
+            Result.Success(Unit)
+        }
+        val route = resumePeerRoute()
+
+        assertThat(owner.acquire(route) { Result.Failure(NetError.Timeout) })
+            .isEqualTo(Result.Failure(NetError.Timeout))
+
+        assertThat(owner.leaveRoute(route, SessionEndReason.Cancelled))
+            .isEqualTo(Result.Success(Unit))
+        assertThat(discardCalls).isEqualTo(1)
+        assertThat(owner.state.value).isEqualTo(ProcessMultiplayerState.Idle)
+    }
+
+    @Test
+    fun failedColdResumeDiscardKeepsTheRouteForAnExplicitRetry() = runTest {
+        var discardCalls = 0
+        val owner = ProcessMultiplayerSessionOwner(backgroundScope) {
+            discardCalls++
+            if (discardCalls == 1) {
+                Result.Failure(NetError.SecureStorageUnavailable)
+            } else {
+                Result.Success(Unit)
+            }
+        }
+        val route = resumePeerRoute()
+        owner.acquire(route) { Result.Failure(NetError.Timeout) }
+
+        assertThat(owner.leaveRoute(route, SessionEndReason.Cancelled))
+            .isEqualTo(Result.Failure(NetError.SecureStorageUnavailable))
+        val failed = owner.state.value as ProcessMultiplayerState.Failed
+        assertThat(failed.route).isEqualTo(route)
+        assertThat(failed.error).isEqualTo(NetError.SecureStorageUnavailable)
+        assertThat(failed.retryMode).isEqualTo(MultiplayerOpenMode.Resume)
+
+        assertThat(owner.leaveRoute(route, SessionEndReason.Cancelled))
+            .isEqualTo(Result.Success(Unit))
+        assertThat(discardCalls).isEqualTo(2)
+        assertThat(owner.state.value).isEqualTo(ProcessMultiplayerState.Idle)
     }
 
     @Test
@@ -732,6 +782,13 @@ class ProcessMultiplayerSessionOwnerTest {
         gameId = GameId("whodunit"),
         displayName = "Peer",
         roomCode = "A23456",
+    )
+
+    private fun resumePeerRoute(): MultiplayerSessionRoute = MultiplayerSessionRoute.peer(
+        gameId = GameId("whodunit"),
+        displayName = "Peer",
+        roomCode = "",
+        resumeExistingSession = true,
     )
 }
 
