@@ -239,14 +239,18 @@ three physical LAN devices; skipped x64 runtime tasks are host-architecture
 limitations, while x64 compilation/linkage passed in `productionAppleCheck`.
 Build outputs were cleaned and Parlor Gradle daemons stopped after every batch.
 
-The developer's primary checkout also contains preserved, uncommitted Mobile
-Release Kit work that is intentionally outside that qualified tree. Its focused
-test
-`WorkflowContractTest.test_mobile_release_kit_ios_signing_mapping_is_release_target_only`
-was rerun and fails because its Xcode configuration parser lets the UI-test
-`Release` configuration overwrite the application target's `Release` entry.
-That work must be corrected and requalified before it can be integrated; it is
-not reported as a defect in the committed candidate.
+### Preserved working-tree finding
+
+| ID | Severity | Exact location and reproduction | Root cause and recommended fix | Classification / status |
+|---|---|---|---|---|
+| WT-RELEASE-01 | Medium | Uncommitted `scripts/release/tests/test_workflow_contract.py`, `WorkflowContractTest.test_mobile_release_kit_ios_signing_mapping_is_release_target_only`: the focused test fails because the parsed `Release` settings belong to the UI-test target and therefore lack the new Mobile Release Kit mappings. | A dictionary keyed only by `Debug`/`Release` accepts every target containing `PRODUCT_BUNDLE_IDENTIFIER`, so later UI-test configurations overwrite the application configurations. Select the two blocks whose exact `PRODUCT_NAME` is `$(APP_NAME)`, assert that exactly two matched, then build the dictionary. | Pre-existing uncommitted user work, not a committed-candidate regression; OPEN and intentionally not modified without owner approval. |
+
+The fix above was independently exercised in an isolated worktree without
+altering the primary checkout: its focused test passed, followed by all 130
+release-system tests and inventory validation. The remaining Mobile Release
+Kit changes are still uncommitted and outside the qualified tree; after owner
+approval, the one-hunk test correction and the complete feature must be
+reviewed, committed on a focused branch, and requalified together.
 
 **Final verdict: NOT READY.** The blockers are the failing uncommitted release
 work, open issue `#230` (Store identity/credentials/infrastructure), open issue
