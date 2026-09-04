@@ -1,7 +1,6 @@
 package com.parlor.app.shell.multiplayer
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,7 +14,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -38,7 +36,7 @@ import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorCard
 import com.parlor.designsystem.components.ParlorTextField
 import com.parlor.designsystem.components.ScreenHeader
-import com.parlor.designsystem.components.StickyActionBar
+import com.parlor.designsystem.components.StickyActionLayout
 import com.parlor.designsystem.components.parlorSafeContentPadding
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.networking.room.RoomInputPolicy
@@ -60,62 +58,64 @@ fun JoinPromptScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
 
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
-        Box(modifier = Modifier.fillMaxSize().imePadding()) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                    .parlorSafeContentPadding(
-                        horizontal = ParlorTheme.spacing.l,
-                        top = ParlorTheme.spacing.l,
-                        bottom = ParlorTheme.spacing.xxxl + ParlorTheme.spacing.xxl,
-                    ),
-                verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l),
-            ) {
-                ScreenHeader(
-                    title = stringResource(Res.string.join_title),
-                    eyebrow = stringResource(Res.string.join_eyebrow),
-                    subtitle = stringResource(Res.string.join_code_help),
-                    onBack = onCancel,
-                    backContentDescription = stringResource(Res.string.join_cancel_description),
-                )
-
-                ParlorTextField(
-                    value = code,
-                    onValueChange = { input -> code = RoomInputPolicy.normalizeRoomCode(input) },
-                    label = stringResource(Res.string.join_code_field),
-                    capitalization = KeyboardCapitalization.Characters,
-                    textStyle = ParlorTheme.typography.timerMedium.copy(
-                        textAlign = TextAlign.Center,
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onDone = {
-                            focusManager.clearFocus()
-                            keyboardController?.hide()
-                        },
-                    ),
-                )
-
-                ParlorCard(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentPadding = ParlorTheme.spacing.m,
-                    bordered = false,
+        StickyActionLayout(
+            modifier = Modifier.fillMaxSize().imePadding(),
+            content = {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                        .parlorSafeContentPadding(
+                            horizontal = ParlorTheme.spacing.l,
+                            top = ParlorTheme.spacing.l,
+                            bottom = ParlorTheme.spacing.l,
+                        ),
+                    verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l),
                 ) {
-                    Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.xs)) {
-                        EyebrowLabel(
-                            text = stringResource(Res.string.join_local_label),
-                            accent = false,
-                        )
-                        Text(
-                            text = stringResource(Res.string.join_local_body),
-                            style = ParlorTheme.typography.bodySmall,
-                            color = ParlorTheme.colors.textSecondary,
-                        )
+                    ScreenHeader(
+                        title = stringResource(Res.string.join_title),
+                        eyebrow = stringResource(Res.string.join_eyebrow),
+                        subtitle = stringResource(Res.string.join_code_help),
+                        onBack = onCancel,
+                        backContentDescription = stringResource(Res.string.join_cancel_description),
+                    )
+
+                    ParlorTextField(
+                        value = code,
+                        onValueChange = { input -> code = RoomInputPolicy.normalizeRoomCode(input) },
+                        label = stringResource(Res.string.join_code_field),
+                        capitalization = KeyboardCapitalization.Characters,
+                        textStyle = ParlorTheme.typography.timerMedium.copy(
+                            textAlign = TextAlign.Center,
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onDone = {
+                                focusManager.clearFocus()
+                                keyboardController?.hide()
+                            },
+                        ),
+                    )
+
+                    ParlorCard(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentPadding = ParlorTheme.spacing.m,
+                        bordered = false,
+                    ) {
+                        Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.xs)) {
+                            EyebrowLabel(
+                                text = stringResource(Res.string.join_local_label),
+                                accent = false,
+                            )
+                            Text(
+                                text = stringResource(Res.string.join_local_body),
+                                style = ParlorTheme.typography.bodySmall,
+                                color = ParlorTheme.colors.textSecondary,
+                            )
+                        }
                     }
                 }
-            }
-
-            StickyActionBar(modifier = Modifier.align(Alignment.BottomCenter)) {
+            },
+            actions = {
                 ParlorButton(
                     label = stringResource(Res.string.join_confirm),
                     contentDescription = stringResource(Res.string.join_confirm_description),
@@ -123,7 +123,7 @@ fun JoinPromptScreen(
                     modifier = Modifier.fillMaxWidth(),
                     enabled = RoomInputPolicy.isValidRoomCode(code),
                 )
-            }
-        }
+            },
+        )
     }
 }
