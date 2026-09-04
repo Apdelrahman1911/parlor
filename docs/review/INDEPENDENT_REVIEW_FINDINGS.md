@@ -214,6 +214,9 @@ as closure evidence without the tests named in the corresponding finding.
   disabled candidate/promotion workflows must not be re-enabled beforehand.
 - Signed Play Internal and TestFlight artifacts, with artifact identity tied to
   the reviewed commit.
+- Store qualification still requires Xcode `26.3` build `17C529`; the local
+  machine has Xcode `26.5` build `17F42`, so its successful Apple linkage and
+  simulator runs are not represented as the pinned Store-toolchain receipt.
 - Physical TalkBack/VoiceOver, large text, RTL, contrast, and motion checks.
 - Privacy disclosure, export-compliance, licenses/SBOM, store metadata, legal,
   incident response, and publisher-key ownership decisions.
@@ -223,15 +226,27 @@ production-ready claim.
 
 ## Working-tree qualification boundary and verdict
 
-The clean committed executable tree above passes every repository-executable
-gate run in this review. The developer's primary checkout also contains
-preserved, uncommitted Mobile Release Kit work that is intentionally outside
-that candidate. Its focused test
+After closing `RR-TEST-01`, clean commit
+`fc29fa0b9d87e803937468e45021a515ed0f6920` (tree
+`5c36eb77307770986657cd20e1e91a2bb6c69f37`) passed a fresh exact-HEAD matrix:
+`productionCheck` (903 tasks), `allTests` (861 tasks),
+`productionAppleCheck` (147 tasks),
+`productionIosSimulatorRuntimeTests` (188 tasks), and
+`scripts/release/validate_release_system.sh` (128 tests and 626 reviewed
+inventory rows). Dependency verification was strict for every Gradle matrix
+task. The three ignored P2pKit loopback tests still explicitly require two or
+three physical LAN devices; skipped x64 runtime tasks are host-architecture
+limitations, while x64 compilation/linkage passed in `productionAppleCheck`.
+Build outputs were cleaned and Parlor Gradle daemons stopped after every batch.
+
+The developer's primary checkout also contains preserved, uncommitted Mobile
+Release Kit work that is intentionally outside that qualified tree. Its focused
+test
 `WorkflowContractTest.test_mobile_release_kit_ios_signing_mapping_is_release_target_only`
-currently fails because its Xcode configuration parser lets the UI-test
+was rerun and fails because its Xcode configuration parser lets the UI-test
 `Release` configuration overwrite the application target's `Release` entry.
 That work must be corrected and requalified before it can be integrated; it is
-not reported as a defect in `0c7cc33`.
+not reported as a defect in the committed candidate.
 
 **Final verdict: NOT READY.** The blockers are the failing uncommitted release
 work, open issue `#230` (Store identity/credentials/infrastructure), open issue
