@@ -21,6 +21,7 @@ import com.parlor.networking.room.RoomInfo
 import com.parlor.networking.room.RoomLifecycleState
 import com.parlor.networking.room.RoomMember
 import com.parlor.networking.room.SendTarget
+import com.parlor.networking.room.SessionEndCommitStatus
 import com.parlor.networking.testing.InMemoryRoomBus
 import com.parlor.networking.testing.InMemoryPeerRoom
 import kotlinx.coroutines.channels.Channel
@@ -791,6 +792,103 @@ class AuthoritativeSessionCoordinatorTest {
         assertEquals(2, coordinator.revision.value)
         assertEquals(listOf<ProtocolValidation>(ProtocolValidation.WrongGame), violations)
         assertEquals(listOf(SessionEndReason.HostLeft), ended)
+        coordinator.close()
+    }
+
+    @Test
+    fun `peer validates terminal envelope before asking transport to commit`() = runTest {
+        val room = RecordingRoom(isHost = false, selfPlayerId = peerId)
+        val violations = mutableListOf<ProtocolValidation>()
+        val coordinator = PeerAuthoritativeSessionCoordinator(
+            room = room,
+            protocol = protocol,
+            selfPlayerId = peerId,
+            scope = this,
+            onSnapshot = { _, _ -> true },
+            onProtocolViolation = { violations += it },
+        )
+        val invalid = HostMessage.SessionEnded(
+            header = header(sequence = 1L, gameId = GameId("different-game")),
+            reason = SessionEndReason.HostLeft,
+            finalRevision = 0L,
+        )
+
+        room.receive(invalid)
+        advanceUntilIdle()
+
+        assertEquals(listOf<ProtocolValidation>(ProtocolValidation.WrongGame), violations)
+        assertTrue(room.sessionEndCommits.isEmpty())
+        coordinator.close()
+    }
+
+    @Test
+    fun `peer does not accept terminal end when durable transport commit fails`() = runTest {
+        val room = RecordingRoom(isHost = false, selfPlayerId = peerId)
+        val ended = mutableListOf<SessionEndReason>()
+        val failures = mutableListOf<NetError>()
+        room.sessionEndCommitResult = Result.Failure(NetError.SecureStorageUnavailable)
+        val coordinator = PeerAuthoritativeSessionCoordinator(
+            room = room,
+            protocol = protocol,
+            selfPlayerId = peerId,
+            scope = this,
+            onSnapshot = { _, _ -> true },
+            onSessionEnded = { ended += it.reason },
+            onSessionEndCommitFailure = { failures += it },
+        )
+        val terminal = HostMessage.SessionEnded(
+            header = header(sequence = 1L),
+            reason = SessionEndReason.Completed,
+            finalRevision = 3L,
+        )
+
+        room.receive(terminal)
+        runCurrent()
+
+        assertEquals(emptyList<SessionEndReason>(), ended)
+        assertEquals(listOf<NetError>(NetError.SecureStorageUnavailable), failures)
+        assertEquals(0L, coordinator.revision.value)
+
+        // Failure must not consume the message identity; a retransmission can
+        // retry the durable revocation transaction and only then end gameplay.
+        room.sessionEndCommitResult = Result.Success(SessionEndCommitStatus.Committed)
+        room.receive(terminal)
+        advanceUntilIdle()
+
+        assertEquals(listOf(SessionEndReason.Completed), ended)
+        assertEquals(3L, coordinator.revision.value)
+        assertEquals(listOf(terminal, terminal), room.sessionEndCommits)
+        coordinator.close()
+    }
+
+    @Test
+    fun `peer ignores validated terminal frame no longer owned by transport`() = runTest {
+        val room = RecordingRoom(isHost = false, selfPlayerId = peerId)
+        val ended = mutableListOf<SessionEndReason>()
+        val failures = mutableListOf<NetError>()
+        room.sessionEndCommitResult = Result.Success(SessionEndCommitStatus.NotOwned)
+        val coordinator = PeerAuthoritativeSessionCoordinator(
+            room = room,
+            protocol = protocol,
+            selfPlayerId = peerId,
+            scope = this,
+            onSnapshot = { _, _ -> true },
+            onSessionEnded = { ended += it.reason },
+            onSessionEndCommitFailure = { failures += it },
+        )
+        val terminal = HostMessage.SessionEnded(
+            header = header(sequence = 1L),
+            reason = SessionEndReason.HostLeft,
+            finalRevision = 1L,
+        )
+
+        room.receive(terminal)
+        advanceUntilIdle()
+
+        assertEquals(emptyList<SessionEndReason>(), ended)
+        assertEquals(emptyList<NetError>(), failures)
+        assertEquals(0L, coordinator.revision.value)
+        assertEquals(listOf(terminal), room.sessionEndCommits)
         coordinator.close()
     }
 
@@ -1587,6 +1685,9 @@ private class RecordingRoom(
     var sendToHostError: NetError? = null
     var commandSendGate: CompletableDeferred<Unit>? = null
     var sendFailure: Throwable? = null
+    var sessionEndCommitResult: Result<SessionEndCommitStatus, NetError> =
+        Result.Success(SessionEndCommitStatus.Committed)
+    val sessionEndCommits = mutableListOf<HostMessage.SessionEnded>()
 
     suspend fun receive(message: RoomMessage) {
         inbox.send(message)
@@ -1610,6 +1711,13 @@ private class RecordingRoom(
         if (message is PeerMessage.ClientCommand) commandSendGate?.await()
         val error = sendToHostError
         return if (error == null) Result.Success(Unit) else Result.Failure(error)
+    }
+
+    override suspend fun commitValidatedSessionEnd(
+        message: HostMessage.SessionEnded,
+    ): Result<SessionEndCommitStatus, NetError> {
+        sessionEndCommits += message
+        return sessionEndCommitResult
     }
 
     override suspend fun leave() = Unit
