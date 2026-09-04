@@ -24,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
@@ -186,6 +187,7 @@ private fun HomeTopBar() {
                 text = stringResource(Res.string.app_name),
                 style = ParlorTheme.typography.headingMedium,
                 color = ParlorTheme.colors.textPrimary,
+                modifier = Modifier.testTag(HOME_BRAND_TEST_TAG),
             )
         }
     }
@@ -550,3 +552,4 @@ private fun GameCardArt(accent: ParlorAccent) {
 private const val CARD_ACCENT_ALPHA = 0.14f
 private const val CARD_ART_HALO_ALPHA = 0.10f
 private const val CARD_ART_STROKE_RATIO = 0.035f
+private const val HOME_BRAND_TEST_TAG = "parlor-home-brand"

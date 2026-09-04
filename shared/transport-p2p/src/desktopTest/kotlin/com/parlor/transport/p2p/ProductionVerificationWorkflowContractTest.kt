@@ -301,6 +301,9 @@ class ProductionVerificationWorkflowContractTest {
         val xcodeProject = read("iosApp/iosApp.xcodeproj/project.pbxproj")
         val xcodeScheme = read("iosApp/iosApp.xcodeproj/xcshareddata/xcschemes/iosApp.xcscheme")
         val appLaunchTest = read("iosApp/iosAppUITests/IOSAppLaunchUITests.swift")
+        val homeScreen = read(
+            "composeApp/src/commonMain/kotlin/com/parlor/app/shell/home/HomeScreen.kt",
+        )
         val frameworkNormalizer = read(
             "scripts/release/normalize_embedded_apple_framework.sh",
         )
@@ -413,10 +416,20 @@ class ProductionVerificationWorkflowContractTest {
         listOf(
             "XCUIApplication()",
             "runningForeground",
-            "staticTexts[\"PARLOR\"]",
+            "staticTexts[\"parlor-home-brand\"]",
             "No alert should appear during the simulator cold-start observation window",
             "The Swift host should remain in the foreground after Compose renders",
         ).forEach { required -> assertContains(appLaunchTest, required) }
+        listOf(
+            "HOME_BRAND_TEST_TAG = \"parlor-home-brand\"",
+            ".testTag(HOME_BRAND_TEST_TAG)",
+        ).forEach { required ->
+            assertContains(
+                homeScreen,
+                required,
+                message = "The iOS launch probe must target a stable Compose home marker",
+            )
+        }
 
         val appleEvidenceMarker = "- name: Upload Apple verification evidence"
         assertContains(workflow, swiftReleaseMarker)
