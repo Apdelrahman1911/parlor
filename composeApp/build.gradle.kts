@@ -379,7 +379,21 @@ val verifyReleaseLintWarnings by tasks.registering {
                 val relativeSource = repositoryRoot.relativize(source)
                     .toString()
                     .replace(File.separatorChar, '/')
-                add("$id|$relativeSource|$message")
+                // Lint 9.1.1 can report the same version-catalog advisory as
+                // either ID across otherwise identical forced runs. Preserve
+                // the exact path, coordinate, and current version while
+                // canonicalizing only those two equivalent detector IDs.
+                val canonicalId = if (
+                    relativeSource == "gradle/libs.versions.toml" &&
+                    id in setOf("GradleDependency", "NewerVersionAvailable") &&
+                    message.startsWith("A newer version of ") &&
+                    " than " in message
+                ) {
+                    "DependencyUpdate"
+                } else {
+                    id
+                }
+                add("$canonicalId|$relativeSource|$message")
             }
         }.sorted()
         val expected = inventory.readLines()
