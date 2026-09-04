@@ -271,8 +271,25 @@ internal object WhodunitStateValidator {
             }
         }
 
+        val verdictCharacterId = when (val verdict = state.public.verdict) {
+            is Verdict.PlayersWin -> CharacterId(verdict.killerCharacterId)
+            is Verdict.KillerWins -> CharacterId(verdict.killerCharacterId)
+            null -> null
+        }
+        verdictCharacterId?.let { killerCharacterId ->
+            require(killerCharacterId in charactersById) {
+                "Projected verdict references a character absent from the loaded case"
+            }
+            ownPrivate?.let { privateState ->
+                require(
+                    (privateState.role == PlayerRole.Killer) ==
+                        (privateState.characterId == killerCharacterId),
+                ) { "Projected verdict conflicts with the receiving player's private role" }
+            }
+        }
+
         if (state.public.revealedClues.isNotEmpty()) {
-            val possibleKillerCharacters = when (ownPrivate?.role) {
+            val possibleKillerCharacters = verdictCharacterId?.let(::setOf) ?: when (ownPrivate?.role) {
                 PlayerRole.Killer -> setOf(ownPrivate.characterId)
                 PlayerRole.Innocent -> charactersById.keys - ownPrivate.characterId
                 null -> charactersById.keys
@@ -304,23 +321,6 @@ internal object WhodunitStateValidator {
             )
             require(timer.totalSeconds == expectedSeconds) {
                 "Projected timer duration differs from the loaded case"
-            }
-        }
-
-        val verdictCharacterId = when (val verdict = state.public.verdict) {
-            is Verdict.PlayersWin -> CharacterId(verdict.killerCharacterId)
-            is Verdict.KillerWins -> CharacterId(verdict.killerCharacterId)
-            null -> null
-        }
-        verdictCharacterId?.let { killerCharacterId ->
-            require(killerCharacterId in charactersById) {
-                "Projected verdict references a character absent from the loaded case"
-            }
-            ownPrivate?.let { privateState ->
-                require(
-                    (privateState.role == PlayerRole.Killer) ==
-                        (privateState.characterId == killerCharacterId),
-                ) { "Projected verdict conflicts with the receiving player's private role" }
             }
         }
     }
