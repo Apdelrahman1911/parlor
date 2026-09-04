@@ -975,7 +975,12 @@ class P2pKitRoomTransportLifecycleTest {
                     ),
                 ),
             )
-            awaitCondition { session.state.value == ConnectionState.Closed }
+            // This test owns the admission-budget contract, not the separate
+            // best-effort wire-flush delay before transport close. Waiting for
+            // Closed here multiplied four real-time delays and made the full
+            // productionCheck flaky under worker contention. The rejection is
+            // the semantic boundary; close ordering has dedicated coverage.
+            awaitCondition { session.admissionRejections().isNotEmpty() }
         }
 
         attempts.take(P2pTrafficLimits.ADMISSION_PER_PEER_BURST).forEach { session ->
