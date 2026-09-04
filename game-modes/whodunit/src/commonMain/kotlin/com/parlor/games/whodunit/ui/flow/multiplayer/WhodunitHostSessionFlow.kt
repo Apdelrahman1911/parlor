@@ -44,6 +44,7 @@ import com.parlor.games.whodunit.resources.host_join_request_format
 import com.parlor.games.whodunit.resources.host_members_empty
 import com.parlor.games.whodunit.resources.host_members_eyebrow
 import com.parlor.games.whodunit.resources.host_pending_eyebrow
+import com.parlor.games.whodunit.resources.host_player_bullet_format
 import com.parlor.games.whodunit.resources.host_room_code_eyebrow
 import com.parlor.games.whodunit.resources.host_opening_room
 import com.parlor.games.whodunit.resources.host_title
@@ -461,7 +462,10 @@ private fun HostLobbyContent(
                     } else {
                         connectedMembers.forEach { member ->
                             Text(
-                                text = "· ${member.displayName}",
+                                text = stringResource(
+                                    Res.string.host_player_bullet_format,
+                                    member.displayName,
+                                ),
                                 style = ParlorTheme.typography.bodyLarge,
                                 color = ParlorTheme.colors.textPrimary,
                             )
