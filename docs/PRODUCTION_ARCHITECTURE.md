@@ -249,8 +249,11 @@ Multiplayer resume is a separate transport credential and is available for both
 shipping games while the original host/seat remains valid.
 
 Settings are persistent per platform. The shipping controls are language,
-theme, and reduced motion; each has a validated default and a typed persistence
-failure path. Parlor currently ships no sound implementation, analytics SDK,
+theme, and reduced motion; each has a validated default. Mutations are
+serialized and published to UI state only after the platform backing accepts
+them. Android and Desktop surface write failures reported by their APIs; iOS
+UserDefaults persists asynchronously and exposes no per-write durability
+result. Parlor currently ships no sound implementation, analytics SDK,
 crash-reporting SDK, upload provider, or placeholder consent control. Adding
 any of those is a product/privacy change that requires an implementation,
 truthful UI, store disclosures, and release evidence together.

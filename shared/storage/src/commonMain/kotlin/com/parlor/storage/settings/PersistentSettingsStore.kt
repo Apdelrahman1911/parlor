@@ -22,10 +22,11 @@ interface SettingsKeyValueBacking {
 /**
  * Validating, serialized production [SettingsStore].
  *
- * A write is persisted before its flow changes, so an I/O failure never tells
- * the running UI that a preference was saved when it was not. One mutex
- * serializes all keys, giving concurrent toggles a deterministic order.
- * Cancellation is deliberately not caught or translated.
+ * A backing mutation returns before its flow changes, so a failure reported by
+ * a backing is not published to the running UI. Some native preference APIs
+ * persist accepted mutations asynchronously and expose no durability
+ * acknowledgement. One mutex serializes all keys, giving concurrent toggles a
+ * deterministic order. Cancellation is deliberately not caught or translated.
  */
 class PersistentSettingsStore(
     private val backing: SettingsKeyValueBacking,

@@ -2,7 +2,7 @@ package com.parlor.storage.settings
 
 import kotlinx.coroutines.flow.Flow
 
-/** A platform preference store could not durably apply a requested value. */
+/** A platform preference store rejected or could not apply a requested value. */
 class SettingsPersistenceException(
     message: String,
     cause: Throwable? = null,
