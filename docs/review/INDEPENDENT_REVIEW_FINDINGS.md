@@ -244,7 +244,7 @@ Build outputs were cleaned and Parlor Gradle daemons stopped after every batch.
 
 | ID | Severity | Exact location and reproduction | Root cause and recommended fix | Classification / status |
 |---|---|---|---|---|
-| WT-RELEASE-01 | Medium | `scripts/release/tests/test_workflow_contract.py`, `WorkflowContractTest.test_mobile_release_kit_ios_signing_mapping_is_release_target_only`: the focused test failed because the parsed `Release` settings belonged to the UI-test target and therefore lacked the new Mobile Release Kit mappings. | A dictionary keyed only by `Debug`/`Release` accepted every target containing `PRODUCT_BUNDLE_IDENTIFIER`, so later UI-test configurations overwrote the application configurations. The test now selects exactly two blocks whose exact `PRODUCT_NAME` is `$(APP_NAME)` before building the Debug/Release dictionary. | Pre-existing Mobile Release Kit worktree defect; focused failure reproduced, root cause fixed in `fffd2d6`; CLOSED on the isolated feature branch. |
+| WT-RELEASE-01 | Medium | `scripts/release/tests/test_workflow_contract.py`, `WorkflowContractTest.test_mobile_release_kit_ios_signing_mapping_is_release_target_only`: the focused test failed because the parsed `Release` settings belonged to the UI-test target and therefore lacked the new Mobile Release Kit mappings. | A dictionary keyed only by `Debug`/`Release` accepted every target containing `PRODUCT_BUNDLE_IDENTIFIER`, so later UI-test configurations overwrote the application configurations. The test now selects exactly two blocks whose exact `PRODUCT_NAME` is `$(APP_NAME)` before building the Debug/Release dictionary. | Pre-existing Mobile Release Kit worktree defect; focused failure reproduced, root cause fixed in `fffd2d6`, reviewed, and integrated into `main`; CLOSED. |
 
 The original focused failure was reproduced before the fix. The correction was
 then reviewed independently and exercised on the isolated feature branch: the
@@ -252,8 +252,7 @@ focused test passed, all 130 release-system tests passed, Xcode Debug and
 Release effective settings matched their intended target-scoped identities,
 and Android configuration failed closed when shared signing was required but
 missing. The feature remains non-publishing and both Store identities remain
-explicitly blocked. The primary checkout was not altered; integration still
-requires preserving or deliberately adopting its matching user-owned changes.
+explicitly blocked.
 
 The executable feature-branch head
 `50f0aabd22335306fc43d48820a9a6cf84a98ff8` (tree
@@ -268,10 +267,21 @@ registry passed, distinguishing the host-process collision from a source or
 test failure. Every Gradle batch was followed by daemon shutdown and removal
 of generated `build/` directories.
 
+The branch was then fast-forwarded into local `main` without overwriting the
+pre-existing untracked `AGENTS.md`, `design/`, or `project-code-audit/` paths.
+The guard stash was compared byte-for-byte before removal: the four tracked
+configuration files and both formerly untracked Mobile Release Kit files
+matched the integrated tree, while the workflow test differed only by the
+reviewed parser correction. The older user stash was preserved unchanged.
+Post-integration commit `72a597206a34576c7b0704bdc9c0b46ab753015a`
+passed `productionCheck` with strict dependency verification (903 tasks),
+including all 130 release-system tests and all 628 reviewed inventory rows.
+Cleanup removed every generated `build/` directory and stopped all Gradle
+daemons. The temporary worktree, integration stash, and issue branch were
+removed only after that preservation check.
+
 **Final verdict: NOT READY.** The blockers are open issue `#230` (Store
 identity/credentials/infrastructure), open issue `#6` (real multi-device LAN
-evidence), integration of the isolated Mobile Release Kit branch without
-overwriting the matching primary-checkout user work, and the remaining
-physical-device, signed-artifact, Store, accessibility, and owner/legal gates
-above. No mock, simulator, unsigned build, or source inspection is represented
-as satisfying those external requirements.
+evidence), and the remaining physical-device, signed-artifact, Store,
+accessibility, and owner/legal gates above. No mock, simulator, unsigned build,
+or source inspection is represented as satisfying those external requirements.
