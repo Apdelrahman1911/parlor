@@ -2,6 +2,7 @@ package com.parlor.designsystem.components
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.add
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.systemBars
@@ -12,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 
 /**
- * Insets screen content by the larger of its visual spacing and the device's
+ * Insets screen content by its visual spacing in addition to the device's
  * system-bar/cutout safe area. Applying this after a scroll modifier keeps the
  * viewport edge to edge while making the inset part of the scrollable content.
  */
@@ -36,13 +37,23 @@ private fun parlorSafeContentInsets(
     horizontal: Dp,
     top: Dp,
     bottom: Dp,
-): WindowInsets = WindowInsets.systemBars
-    .union(WindowInsets.displayCutout)
-    .union(
-        WindowInsets(
-            left = horizontal,
-            top = top,
-            right = horizontal,
-            bottom = bottom,
-        ),
-    )
+): WindowInsets = addVisualSpacing(
+    safeArea = WindowInsets.systemBars.union(WindowInsets.displayCutout),
+    horizontal = horizontal,
+    top = top,
+    bottom = bottom,
+)
+
+internal fun addVisualSpacing(
+    safeArea: WindowInsets,
+    horizontal: Dp,
+    top: Dp,
+    bottom: Dp,
+): WindowInsets = safeArea.add(
+    WindowInsets(
+        left = horizontal,
+        top = top,
+        right = horizontal,
+        bottom = bottom,
+    ),
+)
