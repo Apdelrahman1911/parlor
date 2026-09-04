@@ -16,7 +16,7 @@ final class IOSAppLaunchUITests: XCTestCase {
             "The Swift host should launch and remain in the foreground",
         )
         XCTAssertTrue(
-            app.staticTexts["PARLOR"].waitForExistence(timeout: 30),
+            app.staticTexts["parlor-home-brand"].waitForExistence(timeout: 30),
             "The Kotlin Compose root should render the home screen",
         )
         XCTAssertFalse(

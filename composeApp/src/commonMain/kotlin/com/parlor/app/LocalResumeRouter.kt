@@ -53,39 +53,39 @@ internal class LocalResumeCoordinator(
 
     fun request(
         sessionId: SessionId,
-        currentScreen: () -> AppScreen,
-        navigate: (AppScreen) -> Unit,
+        currentRoute: () -> AppRoute,
+        navigate: (LocalResumeDestination) -> Unit,
     ) {
-        val origin = currentScreen()
-        if (origin != AppScreen.Home && origin != AppScreen.LocalResumeFailure(sessionId)) return
+        val origin = currentRoute()
+        if (origin != AppRoute.Home && origin != AppRoute.LocalResumeFailure(sessionId)) return
 
         launchOperation(replaceActive = true) { requestGeneration ->
             val result = resolveLocalResumeDestination(store, router, sessionId)
-            if (gate.isCurrent(requestGeneration) && currentScreen() == origin) {
-                navigate(localResumeResultScreen(sessionId, result))
+            if (gate.isCurrent(requestGeneration) && currentRoute() == origin) {
+                navigate(localResumeResultDestination(sessionId, result))
             }
         }
     }
 
     fun discard(
         sessionId: SessionId,
-        currentScreen: () -> AppScreen,
+        currentRoute: () -> AppRoute,
         onDiscarded: () -> Unit,
         onFailure: () -> Unit,
     ) {
-        val origin = AppScreen.LocalResumeFailure(sessionId)
-        if (currentScreen() != origin || activeJob != null) return
+        val origin = AppRoute.LocalResumeFailure(sessionId)
+        if (currentRoute() != origin || activeJob != null) return
 
         launchOperation(replaceActive = false) { requestGeneration ->
             when (store.delete(sessionId)) {
                 is Result.Success -> if (
-                    gate.isCurrent(requestGeneration) && currentScreen() == origin
+                    gate.isCurrent(requestGeneration) && currentRoute() == origin
                 ) {
                     onDiscarded()
                 }
 
                 is Result.Failure -> if (
-                    gate.isCurrent(requestGeneration) && currentScreen() == origin
+                    gate.isCurrent(requestGeneration) && currentRoute() == origin
                 ) {
                     onFailure()
                 }
@@ -147,11 +147,17 @@ internal suspend fun resolveLocalResumeDestination(
     }
 }
 
+/** Result consumed by the central navigator after an authenticated snapshot lookup. */
+internal sealed interface LocalResumeDestination {
+    data class Game(val launch: GameShellLaunch.ResumeLocal) : LocalResumeDestination
+    data class Recovery(val sessionId: SessionId) : LocalResumeDestination
+}
+
 /** Keeps an unreadable save addressable so the shell can offer explicit recovery. */
-internal fun localResumeResultScreen(
+internal fun localResumeResultDestination(
     sessionId: SessionId,
     result: Result<GameShellLaunch.ResumeLocal, DataError>,
-): AppScreen = when (result) {
-    is Result.Success -> AppScreen.Game(result.data)
-    is Result.Failure -> AppScreen.LocalResumeFailure(sessionId)
+): LocalResumeDestination = when (result) {
+    is Result.Success -> LocalResumeDestination.Game(result.data)
+    is Result.Failure -> LocalResumeDestination.Recovery(sessionId)
 }

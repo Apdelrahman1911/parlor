@@ -8,9 +8,12 @@ object RoomInputPolicy {
 
     /** Normalizes keyboard input without accepting ambiguous or non-ASCII code points. */
     fun normalizeRoomCode(input: String): String = input
-        .uppercase()
+        .asSequence()
+        .filter { it in 'a'..'z' || it in 'A'..'Z' || it in '0'..'9' }
+        .map(Char::uppercaseChar)
         .filter { it in ROOM_CODE_ALPHABET }
         .take(ROOM_CODE_LENGTH)
+        .joinToString(separator = "")
 
     fun isValidRoomCode(code: String): Boolean =
         code.length == ROOM_CODE_LENGTH && code.all { it in ROOM_CODE_ALPHABET }

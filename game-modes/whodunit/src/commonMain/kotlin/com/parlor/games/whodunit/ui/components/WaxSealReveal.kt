@@ -44,7 +44,7 @@ import org.jetbrains.compose.resources.stringResource
  * The press-and-hold reveal gate, editorial direction.
  *
  * Anatomy is intentionally minimal:
- *  - A coral circle that gently scales up while pressed.
+ *  - An accent-colored circle that gently scales up while pressed.
  *  - A hairline progress ring around it that fills clockwise from 12
  *    o'clock as the hold completes.
  *  - A label below.
@@ -189,7 +189,7 @@ fun WaxSealReveal(
                 }
             }
 
-            // Coral dot in the centre — scales on press, pops on complete.
+            // Accent dot in the centre — scales on press, pops on complete.
             Box(
                 modifier = Modifier
                     .size(dotDiameter)

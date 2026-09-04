@@ -88,6 +88,10 @@ class ProtocolValidationTest {
         )
         assertEquals(ProtocolValidation.Valid, valid.validateFor(session))
         assertEquals(
+            ProtocolValidation.InvalidSequence,
+            valid.copy(header = valid.header.copy(sequence = 1L)).validateFor(session),
+        )
+        assertEquals(
             ProtocolValidation.CommandPayloadTooLarge,
             valid.copy(payload = ByteArray(MAX_COMMAND_PAYLOAD_BYTES + 1)).validateFor(session),
         )
@@ -121,6 +125,10 @@ class ProtocolValidationTest {
         assertEquals(ProtocolValidation.Valid, snapshot.validateFor(session))
         assertEquals(
             ProtocolValidation.InvalidSequence,
+            snapshot.copy(header = snapshot.header.copy(sequence = 0L)).validateFor(session),
+        )
+        assertEquals(
+            ProtocolValidation.InvalidSequence,
             snapshot.copy(nextExpectedClientSequence = 0L).validateFor(session),
         )
         assertEquals(
@@ -140,8 +148,37 @@ class ProtocolValidationTest {
 
         assertEquals(ProtocolValidation.Valid, request.validateFor(session))
         assertEquals(
+            ProtocolValidation.InvalidSequence,
+            request.copy(header = request.header.copy(sequence = 1L)).validateFor(session),
+        )
+        assertEquals(
             ProtocolValidation.InvalidRevision,
             request.copy(lastAppliedRevision = -2L).validateFor(session),
+        )
+    }
+
+    @Test
+    fun `peer control messages require the unsequenced zero header domain`() {
+        val heartbeat = PeerMessage.SessionHeartbeat(
+            header = header(),
+            actor = PlayerId("peer"),
+            lastAppliedRevision = 0L,
+        )
+        val outcome = PeerMessage.CommandOutcomeRequest(
+            header = header(),
+            actor = PlayerId("peer"),
+            commandId = MESSAGE_ID,
+        )
+
+        assertEquals(ProtocolValidation.Valid, heartbeat.validateFor(session))
+        assertEquals(ProtocolValidation.Valid, outcome.validateFor(session))
+        assertEquals(
+            ProtocolValidation.InvalidSequence,
+            heartbeat.copy(header = heartbeat.header.copy(sequence = 1L)).validateFor(session),
+        )
+        assertEquals(
+            ProtocolValidation.InvalidSequence,
+            outcome.copy(header = outcome.header.copy(sequence = 1L)).validateFor(session),
         )
     }
 
@@ -151,14 +188,36 @@ class ProtocolValidationTest {
             ProtocolValidation.WrongConnectionEpoch,
             header().copy(connectionEpoch = 2L).validateFor(session),
         )
+        val commandResult = HostMessage.CommandResult(
+            header = header(sequence = 1),
+            commandId = MESSAGE_ID,
+            status = CommandStatus.Applied,
+            authoritativeRevision = 0L,
+        )
+        val heartbeat = HostMessage.Heartbeat(
+            header = header(sequence = 2),
+            authoritativeRevision = 0L,
+        )
+        val ended = HostMessage.SessionEnded(
+            header = header(sequence = 3),
+            reason = SessionEndReason.HostLeft,
+            finalRevision = 0L,
+        )
+        listOf(commandResult, heartbeat, ended).forEach { message ->
+            val validation = when (message) {
+                is HostMessage.CommandResult ->
+                    message.copy(header = message.header.copy(sequence = 0L)).validateFor(session)
+                is HostMessage.Heartbeat ->
+                    message.copy(header = message.header.copy(sequence = 0L)).validateFor(session)
+                is HostMessage.SessionEnded ->
+                    message.copy(header = message.header.copy(sequence = 0L)).validateFor(session)
+                else -> error("Unexpected host message")
+            }
+            assertEquals(ProtocolValidation.InvalidSequence, validation)
+        }
         assertEquals(
             ProtocolValidation.InvalidRevision,
-            HostMessage.CommandResult(
-                header = header(sequence = 1),
-                commandId = MESSAGE_ID,
-                status = CommandStatus.Applied,
-                authoritativeRevision = -1,
-            ).validateFor(session),
+            commandResult.copy(authoritativeRevision = -1L).validateFor(session),
         )
         assertEquals(
             ProtocolValidation.InvalidRevision,

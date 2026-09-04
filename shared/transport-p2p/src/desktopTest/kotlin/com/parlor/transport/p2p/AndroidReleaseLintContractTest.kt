@@ -52,17 +52,19 @@ class AndroidReleaseLintContractTest {
         assertContains(appBuild, "reports/lint-results-release.xml")
         assertContains(appBuild, "config/android-lint-accepted-warnings.txt")
         assertContains(appBuild, "Newer version of lint available: ")
+        assertContains(appBuild, "id in setOf(\"GradleDependency\", \"NewerVersionAvailable\")")
+        assertContains(appBuild, "\"DependencyUpdate\"")
         assertContains(appBuild, "actual == expected")
         val accepted = inventory.lineSequence()
             .map(String::trim)
             .filter { line -> line.isNotEmpty() && !line.startsWith('#') }
             .toList()
-        assertEquals(30, accepted.size)
+        assertEquals(32, accepted.size)
         assertEquals(
             mapOf(
                 "AndroidGradlePluginVersion" to 4,
-                "GradleDependency" to 2,
-                "NewerVersionAvailable" to 23,
+                "DependencyUpdate" to 26,
+                "GradleDependency" to 1,
                 "OldTargetApi" to 1,
             ),
             accepted.groupingBy { line -> line.substringBefore('|') }.eachCount(),
@@ -78,12 +80,18 @@ class AndroidReleaseLintContractTest {
                 )
             },
         )
+        assertFalse(
+            accepted.any { line ->
+                line.startsWith("GradleDependency|gradle/libs.versions.toml|") ||
+                    line.startsWith("NewerVersionAvailable|gradle/libs.versions.toml|")
+            },
+        )
         assertContains(workflow, "productionCheck")
         assertContains(workflow, "lint-results-*")
         assertContains(catalog, "androidx-activity-compose")
         assertContains(appBuild, "implementation(libs.androidx.activity.compose)")
         assertContains(triage, "reported 59 warnings")
-        assertContains(triage, "contains 29")
+        assertContains(triage, "contains 32")
     }
 
     @Test
@@ -164,10 +172,19 @@ class AndroidReleaseLintContractTest {
 
     @Test
     fun compact_interactive_affordances_enforce_accessible_semantics_and_touch_targets() {
+        val iconButton = read(
+            "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/" +
+                "ParlorIconButton.kt",
+        )
+        assertContains(iconButton, ".size(ParlorTheme.spacing.xxl)")
+        assertContains(iconButton, "contentDescription: String")
+        assertContains(iconButton, "contentDescription.isNotBlank()")
+        assertContains(iconButton, "role = Role.Button")
+
         val header = read(
             "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ScreenHeader.kt",
         )
-        assertContains(header, ".size(ParlorTheme.spacing.xxl)")
+        assertContains(header, "ParlorIconButton(")
         assertContains(header, "Modifier.semantics { heading() }")
 
         val tabs = read(
@@ -178,8 +195,11 @@ class AndroidReleaseLintContractTest {
         assertContains(tabs, "selected = selected")
         assertContains(tabs, "role = Role.Tab")
 
-        val home = read("composeApp/src/commonMain/kotlin/com/parlor/app/shell/home/HomeScreen.kt")
-        assertContains(home, ".heightIn(min = ParlorTheme.spacing.xxl)")
+        val navigationHost = read(
+            "composeApp/src/commonMain/kotlin/com/parlor/app/AppNavigationHost.kt",
+        )
+        assertContains(navigationHost, "icon = ParlorIcons.Settings")
+        assertContains(navigationHost, "icon = ParlorIcons.FolderOpen")
 
         val privacy = read(
             "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/screens/safety/PrivacyConcernOverlay.kt",

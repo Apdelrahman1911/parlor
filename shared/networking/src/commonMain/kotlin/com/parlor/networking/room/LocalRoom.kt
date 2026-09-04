@@ -94,6 +94,25 @@ interface LocalRoom {
     suspend fun sendToHost(message: PeerMessage): Result<Unit, NetError>
 
     /**
+     * Commits a peer-side terminal frame after the session coordinator has
+     * validated its complete protocol envelope and authoritative revision.
+     *
+     * Resumable transports use this as an ownership-checked transaction: the
+     * authenticated physical frame is staged while decoding, then this call
+     * permanently revokes the matching logical membership before gameplay is
+     * told that the session ended. [SessionEndCommitStatus.NotOwned] means the
+     * frame came from a replaced/closed physical session and must be ignored.
+     * A failure is retryable and must not be presented as an accepted end.
+     *
+     * Non-resumable transports have no capability to revoke and therefore
+     * commit immediately through this compatibility default.
+     */
+    suspend fun commitValidatedSessionEnd(
+        message: HostMessage.SessionEnded,
+    ): Result<SessionEndCommitStatus, NetError> =
+        Result.Success(SessionEndCommitStatus.Committed)
+
+    /**
      * Closes this physical room after admission when session start cannot be
      * completed, while retaining any transport-managed resumable membership.
      *
@@ -160,6 +179,11 @@ interface LocalRoom {
 
     /** Best-effort physical cleanup for lifecycle/disposal ownership. */
     suspend fun leave()
+}
+
+enum class SessionEndCommitStatus {
+    Committed,
+    NotOwned,
 }
 
 /** Shared empty flow for transports that don't emit peer events. */

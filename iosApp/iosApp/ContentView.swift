@@ -14,7 +14,7 @@ struct ContentView: View {
     var body: some View {
         ZStack {
             ComposeView()
-                .ignoresSafeArea()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .accessibilityHidden(scenePhase != .active)
 
             // iOS snapshots the scene for the app switcher after it becomes
@@ -22,10 +22,11 @@ struct ContentView: View {
             // but do not suspend the LAN session until true background.
             if scenePhase != .active {
                 Color.black
-                    .ignoresSafeArea()
                     .accessibilityHidden(true)
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .ignoresSafeArea(.container, edges: .all)
         .onAppear {
             reportScenePhase(scenePhase)
         }

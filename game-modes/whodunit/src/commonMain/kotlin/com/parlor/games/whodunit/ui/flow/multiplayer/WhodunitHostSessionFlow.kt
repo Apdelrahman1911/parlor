@@ -4,14 +4,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -41,10 +38,13 @@ import com.parlor.games.whodunit.resources.host_approve
 import com.parlor.games.whodunit.resources.host_approve_description
 import com.parlor.games.whodunit.resources.host_decline
 import com.parlor.games.whodunit.resources.host_decline_description
+import com.parlor.games.whodunit.resources.host_context_authority
+import com.parlor.games.whodunit.resources.host_context_local
 import com.parlor.games.whodunit.resources.host_join_request_format
 import com.parlor.games.whodunit.resources.host_members_empty
 import com.parlor.games.whodunit.resources.host_members_eyebrow
 import com.parlor.games.whodunit.resources.host_pending_eyebrow
+import com.parlor.games.whodunit.resources.host_player_bullet_format
 import com.parlor.games.whodunit.resources.host_room_code_eyebrow
 import com.parlor.games.whodunit.resources.host_opening_room
 import com.parlor.games.whodunit.resources.host_title
@@ -69,18 +69,21 @@ import com.parlor.core.result.DataError
 import com.parlor.core.result.Result
 import com.parlor.designsystem.backdrop.HeroBackdrop
 import com.parlor.designsystem.components.CandleFlame
+import com.parlor.designsystem.components.ContextRibbon
 import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.LocalParlorToastState
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorButtonVariant
 import com.parlor.designsystem.components.ParlorCard
+import com.parlor.designsystem.components.ParlorContextTone
 import com.parlor.designsystem.components.ParlorToastSeverity
-import com.parlor.designsystem.components.SessionExitAffordance
 import com.parlor.designsystem.components.SessionExitBackAction
 import com.parlor.designsystem.components.SessionExitConfirmation
 import com.parlor.designsystem.components.SessionExitKind
-import com.parlor.designsystem.components.StickyActionBar
+import com.parlor.designsystem.components.SessionExitOverlay
+import com.parlor.designsystem.components.StickyActionLayout
 import com.parlor.designsystem.components.sessionExitBackAction
+import com.parlor.designsystem.components.parlorSafeContentPadding
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.engine.state.Player
 import com.parlor.games.whodunit.content.WhodunitCase
@@ -253,7 +256,11 @@ fun WhodunitHostSessionFlow(
             modifier = modifier,
         )
     } else {
-        Box(modifier = modifier.fillMaxSize()) {
+        SessionExitOverlay(
+            visible = gameIsActive,
+            onClick = { leaveConfirmationOpen = true },
+            modifier = modifier,
+        ) {
             when {
                 renderedHostError != null -> HostErrorState(
                     error = netErrorMessage(renderedHostError),
@@ -350,15 +357,6 @@ fun WhodunitHostSessionFlow(
                     )
                 }
             }
-            if (gameIsActive) {
-                SessionExitAffordance(
-                    onClick = { leaveConfirmationOpen = true },
-                    modifier = Modifier
-                        .align(Alignment.TopStart)
-                        .windowInsetsPadding(WindowInsets.statusBars)
-                        .padding(ParlorTheme.spacing.m),
-                )
-            }
         }
     }
 }
@@ -382,184 +380,192 @@ private fun HostLobbyContent(
     val toastState = LocalParlorToastState.current
     val admissionFailedText = stringResource(Res.string.host_admission_failed)
     var admissionsInFlight by remember(room) { mutableStateOf(emptySet<PlayerId>()) }
+    val playerCount = connectedMembers.size + 1
+    val canStart = playerCount in supportedPlayerCounts && pendingAdmissions.isEmpty()
+    val startLabel = when {
+        pendingAdmissions.isNotEmpty() ->
+            stringResource(Res.string.host_start_pending)
+        playerCount < supportedPlayerCounts.first ->
+            stringResource(
+                Res.string.host_start_need_more_format,
+                supportedPlayerCounts.first.toString(),
+            )
+        playerCount > supportedPlayerCounts.last ->
+            stringResource(
+                Res.string.host_start_too_many_format,
+                supportedPlayerCounts.last.toString(),
+            )
+        else ->
+            stringResource(Res.string.host_start_with_players_format, playerCount)
+    }
 
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
-        Box(modifier = Modifier.fillMaxSize()) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(
-                    start = ParlorTheme.spacing.l,
-                    end = ParlorTheme.spacing.l,
-                    top = ParlorTheme.spacing.l,
-                    bottom = ParlorTheme.spacing.xxxl + ParlorTheme.spacing.xxl,
-                ),
-            verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l),
-        ) {
-            EyebrowLabel(text = stringResource(Res.string.host_title))
+        StickyActionLayout(
+            modifier = Modifier.fillMaxSize(),
+            content = {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                        .parlorSafeContentPadding(
+                            horizontal = ParlorTheme.spacing.l,
+                            top = ParlorTheme.spacing.l,
+                            bottom = ParlorTheme.spacing.l,
+                        ),
+                    verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l),
+                ) {
+                    ContextRibbon(
+                        label = stringResource(Res.string.host_context_local),
+                        detail = stringResource(Res.string.host_context_authority),
+                        tone = ParlorContextTone.Host,
+                    )
+                    EyebrowLabel(text = stringResource(Res.string.host_title))
 
-            // Hero room-code card — the screen's signature moment. The
-            // indigo-tinted hero surface makes the code unmistakable when the
-            // host turns the phone to a friend.
-            ParlorCard(
-                modifier = Modifier.fillMaxWidth(),
-                cornerRadius = ParlorTheme.radii.elevated,
-                contentPadding = ParlorTheme.spacing.l,
-                hero = true,
-            ) {
-                Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s)) {
-                    EyebrowLabel(
-                        text = stringResource(Res.string.host_room_code_eyebrow),
-                        accent = false,
-                    )
-                    Text(
-                        text = info.code,
-                        style = ParlorTheme.typography.displayHero,
-                        color = ParlorTheme.colors.accentEmber,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth(),
-                    )
-                    Text(
-                        text = stringResource(Res.string.host_hosting_as_format, hostName),
-                        style = ParlorTheme.typography.bodyMedium,
-                        color = ParlorTheme.colors.textTertiary,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth(),
-                    )
-                }
-            }
-
-            EyebrowLabel(text = stringResource(Res.string.host_members_eyebrow), accent = false)
-            if (connectedMembers.isEmpty()) {
-                Text(
-                    text = stringResource(Res.string.host_members_empty),
-                    style = ParlorTheme.typography.bodyMedium,
-                    color = ParlorTheme.colors.textTertiary,
-                )
-            } else {
-                connectedMembers.forEach { member ->
-                    Text(
-                        text = "· ${member.displayName}",
-                        style = ParlorTheme.typography.bodyLarge,
-                        color = ParlorTheme.colors.textPrimary,
-                    )
-                }
-            }
-
-            if (pendingAdmissions.isNotEmpty()) {
-                EyebrowLabel(
-                    text = stringResource(Res.string.host_pending_eyebrow),
-                    accent = false,
-                )
-                pendingAdmissions.forEach { admission ->
+                    // Hero room-code card — the screen's signature moment. The
+                    // high-contrast hero surface makes the code unmistakable when the
+                    // host turns the phone to a friend.
                     ParlorCard(
                         modifier = Modifier.fillMaxWidth(),
-                        contentPadding = ParlorTheme.spacing.m,
+                        cornerRadius = ParlorTheme.radii.elevated,
+                        contentPadding = ParlorTheme.spacing.l,
+                        hero = true,
                     ) {
-                        Column(
-                            verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s),
-                        ) {
+                        Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s)) {
+                            EyebrowLabel(
+                                text = stringResource(Res.string.host_room_code_eyebrow),
+                                accent = false,
+                            )
+                            Text(
+                                text = info.code,
+                                style = ParlorTheme.typography.displayHero,
+                                color = ParlorTheme.colors.accentEmber,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.fillMaxWidth(),
+                            )
+                            Text(
+                                text = stringResource(Res.string.host_hosting_as_format, hostName),
+                                style = ParlorTheme.typography.bodyMedium,
+                                color = ParlorTheme.colors.textTertiary,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.fillMaxWidth(),
+                            )
+                        }
+                    }
+
+                    EyebrowLabel(text = stringResource(Res.string.host_members_eyebrow), accent = false)
+                    if (connectedMembers.isEmpty()) {
+                        Text(
+                            text = stringResource(Res.string.host_members_empty),
+                            style = ParlorTheme.typography.bodyMedium,
+                            color = ParlorTheme.colors.textTertiary,
+                        )
+                    } else {
+                        connectedMembers.forEach { member ->
                             Text(
                                 text = stringResource(
-                                    Res.string.host_join_request_format,
-                                    admission.displayName,
+                                    Res.string.host_player_bullet_format,
+                                    member.displayName,
                                 ),
                                 style = ParlorTheme.typography.bodyLarge,
                                 color = ParlorTheme.colors.textPrimary,
                             )
-                            ParlorButton(
-                                label = stringResource(Res.string.host_approve),
-                                contentDescription = stringResource(
-                                    Res.string.host_approve_description,
-                                    admission.displayName,
-                                ),
-                                onClick = {
-                                    if (admission.playerId !in admissionsInFlight) {
-                                        admissionsInFlight += admission.playerId
-                                        scope.launch {
-                                            val approved = room.approveAdmission(admission.playerId)
-                                            if (approved is Result.Failure) {
-                                                toastState.show(
-                                                    admissionFailedText,
-                                                    ParlorToastSeverity.Danger,
-                                                )
-                                            }
-                                            admissionsInFlight -= admission.playerId
-                                        }
-                                    }
-                                },
-                                modifier = Modifier.fillMaxWidth(),
-                                enabled = admission.playerId !in admissionsInFlight,
-                            )
-                            ParlorButton(
-                                label = stringResource(Res.string.host_decline),
-                                contentDescription = stringResource(
-                                    Res.string.host_decline_description,
-                                    admission.displayName,
-                                ),
-                                onClick = {
-                                    if (admission.playerId !in admissionsInFlight) {
-                                        admissionsInFlight += admission.playerId
-                                        scope.launch {
-                                            val rejected = room.rejectAdmission(admission.playerId)
-                                            if (rejected is Result.Failure) {
-                                                toastState.show(
-                                                    admissionFailedText,
-                                                    ParlorToastSeverity.Danger,
-                                                )
-                                            }
-                                            admissionsInFlight -= admission.playerId
-                                        }
-                                    }
-                                },
-                                modifier = Modifier.fillMaxWidth(),
-                                variant = ParlorButtonVariant.Secondary,
-                                enabled = admission.playerId !in admissionsInFlight,
-                            )
                         }
                     }
+
+                    if (pendingAdmissions.isNotEmpty()) {
+                        EyebrowLabel(
+                            text = stringResource(Res.string.host_pending_eyebrow),
+                            accent = false,
+                        )
+                        pendingAdmissions.forEach { admission ->
+                            ParlorCard(
+                                modifier = Modifier.fillMaxWidth(),
+                                contentPadding = ParlorTheme.spacing.m,
+                            ) {
+                                Column(
+                                    verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s),
+                                ) {
+                                    Text(
+                                        text = stringResource(
+                                            Res.string.host_join_request_format,
+                                            admission.displayName,
+                                        ),
+                                        style = ParlorTheme.typography.bodyLarge,
+                                        color = ParlorTheme.colors.textPrimary,
+                                    )
+                                    ParlorButton(
+                                        label = stringResource(Res.string.host_approve),
+                                        contentDescription = stringResource(
+                                            Res.string.host_approve_description,
+                                            admission.displayName,
+                                        ),
+                                        onClick = {
+                                            if (admission.playerId !in admissionsInFlight) {
+                                                admissionsInFlight += admission.playerId
+                                                scope.launch {
+                                                    val approved = room.approveAdmission(admission.playerId)
+                                                    if (approved is Result.Failure) {
+                                                        toastState.show(
+                                                            admissionFailedText,
+                                                            ParlorToastSeverity.Danger,
+                                                        )
+                                                    }
+                                                    admissionsInFlight -= admission.playerId
+                                                }
+                                            }
+                                        },
+                                        modifier = Modifier.fillMaxWidth(),
+                                        enabled = admission.playerId !in admissionsInFlight,
+                                    )
+                                    ParlorButton(
+                                        label = stringResource(Res.string.host_decline),
+                                        contentDescription = stringResource(
+                                            Res.string.host_decline_description,
+                                            admission.displayName,
+                                        ),
+                                        onClick = {
+                                            if (admission.playerId !in admissionsInFlight) {
+                                                admissionsInFlight += admission.playerId
+                                                scope.launch {
+                                                    val rejected = room.rejectAdmission(admission.playerId)
+                                                    if (rejected is Result.Failure) {
+                                                        toastState.show(
+                                                            admissionFailedText,
+                                                            ParlorToastSeverity.Danger,
+                                                        )
+                                                    }
+                                                    admissionsInFlight -= admission.playerId
+                                                }
+                                            }
+                                        },
+                                        modifier = Modifier.fillMaxWidth(),
+                                        variant = ParlorButtonVariant.Secondary,
+                                        enabled = admission.playerId !in admissionsInFlight,
+                                    )
+                                }
+                            }
+                        }
+                    }
+
                 }
-            }
-
-        }
-
-        val playerCount = connectedMembers.size + 1
-        val canStart =
-            playerCount in supportedPlayerCounts && pendingAdmissions.isEmpty()
-        val startLabel = when {
-            pendingAdmissions.isNotEmpty() ->
-                stringResource(Res.string.host_start_pending)
-            playerCount < supportedPlayerCounts.first ->
-                stringResource(
-                    Res.string.host_start_need_more_format,
-                    supportedPlayerCounts.first.toString(),
+            },
+            actions = {
+                ParlorButton(
+                    label = startLabel,
+                    contentDescription = stringResource(Res.string.host_start_description),
+                    onClick = onStart,
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = canStart && !startInFlight,
                 )
-            playerCount > supportedPlayerCounts.last ->
-                stringResource(
-                    Res.string.host_start_too_many_format,
-                    supportedPlayerCounts.last.toString(),
+                ParlorButton(
+                    label = stringResource(Res.string.host_cancel),
+                    contentDescription = stringResource(Res.string.host_cancel_description),
+                    onClick = onLeave,
+                    modifier = Modifier.fillMaxWidth(),
+                    variant = ParlorButtonVariant.Secondary,
                 )
-            else ->
-                stringResource(Res.string.host_start_with_players_format, playerCount)
-        }
-        StickyActionBar(modifier = Modifier.align(Alignment.BottomCenter)) {
-            ParlorButton(
-                label = startLabel,
-                contentDescription = stringResource(Res.string.host_start_description),
-                onClick = onStart,
-                modifier = Modifier.fillMaxWidth(),
-                enabled = canStart && !startInFlight,
-            )
-            ParlorButton(
-                label = stringResource(Res.string.host_cancel),
-                contentDescription = stringResource(Res.string.host_cancel_description),
-                onClick = onLeave,
-                modifier = Modifier.fillMaxWidth(),
-                variant = ParlorButtonVariant.Secondary,
-            )
-        }
-        }
+            },
+        )
     }
 }
 
@@ -572,7 +578,9 @@ private fun HostLoadingState(
 ) {
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
         Column(
-            modifier = Modifier.fillMaxSize().padding(ParlorTheme.spacing.xl),
+            modifier = Modifier
+                .fillMaxSize()
+                .parlorSafeContentPadding(ParlorTheme.spacing.xl),
             verticalArrangement = Arrangement.spacedBy(
                 ParlorTheme.spacing.l,
                 Alignment.CenterVertically,
@@ -614,8 +622,8 @@ private fun HostErrorState(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(ParlorTheme.spacing.xl)
-                .verticalScroll(rememberScrollState()),
+                .verticalScroll(rememberScrollState())
+                .parlorSafeContentPadding(ParlorTheme.spacing.xl),
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l, Alignment.CenterVertically),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {

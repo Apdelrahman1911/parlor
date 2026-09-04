@@ -98,11 +98,17 @@ class CaseSummaryValidator(
                     "must be 1..$MAX_TITLE_LENGTH characters",
                 )
             }
+            if (!AuthoredTextPolicy.isSafeForDisplay(summary.title)) {
+                return ValidationError.MalformedField("title", "contains unsafe characters")
+            }
             if (summary.subtitle?.length ?: 0 > MAX_SUBTITLE_LENGTH) {
                 return ValidationError.MalformedField(
                     "subtitle",
                     "must be <= $MAX_SUBTITLE_LENGTH characters",
                 )
+            }
+            if (summary.subtitle?.let(AuthoredTextPolicy::isSafeForDisplay) == false) {
+                return ValidationError.MalformedField("subtitle", "contains unsafe characters")
             }
             if (
                 summary.language.length > MAX_LANGUAGE_LENGTH ||
@@ -112,6 +118,9 @@ class CaseSummaryValidator(
             }
             if (summary.theme.isBlank() || summary.theme.length > MAX_THEME_LENGTH) {
                 return ValidationError.MalformedField("theme", "must be 1..64 characters")
+            }
+            if (!AuthoredTextPolicy.isSafeForDisplay(summary.theme)) {
+                return ValidationError.MalformedField("theme", "contains unsafe characters")
             }
             if (
                 summary.supportedPlayerCounts.min < MIN_PLAYER_COUNT ||

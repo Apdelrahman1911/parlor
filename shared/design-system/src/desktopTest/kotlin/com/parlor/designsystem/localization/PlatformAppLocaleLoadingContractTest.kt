@@ -6,11 +6,12 @@ import kotlin.test.assertTrue
 
 class PlatformAppLocaleLoadingContractTest {
     @Test
-    fun every_platform_renders_the_loading_slot_before_its_locale_effect_applies() {
+    fun every_platform_loads_initially_without_keying_applied_state_to_language_changes() {
         platformActuals.forEach { relativePath ->
             val source = repositoryRoot().resolve(relativePath).readText().replace("\r\n", "\n")
 
             assertTrue("loading: @Composable () -> Unit" in source, relativePath)
+            assertTrue("var appliedLanguageTag by remember {" in source, relativePath)
             assertTrue("val activeTag = appliedLanguageTag ?: run {" in source, relativePath)
             assertTrue("loading()\n        return" in source, relativePath)
         }
@@ -24,6 +25,23 @@ class PlatformAppLocaleLoadingContractTest {
             .readText()
 
         assertTrue("Surface(modifier = Modifier.fillMaxSize()) {}" in source)
+    }
+
+    @Test
+    fun ios_provider_keeps_uikit_start_edge_in_sync_with_runtime_language() {
+        val source = repositoryRoot()
+            .resolve(
+                "shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/" +
+                    "LocalAppLocale.ios.kt",
+            )
+            .readText()
+
+        assertTrue("LocalUIViewController.current" in source)
+        assertTrue("UISemanticContentAttributeForceRightToLeft" in source)
+        assertTrue("UISemanticContentAttributeForceLeftToRight" in source)
+        assertTrue("if (view.semanticContentAttribute == semanticAttribute) return" in source)
+        assertTrue("if (view.window != null)" in source)
+        assertTrue("view.didMoveToWindow()" in source)
     }
 
     private fun repositoryRoot(): File {

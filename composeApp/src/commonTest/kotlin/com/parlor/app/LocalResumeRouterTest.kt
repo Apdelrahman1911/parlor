@@ -77,12 +77,12 @@ class LocalResumeRouterTest {
     fun unreadable_outer_snapshot_routes_to_explicit_recovery_for_that_exact_save() {
         val sessionId = SessionId("corrupt-session")
 
-        val screen = localResumeResultScreen(
+        val destination = localResumeResultDestination(
             sessionId = sessionId,
             result = Result.Failure(DataError.CorruptedData),
         )
 
-        assertEquals(AppScreen.LocalResumeFailure(sessionId), screen)
+        assertEquals(LocalResumeDestination.Recovery(sessionId), destination)
     }
 
     @Test
@@ -90,9 +90,9 @@ class LocalResumeRouterTest {
         val sessionId = SessionId("healthy-session")
         val launch = GameShellLaunch.ResumeLocal(MafiaIds.GameId, sessionId)
 
-        val screen = localResumeResultScreen(sessionId, Result.Success(launch))
+        val destination = localResumeResultDestination(sessionId, Result.Success(launch))
 
-        assertEquals(AppScreen.Game(launch), screen)
+        assertEquals(LocalResumeDestination.Game(launch), destination)
     }
 
     @Test
@@ -136,14 +136,18 @@ class LocalResumeRouterTest {
                 override suspend fun delete(sessionId: SessionId) =
                     backingStore.delete(sessionId).also { deletes++ }
             }
-            var screen: AppScreen = AppScreen.Home
+            val navigator = AppNavigator()
             val coordinator = LocalResumeCoordinator(this, store, router)
 
-            coordinator.request(sessionId, { screen }, { screen = it })
+            coordinator.request(
+                sessionId,
+                currentRoute = { navigator.currentRoute },
+                navigate = { navigator.applyLocalResumeDestination(it) },
+            )
             assertTrue(coordinator.busy.value)
             runCurrent()
 
-            assertEquals(AppScreen.LocalResumeFailure(sessionId), screen)
+            assertEquals(AppRoute.LocalResumeFailure(sessionId), navigator.currentRoute)
             assertEquals(0, deletes)
             assertFalse(coordinator.busy.value)
         }
@@ -155,17 +159,17 @@ class LocalResumeRouterTest {
             val store = InMemorySnapshotStore().also {
                 it.save(snapshot(sessionId, MafiaIds.GameId))
             }
-            var screen: AppScreen = AppScreen.LocalResumeFailure(sessionId)
+            val navigator = AppNavigator().also { it.showLocalResumeFailure(sessionId) }
             var discarded = 0
             var failures = 0
             val coordinator = LocalResumeCoordinator(this, store, router)
 
             coordinator.discard(
                 sessionId = sessionId,
-                currentScreen = { screen },
+                currentRoute = { navigator.currentRoute },
                 onDiscarded = {
                     discarded++
-                    screen = AppScreen.Home
+                    navigator.navigateHome(AppRoute.LocalResumeFailure(sessionId))
                 },
                 onFailure = { failures++ },
             )
@@ -185,21 +189,21 @@ class LocalResumeRouterTest {
                 override suspend fun delete(sessionId: SessionId) =
                     Result.Failure(DataError.IoError("test_failure"))
             }
-            val recovery = AppScreen.LocalResumeFailure(sessionId)
-            var screen: AppScreen = recovery
+            val recovery = AppRoute.LocalResumeFailure(sessionId)
+            val navigator = AppNavigator().also { it.showLocalResumeFailure(sessionId) }
             var discarded = 0
             var failures = 0
             val coordinator = LocalResumeCoordinator(this, store, router)
 
             coordinator.discard(
                 sessionId = sessionId,
-                currentScreen = { screen },
+                currentRoute = { navigator.currentRoute },
                 onDiscarded = { discarded++ },
                 onFailure = { failures++ },
             )
             runCurrent()
 
-            assertEquals(recovery, screen)
+            assertEquals(recovery, navigator.currentRoute)
             assertEquals(0, discarded)
             assertEquals(1, failures)
             assertFalse(coordinator.busy.value)
@@ -213,17 +217,21 @@ class LocalResumeRouterTest {
                 override suspend fun load(sessionId: SessionId): Result<GameSnapshot, DataError> =
                     awaitCancellation()
             }
-            var screen: AppScreen = AppScreen.Home
+            val navigator = AppNavigator()
             val coordinator = LocalResumeCoordinator(this, store, router)
 
-            coordinator.request(sessionId, { screen }, { screen = it })
+            coordinator.request(
+                sessionId,
+                currentRoute = { navigator.currentRoute },
+                navigate = { navigator.applyLocalResumeDestination(it) },
+            )
             runCurrent()
             assertTrue(coordinator.busy.value)
 
             coordinator.invalidate()
             runCurrent()
 
-            assertEquals(AppScreen.Home, screen)
+            assertEquals(AppRoute.Home, navigator.currentRoute)
             assertFalse(coordinator.busy.value)
         }
 
@@ -235,4 +243,11 @@ class LocalResumeRouterTest {
         phaseId = "test",
         payload = byteArrayOf(1),
     )
+
+    private fun AppNavigator.applyLocalResumeDestination(destination: LocalResumeDestination) {
+        when (destination) {
+            is LocalResumeDestination.Game -> openGame(destination.launch)
+            is LocalResumeDestination.Recovery -> showLocalResumeFailure(destination.sessionId)
+        }
+    }
 }

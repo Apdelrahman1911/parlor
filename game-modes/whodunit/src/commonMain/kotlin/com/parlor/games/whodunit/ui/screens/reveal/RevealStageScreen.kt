@@ -34,6 +34,7 @@ import com.parlor.designsystem.backdrop.HeroBackdrop
 import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorCard
+import com.parlor.designsystem.components.parlorSafeContentPadding
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.whodunit.domain.event.KillerWinCause
 import com.parlor.games.whodunit.domain.event.Verdict
@@ -59,7 +60,7 @@ import org.jetbrains.compose.resources.stringResource
  *
  *  1. **Verdict word** ("Yes"/"No") fades in immediately at full display
  *     size, with no decoration.
- *  2. **Accent line** — a 48dp coral horizontal bar — slides in from
+ *  2. **Accent line** — a 48dp amber horizontal bar — slides in from
  *     zero width to its full width, drawing the eye to the verdict card.
  *  3. **Verdict card** holding the killer's name fades in.
  *  4. **Narrative** fades in last so the room reads the killer's name
@@ -167,8 +168,8 @@ fun RevealStageScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(ParlorTheme.spacing.xl)
-                .verticalScroll(rememberScrollState()),
+                .verticalScroll(rememberScrollState())
+                .parlorSafeContentPadding(ParlorTheme.spacing.xl),
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -179,7 +180,7 @@ fun RevealStageScreen(
                 color = accentColor,
                 textAlign = TextAlign.Center,
             )
-            // Accent line — coral bar that draws in from zero width.
+            // Accent line — amber bar that draws in from zero width.
             Box(
                 modifier = Modifier
                     .width(ParlorTheme.spacing.xxxl * 1.5f * accentLineProgress)
@@ -248,6 +249,7 @@ fun RevealStageScreen(
                         Res.string.reveal_stage_continue_description,
                     ),
                     onClick = onAcknowledge,
+                    enabled = narrativeAccessible,
                     modifier = Modifier.fillMaxWidth(),
                 )
             } else if (waitingLabel != null) {

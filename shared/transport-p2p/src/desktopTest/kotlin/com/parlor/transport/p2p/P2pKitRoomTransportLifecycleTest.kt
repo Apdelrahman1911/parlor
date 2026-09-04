@@ -32,6 +32,7 @@ import com.parlor.networking.room.RoomInfo
 import com.parlor.networking.room.RoomLifecycleState
 import com.parlor.networking.room.RoomMember
 import com.parlor.networking.room.SendTarget
+import com.parlor.networking.room.SessionEndCommitStatus
 import com.parlor.networking.transport.LocalNetworkAccess
 import com.parlor.networking.transport.HostConfig
 import dev.p2pkit.core.AppId
@@ -62,6 +63,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -973,7 +975,12 @@ class P2pKitRoomTransportLifecycleTest {
                     ),
                 ),
             )
-            awaitCondition { session.state.value == ConnectionState.Closed }
+            // This test owns the admission-budget contract, not the separate
+            // best-effort wire-flush delay before transport close. Waiting for
+            // Closed here multiplied four real-time delays and made the full
+            // productionCheck flaky under worker contention. The rejection is
+            // the semantic boundary; close ordering has dedicated coverage.
+            awaitCondition { session.admissionRejections().isNotEmpty() }
         }
 
         attempts.take(P2pTrafficLimits.ADMISSION_PER_PEER_BURST).forEach { session ->
@@ -1747,12 +1754,203 @@ class P2pKitRoomTransportLifecycleTest {
 
         session.incomingFlow.emit(P2pMessage.Binary(codec.encode(terminal)))
         assertThat(withTimeout(2_000) { room.incoming.first() }).isEqualTo(terminal)
+        assertThat(room.commitValidatedSessionEnd(terminal))
+            .isEqualTo(Result.Success(SessionEndCommitStatus.Committed))
         session.stateFlow.value = ConnectionState.Closed
         repeat(10) { yield() }
 
         assertThat(resumeRequests).isEmpty()
         assertThat(room.sendToHost(testPeerHeartbeat()))
             .isEqualTo(Result.Failure(NetError.NotConnected))
+        room.leave()
+    }
+
+    @Test
+    fun terminal_frame_is_staged_until_the_session_layer_validates_it() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("peer-pid"))
+        val hostPeer = peer("host-pid", "Host Device")
+        val session = FakeP2pSession(hostPeer)
+        val credential = resumableCredential(generation = 1L)
+        val store = ResumableCredentialStore(testSecureStorage())
+        store.stage(credential)
+        store.commit(credential.offerId, credential.generation)
+        val room = PeerP2pRoom(
+            kit = kit,
+            session = session,
+            hostPeer = hostPeer,
+            roomCode = credential.roomCode,
+            scope = testScope,
+            codec = codec,
+            initialCredential = credential,
+            credentialStore = store,
+        )
+        val wrongSessionTerminal = testTerminalMessage().copy(
+            header = testTerminalMessage().header.copy(
+                sessionId = SessionId("different-session"),
+            ),
+        )
+
+        session.incomingFlow.emit(P2pMessage.Binary(codec.encode(wrongSessionTerminal)))
+        assertThat(withTimeout(2_000L) { room.incoming.first() })
+            .isEqualTo(wrongSessionTerminal)
+
+        // Authentication at the physical transport is not enough to revoke a
+        // logical membership. The session layer has not validated this frame.
+        assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(credential))
+        assertThat(room.sendToHost(testPeerHeartbeat())).isEqualTo(Result.Success(Unit))
+        room.leave()
+    }
+
+    @Test
+    fun failed_terminal_commit_does_not_disable_the_live_room() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("peer-pid"))
+        val hostPeer = peer("host-pid", "Host Device")
+        val session = FakeP2pSession(hostPeer)
+        val credential = resumableCredential(generation = 1L)
+        val failingStorage = FailingRemoveSecureStorage(testSecureStorage())
+        val store = ResumableCredentialStore(failingStorage)
+        store.stage(credential)
+        store.commit(credential.offerId, credential.generation)
+        val room = PeerP2pRoom(
+            kit = kit,
+            session = session,
+            hostPeer = hostPeer,
+            roomCode = credential.roomCode,
+            scope = testScope,
+            codec = codec,
+            initialCredential = credential,
+            credentialStore = store,
+        )
+        failingStorage.failRemove = true
+
+        session.incomingFlow.emit(P2pMessage.Binary(codec.encode(testTerminalMessage())))
+        assertThat(withTimeout(2_000L) { room.incoming.first() })
+            .isEqualTo(testTerminalMessage())
+
+        assertThat(room.commitValidatedSessionEnd(testTerminalMessage()))
+            .isEqualTo(Result.Failure(NetError.SecureStorageUnavailable))
+        assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(credential))
+        assertThat(room.sendToHost(testPeerHeartbeat())).isEqualTo(Result.Success(Unit))
+
+        failingStorage.failRemove = false
+        failingStorage.fatalRemove = true
+        assertFailsWith<AssertionError> {
+            room.commitValidatedSessionEnd(testTerminalMessage())
+        }
+        assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(credential))
+        assertThat(room.sendToHost(testPeerHeartbeat())).isEqualTo(Result.Success(Unit))
+
+        failingStorage.fatalRemove = false
+        failingStorage.cancelRemove = true
+        assertFailsWith<CancellationException> {
+            room.commitValidatedSessionEnd(testTerminalMessage())
+        }
+        assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(credential))
+        assertThat(room.sendToHost(testPeerHeartbeat())).isEqualTo(Result.Success(Unit))
+
+        failingStorage.cancelRemove = false
+        assertThat(room.commitValidatedSessionEnd(testTerminalMessage()))
+            .isEqualTo(Result.Success(SessionEndCommitStatus.Committed))
+        assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(null))
+        assertThat(room.sendToHost(testPeerHeartbeat()))
+            .isEqualTo(Result.Failure(NetError.NotConnected))
+        room.leave()
+    }
+
+    @Test
+    fun validated_terminal_commit_cancels_and_joins_resume_before_revocation() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("peer-pid"))
+        val hostPeer = peer("host-pid", "Host Device")
+        val session = FakeP2pSession(hostPeer)
+        val credential = resumableCredential(generation = 1L)
+        val store = ResumableCredentialStore(testSecureStorage())
+        store.stage(credential)
+        store.commit(credential.offerId, credential.generation)
+        val resumeStarted = CompletableDeferred<Unit>()
+        val resumeStopped = CompletableDeferred<Unit>()
+        val room = PeerP2pRoom(
+            kit = kit,
+            session = session,
+            hostPeer = hostPeer,
+            roomCode = credential.roomCode,
+            scope = testScope,
+            codec = codec,
+            initialCredential = credential,
+            credentialStore = store,
+            resumeConnector = {
+                resumeStarted.complete(Unit)
+                try {
+                    awaitCancellation()
+                } finally {
+                    resumeStopped.complete(Unit)
+                }
+            },
+        )
+        val terminal = testTerminalMessage()
+        session.incomingFlow.emit(P2pMessage.Binary(codec.encode(terminal)))
+        assertThat(withTimeout(2_000L) { room.incoming.first() }).isEqualTo(terminal)
+
+        session.stateFlow.value = ConnectionState.Closed
+        withTimeout(2_000L) { resumeStarted.await() }
+
+        assertThat(room.commitValidatedSessionEnd(terminal))
+            .isEqualTo(Result.Success(SessionEndCommitStatus.Committed))
+        assertThat(resumeStopped.isCompleted).isTrue()
+        assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(null))
+        room.leave()
+    }
+
+    @Test
+    fun staged_terminal_from_replaced_session_cannot_revoke_rotated_membership() = runBlocking {
+        val kit = FakeP2pKit(P2pPeerId("peer-pid"))
+        val hostPeer = peer("host-pid", "Host Device")
+        val firstSession = FakeP2pSession(hostPeer)
+        val replacementSession = FakeP2pSession(hostPeer)
+        val generationOne = resumableCredential(generation = 1L)
+        val generationTwo = resumableCredential(generation = 2L)
+        val store = ResumableCredentialStore(testSecureStorage())
+        store.stage(generationOne)
+        store.commit(generationOne.offerId, generationOne.generation)
+        val room = PeerP2pRoom(
+            kit = kit,
+            session = firstSession,
+            hostPeer = hostPeer,
+            roomCode = generationOne.roomCode,
+            scope = testScope,
+            codec = codec,
+            initialCredential = generationOne,
+            credentialStore = store,
+            resumeConnector = {
+                store.stage(generationTwo)
+                store.commit(generationTwo.offerId, generationTwo.generation)
+                Result.Success(
+                    ResumedPeerConnection(
+                        replacementSession,
+                        hostPeer,
+                        generationTwo,
+                        hostPeer.name,
+                    ),
+                )
+            },
+        )
+        val events = mutableListOf<PeerEvent>()
+        val eventCollector = testScope.async { room.peerEvents.collect { events += it } }
+        val terminal = testTerminalMessage()
+        firstSession.incomingFlow.emit(P2pMessage.Binary(codec.encode(terminal)))
+        assertThat(withTimeout(2_000L) { room.incoming.first() }).isEqualTo(terminal)
+
+        // The terminal was staged by G1, but G2 wins physical-session
+        // ownership before the session coordinator reaches its commit call.
+        firstSession.stateFlow.value = ConnectionState.Closed
+        awaitCondition { events.contains(PeerEvent.HostRestored) }
+        assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(generationTwo))
+
+        assertThat(room.commitValidatedSessionEnd(terminal))
+            .isEqualTo(Result.Success(SessionEndCommitStatus.NotOwned))
+        assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(generationTwo))
+        assertThat(room.sendToHost(testPeerHeartbeat())).isEqualTo(Result.Success(Unit))
+
+        eventCollector.cancel()
         room.leave()
     }
 
@@ -1793,8 +1991,11 @@ class P2pKitRoomTransportLifecycleTest {
             session.incomingFlow.emit(P2pMessage.Binary(codec.encode(terminal)))
             assertThat(withTimeout(2_000L) { room.incoming.first() }).isEqualTo(terminal)
 
-            // Receipt of the authenticated terminal frame is the durability
-            // boundary; navigation/onDispose is not required to revoke resume.
+            // Physical authentication only stages provenance. The validated
+            // session-layer commit is the credential-revocation boundary.
+            assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(credential))
+            assertThat(room.commitValidatedSessionEnd(terminal))
+                .isEqualTo(Result.Success(SessionEndCommitStatus.Committed))
             assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(null))
             assertThat(kit.stopCalls).isEqualTo(0)
 
@@ -2052,13 +2253,15 @@ class P2pKitRoomTransportLifecycleTest {
         repeat(5) { yield() }
         assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(generationTwo))
 
-        // The active replacement collector is bound to G2, so its terminal
-        // frame revokes G2 before the frame is exposed to game/UI code.
+        // The active replacement collector is bound to G2, so the validated
+        // terminal commit revokes G2 before game/UI accepts the end.
         replacementSession.incomingFlow.emit(
             P2pMessage.Binary(codec.encode(testTerminalMessage())),
         )
         assertThat(withTimeout(2_000L) { room.incoming.first() })
             .isEqualTo(testTerminalMessage())
+        assertThat(room.commitValidatedSessionEnd(testTerminalMessage()))
+            .isEqualTo(Result.Success(SessionEndCommitStatus.Committed))
         assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(null))
 
         eventCollector.cancel()
@@ -2104,6 +2307,8 @@ class P2pKitRoomTransportLifecycleTest {
             )
             assertThat(withTimeout(2_000L) { terminal.await() })
                 .isEqualTo(testTerminalMessage())
+            assertThat(room.commitValidatedSessionEnd(testTerminalMessage()))
+                .isEqualTo(Result.Success(SessionEndCommitStatus.Committed))
             assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(null))
 
             // Model the exact post-connector race: Success is already in hand,
@@ -2266,6 +2471,8 @@ class P2pKitRoomTransportLifecycleTest {
             session.incomingFlow.emit(P2pMessage.Binary(codec.encode(testTerminalMessage())))
             assertThat(withTimeout(2_000L) { room.incoming.first() })
                 .isEqualTo(testTerminalMessage())
+            assertThat(room.commitValidatedSessionEnd(testTerminalMessage()))
+                .isEqualTo(Result.Failure(NetError.SecureStorageUnavailable))
 
             assertThat(
                 diagnostics.snapshot().any {
@@ -2852,6 +3059,8 @@ class P2pKitRoomTransportLifecycleTest {
             assertThat(relaunchedKit.lastExpectedFingerprint).isEqualTo(TEST_PEER_FINGERPRINT)
             assertThat(room.rejoinToken).isEqualTo(null)
             assertThat(room.incoming.first()).isEqualTo(testTerminalMessage())
+            assertThat(room.commitValidatedSessionEnd(testTerminalMessage()))
+                .isEqualTo(Result.Success(SessionEndCommitStatus.Committed))
 
             room.leave()
             assertThat(relaunchedTransport.resumableSession())
@@ -3210,6 +3419,55 @@ class P2pKitRoomTransportLifecycleTest {
         )
         assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(credential))
         assertThat(kit.stopCalls).isEqualTo(1)
+    }
+
+    @Test
+    fun explicit_cold_resume_discard_revokes_the_stored_membership() = runBlocking {
+        val secureStorage = testSecureStorage()
+        val credential = resumableCredential(generation = 1L)
+        val pendingRotation = resumableCredential(generation = 2L)
+        val store = ResumableCredentialStore(secureStorage)
+        store.stage(credential)
+        store.commit(credential.offerId, credential.generation)
+        store.stage(pendingRotation)
+        val transport = P2pKitRoomTransport(
+            appId = AppId("com.parlor.test"),
+            deviceName = "self-device",
+            scope = testScope,
+            kitFactory = object : P2pKitFactory {
+                override suspend fun createKit(appId: AppId, deviceName: String): P2pKit =
+                    error("discard must not start P2pKit")
+            },
+            secureStorage = secureStorage,
+        )
+
+        assertThat(transport.discardResumableSession()).isEqualTo(Result.Success(Unit))
+        assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(null))
+    }
+
+    @Test
+    fun explicit_cold_resume_discard_fails_closed_when_secure_removal_fails() = runBlocking {
+        val secureStorage = FailingRemoveSecureStorage(testSecureStorage())
+        val credential = resumableCredential(generation = 1L)
+        val store = ResumableCredentialStore(secureStorage)
+        store.stage(credential)
+        store.commit(credential.offerId, credential.generation)
+        secureStorage.failRemove = true
+        val transport = P2pKitRoomTransport(
+            appId = AppId("com.parlor.test"),
+            deviceName = "self-device",
+            scope = testScope,
+            kitFactory = object : P2pKitFactory {
+                override suspend fun createKit(appId: AppId, deviceName: String): P2pKit =
+                    error("discard must not start P2pKit")
+            },
+            secureStorage = secureStorage,
+        )
+
+        assertThat(transport.discardResumableSession())
+            .isEqualTo(Result.Failure(NetError.SecureStorageUnavailable))
+        secureStorage.failRemove = false
+        assertThat(store.loadResumeCandidate()).isEqualTo(Result.Success(credential))
     }
 
     @Test

@@ -27,7 +27,7 @@ import com.parlor.designsystem.tokens.rememberParlorTypography
 
 /**
  * Parlor's design-system entry point. Wraps Material 3 with our token system
- * so existing M3 components inherit cozy-noir colors while we layer Parlor's
+ * so existing M3 components inherit the warm editorial palette while we layer Parlor's
  * custom components on top.
  *
  * Access tokens inside Composable code via `ParlorTheme.colors`, `.typography`,
@@ -65,8 +65,8 @@ object ParlorTheme {
  * `themeMode = ThemeMode.System` follows the host OS (via
  * [isSystemInDarkTheme]). `Light` and `Dark` force the corresponding palette.
  *
- * Both light and dark cozy-noir share the ember accent so the brand stays
- * coherent across modes.
+ * Both light and dark palettes share the default amber accent; a game may
+ * override that accent below the root theme without changing semantic colors.
  */
 @Composable
 fun ParlorTheme(
@@ -143,7 +143,7 @@ fun ParlorTheme(
     }
 }
 
-private val LocalParlorColors = staticCompositionLocalOf<ParlorColors> {
+internal val LocalParlorColors = staticCompositionLocalOf<ParlorColors> {
     error("ParlorColors not provided. Wrap your content with ParlorTheme.")
 }
 private val LocalParlorTypography = staticCompositionLocalOf { DefaultParlorTypography }

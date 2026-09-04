@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -63,7 +62,7 @@ fun ReconnectingOverlay(
                 paneTitle = title
                 liveRegion = LiveRegionMode.Assertive
             }
-            .padding(ParlorTheme.spacing.xl),
+            .parlorSafeContentPadding(ParlorTheme.spacing.xl),
         contentAlignment = Alignment.Center,
     ) {
         // The observing session remains composed behind this surface so it can

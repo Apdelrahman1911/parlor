@@ -10,23 +10,25 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
+import com.parlor.designsystem.icons.ParlorIcons
 import com.parlor.designsystem.theme.ParlorTheme
 
 /**
- * Reusable empty/error state block. A circular glyph "well" + title + body +
+ * Reusable empty/error state block. A circular icon well + title + body +
  * optional action. Honest about what's missing — and replaces every screen's
  * bare-Text "Couldn't load..." with a consistent treatment.
  *
  *  - [title] required.
  *  - [body] optional supporting line.
- *  - [glyph] optional 1-2 character mark drawn into the circular well.
- *    Defaults to a centred dot.
+ *  - [icon] visual mark drawn into the circular well. Defaults to a folder.
  *  - [action] optional composable for a single CTA (typically a ParlorButton).
  *
  * Used both for "no cases" and "couldn't load cases" — the difference is
@@ -37,7 +39,7 @@ fun EmptyState(
     title: String,
     modifier: Modifier = Modifier,
     body: String? = null,
-    glyph: String? = null,
+    icon: ImageVector = ParlorIcons.FolderOpen,
     action: (@Composable () -> Unit)? = null,
 ) {
     val colors = ParlorTheme.colors
@@ -55,10 +57,11 @@ fun EmptyState(
                 .background(colors.surfaceElevated),
             contentAlignment = Alignment.Center,
         ) {
-            Text(
-                text = glyph ?: "·",
-                style = ParlorTheme.typography.displayMedium,
-                color = colors.textTertiary,
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = colors.textTertiary,
+                modifier = Modifier.size(ParlorTheme.iconSize.xl),
             )
         }
         Text(

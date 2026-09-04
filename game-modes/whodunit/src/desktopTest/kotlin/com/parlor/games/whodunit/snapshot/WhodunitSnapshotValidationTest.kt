@@ -964,6 +964,66 @@ class WhodunitSnapshotValidationTest {
     }
 
     @Test
+    fun peerCaseBoundaryBindsClueHistoryToTheTerminalVerdictCharacter() {
+        val context = reducerContext()
+        fun step(state: WhodunitState, action: WhodunitAction): WhodunitState =
+            WhodunitReducer.reduce(state, action, context).newState
+
+        var canonical = classicStateWithFinalClue()
+        canonical = step(canonical, WhodunitAction.StartDiscussionTimer(180))
+        canonical = step(canonical, WhodunitAction.AdvanceFromDiscussion)
+        val killerId = canonical.hostOnly.killerId
+        val ballot = (canonical.public.voteState as VoteState.Collecting).ballotPlayerIds
+        ballot.forEach { voterId ->
+            canonical = step(
+                canonical,
+                if (voterId == killerId) {
+                    WhodunitAction.AbstainVote(voterId)
+                } else {
+                    WhodunitAction.CastVote(voterId, killerId)
+                },
+            )
+        }
+        canonical = step(canonical, WhodunitAction.CloseVote)
+
+        val trueKillerCharacter = canonical.hostOnly.killerCharacterId
+        val receiverId = canonical.players.first { player ->
+            val characterId = canonical.privatePerPlayer.getValue(player.id).characterId
+            player.id != killerId && characterId != trueKillerCharacter
+        }.id
+        val receiverPrivate = canonical.privatePerPlayer.getValue(receiverId)
+        val forgedKillerCharacter = canonical.privatePerPlayer.values.first { privateState ->
+            privateState.characterId != trueKillerCharacter &&
+                privateState.characterId != receiverPrivate.characterId
+        }.characterId
+        val publicProjection = WhodunitProjectionPolicy.toPublic(canonical).state
+        val case = validatedCase()
+        assertTrue(
+            WhodunitStateValidator.isValidPeerProjectionForCase(
+                publicState = publicProjection,
+                ownPrivate = receiverPrivate,
+                selfPlayerId = receiverId,
+                case = case,
+            ),
+        )
+        val forgedProjection = publicProjection.copy(
+            public = publicProjection.public.copy(
+                verdict = Verdict.PlayersWin(forgedKillerCharacter.raw),
+            ),
+        )
+
+        assertFalse(
+            WhodunitStateValidator.isValidPeerProjectionForCase(
+                publicState = forgedProjection,
+                ownPrivate = receiverPrivate,
+                selfPlayerId = receiverId,
+                case = case,
+            ),
+            "terminal clue history must be reachable for the character named by the verdict",
+        )
+    }
+
+    @Test
     fun oversizedSnapshotIsRejectedBeforeJsonParsing() {
         assertFailsWith<IllegalArgumentException> {
             codec.decode(ByteArray(256 * 1024 + 1) { ' '.code.toByte() })

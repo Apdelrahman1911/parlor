@@ -301,6 +301,12 @@ class ProductionVerificationWorkflowContractTest {
         val xcodeProject = read("iosApp/iosApp.xcodeproj/project.pbxproj")
         val xcodeScheme = read("iosApp/iosApp.xcodeproj/xcshareddata/xcschemes/iosApp.xcscheme")
         val appLaunchTest = read("iosApp/iosAppUITests/IOSAppLaunchUITests.swift")
+        val homeScreen = read(
+            "composeApp/src/commonMain/kotlin/com/parlor/app/shell/home/HomeScreen.kt",
+        )
+        val frameworkNormalizer = read(
+            "scripts/release/normalize_embedded_apple_framework.sh",
+        )
 
         listOf(
             "DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer",
@@ -359,6 +365,25 @@ class ProductionVerificationWorkflowContractTest {
             "isStatic = false",
             message = "The launchable app must embed a dynamic Kotlin framework, not a static archive",
         )
+        assertContains(
+            xcodeProject,
+            "scripts/release/normalize_embedded_apple_framework.sh",
+            message = "The Xcode shell phase must normalize the embedded framework's case",
+        )
+        listOf(
+            "canonical_name=\"\${framework_base_name}.framework\"",
+            "candidate_lowercase=",
+            "match_count=\$((match_count + 1))",
+            ".case-normalization",
+            "/bin/mv \"\$match\" \"\$temporary_framework\"",
+            "embedded framework executable does not match its Mach-O install name",
+        ).forEach { required ->
+            assertContains(
+                frameworkNormalizer,
+                required,
+                message = "The Apple build must preserve the framework's case-sensitive identity",
+            )
+        }
 
         val appLaunchMarker = "- name: Launch Swift host and Compose root on iOS Simulator"
         val swiftReleaseMarker = "- name: Build unsigned Swift Release wrapper"
@@ -391,10 +416,20 @@ class ProductionVerificationWorkflowContractTest {
         listOf(
             "XCUIApplication()",
             "runningForeground",
-            "staticTexts[\"PARLOR\"]",
+            "staticTexts[\"parlor-home-brand\"]",
             "No alert should appear during the simulator cold-start observation window",
             "The Swift host should remain in the foreground after Compose renders",
         ).forEach { required -> assertContains(appLaunchTest, required) }
+        listOf(
+            "HOME_BRAND_TEST_TAG = \"parlor-home-brand\"",
+            ".testTag(HOME_BRAND_TEST_TAG)",
+        ).forEach { required ->
+            assertContains(
+                homeScreen,
+                required,
+                message = "The iOS launch probe must target a stable Compose home marker",
+            )
+        }
 
         val appleEvidenceMarker = "- name: Upload Apple verification evidence"
         assertContains(workflow, swiftReleaseMarker)

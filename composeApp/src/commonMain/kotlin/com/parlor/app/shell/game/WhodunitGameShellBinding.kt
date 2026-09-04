@@ -11,6 +11,7 @@ import com.parlor.app.permissions.rememberP2pPermissionGate
 import com.parlor.app.resources.Res
 import com.parlor.app.resources.home_whodunit_open
 import com.parlor.app.resources.home_whodunit_open_description
+import com.parlor.app.resources.home_whodunit_kicker
 import com.parlor.app.resources.home_whodunit_subtitle
 import com.parlor.app.resources.home_whodunit_tagline
 import com.parlor.app.resources.home_whodunit_title
@@ -23,6 +24,8 @@ import com.parlor.app.shell.playmode.PlayModePickerScreen
 import com.parlor.content.repository.CaseRepository
 import com.parlor.core.ids.ModeId
 import com.parlor.engine.definition.GameDefinition
+import com.parlor.designsystem.theme.ParlorAccent
+import com.parlor.designsystem.theme.ParlorAccentScope
 import com.parlor.games.whodunit.WhodunitDefinition
 import com.parlor.games.whodunit.WhodunitIds
 import com.parlor.games.whodunit.WhodunitPlayModePolicy
@@ -61,6 +64,8 @@ internal class WhodunitGameShellBinding(
         tagline = stringResource(Res.string.home_whodunit_tagline),
         openLabel = stringResource(Res.string.home_whodunit_open),
         openContentDescription = stringResource(Res.string.home_whodunit_open_description),
+        kicker = stringResource(Res.string.home_whodunit_kicker),
+        accent = ParlorAccent.Amber,
     )
 
     @Composable
@@ -71,14 +76,16 @@ internal class WhodunitGameShellBinding(
         modifier: Modifier,
     ) {
         require(launch.gameId == definition.id) { "Whodunit binding received another game" }
-        WhodunitShellContent(
-            launch = launch,
-            capabilities = capabilities,
-            supportedPlayerCounts = SHIPPED_WHODUNIT_PLAYER_COUNTS,
-            onExit = onExit,
-            backRequest = backRequest,
-            modifier = modifier,
-        )
+        ParlorAccentScope(ParlorAccent.Amber) {
+            WhodunitShellContent(
+                launch = launch,
+                capabilities = capabilities,
+                supportedPlayerCounts = SHIPPED_WHODUNIT_PLAYER_COUNTS,
+                onExit = onExit,
+                backRequest = backRequest,
+                modifier = modifier,
+            )
+        }
     }
 }
 

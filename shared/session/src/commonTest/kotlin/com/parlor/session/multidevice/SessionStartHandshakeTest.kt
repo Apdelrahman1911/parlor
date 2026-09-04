@@ -22,6 +22,7 @@ import com.parlor.networking.room.RoomInfo
 import com.parlor.networking.room.RoomLifecycleState
 import com.parlor.networking.room.RoomMember
 import com.parlor.networking.room.SendTarget
+import com.parlor.networking.room.SessionEndCommitStatus
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.async
@@ -750,6 +751,56 @@ class SessionStartHandshakeTest {
     }
 
     @Test
+    fun `peer lobby reports terminal credential commit failure without accepting end`() = runTest {
+        val room = StartRoom(isHost = false, selfPlayerId = peerId).apply {
+            sessionEndCommitResult = Result.Failure(NetError.SecureStorageUnavailable)
+        }
+        val waiting = async {
+            awaitAuthoritativeSessionStart(
+                room,
+                protocol.gameId,
+                protocol.gameVersion,
+            ) { _, _ -> true }
+        }
+        runCurrent()
+        val terminal = terminal()
+
+        room.receive(terminal)
+        runCurrent()
+
+        assertEquals(NetError.SecureStorageUnavailable, networkFailure(waiting.await()))
+        assertEquals(listOf(terminal), room.sessionEndCommits)
+    }
+
+    @Test
+    fun `peer start transaction ignores terminal frame no longer owned by transport`() = runTest {
+        val room = StartRoom(isHost = false, selfPlayerId = peerId).apply {
+            sessionEndCommitResult = Result.Success(SessionEndCommitStatus.NotOwned)
+        }
+        val waiting = async {
+            awaitAuthoritativeSessionStart(
+                room,
+                protocol.gameId,
+                protocol.gameVersion,
+            ) { _, _ -> true }
+        }
+        runCurrent()
+        val offer = offer()
+        room.receive(offer)
+        runCurrent()
+        val terminal = terminal()
+
+        room.receive(terminal)
+        runCurrent()
+        assertFalse(waiting.isCompleted)
+        assertEquals(listOf(terminal), room.sessionEndCommits)
+
+        room.receive(commit(offer.startId))
+        runCurrent()
+        assertIs<Result.Success<ValidatedSessionStart>>(waiting.await())
+    }
+
+    @Test
     fun `peer validates wire version against local protocol major and minor`() = runTest {
         suspend fun rejected(version: ProtocolVersion): SessionStartFailure.Protocol {
             val room = StartRoom(isHost = false, selfPlayerId = peerId)
@@ -1144,6 +1195,15 @@ class SessionStartHandshakeTest {
         sequence = sequence,
     )
 
+    private fun terminal() = HostMessage.SessionEnded(
+        header = header(
+            messageId = "terminal-01234567890123456789",
+            sequence = 2L,
+        ),
+        reason = SessionEndReason.HostLeft,
+        finalRevision = 0L,
+    )
+
     private fun networkFailure(
         result: Result<ValidatedSessionStart, SessionStartFailure>,
     ): NetError = assertIs<SessionStartFailure.Network>(
@@ -1179,6 +1239,9 @@ private class StartRoom(
     var dropStartCommits = 0
     var hostMessageSink: suspend (SendTarget, HostMessage) -> Unit = { _, _ -> }
     var peerMessageSink: suspend (PeerMessage) -> Unit = {}
+    var sessionEndCommitResult: Result<SessionEndCommitStatus, NetError> =
+        Result.Success(SessionEndCommitStatus.Committed)
+    val sessionEndCommits = mutableListOf<HostMessage.SessionEnded>()
 
     suspend fun receive(message: RoomMessage) {
         inbox.send(message)
@@ -1226,6 +1289,13 @@ private class StartRoom(
         }
         peerMessageSink(message)
         return Result.Success(Unit)
+    }
+
+    override suspend fun commitValidatedSessionEnd(
+        message: HostMessage.SessionEnded,
+    ): Result<SessionEndCommitStatus, NetError> {
+        sessionEndCommits += message
+        return sessionEndCommitResult
     }
 
     override suspend fun leave() = Unit

@@ -27,8 +27,15 @@ import androidx.compose.ui.text.style.TextAlign
 import com.parlor.core.ids.PlayerId
 import com.parlor.designsystem.backdrop.HeroBackdrop
 import com.parlor.designsystem.components.EyebrowLabel
+import com.parlor.designsystem.components.ContextRibbon
 import com.parlor.designsystem.components.ParlorButton
+import com.parlor.designsystem.components.ParlorContextTone
+import com.parlor.designsystem.components.parlorSafeContentPadding
 import com.parlor.designsystem.theme.ParlorTheme
+import com.parlor.games.mafia.resources.Res
+import com.parlor.games.mafia.resources.private_do_not_pass
+import com.parlor.games.mafia.resources.private_screen_label
+import org.jetbrains.compose.resources.stringResource
 
 data class PickableTarget(
     val id: PlayerId,
@@ -63,11 +70,16 @@ fun TargetPickerScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(ParlorTheme.spacing.xl)
-                .verticalScroll(rememberScrollState()),
+                .verticalScroll(rememberScrollState())
+                .parlorSafeContentPadding(ParlorTheme.spacing.xl),
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+            ContextRibbon(
+                label = stringResource(Res.string.private_screen_label),
+                detail = stringResource(Res.string.private_do_not_pass),
+                tone = ParlorContextTone.Private,
+            )
             EyebrowLabel(text = eyebrow, textAlign = TextAlign.Center)
             Text(
                 text = headline,

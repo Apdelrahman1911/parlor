@@ -10,3 +10,10 @@
 TEAM_ID =
 BUNDLE_ID = com.parlor.app
 APP_NAME = Parlor
+
+// Target-scoped Mobile Release Kit signing defaults. Its signed build overrides only these
+// user-defined values, preventing standard signing settings from leaking into dependency targets.
+MOBILE_RELEASE_IOS_CODE_SIGN_STYLE = Automatic
+MOBILE_RELEASE_IOS_CODE_SIGN_IDENTITY =
+MOBILE_RELEASE_IOS_PROVISIONING_PROFILE_SPECIFIER =
+MOBILE_RELEASE_IOS_DEVELOPMENT_TEAM = $(TEAM_ID)

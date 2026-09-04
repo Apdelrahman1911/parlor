@@ -1,37 +1,57 @@
 package com.parlor.app.shell.home
 
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.style.TextAlign
 import com.parlor.app.resources.Res
+import com.parlor.app.resources.app_name
 import com.parlor.app.resources.home_continue_label
 import com.parlor.app.resources.home_eyebrow
+import com.parlor.app.resources.home_game_kicker_format
+import com.parlor.app.resources.home_games_count
 import com.parlor.app.resources.home_games_label
+import com.parlor.app.resources.home_local_lan_meta
+import com.parlor.app.resources.home_local_meta
+import com.parlor.app.resources.home_players_exact_format
+import com.parlor.app.resources.home_players_range_format
 import com.parlor.app.resources.home_recovery_checking
 import com.parlor.app.resources.home_recovery_retry
 import com.parlor.app.resources.home_recovery_retry_description
 import com.parlor.app.resources.home_recovery_unavailable_body
 import com.parlor.app.resources.home_recovery_unavailable_title
+import com.parlor.app.resources.home_resume_multiplayer_description
+import com.parlor.app.resources.home_resume_multiplayer_subtitle
+import com.parlor.app.resources.home_resume_multiplayer_title
 import com.parlor.app.resources.home_resume_tile_description
 import com.parlor.app.resources.home_resume_tile_game_description
 import com.parlor.app.resources.home_resume_tile_game_title
@@ -39,13 +59,11 @@ import com.parlor.app.resources.home_resume_tile_position
 import com.parlor.app.resources.home_resume_tile_subtitle
 import com.parlor.app.resources.home_resume_tile_title
 import com.parlor.app.resources.home_resume_tile_unknown_description
-import com.parlor.app.resources.home_resume_multiplayer_description
-import com.parlor.app.resources.home_resume_multiplayer_subtitle
-import com.parlor.app.resources.home_resume_multiplayer_title
-import com.parlor.app.resources.home_settings_description
+import com.parlor.app.resources.home_saved_on_device
 import com.parlor.app.resources.home_subtitle
-import com.parlor.app.resources.settings_title
+import com.parlor.app.resources.home_title
 import com.parlor.app.shell.game.GameCatalogPresentation
+import com.parlor.app.shell.game.GameEntryMode
 import com.parlor.app.shell.game.GameShellBinding
 import com.parlor.core.ids.GameId
 import com.parlor.core.ids.SessionId
@@ -53,31 +71,19 @@ import com.parlor.designsystem.backdrop.HeroBackdrop
 import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorCard
+import com.parlor.designsystem.components.ParlorMark
+import com.parlor.designsystem.components.parlorSafeContentPaddingValues
+import com.parlor.designsystem.icons.ParlorIcons
+import com.parlor.designsystem.theme.ParlorAccent
+import com.parlor.designsystem.theme.ParlorAccentScope
 import com.parlor.designsystem.theme.ParlorTheme
 import org.jetbrains.compose.resources.stringResource
 
-/**
- * Home — game-first. One scrolling surface, no tabs.
- *
- * Layout, top to bottom:
- *  1. **Top bar.** PARLOR eyebrow + one-line orientation subtitle, with a
- *     SETTINGS text-link on the trailing edge.
- *  2. **Continue** (only when [unfinishedSessions] is non-empty). Tappable
- *     tiles that drop the user back into an in-progress investigation.
- *  3. **Games.** Hero cards supplied by every installed game binding. Tapping
- *     a game card invokes [onGameSelected]; the parent routes to the game
- *     setup screen (Solo / Pass-and-Play / Host / Join).
- *
- * Multiplayer (host/join) is **not** surfaced here anymore — it's a choice
- * the user makes *after* picking a game, alongside Solo and Pass-and-Play.
- * That keeps the home page about the games themselves and lets the setup
- * screen own the "how" decision.
- */
+/** Game-first library. Recovery stays secondary and exposes metadata only. */
 @Composable
 internal fun HomeScreen(
     games: List<GameShellBinding>,
     onGameSelected: (GameId) -> Unit,
-    onSettings: () -> Unit,
     modifier: Modifier = Modifier,
     unfinishedSessions: List<LocalRecoveryEntry> = emptyList(),
     onResume: (SessionId) -> Unit = {},
@@ -89,17 +95,16 @@ internal fun HomeScreen(
 ) {
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize(),
-            contentPadding = PaddingValues(
-                start = ParlorTheme.spacing.xl,
-                end = ParlorTheme.spacing.xl,
-                top = ParlorTheme.spacing.xl,
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = parlorSafeContentPaddingValues(
+                horizontal = ParlorTheme.spacing.l,
+                top = ParlorTheme.spacing.l,
                 bottom = ParlorTheme.spacing.xxl,
             ),
-            verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.xl),
+            verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l),
         ) {
-            item(key = "home-top-bar") { HomeTopBar(onSettings = onSettings) }
+            item(key = "home-top-bar") { HomeTopBar() }
+            item(key = "home-lead") { HomeLead() }
 
             when {
                 recoveryLoading -> item(key = "recovery-loading") { RecoveryLoadingCard() }
@@ -110,9 +115,9 @@ internal fun HomeScreen(
 
             if (unfinishedSessions.isNotEmpty() || hasResumableMultiplayer) {
                 item(key = "continue-label") {
-                    EyebrowLabel(
-                        text = stringResource(Res.string.home_continue_label),
-                        accent = false,
+                    SectionHeading(
+                        label = stringResource(Res.string.home_continue_label),
+                        detail = stringResource(Res.string.home_saved_on_device),
                     )
                 }
                 itemsIndexed(
@@ -131,9 +136,7 @@ internal fun HomeScreen(
                     item(key = "multiplayer-resume") {
                         ResumeTile(
                             title = stringResource(Res.string.home_resume_multiplayer_title),
-                            subtitle = stringResource(
-                                Res.string.home_resume_multiplayer_subtitle,
-                            ),
+                            subtitle = stringResource(Res.string.home_resume_multiplayer_subtitle),
                             contentDescription = stringResource(
                                 Res.string.home_resume_multiplayer_description,
                             ),
@@ -144,18 +147,89 @@ internal fun HomeScreen(
             }
 
             item(key = "games-label") {
-                EyebrowLabel(text = stringResource(Res.string.home_games_label), accent = false)
+                SectionHeading(
+                    label = stringResource(Res.string.home_games_label),
+                    detail = stringResource(Res.string.home_games_count, games.size),
+                )
             }
             items(
                 items = games,
                 key = { game -> "game:${game.definition.id.raw}" },
             ) { game ->
+                val presentation = game.catalogPresentation()
                 GameHeroCard(
-                    presentation = game.catalogPresentation(),
+                    presentation = presentation,
+                    supportedPlayerCounts = game.multiplayerContract
+                        ?.supportedPlayerCounts
+                        ?: game.definition.supportedPlayerCounts,
+                    supportsLan = game.capabilities.supports(GameEntryMode.Host) ||
+                        game.capabilities.supports(GameEntryMode.Join),
+                    position = games.indexOf(game) + 1,
                     onOpen = { onGameSelected(game.definition.id) },
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun HomeTopBar() {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            ParlorMark(modifier = Modifier.size(ParlorTheme.spacing.xxl))
+            Text(
+                text = stringResource(Res.string.app_name),
+                style = ParlorTheme.typography.headingMedium,
+                color = ParlorTheme.colors.textPrimary,
+                modifier = Modifier.testTag(HOME_BRAND_TEST_TAG),
+            )
+        }
+    }
+}
+
+@Composable
+private fun HomeLead() {
+    Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s)) {
+        EyebrowLabel(text = stringResource(Res.string.home_eyebrow))
+        Text(
+            text = stringResource(Res.string.home_title),
+            style = ParlorTheme.typography.displayLarge,
+            color = ParlorTheme.colors.textPrimary,
+            modifier = Modifier.semantics { heading() },
+        )
+        Text(
+            text = stringResource(Res.string.home_subtitle),
+            style = ParlorTheme.typography.bodyMedium,
+            color = ParlorTheme.colors.textSecondary,
+        )
+    }
+}
+
+@Composable
+private fun SectionHeading(label: String, detail: String) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        EyebrowLabel(
+            text = label,
+            accent = false,
+            modifier = Modifier.weight(1f),
+        )
+        Text(
+            text = detail,
+            style = ParlorTheme.typography.bodySmall,
+            color = ParlorTheme.colors.textTertiary,
+            textAlign = TextAlign.End,
+            modifier = Modifier.weight(1f),
+        )
     }
 }
 
@@ -165,7 +239,6 @@ private fun RecoveryLoadingCard() {
         modifier = Modifier
             .fillMaxWidth()
             .semantics { liveRegion = LiveRegionMode.Polite },
-        cornerRadius = ParlorTheme.radii.card,
         contentPadding = ParlorTheme.spacing.l,
     ) {
         Text(
@@ -182,7 +255,6 @@ private fun RecoveryUnavailableCard(onRetry: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .semantics { liveRegion = LiveRegionMode.Polite },
-        cornerRadius = ParlorTheme.radii.card,
         contentPadding = ParlorTheme.spacing.l,
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m)) {
@@ -198,49 +270,13 @@ private fun RecoveryUnavailableCard(onRetry: () -> Unit) {
             )
             ParlorButton(
                 label = stringResource(Res.string.home_recovery_retry),
-                contentDescription = stringResource(
-                    Res.string.home_recovery_retry_description,
-                ),
+                contentDescription = stringResource(Res.string.home_recovery_retry_description),
                 onClick = onRetry,
                 modifier = Modifier.fillMaxWidth(),
             )
         }
     }
 }
-
-// ============================================================================ Top bar ==
-
-@Composable
-private fun HomeTopBar(onSettings: () -> Unit) {
-    val settingsLabel = stringResource(Res.string.settings_title)
-    val settingsDescription = stringResource(Res.string.home_settings_description)
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.Top,
-    ) {
-        Column(modifier = Modifier.weight(1f)) {
-            EyebrowLabel(text = stringResource(Res.string.home_eyebrow))
-            Spacer(modifier = Modifier.height(ParlorTheme.spacing.xs))
-            Text(
-                text = stringResource(Res.string.home_subtitle),
-                style = ParlorTheme.typography.bodyLarge,
-                color = ParlorTheme.colors.textSecondary,
-            )
-        }
-        Text(
-            text = settingsLabel.uppercase(),
-            style = ParlorTheme.typography.labelSmall,
-            color = ParlorTheme.colors.accentEmber,
-            modifier = Modifier
-                .heightIn(min = ParlorTheme.spacing.xxl)
-                .semantics { contentDescription = settingsDescription }
-                .clickable(role = Role.Button, onClick = onSettings)
-                .padding(ParlorTheme.spacing.s),
-        )
-    }
-}
-
-// =========================================================================== Continue ==
 
 @Composable
 private fun LocalResumeTile(
@@ -253,7 +289,7 @@ private fun LocalResumeTile(
     val binding = entry.gameId?.let { gameId ->
         games.firstOrNull { game -> game.definition.id == gameId }
     }
-    val gameTitle = if (binding == null) null else binding.catalogPresentation().title
+    val gameTitle = binding?.catalogPresentation()?.title
     val title = if (gameTitle == null) {
         stringResource(Res.string.home_resume_tile_title)
     } else {
@@ -297,20 +333,34 @@ private fun ResumeTile(
             .fillMaxWidth()
             .semantics { this.contentDescription = contentDescription }
             .clickable(role = Role.Button, onClick = onTap),
-        cornerRadius = ParlorTheme.radii.card,
         contentPadding = ParlorTheme.spacing.l,
     ) {
-        Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.xs)) {
-            Text(
-                text = title,
-                style = ParlorTheme.typography.headingLarge,
-                color = ParlorTheme.colors.textPrimary,
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(ParlorTheme.spacing.xs, ParlorTheme.spacing.xxl)
+                    .clip(RoundedCornerShape(ParlorTheme.radii.pill))
+                    .background(ParlorTheme.colors.accentEmber),
             )
-            Text(
-                text = subtitle,
-                style = ParlorTheme.typography.bodyMedium,
-                color = ParlorTheme.colors.textSecondary,
-            )
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.xs),
+            ) {
+                Text(
+                    text = title,
+                    style = ParlorTheme.typography.headingMedium,
+                    color = ParlorTheme.colors.textPrimary,
+                )
+                Text(
+                    text = subtitle,
+                    style = ParlorTheme.typography.bodySmall,
+                    color = ParlorTheme.colors.textSecondary,
+                )
+            }
+            DirectionalArrow()
         }
     }
 }
@@ -318,37 +368,188 @@ private fun ResumeTile(
 @Composable
 private fun GameHeroCard(
     presentation: GameCatalogPresentation,
+    supportedPlayerCounts: IntRange,
+    supportsLan: Boolean,
+    position: Int,
     onOpen: () -> Unit,
 ) {
-    ParlorCard(
-        modifier = Modifier.fillMaxWidth(),
-        cornerRadius = ParlorTheme.radii.elevated,
-        contentPadding = ParlorTheme.spacing.xl,
-        hero = true,
+    ParlorAccentScope(presentation.accent) {
+        ParlorCard(
+            modifier = Modifier
+                .fillMaxWidth()
+                .semantics { contentDescription = presentation.openContentDescription }
+                .clickable(role = Role.Button, onClick = onOpen),
+            cornerRadius = ParlorTheme.radii.elevated,
+            contentPadding = ParlorTheme.spacing.l,
+            hero = true,
+        ) {
+            Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m)) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.Top,
+                ) {
+                    EyebrowLabel(
+                        text = stringResource(
+                            Res.string.home_game_kicker_format,
+                            presentation.kicker,
+                            position,
+                        ),
+                        modifier = Modifier.weight(1f),
+                    )
+                    GameCardArt(presentation.accent)
+                }
+                Text(
+                    text = presentation.title,
+                    style = ParlorTheme.typography.displayLarge,
+                    color = ParlorTheme.colors.textPrimary,
+                    modifier = Modifier.semantics { heading() },
+                )
+                Text(
+                    text = presentation.subtitle,
+                    style = ParlorTheme.typography.headingMedium,
+                    color = ParlorTheme.colors.accentEmber,
+                )
+                Text(
+                    text = presentation.tagline,
+                    style = ParlorTheme.typography.bodyMedium,
+                    color = ParlorTheme.colors.textSecondary,
+                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s),
+                ) {
+                    MetaPill(
+                        text = playerRangeLabel(supportedPlayerCounts),
+                        modifier = Modifier.weight(1f),
+                    )
+                    MetaPill(
+                        text = stringResource(
+                            if (supportsLan) {
+                                Res.string.home_local_lan_meta
+                            } else {
+                                Res.string.home_local_meta
+                            },
+                        ),
+                        modifier = Modifier.weight(1f),
+                    )
+                }
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = presentation.openLabel,
+                        style = ParlorTheme.typography.labelLarge,
+                        color = ParlorTheme.colors.accentEmber,
+                    )
+                    DirectionalArrow(accent = true)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun playerRangeLabel(range: IntRange): String =
+    if (range.first == range.last) {
+        stringResource(Res.string.home_players_exact_format, range.first)
+    } else {
+        stringResource(Res.string.home_players_range_format, range.first, range.last)
+    }
+
+@Composable
+private fun MetaPill(text: String, modifier: Modifier = Modifier) {
+    Text(
+        text = text,
+        style = ParlorTheme.typography.bodySmall,
+        color = ParlorTheme.colors.textSecondary,
+        textAlign = TextAlign.Center,
+        modifier = modifier
+            .clip(RoundedCornerShape(ParlorTheme.radii.pill))
+            .background(ParlorTheme.colors.surfaceHigher)
+            .padding(horizontal = ParlorTheme.spacing.s, vertical = ParlorTheme.spacing.xs),
+    )
+}
+
+@Composable
+private fun DirectionalArrow(accent: Boolean = false) {
+    Box(
+        modifier = Modifier
+            .size(ParlorTheme.spacing.xxl)
+            .clip(RoundedCornerShape(ParlorTheme.radii.pill))
+            .background(
+                if (accent) {
+                    ParlorTheme.colors.accentEmber.copy(alpha = CARD_ACCENT_ALPHA)
+                } else {
+                    ParlorTheme.colors.surfaceHigher
+                },
+            )
+            .clearAndSetSemantics { },
+        contentAlignment = Alignment.Center,
     ) {
-        Column(verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m)) {
-            Text(
-                text = presentation.title,
-                style = ParlorTheme.typography.displayHero,
-                color = ParlorTheme.colors.textPrimary,
+        Icon(
+            imageVector = ParlorIcons.Forward,
+            contentDescription = null,
+            tint = if (accent) {
+                ParlorTheme.colors.accentEmber
+            } else {
+                ParlorTheme.colors.textSecondary
+            },
+            modifier = Modifier.size(ParlorTheme.iconSize.m),
+        )
+    }
+}
+
+@Composable
+private fun GameCardArt(accent: ParlorAccent) {
+    val colors = ParlorTheme.colors
+    Canvas(
+        modifier = Modifier
+            .size(ParlorTheme.spacing.xxxl)
+            .clearAndSetSemantics { },
+    ) {
+        drawCircle(colors.accentEmber.copy(alpha = CARD_ART_HALO_ALPHA))
+        if (accent == ParlorAccent.Crimson) {
+            drawCircle(
+                color = colors.accentEmber,
+                radius = size.minDimension * 0.28f,
             )
-            Text(
-                text = presentation.subtitle,
-                style = ParlorTheme.typography.displayMedium,
-                color = ParlorTheme.colors.accentEmber,
+            drawCircle(
+                color = colors.surfaceHero,
+                radius = size.minDimension * 0.24f,
+                center = center.copy(
+                    x = center.x + size.width * 0.12f,
+                    y = center.y - size.height * 0.08f,
+                ),
             )
-            Text(
-                text = presentation.tagline,
-                style = ParlorTheme.typography.bodyLarge,
-                color = ParlorTheme.colors.textSecondary,
+        } else {
+            val stroke = size.minDimension * CARD_ART_STROKE_RATIO
+            drawCircle(
+                color = colors.accentEmber,
+                radius = size.minDimension * 0.27f,
+                style = androidx.compose.ui.graphics.drawscope.Stroke(width = stroke),
             )
-            Spacer(modifier = Modifier.height(ParlorTheme.spacing.s))
-            ParlorButton(
-                label = presentation.openLabel,
-                contentDescription = presentation.openContentDescription,
-                onClick = onOpen,
-                modifier = Modifier.fillMaxWidth(),
+            drawLine(
+                color = colors.accentEmber,
+                start = center.copy(y = center.y - size.height * 0.22f),
+                end = center.copy(y = center.y + size.height * 0.22f),
+                strokeWidth = stroke,
+                cap = StrokeCap.Round,
+            )
+            drawLine(
+                color = colors.accentEmber,
+                start = center.copy(x = center.x - size.width * 0.22f),
+                end = center.copy(x = center.x + size.width * 0.22f),
+                strokeWidth = stroke,
+                cap = StrokeCap.Round,
             )
         }
     }
 }
+
+private const val CARD_ACCENT_ALPHA = 0.14f
+private const val CARD_ART_HALO_ALPHA = 0.10f
+private const val CARD_ART_STROKE_RATIO = 0.035f
+private const val HOME_BRAND_TEST_TAG = "parlor-home-brand"

@@ -51,7 +51,7 @@ fun SessionEnvelopeHeader.validateFor(expected: SessionProtocol): ProtocolValida
 }
 
 fun PeerMessage.ClientCommand.validateFor(expected: SessionProtocol): ProtocolValidation {
-    val headerResult = header.validateFor(expected)
+    val headerResult = header.validatePeerMessageFor(expected)
     if (headerResult != ProtocolValidation.Valid) return headerResult
     return when {
         commandId != header.messageId || !commandId.isValidOpaqueId() ->
@@ -64,7 +64,7 @@ fun PeerMessage.ClientCommand.validateFor(expected: SessionProtocol): ProtocolVa
 }
 
 fun PeerMessage.SnapshotRequest.validateFor(expected: SessionProtocol): ProtocolValidation {
-    val headerResult = header.validateFor(expected)
+    val headerResult = header.validatePeerMessageFor(expected)
     if (headerResult != ProtocolValidation.Valid) return headerResult
     // -1 is the explicit "no authoritative snapshot installed" sentinel.
     // It lets a newly committed peer request revision zero without pretending
@@ -77,7 +77,7 @@ fun PeerMessage.SnapshotRequest.validateFor(expected: SessionProtocol): Protocol
 }
 
 fun PeerMessage.SessionHeartbeat.validateFor(expected: SessionProtocol): ProtocolValidation {
-    val headerResult = header.validateFor(expected)
+    val headerResult = header.validatePeerMessageFor(expected)
     if (headerResult != ProtocolValidation.Valid) return headerResult
     return if (lastAppliedRevision < 0L) {
         ProtocolValidation.InvalidRevision
@@ -87,7 +87,7 @@ fun PeerMessage.SessionHeartbeat.validateFor(expected: SessionProtocol): Protoco
 }
 
 fun PeerMessage.CommandOutcomeRequest.validateFor(expected: SessionProtocol): ProtocolValidation {
-    val headerResult = header.validateFor(expected)
+    val headerResult = header.validatePeerMessageFor(expected)
     if (headerResult != ProtocolValidation.Valid) return headerResult
     return if (commandId != header.messageId || !commandId.isValidOpaqueId()) {
         ProtocolValidation.InvalidMessageId
@@ -97,7 +97,7 @@ fun PeerMessage.CommandOutcomeRequest.validateFor(expected: SessionProtocol): Pr
 }
 
 fun HostMessage.PlayerSnapshot.validateFor(expected: SessionProtocol): ProtocolValidation {
-    val headerResult = header.validateFor(expected)
+    val headerResult = header.validateSequencedHostMessageFor(expected)
     if (headerResult != ProtocolValidation.Valid) return headerResult
     return when {
         revision < 0L -> ProtocolValidation.InvalidRevision
@@ -110,7 +110,7 @@ fun HostMessage.PlayerSnapshot.validateFor(expected: SessionProtocol): ProtocolV
 }
 
 fun HostMessage.CommandResult.validateFor(expected: SessionProtocol): ProtocolValidation {
-    val headerResult = header.validateFor(expected)
+    val headerResult = header.validateSequencedHostMessageFor(expected)
     if (headerResult != ProtocolValidation.Valid) return headerResult
     return when {
         !commandId.isValidOpaqueId() -> ProtocolValidation.InvalidMessageId
@@ -121,7 +121,7 @@ fun HostMessage.CommandResult.validateFor(expected: SessionProtocol): ProtocolVa
 }
 
 fun HostMessage.Heartbeat.validateFor(expected: SessionProtocol): ProtocolValidation {
-    val headerResult = header.validateFor(expected)
+    val headerResult = header.validateSequencedHostMessageFor(expected)
     if (headerResult != ProtocolValidation.Valid) return headerResult
     return if (authoritativeRevision < 0L) {
         ProtocolValidation.InvalidRevision
@@ -131,12 +131,34 @@ fun HostMessage.Heartbeat.validateFor(expected: SessionProtocol): ProtocolValida
 }
 
 fun HostMessage.SessionEnded.validateFor(expected: SessionProtocol): ProtocolValidation {
-    val headerResult = header.validateFor(expected)
+    val headerResult = header.validateSequencedHostMessageFor(expected)
     if (headerResult != ProtocolValidation.Valid) return headerResult
     return if (finalRevision < 0L) {
         ProtocolValidation.InvalidRevision
     } else {
         ProtocolValidation.Valid
+    }
+}
+
+private fun SessionEnvelopeHeader.validatePeerMessageFor(
+    expected: SessionProtocol,
+): ProtocolValidation {
+    val result = validateFor(expected)
+    return if (result == ProtocolValidation.Valid && sequence != 0L) {
+        ProtocolValidation.InvalidSequence
+    } else {
+        result
+    }
+}
+
+private fun SessionEnvelopeHeader.validateSequencedHostMessageFor(
+    expected: SessionProtocol,
+): ProtocolValidation {
+    val result = validateFor(expected)
+    return if (result == ProtocolValidation.Valid && sequence <= 0L) {
+        ProtocolValidation.InvalidSequence
+    } else {
+        result
     }
 }
 

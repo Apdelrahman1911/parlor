@@ -68,6 +68,24 @@ class WhodunitPayloadHardeningTest {
     }
 
     @Test
+    fun unsafeAuthoredTextAndTagsAreRejected() = runTest {
+        val (envelope, payload) = loadCase()
+        assertRejected(
+            envelope.withPayload(payload.copy(publicIntro = "Welcome\nto the mystery")),
+        )
+
+        val firstClue = payload.cluePools.publicUniversal.first()
+        val unsafeTag = payload.copy(
+            cluePools = payload.cluePools.copy(
+                publicUniversal = listOf(
+                    firstClue.copy(tags = listOf("evidence\u202Ehidden")),
+                ) + payload.cluePools.publicUniversal.drop(1),
+            ),
+        )
+        assertRejected(envelope.withPayload(unsafeTag))
+    }
+
+    @Test
     fun roundDeclarationsTheReducerWouldIgnoreAreRejected() = runTest {
         val (envelope, payload) = loadCase()
         val key = payload.roundConfigByPlayerCount.keys.first()

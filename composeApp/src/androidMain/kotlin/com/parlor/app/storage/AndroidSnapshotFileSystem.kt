@@ -25,6 +25,10 @@ import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 import javax.crypto.spec.GCMParameterSpec
 
+/** A failed directory read is unavailable storage, not an empty snapshot inventory. */
+internal fun requireSnapshotDirectoryListing(files: Array<File>?): Array<File> =
+    files ?: throw SnapshotProtectionException()
+
 /**
  * Android snapshot storage with authenticated encryption.
  *
@@ -86,7 +90,7 @@ class AndroidSnapshotFileSystem(
         // explicit recovery instead of hiding every healthy save.
         val legacyNames = legacyDir
             .takeIf(File::isDirectory)
-            ?.listFiles()
+            ?.let { directory -> requireSnapshotDirectoryListing(directory.listFiles()) }
             ?.asSequence()
             ?.filter(File::isFile)
             ?.map(File::getName)
@@ -96,14 +100,13 @@ class AndroidSnapshotFileSystem(
             .orEmpty()
         migrateSnapshotRecordsIndependently(legacyNames, ::readProtectedOrMigrate)
 
-        val protectedNames = baseDir.listFiles()
-            ?.asSequence()
-            ?.filter(File::isFile)
-            ?.map(File::getName)
-            ?.filter(::isSafeSnapshotFileName)
-            ?.filterNot { it.endsWith(".tmp") }
-            ?.toList()
-            .orEmpty()
+        val protectedNames = requireSnapshotDirectoryListing(baseDir.listFiles())
+            .asSequence()
+            .filter(File::isFile)
+            .map(File::getName)
+            .filter(::isSafeSnapshotFileName)
+            .filterNot { it.endsWith(".tmp") }
+            .toList()
         (legacyNames + protectedNames).distinct()
     }
 

@@ -14,8 +14,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import com.parlor.core.ids.PlayerId
 import com.parlor.designsystem.backdrop.HeroBackdrop
+import com.parlor.designsystem.components.ContextRibbon
 import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ParlorButton
+import com.parlor.designsystem.components.ParlorContextTone
+import com.parlor.designsystem.components.parlorSafeContentPadding
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.mafia.domain.state.DetectiveSeesAs
 import com.parlor.games.mafia.resources.Res
@@ -30,6 +33,8 @@ import com.parlor.games.mafia.resources.night_detective_result_mafia_format
 import com.parlor.games.mafia.resources.night_detective_result_town_format
 import com.parlor.games.mafia.resources.night_detective_skip
 import com.parlor.games.mafia.resources.night_detective_submit
+import com.parlor.games.mafia.resources.private_do_not_pass
+import com.parlor.games.mafia.resources.private_screen_label
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -74,11 +79,16 @@ fun DetectiveResultScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(ParlorTheme.spacing.xl)
-                .verticalScroll(rememberScrollState()),
+                .verticalScroll(rememberScrollState())
+                .parlorSafeContentPadding(ParlorTheme.spacing.xl),
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l, Alignment.CenterVertically),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+            ContextRibbon(
+                label = stringResource(Res.string.private_screen_label),
+                detail = stringResource(Res.string.private_do_not_pass),
+                tone = ParlorContextTone.Private,
+            )
             EyebrowLabel(
                 text = stringResource(Res.string.night_detective_result_eyebrow_format, detectiveName),
                 textAlign = TextAlign.Center,

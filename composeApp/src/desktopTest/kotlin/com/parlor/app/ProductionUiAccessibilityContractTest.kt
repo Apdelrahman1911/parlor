@@ -247,6 +247,66 @@ class ProductionUiAccessibilityContractTest {
     }
 
     @Test
+    fun controls_use_vector_icons_instead_of_font_dependent_text_glyphs() {
+        val forbiddenIconLiterals = listOf("⚙", "←", "→", "‹", "›", "II", "+", "−")
+        productionKotlinFiles().forEach { sourceFile ->
+            val source = sourceFile.readText()
+            forbiddenIconLiterals.forEach { literal ->
+                val textAssignment = Regex(
+                    """(?:text|label|glyph)\s*=\s*${Regex.escape("\"$literal\"")}""",
+                )
+                assertFalse(
+                    textAssignment.containsMatchIn(source),
+                    "Text icon $literal found in ${sourceFile.relativeTo(root).path}",
+                )
+            }
+        }
+
+        assertContains(
+            read("composeApp/src/commonMain/kotlin/com/parlor/app/AppNavigationHost.kt"),
+            "icon = ParlorIcons.Settings",
+        )
+        assertContains(
+            read("composeApp/src/commonMain/kotlin/com/parlor/app/AppNavigationHost.kt"),
+            "icon = ParlorIcons.FolderOpen",
+        )
+        assertContains(
+            read("composeApp/src/commonMain/kotlin/com/parlor/app/shell/home/HomeScreen.kt"),
+            "imageVector = ParlorIcons.Forward",
+        )
+        assertContains(
+            read(
+                "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/" +
+                    "ui/flow/WhodunitGameFlow.kt",
+            ),
+            "icon = ParlorIcons.Pause",
+        )
+        val mafiaSetup = read(
+            "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/" +
+                "ui/screens/setup/MafiaSetupScreen.kt",
+        )
+        assertContains(mafiaSetup, "icon = ParlorIcons.Remove")
+        assertContains(mafiaSetup, "icon = ParlorIcons.Add")
+        assertContains(
+            read(
+                "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/" +
+                    "components/EmptyState.kt",
+            ),
+            "icon: ImageVector = ParlorIcons.FolderOpen",
+        )
+
+        val mafiaResources = listOf(
+            "game-modes/mafia/src/commonMain/composeResources/values/strings.xml",
+            "game-modes/mafia/src/commonMain/composeResources/values-ar/strings.xml",
+        )
+        mafiaResources.forEach { path ->
+            val resources = read(path)
+            assertFalse(resources.contains("settings_role_count_decrement_label"))
+            assertFalse(resources.contains("settings_role_count_increment_label"))
+        }
+    }
+
+    @Test
     fun fullscreen_text_surfaces_keep_actions_reachable_with_large_text() {
         val expectedScrollContainers = mapOf(
             "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/" +

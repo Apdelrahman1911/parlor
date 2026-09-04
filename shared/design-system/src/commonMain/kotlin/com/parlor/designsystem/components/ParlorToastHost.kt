@@ -10,8 +10,15 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.union
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -149,6 +156,12 @@ fun ParlorToastHost(
     Column(
         modifier = modifier
             .fillMaxWidth()
+            .windowInsetsPadding(
+                toastHostSafeAreaInsets(
+                    navigationBars = WindowInsets.navigationBars,
+                    displayCutout = WindowInsets.displayCutout,
+                ),
+            )
             .padding(ParlorTheme.spacing.l),
         verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -177,6 +190,13 @@ fun ParlorToastHost(
         }
     }
 }
+
+internal fun toastHostSafeAreaInsets(
+    navigationBars: WindowInsets,
+    displayCutout: WindowInsets,
+): WindowInsets = navigationBars
+    .union(displayCutout)
+    .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom)
 
 @Composable
 private fun ToastChip(toast: ParlorToast) {

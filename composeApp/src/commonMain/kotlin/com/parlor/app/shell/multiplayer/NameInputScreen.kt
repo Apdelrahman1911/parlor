@@ -1,18 +1,13 @@
 package com.parlor.app.shell.multiplayer
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.ui.Alignment
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -38,7 +33,8 @@ import com.parlor.designsystem.backdrop.HeroBackdrop
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorTextField
 import com.parlor.designsystem.components.ScreenHeader
-import com.parlor.designsystem.components.StickyActionBar
+import com.parlor.designsystem.components.StickyActionLayout
+import com.parlor.designsystem.components.parlorSafeContentPadding
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.networking.room.RoomInputPolicy
 import org.jetbrains.compose.resources.stringResource
@@ -70,45 +66,46 @@ fun NameInputScreen(
     val sanitized = normalizedMultiplayerDisplayName(name)
 
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
-        Box(modifier = Modifier.fillMaxSize().imePadding()) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                    .padding(
-                        start = ParlorTheme.spacing.l,
-                        end = ParlorTheme.spacing.l,
-                        top = ParlorTheme.spacing.l,
-                        bottom = ParlorTheme.spacing.xxxl + ParlorTheme.spacing.xxl,
-                    ),
-                verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l),
-            ) {
-                ScreenHeader(
-                    title = if (isHost) stringResource(Res.string.name_title_host)
-                    else stringResource(Res.string.name_title_peer),
-                    eyebrow = if (isHost) stringResource(Res.string.name_eyebrow_host)
-                    else stringResource(Res.string.name_eyebrow_peer),
-                    subtitle = stringResource(Res.string.name_help),
-                    onBack = onBack,
-                    backContentDescription = stringResource(Res.string.name_back_description),
-                )
+        StickyActionLayout(
+            modifier = Modifier.fillMaxSize().imePadding(),
+            content = {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                        .parlorSafeContentPadding(
+                            horizontal = ParlorTheme.spacing.l,
+                            top = ParlorTheme.spacing.l,
+                            bottom = ParlorTheme.spacing.l,
+                        ),
+                    verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l),
+                ) {
+                    ScreenHeader(
+                        title = if (isHost) stringResource(Res.string.name_title_host)
+                        else stringResource(Res.string.name_title_peer),
+                        eyebrow = if (isHost) stringResource(Res.string.name_eyebrow_host)
+                        else stringResource(Res.string.name_eyebrow_peer),
+                        subtitle = stringResource(Res.string.name_help),
+                        onBack = onBack,
+                        backContentDescription = stringResource(Res.string.name_back_description),
+                    )
 
-                ParlorTextField(
-                    value = name,
-                    onValueChange = { input ->
-                        name = RoomInputPolicy.sanitizeDisplayNameInput(input)
-                    },
-                    label = stringResource(Res.string.name_field),
-                    keyboardActions = KeyboardActions(
-                        onDone = {
-                            focusManager.clearFocus()
-                            keyboardController?.hide()
+                    ParlorTextField(
+                        value = name,
+                        onValueChange = { input ->
+                            name = RoomInputPolicy.sanitizeDisplayNameInput(input)
                         },
-                    ),
-                )
-            }
-
-            StickyActionBar(modifier = Modifier.align(Alignment.BottomCenter)) {
+                        label = stringResource(Res.string.name_field),
+                        keyboardActions = KeyboardActions(
+                            onDone = {
+                                focusManager.clearFocus()
+                                keyboardController?.hide()
+                            },
+                        ),
+                    )
+                }
+            },
+            actions = {
                 ParlorButton(
                     label = if (isHost) stringResource(Res.string.name_confirm_host)
                     else stringResource(Res.string.name_confirm_peer),
@@ -121,7 +118,7 @@ fun NameInputScreen(
                     modifier = Modifier.fillMaxWidth(),
                     enabled = RoomInputPolicy.isValidDisplayName(sanitized),
                 )
-            }
-        }
+            },
+        )
     }
 }

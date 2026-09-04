@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "version": {
+    "source": "config/parlor-version.xcconfig",
+    "nameKey": "PARLOR_VERSION_NAME",
+    "buildKey": "PARLOR_BUILD_NUMBER"
+  },
+  "source": {
+    "candidateBranch": "testing",
+    "productionBranch": "release"
+  },
+  "android": {
+    "enabled": true,
+    "applicationId": "com.parlor.app",
+    "identityStatus": "blocked",
+    "module": ":composeApp",
+    "variant": "release"
+  },
+  "ios": {
+    "enabled": true,
+    "bundleId": "com.parlor.app",
+    "identityStatus": "blocked",
+    "project": "iosApp/iosApp.xcodeproj",
+    "scheme": "iosApp",
+    "archiveConfiguration": "Release",
+    "symbols": {
+      "policy": "retain"
+    }
+  },
+  "metadata": {
+    "root": "release/store",
+    "androidLocales": [
+      "en-US"
+    ],
+    "iosLocales": [
+      "en-US"
+    ]
+  },
+  "services": {
+    "androidFirebase": "disabled",
+    "iosFirebase": "disabled"
+  },
+  "projectChecks": {
+    "preflight": [
+      [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/release/tests",
+        "-p",
+        "test_*.py",
+        "-v"
+      ],
+      [
+        "python3",
+        "scripts/release/workflow_contract.py"
+      ]
+    ],
+    "androidArtifact": [],
+    "iosArtifact": []
+  }
+}

@@ -64,7 +64,7 @@ fun TimerRibbon(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(ParlorTheme.radii.subtle))
-            .background(if (urgent) colors.accentEmberDeep else colors.surfaceInset)
+            .background(if (urgent) colors.accentEmber else colors.surfaceInset)
             .clearAndSetSemantics {
                 // The visual label, current value, and total form one timer value;
                 // presenting them as separate nodes makes it hard to follow.
@@ -80,17 +80,17 @@ fun TimerRibbon(
         Text(
             text = statusLabel,
             style = ParlorTheme.typography.labelSmall,
-            color = if (urgent) colors.textPrimary else colors.textSecondary,
+            color = if (urgent) colors.textOnAccent else colors.textSecondary,
         )
         Text(
             text = remainingTime,
             style = ParlorTheme.typography.timerMedium,
-            color = colors.textPrimary,
+            color = if (urgent) colors.textOnAccent else colors.textPrimary,
         )
         Text(
             text = visualTotalTime,
             style = ParlorTheme.typography.bodyMedium,
-            color = colors.textTertiary,
+            color = if (urgent) colors.textOnAccent else colors.textTertiary,
         )
     }
 }

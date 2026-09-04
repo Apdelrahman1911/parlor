@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 import unittest
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -39,6 +40,87 @@ class WorkflowContractTest(unittest.TestCase):
         )
         with self.assertRaisesRegex(RuntimeError, "app-launch test"):
             workflow_contract.verify_validation(broken)
+
+    def test_mobile_release_kit_android_signing_fallbacks_remain_bounded(self) -> None:
+        gradle = (workflow_contract.ROOT / "composeApp/build.gradle.kts").read_text(
+            encoding="utf-8"
+        )
+        inputs = (
+            ("PARLOR_ANDROID_KEYSTORE_PATH", "MOBILE_RELEASE_ANDROID_KEYSTORE_PATH", "storeFile"),
+            (
+                "PARLOR_ANDROID_KEYSTORE_PASSWORD",
+                "MOBILE_RELEASE_ANDROID_KEYSTORE_PASSWORD",
+                "storePassword",
+            ),
+            ("PARLOR_ANDROID_KEY_ALIAS", "MOBILE_RELEASE_ANDROID_KEY_ALIAS", "keyAlias"),
+            (
+                "PARLOR_ANDROID_KEY_PASSWORD",
+                "MOBILE_RELEASE_ANDROID_KEY_PASSWORD",
+                "keyPassword",
+            ),
+        )
+        for legacy_name, shared_name, property_name in inputs:
+            legacy = f'providers.environmentVariable("{legacy_name}")'
+            shared = f'providers.environmentVariable("{shared_name}")'
+            property_input = f'providers.gradleProperty("parlor.android.signing.{property_name}")'
+            with self.subTest(input=shared_name):
+                self.assertIn(legacy, gradle)
+                self.assertIn(shared, gradle)
+                self.assertIn(property_input, gradle)
+                self.assertLess(gradle.index(legacy), gradle.index(shared))
+                self.assertLess(gradle.index(shared), gradle.index(property_input))
+        self.assertIn('providers.environmentVariable("MOBILE_RELEASE_REQUIRE_SIGNING")', gradle)
+        self.assertIn("check(!releaseSigningRequired || releaseSigningConfigured)", gradle)
+
+    def test_mobile_release_kit_ios_signing_mapping_is_release_target_only(self) -> None:
+        project = (workflow_contract.ROOT / "iosApp/iosApp.xcodeproj/project.pbxproj").read_text(
+            encoding="utf-8"
+        )
+        configuration = (workflow_contract.ROOT / "iosApp/Configuration/Config.xcconfig").read_text(
+            encoding="utf-8"
+        )
+        for default in (
+            "MOBILE_RELEASE_IOS_CODE_SIGN_STYLE = Automatic",
+            "MOBILE_RELEASE_IOS_CODE_SIGN_IDENTITY =",
+            "MOBILE_RELEASE_IOS_PROVISIONING_PROFILE_SPECIFIER =",
+            "MOBILE_RELEASE_IOS_DEVELOPMENT_TEAM = $(TEAM_ID)",
+        ):
+            self.assertIn(default, configuration)
+
+        pattern = re.compile(
+            r"/\* (?P<name>Debug|Release) \*/ = \{\n"
+            r"\s+isa = XCBuildConfiguration;\n"
+            r".*?\s+buildSettings = \{\n"
+            r"(?P<settings>.*?)\n\s+\};\n"
+            r"\s+name = (?P=name);\n"
+            r"\s+\};",
+            re.DOTALL,
+        )
+        app_configuration_matches = [
+            (match.group("name"), match.group("settings"))
+            for match in pattern.finditer(project)
+            if re.search(
+                r'^\s*PRODUCT_NAME = "\$\(APP_NAME\)";\s*$',
+                match.group("settings"),
+                re.MULTILINE,
+            )
+        ]
+        self.assertEqual(len(app_configuration_matches), 2)
+        app_configurations = dict(app_configuration_matches)
+        self.assertEqual(set(app_configurations), {"Debug", "Release"})
+        debug = app_configurations["Debug"]
+        release = app_configurations["Release"]
+        self.assertIn("CODE_SIGN_STYLE = Automatic;", debug)
+        self.assertIn('DEVELOPMENT_TEAM = "$(TEAM_ID)";', debug)
+        self.assertNotIn("MOBILE_RELEASE_IOS_", debug)
+        for mapping in (
+            'CODE_SIGN_IDENTITY = "$(MOBILE_RELEASE_IOS_CODE_SIGN_IDENTITY)";',
+            'CODE_SIGN_STYLE = "$(MOBILE_RELEASE_IOS_CODE_SIGN_STYLE)";',
+            'DEVELOPMENT_TEAM = "$(MOBILE_RELEASE_IOS_DEVELOPMENT_TEAM)";',
+            'PROVISIONING_PROFILE_SPECIFIER = "$(MOBILE_RELEASE_IOS_PROVISIONING_PROFILE_SPECIFIER)";',
+        ):
+            self.assertIn(mapping, release)
+            self.assertEqual(project.count(mapping), 1)
 
     def test_candidate_bundletool_download_must_be_bounded(self) -> None:
         workflow = (workflow_contract.ROOT / ".github/workflows/testing-candidate.yml").read_text(

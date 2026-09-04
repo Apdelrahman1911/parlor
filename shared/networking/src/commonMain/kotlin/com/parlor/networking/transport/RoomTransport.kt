@@ -50,6 +50,15 @@ interface RoomTransport {
         Result.Failure(NetError.NotConnected)
 
     /**
+     * Permanently discards the protected membership returned by
+     * [resumableSession], even when no [LocalRoom] could be reconstructed.
+     * Implementations must use an ownership-checked transaction so a stale
+     * discard cannot erase a concurrently replaced membership. The default is
+     * only appropriate for transports that never persist resumable sessions.
+     */
+    suspend fun discardResumableSession(): Result<Unit, NetError> = Result.Success(Unit)
+
+    /**
      * Stream of rooms currently visible to this transport. Transports that
      * don't support discovery emit an empty list once and complete. A UI may
      * still collect a human room code, but the transport remains responsible

@@ -21,7 +21,7 @@ class ActiveTextContrastCallSiteTest {
         assertContains(button, "background = colors.accentEmber")
         assertContains(button, "background = colors.semanticDanger")
         assertContains(button, "foreground = colors.textOnAccent")
-        assertContains(button, "colors.accentEmberDeep.copy(alpha = 0.35f)")
+        assertContains(button, "colors.accentEmberGlow.copy(alpha = 0.35f)")
 
         val offlineBanner = read(
             "src/commonMain/kotlin/com/parlor/designsystem/components/OfflineBanner.kt",

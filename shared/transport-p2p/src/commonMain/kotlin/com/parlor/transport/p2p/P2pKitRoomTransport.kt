@@ -23,6 +23,7 @@ import com.parlor.networking.room.RoomInputPolicy
 import com.parlor.networking.room.RoomLifecycleState
 import com.parlor.networking.room.RoomMember
 import com.parlor.networking.room.SendTarget
+import com.parlor.networking.room.SessionEndCommitStatus
 import com.parlor.networking.transport.HostConfig
 import com.parlor.networking.transport.HostedGameProtocol
 import com.parlor.networking.transport.JoinConfig
@@ -78,6 +79,8 @@ internal interface AppLifecycleAwareRoom {
 }
 
 private const val REJOIN_SECRET_HEX_LENGTH: Int = 64
+private const val MAX_STAGED_TERMINAL_FRAMES: Int =
+    P2pTrafficLimits.PEER_APPLICATION_QUEUE_CAPACITY + 2
 
 /**
  * Adapts P2pKit (`dev.p2pkit.core.P2pKit`) to Parlor's [RoomTransport].
@@ -650,6 +653,49 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
                 }
             }
         }
+
+    override suspend fun discardResumableSession(): Result<Unit, NetError> {
+        val credential = when (val loaded = credentialStore.loadResumeCandidate()) {
+            is Result.Failure -> return Result.Failure(NetError.SecureStorageUnavailable)
+            is Result.Success -> loaded.data ?: return Result.Success(Unit)
+        }
+        val invalidated = try {
+            credentialStore.invalidateMembershipOwned(credential)
+        } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
+            failure.rethrowIfCancellation()
+            diagnostics.event(
+                P2pDiagnosticEventName.CREDENTIAL_INVALIDATION_FAILED,
+                P2pDiagnosticRole.PEER,
+                P2pDiagnosticResult.FAILURE,
+                P2pDiagnosticReason.INTERNAL,
+            )
+            return Result.Failure(NetError.SecureStorageUnavailable)
+        }
+        return when (invalidated) {
+            is Result.Success -> {
+                diagnostics.event(
+                    P2pDiagnosticEventName.CREDENTIAL_INVALIDATED,
+                    P2pDiagnosticRole.PEER,
+                    if (invalidated.data == CredentialInvalidationResult.Invalidated) {
+                        P2pDiagnosticResult.SUCCESS
+                    } else {
+                        P2pDiagnosticResult.DUPLICATE
+                    },
+                    P2pDiagnosticReason.SESSION_ENDED,
+                )
+                Result.Success(Unit)
+            }
+            is Result.Failure -> {
+                diagnostics.event(
+                    P2pDiagnosticEventName.CREDENTIAL_INVALIDATION_FAILED,
+                    P2pDiagnosticRole.PEER,
+                    P2pDiagnosticResult.FAILURE,
+                    P2pDiagnosticReason.INTERNAL,
+                )
+                Result.Failure(NetError.SecureStorageUnavailable)
+            }
+        }
+    }
 
     @Suppress("LongMethod") // One transactional resume path owns kit cleanup on every exit.
     override suspend fun resumeLastSession(): Result<LocalRoom, NetError> {
@@ -3553,6 +3599,12 @@ private data class ResumeAttemptOwnership(
     val expectedSession: P2pSession,
 )
 
+private data class StagedTerminalFrame(
+    val message: HostMessage.SessionEnded,
+    val session: P2pSession,
+    val credentialBinding: ResumableSessionCredential?,
+)
+
 // ============================================================================ Peer room ==
 
 internal class PeerP2pRoom(
@@ -3617,10 +3669,15 @@ internal class PeerP2pRoom(
     private var left = false
     private val lifecycleMutex = Mutex()
     private val sessionMutex = Mutex()
+    private val terminalCommitMutex = Mutex()
     private var lifecycleExpiryJob: Job? = null
     private var resumeJob: Job? = null
-    /** An authenticated host terminal frame permanently disables logical resume. */
+    /** A session-validated authenticated terminal frame permanently disables resume. */
     private var terminalByHost = false
+    /** Authenticated provenance retained until the session layer validates the frame. */
+    private val stagedTerminalFrames = ArrayDeque<StagedTerminalFrame>()
+    /** Blocks resume/adoption while validated terminal revocation is committing. */
+    private var terminalCommitInFlight: StagedTerminalFrame? = null
     /** The pre-background socket can never reactivate this logical room. */
     private var lifecycleRetiredSession: P2pSession? = null
     private var activeSession: P2pSession = session
@@ -3635,6 +3692,9 @@ internal class PeerP2pRoom(
         )
 
         val transition = lifecycleMutex.withLock {
+            if (left || terminalByHost || terminalCommitInFlight != null) {
+                return@withLock null
+            }
             when (val current = _lifecycle.value) {
                 RoomLifecycleState.Active -> {
                     val deadline = atEpochMillis + appResumeGraceMs
@@ -3690,6 +3750,9 @@ internal class PeerP2pRoom(
 
     override suspend fun appForegrounded(atEpochMillis: Long) {
         val deadline = lifecycleMutex.withLock {
+            if (left || terminalByHost || terminalCommitInFlight != null) {
+                return@withLock null
+            }
             when (val current = _lifecycle.value) {
                 is RoomLifecycleState.Suspended -> current.resumeDeadlineEpochMillis
                 is RoomLifecycleState.Resuming -> current.resumeDeadlineEpochMillis
@@ -3736,6 +3799,7 @@ internal class PeerP2pRoom(
                     lifecycleMutex.withLock {
                         !left &&
                             !terminalByHost &&
+                            terminalCommitInFlight == null &&
                             (_lifecycle.value as? RoomLifecycleState.Resuming)
                                 ?.resumeDeadlineEpochMillis == deadline
                     }
@@ -3774,7 +3838,12 @@ internal class PeerP2pRoom(
                 }
         }
         val accepted = lifecycleMutex.withLock {
-            if (left || terminalByHost || resumeJob?.isActive == true) {
+            if (
+                left ||
+                terminalByHost ||
+                terminalCommitInFlight != null ||
+                resumeJob?.isActive == true
+            ) {
                 false
             } else {
                 resumeJob = job
@@ -3840,7 +3909,9 @@ internal class PeerP2pRoom(
         ownership: ResumeAttemptOwnership?,
     ): SessionReplacementOutcome {
         val old = lifecycleMutex.withLock {
-            if (left || terminalByHost) return SessionReplacementOutcome.NotAdopted
+            if (left || terminalByHost || terminalCommitInFlight != null) {
+                return SessionReplacementOutcome.NotAdopted
+            }
             sessionMutex.withLock {
                 if (
                     ownership != null &&
@@ -4005,7 +4076,9 @@ internal class PeerP2pRoom(
         expectedSession: P2pSession? = null,
     ): Boolean {
         val restored = lifecycleMutex.withLock lifecycleLock@{
-            if (left || terminalByHost) return@lifecycleLock false
+            if (left || terminalByHost || terminalCommitInFlight != null) {
+                return@lifecycleLock false
+            }
             sessionMutex.withLock sessionLock@{
                 if (expectedSession != null && activeSession !== expectedSession) {
                     return@sessionLock false
@@ -4042,6 +4115,15 @@ internal class PeerP2pRoom(
 
     private suspend fun scheduleLifecycleExpiry(deadline: Long, delayMs: Long) {
         lifecycleMutex.withLock {
+            if (left || terminalByHost || terminalCommitInFlight != null) return
+            val currentDeadline = when (val current = _lifecycle.value) {
+                is RoomLifecycleState.Suspended -> current.resumeDeadlineEpochMillis
+                is RoomLifecycleState.Resuming -> current.resumeDeadlineEpochMillis
+                RoomLifecycleState.Active,
+                RoomLifecycleState.Expired,
+                RoomLifecycleState.Closed -> null
+            }
+            if (currentDeadline != deadline) return
             lifecycleExpiryJob?.cancel()
             lifecycleExpiryJob = scope.launch {
                 delay(delayMs.coerceAtLeast(0L))
@@ -4130,7 +4212,7 @@ internal class PeerP2pRoom(
                 return@collect
             }
             if (decoded is HostMessage.SessionEnded) {
-                if (!acceptAuthenticatedTerminal(session, credentialBinding)) {
+                if (!stageAuthenticatedTerminal(decoded, session, credentialBinding)) {
                     return@collect
                 }
             }
@@ -4168,40 +4250,147 @@ internal class PeerP2pRoom(
     }
 
     /**
-     * Accepts a terminal frame only from the currently owned physical session.
-     * The collector's credential binding is invalidated before the frame reaches
-     * UI/game cleanup, so process/UI teardown is not required for correctness.
+     * Retains authenticated physical provenance without applying any logical
+     * terminal effect. The session coordinator must first validate the exact
+     * protocol/session/game/version/sequence/revision envelope and then call
+     * [commitValidatedSessionEnd].
      */
-    private suspend fun acceptAuthenticatedTerminal(
+    private suspend fun stageAuthenticatedTerminal(
+        message: HostMessage.SessionEnded,
         session: P2pSession,
         credentialBinding: ResumableSessionCredential?,
-    ): Boolean {
-        var resumeToCancel: Job? = null
-        val accepted = lifecycleMutex.withLock {
-            if (left || terminalByHost) {
-                false
-            } else {
-                sessionMutex.withLock {
-                    if (activeSession !== session) {
-                        false
-                    } else {
-                        terminalByHost = true
-                        resumeToCancel = resumeJob
-                        resumeJob = null
-                        true
+    ): Boolean = lifecycleMutex.withLock lifecycleLock@{
+        if (left || terminalByHost || terminalCommitInFlight != null) {
+            return@lifecycleLock false
+        }
+        sessionMutex.withLock sessionLock@{
+            if (activeSession !== session) return@sessionLock false
+            stagedTerminalFrames.addLast(
+                StagedTerminalFrame(message, session, credentialBinding),
+            )
+            while (stagedTerminalFrames.size > MAX_STAGED_TERMINAL_FRAMES) {
+                stagedTerminalFrames.removeFirst()
+            }
+            true
+        }
+    }
+
+    /**
+     * Atomically converts one staged, session-validated terminal frame into a
+     * permanent logical end. Credential deletion must succeed before the room
+     * is terminal; otherwise the exact frame stays retryable and resume remains
+     * possible.
+     */
+    override suspend fun commitValidatedSessionEnd(
+        message: HostMessage.SessionEnded,
+    ): Result<SessionEndCommitStatus, NetError> = terminalCommitMutex.withLock {
+        val transaction = beginTerminalCommit(message)
+            ?: return@withLock Result.Success(SessionEndCommitStatus.NotOwned)
+        var settled = false
+        try {
+            withContext(NonCancellable) {
+                transaction.jobs.forEach { it.cancelAndJoin() }
+                when (
+                    val invalidated = invalidateCredentialForRoom(
+                        transaction.frame.credentialBinding,
+                        P2pDiagnosticReason.SESSION_ENDED,
+                        CredentialInvalidationScope.LogicalMembership,
+                    )
+                ) {
+                    is Result.Success -> {
+                        val status = finishTerminalCommit(transaction.frame)
+                        settled = true
+                        Result.Success(status)
+                    }
+                    is Result.Failure -> {
+                        rollbackTerminalCommit(transaction.frame)
+                        settled = true
+                        Result.Failure(invalidated.error)
                     }
                 }
             }
+        } finally {
+            if (!settled) {
+                withContext(NonCancellable) {
+                    rollbackTerminalCommit(transaction.frame)
+                }
+            }
         }
-        if (!accepted) return false
+    }
 
-        resumeToCancel?.cancel()
-        invalidateCredentialForRoom(
-            credentialBinding,
-            P2pDiagnosticReason.SESSION_ENDED,
-            CredentialInvalidationScope.LogicalMembership,
-        )
-        return true
+    private data class TerminalCommitTransaction(
+        val frame: StagedTerminalFrame,
+        val jobs: List<Job>,
+    )
+
+    private suspend fun beginTerminalCommit(
+        message: HostMessage.SessionEnded,
+    ): TerminalCommitTransaction? = lifecycleMutex.withLock lifecycleLock@{
+        if (left || terminalByHost || terminalCommitInFlight != null) {
+            return@lifecycleLock null
+        }
+        sessionMutex.withLock sessionLock@{
+            stagedTerminalFrames.removeAll { it.session !== activeSession }
+            val index = stagedTerminalFrames.indexOfLast { staged ->
+                staged.session === activeSession && staged.message == message
+            }
+            if (index < 0) return@sessionLock null
+            val frame = stagedTerminalFrames.removeAt(index)
+            terminalCommitInFlight = frame
+            val jobs = listOfNotNull(lifecycleExpiryJob, resumeJob).distinct()
+            lifecycleExpiryJob = null
+            resumeJob = null
+            TerminalCommitTransaction(frame, jobs)
+        }
+    }
+
+    private suspend fun finishTerminalCommit(
+        frame: StagedTerminalFrame,
+    ): SessionEndCommitStatus = lifecycleMutex.withLock lifecycleLock@{
+        if (terminalCommitInFlight !== frame) {
+            return@lifecycleLock SessionEndCommitStatus.NotOwned
+        }
+        sessionMutex.withLock {
+            terminalCommitInFlight = null
+            if (left || activeSession !== frame.session) {
+                SessionEndCommitStatus.NotOwned
+            } else {
+                terminalByHost = true
+                stagedTerminalFrames.clear()
+                SessionEndCommitStatus.Committed
+            }
+        }
+    }
+
+    private suspend fun rollbackTerminalCommit(frame: StagedTerminalFrame) {
+        data class Recovery(val deadline: Long, val resume: Boolean)
+
+        val recovery = lifecycleMutex.withLock lifecycleLock@{
+            if (terminalCommitInFlight !== frame) return@lifecycleLock null
+            sessionMutex.withLock sessionLock@{
+                terminalCommitInFlight = null
+                if (left || terminalByHost || activeSession !== frame.session) {
+                    return@sessionLock null
+                }
+                stagedTerminalFrames.addFirst(frame)
+                while (stagedTerminalFrames.size > MAX_STAGED_TERMINAL_FRAMES) {
+                    stagedTerminalFrames.removeLast()
+                }
+                when (val current = _lifecycle.value) {
+                    is RoomLifecycleState.Suspended ->
+                        Recovery(current.resumeDeadlineEpochMillis, resume = false)
+                    is RoomLifecycleState.Resuming ->
+                        Recovery(current.resumeDeadlineEpochMillis, resume = true)
+                    RoomLifecycleState.Active,
+                    RoomLifecycleState.Expired,
+                    RoomLifecycleState.Closed -> null
+                }
+            }
+        }
+        recovery ?: return
+        val remaining = (recovery.deadline - nowMillis()).coerceAtLeast(0L)
+        scheduleLifecycleExpiry(recovery.deadline, remaining)
+        if (recovery.resume) resumeAfterForeground(recovery.deadline)
     }
 
     /**
@@ -4357,7 +4546,9 @@ internal class PeerP2pRoom(
 
     private suspend fun markHostLostIfActive(session: P2pSession): Boolean {
         val marked = lifecycleMutex.withLock lifecycleLock@{
-            if (left || terminalByHost) return@lifecycleLock false
+            if (left || terminalByHost || terminalCommitInFlight != null) {
+                return@lifecycleLock false
+            }
             sessionMutex.withLock sessionLock@{
                 if (activeSession !== session) return@sessionLock false
                 markHostConnected(false)
@@ -4380,7 +4571,9 @@ internal class PeerP2pRoom(
     private suspend fun beginForegroundResume(expectedSession: P2pSession) {
         val now = nowMillis()
         val deadline = lifecycleMutex.withLock lifecycleLock@{
-            if (left || terminalByHost) return@lifecycleLock null
+            if (left || terminalByHost || terminalCommitInFlight != null) {
+                return@lifecycleLock null
+            }
             sessionMutex.withLock sessionLock@{
                 if (activeSession !== expectedSession) return@sessionLock null
                 when (val current = _lifecycle.value) {
@@ -4414,7 +4607,9 @@ internal class PeerP2pRoom(
 
     override suspend fun sendToHost(message: PeerMessage): Result<Unit, NetError> {
         val session = lifecycleMutex.withLock {
-            if (left || terminalByHost) return Result.Failure(NetError.NotConnected)
+            if (left || terminalByHost || terminalCommitInFlight != null) {
+                return Result.Failure(NetError.NotConnected)
+            }
             sessionMutex.withLock { activeSession }
         }
         if (session.state.value != ConnectionState.Connected) {
@@ -4499,6 +4694,7 @@ internal class PeerP2pRoom(
                 Triple(false, emptyList(), null)
             } else {
                 left = true
+                stagedTerminalFrames.clear()
                 val toCancel = listOfNotNull(lifecycleExpiryJob, resumeJob)
                 lifecycleExpiryJob = null
                 resumeJob = null

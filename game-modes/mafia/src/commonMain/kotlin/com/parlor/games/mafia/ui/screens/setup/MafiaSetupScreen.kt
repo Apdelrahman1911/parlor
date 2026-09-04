@@ -33,8 +33,11 @@ import androidx.compose.ui.unit.dp
 import com.parlor.designsystem.backdrop.HeroBackdrop
 import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ParlorButton
-import com.parlor.designsystem.components.ParlorButtonVariant
 import com.parlor.designsystem.components.ParlorCard
+import com.parlor.designsystem.components.ParlorIconButton
+import com.parlor.designsystem.components.ParlorIconButtonVariant
+import com.parlor.designsystem.icons.ParlorIcons
+import com.parlor.designsystem.components.parlorSafeContentPadding
 import com.parlor.designsystem.theme.ParlorTheme
 import com.parlor.games.mafia.domain.settings.MafiaKillTie
 import com.parlor.games.mafia.domain.settings.MafiaRoleCounts
@@ -67,9 +70,7 @@ import com.parlor.games.mafia.resources.settings_kill_tie_random
 import com.parlor.games.mafia.resources.settings_kill_tie_revote
 import com.parlor.games.mafia.resources.settings_max_revotes
 import com.parlor.games.mafia.resources.settings_role_count_decrement_description_format
-import com.parlor.games.mafia.resources.settings_role_count_decrement_label
 import com.parlor.games.mafia.resources.settings_role_count_increment_description_format
-import com.parlor.games.mafia.resources.settings_role_count_increment_label
 import com.parlor.games.mafia.resources.settings_roles_card
 import com.parlor.games.mafia.resources.settings_start
 import com.parlor.games.mafia.resources.settings_start_description
@@ -120,8 +121,8 @@ fun MafiaSetupScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .imePadding()
-                .padding(ParlorTheme.spacing.xl)
-                .verticalScroll(rememberScrollState()),
+                .verticalScroll(rememberScrollState())
+                .parlorSafeContentPadding(ParlorTheme.spacing.xl),
             verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.l),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -349,8 +350,6 @@ private fun RoleCountStepperRow(
     decEnabled: Boolean,
     incEnabled: Boolean,
 ) {
-    val decLabel = stringResource(Res.string.settings_role_count_decrement_label)
-    val incLabel = stringResource(Res.string.settings_role_count_increment_label)
     val decDesc = stringResource(Res.string.settings_role_count_decrement_description_format, name)
     val incDesc = stringResource(Res.string.settings_role_count_increment_description_format, name)
 
@@ -368,12 +367,12 @@ private fun RoleCountStepperRow(
             horizontalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            ParlorButton(
-                label = decLabel,
+            ParlorIconButton(
+                icon = ParlorIcons.Remove,
                 contentDescription = decDesc,
                 onClick = onDecrement,
                 enabled = decEnabled,
-                variant = ParlorButtonVariant.Ghost,
+                variant = ParlorIconButtonVariant.Ghost,
             )
             Text(
                 text = count.toString(),
@@ -382,12 +381,12 @@ private fun RoleCountStepperRow(
                 textAlign = TextAlign.Center,
                 modifier = Modifier.widthIn(min = 32.dp),
             )
-            ParlorButton(
-                label = incLabel,
+            ParlorIconButton(
+                icon = ParlorIcons.Add,
                 contentDescription = incDesc,
                 onClick = onIncrement,
                 enabled = incEnabled,
-                variant = ParlorButtonVariant.Ghost,
+                variant = ParlorIconButtonVariant.Ghost,
             )
         }
     }
