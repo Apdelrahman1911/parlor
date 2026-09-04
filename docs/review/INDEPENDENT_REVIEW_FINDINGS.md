@@ -193,8 +193,9 @@ are additional fixes.
 | RR-RELEASE-01 | `27bebac` |
 | RR-BUILD-01 | `20a02c5`, `b909b58` |
 | RR-TEST-01 | `5a1b1de` |
+| WT-RELEASE-01 | `fffd2d6` |
 | Reviewed feature migrations, no defect closure | `26ac4b0`, `42ec623`, `526338e`, `2546a05`, `c6af17e`, `db0c8c3` |
-| Regression/review infrastructure, no product defect | `05a3c1b`, `64f58e6`, `b6dbb52`, `0738676` |
+| Regression/review infrastructure, no product defect | `05a3c1b`, `64f58e6`, `b6dbb52`, `0738676`, `55922f6` |
 
 Some commits intentionally appear in two groups where one atomic change closed
 two inseparable root causes (for example unreadable storage plus recovery UI,
@@ -224,7 +225,7 @@ as closure evidence without the tests named in the corresponding finding.
 These are not converted into automated PASS results and do not permit a
 production-ready claim.
 
-## Working-tree qualification boundary and verdict
+## Mobile Release Kit qualification boundary and verdict
 
 After closing `RR-TEST-01`, clean commit
 `fc29fa0b9d87e803937468e45021a515ed0f6920` (tree
@@ -239,22 +240,24 @@ three physical LAN devices; skipped x64 runtime tasks are host-architecture
 limitations, while x64 compilation/linkage passed in `productionAppleCheck`.
 Build outputs were cleaned and Parlor Gradle daemons stopped after every batch.
 
-### Preserved working-tree finding
+### Mobile Release Kit finding
 
 | ID | Severity | Exact location and reproduction | Root cause and recommended fix | Classification / status |
 |---|---|---|---|---|
-| WT-RELEASE-01 | Medium | Uncommitted `scripts/release/tests/test_workflow_contract.py`, `WorkflowContractTest.test_mobile_release_kit_ios_signing_mapping_is_release_target_only`: the focused test fails because the parsed `Release` settings belong to the UI-test target and therefore lack the new Mobile Release Kit mappings. | A dictionary keyed only by `Debug`/`Release` accepts every target containing `PRODUCT_BUNDLE_IDENTIFIER`, so later UI-test configurations overwrite the application configurations. Select the two blocks whose exact `PRODUCT_NAME` is `$(APP_NAME)`, assert that exactly two matched, then build the dictionary. | Pre-existing uncommitted user work, not a committed-candidate regression; OPEN and intentionally not modified without owner approval. |
+| WT-RELEASE-01 | Medium | `scripts/release/tests/test_workflow_contract.py`, `WorkflowContractTest.test_mobile_release_kit_ios_signing_mapping_is_release_target_only`: the focused test failed because the parsed `Release` settings belonged to the UI-test target and therefore lacked the new Mobile Release Kit mappings. | A dictionary keyed only by `Debug`/`Release` accepted every target containing `PRODUCT_BUNDLE_IDENTIFIER`, so later UI-test configurations overwrote the application configurations. The test now selects exactly two blocks whose exact `PRODUCT_NAME` is `$(APP_NAME)` before building the Debug/Release dictionary. | Pre-existing Mobile Release Kit worktree defect; focused failure reproduced, root cause fixed in `fffd2d6`; CLOSED on the isolated feature branch. |
 
-The fix above was independently exercised in an isolated worktree without
-altering the primary checkout: its focused test passed, followed by all 130
-release-system tests and inventory validation. The remaining Mobile Release
-Kit changes are still uncommitted and outside the qualified tree; after owner
-approval, the one-hunk test correction and the complete feature must be
-reviewed, committed on a focused branch, and requalified together.
+The original focused failure was reproduced before the fix. The correction was
+then reviewed independently and exercised on the isolated feature branch: the
+focused test passed, all 130 release-system tests passed, Xcode Debug and
+Release effective settings matched their intended target-scoped identities,
+and Android configuration failed closed when shared signing was required but
+missing. The feature remains non-publishing and both Store identities remain
+explicitly blocked. The primary checkout was not altered; integration still
+requires preserving or deliberately adopting its matching user-owned changes.
 
-**Final verdict: NOT READY.** The blockers are the failing uncommitted release
-work, open issue `#230` (Store identity/credentials/infrastructure), open issue
-`#6` (real multi-device LAN evidence), and the remaining physical-device,
-signed-artifact, Store, accessibility, and owner/legal gates above. No mock,
-simulator, unsigned build, or source inspection is represented as satisfying
-those external requirements.
+**Final verdict: NOT READY.** The blockers are open issue `#230` (Store
+identity/credentials/infrastructure), open issue `#6` (real multi-device LAN
+evidence), integration and exact-tree qualification of the isolated Mobile
+Release Kit branch, and the remaining physical-device, signed-artifact, Store,
+accessibility, and owner/legal gates above. No mock, simulator, unsigned build,
+or source inspection is represented as satisfying those external requirements.
