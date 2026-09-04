@@ -57,12 +57,12 @@ class AndroidReleaseLintContractTest {
             .map(String::trim)
             .filter { line -> line.isNotEmpty() && !line.startsWith('#') }
             .toList()
-        assertEquals(30, accepted.size)
+        assertEquals(32, accepted.size)
         assertEquals(
             mapOf(
                 "AndroidGradlePluginVersion" to 4,
-                "GradleDependency" to 2,
-                "NewerVersionAvailable" to 23,
+                "GradleDependency" to 3,
+                "NewerVersionAvailable" to 24,
                 "OldTargetApi" to 1,
             ),
             accepted.groupingBy { line -> line.substringBefore('|') }.eachCount(),
@@ -83,7 +83,7 @@ class AndroidReleaseLintContractTest {
         assertContains(catalog, "androidx-activity-compose")
         assertContains(appBuild, "implementation(libs.androidx.activity.compose)")
         assertContains(triage, "reported 59 warnings")
-        assertContains(triage, "contains 29")
+        assertContains(triage, "contains 32")
     }
 
     @Test
