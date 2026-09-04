@@ -71,15 +71,19 @@ tasks.withType<org.gradle.api.tasks.testing.Test>().configureEach {
 // Environment variables are preferred in CI; equivalent Gradle properties
 // make local store builds possible without changing this file.
 val releaseStoreFile = providers.environmentVariable("PARLOR_ANDROID_KEYSTORE_PATH")
+    .orElse(providers.environmentVariable("MOBILE_RELEASE_ANDROID_KEYSTORE_PATH"))
     .orElse(providers.gradleProperty("parlor.android.signing.storeFile"))
     .orNull
 val releaseStorePassword = providers.environmentVariable("PARLOR_ANDROID_KEYSTORE_PASSWORD")
+    .orElse(providers.environmentVariable("MOBILE_RELEASE_ANDROID_KEYSTORE_PASSWORD"))
     .orElse(providers.gradleProperty("parlor.android.signing.storePassword"))
     .orNull
 val releaseKeyAlias = providers.environmentVariable("PARLOR_ANDROID_KEY_ALIAS")
+    .orElse(providers.environmentVariable("MOBILE_RELEASE_ANDROID_KEY_ALIAS"))
     .orElse(providers.gradleProperty("parlor.android.signing.keyAlias"))
     .orNull
 val releaseKeyPassword = providers.environmentVariable("PARLOR_ANDROID_KEY_PASSWORD")
+    .orElse(providers.environmentVariable("MOBILE_RELEASE_ANDROID_KEY_PASSWORD"))
     .orElse(providers.gradleProperty("parlor.android.signing.keyPassword"))
     .orNull
 val releaseSigningConfigured = listOf(
@@ -88,6 +92,13 @@ val releaseSigningConfigured = listOf(
     releaseKeyAlias,
     releaseKeyPassword,
 ).all { !it.isNullOrBlank() }
+val releaseSigningRequired = providers.environmentVariable("MOBILE_RELEASE_REQUIRE_SIGNING")
+    .map { it.equals("true", ignoreCase = true) }
+    .getOrElse(false)
+
+check(!releaseSigningRequired || releaseSigningConfigured) {
+    "MOBILE_RELEASE_REQUIRE_SIGNING=true, but Android release signing is not fully configured."
+}
 
 kotlin {
     androidTarget {
@@ -517,11 +528,12 @@ val verifyReleaseSigning by tasks.registering {
         check(releaseSigningConfigured) {
             """
             Android store signing is not configured. Set all of:
-              PARLOR_ANDROID_KEYSTORE_PATH
-              PARLOR_ANDROID_KEYSTORE_PASSWORD
-              PARLOR_ANDROID_KEY_ALIAS
-              PARLOR_ANDROID_KEY_PASSWORD
-            (or the matching parlor.android.signing.* Gradle properties).
+              MOBILE_RELEASE_ANDROID_KEYSTORE_PATH
+              MOBILE_RELEASE_ANDROID_KEYSTORE_PASSWORD
+              MOBILE_RELEASE_ANDROID_KEY_ALIAS
+              MOBILE_RELEASE_ANDROID_KEY_PASSWORD
+            The legacy PARLOR_ANDROID_* names and matching
+            parlor.android.signing.* Gradle properties remain supported.
             """.trimIndent()
         }
         check(rootProject.file(requireNotNull(releaseStoreFile)).isFile) {
