@@ -255,9 +255,23 @@ missing. The feature remains non-publishing and both Store identities remain
 explicitly blocked. The primary checkout was not altered; integration still
 requires preserving or deliberately adopting its matching user-owned changes.
 
+The executable feature-branch head
+`50f0aabd22335306fc43d48820a9a6cf84a98ff8` (tree
+`05e67f6e397f248cc6a25eb6774c1efc6abf783e`) then passed
+`productionCheck` (903 tasks), `allTests` (861 tasks),
+`productionAppleCheck` (147 tasks), and
+`productionIosSimulatorRuntimeTests` (188 tasks), all with strict dependency
+verification. The release validator passed 130 tests and verified all 628
+inventory rows. Two earlier Apple aggregate attempts lost their shared Gradle
+daemon during framework linkage; a serial rerun with an isolated daemon
+registry passed, distinguishing the host-process collision from a source or
+test failure. Every Gradle batch was followed by daemon shutdown and removal
+of generated `build/` directories.
+
 **Final verdict: NOT READY.** The blockers are open issue `#230` (Store
 identity/credentials/infrastructure), open issue `#6` (real multi-device LAN
-evidence), integration and exact-tree qualification of the isolated Mobile
-Release Kit branch, and the remaining physical-device, signed-artifact, Store,
-accessibility, and owner/legal gates above. No mock, simulator, unsigned build,
-or source inspection is represented as satisfying those external requirements.
+evidence), integration of the isolated Mobile Release Kit branch without
+overwriting the matching primary-checkout user work, and the remaining
+physical-device, signed-artifact, Store, accessibility, and owner/legal gates
+above. No mock, simulator, unsigned build, or source inspection is represented
+as satisfying those external requirements.
