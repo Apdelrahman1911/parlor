@@ -16,6 +16,7 @@ import com.parlor.engine.state.GameState
 import com.parlor.session.SessionController
 import com.parlor.session.SubmissionReceipt
 import com.parlor.session.ViewerContext
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -67,6 +68,7 @@ class PassAndPlaySessionController<S : GameState, A : GameAction, E : GameEvent>
 
     private val _events = MutableSharedFlow<E>(extraBufferCapacity = 64)
     override val events: SharedFlow<E> = _events.asSharedFlow()
+    private var eventTail = CompletableDeferred<Unit>().also { it.complete(Unit) }
 
     private val privateFlows: MutableMap<PlayerId, StateFlow<PrivateProjection<S>>> = mutableMapOf()
 
@@ -107,15 +109,25 @@ class PassAndPlaySessionController<S : GameState, A : GameAction, E : GameEvent>
         // momentarily-absent collector back-pressure and stall every other
         // submit (UI, host bridge, PartyAwareSession ack bursts).
         // See PROBLEMS_PARLOR.md → session-01.
-        val (reduction, stateChanged) = mutex.withLock {
+        val (stateChanged, eventTurn) = mutex.withLock {
             if (closed) return Result.Failure(SubmitError.SessionClosed)
             val current = state.value
             val reduction = reducer.reduce(current, action, reducerContext)
             val changed = reduction.newState != current
             if (changed) state.value = reduction.newState
-            reduction to changed
+            val turn = if (reduction.events.isEmpty()) {
+                null
+            } else {
+                val completion = CompletableDeferred<Unit>()
+                OrderedEventEmissionTurn(
+                    previous = eventTail,
+                    completion = completion,
+                    events = reduction.events,
+                ).also { eventTail = completion }
+            }
+            changed to turn
         }
-        reduction.events.forEach { _events.emit(it) }
+        eventTurn?.emitTo(_events::emit)
         return Result.Success(SubmissionReceipt(stateChanged))
     }
 
@@ -127,5 +139,21 @@ class PassAndPlaySessionController<S : GameState, A : GameAction, E : GameEvent>
         // Linearize closure with canonical reducer commits. Once close returns,
         // no in-flight or later submit can commit another state transition.
         mutex.withLock { closed = true }
+    }
+}
+
+/** A commit-ordered event batch reserved while the canonical-state mutex is held. */
+internal class OrderedEventEmissionTurn<E>(
+    private val previous: CompletableDeferred<Unit>,
+    private val completion: CompletableDeferred<Unit>,
+    private val events: List<E>,
+) {
+    suspend fun emitTo(emit: suspend (E) -> Unit) {
+        try {
+            previous.await()
+            events.forEach { event -> emit(event) }
+        } finally {
+            completion.complete(Unit)
+        }
     }
 }
