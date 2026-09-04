@@ -61,4 +61,29 @@ class CaseSummaryValidatorTest {
             CaseSummaryValidator.validateShape(GameId("whodunit"), listOf(oversizedTitle)),
         )
     }
+
+    @Test
+    fun shape_validation_rejects_control_and_format_characters_in_display_data() {
+        val unsafeFields = listOf(
+            valid.copy(title = "The Last\nDinner") to "title",
+            valid.copy(title = "Mystery\uD83C") to "title",
+            valid.copy(subtitle = "A \u202Emystery") to "subtitle",
+            valid.copy(theme = "country\u200Bmanor") to "theme",
+        )
+
+        unsafeFields.forEach { (summary, field) ->
+            assertIs<Result.Failure<ValidationError>>(
+                CaseSummaryValidator.validateShape(GameId("whodunit"), listOf(summary)),
+            ).also { failure ->
+                assertEquals(field, (failure.error as ValidationError.MalformedField).path)
+            }
+        }
+
+        assertIs<Result.Success<List<CaseSummary>>>(
+            CaseSummaryValidator.validateShape(
+                GameId("whodunit"),
+                listOf(valid.copy(title = "Mystery 🎭")),
+            ),
+        )
+    }
 }
