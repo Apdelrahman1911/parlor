@@ -654,6 +654,49 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
             }
         }
 
+    override suspend fun discardResumableSession(): Result<Unit, NetError> {
+        val credential = when (val loaded = credentialStore.loadResumeCandidate()) {
+            is Result.Failure -> return Result.Failure(NetError.SecureStorageUnavailable)
+            is Result.Success -> loaded.data ?: return Result.Success(Unit)
+        }
+        val invalidated = try {
+            credentialStore.invalidateMembershipOwned(credential)
+        } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
+            failure.rethrowIfCancellation()
+            diagnostics.event(
+                P2pDiagnosticEventName.CREDENTIAL_INVALIDATION_FAILED,
+                P2pDiagnosticRole.PEER,
+                P2pDiagnosticResult.FAILURE,
+                P2pDiagnosticReason.INTERNAL,
+            )
+            return Result.Failure(NetError.SecureStorageUnavailable)
+        }
+        return when (invalidated) {
+            is Result.Success -> {
+                diagnostics.event(
+                    P2pDiagnosticEventName.CREDENTIAL_INVALIDATED,
+                    P2pDiagnosticRole.PEER,
+                    if (invalidated.data == CredentialInvalidationResult.Invalidated) {
+                        P2pDiagnosticResult.SUCCESS
+                    } else {
+                        P2pDiagnosticResult.DUPLICATE
+                    },
+                    P2pDiagnosticReason.SESSION_ENDED,
+                )
+                Result.Success(Unit)
+            }
+            is Result.Failure -> {
+                diagnostics.event(
+                    P2pDiagnosticEventName.CREDENTIAL_INVALIDATION_FAILED,
+                    P2pDiagnosticRole.PEER,
+                    P2pDiagnosticResult.FAILURE,
+                    P2pDiagnosticReason.INTERNAL,
+                )
+                Result.Failure(NetError.SecureStorageUnavailable)
+            }
+        }
+    }
+
     @Suppress("LongMethod") // One transactional resume path owns kit cleanup on every exit.
     override suspend fun resumeLastSession(): Result<LocalRoom, NetError> {
         val credential = when (val loaded = credentialStore.loadResumeCandidate()) {
