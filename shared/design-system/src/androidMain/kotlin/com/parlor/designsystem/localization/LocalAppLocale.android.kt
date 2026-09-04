@@ -32,7 +32,7 @@ internal actual fun PlatformAppLocale(
     val requestedLocale = remember(languageTag, systemLocale) {
         languageTag?.let(Locale::forLanguageTag) ?: systemLocale
     }
-    var appliedLanguageTag by remember(languageTag, systemLocale) {
+    var appliedLanguageTag by remember {
         mutableStateOf<String?>(null)
     }
 
@@ -60,8 +60,9 @@ internal actual fun PlatformAppLocale(
         loading()
         return
     }
+    val activeLocale = remember(activeTag) { Locale.forLanguageTag(activeTag) }
     val localizedConfiguration = remember(baseConfiguration, activeTag) {
-        Configuration(baseConfiguration).apply { setLocale(requestedLocale) }
+        Configuration(baseConfiguration).apply { setLocale(activeLocale) }
     }
     val localizedContext = remember(baseContext, localizedConfiguration) {
         baseContext.createConfigurationContext(localizedConfiguration)

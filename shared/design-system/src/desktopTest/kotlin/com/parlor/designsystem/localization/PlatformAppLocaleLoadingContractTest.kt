@@ -6,11 +6,12 @@ import kotlin.test.assertTrue
 
 class PlatformAppLocaleLoadingContractTest {
     @Test
-    fun every_platform_renders_the_loading_slot_before_its_locale_effect_applies() {
+    fun every_platform_loads_initially_without_keying_applied_state_to_language_changes() {
         platformActuals.forEach { relativePath ->
             val source = repositoryRoot().resolve(relativePath).readText().replace("\r\n", "\n")
 
             assertTrue("loading: @Composable () -> Unit" in source, relativePath)
+            assertTrue("var appliedLanguageTag by remember {" in source, relativePath)
             assertTrue("val activeTag = appliedLanguageTag ?: run {" in source, relativePath)
             assertTrue("loading()\n        return" in source, relativePath)
         }

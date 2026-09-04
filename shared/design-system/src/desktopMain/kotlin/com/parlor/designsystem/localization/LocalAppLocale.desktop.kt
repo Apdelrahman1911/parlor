@@ -18,7 +18,7 @@ internal actual fun PlatformAppLocale(
     loading: @Composable () -> Unit,
     content: @Composable (activeLanguageTag: String?) -> Unit,
 ) {
-    var appliedLanguageTag by remember(languageTag) { mutableStateOf<String?>(null) }
+    var appliedLanguageTag by remember { mutableStateOf<String?>(null) }
 
     DisposableEffect(languageTag) {
         val previousLocale = Locale.getDefault()
