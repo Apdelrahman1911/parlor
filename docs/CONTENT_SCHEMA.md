@@ -72,7 +72,8 @@ motive, private secret, complete innocent brief, complete guilty brief, 1–32
 timeline entries, unique non-self valid deflection targets, and optional
 bounded details. Required text must be non-blank. The validator's constants are
 the exact length limits; content authors must not infer a looser limit from UI
-layout.
+layout. Displayed envelope and payload text fields reject ISO control characters,
+Unicode format controls (including bidi overrides), and malformed UTF-16.
 
 ## Clue invariants
 

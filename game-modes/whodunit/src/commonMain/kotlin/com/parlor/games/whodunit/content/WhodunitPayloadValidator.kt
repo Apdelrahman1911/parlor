@@ -1,6 +1,7 @@
 package com.parlor.games.whodunit.content
 
 import com.parlor.content.schema.CaseEnvelope
+import com.parlor.content.validation.AuthoredTextPolicy
 import com.parlor.content.validation.PayloadValidator
 import com.parlor.core.ids.ModeId
 import com.parlor.core.result.Result
@@ -335,7 +336,11 @@ class WhodunitPayloadValidator(
             }
             clue.tags?.let { tags ->
                 if (tags.size > MAX_TAGS || tags.size != tags.toSet().size ||
-                    tags.any { it.isBlank() || it.length > MAX_SHORT_TEXT }
+                    tags.any { tag ->
+                        tag.isBlank() ||
+                            tag.length > MAX_SHORT_TEXT ||
+                            !AuthoredTextPolicy.isSafeForDisplay(tag)
+                    }
                 ) {
                     return ValidationError.PayloadInvalid("clue '${clue.id}' has invalid tags")
                 }
@@ -413,6 +418,8 @@ class WhodunitPayloadValidator(
     ): ValidationError.PayloadInvalid? = when {
         value.isBlank() -> ValidationError.PayloadInvalid("$label blank")
         value.length > maximumLength -> ValidationError.PayloadInvalid("$label too long")
+        !AuthoredTextPolicy.isSafeForDisplay(value) ->
+            ValidationError.PayloadInvalid("$label contains unsafe characters")
         else -> null
     }
 
