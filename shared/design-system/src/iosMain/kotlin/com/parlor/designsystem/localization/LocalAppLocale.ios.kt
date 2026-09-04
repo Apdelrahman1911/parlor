@@ -28,7 +28,7 @@ internal actual fun PlatformAppLocale(
     loading: @Composable () -> Unit,
     content: @Composable (activeLanguageTag: String?) -> Unit,
 ) {
-    var appliedLanguageTag by remember(languageTag) { mutableStateOf<String?>(null) }
+    var appliedLanguageTag by remember { mutableStateOf<String?>(null) }
 
     DisposableEffect(languageTag) {
         val userDefaults = NSUserDefaults.standardUserDefaults
@@ -60,7 +60,7 @@ internal actual fun PlatformAppLocale(
         return
     }
     val viewController = LocalUIViewController.current
-    val layoutDirection = resolveAppLanguage(languageTag, activeTag).layoutDirection
+    val layoutDirection = resolveAppLanguage(null, activeTag).layoutDirection
     SideEffect {
         applyNativeLayoutDirection(viewController, layoutDirection)
     }
