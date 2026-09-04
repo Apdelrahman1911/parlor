@@ -55,9 +55,9 @@ import com.parlor.designsystem.components.ParlorIconButtonVariant
 import com.parlor.designsystem.components.ReconnectingOverlay
 import com.parlor.designsystem.components.LocalParlorToastState
 import com.parlor.designsystem.components.ParlorToastSeverity
-import com.parlor.designsystem.components.SessionExitAffordance
 import com.parlor.designsystem.components.SessionExitConfirmation
 import com.parlor.designsystem.components.SessionExitKind
+import com.parlor.designsystem.components.SessionExitOverlay
 import com.parlor.designsystem.icons.ParlorIcons
 import com.parlor.designsystem.components.parlorSafeContentPadding
 import com.parlor.designsystem.theme.ParlorTheme
@@ -914,17 +914,23 @@ private fun SessionDrivenFlow(
         )
     } else {
         Box(modifier = modifier.fillMaxSize()) {
-            HostPhaseRouter(
-                playMode = playMode,
-                phase = state.phase,
-                state = state,
-                case = case,
-                payload = payload,
-                session = session,
-                scope = scope,
-                onBackToLibrary = exitAfterFlush,
+            SessionExitOverlay(
+                visible = state.phase !is WhodunitPhase.PostGame,
+                onClick = { exitConfirmationOpen = true },
                 modifier = Modifier.fillMaxSize(),
-            )
+            ) {
+                HostPhaseRouter(
+                    playMode = playMode,
+                    phase = state.phase,
+                    state = state,
+                    case = case,
+                    payload = payload,
+                    session = session,
+                    scope = scope,
+                    onBackToLibrary = exitAfterFlush,
+                    modifier = Modifier.fillMaxSize(),
+                )
+            }
 
             // Pause chrome — visible on every in-game screen except during the
             // overlay itself. Tapping it submits the Pause action; the reducer
@@ -936,16 +942,6 @@ private fun SessionDrivenFlow(
                     onPause = { scope.launch { session.submit(WhodunitAction.Pause) } },
                     modifier = Modifier
                         .align(Alignment.TopEnd)
-                        .windowInsetsPadding(WindowInsets.statusBars)
-                        .padding(ParlorTheme.spacing.m),
-                )
-            }
-
-            if (state.phase !is WhodunitPhase.PostGame) {
-                SessionExitAffordance(
-                    onClick = { exitConfirmationOpen = true },
-                    modifier = Modifier
-                        .align(Alignment.TopStart)
                         .windowInsetsPadding(WindowInsets.statusBars)
                         .padding(ParlorTheme.spacing.m),
                 )

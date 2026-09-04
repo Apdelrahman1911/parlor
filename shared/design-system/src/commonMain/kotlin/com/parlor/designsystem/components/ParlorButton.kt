@@ -27,6 +27,8 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.parlor.designsystem.theme.ParlorTheme
 
+internal val ParlorButtonMinimumHeight = 52.dp
+
 /**
  * Visual variants — editorial direction.
  *
@@ -97,7 +99,7 @@ fun ParlorButton(
         modifier = modifier
             // 52dp is the design-system primitive's intrinsic touch target,
             // not a feature-UI hardcoded value. Lives here, not in screens.
-            .heightIn(min = 52.dp)
+            .heightIn(min = ParlorButtonMinimumHeight)
             .clip(shape)
             .background(containerColor)
             .background(pressedTint)
