@@ -173,6 +173,11 @@ kotlin {
                 implementation(compose.desktop.currentOs)
             }
         }
+        val desktopTest by getting {
+            dependencies {
+                implementation(libs.compose.ui.test)
+            }
+        }
     }
 }
 
