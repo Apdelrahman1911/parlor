@@ -504,11 +504,12 @@ private fun ToggleRow(
                 role = Role.Switch,
                 onValueChange = onCheckedChange,
             ),
-        horizontalArrangement = Arrangement.SpaceBetween,
+        horizontalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.m),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = label,
+            modifier = Modifier.weight(1f),
             style = ParlorTheme.typography.bodyLarge,
             color = ParlorTheme.colors.textPrimary,
         )
