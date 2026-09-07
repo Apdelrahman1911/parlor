@@ -98,7 +98,9 @@ class PackageBoundaryTests(unittest.TestCase):
             self.assertEqual('curl', args[0])
             self.assertIn('--proto', args)
             self.assertIn('=https', args)
-            self.assertEqual(400, options['timeout'])
+            self.assertEqual(650, options['timeout'])
+            self.assertEqual('300', args[args.index('--max-time') + 1])
+            self.assertEqual('1', args[args.index('--retry') + 1])
             self.tool.write_bytes(b'disposable synthetic tool, never executed')
             if download_error:
                 raise download_error
@@ -138,7 +140,7 @@ class PackageBoundaryTests(unittest.TestCase):
     def test_failed_or_cancelled_download_cleans_only_its_tool(self):
         sentinel = self.dest / 'scratch/unrelated.txt'
         sentinel.write_bytes(b'preserve')
-        for error in (subprocess.TimeoutExpired('synthetic', 400), KeyboardInterrupt()):
+        for error in (subprocess.TimeoutExpired('synthetic', 650), KeyboardInterrupt()):
             with self.subTest(error=type(error).__name__), self.assertRaises(type(error)):
                 self.full(download_error=error)
             self.assertFalse(self.tool.exists())

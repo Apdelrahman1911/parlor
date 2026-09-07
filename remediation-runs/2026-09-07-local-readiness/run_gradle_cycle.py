@@ -160,9 +160,11 @@ def inspect_android_package(path, dest, index, env):
     tool=dest/'scratch'/f'bundletool-{index}.jar'
     if tool.exists() or tool.is_symlink(): raise RuntimeError('Refusing pre-existing task tool')
     command=['curl','--fail','--silent','--show-error','--location','--proto','=https','--tlsv1.2',
-             '--max-filesize','134217728','--max-time','120','--retry','3',policy['url'],'-o',str(tool)]
+             '--max-filesize','134217728','--max-time','300','--retry','1',policy['url'],'-o',str(tool)]
     try:
-        subprocess.run(command,check=True,timeout=400)
+        # The pinned all-in-one JAR is 32 MB; allow slow links to finish one
+        # attempt instead of repeatedly discarding nearly complete downloads.
+        subprocess.run(command,check=True,timeout=650)
         report=dest/'artifacts'/f'android-package-{index}.json'
         if report.exists() or report.is_symlink(): raise RuntimeError('Refusing pre-existing package report')
         code=invoke(['/usr/bin/python3','-B',str(ROOT/'scripts/verification/android_release_artifacts.py'),
