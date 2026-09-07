@@ -352,6 +352,17 @@ private fun MafiaState.hasValidResolutionHistory(): Boolean {
     if (!votes.hasExpectedVoteDays(latestVoteDay)) return false
 
     val latestNight = nights.lastOrNull()
+    // The reducer updates the Doctor's private restriction from this same
+    // effective protection (including a skip), even after the Doctor dies.
+    // The newest record survives history capping. Post-game alone clears the
+    // private value intentionally; enabling repeats does not erase history.
+    if (
+        phase != MafiaPhase.PostGame &&
+        privatePerPlayer.values.singleOrNull { it.role == Role.Doctor }?.previousDoctorProtect !=
+        latestNight?.doctorProtect
+    ) {
+        return false
+    }
     val nightAnnouncement = public.lastNight
     if ((latestNight == null) != (nightAnnouncement == null)) return false
     if (latestNight != null && nightAnnouncement != null) {

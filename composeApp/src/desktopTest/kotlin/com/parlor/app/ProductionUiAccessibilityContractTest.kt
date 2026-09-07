@@ -200,6 +200,10 @@ class ProductionUiAccessibilityContractTest {
             "shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/" +
                 "LocalAppLocale.ios.kt",
         )
+        val iosOwner = read(
+            "shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/" +
+                "IosLanguageOverrideOwner.kt",
+        )
         val desktop = read(
             "shared/design-system/src/desktopMain/kotlin/com/parlor/designsystem/localization/" +
                 "LocalAppLocale.desktop.kt",
@@ -212,7 +216,14 @@ class ProductionUiAccessibilityContractTest {
         assertFalse(android.contains("updateConfiguration"))
         assertFalse(android.contains("@Suppress(\"DEPRECATION\")"))
         assertTrue(android.indexOf("Locale.setDefault") > android.indexOf("DisposableEffect("))
-        assertTrue(ios.indexOf("userDefaults.setObject") > ios.indexOf("DisposableEffect("))
+        assertContains(ios, "val overrideOwner = remember {")
+        assertContains(ios, "IosLanguageOverrideOwner(")
+        assertContains(ios, "DisposableEffect(languageTag) {\n        overrideOwner.apply(languageTag)")
+        assertContains(ios, "onDispose {\n            overrideOwner.release()")
+        assertFalse(ios.contains(".setObject("), "Preference writes belong to the effect-owned override owner")
+        assertContains(iosOwner, "defaults.persistentDomainForName(applicationDomain)")
+        assertContains(iosOwner, "domain[APPLE_LANGUAGES_KEY] == listOf(installed)")
+        assertFalse(iosOwner.contains("arrayForKey("), "Do not promote a resolved OS fallback to owned state")
         assertTrue(desktop.indexOf("Locale.setDefault") > desktop.indexOf("DisposableEffect("))
     }
 

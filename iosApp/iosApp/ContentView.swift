@@ -53,10 +53,10 @@ struct ContentView: View {
 
 private struct ComposeView: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> UIViewController {
-        MainViewControllerKt.MainViewController()
+        ComposeContainerViewController(contentController: MainViewControllerKt.MainViewController())
     }
 
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
-        // No-op — the Kotlin view controller owns its own state.
+        // Keep the same container and Compose child; Kotlin owns application state.
     }
 }

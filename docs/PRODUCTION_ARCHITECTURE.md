@@ -248,6 +248,21 @@ during recovery (`MafiaSnapshotRecovery.kt` and `WhodunitGameFlow.kt`).
 Multiplayer resume is a separate transport credential and is available for both
 shipping games while the original host/seat remains valid.
 
+Whodunit local recovery requires the exact persisted story version and canonical
+content digest before starting its reducer. Missing identity metadata cannot
+prove compatibility, even when a legacy save has no clues yet. Incompatible
+pre-release saves stay available for Retry/Back or explicit Discard; they are
+not silently rebound to edited story text. LAN start likewise requires the
+exact content identity. See `PRE_RELEASE_COMPATIBILITY.md` and
+`WHODUNIT_TEST_CONTENT.md` for the unpublished testing-content policy.
+
+On iOS, legacy `Documents/snapshots` is marked excluded from backup before
+listing or migrating it; failure to set or verify that flag is surfaced, not
+treated as an empty store. Failed legacy migrations retain their bytes for
+Retry/Discard rather than deleting the last recoverable copy. The exclusion
+flag is an OS backup policy request, not proof of a completed backup/restore
+test. Current authenticated records retain precedence over legacy copies.
+
 Settings are persistent per platform. The shipping controls are language,
 theme, and reduced motion; each has a validated default. Mutations are
 serialized and published to UI state only after the platform backing accepts
@@ -257,6 +272,33 @@ result. Parlor currently ships no sound implementation, analytics SDK,
 crash-reporting SDK, upload provider, or placeholder consent control. Adding
 any of those is a product/privacy change that requires an implementation,
 truthful UI, store disclosures, and release evidence together.
+
+On iOS, explicit in-app language overrides carry Parlor-owned provenance in the
+application preferences domain. Follow System releases only a matching owned
+`AppleLanguages` value and restores its previous application-domain value or
+absence, not a resolved global fallback. Unmarked legacy values and differing
+external OS preference values are preserved; an identical external write cannot
+be distinguished by value comparison. The marker is persisted for reconciliation
+after restart, but UserDefaults still provides no per-write durability or
+cross-process transaction guarantee. Language switching does not recreate active
+sessions. Clean installs and current ownership-aware builds are the supported
+pre-release baseline; ambiguous unmarked development-build overrides have no
+supported migration (`PRE_RELEASE_COMPATIBILITY.md`). They are preserved,
+not guessed away or silently deleted.
+
+The iOS SwiftUI representable owns a plain UIKit container, with the existing
+Compose controller as its single full-bounds child. This separates SwiftUI's
+outer-view updates from the language provider's explicit native direction on
+the Compose view. Physical edge constraints deliberately allow different
+parent/child directions; safe-area padding remains Compose-owned. Standard
+containment forwards appearance, while child status-bar, home-indicator,
+system-edge and supported/preferred-orientation policies are delegated. There
+is no second navigation stack, language-keyed root, or replacement session.
+The container is implemented in Swift because the pinned Kotlin UIKit bindings
+import UIViewController category methods as non-overridable extensions.
+`ComposeContainerViewControllerTests` compiles that same source in the existing
+Xcode UI-test target; UIKit unit assertions and actual app-host/gesture checks
+are separate verification requirements.
 
 ## Release boundaries
 

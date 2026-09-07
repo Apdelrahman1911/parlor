@@ -44,6 +44,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.updateAndGet
 
 /**
  * Severity buckets that map to a Parlor color from [com.parlor.designsystem.tokens.ParlorColors].
@@ -54,8 +55,8 @@ enum class ParlorToastSeverity { Info, Success, Warning, Danger }
  * One toast — created by features, rendered by [ParlorToastHost].
  *
  * `text` is already-localized; `severity` picks the leading-edge accent.
- * `id` is monotonic so a feature can de-dupe ("Alice reconnected" should
- * not stack three deep if the connection flaps).
+ * `id` identifies one presentation lifetime, including its exit animation.
+ * The state coalesces adjacent equal text; IDs are not message deduplication keys.
  */
 data class ParlorToast(
     val id: Long,
@@ -76,15 +77,19 @@ class ParlorToastState(
     private val defaultDurationMs: Long = 3_500L,
 ) {
     private val _toasts: MutableStateFlow<List<ParlorToast>> = MutableStateFlow(emptyList())
+    private val lastIdentity = MutableStateFlow(0L)
     val toasts: StateFlow<List<ParlorToast>> = _toasts
     fun show(text: String, severity: ParlorToastSeverity = ParlorToastSeverity.Info) {
+        // Allocate outside the retryable queue update. A just-dismissed toast
+        // can still own a composition/effect when the empty frame is conflated.
+        // Never recycle its identity, even when the live queue is empty.
+        val identity = lastIdentity.updateAndGet { previous ->
+            check(previous < Long.MAX_VALUE) { "Toast identity space exhausted" }
+            previous + 1L
+        }
         _toasts.update { current ->
-            // Keep this update pure and atomic: MutableStateFlow may re-run it
-            // under contention, so deriving the id from the active queue avoids
-            // a separate racy counter. IDs need only be unique among live items.
             if (current.lastOrNull()?.text == text) return@update current
-            val nextId = (current.maxOfOrNull(ParlorToast::id) ?: 0L) + 1L
-            (current + ParlorToast(nextId, text, severity)).takeLast(MAX_QUEUED_TOASTS)
+            (current + ParlorToast(identity, text, severity)).takeLast(MAX_QUEUED_TOASTS)
         }
     }
 
@@ -171,7 +176,7 @@ fun ParlorToastHost(
             // queued toast expires — not just the newest. The previous single
             // LaunchedEffect keyed on toasts.lastOrNull() left older toasts
             // stranded forever (see PROBLEMS_PARLOR.md → ds-01).
-            key(toast.id) {
+            key(state, toast.id) {
                 var visible by remember(toast.id) { mutableStateOf(true) }
                 LaunchedEffect(toast.id) {
                     delay(state.duration())

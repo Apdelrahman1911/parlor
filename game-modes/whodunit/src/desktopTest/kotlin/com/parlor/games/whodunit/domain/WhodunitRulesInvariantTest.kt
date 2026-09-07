@@ -357,7 +357,7 @@ class WhodunitRulesInvariantTest {
     }
 
     @Test
-    fun unresolvedFinalTwoVoteProducesCanonicalPersistableWinner() {
+    fun defensiveFinalTwoFallbackDoesNotMakeAnActiveSnapshotValid() {
         val roster = players(5)
         val seed = 73L
         var state = definition.createInitialState(
@@ -425,9 +425,14 @@ class WhodunitRulesInvariantTest {
                 verdict = null,
             ),
         )
-        assertSnapshotBoundaries(state)
+        // This is deliberately reducer-impossible input, not an admissible
+        // current or legacy snapshot. Keep the defensive fallback covered
+        // without allowing recovery to reopen an already decided game.
+        assertFailsWith<IllegalArgumentException> {
+            WhodunitStateValidator.requireValid(state)
+        }
         finalTwo.forEach { voter ->
-            state = submitValid(state, WhodunitAction.AbstainVote(voter))
+            state = reduce(state, WhodunitAction.AbstainVote(voter)).newState
         }
 
         state = submitValid(state, WhodunitAction.CloseVote)

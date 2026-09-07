@@ -1,7 +1,11 @@
 package com.parlor.transport.p2p
 
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
 
 /**
  * Serializes process lifecycle state with registration of the one active room.
@@ -46,11 +50,22 @@ internal class AppLifecycleRoomCoordinator {
         registrationId: String,
         room: AppLifecycleAwareRoom,
     ) = transitionMutex.withLock {
-        val backgroundedAt = stateMutex.withLock {
-            activeRoom = ActiveRoom(registrationId, room)
-            lastBackgroundedAt.takeIf { appIsBackgrounded }
+        var registered = false
+        try {
+            val backgroundedAt = stateMutex.withLock {
+                activeRoom = ActiveRoom(registrationId, room)
+                lastBackgroundedAt.takeIf { appIsBackgrounded }
+            }
+            if (backgroundedAt != null) room.appBackgrounded(backgroundedAt)
+            currentCoroutineContext().ensureActive()
+            registered = true
+        } finally {
+            if (!registered) withContext(NonCancellable) {
+                // Detach before releasing the transition lock: a queued
+                // foreground must not revive a room whose opening failed.
+                roomClosed(registrationId)
+            }
         }
-        if (backgroundedAt != null) room.appBackgrounded(backgroundedAt)
     }
 
     suspend fun roomClosed(registrationId: String) {

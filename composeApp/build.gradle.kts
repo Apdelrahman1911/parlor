@@ -192,6 +192,18 @@ kotlin {
     }
 }
 
+// Desktop's locale source contract also reads non-JVM platform adapters and
+// the iOS ownership helper. An iOS-only edit must invalidate its prior result.
+tasks.named("desktopTest") {
+    inputs.files(
+        rootProject.fileTree("shared/design-system/src") {
+            include("*Main/kotlin/com/parlor/designsystem/localization/*.kt")
+        },
+    )
+        .withPropertyName("platformLocaleContractSources")
+        .withPathSensitivity(org.gradle.api.tasks.PathSensitivity.RELATIVE)
+}
+
 // Release Kotlin/Native LTO is memory intensive. With Gradle parallelism
 // enabled, linking multiple Compose frameworks in one JVM can exhaust even the
 // configured 6 GiB heap although every target links successfully in isolation.

@@ -273,12 +273,11 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
                 appId = appId,
                 deviceName = advertisedDeviceName,
             )
-            // p2p-005: if start()/startAdvertising() throws, stop the kit before
-            // propagating — otherwise the started instance (sockets, JmDNS/NSD
-            // registration, kit scope) leaks for the process lifetime. join()
-            // already does this; host() didn't.
+            // Creation owns the kit and room until lifecycle registration also
+            // succeeds. Cancellation there must close the unreturned room just
+            // like an earlier start/advertising failure.
             var room: HostP2pRoom? = null
-            var initializationComplete = false
+            var ownershipTransferred = false
             try {
                 kit.start()
                 checkNotNull(kit.localFingerprint) {
@@ -301,9 +300,18 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
                 )
                 kit.startAdvertising()
                 _localNetworkAccess.value = LocalNetworkAccess.Operational
-                initializationComplete = true
+                val hostedRoom = checkNotNull(room)
+                registerLifecycleRoom(lifecycleRegistrationId, hostedRoom)
+                diagnostics.event(
+                    P2pDiagnosticEventName.SESSION_CREATE_SUCCEEDED,
+                    P2pDiagnosticRole.HOST,
+                    P2pDiagnosticResult.SUCCESS,
+                )
+                val result = Result.Success(hostedRoom)
+                ownershipTransferred = true
+                result
             } finally {
-                if (!initializationComplete) withContext(NonCancellable) {
+                if (!ownershipTransferred) withContext(NonCancellable) {
                     if (room == null) {
                         kit.stopAfterFailure(diagnostics)
                     } else {
@@ -315,14 +323,6 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
                     }
                 }
             }
-            val hostedRoom = checkNotNull(room)
-            registerLifecycleRoom(lifecycleRegistrationId, hostedRoom)
-            diagnostics.event(
-                P2pDiagnosticEventName.SESSION_CREATE_SUCCEEDED,
-                P2pDiagnosticRole.HOST,
-                P2pDiagnosticResult.SUCCESS,
-            )
-            Result.Success(hostedRoom)
         } catch (@Suppress("TooGenericExceptionCaught") failure: Exception) {
             failure.rethrowIfCancellation()
             recordLocalNetworkFailure(failure)
@@ -393,6 +393,7 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
             )
             return Result.Failure(NetError.TransportFailure(t.message ?: "join failed"))
         }
+        var openingRoom: PeerP2pRoom? = null
         var keepKitRunning = false
         return try {
             val startedAt = TimeSource.Monotonic.markNow()
@@ -527,8 +528,8 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
                             onClosed = { roomClosed(lifecycleRegistrationId) },
                             hostDisplayName = admission.hostDisplayName,
                         )
+                        openingRoom = peerRoom
                         if (!peerRoom.finishInitialAdmissionHandoff(admission.credential)) {
-                            peerRoom.abandonFailedResume()
                             result = Result.Failure(
                                 NetError.TransportFailure("admission handoff failed"),
                             )
@@ -579,7 +580,6 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
             checkNotNull(result).also { completed ->
                 when (completed) {
                     is Result.Success -> {
-                        keepKitRunning = true
                         diagnostics.event(
                             P2pDiagnosticEventName.DISCOVERY_FINISHED,
                             P2pDiagnosticRole.PEER,
@@ -590,6 +590,7 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
                             P2pDiagnosticRole.PEER,
                             P2pDiagnosticResult.SUCCESS,
                         )
+                        keepKitRunning = true
                     }
                     is Result.Failure -> {
                         diagnostics.event(
@@ -618,7 +619,7 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
             )
             Result.Failure(NetError.TransportFailure(t.message ?: "join failed"))
         } finally {
-            if (!keepKitRunning) kit.stopAfterFailure(diagnostics)
+            if (!keepKitRunning) kit.closeUnreturnedPeerRoom(openingRoom, diagnostics)
         }
     }
 
@@ -761,6 +762,7 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
                 NetError.TransportFailure(failure.message ?: "resume initialization failed"),
             )
         }
+        var openingRoom: PeerP2pRoom? = null
         var keepKitRunning = false
         return try {
             when (val resumed = resumeConnectionDetailed(kit, credential)) {
@@ -807,8 +809,8 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
                         onClosed = { roomClosed(lifecycleRegistrationId) },
                         hostDisplayName = resumed.data.hostDisplayName,
                     )
+                    openingRoom = room
                     if (!room.finishInitialResumeHandoff(resumed.data)) {
-                        room.abandonFailedResume()
                         Result.Failure(NetError.TransportFailure("resume handoff failed"))
                     } else {
                         registerLifecycleRoom(lifecycleRegistrationId, room)
@@ -833,7 +835,7 @@ class P2pKitRoomTransport @Suppress("LongParameterList") private constructor(
             )
             Result.Failure(NetError.TransportFailure(failure.message ?: "resume failed"))
         } finally {
-            if (!keepKitRunning) kit.stopAfterFailure(diagnostics)
+            if (!keepKitRunning) kit.closeUnreturnedPeerRoom(openingRoom, diagnostics)
         }
     }
 
@@ -1602,6 +1604,30 @@ private fun PeerMessage.hasValidPeerPayloadBounds(): Boolean = when (this) {
     else -> true
 }
 
+/**
+ * Until handoff and lifecycle registration return, creation owns the peer's
+ * process-scoped collectors and expiry/resume jobs as well as its physical kit.
+ * An interrupted opening is not an explicit Leave: retain its committed
+ * credential and never notify the host to revoke the membership.
+ */
+private suspend fun P2pKit.closeUnreturnedPeerRoom(
+    room: PeerP2pRoom?,
+    diagnostics: P2pDiagnostics,
+) {
+    withContext(NonCancellable) {
+        if (room == null) {
+            stopAfterFailure(diagnostics)
+        } else {
+            // Room cleanup already stops the terminal kit; do not stop it twice.
+            attemptCleanup(
+                diagnostics,
+                P2pDiagnosticRole.PEER,
+                preserveCancellation = false,
+            ) { room.abandonFailedResume() }
+        }
+    }
+}
+
 /** Ensure a partially-started kit is released even when its owner is cancelled. */
 private suspend fun P2pKit.stopAfterFailure(diagnostics: P2pDiagnostics) {
     diagnostics.event(P2pDiagnosticEventName.CLEANUP_STARTED)
@@ -1813,8 +1839,8 @@ internal class HostP2pRoom(
     private var lifecycleExpiryJob: Job? = null
 
     // p2p-016: leave() runs from a "Leave" tap AND from DisposableEffect.onDispose,
-    // so a real double-call is expected. kit.stop() is terminal — a second call
-    // throws IllegalStateException. Guard so leave() is idempotent. Every access
+    // so a real double-call is expected. rc3's kit.stop() is idempotent, but the
+    // room's own notifications/cleanup must also run only once. Every access
     // is serialized by stateMutex, so no cross-platform @Volatile is needed.
     private var left = false
 
@@ -3542,8 +3568,8 @@ internal class HostP2pRoom(
                     preserveCancellation = false,
                 ) { session.close() }
             }
-            // kit.stop() is terminal; guard it so a late/duplicate teardown can't
-            // throw out of a disposal path. See PROBLEMS_PARLOR.md → p2p-016.
+            // The room ownership guard keeps teardown and diagnostics single-shot;
+            // rc3's underlying terminal kit.stop() is itself idempotent.
             attemptCleanup(
                 diagnostics,
                 P2pDiagnosticRole.HOST,

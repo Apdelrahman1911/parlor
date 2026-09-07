@@ -42,6 +42,7 @@ import platform.Foundation.NSFileHandle
 import platform.Foundation.NSFileManager
 import platform.Foundation.NSFileProtectionComplete
 import platform.Foundation.NSFileProtectionKey
+import platform.Foundation.NSNumber
 import platform.Foundation.NSURL
 import platform.Foundation.NSURLIsExcludedFromBackupKey
 import platform.Foundation.NSUserDomainMask
@@ -69,6 +70,7 @@ internal class IosSnapshotFileSystem(
     private val fileManager: NSFileManager = NSFileManager.defaultManager,
     private val dispatcher: CoroutineDispatcher = Dispatchers.Default,
     private val snapshotKeyReader: () -> ByteArray? = keychain::readExisting,
+    private val backupExcluder: (NSURL) -> Unit = ::excludeSnapshotFromBackup,
 ) : SnapshotFileSystem {
 
     private val basePath: String by lazy {
@@ -100,7 +102,7 @@ internal class IosSnapshotFileSystem(
             ) {
                 throw IllegalStateException("Couldn't create protected snapshot directory")
             }
-            excludeFromBackup(NSURL.fileURLWithPath(directory, isDirectory = true))
+            backupExcluder(NSURL.fileURLWithPath(directory, isDirectory = true))
             directory
         }
     }
@@ -148,6 +150,10 @@ internal class IosSnapshotFileSystem(
     }
 
     override suspend fun list(): List<String> = withContext(dispatcher) {
+        // Failed migrations remain available for Retry/Discard, but their old
+        // plaintext must not retain Documents' default backup eligibility.
+        // Protection failure is not an isolated corrupt-record failure.
+        excludeLegacyDirectoryFromBackup()
         // listUnfinished() runs on cold start, so upgrade old plaintext even
         // if the user does not open its resume tile. Migrate independently so
         // one damaged legacy record cannot hide every healthy saved game.
@@ -166,6 +172,7 @@ internal class IosSnapshotFileSystem(
     }
 
     private fun readProtectedOrMigrate(name: String): ByteArray? {
+        excludeLegacyDirectoryFromBackup()
         val path = filePath(name)
         if (!fileManager.fileExistsAtPath(path)) return migrateLegacy(name)
 
@@ -210,6 +217,14 @@ internal class IosSnapshotFileSystem(
 
     private fun deleteLegacy(name: String) {
         deletePathIfPresent("$legacyBasePath/$name")
+    }
+
+    private fun excludeLegacyDirectoryFromBackup() {
+        // Reapply on every access: filesystem operations can recreate the
+        // directory or reset its exclusion bit after this instance was made.
+        if (fileManager.fileExistsAtPath(legacyBasePath)) {
+            backupExcluder(NSURL.fileURLWithPath(legacyBasePath, isDirectory = true))
+        }
     }
 
     private fun readBytes(path: String, maximumBytes: Int): ByteArray {
@@ -355,19 +370,7 @@ internal class IosSnapshotFileSystem(
                 throw IllegalStateException("Couldn't atomically write protected snapshot")
             }
         }
-        excludeFromBackup(NSURL.fileURLWithPath(path))
-    }
-
-    private fun excludeFromBackup(url: NSURL) {
-        val key = NSURLIsExcludedFromBackupKey
-            ?: throw IllegalStateException("iOS backup-exclusion key unavailable")
-        memScoped {
-            val error = alloc<ObjCObjectVar<NSError?>>()
-            error.value = null
-            if (!url.setResourceValue(true, forKey = key, error = error.ptr)) {
-                throw IllegalStateException("Couldn't exclude protected snapshot from backup")
-            }
-        }
+        backupExcluder(NSURL.fileURLWithPath(path))
     }
 
     private fun filePath(name: String): String = "$basePath/$name"
@@ -392,6 +395,25 @@ internal class IosSnapshotFileSystem(
         const val FORMAT_VERSION: Byte = 1
 
         val MAGIC: ByteArray = "PARSNAP".encodeToByteArray()
+    }
+}
+
+internal fun excludeSnapshotFromBackup(url: NSURL) {
+    val key = NSURLIsExcludedFromBackupKey
+        ?: throw IllegalStateException("iOS backup-exclusion key unavailable")
+    memScoped {
+        val error = alloc<ObjCObjectVar<NSError?>>()
+        error.value = null
+        if (!url.setResourceValue(true, forKey = key, error = error.ptr)) {
+            throw IllegalStateException("Couldn't exclude protected snapshot from backup")
+        }
+        // A new URL avoids accepting a resource value cached by the setter.
+        val path = url.path ?: throw IllegalStateException("Snapshot URL has no path")
+        error.value = null
+        val values = NSURL.fileURLWithPath(path).resourceValuesForKeys(listOf(key), error.ptr)
+        if (error.value != null || (values?.get(key) as? NSNumber)?.boolValue != true) {
+            throw IllegalStateException("Couldn't verify snapshot backup exclusion")
+        }
     }
 }
 

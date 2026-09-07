@@ -9,6 +9,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.uikit.LocalUIViewController
 import androidx.compose.ui.unit.LayoutDirection
+import platform.Foundation.NSBundle
 import platform.Foundation.NSLocale
 import platform.Foundation.NSUserDefaults
 import platform.Foundation.preferredLanguages
@@ -19,8 +20,9 @@ import platform.UIKit.UIViewController
 /**
  * Compose resources read [NSLocale.preferredLanguages]. An explicit in-app
  * language therefore needs the platform AppleLanguages override used by the
- * Compose resource implementation. The effect owns and restores only the value
- * it installed; System mode leaves platform language preferences untouched.
+ * Compose resource implementation. Persistent ownership bookkeeping lets
+ * System mode release a Parlor override even after an interrupted process.
+ * Unowned platform preferences are never deleted or promoted from a fallback.
  */
 @Composable
 internal actual fun PlatformAppLocale(
@@ -29,29 +31,21 @@ internal actual fun PlatformAppLocale(
     content: @Composable (activeLanguageTag: String?) -> Unit,
 ) {
     var appliedLanguageTag by remember { mutableStateOf<String?>(null) }
+    val overrideOwner = remember {
+        IosLanguageOverrideOwner(
+            NSUserDefaults.standardUserDefaults,
+            checkNotNull(NSBundle.mainBundle.bundleIdentifier),
+        )
+    }
 
     DisposableEffect(languageTag) {
-        val userDefaults = NSUserDefaults.standardUserDefaults
-        val previousLanguages = userDefaults.arrayForKey(APPLE_LANGUAGES_KEY)
-        if (languageTag != null) {
-            userDefaults.setObject(listOf(languageTag), APPLE_LANGUAGES_KEY)
-        }
+        overrideOwner.apply(languageTag)
         appliedLanguageTag = languageTag ?: NSLocale.preferredLanguages
             .firstOrNull()
             ?.toString()
 
         onDispose {
-            val installedLanguage = languageTag ?: return@onDispose
-            val currentLanguage = userDefaults.arrayForKey(APPLE_LANGUAGES_KEY)
-                ?.firstOrNull()
-                ?.toString()
-            if (currentLanguage == installedLanguage) {
-                if (previousLanguages == null) {
-                    userDefaults.removeObjectForKey(APPLE_LANGUAGES_KEY)
-                } else {
-                    userDefaults.setObject(previousLanguages, APPLE_LANGUAGES_KEY)
-                }
-            }
+            overrideOwner.release()
         }
     }
 
@@ -87,5 +81,3 @@ private fun applyNativeLayoutDirection(
         view.didMoveToWindow()
     }
 }
-
-private const val APPLE_LANGUAGES_KEY = "AppleLanguages"

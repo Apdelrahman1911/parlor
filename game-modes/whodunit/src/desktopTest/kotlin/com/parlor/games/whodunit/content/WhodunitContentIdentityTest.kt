@@ -4,7 +4,6 @@ import com.parlor.content.schema.CaseEnvelope
 import com.parlor.core.ids.GameId
 import com.parlor.core.ids.PlayerId
 import com.parlor.core.ids.SessionId
-import com.parlor.core.versioning.SemVer
 import com.parlor.engine.state.Player
 import com.parlor.games.whodunit.resources.Res
 import com.parlor.networking.protocol.HostMessage
@@ -47,7 +46,8 @@ class WhodunitContentIdentityTest {
         val offer = offer(identity)
 
         assertTrue(offer.matches(original))
-        assertFalse(offer.matches(original.copy(version = SemVer(1, 0, 1))))
+        val differentVersion = original.version.copy(patch = original.version.patch + 1)
+        assertFalse(offer.matches(original.copy(version = differentVersion)))
 
         val changedPayload = JsonObject(
             original.payload.jsonObject + ("publicIntro" to JsonPrimitive("Changed intro")),

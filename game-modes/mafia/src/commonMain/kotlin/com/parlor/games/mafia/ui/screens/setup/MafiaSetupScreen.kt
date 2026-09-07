@@ -96,10 +96,9 @@ import org.jetbrains.compose.resources.stringResource
  * while [MafiaSettings.validate] remains the authoritative gate and disables
  * Start for invalid combinations. The three timer fields are retained only
  * for compatibility and are intentionally not exposed until timed phase
- * transitions exist. Submitting fires [onStart] — the flow then dispatches
- * `ApplySettings` followed by `StartGame`, after which this screen no longer
- * renders (the phase moves off Setup), so the settings are structurally
- * locked.
+ * transitions exist. Submitting fires [onStart] — both flows then dispatch
+ * one atomic `ConfigureAndStart`, after which this screen no longer renders
+ * (the phase moves off Setup), so the settings are structurally locked.
  */
 @Composable
 fun MafiaSetupScreen(

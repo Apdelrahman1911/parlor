@@ -157,7 +157,7 @@ class P2pKitRoomTransportLoopbackTest {
     @Test
     @Ignore("Needs two physical devices on the same LAN; mDNS multicast on " +
         "single-JVM loopback is unreliable. Run docs/P2P_MANUAL_TEST.md.")
-    fun peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back() = runBlocking {
+    fun peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back(): Unit = runBlocking {
         val appId = AppId("com.parlor.p2p.test.${randomTag()}")
 
         val hostTransport = P2pKitRoomTransport(appId, "host-device", testScope, testKitFactory)
@@ -207,7 +207,7 @@ class P2pKitRoomTransportLoopbackTest {
     @Test
     @Ignore("Needs three physical devices on the same LAN; mDNS multicast on " +
         "single-JVM loopback is unreliable. Run docs/P2P_MANUAL_TEST.md.")
-    fun host_broadcast_reaches_every_peer() = runBlocking {
+    fun host_broadcast_reaches_every_peer(): Unit = runBlocking {
         val appId = AppId("com.parlor.p2p.test.${randomTag()}")
 
         val hostTransport = P2pKitRoomTransport(appId, "host-device", testScope, testKitFactory)

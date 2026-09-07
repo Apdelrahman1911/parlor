@@ -338,12 +338,25 @@ private fun PeerPhaseScreens(
 ) {
     val waitingHint = stringResource(Res.string.peer_waiting_for_host)
     val waitingEyebrow = stringResource(Res.string.peer_waiting_eyebrow)
-    LaunchedEffect(phase, playMode.selfPlayerId) {
+    val selfPlayerId = playMode.selfPlayerId
+    val generation = state.public.roleAssignmentGeneration
+    LaunchedEffect(session, phase, selfPlayerId, generation) {
+        // Command waiting/pause covers can remove this subtree. A remount is
+        // not a new readiness ceremony: only the host's own-seat readiness
+        // projection decides whether an acknowledgement is still needed. Read
+        // the same atomic player flow directly: its Compose collector may lag
+        // behind a command outcome that has already removed the waiting cover.
+        val current = session.privateStateFor(selfPlayerId).value.state
+        if (current.phase != phase || current.public.roleAssignmentGeneration != generation) {
+            return@LaunchedEffect
+        }
         when (phase) {
-            WhodunitPhase.PublicIntro ->
-                session.submit(WhodunitAction.AcknowledgeIntro(playMode.selfPlayerId))
-            WhodunitPhase.RulesBriefing ->
-                session.submit(WhodunitAction.AcknowledgeBriefing(playMode.selfPlayerId))
+            WhodunitPhase.PublicIntro -> if (selfPlayerId !in current.public.introAcknowledged) {
+                session.submit(WhodunitAction.AcknowledgeIntro(selfPlayerId))
+            }
+            WhodunitPhase.RulesBriefing -> if (selfPlayerId !in current.public.briefingReady) {
+                session.submit(WhodunitAction.AcknowledgeBriefing(selfPlayerId))
+            }
             else -> Unit
         }
     }

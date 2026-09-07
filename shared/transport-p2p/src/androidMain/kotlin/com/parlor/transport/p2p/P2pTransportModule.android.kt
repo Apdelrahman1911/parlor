@@ -15,7 +15,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import kotlinx.coroutines.withContext
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.Module
 import org.koin.core.qualifier.named
@@ -41,7 +40,7 @@ internal class AndroidP2pKitFactory(
     private var initialized = false
 
     override suspend fun createKit(appId: AppId, deviceName: String): P2pKit =
-        withContext(initializationDispatcher) {
+        createOwnedP2pKit(initializationDispatcher) {
             initializationMutex.withLock {
                 if (!initialized) {
                     // Reads/creates P2pKit's stable identity file. Keep it on

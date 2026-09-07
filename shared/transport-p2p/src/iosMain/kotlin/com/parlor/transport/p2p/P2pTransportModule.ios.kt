@@ -11,7 +11,6 @@ import dev.p2pkit.transport.lan.lan
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import org.koin.core.module.Module
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -26,7 +25,7 @@ private class IosP2pKitFactory(
     private val initializationDispatcher: CoroutineDispatcher = Dispatchers.Default,
 ) : P2pKitFactory {
     override suspend fun createKit(appId: AppId, deviceName: String): P2pKit =
-        withContext(initializationDispatcher) {
+        createOwnedP2pKit(initializationDispatcher) {
             P2pKit.create {
                 this.appId = appId
                 this.deviceName = deviceName

@@ -425,7 +425,7 @@ class P2pKitRoomTransportLifecycleTest {
     }
 
     @Test
-    fun disconnect_during_acceptance_rolls_back_the_seat_without_a_ghost_member() = runBlocking {
+    fun disconnect_during_acceptance_rolls_back_the_seat_without_a_ghost_member(): Unit = runBlocking {
         val kit = FakeP2pKit(P2pPeerId("host-pid"))
         val room = newHostRoom(kit, maxRemotePlayers = 1)
         val alice = FakeP2pSession(peer("alice-pid", "Alice"))
@@ -450,7 +450,7 @@ class P2pKitRoomTransportLifecycleTest {
     }
 
     @Test
-    fun cancellation_during_acceptance_propagates_after_rolling_back_the_seat() = runBlocking {
+    fun cancellation_during_acceptance_propagates_after_rolling_back_the_seat(): Unit = runBlocking {
         val kit = FakeP2pKit(P2pPeerId("host-pid"))
         val room = newHostRoom(kit, maxRemotePlayers = 1)
         val alice = FakeP2pSession(peer("alice-pid", "Alice"))
@@ -3664,7 +3664,7 @@ class P2pKitRoomTransportLifecycleTest {
         }
 
     @Test
-    fun wrong_room_does_not_end_search_before_a_late_correct_candidate_appears() = runBlocking {
+    fun wrong_room_does_not_end_search_before_a_late_correct_candidate_appears(): Unit = runBlocking {
         val kit = FakeP2pKit(P2pPeerId("self-pid"))
         val wrongPeer = peer(
             "wrong-host",
@@ -3788,7 +3788,7 @@ class P2pKitRoomTransportLifecycleTest {
     }
 
     @Test
-    fun admission_pending_opens_a_separate_host_approval_window() = runBlocking {
+    fun admission_pending_opens_a_separate_host_approval_window(): Unit = runBlocking {
         val kit = FakeP2pKit(P2pPeerId("self-pid"))
         val hostPeer = peer(
             "live-host",
@@ -4610,7 +4610,7 @@ class P2pKitRoomTransportLifecycleTest {
     }
 
     @Test
-    fun host_send_propagates_coroutine_cancellation() = runBlocking {
+    fun host_send_propagates_coroutine_cancellation(): Unit = runBlocking {
         val kit = FakeP2pKit(P2pPeerId("host-pid"))
         val room = newHostRoom(kit)
         val alice = FakeP2pSession(peer("alice-pid", "Alice"))
@@ -4623,7 +4623,7 @@ class P2pKitRoomTransportLifecycleTest {
     }
 
     @Test
-    fun peer_send_propagates_coroutine_cancellation() = runBlocking {
+    fun peer_send_propagates_coroutine_cancellation(): Unit = runBlocking {
         val kit = FakeP2pKit(P2pPeerId("peer-pid"))
         val hostPeer = peer("host-pid", "Host Device")
         val session = FakeP2pSession(hostPeer).apply {
@@ -4637,7 +4637,7 @@ class P2pKitRoomTransportLifecycleTest {
     }
 
     @Test
-    fun kit_factory_cancellation_is_never_mapped_to_transport_failure() = runBlocking {
+    fun kit_factory_cancellation_is_never_mapped_to_transport_failure(): Unit = runBlocking {
         val transport = P2pKitRoomTransport(
             appId = AppId("com.parlor.test"),
             deviceName = "self-device",
@@ -4756,7 +4756,7 @@ class P2pKitRoomTransportLifecycleTest {
     }
 
     @Test
-    fun fatal_send_and_cleanup_failures_are_never_converted_to_normal_results() = runBlocking {
+    fun fatal_send_and_cleanup_failures_are_never_converted_to_normal_results(): Unit = runBlocking {
         val hostKit = FakeP2pKit(P2pPeerId("host-pid"))
         val hostRoom = newHostRoom(hostKit)
         val alice = FakeP2pSession(peer("alice-pid", "Alice"))
@@ -5277,8 +5277,8 @@ internal class FakeP2pKit(
         foregroundCalls += 1
     }
     override suspend fun stop() {
-        // Faithful to the real kit: stop() is terminal and a second call throws
-        // IllegalStateException (States.kt). The transport must guard against it.
+        // Deliberately stricter than rc3's idempotent terminal stop(): duplicate
+        // cleanup here exposes competing ownership in the adapter under test.
         check(stopCalls == 0) { "kit already stopped" }
         stopHandler?.invoke()
         callLog += "stop"

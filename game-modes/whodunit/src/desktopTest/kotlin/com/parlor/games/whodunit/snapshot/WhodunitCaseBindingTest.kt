@@ -69,7 +69,7 @@ class WhodunitCaseBindingTest {
         val assigned = assignedState(case)
         assertThat(assigned).isNotEqualTo(initialState(case, players))
         assertAccepted(assigned, case)
-        assertAccepted(assigned, case, withoutContentIdentity = true)
+        assertRejected(assigned, case, withoutContentIdentity = true)
     }
 
     @Test
@@ -332,11 +332,8 @@ class WhodunitCaseBindingTest {
     private fun assertAccepted(
         state: WhodunitState,
         case: ValidatedCase<WhodunitCase>,
-        withoutContentIdentity: Boolean = false,
     ) {
-        val resumed = resumed(state, case).let {
-            if (withoutContentIdentity) it.copy(contentIdentity = null) else it
-        }
+        val resumed = resumed(state, case)
         assertThat(validateResumedSessionForCase(resumed, case))
             .isInstanceOf(Result.Success::class)
     }

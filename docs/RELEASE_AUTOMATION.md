@@ -130,6 +130,26 @@ or production promotion re-reads Play's app-bundle inventory and refuses to
 mutate a track unless the selected version code still resolves to the exact
 candidate AAB SHA-256.
 
+Android artifact and dependency-report sizes are checked as regular files with
+portable Python metadata reads (512 MiB and 10 MiB limits respectively).
+`PrepareAndroidUploadTrust.java` is a JDK 21 validation-only helper: it verifies
+every payload signer against the approved upload-certificate SHA-256 before
+creating temporary **public-only** trust for an approved self-signed leaf.
+Explicit certificate validity, critical-extension, and algorithm checks precede
+that trust; strict `jarsigner` must then succeed, including code-signing purpose
+checks. Timestamp authority trust remains the original JDK public roots, not
+the upload leaf.
+The helper's narrowly scoped internal `AlgorithmChecker`/`Validator` exports
+require JDK 21 and fail closed on an incompatible JDK. Verification isolates
+the user-home keystore and retains no private key. Disposable synthetic tests
+verify these local controls, not Store signing or full RFC3161 interoperability.
+
+Google promotion inserts its mutation edit before reading track and bundle
+state. Source/destination guards, staged-rollout protection, candidate digest
+validation, update, validation, and commit all use that same edit snapshot.
+Uncommitted edit cleanup is attempted and failures are reported; post-commit
+readback remains separate and no mutating request is blindly retried.
+
 The candidate concurrency group serializes every candidate-creation dispatch,
 not only identical SHAs. That makes the claim lookup and durable artifact
 creation one repository-wide transaction: two different commits carrying the

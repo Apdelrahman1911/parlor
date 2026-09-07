@@ -144,6 +144,7 @@ import com.parlor.games.whodunit.resources.whodunit_loading_eyebrow
 import com.parlor.games.whodunit.resources.whodunit_recovery_discard
 import com.parlor.games.whodunit.resources.whodunit_recovery_discard_description
 import com.parlor.games.whodunit.resources.whodunit_recovery_discard_failed
+import com.parlor.games.whodunit.resources.whodunit_recovery_incompatible_or_corrupted
 import com.parlor.games.whodunit.resources.whodunit_recovery_retry
 import com.parlor.games.whodunit.resources.whodunit_recovery_retry_description
 import com.parlor.games.whodunit.resources.whodunit_save_failed
@@ -211,8 +212,8 @@ import org.koin.core.qualifier.named
  * When [resumeSessionId] is non-null, the flow looks up the persisted
  * snapshot, validates and decodes its payload to a [WhodunitState], skips the
  * pre-session setup screens, and boots the controller at the saved phase. A
- * missing or corrupt snapshot drops back to the library — never to a half-
- * configured fresh game.
+ * missing, incompatible or corrupt snapshot offers recovery actions — never
+ * a half-configured fresh game or silent replacement of the saved session.
  */
 @Composable
 fun WhodunitGameFlow(
@@ -385,19 +386,18 @@ private fun ExitOnBackRequest(backRequestId: Long, onExit: () -> Unit) {
 internal data class ResumedSession(
     val sessionId: SessionId,
     val state: WhodunitState,
-    /** Exact case identity for snapshots written by content-bound builds. */
+    /** Exact case identity; legacy records may be inspected without it, but cannot launch. */
     val contentIdentity: WhodunitContentIdentity?,
     /**
      * Play mode read back from `GameSnapshot.metadata[PLAY_MODE_KEY]`.
-     * PassAndPlay is the only supported value. Retired Solo snapshots are
-     * deleted during loading; MultiDevice sessions are not stored here.
+     * PassAndPlay is the only supported value. Unsupported modes, including
+     * retired Solo, are rejected without deletion; MultiDevice is not stored here.
      * `null` means the snapshot pre-dates the metadata field.
      */
     val playMode: PlayMode?,
 )
 
 private const val PLAY_MODE_KEY = "playMode"
-private const val PLAY_MODE_SOLO = "Solo"
 private const val PLAY_MODE_PASS_AND_PLAY = "PassAndPlay"
 private const val CASE_VERSION_KEY = "caseVersion"
 private const val CASE_DIGEST_KEY = "caseDigest"
@@ -433,12 +433,8 @@ internal suspend fun loadResumedSession(
             return Result.Failure(DataError.CorruptedData)
         }
         val persistedPlayMode = snapshot.metadata[PLAY_MODE_KEY]
-        if (persistedPlayMode == PLAY_MODE_SOLO) {
-            return when (val deleted = snapshotStore.delete(sessionId)) {
-                is Result.Success -> Result.Failure(DataError.NotFound)
-                is Result.Failure -> Result.Failure(deleted.error)
-            }
-        }
+        // Unsupported internal builds are not migrated. Keep their records
+        // for explicit discard rather than deleting during a read/retry.
         if (persistedPlayMode != null && persistedPlayMode != PLAY_MODE_PASS_AND_PLAY) {
             return Result.Failure(DataError.CorruptedData)
         }
@@ -467,16 +463,17 @@ internal suspend fun loadResumedSession(
 
 /**
  * Binds a decoded local snapshot to the exact validated case that will drive
- * its reducer. New snapshots must match the persisted content identity. A
- * legacy snapshot without that metadata is accepted only when every stored
- * gameplay reference still exists and agrees with the currently loaded case.
+ * its reducer. All launches require a persisted matching content identity:
+ * references alone cannot bind a legacy pre-clue save to the original prose.
+ * Unmarked pre-release saves remain available for explicit discard, without
+ * fabricating an identity or silently rewriting their state.
  */
 internal fun validateResumedSessionForCase(
     resumed: ResumedSession,
     case: ValidatedCase<WhodunitCase>,
 ): Result<Unit, DataError> = try {
     val persistedIdentity = resumed.contentIdentity
-    if (persistedIdentity != null && persistedIdentity != case.envelope.contentIdentity()) {
+    if (persistedIdentity == null || persistedIdentity != case.envelope.contentIdentity()) {
         Result.Failure(DataError.CorruptedData)
     } else {
         WhodunitStateValidator.requireValidForCase(
@@ -608,6 +605,11 @@ private fun RecoveryErrorScreen(
     actionsEnabled: Boolean,
     modifier: Modifier = Modifier,
 ) {
+    val messageResource = if (error is DataError.CorruptedData) {
+        Res.string.whodunit_recovery_incompatible_or_corrupted
+    } else {
+        whodunitDataErrorResource(error)
+    }
     HeroBackdrop(modifier = modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
@@ -628,7 +630,7 @@ private fun RecoveryErrorScreen(
                 textAlign = TextAlign.Center,
             )
             Text(
-                text = stringResource(whodunitDataErrorResource(error)),
+                text = stringResource(messageResource),
                 style = ParlorTheme.typography.bodyMedium,
                 color = ParlorTheme.colors.textTertiary,
                 textAlign = TextAlign.Center,

@@ -266,20 +266,24 @@ class GoogleTrackTest(unittest.TestCase):
                 credentials=str(Path(temporary) / "credentials.json"),
             )
             client = mock.Mock()
-            client.read_inventory.return_value = (
-                [
-                    {
-                        "track": "internal",
-                        "releases": [{"versionCodes": ["1"], "status": "completed"}],
-                    },
-                    {"track": "closed-testing", "releases": []},
-                ],
-                [{"versionCode": 1, "sha256": "9" * 64}],
-            )
+            client.insert_edit.return_value = "checked-edit"
+            client.list_tracks.return_value = [
+                {
+                    "track": "internal",
+                    "releases": [{"versionCodes": ["1"], "status": "completed"}],
+                },
+                {"track": "closed-testing", "releases": []},
+            ]
+            client.list_bundles.return_value = [{"versionCode": 1, "sha256": "9" * 64}]
             with mock.patch.object(store_api, "GoogleClient", return_value=client):
                 with self.assertRaisesRegex(store_api.ReleaseError, "immutable AAB digest"):
                     store_api.google_promote_execute(args)
-            client.insert_edit.assert_not_called()
+            client.insert_edit.assert_called_once_with("com.parlor.app")
+            client.list_tracks.assert_called_once_with("com.parlor.app", "checked-edit")
+            client.list_bundles.assert_called_once_with("com.parlor.app", "checked-edit")
+            client.delete_edit.assert_called_once_with("com.parlor.app", "checked-edit")
+            client.set_track.assert_not_called()
+            client.commit_edit.assert_not_called()
 
     def test_existing_google_promotion_with_exact_store_bytes_is_idempotent(self) -> None:
         candidate = manifest()
@@ -296,22 +300,26 @@ class GoogleTrackTest(unittest.TestCase):
             )
             release = {"versionCodes": ["1"], "status": "completed"}
             client = mock.Mock()
-            client.read_inventory.return_value = (
-                [
-                    {"track": "internal", "releases": [release]},
-                    {"track": "closed-testing", "releases": [release]},
-                ],
-                [
-                    {
-                        "versionCode": 1,
-                        "sha256": candidate["artifacts"]["android"]["sha256"],
-                    }
-                ],
-            )
+            client.insert_edit.return_value = "checked-edit"
+            client.list_tracks.return_value = [
+                {"track": "internal", "releases": [release]},
+                {"track": "closed-testing", "releases": [release]},
+            ]
+            client.list_bundles.return_value = [
+                {
+                    "versionCode": 1,
+                    "sha256": candidate["artifacts"]["android"]["sha256"],
+                }
+            ]
             with mock.patch.object(store_api, "GoogleClient", return_value=client):
                 result = store_api.google_promote_execute(args)
             self.assertEqual(result["result"], "already_present")
-            client.insert_edit.assert_not_called()
+            client.insert_edit.assert_called_once_with("com.parlor.app")
+            client.list_tracks.assert_called_once_with("com.parlor.app", "checked-edit")
+            client.list_bundles.assert_called_once_with("com.parlor.app", "checked-edit")
+            client.delete_edit.assert_called_once_with("com.parlor.app", "checked-edit")
+            client.set_track.assert_not_called()
+            client.commit_edit.assert_not_called()
 
     def test_prebuild_uniqueness_rejects_existing_store_version(self) -> None:
         client = mock.Mock()

@@ -38,9 +38,10 @@ internal val ParlorButtonMinimumHeight = 52.dp
  *    Companion to a primary on the same screen.
  *  - [Ghost] — transparent body, no border, secondary text. Back/nav
  *    style actions that should recede.
+ *  - [CoverGhost] — transparent action with light text for black privacy/recovery covers.
  *  - [Destructive] — danger-tinted body for leave/end/delete paths.
  */
-enum class ParlorButtonVariant { Primary, Secondary, Ghost, Destructive }
+enum class ParlorButtonVariant { Primary, Secondary, Ghost, CoverGhost, Destructive }
 
 /**
  * Editorial action button. Flat, no decoration, no lift. Press feedback
@@ -69,11 +70,16 @@ fun ParlorButton(
     val borderColor: Color
     if (!enabled) {
         containerColor = when (variant) {
-            ParlorButtonVariant.Ghost, ParlorButtonVariant.Secondary -> colors.transparent
+            ParlorButtonVariant.Ghost, ParlorButtonVariant.CoverGhost,
+            ParlorButtonVariant.Secondary -> colors.transparent
             else -> colors.semanticMuted
         }
-        contentColor = colors.textTertiary
-        borderColor = colors.borderSubtle
+        contentColor = if (variant == ParlorButtonVariant.CoverGhost) {
+            colors.coverScreenTextTertiary
+        } else {
+            colors.textTertiary
+        }
+        borderColor = if (variant == ParlorButtonVariant.CoverGhost) colors.transparent else colors.borderSubtle
     } else {
         containerColor = style.background
         contentColor = style.foreground
@@ -87,7 +93,7 @@ fun ParlorButton(
             ParlorButtonVariant.Primary -> colors.accentEmberGlow.copy(alpha = 0.35f)
             ParlorButtonVariant.Destructive -> colors.semanticDanger.copy(alpha = 0.35f)
             ParlorButtonVariant.Secondary -> colors.accentEmber.copy(alpha = 0.10f)
-            ParlorButtonVariant.Ghost -> colors.accentEmber.copy(alpha = 0.08f)
+            ParlorButtonVariant.Ghost, ParlorButtonVariant.CoverGhost -> colors.accentEmber.copy(alpha = 0.08f)
         }
     } else {
         colors.transparent
@@ -170,6 +176,11 @@ private data class ParlorButtonVariantStyle(
             ParlorButtonVariant.Ghost -> ParlorButtonVariantStyle(
                 background = colors.transparent,
                 foreground = colors.textSecondary,
+                border = colors.transparent,
+            )
+            ParlorButtonVariant.CoverGhost -> ParlorButtonVariantStyle(
+                background = colors.transparent,
+                foreground = colors.coverScreenTextSecondary,
                 border = colors.transparent,
             )
             ParlorButtonVariant.Destructive -> ParlorButtonVariantStyle(
