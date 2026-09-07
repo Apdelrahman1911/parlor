@@ -1398,7 +1398,7 @@ fun WhodunitMultiplayerPeerFlow(
  * only a new authoritative host snapshot clears this surface.
  */
 @Composable
-private fun PeerHostPausedBanner(modifier: Modifier = Modifier) {
+internal fun PeerHostPausedBanner(modifier: Modifier = Modifier) {
     val title = stringResource(Res.string.peer_paused_eyebrow)
     Box(
         modifier = modifier
@@ -1418,13 +1418,13 @@ private fun PeerHostPausedBanner(modifier: Modifier = Modifier) {
             Text(
                 text = title.uppercase(),
                 style = ParlorTheme.typography.labelSmall,
-                color = ParlorTheme.colors.accentEmber,
+                color = ParlorTheme.colors.coverScreenTextSecondary,
                 modifier = Modifier.semantics { heading() },
             )
             Text(
                 text = stringResource(Res.string.peer_paused_body),
                 style = ParlorTheme.typography.displayMedium,
-                color = ParlorTheme.colors.textPrimary,
+                color = ParlorTheme.colors.coverScreenTextPrimary,
                 textAlign = TextAlign.Center,
             )
         }
