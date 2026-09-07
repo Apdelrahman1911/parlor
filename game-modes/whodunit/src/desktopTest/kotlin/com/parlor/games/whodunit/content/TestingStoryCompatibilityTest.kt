@@ -48,22 +48,25 @@ class TestingStoryCompatibilityTest {
     private val fixture = TestingStoryFixtures()
 
     @Test
-    fun correctedStoriesDoNotReuseAnyOriginalCanonicalContentDigest() = runTest {
+    fun correctedStoriesDoNotReuseAnyRecordedEarlierCanonicalContentDigest() = runTest {
+        assertEquals(bundledWhodunitCaseIds.toSet(), fixture.retiredIdentities.keys)
+        assertEquals(11, fixture.retiredIdentities.values.sumOf { it.size })
         val reused = mutableListOf<String>()
-        fixture.originalDigests.forEach { (caseId, oldDigest) ->
-            if (fixture.loadCase(caseId).envelope.contentIdentity().digest == oldDigest) {
+        fixture.retiredIdentities.forEach { (caseId, retired) ->
+            val current = fixture.loadCase(caseId).envelope.contentIdentity()
+            if (retired.any { it.digest == current.digest }) {
                 reused += caseId
             }
         }
-        // This fails for all four uncorrected bundles, also checking that the
-        // archived digest constants are the production Kotlin canonical digests.
+        // Keep the first four 1.0.0 identities AND all seven pre-follow-up
+        // identities: a version bump cannot silently replace older-save coverage.
         assertEquals(emptyList(), reused)
     }
 
     @Test
     fun identityLessPreClueSavesCannotSilentlyBindToInstalledStoryProse() = runTest {
         val acceptedWithoutIdentity = mutableListOf<String>()
-        fixture.originalDigests.keys.forEach { caseId ->
+        bundledWhodunitCaseIds.forEach { caseId ->
             val case = fixture.loadCase(caseId)
             fixture.modes.forEach { mode ->
                 val assigned = fixture.assignedState(case, mode, seed = 91L)
@@ -104,15 +107,12 @@ class TestingStoryCompatibilityTest {
 
     @Test
     fun currentSaveRoundTripsButOldOrCrossedIdentityIsRetainedAndRejected() = runTest {
-        fixture.originalDigests.forEach { (caseId, oldDigest) ->
+        fixture.retiredIdentities.forEach { (caseId, retired) ->
             val case = fixture.loadCase(caseId)
             val current = case.envelope.contentIdentity()
-            val identities = listOf(
-                current,
-                WhodunitContentIdentity("1.0.0", oldDigest),
-                current.copy(version = "1.0.0"),
-                current.copy(digest = oldDigest),
-            )
+            val identities = listOf(current) + retired.flatMap { old ->
+                listOf(old, current.copy(version = old.version), current.copy(digest = old.digest))
+            }
             fixture.modes.forEach { mode ->
                 val assigned = fixture.assignedState(case, mode, seed = 91L)
                 identities.forEachIndexed { index, identity ->
@@ -162,7 +162,7 @@ class TestingStoryCompatibilityTest {
 
     @Test
     fun lanOffersMatchOnlyTheExactLoadedRevisionForAllCorrectedCasesAndModes() = runTest {
-        fixture.originalDigests.forEach { (caseId, oldDigest) ->
+        fixture.retiredIdentities.forEach { (caseId, retired) ->
             val case = fixture.loadCase(caseId)
             val identity = case.envelope.contentIdentity()
             fixture.modes.forEach { mode ->
@@ -184,9 +184,11 @@ class TestingStoryCompatibilityTest {
                     caseDigest = identity.digest,
                 )
                 assertTrue(offer.matches(case.envelope), "$caseId/${mode.raw}")
-                assertFalse(offer.copy(caseVersion = "1.0.0", caseDigest = oldDigest).matches(case.envelope))
-                assertFalse(offer.copy(caseVersion = "1.0.0").matches(case.envelope))
-                assertFalse(offer.copy(caseDigest = oldDigest).matches(case.envelope))
+                retired.forEach { old ->
+                    assertFalse(offer.copy(caseVersion = old.version, caseDigest = old.digest).matches(case.envelope))
+                    assertFalse(offer.copy(caseVersion = old.version).matches(case.envelope))
+                    assertFalse(offer.copy(caseDigest = old.digest).matches(case.envelope))
+                }
             }
         }
     }
@@ -208,6 +210,40 @@ internal class TestingStoryFixtures {
         "jasmine-ring" to "5cd26321aecef56a82afb56ec61f8ebad77329de39f413cb59b26de766d0d714",
         "khan-el-khalili" to "0e690e0129c9b76fb772952b4e888e59e81610597b9294c52e8f656144393b9c",
     )
+
+    // Full canonical identities at 85ded00435b4f8327ce32d3b7f5062c4438ae174,
+    // before the independently reviewed follow-up prose corrections. These
+    // are not resource-byte hashes and must not be updated with current prose.
+    private val previousIdentities = mapOf(
+        "last-dinner" to WhodunitContentIdentity(
+            "1.0.1", "f3b71cc74aaee28dcf7845b750ca773229047388a391ba9294be89efab173a05",
+        ),
+        "layla-halabi" to WhodunitContentIdentity(
+            "1.0.1", "953d5b1dae0aa26b9901e0e044f279b94fd64d4a6d8a66371a9c6577672a3cfc",
+        ),
+        "jasmine-ring" to WhodunitContentIdentity(
+            "1.0.1", "d0aab1123c08f7fb919f00f7ecc8eeb9e1ed2d5daf03df169ea90489c63199c7",
+        ),
+        "khan-el-khalili" to WhodunitContentIdentity(
+            "1.0.1", "c9979500738d7b15812b286300714db1943824aa44c29656dc6bebea72e979a0",
+        ),
+        "iskenderia-corniche" to WhodunitContentIdentity(
+            "1.0.0", "b492eddff0ccfdc3142a60ff2ee6da22566cbb39ab8717c2219e8875ac66733d",
+        ),
+        "saidi-inheritance" to WhodunitContentIdentity(
+            "1.0.0", "5d333bfb59ebf49586f5ca15a26ba55206b6d8aa9de505ca8c3e4738ffebf8b6",
+        ),
+        "zamalek-ramadan" to WhodunitContentIdentity(
+            "1.0.0", "b3fa57ea89c675bc3c5185a64adcbf0a99b4d640d6dff6fa206b58ed2c070d91",
+        ),
+    )
+
+    val retiredIdentities = previousIdentities.mapValues { (caseId, previous) ->
+        buildList {
+            add(previous)
+            originalDigests[caseId]?.let { add(WhodunitContentIdentity("1.0.0", it)) }
+        }
+    }
 
     suspend fun loadCase(id: String): ValidatedCase<WhodunitCase> {
         val raw = Res.readBytes("files/cases/$id.json").decodeToString()

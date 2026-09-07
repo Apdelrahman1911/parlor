@@ -123,12 +123,12 @@ class TestingStoryChronologyTest {
     }
 
     @Test
-    fun correctionsBumpOnlyTheFourTestingCaseVersions() = runTest {
-        val correctedIds = setOf("last-dinner", "layla-halabi", "jasmine-ring", "khan-el-khalili")
+    fun eachCorrectedTestingStoryUsesItsNextContentVersionWithoutSchemaChanges() = runTest {
+        val previouslyCorrectedIds = setOf("last-dinner", "layla-halabi", "jasmine-ring", "khan-el-khalili")
         bundledWhodunitCaseIds.forEach { id ->
             val case = loadCase(id)
             assertEquals(
-                if (id in correctedIds) SemVer(1, 0, 1) else SemVer(1, 0, 0),
+                if (id in previouslyCorrectedIds) SemVer(1, 0, 2) else SemVer(1, 0, 1),
                 case.envelope.version,
                 id,
             )

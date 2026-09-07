@@ -27,9 +27,9 @@ class TestingStoryGameTraceTest {
     private val fixture = TestingStoryFixtures()
 
     @Test
-    fun everyCorrectedCaseKillerAndModeCompletesDeterministicallyAndRoundTrips() = runTest {
+    fun everyBundledCaseKillerAndModeCompletesDeterministicallyAndRoundTrips() = runTest {
         var combinations = 0
-        fixture.originalDigests.keys.forEach { caseId ->
+        bundledWhodunitCaseIds.forEach { caseId ->
             val case = fixture.loadCase(caseId)
             fixture.modes.forEach { mode ->
                 val seeds = seedsForEveryKiller(case, mode)
@@ -42,7 +42,7 @@ class TestingStoryGameTraceTest {
                 }
             }
         }
-        assertEquals(48, combinations)
+        assertEquals(84, combinations)
     }
 
     private fun seedsForEveryKiller(case: ValidatedCase<WhodunitCase>, mode: ModeId): Map<String, Long> {
