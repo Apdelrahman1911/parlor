@@ -25,6 +25,11 @@ import kotlin.time.Duration.Companion.seconds
  *    without restarting the coroutine.
  *  - **Submits `TimerExpired`** when `remainingSeconds <= 1` so the reducer
  *    clears the timer cleanly and the round can advance.
+ *  - **Excludes Leave-confirmation time**: the local organizer/host flow removes
+ *    the containing game presentation while confirming Leave. Its effect is
+ *    cancelled, not moved into a retained runtime. Stay starts a fresh delay
+ *    from the unchanged remaining seconds; no elapsed-time catch-up is applied.
+ *    Existing session/per-timer pauses remain owned by their original actions.
  *
  * The function is extracted from the `LaunchedEffect` in [RoundSegment] so
  * the loop is unit-testable under `runTest` with virtual time, without

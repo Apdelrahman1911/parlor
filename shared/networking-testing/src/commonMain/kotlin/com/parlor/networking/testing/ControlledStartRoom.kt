@@ -44,7 +44,9 @@ class ControlledStartRoom(
     override val peerEvents get() = host.peerEvents
     override val selfPlayerId get() = host.selfPlayerId
     override val isHost: Boolean = true
-    private val memberState = MutableStateFlow(players.map { RoomMember(it.id, it.displayName, true) })
+    // Host rooms expose remote members, not the host itself. Game entry routes
+    // prepend the authoritative host when constructing the frozen player list.
+    private val memberState = MutableStateFlow(players.drop(1).map { RoomMember(it.id, it.displayName, true) })
     override val members = memberState.asStateFlow()
     val lifecycleState = MutableStateFlow<RoomLifecycleState>(RoomLifecycleState.Active)
     override val lifecycle = lifecycleState.asStateFlow()

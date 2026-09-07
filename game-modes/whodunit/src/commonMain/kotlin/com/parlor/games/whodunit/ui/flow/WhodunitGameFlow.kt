@@ -898,6 +898,11 @@ private fun SessionDrivenFlow(
         }
     }
 
+    // Product policy: Leave-confirmation time is excluded from Discussion.
+    // Replace (do not overlay/retain) HostPhaseRouter: disposal cancels its
+    // sole ticker while this controller and snapshot writer remain alive.
+    // Stay remounts at the saved remaining seconds, without wall-clock catch-up
+    // or a Resume action that could release a manual/lifecycle-owned pause.
     if (exitConfirmationOpen) {
         SessionExitConfirmation(
             kind = SessionExitKind.Local,
