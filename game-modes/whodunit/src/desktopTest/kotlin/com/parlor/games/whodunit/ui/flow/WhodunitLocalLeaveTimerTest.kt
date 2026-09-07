@@ -7,13 +7,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.test.runSkikoComposeUiTest
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import com.parlor.designsystem.components.LocalParlorToastState
@@ -30,6 +31,7 @@ import kotlin.test.assertFalse
 import kotlin.test.assertIs
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
+import kotlin.time.Duration.Companion.seconds
 import org.koin.compose.KoinIsolatedContext
 import org.koin.dsl.koinApplication
 
@@ -157,7 +159,7 @@ class WhodunitLocalLeaveTimerTest {
             awaitText(LOCAL_TITLE)
             val frozen = current.savedState()
             val writes = current.store.attempts.get()
-            // Longer than the entire authored discussion: no timer expiry or catch-up.
+            // Longer than the entire remaining discussion: no expiry or catch-up.
             mainClock.advanceTimeBy(CONFIRMATION_MS)
             assertEquals(frozen, current.savedState())
             assertEquals(writes, current.store.attempts.get())
@@ -181,10 +183,15 @@ class WhodunitLocalLeaveTimerTest {
         actions: List<WhodunitAction> = emptyList(),
         verify: ComposeUiTest.(WhodunitDiscussionFixture, Controls) -> Unit,
     ) {
-        fixture.prepareLocal(actions)
+        // Reach a real late-discussion state without changing the bundled
+        // duration/content. CMP rasterizes every virtual frame: simulating six
+        // minutes per modal unnecessarily exhausts the 60s CI test budget.
+        val prepared = fixture.prepareLocal(listOf(WhodunitAction.TimerTicked(REMAINING_SECONDS)) + actions)
+        assertEquals(180, assertNotNull(prepared.public.timer).totalSeconds)
+        if (actions.isEmpty()) assertEquals(REMAINING_SECONDS, assertNotNull(prepared.public.timer).remainingSeconds)
         val application = koinApplication { modules(fixture.bindings()) }
         try {
-            runComposeUiTest {
+            runSkikoComposeUiTest(size = Size(360f, 760f), testTimeout = 60.seconds) {
                 mainClock.autoAdvance = false
                 val controls = Controls()
                 val toast = ParlorToastState()
@@ -242,7 +249,8 @@ class WhodunitLocalLeaveTimerTest {
         }
 
     private companion object {
-        const val CONFIRMATION_MS = 360_000L
+        const val REMAINING_SECONDS = 30
+        const val CONFIRMATION_MS = 60_000L
         const val OPEN = "Open options to leave this game."
         const val STAY = "Close the leave options and continue playing."
         const val SAVE = "Save this game and return to the home screen."

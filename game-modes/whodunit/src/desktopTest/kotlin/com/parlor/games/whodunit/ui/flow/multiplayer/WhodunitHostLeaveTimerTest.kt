@@ -6,13 +6,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.test.runSkikoComposeUiTest
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import com.parlor.core.result.Result
@@ -43,6 +44,7 @@ import kotlin.test.assertFalse
 import kotlin.test.assertIs
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
+import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -81,7 +83,7 @@ class WhodunitHostLeaveTimerTest {
             modules(fixture.bindings(), module { single { lane.owner } })
         }
         try {
-            runComposeUiTest {
+            runSkikoComposeUiTest(size = Size(360f, 760f), testTimeout = 60.seconds) {
                 mainClock.autoAdvance = false
                 var mounted by mutableStateOf(true)
                 var backRequest by mutableStateOf(0L)
@@ -133,12 +135,17 @@ class WhodunitHostLeaveTimerTest {
                     fixture.advanceToDiscussion(canonical.value.public.roleAssignmentGeneration) { action ->
                         assertIs<Result.Success<*>>(runtime.session.submit(action))
                     }
+                    // Keep the authored total/identity while reaching a legal
+                    // late-discussion state. A 60s confirmation then exceeds
+                    // the entire remaining deadline without 22,500 idle renders.
+                    assertIs<Result.Success<*>>(runtime.session.submit(WhodunitAction.TimerTicked(REMAINING_SECONDS)))
                 }
                 awaitText("DISCUSSION")
                 val initial = canonical.value
-                assertEquals(180, assertNotNull(initial.public.timer).remainingSeconds)
+                assertEquals(180, assertNotNull(initial.public.timer).totalSeconds)
+                assertEquals(REMAINING_SECONDS, assertNotNull(initial.public.timer).remainingSeconds)
                 advanceActiveTime(lane, 3_000L)
-                assertEquals(177, assertNotNull(canonical.value.public.timer).remainingSeconds)
+                assertEquals(REMAINING_SECONDS - 3, assertNotNull(canonical.value.public.timer).remainingSeconds)
                 if (manualPause) {
                     lane.runQueued { runtime.session.submit(WhodunitAction.Pause) }
                     awaitText("PAUSED")
@@ -268,7 +275,8 @@ class WhodunitHostLeaveTimerTest {
     }
 
     private companion object {
-        const val CONFIRMATION_MS = 360_000L
+        const val REMAINING_SECONDS = 30
+        const val CONFIRMATION_MS = 60_000L
         const val OPEN = "Open options to leave this game."
         const val STAY = "Close the leave options and continue playing."
     }
