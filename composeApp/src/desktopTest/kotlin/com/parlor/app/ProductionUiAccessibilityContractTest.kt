@@ -3,6 +3,7 @@ package com.parlor.app
 import java.io.File
 import kotlin.test.Test
 import kotlin.test.assertContains
+import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
@@ -353,7 +354,19 @@ class ProductionUiAccessibilityContractTest {
         }
     }
 
-    private fun read(path: String): String = File(root, path).readText()
+    @Test
+    fun source_contract_text_normalizes_only_crlf_line_endings() {
+        val lf = "DisposableEffect(languageTag) {\n        overrideOwner.apply(languageTag)\n" +
+            "        onDispose {\n            overrideOwner.release()\n        }\n    }"
+        assertEquals(lf, normalizeSourceLineEndings(lf))
+        assertEquals(lf, normalizeSourceLineEndings(lf.replace("\n", "\r\n")))
+        val otherContent = "unchanged\t literal \\r\\n and lone\rcarriage return"
+        assertEquals(otherContent, normalizeSourceLineEndings(otherContent))
+    }
+
+    private fun read(path: String): String = normalizeSourceLineEndings(File(root, path).readText())
+
+    private fun normalizeSourceLineEndings(source: String): String = source.replace("\r\n", "\n")
 
     private fun productionKotlinFiles(): Sequence<File> = sequenceOf(
         File(root, "composeApp/src/commonMain"),
