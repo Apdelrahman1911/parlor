@@ -124,11 +124,19 @@ class TestingStoryChronologyTest {
 
     @Test
     fun eachCorrectedTestingStoryUsesItsNextContentVersionWithoutSchemaChanges() = runTest {
-        val previouslyCorrectedIds = setOf("last-dinner", "layla-halabi", "jasmine-ring", "khan-el-khalili")
+        val patchVersions = mapOf(
+            "last-dinner" to 2,
+            "layla-halabi" to 2,
+            "jasmine-ring" to 3,
+            "khan-el-khalili" to 2,
+            "iskenderia-corniche" to 2,
+            "saidi-inheritance" to 1,
+            "zamalek-ramadan" to 1,
+        )
         bundledWhodunitCaseIds.forEach { id ->
             val case = loadCase(id)
             assertEquals(
-                if (id in previouslyCorrectedIds) SemVer(1, 0, 2) else SemVer(1, 0, 1),
+                SemVer(1, 0, patchVersions.getValue(id)),
                 case.envelope.version,
                 id,
             )

@@ -27,10 +27,10 @@ These are testing-content coherence choices, not production editorial approval:
 |---|---|---|
 | `last-dinner` | **1.0.2** | Daniel's 9:00 claim versus 9:10 lamp is ten minutes, not fifteen. Vivienne's half-burned document is in the library fireplace, matching her own timeline, companion clue and final account. Her study document-fetching and Daniel's false alibi remain. |
 | `layla-halabi` | **1.0.2** | Keep the public 8:45 speech. Amal's speech entry matches it; Rana's method and door witnesses agree with her existing 8:40 dosing/8:50 return and concealed ten-minute detour. Ghassan, Souad and Tarek's method prose now explicitly says 8:58, as their own timelines already did. Amal brings her father's note; Tarek keeps his genuine uncle relationship. |
-| `jasmine-ring` | **1.0.2** | Walid returns at 11:22 and stages his search at 11:30: eight minutes. His lie and earlier stair-witness claims remain. Fadi's note now says the following morning, matching his brief and the Thursday-evening setting metadata. The metadata is bundled but not currently displayed, so that latter correction is not claimed as a reproduced visible weekday bug. |
+| `jasmine-ring` | **1.0.3** | Walid returns at 11:22 and stages his search at 11:30: eight minutes. His lie and earlier stair-witness claims remain. Fadi's note now says the following morning, matching his brief and the Thursday-evening setting metadata. The metadata is bundled but not currently displayed, so that latter correction is not claimed as a reproduced visible weekday bug. The final testing choices below align the will's last-week history and Nadim's current shop closure. |
 | `khan-el-khalili` | **1.0.2** | Refaat's dismissal note is dated last week, when his private history says he discovered it. His 7:00 a.m. entry explicitly rereads it; preparation two days earlier and Karim's corrected alibi chain remain. |
 | `saidi-inheritance` | **1.0.1** | Preserve Zahra's age 68, elder-sister role, divorce at 18 and fifty-year history. The testing age choice makes Mahrous 62 and aligns the physician's age reference to his sixties, rather than rewriting that family history. |
-| `iskenderia-corniche` | **1.0.1** | Preserve Atif's age 70 and Magda's elder-sister/caregiver history; the testing age choice makes Magda 75. Her having cared for him at 15 is then coherent. Fatma takes the pack at 7:00 a.m., prepares it in the pantry at 8:25 p.m. and carries the bottle in her apron for the 8:35 table detour. Her method now matches her factual timeline; the bottle evidence and deliberately incomplete 8:40 alibi remain. |
+| `iskenderia-corniche` | **1.0.2** | Preserve Atif's age 70 and Magda's elder-sister/caregiver history; the testing age choice makes Magda 75. Her having cared for him at 15 is then coherent. Fatma takes the pack at 7:00 a.m., prepares it in the pantry at 8:25 p.m. and carries the bottle in her apron for the 8:35 table detour. Her method now matches her factual timeline; the bottle evidence and deliberately incomplete 8:40 alibi remain. In the selected guilty Captain variant, discovery is at 9:15 and the shout at 9:17, after the camera's two-minute hesitation. |
 | `zamalek-ramadan` | **1.0.1** | Mokhtar's final account now agrees with the two-year secret/audit history. The fictional delay is explicitly approximate, not a two-hour minimum contradicted by 6:48 dosing and 8:30–8:45 death. This is no validation of real-world pharmacology. |
 
 The replacement ages are explicit pre-release editorial choices, not ages
@@ -38,6 +38,27 @@ independently recovered from an author. No characters are added or removed;
 motives, killer variants, case/character/clue IDs, clue-pool ordering, supported
 modes/counts and round settings are unchanged. All seven bundles still support
 exactly six players in Classic Vote and Elimination; engine ranges remain broader.
+
+### Final testing-chronology choices
+
+The owner authorized choosing coherent facts instead of leaving these testing
+stories blocked on an unrecorded author decision:
+
+- **Jasmine will:** Rasha persuades Abu Walid and he writes the new will last
+  week; Walid discovers it that same week. Both dossiers already supplied
+  last-week anchors. Copies/drafts and the next-morning signature remain;
+  no earlier second will or revision history is invented.
+- **Jasmine shop:** Nadim's shop officially closed last week, as its objective
+  register clue states. His private current-status paragraph agrees. His
+  desperation before closure, retrospective final account, Istanbul plan and
+  false cigarette alibi remain.
+- **Guilty Captain:** arrival/discovery at 9:15 agrees with the public intro;
+  he waits two minutes and shouts at 9:17, matching the camera and final account.
+  The other five guilty-only 9:15 shout rows belong to mutually exclusive
+  variants, so they are not rewritten.
+
+These choices advance Jasmine **1.0.2 → 1.0.3** and Iskenderia **1.0.1 → 1.0.2**.
+They are approved testing corrections, not final production editorial approval.
 
 ## Content identity and recovery
 
@@ -51,9 +72,10 @@ match both to the installed case before launching it. A pre-correction 1.0.0
 save is **not migrated** to a corrected version, even if character IDs or clue
 history still look valid. Likewise, a prior 1.0.1 save cannot launch a current
 1.0.2 story. Neither changing a version alone nor substituting a digest makes
-incompatible content acceptable. The compatibility fixtures retain the four
-original 1.0.0 digests and all seven pre-follow-up identities; they are not
-updated to match the new prose.
+incompatible content acceptable. The same rule rejects Jasmine's prior 1.0.2
+save under 1.0.3. The compatibility fixtures retain the four original 1.0.0
+digests, all seven pre-follow-up identities and the two pre-final-editorial
+identities; none is updated to match new prose.
 
 Older saves without either identity field may still be decoded/inspected by
 the legacy loader and codec, but cannot launch a game: a pre-clue snapshot
@@ -72,10 +94,11 @@ seeds and own-private projection boundaries are unchanged.
 
 ## Verification and remaining editorial work
 
-- `TestingStoryChronologyTest` and `TestingStoryFollowupChronologyTest` pin the
+- `TestingStoryChronologyTest`, `TestingStoryFollowupChronologyTest` and
+  `TestingStoryRemainingChronologyTest` pin the
   selected factual chains, reference corrections and preserved lies against
   actual bundled resources and strict production validators.
-- `TestingStoryCompatibilityTest` checks all eleven retired canonical identities,
+- `TestingStoryCompatibilityTest` checks all thirteen retired canonical identities,
   current save/load, rejected old/crossed/missing identities, byte retention,
   explicit deletion and exact LAN-offer content matching. Its filesystem is
   synthetic; it is not physical-device or platform-durability evidence.
@@ -97,21 +120,11 @@ VoiceOver/TalkBack review, signed-release proof or editorial certification.
 Every line and killer variant of all seven files was read for this follow-up.
 That does not establish that every narrative claim is coherent or that a
 deterministic full-game test is a human playtest. Remaining editorial questions
-are recorded rather than repaired by inventing events:
+are distinguished from the factual choices above:
 
 - Overlapping innocent library accounts in Last Dinner, Souad/Rana alibis in
   Layla and cross-variant witness alibis: the shipping briefing permits lying;
   “innocent” alone does not certify every account as an objective timeline.
-- Jasmine's two-month will knowledge versus last-week persuasion/document
-  discovery needs a decision about an earlier draft versus the same completed
-  will. Existing references to copies/drafts are counter-evidence, not proof
-  of an unmentioned revision history.
-- Jasmine's imminent shop closure versus a last-week official closure needs
-  a decision about motive-time versus current status. No administrative or
-  reopening history is invented.
-- Iskenderia's arrival/discovery/scream row may span several events; its
-  relationship to the public discovery and two-minute hesitation still needs
-  editorial confirmation.
 
 The apparent Daniel reconciliation-versus-8:30-toast conflict compares
 mutually exclusive killer timelines. Jasmine's public 11:10 request does not

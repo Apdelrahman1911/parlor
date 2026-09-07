@@ -50,7 +50,7 @@ class TestingStoryCompatibilityTest {
     @Test
     fun correctedStoriesDoNotReuseAnyRecordedEarlierCanonicalContentDigest() = runTest {
         assertEquals(bundledWhodunitCaseIds.toSet(), fixture.retiredIdentities.keys)
-        assertEquals(11, fixture.retiredIdentities.values.sumOf { it.size })
+        assertEquals(13, fixture.retiredIdentities.values.sumOf { it.size })
         val reused = mutableListOf<String>()
         fixture.retiredIdentities.forEach { (caseId, retired) ->
             val current = fixture.loadCase(caseId).envelope.contentIdentity()
@@ -58,8 +58,8 @@ class TestingStoryCompatibilityTest {
                 reused += caseId
             }
         }
-        // Keep the first four 1.0.0 identities AND all seven pre-follow-up
-        // identities: a version bump cannot silently replace older-save coverage.
+        // Keep the first four 1.0.0 identities, all seven pre-follow-up
+        // identities and both pre-final-editorial identities. Do not replace old-save coverage.
         assertEquals(emptyList(), reused)
     }
 
@@ -238,10 +238,22 @@ internal class TestingStoryFixtures {
         ),
     )
 
+    // Canonical identities from committed 1f809b87c15a4deb079809bc14718a58cf0fe451,
+    // before the explicit final testing-chronology choices. Preserve these saved-game boundaries.
+    private val preFinalEditorialIdentities = mapOf(
+        "jasmine-ring" to WhodunitContentIdentity(
+            "1.0.2", "f03f94cc92f2f0c2388eab34e45857cb7dcfca2dd86f2aced5ff23d9292017cf",
+        ),
+        "iskenderia-corniche" to WhodunitContentIdentity(
+            "1.0.1", "e27cddb6fb9b6bf035ce6cd9fcb8000dbcb589ae0333cda5c7d7ac83598fb2f7",
+        ),
+    )
+
     val retiredIdentities = previousIdentities.mapValues { (caseId, previous) ->
         buildList {
             add(previous)
             originalDigests[caseId]?.let { add(WhodunitContentIdentity("1.0.0", it)) }
+            preFinalEditorialIdentities[caseId]?.let(::add)
         }
     }
 
