@@ -20,6 +20,12 @@ concurrency:
 permissions:
   contents: read
 
+env:
+  # --no-daemon controls Gradle, not Kotlin's separate compiler daemon.
+  # Keep compiler work inside the explicitly stopped verification Gradle lane,
+  # including Gradle invocations from the Xcode shell phase.
+  GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+
 jobs:
   desktop-android:
     name: Common, desktop, and Android release
@@ -41,6 +47,14 @@ jobs:
           distribution: temurin
           java-version: "21"
           check-latest: false
+
+      - name: Claim fresh verification output ownership
+        id: verification_ownership
+        shell: python
+        run: |
+          import runpy, sys
+          sys.argv = ["verification_hygiene.py", "prepare"]
+          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
 
       - name: Install pinned Android SDK packages
         shell: bash
@@ -74,9 +88,25 @@ jobs:
       - name: Run common, desktop, Android, static-analysis, and release gates
         run: ./gradlew productionCheck productionStaticAnalysis productionReleaseAutomationCheck allTests --dependency-verification=strict --no-daemon --stacktrace --console=plain
 
+      - name: Stop Gradle after common-android
+        if: always()
+        shell: python
+        run: |
+          import runpy, sys
+          sys.argv = ["verification_hygiene.py", "stop", "common-android"]
+          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
+
       - name: Run release Android managed-device smoke tests
         shell: bash
         run: scripts/android/run_release_managed_device_smoke.sh
+
+      - name: Stop Gradle after managed-device
+        if: always()
+        shell: python
+        run: |
+          import runpy, sys
+          sys.argv = ["verification_hygiene.py", "stop", "managed-device"]
+          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
 
       - name: Inspect unsigned Android release artifact and merged manifest
         shell: bash
@@ -94,6 +124,7 @@ jobs:
           cp "$manifest" build/ci-evidence/merged-release-manifest.xml
 
       - name: Upload verification reports, mappings, and unsigned AAB
+        id: verification_artifact
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
@@ -104,11 +135,37 @@ jobs:
             build/ci-evidence/
             **/build/reports/detekt/
             **/build/reports/tests/
+            **/build/test-results/**/*.xml
+            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-ownership.json
+            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-stop-*.json
             **/build/reports/androidTests/managedDevice/
             **/build/outputs/androidTest-results/managedDevice/
             **/build/reports/lint-results-*
             composeApp/build/outputs/mapping/release/
             composeApp/build/outputs/bundle/release/*.aab
+
+      # A successful nonempty upload must precede deletion of the last local evidence copy.
+      - name: Clean only attested verification outputs
+        if: always()
+        env:
+          PARLOR_VERIFICATION_PREPARE_OUTCOME: ${{ steps.verification_ownership.outcome }}
+          PARLOR_VERIFICATION_UPLOAD_OUTCOME: ${{ steps.verification_artifact.outcome }}
+          PARLOR_VERIFICATION_ARTIFACT_ID: ${{ steps.verification_artifact.outputs.artifact-id }}
+          PARLOR_VERIFICATION_ARTIFACT_DIGEST: ${{ steps.verification_artifact.outputs.artifact-digest }}
+        shell: python
+        run: |
+          import runpy, sys
+          sys.argv = ["verification_hygiene.py", "cleanup"]
+          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
+
+      - name: Upload verification cleanup receipt
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: verification-cleanup-${{ github.job }}
+          if-no-files-found: warn
+          retention-days: 14
+          path: ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-cleanup.json
 
   desktop-linux-arm64:
     name: Desktop strict verification (Linux arm64)
@@ -129,6 +186,14 @@ jobs:
           java-version: "21"
           check-latest: false
 
+      - name: Claim fresh verification output ownership
+        id: verification_ownership
+        shell: python
+        run: |
+          import runpy, sys
+          sys.argv = ["verification_hygiene.py", "prepare"]
+          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
+
       - name: Require the Linux arm64 host
         shell: bash
         run: |
@@ -141,6 +206,51 @@ jobs:
       - name: Resolve and test the supported Linux arm64 desktop graph
         shell: bash
         run: ./gradlew productionDesktopCheck --dependency-verification=strict --no-daemon --stacktrace --console=plain
+
+      - name: Stop Gradle after linux-arm64
+        if: always()
+        shell: python
+        run: |
+          import runpy, sys
+          sys.argv = ["verification_hygiene.py", "stop", "linux-arm64"]
+          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
+
+      - name: Upload Desktop verification descriptors
+        id: verification_artifact
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: desktop-verification-${{ github.job }}
+          if-no-files-found: warn
+          retention-days: 14
+          path: |
+            **/build/reports/tests/
+            **/build/test-results/**/*.xml
+            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-ownership.json
+            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-stop-*.json
+
+      # A successful nonempty upload must precede deletion of the last local evidence copy.
+      - name: Clean only attested verification outputs
+        if: always()
+        env:
+          PARLOR_VERIFICATION_PREPARE_OUTCOME: ${{ steps.verification_ownership.outcome }}
+          PARLOR_VERIFICATION_UPLOAD_OUTCOME: ${{ steps.verification_artifact.outcome }}
+          PARLOR_VERIFICATION_ARTIFACT_ID: ${{ steps.verification_artifact.outputs.artifact-id }}
+          PARLOR_VERIFICATION_ARTIFACT_DIGEST: ${{ steps.verification_artifact.outputs.artifact-digest }}
+        shell: python
+        run: |
+          import runpy, sys
+          sys.argv = ["verification_hygiene.py", "cleanup"]
+          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
+
+      - name: Upload verification cleanup receipt
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: verification-cleanup-${{ github.job }}
+          if-no-files-found: warn
+          retention-days: 14
+          path: ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-cleanup.json
 
   desktop-macos-x64:
     name: Desktop and Kotlin Native strict verification (macOS x64)
@@ -161,6 +271,14 @@ jobs:
           java-version: "21"
           check-latest: false
 
+      - name: Claim fresh verification output ownership
+        id: verification_ownership
+        shell: python
+        run: |
+          import runpy, sys
+          sys.argv = ["verification_hygiene.py", "prepare"]
+          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
+
       - name: Require the macOS x64 host
         shell: bash
         run: |
@@ -173,6 +291,51 @@ jobs:
       - name: Resolve and test the macOS x64 host-selected graphs
         shell: bash
         run: ./gradlew productionDesktopCheck :composeApp:downloadKotlinNativeDistribution --dependency-verification=strict --no-daemon --stacktrace --console=plain
+
+      - name: Stop Gradle after macos-x64
+        if: always()
+        shell: python
+        run: |
+          import runpy, sys
+          sys.argv = ["verification_hygiene.py", "stop", "macos-x64"]
+          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
+
+      - name: Upload Desktop verification descriptors
+        id: verification_artifact
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: desktop-verification-${{ github.job }}
+          if-no-files-found: warn
+          retention-days: 14
+          path: |
+            **/build/reports/tests/
+            **/build/test-results/**/*.xml
+            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-ownership.json
+            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-stop-*.json
+
+      # A successful nonempty upload must precede deletion of the last local evidence copy.
+      - name: Clean only attested verification outputs
+        if: always()
+        env:
+          PARLOR_VERIFICATION_PREPARE_OUTCOME: ${{ steps.verification_ownership.outcome }}
+          PARLOR_VERIFICATION_UPLOAD_OUTCOME: ${{ steps.verification_artifact.outcome }}
+          PARLOR_VERIFICATION_ARTIFACT_ID: ${{ steps.verification_artifact.outputs.artifact-id }}
+          PARLOR_VERIFICATION_ARTIFACT_DIGEST: ${{ steps.verification_artifact.outputs.artifact-digest }}
+        shell: python
+        run: |
+          import runpy, sys
+          sys.argv = ["verification_hygiene.py", "cleanup"]
+          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
+
+      - name: Upload verification cleanup receipt
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: verification-cleanup-${{ github.job }}
+          if-no-files-found: warn
+          retention-days: 14
+          path: ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-cleanup.json
 
   desktop-windows-x64:
     name: Desktop, Kotlin Native, and Android resources strict verification (Windows x64)
@@ -192,6 +355,14 @@ jobs:
           distribution: temurin
           java-version: "21"
           check-latest: false
+
+      - name: Claim fresh verification output ownership
+        id: verification_ownership
+        shell: python
+        run: |
+          import runpy, sys
+          sys.argv = ["verification_hygiene.py", "prepare"]
+          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
 
       - name: Require the Windows x64 host
         shell: pwsh
@@ -215,6 +386,51 @@ jobs:
       - name: Resolve and test the Windows x64 host-selected graphs
         shell: pwsh
         run: .\gradlew.bat productionDesktopCheck :composeApp:downloadKotlinNativeDistribution :composeApp:processDebugResources --dependency-verification=strict --no-daemon --stacktrace --console=plain
+
+      - name: Stop Gradle after windows-x64
+        if: always()
+        shell: python
+        run: |
+          import runpy, sys
+          sys.argv = ["verification_hygiene.py", "stop", "windows-x64"]
+          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
+
+      - name: Upload Desktop verification descriptors
+        id: verification_artifact
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: desktop-verification-${{ github.job }}
+          if-no-files-found: warn
+          retention-days: 14
+          path: |
+            **/build/reports/tests/
+            **/build/test-results/**/*.xml
+            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-ownership.json
+            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-stop-*.json
+
+      # A successful nonempty upload must precede deletion of the last local evidence copy.
+      - name: Clean only attested verification outputs
+        if: always()
+        env:
+          PARLOR_VERIFICATION_PREPARE_OUTCOME: ${{ steps.verification_ownership.outcome }}
+          PARLOR_VERIFICATION_UPLOAD_OUTCOME: ${{ steps.verification_artifact.outcome }}
+          PARLOR_VERIFICATION_ARTIFACT_ID: ${{ steps.verification_artifact.outputs.artifact-id }}
+          PARLOR_VERIFICATION_ARTIFACT_DIGEST: ${{ steps.verification_artifact.outputs.artifact-digest }}
+        shell: python
+        run: |
+          import runpy, sys
+          sys.argv = ["verification_hygiene.py", "cleanup"]
+          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
+
+      - name: Upload verification cleanup receipt
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: verification-cleanup-${{ github.job }}
+          if-no-files-found: warn
+          retention-days: 14
+          path: ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-cleanup.json
 
   ios:
     name: iOS tests, release frameworks, and Swift wrapper
@@ -241,6 +457,19 @@ jobs:
           java-version: "21"
           check-latest: false
 
+      - name: Claim fresh verification output ownership
+        id: verification_ownership
+        shell: python
+        run: |
+          import runpy, sys
+          sys.argv = ["verification_hygiene.py", "prepare"]
+          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
+
+      - name: Claim apple-aggregate native resource ownership
+        id: apple_aggregate_prepare
+        shell: bash
+        run: /usr/bin/python3 -B -m scripts.ci.apple_verification_hygiene prepare apple-aggregate
+
       - name: Record Xcode toolchain and exact source
         shell: bash
         run: |
@@ -259,11 +488,21 @@ jobs:
           test -z "$(git status --porcelain)"
 
       - name: Run iOS simulator tests, Apple static analysis, and release linkage gates
+        id: apple_aggregate_run
         shell: bash
         run: |
           set -euo pipefail
           echo "productionIosSimulatorRuntimeTests runs all executable iosSimulatorArm64 runtime tests; productionAppleCheck runs Apple type-aware static analysis and linkage-only checks for iosArm64, iosSimulatorArm64, and iosX64."
           ./gradlew productionIosSimulatorRuntimeTests productionAppleCheck --dependency-verification=strict --no-daemon --stacktrace --console=plain
+
+      - name: Stop Gradle after apple-aggregate and retire owned Apple resources
+        id: apple_aggregate_finish
+        if: always()
+        env:
+          PARLOR_APPLE_PREPARE_OUTCOME: ${{ steps.apple_aggregate_prepare.outcome }}
+          PARLOR_APPLE_RUN_OUTCOME: ${{ steps.apple_aggregate_run.outcome }}
+        shell: bash
+        run: /usr/bin/python3 -B -m scripts.ci.apple_verification_hygiene finish apple-aggregate
 
       - name: Validate iOS plist and privacy manifest
         shell: bash
@@ -271,6 +510,11 @@ jobs:
           set -euo pipefail
           plutil -lint iosApp/iosApp/Info.plist
           plutil -lint iosApp/iosApp/PrivacyInfo.xcprivacy
+
+      - name: Claim apple-ui native resource ownership
+        id: apple_ui_prepare
+        shell: bash
+        run: /usr/bin/python3 -B -m scripts.ci.apple_verification_hygiene prepare apple-ui
 
       - name: Verify effective Debug and Release application identities
         shell: bash
@@ -290,25 +534,42 @@ jobs:
           [[ "$release_bundle" == com.parlor.app ]]
 
       - name: Launch Swift host and Compose root on iOS Simulator
+        id: apple_ui_run
         shell: bash
         run: |
           set -euo pipefail
-          simulator_inventory=build/ci-evidence/ios-simulators.json
-          xcrun simctl list devices available --json | tee "$simulator_inventory"
-          simulator_udid="$(jq -er '[.devices[][] | select(.name | startswith("iPhone"))][0].udid' "$simulator_inventory")"
-          rm -rf build/ci-evidence/ios-ui-tests.xcresult
+          # Never run settings/destructive fixtures in an existing simulator profile.
+          simulator_udid="$(/usr/bin/python3 -B -m scripts.ci.apple_verification_hygiene create-simulator apple-ui)"
+          test ! -e build/ci-evidence/ios-ui-tests.xcresult
           xcodebuild \
             -project iosApp/iosApp.xcodeproj \
             -scheme iosApp \
             -configuration Debug \
             -sdk iphonesimulator \
             -destination "platform=iOS Simulator,id=$simulator_udid" \
+            -parallel-testing-enabled NO \
+            -maximum-concurrent-test-simulator-destinations 1 \
             -destination-timeout 120 \
             -derivedDataPath build/xcode-derived-data \
             -resultBundlePath build/ci-evidence/ios-ui-tests.xcresult \
             test | tee build/ci-evidence/xcode-ui-test.log
 
+      - name: Stop Gradle after apple-ui and retire owned Apple resources
+        id: apple_ui_finish
+        if: always()
+        env:
+          PARLOR_APPLE_PREPARE_OUTCOME: ${{ steps.apple_ui_prepare.outcome }}
+          PARLOR_APPLE_RUN_OUTCOME: ${{ steps.apple_ui_run.outcome }}
+        shell: bash
+        run: /usr/bin/python3 -B -m scripts.ci.apple_verification_hygiene finish apple-ui
+
+      - name: Claim apple-wrapper native resource ownership
+        id: apple_wrapper_prepare
+        shell: bash
+        run: /usr/bin/python3 -B -m scripts.ci.apple_verification_hygiene prepare apple-wrapper
+
       - name: Build unsigned Swift Release wrapper
+        id: apple_wrapper_run
         shell: bash
         run: |
           set -euo pipefail
@@ -333,7 +594,17 @@ jobs:
           file "$app/Parlor" | tee build/ci-evidence/xcode-binary.txt
           shasum -a 256 "$app/Parlor" | tee build/ci-evidence/xcode-binary.sha256
 
+      - name: Stop Gradle after apple-wrapper and retire owned Apple resources
+        id: apple_wrapper_finish
+        if: always()
+        env:
+          PARLOR_APPLE_PREPARE_OUTCOME: ${{ steps.apple_wrapper_prepare.outcome }}
+          PARLOR_APPLE_RUN_OUTCOME: ${{ steps.apple_wrapper_run.outcome }}
+        shell: bash
+        run: /usr/bin/python3 -B -m scripts.ci.apple_verification_hygiene finish apple-wrapper
+
       - name: Upload Apple verification evidence
+        id: verification_artifact
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
@@ -345,3 +616,35 @@ jobs:
             build/xcode-derived-data/Build/Products/Release-iphonesimulator/Parlor.app.dSYM/
             **/build/reports/detekt/
             **/build/reports/tests/
+            **/build/test-results/**/*.xml
+            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-ownership.json
+            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-stop-*.json
+            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-apple-*-ownership.json
+            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-apple-ui-simulator-*.json
+
+      # A successful nonempty upload must precede deletion of the last local evidence copy.
+      - name: Clean only attested verification outputs
+        if: always()
+        env:
+          PARLOR_VERIFICATION_PREPARE_OUTCOME: ${{ steps.verification_ownership.outcome }}
+          PARLOR_APPLE_CYCLE_OUTCOMES: >-
+            {"apple-aggregate":{"prepare":"${{ steps.apple_aggregate_prepare.outcome }}","run":"${{ steps.apple_aggregate_run.outcome }}","finish":"${{ steps.apple_aggregate_finish.outcome }}"},
+             "apple-ui":{"prepare":"${{ steps.apple_ui_prepare.outcome }}","run":"${{ steps.apple_ui_run.outcome }}","finish":"${{ steps.apple_ui_finish.outcome }}"},
+             "apple-wrapper":{"prepare":"${{ steps.apple_wrapper_prepare.outcome }}","run":"${{ steps.apple_wrapper_run.outcome }}","finish":"${{ steps.apple_wrapper_finish.outcome }}"}}
+          PARLOR_VERIFICATION_UPLOAD_OUTCOME: ${{ steps.verification_artifact.outcome }}
+          PARLOR_VERIFICATION_ARTIFACT_ID: ${{ steps.verification_artifact.outputs.artifact-id }}
+          PARLOR_VERIFICATION_ARTIFACT_DIGEST: ${{ steps.verification_artifact.outputs.artifact-digest }}
+        shell: python
+        run: |
+          import runpy, sys
+          sys.argv = ["verification_hygiene.py", "cleanup"]
+          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
+
+      - name: Upload verification cleanup receipt
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: verification-cleanup-${{ github.job }}
+          if-no-files-found: warn
+          retention-days: 14
+          path: ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-cleanup.json
