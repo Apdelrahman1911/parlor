@@ -261,7 +261,10 @@ listing or migrating it; failure to set or verify that flag is surfaced, not
 treated as an empty store. Failed legacy migrations retain their bytes for
 Retry/Discard rather than deleting the last recoverable copy. The exclusion
 flag is an OS backup policy request, not proof of a completed backup/restore
-test. Current authenticated records retain precedence over legacy copies.
+test. Current records retain precedence over legacy copies even when unreadable:
+an invalid header, failed authentication, unavailable key, or cancellation never
+causes a silent legacy fallback. The excluded legacy copy is removed only after
+successful authenticated current decryption/migration, or explicit Discard.
 
 Settings are persistent per platform. The shipping controls are language,
 theme, and reduced motion; each has a validated default. Mutations are
