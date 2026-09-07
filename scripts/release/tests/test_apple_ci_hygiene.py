@@ -301,6 +301,179 @@ class NativeParsingAndSignalTest(unittest.TestCase):
         self.assertEqual(backend.lib.task_name_for_pid.call_count, 1)
 
 
+class NativeInventoryAndBasicInfoTest(unittest.TestCase):
+    """Exercise actual ctypes-facing methods without loading native libraries."""
+
+    def setUp(self):
+        self.self_pid = 9000
+        self.uid = 501
+        self.pid_bytes = ctypes.sizeof(ctypes.c_int)
+        self.capacity = (native.MAX_PROCESSES + 1) * self.pid_bytes
+        self.backend = object.__new__(native.DarwinWorkerBackend)
+        # No global-enumeration method exists on this synthetic native boundary.
+        self.backend.proc = Mock(spec=("proc_listpids", "proc_pidinfo", "proc_signal_with_audittoken"))
+        self.addCleanup(ctypes.set_errno, ctypes.get_errno())
+        for name, value in (("geteuid", self.uid), ("getuid", self.uid), ("getpid", self.self_pid)):
+            replacement = patch.object(native.os, name, return_value=value, create=True)
+            replacement.start()
+            self.addCleanup(replacement.stop)
+
+    def inventory(self, pids, returned_bytes=None, error=0):
+        def listpids(selector, uid, pointer, capacity):
+            self.assertEqual(selector, 4)
+            self.assertEqual(uid, self.uid)
+            self.assertEqual(capacity, self.capacity)
+            self.assertEqual(ctypes.sizeof(pointer), capacity)
+            values = ctypes.cast(pointer, ctypes.POINTER(ctypes.c_int))
+            for index, pid in enumerate(pids):
+                values[index] = pid
+            ctypes.set_errno(error)
+            return len(pids) * self.pid_bytes if returned_bytes is None else returned_bytes
+        self.backend.proc.proc_listpids.side_effect = listpids
+
+    def basic(self, *, returned_pid=100, returned_size=None, error=0, status=2, uid=501):
+        def pidinfo(pid, flavor, argument, pointer, capacity):
+            self.assertEqual((pid, flavor, argument), (100, 3, 0))
+            self.assertEqual(capacity, ctypes.sizeof(native.ProcBsdInfo))
+            info = ctypes.cast(pointer, ctypes.POINTER(native.ProcBsdInfo)).contents
+            info.pid, info.uid, info.status = returned_pid, uid, status
+            info.start_sec, info.start_usec = 2, 3
+            info.comm, info.name = b"NO_COMMAND_LOG", b"NO_ENVIRONMENT_OR_TRACKING_LOG"
+            ctypes.set_errno(error)
+            return capacity if returned_size is None else returned_size
+        self.backend.proc.proc_pidinfo.side_effect = pidinfo
+
+    def test_constructor_binds_uid_selector_and_byte_buffer_pointer_abi(self):
+        proc = Mock(spec=("proc_pidinfo", "proc_pidpath", "proc_listpids", "proc_signal_with_audittoken"))
+        lib = Mock()
+        value = native.ProcessIdentity(self.self_pid, self.uid, (2, 0), "/synthetic/python", (0,) * 5 + (self.self_pid, 0, 1))
+        with patch.object(native.platform, "system", return_value="Darwin"), \
+                patch.object(native.platform, "machine", return_value="arm64"), \
+                patch.object(native.ctypes, "CDLL", side_effect=[lib, proc]) as load, \
+                patch.object(native.ctypes.c_uint32, "in_dll", return_value=ctypes.c_uint32(123)), \
+                patch.object(native.os, "sysconf", return_value=1024 * 1024, create=True), \
+                patch.object(native.DarwinWorkerBackend, "read", return_value=value):
+            backend = native.DarwinWorkerBackend()
+        self.assertIs(backend.proc, proc)
+        self.assertEqual(load.call_count, 2)
+        self.assertEqual(proc.proc_listpids.argtypes,
+                         [ctypes.c_uint32, ctypes.c_uint32, ctypes.c_void_p, ctypes.c_int])
+        self.assertIs(proc.proc_listpids.restype, ctypes.c_int)
+        proc.proc_listpids.assert_not_called()
+
+    def test_inventory_uses_effective_uid_and_byte_count_not_global_scan(self):
+        native.os.getuid.return_value = 777  # Selector is effective, not real UID.
+        self.inventory([self.self_pid, 100, 101])
+        self.assertEqual(self.backend._pids(), [100, 101])
+        self.backend.proc.proc_listpids.assert_called_once()
+        self.backend.proc.proc_pidinfo.assert_not_called()
+
+    def test_self_only_inventory_is_a_valid_empty_worker_set(self):
+        self.inventory([self.self_pid])
+        self.assertEqual(self.backend._pids(), [])
+
+    def test_failed_zero_negative_unaligned_and_over_capacity_counts_fail_closed(self):
+        sizes = (-1, 0, 1, 3, 5, self.capacity - 1, self.capacity + self.pid_bytes)
+        for size in sizes:
+            with self.subTest(returned_bytes=size):
+                self.inventory([self.self_pid], returned_bytes=size, error=native.errno.EPERM)
+                with self.assertRaisesRegex(RuntimeError, "bounded native worker inventory"):
+                    self.backend._pids()
+
+    def test_exact_maximum_is_accepted_but_full_buffer_truncation_is_not(self):
+        pids = list(range(1, native.MAX_PROCESSES + 1))
+        self.inventory(pids)
+        self.assertEqual(self.backend._pids(), pids)
+        self.inventory(pids + [native.MAX_PROCESSES + 1])
+        with self.assertRaisesRegex(RuntimeError, "bounded native worker inventory"):
+            self.backend._pids()
+
+    def test_negative_and_duplicate_pid_records_are_not_normalized_away(self):
+        for pids in ([self.self_pid, -1], [self.self_pid, 100, 100]):
+            with self.subTest(pids=pids):
+                self.inventory(pids)
+                with self.assertRaisesRegex(RuntimeError, "Invalid native process inventory"):
+                    self.backend._pids()
+
+    def test_inventory_diagnostic_retains_only_numeric_boundary_failure(self):
+        self.inventory([self.self_pid], returned_bytes=0, error=native.errno.EPERM)
+        with self.assertRaises(RuntimeError) as failure:
+            self.backend._pids()
+        self.assertEqual(str(failure.exception),
+                         "Cannot obtain bounded native worker inventory "
+                         f"(uid=501, bytes=0, capacity={self.capacity}, errno={native.errno.EPERM})")
+
+    def test_lifetimes_reads_only_kernel_uid_selected_processes(self):
+        self.inventory([self.self_pid, 100])
+        self.basic()
+        self.assertEqual(self.backend.lifetimes(), [(100, self.uid, (2, 3))])
+        self.backend.proc.proc_pidinfo.assert_called_once()
+
+    def test_snapshot_preserves_baseline_exclusion_and_full_identity_read(self):
+        self.inventory([self.self_pid, 100, 101])
+        def basic(pid):
+            value = native.ProcBsdInfo()
+            value.uid, value.pid, value.start_sec, value.start_usec = self.uid, pid, 2, 3
+            return value
+        self.backend._basic = Mock(side_effect=basic)
+        self.backend._path = Mock(return_value=WORKER)
+        current = native.ProcessIdentity(101, self.uid, (2, 3), WORKER, (0,) * 5 + (101, 0, 1))
+        self.backend.read = Mock(return_value=current)
+        self.assertEqual(self.backend.snapshot(APPLICATION, {(100, self.uid, (2, 3))}), [current])
+        self.backend._path.assert_called_once_with(101)
+        self.backend.read.assert_called_once_with(101)
+
+    def test_uid_change_after_kernel_selection_is_still_excluded(self):
+        self.inventory([self.self_pid, 100])
+        self.basic(uid=0)
+        self.backend._path = Mock(side_effect=AssertionError("must not inspect another UID's executable"))
+        self.assertEqual(self.backend.lifetimes(), [])
+        self.assertEqual(self.backend.snapshot(APPLICATION, set()), [])
+        self.backend._path.assert_not_called()
+
+    def test_only_actual_absence_or_zombie_can_be_no_basic_identity(self):
+        for error in (native.errno.ESRCH, native.errno.ENOENT):
+            with self.subTest(error=error):
+                self.basic(returned_size=0, error=error)
+                self.assertIsNone(self.backend._basic(100))
+        self.basic(status=5)
+        self.assertIsNone(self.backend._basic(100))
+        self.basic()
+        value = self.backend._basic(100)
+        self.assertEqual((value.pid, value.uid, value.start_sec, value.start_usec), (100, self.uid, 2, 3))
+
+    def test_denial_short_record_and_wrong_pid_remain_explicit_numeric_failures(self):
+        variants = ((0, native.errno.EPERM, 100), (0, native.errno.EACCES, 100),
+                    (0, 0, 100), (135, 0, 100), (136, 0, 101))
+        for size, error, pid in variants:
+            with self.subTest(size=size, error=error, pid=pid):
+                self.basic(returned_size=size, error=error, returned_pid=pid)
+                with self.assertRaises(RuntimeError) as failure:
+                    self.backend._basic(100)
+                self.assertEqual(str(failure.exception),
+                                 "Cannot read complete native process identity "
+                                 f"(pid=100, size={size}, expected=136, returned_pid={pid}, errno={error})")
+                self.assertNotIn("NO_COMMAND_LOG", str(failure.exception))
+                self.assertNotIn("NO_ENVIRONMENT_OR_TRACKING_LOG", str(failure.exception))
+
+    def test_denied_selected_candidate_never_becomes_missing_or_cleanup_success(self):
+        self.inventory([self.self_pid, 100])
+        self.basic(returned_size=0, error=native.errno.EPERM)
+        for operation in (self.backend.lifetimes, lambda: self.backend.snapshot(APPLICATION, set()),
+                          lambda: self.backend.read(100)):
+            with self.subTest(operation=operation):
+                with self.assertRaisesRegex(RuntimeError, "Cannot read complete native process identity"):
+                    operation()
+        claim = {"application": str(APPLICATION), "workers": [WORKER], "baseline": [],
+                 "not_before_us": 1000000, "uid": self.uid, "tracking_sha256": apple.digest(TRACKING)}
+        clock = Clock()
+        receipt = apple.stop_workers(claim, self.backend, TRACKING, clock, clock.sleep)
+        self.assertEqual(receipt["result"], "FAIL")
+        self.assertEqual(receipt["events"], [])
+        self.assertIn("errno=", receipt["errors"][0]["error"])
+        self.backend.proc.proc_signal_with_audittoken.assert_not_called()
+
+
 class Simulators:
     def __init__(self, prefix):
         self.prefix, self.calls = prefix, []

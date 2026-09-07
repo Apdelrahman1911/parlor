@@ -16,6 +16,7 @@ from pathlib import Path
 from typing import NamedTuple
 
 MAX_PROCESSES = 4096
+PROC_UID_ONLY = 4  # Public proc_listpids selector for effective UID.
 MAX_ARGUMENT_BYTES = 1024 * 1024  # ARG_MAX payload excludes the leading argc word.
 ARGC_BYTES = struct.calcsize("=i")
 MAX_ARGUMENT_RECORD_BYTES = MAX_ARGUMENT_BYTES + ARGC_BYTES
@@ -90,8 +91,9 @@ class DarwinWorkerBackend:
         self.proc.proc_pidinfo.restype = ctypes.c_int
         self.proc.proc_pidpath.argtypes = [ctypes.c_int, ctypes.c_void_p, ctypes.c_uint32]
         self.proc.proc_pidpath.restype = ctypes.c_int
-        self.proc.proc_listallpids.argtypes = [ctypes.c_void_p, ctypes.c_int]
-        self.proc.proc_listallpids.restype = ctypes.c_int
+        self.proc.proc_listpids.argtypes = [ctypes.c_uint32, ctypes.c_uint32,
+                                           ctypes.c_void_p, ctypes.c_int]
+        self.proc.proc_listpids.restype = ctypes.c_int
         self.lib.task_name_for_pid.argtypes = [ctypes.c_uint32, ctypes.c_int,
                                               ctypes.POINTER(ctypes.c_uint32)]
         self.lib.task_name_for_pid.restype = ctypes.c_int
@@ -116,10 +118,15 @@ class DarwinWorkerBackend:
         info = ProcBsdInfo()
         ctypes.set_errno(0)
         size = self.proc.proc_pidinfo(pid, 3, 0, ctypes.byref(info), ctypes.sizeof(info))
-        if size == 0 and ctypes.get_errno() in (errno.ESRCH, errno.ENOENT):
+        error = ctypes.get_errno()
+        if size == 0 and error in (errno.ESRCH, errno.ENOENT):
             return None
         if size != ctypes.sizeof(info) or info.pid != pid:
-            raise RuntimeError("Cannot read complete native process identity")
+            raise RuntimeError(
+                "Cannot read complete native process identity "
+                f"(pid={pid}, size={size}, expected={ctypes.sizeof(info)}, "
+                f"returned_pid={info.pid}, errno={error})"
+            )
         return None if info.status == 5 else info
 
     def _path(self, pid: int) -> str:
@@ -185,12 +192,25 @@ class DarwinWorkerBackend:
         raise RuntimeError("Unstable native worker identity; no signal authorized")
 
     def _pids(self) -> list[int]:
+        # PROC_PIDTBSDINFO requires same-user privilege. Select effective UID in
+        # the kernel before requesting BSD identity; never scan unrelated users
+        # then treat their expected EPERM as missing/cleaned task workers.
         values = (ctypes.c_int * (MAX_PROCESSES + 1))()
+        uid, pid_bytes = os.geteuid(), ctypes.sizeof(ctypes.c_int)
         ctypes.set_errno(0)
-        count = self.proc.proc_listallpids(values, ctypes.sizeof(values))
-        if count <= 0 or count > MAX_PROCESSES:
-            raise RuntimeError("Cannot obtain bounded native worker inventory")
-        return [pid for pid in values[:count] if pid > 0 and pid != os.getpid()]
+        size = self.proc.proc_listpids(PROC_UID_ONLY, uid, values, ctypes.sizeof(values))
+        error = ctypes.get_errno()
+        # proc_listpids returns BYTES, unlike proc_listallpids. One spare entry
+        # makes a full/truncated buffer fail instead of omitting unknown workers.
+        if not pid_bytes <= size <= MAX_PROCESSES * pid_bytes or size % pid_bytes:
+            raise RuntimeError(
+                "Cannot obtain bounded native worker inventory "
+                f"(uid={uid}, bytes={size}, capacity={ctypes.sizeof(values)}, errno={error})"
+            )
+        pids = list(values[:size // pid_bytes])
+        if any(pid < 0 for pid in pids) or len(set(pids)) != len(pids):
+            raise RuntimeError("Invalid native process inventory records")
+        return [pid for pid in pids if pid > 0 and pid != os.getpid()]
 
     def lifetimes(self) -> list[tuple]:
         result = []
