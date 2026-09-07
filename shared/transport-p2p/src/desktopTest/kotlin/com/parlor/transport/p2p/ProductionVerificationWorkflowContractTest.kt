@@ -3,6 +3,7 @@ package com.parlor.transport.p2p
 import java.io.File
 import kotlin.test.Test
 import kotlin.test.assertContains
+import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
@@ -390,11 +391,15 @@ class ProductionVerificationWorkflowContractTest {
         assertContains(workflow, appLaunchMarker)
         val appLaunchStep = workflow
             .substringAfter(appLaunchMarker)
-            .substringBefore(swiftReleaseMarker)
+            .substringBefore("\n      - name:")
         listOf(
-            "xcrun simctl list devices available --json",
+            "id: apple_ui_run",
+            "scripts.ci.apple_verification_hygiene create-simulator apple-ui",
+            "test ! -e build/ci-evidence/ios-ui-tests.xcresult",
             "-configuration Debug",
             "platform=iOS Simulator,id=\$simulator_udid",
+            "-parallel-testing-enabled NO",
+            "-maximum-concurrent-test-simulator-destinations 1",
             "-resultBundlePath build/ci-evidence/ios-ui-tests.xcresult",
             "test | tee build/ci-evidence/xcode-ui-test.log",
         ).forEach { required ->
@@ -404,6 +409,8 @@ class ProductionVerificationWorkflowContractTest {
                 message = "Apple CI must launch the real app through XCTest: $required",
             )
         }
+        assertFalse("xcrun simctl list devices available --json" in appLaunchStep)
+        assertOwnedAppleUiLifecycle(workflow, appLaunchMarker)
         listOf(
             "com.apple.product-type.bundle.ui-testing",
             "IOSAppLaunchUITests.swift in Sources",
@@ -499,6 +506,33 @@ class ProductionVerificationWorkflowContractTest {
         }
         assertContains(rootBuild, "tasks.named(\"productionAppleStaticAnalysis\")")
         assertContains(rootBuild, "tasks.matching { it.name in appleTypeAwareDetektTasks }.all")
+    }
+
+    private fun assertOwnedAppleUiLifecycle(workflow: String, appLaunchMarker: String) {
+        val prepareMarker = "- name: Claim apple-ui native resource ownership"
+        val finishMarker = "- name: Stop Gradle after apple-ui and retire owned Apple resources"
+        assertContains(workflow, prepareMarker)
+        assertContains(workflow, finishMarker)
+        val prepareStep = workflow.substringAfter(prepareMarker).substringBefore("\n      - name:")
+        assertContains(prepareStep, "id: apple_ui_prepare")
+        assertContains(prepareStep, "scripts.ci.apple_verification_hygiene prepare apple-ui")
+        assertTrue(workflow.indexOf(prepareMarker) < workflow.indexOf(appLaunchMarker))
+        val nextStepName = workflow.substringAfter(appLaunchMarker)
+            .substringAfter("\n      - name:", missingDelimiterValue = "")
+            .lineSequence().first().trim()
+        assertEquals(
+            finishMarker.removePrefix("- name:").trim(),
+            nextStepName,
+            "Owned UI cleanup must immediately follow XCTest",
+        )
+        val finishStep = workflow.substringAfter(finishMarker).substringBefore("\n      - name:")
+        listOf(
+            "id: apple_ui_finish",
+            "if: always()",
+            "PARLOR_APPLE_PREPARE_OUTCOME: \${{ steps.apple_ui_prepare.outcome }}",
+            "PARLOR_APPLE_RUN_OUTCOME: \${{ steps.apple_ui_run.outcome }}",
+            "scripts.ci.apple_verification_hygiene finish apple-ui",
+        ).forEach { required -> assertContains(finishStep, required) }
     }
 
     @Test
