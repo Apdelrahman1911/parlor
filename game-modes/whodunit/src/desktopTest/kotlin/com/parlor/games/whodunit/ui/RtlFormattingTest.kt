@@ -1,18 +1,16 @@
 package com.parlor.games.whodunit.ui
 
-import androidx.compose.runtime.AbstractApplier
-import androidx.compose.runtime.Composition
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.MonotonicFrameClock
-import androidx.compose.runtime.Recomposer
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.snapshots.Snapshot
 import androidx.compose.ui.InternalComposeUiApi
 import androidx.compose.ui.LocalSystemTheme
 import androidx.compose.ui.SystemTheme
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.runSkikoComposeUiTest
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import com.parlor.designsystem.localization.AppLanguage
@@ -23,14 +21,11 @@ import com.parlor.games.whodunit.resources.timer_total_format
 import com.parlor.games.whodunit.resources.whodunit_list_separator
 import java.io.File
 import java.util.Locale
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.runCurrent
-import kotlinx.coroutines.test.runTest
 import org.jetbrains.compose.resources.stringResource
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlin.time.Duration.Companion.seconds
 
 class RtlFormattingTest {
 
@@ -75,68 +70,61 @@ class RtlFormattingTest {
         )
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class, InternalComposeUiApi::class)
+    @OptIn(ExperimentalTestApi::class, InternalComposeUiApi::class)
     @Test
-    fun localized_resources_render_english_and_arabic_output_with_matching_direction() = runTest {
+    fun localized_resources_render_english_and_arabic_output_with_matching_direction() {
         val processLocale = Locale.getDefault()
         Locale.setDefault(Locale.US)
         val selectedLanguage = mutableStateOf(AppLanguage.English)
         var rendered: RenderedFormatting? = null
-        val compositionContext = coroutineContext + ImmediateFrameClock
-        val recomposer = Recomposer(compositionContext)
-        val composition = Composition(UnitApplier(), recomposer)
-        val recomposerJob = launch(ImmediateFrameClock) {
-            recomposer.runRecomposeAndApplyChanges()
-        }
 
         try {
-            composition.setContent {
-                CompositionLocalProvider(
-                    LocalDensity provides Density(1f),
-                    LocalLayoutDirection provides selectedLanguage.value.layoutDirection,
-                    LocalSystemTheme provides SystemTheme.Light,
-                ) {
-                    val separator = stringResource(Res.string.whodunit_list_separator)
-                    val output = RenderedFormatting(
-                        direction = LocalLayoutDirection.current,
-                        bullet = stringResource(Res.string.round_clue_bullet_format, "Evidence"),
-                        names = listOf("Layla", "Omar").joinToString(separator),
-                        elapsed = stringResource(Res.string.timer_elapsed_format, "03", "07"),
-                        total = stringResource(Res.string.timer_total_format, "05", "00"),
-                    )
-                    SideEffect { rendered = output }
+            runSkikoComposeUiTest(size = Size(320f, 640f), testTimeout = 60.seconds) {
+                setContent {
+                    CompositionLocalProvider(
+                        LocalDensity provides Density(1f),
+                        LocalLayoutDirection provides selectedLanguage.value.layoutDirection,
+                        LocalSystemTheme provides SystemTheme.Light,
+                    ) {
+                        val separator = stringResource(Res.string.whodunit_list_separator)
+                        val output = RenderedFormatting(
+                            direction = LocalLayoutDirection.current,
+                            bullet = stringResource(Res.string.round_clue_bullet_format, "Evidence"),
+                            names = listOf("Layla", "Omar").joinToString(separator),
+                            elapsed = stringResource(Res.string.timer_elapsed_format, "03", "07"),
+                            total = stringResource(Res.string.timer_total_format, "05", "00"),
+                        )
+                        SideEffect { rendered = output }
+                    }
                 }
-            }
-            runCurrent()
-            assertEquals(
-                RenderedFormatting(
-                    direction = LayoutDirection.Ltr,
-                    bullet = "•  Evidence",
-                    names = "Layla · Omar",
-                    elapsed = "03:07",
-                    total = "/ 05:00",
-                ),
-                rendered,
-            )
+                assertEquals(
+                    RenderedFormatting(
+                        direction = LayoutDirection.Ltr,
+                        bullet = "•  Evidence",
+                        names = "Layla · Omar",
+                        elapsed = "03:07",
+                        total = "/ 05:00",
+                    ),
+                    rendered,
+                )
 
-            Locale.setDefault(Locale.forLanguageTag(AppLanguage.Arabic.tag))
-            selectedLanguage.value = AppLanguage.Arabic
-            Snapshot.sendApplyNotifications()
-            runCurrent()
-            assertEquals(
-                RenderedFormatting(
-                    direction = LayoutDirection.Rtl,
-                    bullet = "•  Evidence",
-                    names = "Layla، Omar",
-                    elapsed = "03:07",
-                    total = "/ 05:00",
-                ),
-                rendered,
-            )
+                runOnIdle {
+                    Locale.setDefault(Locale.forLanguageTag(AppLanguage.Arabic.tag))
+                    selectedLanguage.value = AppLanguage.Arabic
+                }
+                waitForIdle()
+                assertEquals(
+                    RenderedFormatting(
+                        direction = LayoutDirection.Rtl,
+                        bullet = "•  Evidence",
+                        names = "Layla، Omar",
+                        elapsed = "03:07",
+                        total = "/ 05:00",
+                    ),
+                    rendered,
+                )
+            }
         } finally {
-            composition.dispose()
-            recomposer.close()
-            recomposerJob.join()
             Locale.setDefault(processLocale)
         }
     }
@@ -163,16 +151,4 @@ class RtlFormattingTest {
         const val RAW_ELAPSED_TIMER: String = "text = \"\$mm:\$ss\""
         const val RAW_TOTAL_TIMER: String = "text = \"/ \$totalMm:\$totalSs\""
     }
-}
-
-private class UnitApplier : AbstractApplier<Unit>(Unit) {
-    override fun insertTopDown(index: Int, instance: Unit) = Unit
-    override fun insertBottomUp(index: Int, instance: Unit) = Unit
-    override fun remove(index: Int, count: Int) = Unit
-    override fun move(from: Int, to: Int, count: Int) = Unit
-    override fun onClear() = Unit
-}
-
-private object ImmediateFrameClock : MonotonicFrameClock {
-    override suspend fun <R> withFrameNanos(onFrame: (Long) -> R): R = onFrame(0L)
 }
