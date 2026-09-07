@@ -165,9 +165,9 @@ hashes in `inherited-controls.json` are provenance, not proof of correctness.
 - Exit `0` means this bounded matrix passed; `2` means diagnostic verification
   succeeded but storage/OS/PRESENT coverage remains partial; `1` means a gate,
   source binding, execution, or cleanup failed. None is a production-readiness
-  or Store verdict. Full games, save-envelope recovery, physical LAN, real
-  signing, assistive technology, and past-launch root causes remain outside
-  these controls' claims.
+  or Store verdict. Full UI games, physical LAN, real Store signing, assistive
+  technology, and past-launch root causes remain outside these controls' claims.
+  Save-envelope recovery belongs only to the additive L08 receipts below.
 - Every nested/outer build path immediately stops the isolated Gradle registry.
   After compact receipts, hashes, UUIDs, and source differences are captured,
   the owned simulator, copy, DerivedData, and task workers are removed/stopped.
@@ -182,3 +182,14 @@ Review first: `run_ios_readiness.py`, `owned_lane.py`, `secondary_fifo.py`,
 the runner writes only to its new campaign cycle directory and owned temporary
 allocation. The final receipt compares original inputs before/after and copied
 inputs after workers stop. Cleanup failures must be resolved, never relabeled.
+
+
+## Additive L08 native regression extension
+
+The same owned-copy runner now requires the additional storage and retained-host
+scenarios described in `L08_README.md`. The earlier eight-launch arbitrary-byte
+health evidence and original local-controller matrices are unchanged, not
+retroactively relabeled as full snapshots or real multiplayer. New receipts bind
+all additional launches to their actual framework bytes/UUIDs. Both new subgates
+must pass for a runtime PASS; their synthetic driver/transport limits remain
+explicit. See the extension notes before creating a new source binding.

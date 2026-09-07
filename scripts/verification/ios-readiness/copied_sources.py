@@ -6,6 +6,7 @@ from pathlib import Path, PurePosixPath
 import re
 import shutil
 from instrument_storage import PATH as CREDENTIALS, ADDITION as NATIVE_ADDITION, instrument_credentials
+from l08_copy import L08_ADDITIONS, L08_ADDITIONAL_MODIFIED, instrument_l08_kotlin
 
 HERE = Path(__file__).resolve().parent
 SETTINGS = 'composeApp/src/commonMain/kotlin/com/parlor/app/shell/settings/SettingsScreen.kt'
@@ -16,12 +17,12 @@ LOCALE = 'shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/locali
 ADDITION = 'shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/auditcopy/DSC01ComposeObservation.kt'
 UIKIT_ADDITION = 'shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/auditcopy/DSC01UIKitObservation.kt'
 ADDITIONS = {ADDITION: 'DSC01ComposeObservation.kt.in', UIKIT_ADDITION: 'DSC01UIKitObservation.kt.in',
-             NATIVE_ADDITION: 'NativeReadinessProbe.kt.in'}
+             NATIVE_ADDITION: 'NativeReadinessProbe.kt.in', **L08_ADDITIONS}
 NAME_FIELDS = (
     'game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/screens/setup/PlayerEntryScreen.kt',
     'game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaPlayerEntryScreen.kt',
 )
-MODIFIED_KOTLIN = (SETTINGS, WD, MF, MAIN, LOCALE, CREDENTIALS, *NAME_FIELDS)
+MODIFIED_KOTLIN = (SETTINGS, WD, MF, MAIN, LOCALE, CREDENTIALS, *NAME_FIELDS, *L08_ADDITIONAL_MODIFIED)
 BUILD_PREFIXES = ('composeApp/', 'shared/', 'game-modes/', 'build-logic/', 'gradle/', 'config/', 'iosApp/', 'scripts/')
 BUILD_ROOTS = ('build.gradle.kts', 'settings.gradle.kts', 'gradle.properties', 'gradlew', 'gradlew.bat')
 PROTECTED = ('.keystore', '.jks', '.p12', '.p8', '.pfx', '.mobileprovision', 'credentials.json',
@@ -154,6 +155,7 @@ fun NativeReadinessStart(boot: Int, onJson: (String) -> Unit) {
         if observer.exists() or observer.is_symlink():
             raise RuntimeError('Refuse an existing observer addition')
         observer.write_text((HERE / template).read_text())
+    instrument_l08_kotlin(copy_root)
 
 
 def inspect_copied_manifest(copy_root, bindings, additional_modified):

@@ -1,0 +1,440 @@
+// COPY-ONLY Debug simulator fixture. Actual owner/game flows/lifecycle coordinator,
+// but an explicitly synthetic pre-admitted ControlledStartRoom, NOT P2pKit LAN.
+package com.parlor.app.readiness
+
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.LayoutDirection
+import com.parlor.content.repository.CaseRepository
+import com.parlor.core.ids.CaseId
+import com.parlor.core.ids.PlayerId
+import com.parlor.core.result.Result
+import com.parlor.core.time.SystemClock
+import com.parlor.engine.state.Player
+import com.parlor.games.mafia.MafiaIds
+import com.parlor.games.mafia.readiness.L08MafiaHost
+import com.parlor.games.mafia.ui.flow.multidevice.MafiaMultiDeviceHostFlow
+import com.parlor.games.whodunit.WhodunitIds
+import com.parlor.games.whodunit.content.WhodunitPayloadValidator
+import com.parlor.games.whodunit.readiness.L08WhodunitHost
+import com.parlor.games.whodunit.ui.flow.WhodunitMultiplayerHostFlow
+import com.parlor.networking.protocol.HostMessage
+import com.parlor.networking.protocol.SessionEndReason
+import com.parlor.networking.protocol.SessionProtocol
+import com.parlor.networking.room.LocalRoom
+import com.parlor.networking.room.NetError
+import com.parlor.networking.room.RoomLifecycleState
+import com.parlor.networking.testing.ControlledStartRoom
+import com.parlor.networking.transport.HostConfig
+import com.parlor.networking.transport.RoomTransport
+import com.parlor.networking.transport.TransportCapability
+import com.parlor.session.multidevice.MultiplayerOpenMode
+import com.parlor.session.multidevice.MultiplayerSessionRoute
+import com.parlor.session.multidevice.ProcessMultiplayerSession
+import com.parlor.session.multidevice.ProcessMultiplayerSessionOwner
+import com.parlor.session.multidevice.ProcessMultiplayerState
+import com.parlor.storage.settings.SettingsStore
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeout
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
+import org.koin.core.module.Module
+import org.koin.core.qualifier.named
+import org.koin.dsl.module
+import org.koin.mp.KoinPlatform
+import platform.Foundation.NSProcessInfo
+import platform.Foundation.NSThread
+
+object L08HostProbe {
+    private val observerScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+    private var active = false
+    private var ordinal = 0
+    private var boot = 0
+    private var token = ""
+    private var variant = "none"
+    private var workerFailed = false
+    private var stage = "context"
+    private var owned: ProcessMultiplayerSession? = null
+    private var witness: Witness? = null
+    private var presentation by mutableStateOf<Witness?>(null)
+    private var captured = false
+    private var mounts = 0
+    private var disposals = 0
+    private var epoch by mutableStateOf(0)
+    private var direction: LayoutDirection? = null
+    private var systemDirection: LayoutDirection? = null
+    private var owner: ProcessMultiplayerSessionOwner? = null
+    private var transport: L08ControlledTransport? = null
+    private var processScope: CoroutineScope? = null
+    private val plan = listOf("prepare", "capture", "language-en", "cycle-1", "resume-1", "language-ar",
+        "cycle-2", "resume-2", "remount", "language-system", "cycle-3", "resume-3", "active-ack", "leave")
+
+    /** Extra test binding only. The original owner/coordinator factories stay unchanged. */
+    fun extraModules(): List<Module> {
+        val env = NSProcessInfo.processInfo.environment
+        if (env["PARLOR_DSC01_SCENARIO"] != "l08-host") return emptyList()
+        requireContext(env["PARLOR_DSC01_RUN_TOKEN"] as? String ?: error("context"), "l08-host")
+        val boot = (env["PARLOR_L08_HOST_BOOT"] as? String)?.toIntOrNull()
+        check(boot != null && boot in 1..3)
+        return listOf(module {
+            single<CoroutineScope>(qualifier = named("multiplayerSession")) {
+                CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate +
+                    CoroutineExceptionHandler { _, _ -> workerFailed = true })
+            }
+            single { L08ControlledTransport(get(qualifier = named("multiplayerSession"))) }
+            single<RoomTransport> { get<L08ControlledTransport>() }
+        })
+    }
+
+    fun command(action: String, callback: (String) -> Unit) {
+        check(NSThread.isMainThread)
+        if (active) return
+        active = true
+        observerScope.launch {
+            var finished = false
+            try {
+                token = NSProcessInfo.processInfo.environment["PARLOR_DSC01_RUN_TOKEN"] as? String ?: error("context")
+                boot = (NSProcessInfo.processInfo.environment["PARLOR_L08_HOST_BOOT"] as? String)?.toIntOrNull()
+                    ?: error("context")
+                requireContext(token, "l08-host")
+                check(boot in 1..3 && plan.getOrNull(ordinal) == action)
+                variant = listOf("whodunit-classic", "mafia-doctor-on", "mafia-doctor-off")[boot - 1]
+                val checks = withTimeout(60_000) { execute(action) }
+                check(!workerFailed)
+                ordinal++
+                finished = action == "leave"
+                callback(buildJsonObject {
+                    put("schema_version", 1); put("status", "PASS"); put("run_token", token)
+                    put("boot_ordinal", boot); put("command_ordinal", ordinal); put("action", action)
+                    put("variant", variant); put("checks", checks); put("host", publicObservation())
+                    put("physical_or_store_evidence", false)
+                }.toString())
+            } catch (cancelled: CancellationException) {
+                finished = true
+                emergencyCleanup()
+                callback(failed(action, "cancelled"))
+                throw cancelled
+            } catch (_: Exception) {
+                finished = true
+                emergencyCleanup()
+                callback(failed(action, "fixture_or_boundary_failure"))
+            } finally {
+                active = false
+                if (finished) observerScope.cancel()
+            }
+        }
+    }
+
+    private suspend fun execute(action: String): JsonObject {
+        stage = action
+        when (action) {
+            "prepare" -> {
+                check(owned == null && !captured && mounts == 0)
+                // Explicit test-only presentation mount happens before owner
+                // acquisition; the ordinary shell cannot launch a second room.
+                check(L08UiSeam.hostContent == null)
+                L08UiSeam.hostContent = {
+                    val current = presentation
+                    if (current == null) Box(Modifier.fillMaxSize()) else actualHostContent(current)
+                }
+                val koin = KoinPlatform.getKoin()
+                owner = koin.get()
+                transport = koin.get<L08ControlledTransport>()
+                processScope = koin.get(qualifier = named("multiplayerSession"))
+                check(koin.get<RoomTransport>() === transport)
+                check(koin.get<SettingsStore>().languageOverride.first() == null)
+                check(checkNotNull(owner).state.value == ProcessMultiplayerState.Idle)
+                val players = (1..6).map { Player(PlayerId("l08-host-seat-$it"), "Audit Player $it", it - 1) }
+                checkNotNull(transport).players = players
+                val loadedCase = if (boot == 1) {
+                    val result = koin.get<CaseRepository>().loadCase(CaseId("last-dinner"), WhodunitPayloadValidator(koin.get()))
+                    check(result is Result.Success)
+                    result.data
+                } else null
+                val route = if (loadedCase != null) MultiplayerSessionRoute.host(WhodunitIds.GameId,
+                    players.first().displayName, loadedCase.envelope.caseId, WhodunitIds.ClassicVoteModeId.raw)
+                    else MultiplayerSessionRoute.host(MafiaIds.GameId, players.first().displayName)
+                val result = checkNotNull(owner).acquire(route, hostSeed = 91L) { mode ->
+                    check(mode == MultiplayerOpenMode.Host)
+                    checkNotNull(transport).host(HostConfig(players.first().displayName, maxRemotePlayers = 5))
+                }
+                check(result is Result.Success)
+                val session = result.data
+                owned = session
+                check(session.runtime.value == null)
+                val frozen = session.freezeAdmissions()
+                val room = checkNotNull(transport).room()
+                check(frozen is Result.Success && frozen.data == room.members.value)
+                val exits: () -> Unit = { workerFailed = true }
+                val value = if (loadedCase != null) {
+                    val game = L08WhodunitHost(session, loadedCase)
+                    Witness(game::waiting, game::protocol, game::accepts, game::started, game::started,
+                        game::capture, game::retained, game::suspendedAck, game::activeAck, game::runtimeClosed, game::release) {
+                        WhodunitMultiplayerHostFlow(loadedCase, WhodunitIds.ClassicVoteModeId, players,
+                            session, checkNotNull(owner), exits, exits, Modifier.fillMaxSize())
+                    }
+                } else {
+                    val game = L08MafiaHost(session, boot == 2)
+                    Witness(game::waiting, game::protocol, game::accepts, game::started, game::assigned,
+                        game::capture, game::retained, game::suspendedAck, game::activeAck, game::runtimeClosed, game::release) {
+                        MafiaMultiDeviceHostFlow(players, session, checkNotNull(owner), exits, exits, Modifier.fillMaxSize())
+                    }
+                }
+                witness = value
+                presentation = value
+                await { value.waiting() && room.offeredPeerCount == 5 }
+                check(room.readyPeerCount == 0 && room.committedPeerCount == 0)
+                room.releaseReady(value.protocol(), value.accepts)
+                await { value.started() && room.snapshottedPeerCount == 5 && direction != null }
+                check(room.committedPeerCount == 5 && room.admissionClosures == 1)
+                systemDirection = direction
+                room.requireNoDrops()
+                return checks("real_owner_acquisition", "admissions_frozen_once", "strict_start_barrier",
+                    "real_host_flow_started", "direct_peer_snapshots", "test_transport_explicit")
+            }
+            "capture" -> {
+                check(!captured)
+                await { checkNotNull(witness).assigned() }
+                checkNotNull(witness).capture()
+                captured = true
+                checkNotNull(transport).arm { checkNotNull(witness).suspendedAck() }
+                retained()
+                check(mounts == 1 && disposals == 0)
+                return checks("canonical_capture_once", "actual_setup_settings", "retained_private_assignment")
+            }
+            "language-en", "language-ar", "language-system" -> {
+                retained()
+                val language = action.removePrefix("language-")
+                val expected = when (language) { "en" -> LayoutDirection.Ltr; "ar" -> LayoutDirection.Rtl; else -> systemDirection }
+                val settings = KoinPlatform.getKoin().get<SettingsStore>()
+                settings.setLanguageOverride(language.takeIf { it != "system" })
+                await { direction == expected }
+                check(settings.languageOverride.first() == language.takeIf { it != "system" })
+                retained()
+                return checks("actual_koin_settings_store", "actual_app_language_provider", "same_session_private_state")
+            }
+            "cycle-1", "cycle-2", "cycle-3" -> {
+                val index = action.last().digitToInt()
+                await { checkNotNull(transport).successfulResumingChecks == index }
+                checkNotNull(transport).requireCycle(index)
+                retained()
+                return checks("actual_uikit_background_foreground", "actual_koin_lifecycle_coordinator",
+                    "suspended_command_rejected", "resuming_command_rejected", "original_deadline_retained", "same_session_private_state")
+            }
+            "resume-1", "resume-2", "resume-3" -> {
+                val index = action.last().digitToInt()
+                checkNotNull(transport).requireCycle(index)
+                retained()
+                checkNotNull(transport).finishSyntheticResume()
+                retained()
+                return checks("synthetic_resume_explicit", "same_session_private_state")
+            }
+            "remount" -> {
+                retained()
+                check(mounts == 1 && disposals == 0 && epoch == 0)
+                epoch = 1
+                await { mounts == 2 && disposals == 1 }
+                retained()
+                return checks("presentation_remounted_once", "runtime_not_recreated", "same_session_private_state")
+            }
+            "active-ack" -> {
+                retained()
+                checkNotNull(witness).activeAck()
+                check(checkNotNull(transport).room().lifecycle.value == RoomLifecycleState.Active)
+                return checks("active_authoritative_ack_accepted", "own_player_only", "no_readiness_bypass")
+            }
+            "leave" -> {
+                val session = checkNotNull(owned)
+                check(checkNotNull(owner).finalLeave(session, SessionEndReason.Cancelled) is Result.Success)
+                check(checkNotNull(owner).state.value == ProcessMultiplayerState.Idle && session.runtime.value == null)
+                check(session.scope.coroutineContext[Job]?.isCompleted == true)
+                checkNotNull(witness).runtimeClosed()
+                val room = checkNotNull(transport).room()
+                check(room.leaves == 1 && room.workerCount == 0)
+                room.requireNoDrops()
+                L08UiSeam.hostContent = null
+                await { disposals == 2 }
+                checkNotNull(processScope?.coroutineContext?.get(Job)).cancelAndJoin()
+                check(processScope?.coroutineContext?.get(Job)?.isCompleted == true)
+                checkNotNull(witness).release()
+                witness = null; presentation = null; owned = null
+                checkNotNull(transport).release()
+                return checks("actual_final_leave", "owner_idle_runtime_released", "room_closed_once", "all_fixture_workers_stopped")
+            }
+            else -> error("action")
+        }
+    }
+
+    @Composable private fun actualHostContent(value: Witness) {
+        key(epoch) {
+            val actualDirection = LocalLayoutDirection.current
+            SideEffect { direction = actualDirection }
+            DisposableEffect(value) {
+                check(mounts < 2)
+                mounts++
+                onDispose { disposals++ }
+            }
+            value.content()
+        }
+    }
+
+    private fun retained() {
+        check(captured && !workerFailed)
+        val session = checkNotNull(owned)
+        check((checkNotNull(owner).state.value as? ProcessMultiplayerState.Active)?.session === session)
+        check(session.room === checkNotNull(transport).room())
+        checkNotNull(witness).retained()
+        val room = checkNotNull(transport).room()
+        check(checkNotNull(transport).opens == 1 && room.admissionClosures == 1 && room.leaves == 0)
+        room.requireNoDrops()
+    }
+
+    private suspend fun await(predicate: () -> Boolean) {
+        withTimeout(20_000) {
+            while (!predicate()) { check(!workerFailed); delay(25) }
+        }
+    }
+
+    private fun checks(vararg keys: String) = buildJsonObject { keys.forEach { put(it, true) } }
+    private fun publicObservation() = buildJsonObject {
+        put("mounts", mounts); put("disposals", disposals)
+        put("direction", when (direction) { LayoutDirection.Ltr -> "ltr"; LayoutDirection.Rtl -> "rtl"; else -> "none" })
+        put("background_cycles", transport?.backgroundCycles ?: 0)
+        put("foreground_cycles", transport?.foregroundCycles ?: 0)
+        put("suspended_checks", transport?.successfulSuspendedChecks ?: 0)
+        put("resuming_checks", transport?.successfulResumingChecks ?: 0)
+        put("room_state", transport?.stateName() ?: "none")
+        put("worker_failure", workerFailed)
+    }
+    private fun failed(action: String, reason: String) = buildJsonObject {
+        put("schema_version", 1); put("status", "FAIL"); put("run_token", token)
+        put("boot_ordinal", boot); put("action", action); put("stage", stage); put("reason", reason)
+    }.toString()
+    private suspend fun emergencyCleanup() = withContext(NonCancellable) {
+        try {
+            withTimeout(10_000) {
+                owned?.let { checkNotNull(owner).finalLeave(it, SessionEndReason.Cancelled) }
+            }
+        } catch (_: Exception) { workerFailed = true }
+        finally {
+            L08UiSeam.hostContent = null
+            try {
+                withTimeout(10_000) { processScope?.coroutineContext?.get(Job)?.cancelAndJoin() }
+            } catch (_: Exception) { workerFailed = true }
+            witness?.release(); witness = null; presentation = null; owned = null
+        }
+    }
+
+    private class Witness(
+        val waiting: () -> Boolean, val protocol: () -> SessionProtocol,
+        val accepts: (HostMessage.SessionStarting) -> Boolean, val started: () -> Boolean,
+        val assigned: () -> Boolean, val capture: () -> Unit, val retained: () -> Unit,
+        val suspendedAck: suspend () -> Unit, val activeAck: suspend () -> Unit,
+        val runtimeClosed: () -> Unit, val release: () -> Unit, val content: @Composable () -> Unit,
+    )
+}
+
+/** Only actual UIKit -> original AppLifecycleCoordinator invokes these hooks. */
+private class L08ControlledTransport(private val processScope: CoroutineScope) : RoomTransport {
+    override val capability = TransportCapability(false, 1, 1024 * 1024)
+    var players: List<Player>? = null
+    private var activeRoom: ControlledStartRoom? = null
+    private var guard: (suspend () -> Unit)? = null
+    private var deadline: Long? = null
+    var opens = 0
+        private set
+    var backgroundCycles = 0
+        private set
+    var foregroundCycles = 0
+        private set
+    var successfulSuspendedChecks = 0
+        private set
+    var successfulResumingChecks = 0
+        private set
+
+    override suspend fun host(config: HostConfig): Result<LocalRoom, NetError> {
+        check(NSThread.isMainThread && opens == 0 && activeRoom == null)
+        val seats = checkNotNull(players)
+        check(seats.size == 6 && config.hostDisplayName == seats.first().displayName && config.maxRemotePlayers == 5)
+        opens++
+        return Result.Success(ControlledStartRoom(seats, processScope).also { activeRoom = it })
+    }
+    override suspend fun join(code: String, displayName: String): Result<LocalRoom, NetError> = Result.Failure(NetError.Unauthorized)
+    fun room() = checkNotNull(activeRoom)
+    fun arm(callback: suspend () -> Unit) {
+        check(guard == null && room().lifecycleState.value == RoomLifecycleState.Active)
+        guard = callback
+    }
+    override fun notifyAppBackgrounded() {
+        check(NSThread.isMainThread)
+        val action = guard ?: return
+        check(backgroundCycles < 3 && backgroundCycles == foregroundCycles)
+        check(room().lifecycleState.value == RoomLifecycleState.Active)
+        deadline = SystemClock.now().toEpochMilliseconds() + 120_000L
+        val state = RoomLifecycleState.Suspended(checkNotNull(deadline))
+        room().lifecycleState.value = state
+        val cycle = ++backgroundCycles
+        processScope.launch(start = CoroutineStart.UNDISPATCHED) {
+            check(room().lifecycleState.value == state)
+            action()
+            check(room().lifecycleState.value == state)
+            successfulSuspendedChecks = cycle
+        }
+    }
+    override fun notifyAppForegrounded() {
+        check(NSThread.isMainThread)
+        val action = guard ?: return
+        check(backgroundCycles == foregroundCycles + 1 && successfulSuspendedChecks == backgroundCycles)
+        val previous = room().lifecycleState.value
+        check(previous == RoomLifecycleState.Suspended(checkNotNull(deadline)))
+        val state = RoomLifecycleState.Resuming(checkNotNull(deadline))
+        room().lifecycleState.value = state
+        val cycle = ++foregroundCycles
+        processScope.launch(start = CoroutineStart.UNDISPATCHED) {
+            check(room().lifecycleState.value == state)
+            action()
+            check(room().lifecycleState.value == state)
+            successfulResumingChecks = cycle
+        }
+    }
+    fun requireCycle(index: Int) {
+        check(index in 1..3 && backgroundCycles == index && foregroundCycles == index)
+        check(successfulSuspendedChecks == index && successfulResumingChecks == index)
+        check(room().lifecycleState.value == RoomLifecycleState.Resuming(checkNotNull(deadline)))
+    }
+    fun finishSyntheticResume() {
+        requireCycle(foregroundCycles)
+        room().lifecycleState.value = RoomLifecycleState.Active
+    }
+    fun stateName() = when (activeRoom?.lifecycleState?.value) {
+        RoomLifecycleState.Active -> "active"
+        is RoomLifecycleState.Suspended -> "suspended"
+        is RoomLifecycleState.Resuming -> "resuming"
+        RoomLifecycleState.Closed -> "closed"
+        else -> "none"
+    }
+    fun release() { check(room().workerCount == 0 && room().leaves == 1); guard = null; activeRoom = null; players = null }
+}

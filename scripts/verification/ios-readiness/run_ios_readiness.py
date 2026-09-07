@@ -3,7 +3,9 @@
 
 All production/build inputs are copied from a later explicitly frozen manifest.
 Only reviewed copy transformations add direct observation/synthetic invocation.
-No source, dependency graph, navigation, reducer or live session is replaced.
+No production repository source, dependency graph, or reducer is replaced. L08
+adds an explicit copied-only controlled transport/presentation seam for host
+verification; storage resume still uses the real Home navigation.
 Root executes only after independent control review. Simulator != physical LAN.
 """
 import datetime
@@ -39,6 +41,9 @@ from artifact_inventory import (inventory_bundle, bind_loaded_images, parse_dwar
                                 render_owned_native_launch, FRAMEWORK_PATH)
 from native_readiness_receipts import verify_native_readiness, read_synthetic_seed_cleanup
 from native_failure_receipts import read_failure
+from l08_copy import instrument_probe_swift, instrument_ui_test
+from l08_receipts import (preserve_l08_evidence, storage_result_names, host_result_names,
+                          read_owned_result, verify_storage, verify_host, framework_subset)
 from simulator_signing import (selected_mode, signing_overrides, render_owned_kotlin_phase,
                                read_phase_receipt, RECEIPT_NAME as PHASE_RECEIPT_NAME)
 from simulator_entitlements import (inspect_bundle_entitlements, inspect_generated_app_entitlements,
@@ -346,7 +351,7 @@ def main():
         receipt = dict(cycle=NAME, started_at=now(), status='RUNNING',
                        execution_kind='manifest-owned-copy-ios-local-readiness-matrix', signing_mode=mode, commands=[],
                        runtime_evidence_status='NOT_RUN', cleanup_status='BLOCKED',
-                       scope='Four actual production-container UIKit tests; actual Settings/restart; direct Compose and actual LocalUIViewController direction; stable outer/child/window identities and full-bounds safe-area geometry in EN/AR portrait/landscape; local Whodunit/Mafia controller/flow/value continuity under synthetic real-store language setters and actual background/foreground; actual OS Arabic per-app preference; eight current-build cold launches; exact rerun credential OSStatus and synthetic storage durability; complete embedded Mach-O inventory and observed loaded-image binding. No physical LAN, full-game, signed-release, Store or leak-free claim.', approved_control_sha256=approved)
+                       scope='Four actual production-container UIKit tests; actual Settings/restart; direct Compose and actual LocalUIViewController direction; stable outer/child/window identities and full-bounds safe-area geometry in EN/AR portrait/landscape; local Whodunit/Mafia controller/flow/value continuity under synthetic real-store language setters and actual background/foreground; actual OS Arabic per-app preference; eight current-build cold launches; exact rerun credential OSStatus and synthetic storage durability; complete embedded Mach-O inventory and observed loaded-image binding. Additive L08: thirteen full GameSnapshot/real Home resume and damaged-record boots and three ControlledStartRoom host locale/lifecycle fixtures; no physical LAN, full-UI-game, signed-release, Store or leak-free claim.', approved_control_sha256=approved)
         temp, owner, env, uuid = None, None, None, None
         # This iteration compiles only inside temp/copy. Original-repository
         # outputs are never task-owned and must never be deleted by this run.
@@ -573,8 +578,10 @@ def main():
                 '        let controller = ComposeContainerViewController(contentController: MainViewControllerKt.MainViewController())\n'
                 '        DSC01Probe.shared.attach(controller)\n        return controller')
             content.write_text(original + '\n' + (FIXTURE / 'DSC01NativeObservation.swift.in').read_text() +
-                               '\n' + (FIXTURE / 'DSC01Probe.swift.in').read_text() + '\n' +
-                               render_owned_native_launch((FIXTURE / 'NativeReadinessLaunch.swift.in').read_text(), temp, mode))
+                               '\n' + instrument_probe_swift((FIXTURE / 'DSC01Probe.swift.in').read_text()) + '\n' +
+                               render_owned_native_launch((FIXTURE / 'NativeReadinessLaunch.swift.in').read_text(), temp, mode) + '\n' +
+                               (FIXTURE / 'L08StorageLaunch.swift.in').read_text() + '\n' +
+                               (FIXTURE / 'L08HostLaunch.swift.in').read_text())
             entry = temp / 'copy/iosApp/iosApp/iOSApp.swift'
             original = entry.read_text()
             needle = 'struct iOSApp: App {'
@@ -582,7 +589,7 @@ def main():
                 raise RuntimeError('Unexpected original Swift App entry')
             entry.write_text(original.replace(needle, needle + '\n    init() { DSC01Probe.shared.prepare() }'))
             ui_test = temp / 'copy/iosApp/iosAppUITests/IOSAppLaunchUITests.swift'
-            ui_test.write_text((FIXTURE / 'IOSAppLaunchUITests.swift.in').read_text() + '\n' +
+            ui_test.write_text(instrument_ui_test((FIXTURE / 'IOSAppLaunchUITests.swift.in').read_text()) + '\n' +
                                (FIXTURE / 'DSC01PublicDiagnostics.swift.in').read_text() + '\n' +
                                (FIXTURE / 'DSC01CatalogSelection.swift.in').read_text() + '\n' +
                                (FIXTURE / 'DSC01MafiaStartSelection.swift.in').read_text() + '\n' +
@@ -591,7 +598,9 @@ def main():
                                    receipt['owned_device_name']) + '\n' +
                                (FIXTURE / 'DSC01OSAppSettings.swift.in').read_text() + '\n' +
                                (FIXTURE / 'DSC01OSPreferenceBaseline.swift.in').read_text() + '\n' +
-                               (FIXTURE / 'NativeReadinessUITests.swift.in').read_text())
+                               (FIXTURE / 'NativeReadinessUITests.swift.in').read_text() + '\n' +
+                               (FIXTURE / 'L08StorageUITests.swift.in').read_text() + '\n' +
+                               (FIXTURE / 'L08HostUITests.swift.in').read_text())
             project = temp / 'copy/iosApp/iosApp.xcodeproj/project.pbxproj'
             pbx = project.read_text()
             old_search = '$(SRCROOT)/../composeApp/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)'
@@ -668,7 +677,7 @@ def main():
                 container = Path((dest / 'owned-container.log').read_text().strip()).resolve()
                 owned_device = Path.home() / 'Library/Developer/CoreSimulator/Devices' / uuid
                 container.relative_to(owned_device.resolve())
-                for scenario in ('settings', 'whodunit', 'mafia', 'os', 'readiness'):
+                for scenario in ('settings', 'whodunit', 'mafia', 'os', 'readiness', 'l08-storage', 'l08-host'):
                     result = container / ('tmp/parlor-dsc01-' + scenario + '-result.json')
                     if result.is_symlink() or result.resolve().parent != (container / 'tmp').resolve():
                         raise RuntimeError('Unexpected synthetic result path; refuse to read')
@@ -676,6 +685,8 @@ def main():
                         if result.stat().st_size > 262144:
                             raise RuntimeError('Oversized synthetic result; refuse to copy')
                         shutil.copyfile(result, dest / ('probe-' + scenario + '-result.json'))
+                receipt['l08_preserved_operation_files'] = preserve_l08_evidence(container, dest)
+                save()
                 cleanup_result = container / 'tmp/parlor-native-synthetic-seed-cleanup.json'
                 if cleanup_result.is_symlink() or cleanup_result.resolve().parent != (container / 'tmp').resolve():
                     raise RuntimeError('Unexpected task-owned synthetic cleanup result path')
@@ -798,6 +809,11 @@ def main():
             native_results = [json.loads((dest / ('parlor-native-readiness-boot-' + str(ordinal) + '.json')).read_text())
                               for ordinal in range(1, 9)]
             native_scenario = json.loads((dest / 'probe-readiness-result.json').read_text())
+            l08_storage_results = [read_owned_result(dest / name, dest, 16384) for name in storage_result_names()]
+            l08_host_results = [read_owned_result(dest / name, dest, 24576) for name in host_result_names()]
+            l08_storage_scenario = read_owned_result(dest / 'probe-l08-storage-result.json', dest, 262144)
+            l08_host_scenario = read_owned_result(dest / 'probe-l08-host-result.json', dest, 262144)
+            all_observed_runs = native_results + l08_storage_results + l08_host_results
             if built_inventory is None or installed_inventory is None:
                 raise RuntimeError('Complete built/installed native binary inventory is unavailable')
             embedded = next(row for row in built_inventory['images'] if row['resolved_path'] == FRAMEWORK_PATH)
@@ -805,7 +821,7 @@ def main():
             framework_inventory = [dict(origin='installed-app-bundle', path=FRAMEWORK_PATH, bytes=embedded['bytes'],
                                         sha256=embedded['sha256'], architectures=embedded_uuid['architectures'])]
             observed_origins = {('installed-app-bundle', FRAMEWORK_PATH)}
-            for native in native_results:
+            for native in all_observed_runs:
                 observed = validate_framework_observation(native.get('loaded_compose_framework'))
                 origin = (observed['origin'], observed['path'])
                 if origin in observed_origins:
@@ -829,7 +845,16 @@ def main():
             receipt['native_readiness'] = verify_native_readiness(native_results, native_scenario,
                 reports['settings'], (dest / 'xcodebuild.log').read_text(), cleanup_record, mode)
             receipt['executed_binary_binding'] = bind_loaded_images(
-                built_inventory, installed_inventory, native_results, framework_inventory)
+                built_inventory, installed_inventory, native_results,
+                framework_subset(native_results, all_observed_runs, framework_inventory))
+            receipt['l08_storage'] = verify_storage(l08_storage_results, l08_storage_scenario,
+                native_scenario['runToken'], (dest / 'xcodebuild.log').read_text(), mode,
+                built_inventory, installed_inventory,
+                framework_subset(l08_storage_results, all_observed_runs, framework_inventory))
+            receipt['l08_host'] = verify_host(l08_host_results, l08_host_scenario,
+                native_scenario['runToken'], (dest / 'xcodebuild.log').read_text(), mode,
+                built_inventory, installed_inventory,
+                framework_subset(l08_host_results, all_observed_runs, framework_inventory))
             receipt['dsc01_matrix'] = verify_probe(reports, verify_legacy_settings_probe, (dest / 'xcodebuild.log').read_text())
             receipt['os_interaction_proof'] = verify_os_action_receipts(
                 (dest / 'xcodebuild.log').read_text(), reports['os'], receipt['dsc01_matrix']['os_settings_gate'])
@@ -851,7 +876,9 @@ def main():
             receipt['runtime_evidence_status'] = 'PASS' if (
                 xcode == 0 and receipt.get('xctest', {}).get('result') == 'Passed' and
                 receipt.get('embedded_gradle_stop_status') == 'PASS' and
-                receipt.get('probe_harness_status') == 'observation_complete') else 'FAIL'
+                receipt.get('probe_harness_status') == 'observation_complete' and
+                receipt.get('l08_storage', {}).get('status') == 'PASS' and
+                receipt.get('l08_host', {}).get('status') == 'PASS') else 'FAIL'
             if receipt['runtime_evidence_status'] != 'PASS':
                 raise RuntimeError('No complete native diagnostic matrix; inspect retained evidence, not an inferred application failure')
         except BaseException as error:

@@ -1,0 +1,146 @@
+// Native lifecycle/locale/host fixture; not P2pKit discovery or physical LAN.
+extension IOSAppLaunchUITests {
+    @MainActor private func verifyL08StartedHosts(_ app: XCUIApplication) throws {
+        let plan = ["prepare", "capture", "language-en", "cycle-1", "resume-1", "language-ar",
+            "cycle-2", "resume-2", "remount", "language-system", "cycle-3", "resume-3", "active-ack", "leave"]
+        var boots = Set<String>()
+        for ordinal in 1...3 {
+            app.launchEnvironment["PARLOR_L08_HOST_BOOT"] = String(ordinal)
+            try startScenario(app, name: "l08-host")
+            let initial = try observe(app)
+            let boot = try string(initial, "boot")
+            XCTAssertTrue(boots.insert(boot).inserted)
+            let before = try dictionary(initial, "now")
+            XCTAssertEqual(before["setting"] as? String, "system")
+            XCTAssertEqual(before["ownerPresent"] as? Bool, false)
+            let systemLanguage = try string(before, "preferredLanguage")
+            let previous = try XCTUnwrap(before["appLanguages"] as? [String])
+            for action in plan {
+                if action == "capture", ordinal != 1 {
+                    // Exact copy-only identity on the ORIGINAL setup switch.
+                    // The reducer/configuration callback is not invoked by test code.
+                    _ = try l08ReadyGameControl(app, identifier: "l08-mafia-repeat")
+                    // Default/draft/selected booleans are sampled directly in
+                    // copied original setup, not guessed from UIKit value text.
+                    if ordinal == 2 {
+                        try l08ActivateGameControlOnce(app, identifier: "l08-mafia-repeat")
+                    }
+                    try l08ActivateGameControlOnce(app, identifier: "l08-mafia-start")
+                }
+                if action.hasPrefix("cycle-") {
+                    // The real SwiftUI scenePhase/Notify bridge drives the actual
+                    // Koin lifecycle coordinator, which owns this test adapter.
+                    XCUIDevice.shared.press(.home)
+                    XCTAssertTrue(app.wait(for: .runningBackground, timeout: 15))
+                    app.activate()
+                    XCTAssertTrue(app.wait(for: .runningForeground, timeout: 15))
+                }
+                let result = try l08HostAction(app, action: action, ordinal: ordinal, boot: boot)
+                let snapshot = try observe(app)
+                XCTAssertEqual(snapshot["boot"] as? String, boot)
+                try assertNative(snapshot, orientation: "portrait")
+                let tag: String
+                switch action {
+                case "prepare", "capture", "language-system", "cycle-3", "resume-3", "active-ack", "leave": tag = "system"
+                case "language-en", "cycle-1", "resume-1": tag = "en"
+                default: tag = "ar"
+                }
+                if tag == "system" { try assertSystem(snapshot, expected: systemLanguage, previous: previous) }
+                else { try assertOwned(snapshot, explicit: tag, previous: previous) }
+                let value = try dictionary(result, "observation")
+                let host = try dictionary(value, "host")
+                XCTAssertEqual(host["direction"] as? String, (tag == "system" ? systemLanguage : tag) == "ar" ? "rtl" : "ltr")
+            }
+            let receipt: [String: Any] = ["schema_version": 1, "boot_ordinal": ordinal,
+                "process_boot": boot, "actions": plan, "foreground": app.state == .runningForeground,
+                "alert_present": app.alerts.firstMatch.exists,
+                "run_token": app.launchEnvironment["PARLOR_DSC01_RUN_TOKEN"] ?? ""]
+            let encoded = try JSONSerialization.data(withJSONObject: receipt, options: [.sortedKeys])
+            XCTAssertLessThanOrEqual(encoded.count, 2048)
+            print("PARLOR_L08_HOST_BOOT " + String(decoding: encoded, as: UTF8.self))
+        }
+        app.buttons["parlor-dsc01-complete"].tap()
+        XCTAssertEqual(try observe(app)["completed"] as? Bool, true)
+        app.launchEnvironment.removeValue(forKey: "PARLOR_L08_HOST_BOOT")
+    }
+
+    @MainActor private func l08HostAction(_ app: XCUIApplication, action: String,
+                                         ordinal: Int, boot: String) throws -> [String: Any] {
+        try l08TapExactPublicControl(app, identifier: "l08-host-next")
+        let state = app.staticTexts["l08-host-result"]
+        XCTAssertTrue(state.waitForExistence(timeout: 10))
+        let done = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            guard let text = state.value as? String, !["pending", "running"].contains(text) else { return false }
+            guard let raw = text.data(using: .utf8), raw.count <= 24576,
+                  let value = (try? JSONSerialization.jsonObject(with: raw)) as? [String: Any] else { return true }
+            return value["action"] as? String == action
+        }, object: nil)
+        XCTAssertEqual(XCTWaiter.wait(for: [done], timeout: 75), .completed)
+        let raw = try XCTUnwrap((state.value as? String)?.data(using: .utf8))
+        XCTAssertLessThanOrEqual(raw.count, 24576)
+        let value = try XCTUnwrap(JSONSerialization.jsonObject(with: raw) as? [String: Any])
+        XCTAssertEqual(value["process_boot"] as? String, boot)
+        XCTAssertEqual(value["boot_ordinal"] as? Int, ordinal)
+        XCTAssertEqual(value["action"] as? String, action)
+        XCTAssertEqual(value["run_token"] as? String, app.launchEnvironment["PARLOR_DSC01_RUN_TOKEN"])
+        XCTAssertEqual(try dictionary(value, "observation")["status"] as? String, "PASS")
+        XCTAssertEqual(try dictionary(value, "observation")["physical_or_store_evidence"] as? Bool, false)
+        XCTAssertEqual(app.state, .runningForeground)
+        XCTAssertFalse(app.alerts.firstMatch.exists)
+        return value
+    }
+
+    @MainActor private func l08GameSample(_ app: XCUIApplication, identifier: String) -> DSC01MafiaStartSample {
+        let query = app.descendants(matching: .any).matching(identifier: identifier)
+        let count = query.count
+        let target = count == 1 ? query.firstMatch : nil
+        let overlays = app.descendants(matching: .any).matching(identifier: "parlor-dsc01-overlay")
+        return DSC01MafiaStartSample(targetCount: count, target: target?.frame,
+            hittable: target?.isHittable ?? false, enabled: target?.isEnabled ?? false, viewport: app.frame,
+            overlayCount: overlays.count, overlay: overlays.count == 1 ? overlays.firstMatch.frame : nil,
+            foreground: app.state == .runningForeground, alertPresent: app.alerts.firstMatch.exists,
+            keyboardPresent: app.keyboards.firstMatch.exists)
+    }
+
+    @MainActor private func l08ReadyGameControl(_ app: XCUIApplication, identifier: String) throws -> XCUIElement {
+        XCTAssertTrue(["l08-mafia-repeat", "l08-mafia-start"].contains(identifier))
+        for attempt in 1...14 {
+            var samples: [DSC01MafiaStartSample] = []
+            for index in 1...6 {
+                if index > 1 { try catalogSamplingInterval() }
+                samples.append(l08GameSample(app, identifier: identifier))
+            }
+            guard samples.allSatisfy(\.isExpectedEnvironment), let first = samples.first else {
+                throw NSError(domain: "L08PublicGameEnvironment", code: 1)
+            }
+            let stable = samples.allSatisfy { $0.geometryNear(first) }
+            if stable && samples.allSatisfy({ $0.plan != nil }) {
+                let query = app.descendants(matching: .any).matching(identifier: identifier)
+                XCTAssertEqual(query.count, 1)
+                return query.firstMatch
+            }
+            if stable && samples.allSatisfy({ $0.targetCount == 1 && !$0.enabled }) {
+                throw NSError(domain: "L08OriginalSetupDisabled", code: 1)
+            }
+            if attempt < 14 && (stable || samples.allSatisfy({ !$0.hittable })) {
+                app.swipeUp(velocity: .slow)
+            }
+        }
+        throw NSError(domain: "L08PublicGameTargetUnavailable", code: 1)
+    }
+
+    @MainActor private func l08ActivateGameControlOnce(_ app: XCUIApplication, identifier: String) throws {
+        let target = try l08ReadyGameControl(app, identifier: identifier)
+        let first = l08GameSample(app, identifier: identifier)
+        try catalogSamplingInterval()
+        let second = l08GameSample(app, identifier: identifier)
+        guard second.geometryNear(first), let plan = second.plan else {
+            throw NSError(domain: "L08PublicGameTargetMoved", code: 1)
+        }
+        let coordinate = target.coordinate(withNormalizedOffset: plan.normalizedOffset)
+        let point = coordinate.screenPoint
+        guard point.x.isFinite, point.y.isFinite, abs(point.x - plan.point.x) <= 0.5,
+              abs(point.y - plan.point.y) <= 0.5 else { throw NSError(domain: "L08PublicGamePointMoved", code: 1) }
+        coordinate.tap() // One measured activation, outside every readiness loop.
+    }
+}
