@@ -41,6 +41,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertIs
+import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
@@ -135,9 +136,9 @@ class WhodunitHostLeaveTimerTest {
                 }
                 awaitText("DISCUSSION")
                 val initial = canonical.value
-                assertEquals(180, initial.public.timer!!.remainingSeconds)
+                assertEquals(180, assertNotNull(initial.public.timer).remainingSeconds)
                 advanceActiveTime(lane, 3_000L)
-                assertEquals(177, canonical.value.public.timer!!.remainingSeconds)
+                assertEquals(177, assertNotNull(canonical.value.public.timer).remainingSeconds)
                 if (manualPause) {
                     lane.runQueued { runtime.session.submit(WhodunitAction.Pause) }
                     awaitText("PAUSED")
@@ -170,12 +171,12 @@ class WhodunitHostLeaveTimerTest {
                     frames()
                     advanceActiveTime(lane, 3_000L)
                     assertEquals(
-                        frozen.public.timer!!.remainingSeconds - if (manualPause) 0 else 3,
-                        canonical.value.public.timer!!.remainingSeconds,
+                        assertNotNull(frozen.public.timer).remainingSeconds - if (manualPause) 0 else 3,
+                        assertNotNull(canonical.value.public.timer).remainingSeconds,
                     )
                     assertEquals(initial.hostOnly, canonical.value.hostOnly)
                     assertEquals(initial.privatePerPlayer, canonical.value.privatePerPlayer)
-                    assertEquals(initial.public.timer!!.timerId, canonical.value.public.timer!!.timerId)
+                    assertEquals(assertNotNull(initial.public.timer).timerId, assertNotNull(canonical.value.public.timer).timerId)
                     assertEquals(manualPause, canonical.value.public.paused)
                 }
 
@@ -186,7 +187,7 @@ class WhodunitHostLeaveTimerTest {
                 assertEquals(ProcessMultiplayerState.Idle, lane.owner.state.value)
                 assertEquals(1, lane.room.leaves)
                 assertEquals(null, lane.owned.runtime.value)
-                assertFalse(runtime.scope.coroutineContext[Job]!!.isActive)
+                assertFalse(assertNotNull(runtime.scope.coroutineContext[Job]).isActive)
                 val afterLeave = canonical.value
                 mainClock.advanceTimeBy(CONFIRMATION_MS)
                 assertEquals(afterLeave, canonical.value)

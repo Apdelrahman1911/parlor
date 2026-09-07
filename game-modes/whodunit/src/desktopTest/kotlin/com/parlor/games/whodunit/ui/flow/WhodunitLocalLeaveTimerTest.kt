@@ -28,6 +28,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertIs
+import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 import org.koin.compose.KoinIsolatedContext
 import org.koin.dsl.koinApplication
@@ -60,9 +61,12 @@ class WhodunitLocalLeaveTimerTest {
         click("Resume the game.")
         frames()
         mainClock.advanceTimeBy(3_000L)
-        awaitSavedSeconds(fixture, paused.public.timer!!.remainingSeconds - 3)
+        awaitSavedSeconds(fixture, assertNotNull(paused.public.timer).remainingSeconds - 3)
         assertFalse(fixture.savedState().public.paused)
-        assertEquals(paused.public.timer!!.remainingSeconds - 3, fixture.savedState().public.timer!!.remainingSeconds)
+        assertEquals(
+            assertNotNull(paused.public.timer).remainingSeconds - 3,
+            assertNotNull(fixture.savedState().public.timer).remainingSeconds,
+        )
     }
 
     @Test
@@ -77,7 +81,7 @@ class WhodunitLocalLeaveTimerTest {
         frames()
         mainClock.advanceTimeBy(5_000L)
         assertEquals(paused, fixture.savedState())
-        assertTrue(fixture.savedState().public.timer!!.paused)
+        assertTrue(assertNotNull(fixture.savedState().public.timer).paused)
     }
 
     @Test
@@ -89,7 +93,8 @@ class WhodunitLocalLeaveTimerTest {
         mainClock.advanceTimeBy(3_000L)
         waitUntil(timeoutMillis = 5_000L) {
             mainClock.advanceTimeBy(0L)
-            fixture.attemptedState().public.timer!!.remainingSeconds == durableBeforeFailure.public.timer!!.remainingSeconds - 3
+            assertNotNull(fixture.attemptedState().public.timer).remainingSeconds ==
+                assertNotNull(durableBeforeFailure.public.timer).remainingSeconds - 3
         }
         click(OPEN)
         awaitText(LOCAL_TITLE)
@@ -112,8 +117,11 @@ class WhodunitLocalLeaveTimerTest {
         awaitGame(fixture)
         assertEquals(frozen, fixture.savedState())
         mainClock.advanceTimeBy(3_000L)
-        awaitSavedSeconds(fixture, frozen.public.timer!!.remainingSeconds - 3)
-        assertEquals(frozen.public.timer!!.remainingSeconds - 3, fixture.savedState().public.timer!!.remainingSeconds)
+        awaitSavedSeconds(fixture, assertNotNull(frozen.public.timer).remainingSeconds - 3)
+        assertEquals(
+            assertNotNull(frozen.public.timer).remainingSeconds - 3,
+            assertNotNull(fixture.savedState().public.timer).remainingSeconds,
+        )
         assertEquals(frozen.hostOnly, fixture.savedState().hostOnly)
         assertEquals(frozen.privatePerPlayer, fixture.savedState().privatePerPlayer)
     }
@@ -125,7 +133,7 @@ class WhodunitLocalLeaveTimerTest {
         click(OPEN)
         awaitText(LOCAL_TITLE)
         val frozen = fixture.savedState()
-        assertEquals(1, frozen.public.timer!!.remainingSeconds)
+        assertEquals(1, assertNotNull(frozen.public.timer).remainingSeconds)
         mainClock.advanceTimeBy(CONFIRMATION_MS)
         assertEquals(frozen, fixture.savedState())
         click(STAY)
@@ -139,8 +147,11 @@ class WhodunitLocalLeaveTimerTest {
     private fun verifyStay(fixture: WhodunitDiscussionFixture) = withLocal(fixture) { current, controls ->
         val initial = current.savedState()
         mainClock.advanceTimeBy(3_000L)
-        awaitSavedSeconds(current, initial.public.timer!!.remainingSeconds - 3)
-        assertEquals(initial.public.timer!!.remainingSeconds - 3, current.savedState().public.timer!!.remainingSeconds)
+        awaitSavedSeconds(current, assertNotNull(initial.public.timer).remainingSeconds - 3)
+        assertEquals(
+            assertNotNull(initial.public.timer).remainingSeconds - 3,
+            assertNotNull(current.savedState().public.timer).remainingSeconds,
+        )
         repeat(3) { iteration ->
             if (iteration == 0) click(OPEN) else runOnIdle { controls.backRequest += 2 }
             awaitText(LOCAL_TITLE)
@@ -154,9 +165,12 @@ class WhodunitLocalLeaveTimerTest {
             click(STAY)
             frames()
             mainClock.advanceTimeBy(3_000L)
-            awaitSavedSeconds(current, frozen.public.timer!!.remainingSeconds - 3)
-            assertEquals(frozen.public.timer!!.remainingSeconds - 3, current.savedState().public.timer!!.remainingSeconds)
-            assertEquals(frozen.public.timer!!.timerId, current.savedState().public.timer!!.timerId)
+            awaitSavedSeconds(current, assertNotNull(frozen.public.timer).remainingSeconds - 3)
+            assertEquals(
+                assertNotNull(frozen.public.timer).remainingSeconds - 3,
+                assertNotNull(current.savedState().public.timer).remainingSeconds,
+            )
+            assertEquals(assertNotNull(frozen.public.timer).timerId, assertNotNull(current.savedState().public.timer).timerId)
             assertEquals(initial.hostOnly, current.savedState().hostOnly)
             assertEquals(initial.privatePerPlayer, current.savedState().privatePerPlayer)
         }
