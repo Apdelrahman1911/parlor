@@ -32,6 +32,20 @@ STORAGE_CHECKS = {
 }
 
 
+# Closed failure-only diagnostics. Historical broad stages remain preservable,
+# but none of these records can satisfy verify_storage's exact PASS schema.
+STORAGE_FAILURE_STAGES = frozenset({
+    'context', 'actual-bindings', 'initial-absence', 'reachable-checkpoint', 'real-store-save',
+    'real-store-load', 'loaded-envelope-equality', 'owned-legacy-seed', 'restart-envelope',
+    'production-recovery', 'protected-metadata', 'legacy-neighbor-isolation', 'actual-home-controller',
+    'actual-terminal-writer-delete', 'retained-corrupt-neighbor', 'dual-copy-retained-after-restart',
+    'explicit-retry-discard', 'final-restart-absence', 'metadata-path', 'metadata-existence',
+    'metadata-directory-backup', 'metadata-file-backup', 'metadata-protection-constants',
+    'metadata-directory-protection', 'metadata-file-protection', 'metadata-encrypted-read',
+    'metadata-encrypted-header',
+})
+
+
 def unique(pairs):
     result = {}
     for key, value in pairs:
@@ -384,13 +398,10 @@ def validate_preservable_operation(record, scenario):
             value.get('run_token') == token and type(value.get('boot_ordinal')) is int and
             value['boot_ordinal'] == boot and value.get('action') == action, 'L08 observation context disagrees')
     if value.get('status') == 'FAIL':
-        stages = {'context', 'actual-bindings', 'initial-absence', 'real-store-save', 'owned-legacy-seed',
-                  'restart-envelope', 'production-recovery', 'protected-metadata', 'legacy-neighbor-isolation',
-                  'actual-home-controller', 'actual-terminal-writer-delete', 'retained-corrupt-neighbor',
-                  'dual-copy-retained-after-restart', 'explicit-retry-discard', 'final-restart-absence'}
         require(set(value) == {'schema_version', 'status', 'run_token', 'boot_ordinal', 'action', 'stage', 'reason'} and
-                value['reason'] in {'cancelled', 'fixture_or_boundary_failure'} and
-                value['stage'] in (stages if scenario == 'l08-storage' else {'context', *HOST_PLAN}),
+                isinstance(value['reason'], str) and value['reason'] in {'cancelled', 'fixture_or_boundary_failure'} and
+                isinstance(value['stage'], str) and
+                value['stage'] in (STORAGE_FAILURE_STAGES if scenario == 'l08-storage' else {'context', *HOST_PLAN}),
                 'Unknown failure metadata must not enter retained evidence')
         return
     keys = {'schema_version', 'status', 'run_token', 'boot_ordinal', 'command_ordinal', 'action',

@@ -89,6 +89,7 @@ object L08StorageProbe {
         if (active) return // The XCTest must fail if an action produces no distinct receipt.
         active = true
         scope.launch {
+            stage = "context" // A new command must not inherit the previous command's stage.
             var token = ""
             var boot = 0
             var finished = false
@@ -136,7 +137,7 @@ object L08StorageProbe {
         val filesystem = koin.get<SnapshotFileSystem>()
         check(store is FileBackedSnapshotStore && filesystem is IosSnapshotFileSystem)
         check(koin.get<RoomTransport>() is P2pKitRoomTransport)
-        val paths = OwnedSnapshotPaths(token)
+        val paths = OwnedSnapshotPaths(token, ::enterStage)
         val alias = when (boot) {
             in 1..8 -> aliases[(boot - 1) / 2]
             9, 10 -> "legacy"
@@ -149,6 +150,7 @@ object L08StorageProbe {
             "save", "legacy-seed" -> {
                 stage = "initial-absence"
                 aliases.forEach { checkAbsent(store, paths, it) }
+                stage = "reachable-checkpoint"
                 val envelope = envelope(id, alias)
                 expected = envelope
                 if (action == "save") {
@@ -171,10 +173,13 @@ object L08StorageProbe {
                     // The dual-copy case is a second independently reducer-built
                     // envelope. Do not copy another session's encoded identity.
                     L08MafiaSnapshots.release()
+                    stage = "reachable-checkpoint"
                     val dual = envelope(paths.id("dual"), "dual")
                     try {
+                        stage = "real-store-save"
                         check(store.save(dual) is Result.Success)
                         assertEnvelope(store, dual.sessionId, dual)
+                        stage = "owned-legacy-seed"
                         val dualBytes = koin.get<Json>().encodeToString(GameSnapshot.serializer(), dual).encodeToByteArray()
                         try { paths.seedDualCopyAndDamageTag(dualBytes) } finally { dualBytes.fill(0) }
                     } finally { dual.payload.fill(0) }
@@ -288,9 +293,13 @@ object L08StorageProbe {
     }
 
     private suspend fun assertEnvelope(store: SnapshotStore, id: SessionId, expected: GameSnapshot) {
+        stage = "real-store-load"
         val loaded = store.load(id)
         check(loaded is Result.Success)
-        try { check(loaded.data == expected) } finally { loaded.data.payload.fill(0) }
+        try {
+            stage = "loaded-envelope-equality"
+            check(loaded.data == expected)
+        } finally { loaded.data.payload.fill(0) }
     }
 
     private suspend fun checkCorrupted(store: SnapshotStore, id: SessionId) {
@@ -319,6 +328,14 @@ object L08StorageProbe {
         }
     }
 
+    // All callers provide closed literal stage names (or a previously captured stage).
+    // Returning the old stage lets nested metadata checks restore it on success only.
+    private fun enterStage(next: String): String {
+        val previous = stage
+        stage = next
+        return previous
+    }
+
     private fun checks(vararg names: String) = buildJsonObject { names.forEach { put(it, true) } }
     private fun failed(token: String, boot: Int, action: String, reason: String) = buildJsonObject {
         put("schema_version", 1); put("status", "FAIL"); put("run_token", token)
@@ -336,7 +353,10 @@ internal fun requireContext(token: String, scenario: String) {
 }
 
 /** Exact app-container/token paths only; no directory enumeration or broad deletion. */
-private class OwnedSnapshotPaths(private val token: String) {
+private class OwnedSnapshotPaths(
+    private val token: String,
+    private val enterStage: (String) -> String,
+) {
     private val files = NSFileManager.defaultManager
     private val home = canonical(NSHomeDirectory())
     private val legacy: String
@@ -442,17 +462,30 @@ private class OwnedSnapshotPaths(private val token: String) {
     fun assertAbsent(alias: String) { assertLegacyAbsent(alias); assertProtectedAbsent(alias) }
     fun legacyExcluded() { check(excluded(legacy)) }
     fun protectedMetadata(alias: String) {
+        val previous = enterStage("metadata-path")
         val path = file(protected, alias)
+        enterStage("metadata-existence")
         check(files.fileExistsAtPath(path))
-        check(excluded(protected) && excluded(path))
+        enterStage("metadata-directory-backup")
+        check(excluded(protected))
+        enterStage("metadata-file-backup")
+        check(excluded(path))
+        enterStage("metadata-protection-constants")
         val key = checkNotNull(NSFileProtectionKey)
         val protection = checkNotNull(NSFileProtectionComplete)
+        enterStage("metadata-directory-protection")
         check(files.attributesOfItemAtPath(protected, null)?.get(key) == protection)
+        enterStage("metadata-file-protection")
         check(files.attributesOfItemAtPath(path, null)?.get(key) == protection)
         // Ciphertext header only; never retain or report any stored payload bytes.
+        enterStage("metadata-encrypted-read")
         val bytes = readBoundedSnapshotBytes(path, 256 * 1024 + 128)
-        try { check(bytes.take(7).toByteArray().contentEquals("PARSNAP".encodeToByteArray())) }
-        finally { bytes.fill(0) }
+        try {
+            enterStage("metadata-encrypted-header")
+            check(bytes.take(7).toByteArray().contentEquals("PARSNAP".encodeToByteArray()))
+        } finally { bytes.fill(0) }
+        // Do not restore in finally: a failure must retain the exact failed boundary.
+        enterStage(previous)
     }
     private fun excluded(path: String): Boolean {
         val key = checkNotNull(NSURLIsExcludedFromBackupKey)
