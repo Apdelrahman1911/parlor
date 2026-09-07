@@ -42,23 +42,14 @@ class P2pKitMavenProvenanceContractTest {
         assertTrue("<verify-metadata>true</verify-metadata>" in metadata)
         assertFalse("p2p-network-provisioning" in metadata)
 
+        val verification = VerificationMetadataAssertions(metadata)
         expectedArtifacts.forEach { expected ->
-            val header =
-                "<component group=\"io.github.apdelrahman1911\" " +
-                    "name=\"${expected.component}\" version=\"$P2PKIT_VERSION\">"
-            val start = metadata.indexOf(header)
-            assertTrue(start >= 0, "Missing verified component ${expected.component}")
-            val end = metadata.indexOf("</component>", startIndex = start)
-            assertTrue(end > start, "Malformed component block for ${expected.component}")
-            val block = metadata.substring(start, end)
-
-            assertTrue(
-                "<artifact name=\"${expected.artifact}\">" in block,
-                "Missing verified artifact ${expected.component}:${expected.artifact}",
-            )
-            assertTrue(
-                "<sha256 value=\"${expected.sha256}\"" in block,
-                "Unexpected checksum for ${expected.component}:${expected.artifact}",
+            verification.assertArtifact(
+                group = "io.github.apdelrahman1911",
+                name = expected.component,
+                version = P2PKIT_VERSION,
+                artifact = expected.artifact,
+                sha256 = expected.sha256,
             )
         }
     }

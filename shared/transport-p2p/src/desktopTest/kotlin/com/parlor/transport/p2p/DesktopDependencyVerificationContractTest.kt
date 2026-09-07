@@ -18,8 +18,8 @@ class DesktopDependencyVerificationContractTest {
         locateRepositoryRoot().resolve("gradle/libs.versions.toml").readText()
     }
 
-    private val metadata: String by lazy {
-        locateRepositoryRoot().resolve("gradle/verification-metadata.xml").readText()
+    private val metadata: VerificationMetadataAssertions by lazy {
+        VerificationMetadataAssertions(locateRepositoryRoot().resolve("gradle/verification-metadata.xml").readText())
     }
 
     @Test
@@ -62,21 +62,21 @@ class DesktopDependencyVerificationContractTest {
         )
 
         variants.forEach { variant ->
-            assertArtifact(
+            metadata.assertArtifact(
                 group = "org.jetbrains.compose.desktop",
                 name = "desktop-jvm-${variant.name}",
                 version = COMPOSE_VERSION,
                 artifact = "desktop-jvm-${variant.name}-$COMPOSE_VERSION.pom",
                 sha256 = variant.composePomSha256,
             )
-            assertArtifact(
+            metadata.assertArtifact(
                 group = "org.jetbrains.skiko",
                 name = "skiko-awt-runtime-${variant.name}",
                 version = SKIKO_VERSION,
                 artifact = "skiko-awt-runtime-${variant.name}-$SKIKO_VERSION.jar",
                 sha256 = variant.skikoJarSha256,
             )
-            assertArtifact(
+            metadata.assertArtifact(
                 group = "org.jetbrains.skiko",
                 name = "skiko-awt-runtime-${variant.name}",
                 version = SKIKO_VERSION,
@@ -102,7 +102,7 @@ class DesktopDependencyVerificationContractTest {
             "windows-x86_64.zip" to
                 "ce99eba1f4faec1d77f4bbd747bb722404ef11f2c349ec70c59d4c002859380f",
         ).forEach { (hostArchive, sha256) ->
-            assertArtifact(
+            metadata.assertArtifact(
                 group = "org.jetbrains.kotlin",
                 name = "kotlin-native-prebuilt",
                 version = KOTLIN_VERSION,
@@ -123,7 +123,7 @@ class DesktopDependencyVerificationContractTest {
             "osx" to "0d47f17c3924e5472b6125aa608d949dd7f46510889729671f31f2f4d801e8e7",
             "windows" to "5dc730c3dc454b76d779a46036c06fd9c874039a31e22214434ecdbe64c3300a",
         ).forEach { (platform, sha256) ->
-            assertArtifact(
+            metadata.assertArtifact(
                 group = "com.android.tools.build",
                 name = "aapt2",
                 version = AAPT2_VERSION,
@@ -131,28 +131,6 @@ class DesktopDependencyVerificationContractTest {
                 sha256 = sha256,
             )
         }
-    }
-
-    private fun assertArtifact(
-        group: String,
-        name: String,
-        version: String,
-        artifact: String,
-        sha256: String,
-    ) {
-        val componentMarker =
-            "<component group=\"$group\" name=\"$name\" version=\"$version\">"
-        val component = metadata.substringAfter(componentMarker, missingDelimiterValue = "")
-            .substringBefore("</component>")
-        assertTrue(component.isNotEmpty(), "Missing verified component $group:$name:$version")
-        assertTrue(
-            "<artifact name=\"$artifact\">" in component,
-            "Missing verified artifact $group:$name:$version:$artifact",
-        )
-        assertTrue(
-            "<sha256 value=\"$sha256\"" in component,
-            "Unexpected checksum for $group:$name:$version:$artifact",
-        )
     }
 
     private fun locateRepositoryRoot(): File {
