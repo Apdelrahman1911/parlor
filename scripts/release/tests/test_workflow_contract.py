@@ -41,6 +41,60 @@ class WorkflowContractTest(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "app-launch test"):
             workflow_contract.verify_validation(broken)
 
+    def test_ios_app_launch_requires_owned_simulator_and_nonparallel_execution(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(
+            encoding="utf-8"
+        )
+        mutations = (
+            ("create-simulator apple-ui", "list devices available --json"),
+            ("-parallel-testing-enabled NO", "-parallel-testing-enabled YES"),
+            ("-maximum-concurrent-test-simulator-destinations 1", "-maximum-concurrent-test-simulator-destinations 2"),
+            ("test ! -e build/ci-evidence/ios-ui-tests.xcresult", "true"),
+            ("-derivedDataPath build/xcode-derived-data", "-derivedDataPath /tmp/unowned"),
+        )
+        for original, replacement in mutations:
+            with self.subTest(original=original):
+                self.assertIn(original, workflow)
+                with self.assertRaisesRegex(RuntimeError, "owned iOS app-launch"):
+                    workflow_contract.verify_validation(workflow.replace(original, replacement, 1))
+
+    def test_ios_app_launch_requires_its_own_preparation_and_finalization(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(
+            encoding="utf-8"
+        )
+        for original, replacement in (
+            ("prepare apple-ui", "prepare apple-wrapper"),
+            ("finish apple-ui", "finish apple-wrapper"),
+            ("id: apple_ui_prepare", "id: another_prepare"),
+            ("steps.apple_ui_prepare.outcome", "steps.apple_wrapper_prepare.outcome"),
+            ("steps.apple_ui_run.outcome", "steps.apple_wrapper_run.outcome"),
+        ):
+            with self.subTest(original=original):
+                with self.assertRaisesRegex(RuntimeError, "owned iOS app-launch"):
+                    workflow_contract.verify_validation(workflow.replace(original, replacement, 1))
+        finish = workflow_contract.validation_step(
+            workflow, "Stop Gradle after apple-ui and retire owned Apple resources"
+        )
+        for condition in ("if: success()", "if: failure()", "# if removed"):
+            with self.subTest(condition=condition):
+                broken = workflow.replace(finish, finish.replace("if: always()", condition), 1)
+                with self.assertRaisesRegex(RuntimeError, "finalizer must always run"):
+                    workflow_contract.verify_validation(broken)
+
+    def test_ios_app_launch_cannot_delay_finalization_or_claim_ownership_after_launch(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(
+            encoding="utf-8"
+        )
+        finish_marker = "      - name: Stop Gradle after apple-ui and retire owned Apple resources\n"
+        delayed = workflow.replace(finish_marker, "      - name: Another build\n        run: ./gradlew build\n\n" + finish_marker, 1)
+        with self.assertRaisesRegex(RuntimeError, "immediately after app-launch"):
+            workflow_contract.verify_validation(delayed)
+        prepare_name = "Claim apple-ui native resource ownership"
+        prepare = f"      - name: {prepare_name}\n" + workflow_contract.validation_step(workflow, prepare_name)
+        misplaced = workflow.replace(prepare, "", 1).replace(finish_marker, prepare + "\n" + finish_marker, 1)
+        with self.assertRaisesRegex(RuntimeError, "ownership before launch"):
+            workflow_contract.verify_validation(misplaced)
+
     def test_mobile_release_kit_android_signing_fallbacks_remain_bounded(self) -> None:
         gradle = (workflow_contract.ROOT / "composeApp/build.gradle.kts").read_text(
             encoding="utf-8"

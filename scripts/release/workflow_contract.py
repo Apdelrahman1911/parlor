@@ -90,6 +90,51 @@ def verify_android_runtime_smoke(name: str, text: str) -> None:
             fail(f"{name}: release managed-device smoke gate is missing {token!r}")
 
 
+def validation_step(text: str, name: str) -> str:
+    """Read one named step in the checked-in, statically reviewed workflow shape."""
+    marker = f"\n      - name: {name}\n"
+    if text.count(marker) != 1:
+        fail(f"validation workflow requires exactly one step {name!r}")
+    return text.split(marker, 1)[1].split("\n      - ", 1)[0]
+
+
+def verify_owned_ios_app_launch(text: str) -> None:
+    prepare_name = "Claim apple-ui native resource ownership"
+    launch_name = "Launch Swift host and Compose root on iOS Simulator"
+    finish_name = "Stop Gradle after apple-ui and retire owned Apple resources"
+    prepare = validation_step(text, prepare_name)
+    launch = validation_step(text, launch_name)
+    finish = validation_step(text, finish_name)
+    helper = "/usr/bin/python3 -B -m scripts.ci.apple_verification_hygiene"
+    for block, required in (
+        (prepare, ("        id: apple_ui_prepare\n", f"        run: {helper} prepare apple-ui\n")),
+        (launch, (
+            "        id: apple_ui_run\n",
+            '          simulator_udid="$(' + helper + ' create-simulator apple-ui)"\n',
+            "          test ! -e build/ci-evidence/ios-ui-tests.xcresult\n",
+            "-parallel-testing-enabled NO",
+            "-maximum-concurrent-test-simulator-destinations 1",
+            "-derivedDataPath build/xcode-derived-data",
+        )),
+        (finish, (
+            "        id: apple_ui_finish\n",
+            "          PARLOR_APPLE_PREPARE_OUTCOME: ${{ steps.apple_ui_prepare.outcome }}\n",
+            "          PARLOR_APPLE_RUN_OUTCOME: ${{ steps.apple_ui_run.outcome }}\n",
+            f"        run: {helper} finish apple-ui\n",
+        )),
+    ):
+        for token in required:
+            if token not in block:
+                fail(f"validation workflow owned iOS app-launch lifecycle lacks {token!r}")
+    if re.findall(r"(?m)^        if: (.*)$", finish) != ["always()"]:
+        fail("validation workflow owned iOS app-launch finalizer must always run")
+    if text.index(f"- name: {prepare_name}\n") >= text.index(f"- name: {launch_name}\n"):
+        fail("validation workflow must claim iOS app-launch ownership before launch")
+    next_step = text.split(f"\n      - name: {launch_name}\n", 1)[1].split("\n      - ", 1)[1]
+    if not next_step.startswith(f"name: {finish_name}\n"):
+        fail("validation workflow must finalize owned iOS resources immediately after app-launch")
+
+
 def verify_validation(text: str) -> None:
     if "secrets." in text:
         fail("main/PR validation workflow must not reference secrets")
@@ -119,7 +164,6 @@ def verify_validation(text: str) -> None:
         fail("validation workflow does not run the iOS app-launch UI test")
     app_launch_step = text.split(app_launch_marker, 1)[1].split(swift_release_marker, 1)[0]
     required_app_launch_contract = (
-        "xcrun simctl list devices available --json",
         "-project iosApp/iosApp.xcodeproj",
         "-scheme iosApp",
         "-configuration Debug",
@@ -131,6 +175,7 @@ def verify_validation(text: str) -> None:
     for token in required_app_launch_contract:
         if token not in app_launch_step:
             fail(f"validation workflow iOS app-launch test lacks {token!r}")
+    verify_owned_ios_app_launch(text)
     if '$1 ~ /PRODUCT_BUNDLE_IDENTIFIER$/' in text:
         fail("validation workflow can confuse the Mac Catalyst derivation flag with the Bundle ID")
     if text.count('key == "PRODUCT_BUNDLE_IDENTIFIER"') != 2:
