@@ -176,6 +176,35 @@ def verify_validation(text: str) -> None:
         if token not in app_launch_step:
             fail(f"validation workflow iOS app-launch test lacks {token!r}")
     verify_owned_ios_app_launch(text)
+    for step, command in (
+        ("Inspect unsigned Android release artifact and merged manifest",
+         'python3 -B scripts/verification/third_party_notices.py --package "$aab" --json >build/ci-evidence/android-release-notices.json'),
+        ("Build unsigned Swift Release wrapper",
+         '/usr/bin/python3 -B scripts/verification/third_party_notices.py --package "$app" --json >build/ci-evidence/ios-release-notices.json'),
+    ):
+        if f"          {command}\n" not in validation_step(text, step):
+            fail(f"validation workflow lacks packaged-notice verification in {step!r}")
+    android_inspection = validation_step(text, "Inspect unsigned Android release artifact and merged manifest")
+    for token in (
+        'scripts/verification/android_release_artifacts.py --package "$aab"',
+        '--bundletool "$tools/bundletool.jar" --dexdump "$ANDROID_HOME/build-tools/36.0.0/dexdump"',
+        '>build/ci-evidence/android-release-artifact-inventory.json',
+        'trap \'rm -rf "$tools"\' EXIT',
+    ):
+        if token not in android_inspection:
+            fail("validation workflow lacks complete unsigned Android artifact inspection/cleanup")
+    ios_inspection = validation_step(text, "Inspect complete unsigned iOS Release package")
+    for token in (
+        "if: success() && steps.apple_wrapper_run.outcome == 'success' && steps.apple_wrapper_finish.outcome == 'success'",
+        '/usr/bin/python3 -B scripts/verification/ios_release_artifacts.py',
+        '--app build/xcode-derived-data/Build/Products/Release-iphonesimulator/Parlor.app',
+        '--source "$GITHUB_WORKSPACE" --json >build/ci-evidence/ios-release-artifact-inventory.json',
+    ):
+        if token not in ios_inspection:
+            fail("validation workflow lacks current-source complete iOS artifact inspection")
+    if not (text.index('id: apple_wrapper_finish') < text.index('name: Inspect complete unsigned iOS Release package')
+            < text.index('name: Upload Apple verification evidence')):
+        fail("complete iOS artifact inspection must follow successful immediate finalization and precede evidence upload")
     if '$1 ~ /PRODUCT_BUNDLE_IDENTIFIER$/' in text:
         fail("validation workflow can confuse the Mac Catalyst derivation flag with the Bundle ID")
     if text.count('key == "PRODUCT_BUNDLE_IDENTIFIER"') != 2:

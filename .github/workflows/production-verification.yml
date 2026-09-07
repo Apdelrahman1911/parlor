@@ -122,6 +122,15 @@ jobs:
           test -s "$manifest"
           sha256sum "$aab" | tee build/ci-evidence/android-aab.sha256
           cp "$manifest" build/ci-evidence/merged-release-manifest.xml
+          python3 -B scripts/verification/third_party_notices.py --package "$aab" --json >build/ci-evidence/android-release-notices.json
+          tools=$(mktemp -d "${RUNNER_TEMP}/parlor-unsigned-aab-tools.XXXXXX")
+          trap 'rm -rf "$tools"' EXIT
+          curl --fail --silent --show-error --location --proto '=https' --tlsv1.2 \
+            --max-filesize 134217728 --max-time 120 --retry 3 \
+            "$(jq -r '.tools.bundletool.url' config/release-policy.json)" -o "$tools/bundletool.jar"
+          python3 -B scripts/verification/android_release_artifacts.py --package "$aab" \
+            --bundletool "$tools/bundletool.jar" --dexdump "$ANDROID_HOME/build-tools/36.0.0/dexdump" \
+            >build/ci-evidence/android-release-artifact-inventory.json
 
       - name: Upload verification reports, mappings, and unsigned AAB
         id: verification_artifact
@@ -593,6 +602,7 @@ jobs:
           test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$app/Info.plist")" = "$(sed -n 's/^PARLOR_BUILD_NUMBER = //p' config/parlor-version.xcconfig)"
           file "$app/Parlor" | tee build/ci-evidence/xcode-binary.txt
           shasum -a 256 "$app/Parlor" | tee build/ci-evidence/xcode-binary.sha256
+          /usr/bin/python3 -B scripts/verification/third_party_notices.py --package "$app" --json >build/ci-evidence/ios-release-notices.json
 
       - name: Stop Gradle after apple-wrapper and retire owned Apple resources
         id: apple_wrapper_finish
@@ -602,6 +612,15 @@ jobs:
           PARLOR_APPLE_RUN_OUTCOME: ${{ steps.apple_wrapper_run.outcome }}
         shell: bash
         run: /usr/bin/python3 -B -m scripts.ci.apple_verification_hygiene finish apple-wrapper
+
+      - name: Inspect complete unsigned iOS Release package
+        if: success() && steps.apple_wrapper_run.outcome == 'success' && steps.apple_wrapper_finish.outcome == 'success'
+        shell: bash
+        run: |
+          set -euo pipefail
+          /usr/bin/python3 -B scripts/verification/ios_release_artifacts.py \
+            --app build/xcode-derived-data/Build/Products/Release-iphonesimulator/Parlor.app \
+            --source "$GITHUB_WORKSPACE" --json >build/ci-evidence/ios-release-artifact-inventory.json
 
       - name: Upload Apple verification evidence
         id: verification_artifact

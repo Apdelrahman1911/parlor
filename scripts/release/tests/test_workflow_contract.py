@@ -95,6 +95,36 @@ class WorkflowContractTest(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "ownership before launch"):
             workflow_contract.verify_validation(misplaced)
 
+    def test_android_and_ios_release_packages_must_verify_notice_bytes(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(
+            encoding="utf-8"
+        )
+        for artifact in ("$aab", "$app"):
+            command = f'scripts/verification/third_party_notices.py --package "{artifact}" --json'
+            with self.subTest(artifact=artifact):
+                self.assertEqual(1, workflow.count(command))
+                with self.assertRaisesRegex(RuntimeError, "packaged-notice verification"):
+                    workflow_contract.verify_validation(workflow.replace(command, "removed-package-check", 1))
+
+    def test_unsigned_android_inventory_is_required_and_tool_cleanup_is_scoped(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(
+            encoding="utf-8"
+        )
+        for command in ('scripts/verification/android_release_artifacts.py --package "$aab"',
+                        'trap \'rm -rf "$tools"\' EXIT'):
+            with self.subTest(command=command), self.assertRaisesRegex(RuntimeError, "complete unsigned Android"):
+                workflow_contract.verify_validation(workflow.replace(command, "removed-package-check", 1))
+
+    def test_complete_ios_inventory_requires_successful_build_and_cleanup(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(
+            encoding="utf-8"
+        )
+        for command in ('/usr/bin/python3 -B scripts/verification/ios_release_artifacts.py',
+                        "&& steps.apple_wrapper_finish.outcome == 'success'",
+                        '--source "$GITHUB_WORKSPACE" --json >build/ci-evidence/ios-release-artifact-inventory.json'):
+            with self.subTest(command=command), self.assertRaisesRegex(RuntimeError, "complete iOS artifact"):
+                workflow_contract.verify_validation(workflow.replace(command, "removed-package-check", 1))
+
     def test_mobile_release_kit_android_signing_fallbacks_remain_bounded(self) -> None:
         gradle = (workflow_contract.ROOT / "composeApp/build.gradle.kts").read_text(
             encoding="utf-8"
