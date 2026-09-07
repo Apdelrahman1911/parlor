@@ -144,13 +144,34 @@ def executed_runs(nodes):
     return rows
 
 
+def leaf_repetition_runs(nodes):
+    """The observed Xcode 26.5 single-destination layout has no run wrapper.
+
+    Accept only its eight ordered, identified leaves. Merely finding eight
+    arbitrary Repetition ancestors would double-count nested device runs.
+    """
+    all_nodes(nodes)
+    if len(nodes) != REPETITIONS:
+        raise RuntimeError('Exactly eight actual leaf repetitions are required')
+    records = []
+    for ordinal, node in enumerate(nodes, 1):
+        if (node['nodeType'] != 'Repetition' or node.get('children', []) != [] or
+                node.get('nodeIdentifier') != str(ordinal) or
+                node['name'] != 'Repetition ' + str(ordinal) or node.get('result') != 'Passed'):
+            raise RuntimeError('Unknown, duplicate or unordered leaf repetition layout')
+        identity = (node['nodeType'], node['name'], node['nodeIdentifier'], node.get('nodeIdentifierURL'))
+        seconds(node.get('durationInSeconds'), minimum=10)
+        records.append((node, (identity,)))
+    return records
+
+
 def verify_xctest(summary, tests, details, uuid):
     if not isinstance(uuid, str) or UUID.fullmatch(uuid) is None:
         raise RuntimeError('Unattested simulator identity')
     if not all(isinstance(value, dict) for value in (summary, tests, details)):
         raise RuntimeError('Missing actual XCResult objects')
     # XCResult can aggregate repetitions at method level. Neither allowed count
-    # proves eight executions: the separate eight Test Case Run records do.
+    # proves eight executions: individually identified execution records do.
     if (summary.get('result') != 'Passed' or summary.get('testFailures') != [] or
             type(summary.get('totalTestCount')) is not int or
             summary['totalTestCount'] not in (1, 8) or
@@ -167,7 +188,7 @@ def verify_xctest(summary, tests, details, uuid):
             any(type(configuration.get(key)) is not int or configuration[key] != 0
                 for key in ('failedTests', 'skippedTests', 'expectedFailures')) or
             type(configuration.get('passedTests')) is not int or
-            configuration['passedTests'] != summary['passedTests']):
+            configuration['passedTests'] not in (1, REPETITIONS)):
         raise RuntimeError('Per-destination XCTest counts disagree')
     verify_device(configuration.get('device'), uuid)
     for view in (tests, details):
@@ -185,7 +206,29 @@ def verify_xctest(summary, tests, details, uuid):
     if (len(cases) != 1 or cases[0].get('nodeIdentifier') != METHOD or cases[0].get('result') != 'Passed' or
             details.get('testIdentifier') != METHOD or details.get('testResult') != 'Passed'):
         raise RuntimeError('Exactly the selected normal-source method must execute')
-    records = executed_runs(details.get('testRuns'))
+    detail_nodes = all_nodes(details.get('testRuns'))
+    direct_leaves = any(node['nodeType'] == 'Repetition' and not node.get('children')
+                        for node in detail_nodes)
+    if direct_leaves:
+        # Actual ios-readiness-06: summary counts the method once, destination
+        # counts its eight executions. Both independent queries expose exactly
+        # the same eight leaf repetitions. Bind IDs, ordering and durations;
+        # never derive successful executions from summary counts or UI markers.
+        records = leaf_repetition_runs(details['testRuns'])
+        tree_records = leaf_repetition_runs(cases[0].get('children'))
+        if (summary['totalTestCount'] != 1 or configuration['passedTests'] != REPETITIONS or
+                sum(node['nodeType'] == 'Repetition' for node in nodes) != REPETITIONS or
+                any(node['nodeType'] == 'Test Case Run' for node in nodes)):
+            raise RuntimeError('Leaf repetition counts or scopes disagree')
+        if ([(path, node['durationInSeconds']) for node, path in records] !=
+                [(path, node['durationInSeconds']) for node, path in tree_records]):
+            raise RuntimeError('Independent XCResult repetition identities or durations disagree')
+        layout = 'identified-leaf-repetitions'
+    else:
+        if configuration['passedTests'] != summary['passedTests']:
+            raise RuntimeError('Per-destination XCTest counts disagree')
+        records = executed_runs(details['testRuns'])
+        layout = 'nested-test-case-runs'
     runs = [node for node, _path in records]
     if len(runs) != REPETITIONS or any(node.get('result') != 'Passed' for node in runs):
         raise RuntimeError('Exactly eight individually passing actual XCTest runs are required')
@@ -197,7 +240,9 @@ def verify_xctest(summary, tests, details, uuid):
     durations = [seconds(node.get('durationInSeconds'), minimum=10) for node in runs]
     return dict(status='PASS', method=METHOD, executed_repetitions=8,
                 actual_run_identities=identities, actual_run_durations_seconds=durations,
-                reported_summary_total=summary['totalTestCount'], device_uuid=uuid,
+                reported_summary_total=summary['totalTestCount'],
+                reported_destination_passes=configuration['passedTests'], repetition_layout=layout,
+                device_uuid=uuid,
                 failures=0, skipped=0, expected_failures=0,
                 limitation='One test method executed eight times, not eight distinct test methods. '
                            'Unknown XCResult repetition shapes are blocked, never inferred from markers.')

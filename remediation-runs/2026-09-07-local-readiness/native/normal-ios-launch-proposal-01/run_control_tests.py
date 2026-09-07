@@ -10,7 +10,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import run_normal_ios_launch as control
 
-EXPECTED_COUNT = 78
+EXPECTED_COUNT = 91
 
 
 def declared_tests():

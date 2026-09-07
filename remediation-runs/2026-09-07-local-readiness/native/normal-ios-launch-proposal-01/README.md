@@ -1,10 +1,16 @@
 # Normal-source iOS launch observation — campaign controls
 
-The controls have independent source review and **78 passing synthetic tests** in
-`evidence/package-controls-01/` (2026-09-07). This is not app-runtime evidence:
-the eight-launch and separate provenance observation below still require a fresh
-source binding, independent exact-control approval, and successful execution.
-The original author did not run an app, build, simulator, signing or native probe.
+The original controls had independent source review and **78 passing synthetic
+tests** in `evidence/package-controls-01/` (2026-09-07). The current pure suite has
+**91 tests**, including a sanitized actual Xcode 26.5 repetition receipt and
+adversarial variants. Test-control success is not app-runtime evidence.
+
+`ios-readiness-06` executed eight successful XCTest repetitions but then failed
+report parsing, before the separate ninth-launch provenance observation. Its
+failure receipt remains unchanged. The parser now distinguishes the observed
+one-method summary from eight destination executions, cross-checking eight
+identified leaf repetitions in both XCResult queries. A complete native PASS
+still requires a fresh binding, independent exact-control approval and execution.
 Root owns the single execution lane; application source is not instrumented here.
 
 ## What this runner does
@@ -27,8 +33,10 @@ Root owns the single execution lane; application source is not instrumented here
    calls public `XCUIApplication.launch()`, waits for foreground/Home, then records
    six observations over at least ten actual post-home seconds. Each observation
    requires foreground, `parlor-home-brand`, and absence of native alerts.
-5. Requires both eight actual individually passing `Test Case Run` records in
-   XCResult and eight complete, serial UUID marker trains. No skipped/failed/
+5. Requires eight actual individually passing execution records in XCResult
+   (nested `Test Case Run`, or the reviewed Xcode 26.5 leaf-`Repetition` layout)
+   and eight complete, serial UUID marker trains. Leaf IDs, order and durations
+   must agree across both queries. No skipped/failed/
    expected-failure run is allowed. Forty-eight samples are **not forty-eight
    tests**. Summary method counts alone cannot establish repetitions. Unknown
    XCResult repetition layouts fail closed for evidence-backed parser review.
@@ -100,7 +108,7 @@ by guesswork; cleanup fails with evidence for targeted follow-up.
 ## Root review and execution
 
 Do not execute while another lane is active. Independent review must examine all
-new source and the referenced approved helper hashes, then run the **78** synthetic
+new source and the referenced approved helper hashes, then run the **91** synthetic
 control tests (not Swift compilation or app runtime):
 
 ```sh
