@@ -2,6 +2,7 @@ package com.parlor.games.mafia.ui.screens.setup
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -352,10 +353,11 @@ private fun RoleCountStepperRow(
     val decDesc = stringResource(Res.string.settings_role_count_decrement_description_format, name)
     val incDesc = stringResource(Res.string.settings_role_count_increment_description_format, name)
 
-    Row(
+    FlowRow(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
+        verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s),
+        itemVerticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = name,
