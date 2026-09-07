@@ -344,7 +344,14 @@ the old evidence expires.
 Configure `main`, `testing`, and `release` independently:
 
 - require pull requests and at least the organization's approved reviewer count;
-- require the two **Production verification** jobs and require branches to be up to date;
+- require all current **Production verification** jobs and require branches to be up to date.
+  The check names in `.github/workflows/production-verification.yml` are:
+  - `Common, desktop, and Android release`;
+  - `Desktop strict verification (Linux arm64)`;
+  - `Desktop and Kotlin Native strict verification (macOS x64)`;
+  - `Desktop, Kotlin Native, and Android resources strict verification (Windows x64)`; and
+  - `iOS tests, release frameworks, and Swift wrapper`.
+  Include any newly added verification job when updating branch protection;
 - require conversation resolution and disallow force pushes and deletion;
 - restrict direct pushes to the approved release maintainers/bot;
 - do not permit bypass for Store promotion operators unless explicitly governed;

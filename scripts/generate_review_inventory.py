@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Generate the independent-review inventory from Git's tracked file set.
+"""Generate a mechanical inventory from Git's tracked file set, not a review attestation.
 
-The CSV is intentionally deterministic: review-infrastructure rows do not
-embed their own commit SHA, avoiding a self-referential generated-file diff.
+Paths infer classifications and Git history supplies historical references.
+Neither proves source review, runtime reachability, or the absence of findings.
+Inventory-infrastructure rows omit their own commit SHA to remain deterministic.
 """
 
 from __future__ import annotations
@@ -236,9 +237,9 @@ def consumers_for(path: str, classification: str, module: str) -> str:
 
 def disposition_for(classification: str, source_set: str) -> str:
     if classification == "historical-document":
-        return "RETAIN AS HISTORICAL; non-authoritative status banner verified"
+        return "RETAIN AS HISTORICAL; authority banner requires separate inspection"
     if classification == "review-evidence":
-        return "RETAIN AND REGENERATE after every tracked review change"
+        return "RETAIN human evidence; regenerate only the mechanical inventory"
     if classification in {"test-source", "test-resource"}:
         return "RETAIN as automated regression/release evidence"
     if classification == "developer-run-config":
@@ -302,15 +303,15 @@ def finding_for(
     overrides: dict[str, str],
 ) -> str:
     if path in REVIEW_INFRASTRUCTURE or path.startswith("docs/review/"):
-        return "Review infrastructure; no product finding"
+        return "Inventory/review infrastructure; independent review not attested"
     change = changes.get(path)
     if change is None:
-        return "None identified in the independent review"
+        return "No historical change mapped; independent review not attested"
     commit, subject = change
     override = overrides.get(commit)
     if override is not None:
         return override
-    return f"See findings register; latest review remediation {commit[:7]} ({subject})"
+    return f"Latest tracked change {commit} ({subject}); independent review not attested"
 
 
 def tracked_paths(root: Path, output_relative: str) -> list[str]:
@@ -332,11 +333,11 @@ def render_inventory(
             "module",
             "source_set",
             "classification",
-            "production_reachability",
-            "main_callers_or_consumers",
-            "reviewer_status",
-            "findings",
-            "final_disposition",
+            "inferred_production_reachability",
+            "inferred_main_callers_or_consumers",
+            "inventory_status",
+            "historical_change_or_finding_reference",
+            "suggested_disposition",
         ],
     )
     for path in paths:
@@ -351,7 +352,7 @@ def render_inventory(
                 classification,
                 reachability_for(path, source_set, classification, module),
                 consumers_for(path, classification, module),
-                "REVIEWED",
+                "MECHANICALLY INVENTORIED; INDEPENDENT REVIEW NOT ATTESTED",
                 finding_for(path, changes, overrides),
                 disposition_for(classification, source_set),
             ],
@@ -389,18 +390,18 @@ def main() -> int:
         if not output.is_file() or output.read_text(encoding="utf-8") != content:
             print(
                 f"Inventory is stale: run scripts/generate_review_inventory.py "
-                f"and review {output_relative}",
+                f"and inspect {output_relative}; freshness does not attest source review",
                 file=sys.stderr,
             )
             return 1
-        print(f"Verified {len(paths)} reviewed rows in {output_relative}")
+        print(f"Verified freshness of {len(paths)} inventory rows in {output_relative}; source review not attested")
     else:
         output.parent.mkdir(parents=True, exist_ok=True)
         temporary = output.with_suffix(output.suffix + ".tmp")
         with temporary.open("w", encoding="utf-8", newline="") as destination:
             destination.write(content)
         temporary.replace(output)
-        print(f"Wrote {len(paths)} reviewed rows to {output_relative}")
+        print(f"Wrote {len(paths)} inventory rows to {output_relative}; source review not attested")
     return 0
 
 

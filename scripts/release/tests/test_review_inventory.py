@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import csv
+import io
 import subprocess
 import sys
 import unittest
@@ -11,6 +13,52 @@ import generate_review_inventory as review_inventory  # noqa: E402
 
 
 class ReviewInventoryTest(unittest.TestCase):
+    def test_mechanical_rows_never_attest_independent_review(self) -> None:
+        commit = "a" * 40
+        paths = [
+            "new-source.kt",
+            "changed-source.kt",
+            "historical-fix.kt",
+            "ARCHITECTURE.md",
+            "docs/review/INDEPENDENT_REVIEW_FINDINGS.md",
+        ]
+        historical_finding = "IR-TEST CLOSED: historical human-reviewed finding"
+        content = review_inventory.render_inventory(
+            paths,
+            {
+                "changed-source.kt": ("b" * 40, "fix: a commit is not a review"),
+                "historical-fix.kt": (commit, "fix: historical finding"),
+            },
+            {commit: historical_finding},
+        )
+        rows = {row["path"]: row for row in csv.DictReader(io.StringIO(content))}
+        self.assertEqual(set(paths), set(rows))
+        for row in rows.values():
+            self.assertEqual(
+                "MECHANICALLY INVENTORIED; INDEPENDENT REVIEW NOT ATTESTED",
+                row.get("inventory_status", row.get("reviewer_status")),
+            )
+            self.assertNotIn("reviewer_status", row)
+        self.assertEqual(
+            historical_finding,
+            rows["historical-fix.kt"]["historical_change_or_finding_reference"],
+        )
+        self.assertIn(
+            "No historical change mapped; independent review not attested",
+            rows["new-source.kt"]["historical_change_or_finding_reference"],
+        )
+        self.assertIn(
+            "Latest tracked change " + "b" * 40,
+            rows["changed-source.kt"]["historical_change_or_finding_reference"],
+        )
+        for unsupported_claim in (
+            "None identified in the independent review",
+            "latest review remediation",
+            "status banner verified",
+            "no product finding",
+        ):
+            self.assertNotIn(unsupported_claim, content)
+
     def test_rendering_is_repeatable_and_independent_of_untracked_files(self) -> None:
         with TemporaryDirectory() as directory:
             root = Path(directory)
