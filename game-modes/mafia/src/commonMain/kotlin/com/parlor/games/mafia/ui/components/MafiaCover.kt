@@ -26,7 +26,6 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.style.TextAlign
 import com.parlor.designsystem.components.ContextRibbon
-import com.parlor.designsystem.components.EyebrowLabel
 import com.parlor.designsystem.components.ParlorButton
 import com.parlor.designsystem.components.ParlorContextTone
 import com.parlor.designsystem.components.parlorSafeContentPadding
@@ -77,8 +76,11 @@ fun MafiaCandlelitCover(
                 verticalArrangement = Arrangement.spacedBy(ParlorTheme.spacing.s),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                EyebrowLabel(
-                    text = stringResource(Res.string.handoff_pass_to_format, playerName),
+                Text(
+                    text = stringResource(Res.string.handoff_pass_to_format, playerName).uppercase(),
+                    modifier = Modifier.fillMaxWidth(),
+                    style = ParlorTheme.typography.labelSmall,
+                    color = ParlorTheme.colors.coverScreenTextSecondary,
                     textAlign = TextAlign.Center,
                 )
                 Text(
