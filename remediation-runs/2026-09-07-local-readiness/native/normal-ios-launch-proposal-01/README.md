@@ -1,10 +1,11 @@
-# Normal-source iOS launch observation — campaign-only draft
+# Normal-source iOS launch observation — campaign controls
 
-**Status: not executed and not independently approved.** No actual app, Gradle,
-Xcode, simulator, `sample`, `vmmap`, signing, or test run was started by the author.
-Only source inspection, public help/schema research, and static Python AST reading
-occurred. All files live in this campaign; adopted controls and application source
-are untouched. Root owns the single execution lane.
+The controls have independent source review and **78 passing synthetic tests** in
+`evidence/package-controls-01/` (2026-09-07). This is not app-runtime evidence:
+the eight-launch and separate provenance observation below still require a fresh
+source binding, independent exact-control approval, and successful execution.
+The original author did not run an app, build, simulator, signing or native probe.
+Root owns the single execution lane; application source is not instrumented here.
 
 ## What this runner does
 
@@ -60,6 +61,9 @@ are untouched. Root owns the single execution lane.
 - Built and installed full native inventories must match. This is not proof of
   release signatures, physical devices, launch-crash history, storage health,
   OS language-override ownership or an absence of other bugs.
+- All 26 reviewed notice resources must also match the bound source bytes in
+  both built and installed apps. Source-only notice success cannot satisfy this
+  package gate, and notice delivery does not establish legal approval.
 - Xcode26.5/17F42, SDK/runtime26.5 are the currently researched local tools, **not**
   Store-qualified Xcode26.3/17C529. Read-only host observation on2026-09-07 found
   macOS26.2/25C56, Darwin25.2.0. An earlier helper's “Darwin26” prose must not be
@@ -96,7 +100,7 @@ by guesswork; cleanup fails with evidence for targeted follow-up.
 ## Root review and execution
 
 Do not execute while another lane is active. Independent review must examine all
-new source and the referenced approved helper hashes, then run the **74** synthetic
+new source and the referenced approved helper hashes, then run the **78** synthetic
 control tests (not Swift compilation or app runtime):
 
 ```sh

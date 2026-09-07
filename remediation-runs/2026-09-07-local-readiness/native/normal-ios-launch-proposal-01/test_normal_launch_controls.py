@@ -476,7 +476,7 @@ class RunnerGuards(unittest.TestCase):
         value.gradle_attempted, value.approved = True, 'a' * 64
         value.stop_gradle, value.shutdown_device, value.delete_device = Mock(), Mock(), Mock()
         value.stop_gradle.return_value = value.shutdown_device.return_value = value.delete_device.return_value = None
-        value.receipt = dict(runtime_evidence_status='PASS', provenance_status='PASS',
+        value.receipt = dict(runtime_evidence_status='PASS', provenance_status='PASS', notice_package_status='PASS',
                              source_before={'frozen': True}, copied_sources_unchanged=True, gradle_stops=[])
         value.environment = dict(SDK_NAME='iphonesimulator26.5')
         value.signing = runner.signing_overrides('disabled')
@@ -645,6 +645,49 @@ class RunnerGuards(unittest.TestCase):
         with self.assertRaises(RuntimeError):
             lane.run_xctest()
         lane.stop_gradle.assert_called_once_with('stop-xcode-immediate')
+
+    def test_notices_check_built_and_installed_apps_using_frozen_copy(self):
+        lane = self.lane()
+        apps = [lane.temporary / 'DerivedData/Parlor.app', lane.temporary / 'simulator/Parlor.app']
+        def successful_receipt(arguments, filename, **options):
+            self.assertEqual(1024 * 1024, options['limit'])
+            (lane.destination / filename).write_text(json.dumps({'status': 'PASS', 'package': {'verified': 26}}))
+        lane.require = Mock(side_effect=successful_receipt)
+        lane.verify_notice_packages(*apps)
+        self.assertEqual(2, lane.require.call_count)
+        for call, app in zip(lane.require.call_args_list, apps):
+            self.assertEqual(['/usr/bin/python3', '-B', lane.temporary / 'copy/scripts/verification/third_party_notices.py',
+                              '--root', lane.temporary / 'copy', '--package', app, '--json'], call.args[0])
+        self.assertEqual('PASS', lane.receipt['notice_package_status'])
+        self.assertEqual(['built', 'installed'], [row['origin'] for row in lane.receipt['notice_packages']])
+        for row in lane.receipt['notice_packages']:
+            self.assertEqual(runner.digest(lane.destination / row['file']), row['sha256'])
+
+    def test_failed_notice_verifier_cannot_pass_package_gate(self):
+        lane = self.lane()
+        lane.require = Mock(side_effect=RuntimeError('synthetic missing package resource'))
+        with self.assertRaises(RuntimeError):
+            lane.verify_notice_packages(Path('/built'), Path('/installed'))
+        self.assertNotEqual('PASS', lane.receipt['notice_package_status'])
+        self.assertEqual([], lane.receipt['notice_packages'])
+
+    def test_source_only_or_failed_notice_receipt_is_not_package_evidence(self):
+        lane = self.lane()
+        for value in ({'status': 'PASS'}, {'status': 'FAIL', 'package': {'verified': 26}}, []):
+            with self.subTest(value=value):
+                def receipt(arguments, filename, **options):
+                    (lane.destination / filename).write_text(json.dumps(value))
+                lane.require = Mock(side_effect=receipt)
+                with self.assertRaises(RuntimeError):
+                    lane.verify_notice_packages(Path('/built'), Path('/installed'))
+                self.assertNotEqual('PASS', lane.receipt['notice_package_status'])
+
+    def test_unexecuted_notice_verification_cannot_be_overall_pass(self):
+        lane = self.lane()
+        lane.receipt['notice_package_status'] = 'NOT_RUN'
+        self.finish(lane)
+        self.assertEqual('PASS', lane.receipt['cleanup_status'])
+        self.assertEqual('FAIL', lane.receipt['status'])
 
     def test_interrupted_xcode_attempt_immediately_stops_gradle(self):
         lane = self.lane()

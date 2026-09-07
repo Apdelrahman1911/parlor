@@ -128,7 +128,8 @@ class Lane:
         self.receipt = dict(schema_version=1, cycle=name, started_at=now(), status='RUNNING',
             execution_kind='normal-source-fixed-eight-plus-separate-public-tool-provenance',
             signing_mode=mode, approved_control_sha256=approved, commands=[], gradle_stops=[],
-            runtime_evidence_status='NOT_RUN', provenance_status='NOT_RUN', cleanup_status='BLOCKED',
+            runtime_evidence_status='NOT_RUN', provenance_status='NOT_RUN',
+            notice_package_status='NOT_RUN', cleanup_status='BLOCKED',
             scope='Eight fixed English XCTest repetitions observing unchanged production app source '
                   'through normal Home accessibility for at least ten post-home seconds each. '
                   'One additional simctl launch observes image provenance separately. No settings '
@@ -376,6 +377,24 @@ class Lane:
             raise RuntimeError('Failed xcodebuild cannot become successful because extracted tests passed')
         self.receipt['runtime_evidence_status'] = 'PASS'
 
+    def verify_notice_packages(self, built, installed):
+        # The caller first binds both canonical directories to our owned build
+        # and simulator. Execute the same source-bound verifier copied with the
+        # app; retain its compact byte receipts before deleting either package.
+        self.receipt['notice_package_status'] = 'RUNNING'
+        self.receipt['notice_packages'] = []
+        copy = self.temporary / 'copy'
+        for origin, app in (('built', built), ('installed', installed)):
+            filename = origin + '-notice-package.json'
+            self.require(['/usr/bin/python3', '-B', copy / 'scripts/verification/third_party_notices.py',
+                          '--root', copy, '--package', app, '--json'], filename, limit=1024 * 1024)
+            report = read_json((self.destination / filename).read_text(), maximum=1024 * 1024)
+            if not isinstance(report, dict) or report.get('status') != 'PASS' or not report.get('package'):
+                raise RuntimeError('Packaged-notice verification did not provide a successful package receipt')
+            self.receipt['notice_packages'].append(dict(origin=origin, file=filename,
+                                                       sha256=digest(self.destination / filename)))
+        self.receipt['notice_package_status'] = 'PASS'
+
     def artifact_inventory(self):
         app = self.temporary / 'DerivedData/Build/Products/Debug-iphonesimulator/Parlor.app'
         if app.is_symlink() or app.resolve(strict=True) != app:
@@ -392,6 +411,7 @@ class Lane:
         actual = inventory_bundle(installed)
         if built != actual:
             raise RuntimeError('Installed native bundle differs from this exact built application')
+        self.verify_notice_packages(app, installed)
         write_json(self.destination / 'built-installed-binary-inventory.json', built)
         self.receipt['built_installed_native_inventory_sha256'] = digest(self.destination / 'built-installed-binary-inventory.json')
         executable = built['bundle_identity']['CFBundleExecutable']
@@ -597,6 +617,7 @@ class Lane:
             'unknown-holder checks; exact copied-input verification; unlink shared-cache pointers '
             'without deleting global caches; remove only this allocation including generated build and DerivedData.')
         complete = (self.receipt['runtime_evidence_status'] == self.receipt['provenance_status'] == 'PASS' and
+                    self.receipt['notice_package_status'] == 'PASS' and
                     self.receipt['cleanup_status'] == 'PASS' and not self.receipt.get('error') and
                     self.receipt['source_unchanged'] and self.receipt['controls_unchanged'] and
                     self.receipt.get('copied_sources_unchanged') is True and not self.receipt['original_outputs_preserved'])
@@ -608,7 +629,7 @@ class Lane:
             self.run_xctest()
             self.observe_external_images()
         except BaseException as error:
-            for field in ('runtime_evidence_status', 'provenance_status'):
+            for field in ('runtime_evidence_status', 'provenance_status', 'notice_package_status'):
                 if self.receipt[field] == 'RUNNING':
                     self.receipt[field] = 'FAIL'
             self.receipt['error'] = dict(type=type(error).__name__, message=str(error)[:800])
