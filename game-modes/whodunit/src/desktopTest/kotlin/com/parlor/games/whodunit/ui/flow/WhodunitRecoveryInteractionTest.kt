@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.onAllNodesWithContentDescription
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
@@ -29,9 +30,11 @@ import com.parlor.core.ids.CaseId
 import com.parlor.core.ids.PlayerId
 import com.parlor.core.ids.SessionId
 import com.parlor.core.random.RandomSource
+import com.parlor.core.random.SessionSeedSource
 import com.parlor.core.result.DataError
 import com.parlor.core.result.EmptyResult
 import com.parlor.core.result.Result
+import com.parlor.core.time.Clock
 import com.parlor.core.time.FakeClock
 import com.parlor.core.versioning.SemVer
 import com.parlor.designsystem.components.LocalParlorToastState
@@ -57,6 +60,7 @@ import com.parlor.games.whodunit.snapshot.WHODUNIT_SNAPSHOT_ENGINE_VERSION
 import com.parlor.storage.snapshot.InMemorySnapshotStore
 import com.parlor.storage.snapshot.SnapshotStore
 import java.util.concurrent.atomic.AtomicInteger
+import java.util.concurrent.atomic.AtomicReference
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -66,6 +70,7 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.koinApplication
 import org.koin.dsl.module
 import kotlin.test.Test
+import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.time.Instant
@@ -96,6 +101,110 @@ class WhodunitRecoveryInteractionTest {
     @Test
     fun arabicRetiredSoloSaveIsKeptUntilExplicitDiscard(): Unit =
         verifyRecovery(AppLanguage.Arabic, persistedMode = "Solo")
+
+    @Test
+    fun englishTransientSnapshotFailureRetriesIntoTheSameSavedInvestigation(): Unit =
+        verifyTransientSnapshotRetry(AppLanguage.English)
+
+    @Test
+    fun arabicTransientSnapshotFailureRetriesIntoTheSameSavedInvestigation(): Unit =
+        verifyTransientSnapshotRetry(AppLanguage.Arabic)
+
+    @Test
+    fun equalSuccessfulSnapshotReadsCannotRepairAnImmutableBundledIdentityMismatch(): Unit = runBlocking {
+        val fixture = Fixture(includeContentIdentity = true, persistedMode = "PassAndPlay")
+        fixture.prepare()
+        val original = assertIs<Result.Success<ResumedSession>>(
+            loadResumedSession(fixture.backing, fixture.definition, fixture.selected.sessionId),
+        )
+        val current = assertIs<Result.Success<ValidatedCase<WhodunitCase>>>(
+            fixture.repository.loadCase(CaseId("last-dinner"), fixture.payloadValidator),
+        ).data
+        repeat(3) {
+            val reread = loadResumedSession(fixture.backing, fixture.definition, fixture.selected.sessionId)
+            assertEquals(original, reread)
+            assertIs<Result.Failure<DataError>>(fixture.repository.refresh(WhodunitIds.GameId, fixture.payloadValidator))
+            val reloadedCase = assertIs<Result.Success<ValidatedCase<WhodunitCase>>>(
+                fixture.repository.loadCase(CaseId("last-dinner"), fixture.payloadValidator),
+            ).data
+            // Validation deliberately creates an opaque token, not an equality-bearing wrapper.
+            assertEquals(current.envelope, reloadedCase.envelope)
+            assertEquals(current.payload, reloadedCase.payload)
+            assertEquals(current.envelope.contentIdentity(), reloadedCase.envelope.contentIdentity())
+            assertEquals(Result.Failure(DataError.CorruptedData), validateResumedSessionForCase(original.data, reloadedCase))
+        }
+        fixture.assertBothKept()
+    }
+
+    private fun verifyTransientSnapshotRetry(language: AppLanguage) {
+        val fixture = Fixture(includeContentIdentity = true, persistedMode = "PassAndPlay", currentStory = true)
+        runBlocking { fixture.prepare() }
+        fixture.repository.loads.set(0)
+        fixture.store.nextReadFailure.set(DataError.IoError("synthetic temporarily unavailable storage"))
+        val application = koinApplication {
+            modules(module {
+                single<CaseRepository> { fixture.repository }
+                single<PayloadValidator<WhodunitCase>>(named("whodunit")) { fixture.payloadValidator }
+                single<SnapshotStore> { fixture.store }
+                single { fixture.definition }
+                single<Clock> { FakeClock(Instant.fromEpochMilliseconds(0)) }
+                single<SessionSeedSource> { SessionSeedSource { error("Resume must not create a fresh seed") } }
+            })
+        }
+        try {
+            runComposeUiTest {
+                val arabic = language == AppLanguage.Arabic
+                val retry = if (arabic) "حاول فتح التحقيق المحفوظ مرة أخرى." else
+                    "Try to open this saved investigation again."
+                val introContinue = if (arabic) "الانتقال من المقدمة إلى شرح القواعد." else
+                    "Advance from the public intro to the rules briefing."
+                val toastState = ParlorToastState()
+                setContent {
+                    KoinIsolatedContext(application) {
+                        CompositionLocalProvider(
+                            LocalDensity provides Density(1f),
+                            LocalParlorToastState provides toastState,
+                        ) {
+                            ProvideAppLanguage(language) {
+                                ParlorTheme(reducedMotion = true) {
+                                    WhodunitGameFlow(
+                                        onBackToLibrary = { error("Retry must not leave the saved investigation") },
+                                        resumeSessionId = fixture.selected.sessionId,
+                                        modifier = Modifier.size(320.dp, 640.dp),
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+                waitUntil(timeoutMillis = 5_000) {
+                    onAllNodesWithContentDescription(retry).fetchSemanticsNodes().size == 1
+                }
+                assertEquals(1, fixture.store.loads.get())
+                assertEquals(0, fixture.repository.loads.get())
+                runBlocking { fixture.assertBothKept() }
+                onNodeWithContentDescription(retry).performScrollTo().performClick()
+                waitUntil(timeoutMillis = 5_000) {
+                    onAllNodesWithContentDescription(introContinue).fetchSemanticsNodes().size == 1 &&
+                        fixture.store.saves.get() > 0
+                }
+                assertEquals(2, fixture.store.loads.get())
+                assertEquals(1, fixture.repository.loads.get())
+                assertEquals(0, fixture.store.deletes.get())
+                runBlocking {
+                    val restored = assertIs<Result.Success<GameSnapshot>>(
+                        fixture.backing.load(fixture.selected.sessionId),
+                    ).data
+                    assertEquals(fixture.selected.sessionId, restored.sessionId)
+                    assertEquals(fixture.selected.metadata, restored.metadata)
+                    assertContentEquals(fixture.selected.payload, restored.payload)
+                    assertEquals(Result.Success(fixture.other), fixture.backing.load(fixture.other.sessionId))
+                }
+            }
+        } finally {
+            application.close()
+        }
+    }
 
     private fun verifyRecovery(
         language: AppLanguage,
@@ -187,6 +296,7 @@ class WhodunitRecoveryInteractionTest {
     private class Fixture(
         private val includeContentIdentity: Boolean,
         private val persistedMode: String,
+        private val currentStory: Boolean = false,
     ) {
         private val json = Json { ignoreUnknownKeys = false; encodeDefaults = true }
         val definition = WhodunitDefinition(json)
@@ -194,7 +304,7 @@ class WhodunitRecoveryInteractionTest {
         private val validator = DefaultCaseValidator(
             json, 1, SemVer(1, 0, 0), DefaultGameRegistry(listOf(definition)),
         )
-        val repository = DefaultCaseRepository(
+        val repository = ObservedRepository(DefaultCaseRepository(
             OfflineRemoteCaseDataSource(),
             InMemoryCachedCaseDataSource(),
             BundledWhodunitCases(
@@ -204,7 +314,7 @@ class WhodunitRecoveryInteractionTest {
             ),
             validator,
             json,
-        )
+        ))
         val backing = InMemorySnapshotStore()
         val store = ObservedStore(backing)
         lateinit var selected: GameSnapshot
@@ -214,8 +324,8 @@ class WhodunitRecoveryInteractionTest {
             val current = assertIs<Result.Success<ValidatedCase<WhodunitCase>>>(
                 repository.loadCase(CaseId("last-dinner"), payloadValidator),
             ).data
-            // A fully valid synthetic prior version, not a corrupt payload or real player record.
-            val oldEnvelope = current.envelope.copy(version = SemVer(0, 9, 0))
+            // Valid synthetic saved content: current for retry success, otherwise an incompatible prior version.
+            val oldEnvelope = if (currentStory) current.envelope else current.envelope.copy(version = SemVer(0, 9, 0))
             val old = assertIs<Result.Success<ValidatedCase<WhodunitCase>>>(
                 validator.validate(json.encodeToString(oldEnvelope), payloadValidator),
             ).data
@@ -257,7 +367,11 @@ class WhodunitRecoveryInteractionTest {
             } else {
                 assertEquals(Result.Failure(DataError.CorruptedData), validateResumedSessionForCase(resumed, old))
             }
-            assertEquals(Result.Failure(DataError.CorruptedData), validateResumedSessionForCase(resumed, current))
+            if (currentStory && includeContentIdentity) {
+                assertIs<Result.Success<Unit>>(validateResumedSessionForCase(resumed, current))
+            } else {
+                assertEquals(Result.Failure(DataError.CorruptedData), validateResumedSessionForCase(resumed, current))
+            }
         }
 
         suspend fun assertBothKept() {
@@ -272,9 +386,11 @@ class WhodunitRecoveryInteractionTest {
         val loads = AtomicInteger()
         val deletes = AtomicInteger()
         val saves = AtomicInteger()
+        val nextReadFailure = AtomicReference<DataError?>(null)
 
         override suspend fun load(sessionId: SessionId): Result<GameSnapshot, DataError> {
             loads.incrementAndGet()
+            nextReadFailure.getAndSet(null)?.let { return Result.Failure(it) }
             return backing.load(sessionId)
         }
 
@@ -284,8 +400,19 @@ class WhodunitRecoveryInteractionTest {
         }
 
         override suspend fun save(snapshot: GameSnapshot): EmptyResult<DataError> {
-            saves.incrementAndGet()
-            return backing.save(snapshot)
+            return backing.save(snapshot).also { saves.incrementAndGet() }
+        }
+    }
+
+    private class ObservedRepository(private val delegate: CaseRepository) : CaseRepository by delegate {
+        val loads = AtomicInteger()
+
+        override suspend fun <TPayload> loadCase(
+            id: CaseId,
+            payloadValidator: PayloadValidator<TPayload>,
+        ): Result<ValidatedCase<TPayload>, DataError> {
+            loads.incrementAndGet()
+            return delegate.loadCase(id, payloadValidator)
         }
     }
 
