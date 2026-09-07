@@ -1,10 +1,12 @@
 package com.parlor.transport.p2p
 
 import java.io.File
+import java.nio.file.Files
 import javax.xml.parsers.DocumentBuilderFactory
 import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
@@ -51,6 +53,10 @@ class AndroidReleaseLintContractTest {
         assertContains(appBuild, "dependsOn(\"lintRelease\")")
         assertContains(appBuild, "reports/lint-results-release.xml")
         assertContains(appBuild, "config/android-lint-accepted-warnings.txt")
+        assertContains(
+            read("shared/transport-p2p/build.gradle.kts"),
+            "rootProject.file(\"config/android-lint-accepted-warnings.txt\")",
+        )
         assertContains(appBuild, "Newer version of lint available: ")
         assertContains(appBuild, "id in setOf(\"GradleDependency\", \"NewerVersionAvailable\")")
         assertContains(appBuild, "\"DependencyUpdate\"")
@@ -59,11 +65,11 @@ class AndroidReleaseLintContractTest {
             .map(String::trim)
             .filter { line -> line.isNotEmpty() && !line.startsWith('#') }
             .toList()
-        assertEquals(32, accepted.size)
+        assertEquals(35, accepted.size)
         assertEquals(
             mapOf(
                 "AndroidGradlePluginVersion" to 4,
-                "DependencyUpdate" to 26,
+                "DependencyUpdate" to 29,
                 "GradleDependency" to 1,
                 "OldTargetApi" to 1,
             ),
@@ -86,12 +92,92 @@ class AndroidReleaseLintContractTest {
                     line.startsWith("NewerVersionAvailable|gradle/libs.versions.toml|")
             },
         )
+        listOf(
+            "org.jetbrains.kotlin.multiplatform",
+            "org.jetbrains.kotlin.plugin.compose",
+            "org.jetbrains.kotlin.plugin.serialization",
+        ).forEach { pluginId ->
+            assertContains(
+                accepted,
+                "DependencyUpdate|gradle/libs.versions.toml|A newer version of $pluginId than 2.4.10",
+            )
+        }
         assertContains(workflow, "productionCheck")
         assertContains(workflow, "lint-results-*")
         assertContains(catalog, "androidx-activity-compose")
         assertContains(appBuild, "implementation(libs.androidx.activity.compose)")
         assertContains(triage, "reported 59 warnings")
-        assertContains(triage, "contains 32")
+        assertContains(triage, "contains 35")
+    }
+
+    @Test
+    fun kotlin_advisory_triage_requires_the_build_to_remain_without_kapt() {
+        val moduleBuilds = Regex("""include\("(:[^"]+)"\)""")
+            .findAll(read("settings.gradle.kts"))
+            .map { match -> match.groupValues[1].removePrefix(":").replace(':', '/') + "/build.gradle.kts" }
+            .toList()
+        assertTrue(moduleBuilds.isNotEmpty(), "No included modules found for the KAPT applicability review")
+        val buildSources = (
+            listOf(
+                "build.gradle.kts",
+                "settings.gradle.kts",
+                "gradle.properties",
+                "gradle/libs.versions.toml",
+                "build-logic/settings.gradle.kts",
+                "build-logic/convention/build.gradle.kts",
+            ) + moduleBuilds
+        ).map(repositoryRoot::resolve) + conventionKotlinSources(
+            repositoryRoot.resolve("build-logic/convention/src/main/kotlin"),
+        )
+        assertNoKaptBuildSources(buildSources)
+        assertFalse(
+            read("gradle/verification-metadata.xml").contains("kotlin-annotation-processing"),
+            "A processing-runtime dependency invalidates the no-KAPT applicability decision",
+        )
+        val transportBuild = read("shared/transport-p2p/build.gradle.kts")
+        assertContains(transportBuild, "rootProject.fileTree(\"build-logic/convention/src/main/kotlin\")")
+        assertContains(transportBuild, "include(\"**/*.kt\", \"**/*.kts\")")
+    }
+
+    @Test
+    fun convention_source_guard_includes_nested_precompiled_kotlin_scripts() {
+        val fixture = Files.createTempDirectory("parlor-convention-source-").toFile()
+        try {
+            fixture.resolve("RegularConvention.kt").writeText("class RegularConvention")
+            val precompiled = fixture.resolve("nested/plugins/precompiled.gradle.kts")
+            assertTrue(precompiled.parentFile.mkdirs())
+            precompiled.writeText("plugins {}")
+            fixture.resolve("ignored.txt").writeText("kapt is not configured by this non-source fixture")
+            val sources = conventionKotlinSources(fixture)
+            assertEquals(
+                setOf("RegularConvention.kt", "nested/plugins/precompiled.gradle.kts"),
+                sources.map { file -> file.relativeTo(fixture).invariantSeparatorsPath }.toSet(),
+            )
+            assertNoKaptBuildSources(sources)
+
+            precompiled.writeText("plugins { kotlin(\"kapt\") }")
+            val rejected = assertFailsWith<AssertionError> {
+                assertNoKaptBuildSources(conventionKotlinSources(fixture))
+            }
+            assertContains(rejected.message.orEmpty(), "precompiled.gradle.kts")
+        } finally {
+            assertTrue(fixture.deleteRecursively(), "Could not remove owned convention-source fixture")
+        }
+    }
+
+    private fun conventionKotlinSources(directory: File): List<File> = directory.walkTopDown()
+        .filter { file -> file.isFile && file.extension in setOf("kt", "kts") }
+        .sortedBy(File::invariantSeparatorsPath)
+        .toList()
+
+    private fun assertNoKaptBuildSources(sources: List<File>) {
+        sources.forEach { file ->
+            assertFalse(
+                file.readText().contains("kapt", ignoreCase = true),
+                "${file.invariantSeparatorsPath} changes the no-KAPT prerequisite; " +
+                    "re-review GHSA-r937-wjx7-w2jp before accepting this pin",
+            )
+        }
     }
 
     @Test
