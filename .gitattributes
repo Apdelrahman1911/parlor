@@ -1,0 +1,6 @@
+# Preserve verbatim third-party notice bytes, including upstream CRLF files.
+composeApp/src/commonMain/composeResources/files/legal/* -text
+# These exact upstream files include CRLF and/or intentional blank final lines.
+# Their byte digests remain pinned; ordinary trailing whitespace is still an error.
+composeApp/src/commonMain/composeResources/files/legal/SLF4J-2.0.16-LICENSE.txt whitespace=cr-at-eol,-blank-at-eof
+composeApp/src/commonMain/composeResources/files/legal/WebP-COPYING.txt whitespace=-blank-at-eof
